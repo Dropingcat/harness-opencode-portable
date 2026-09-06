@@ -35,3 +35,5 @@
 - Введён регрессионный тест `test_mixed_review_verdicts_aggregate_fail_closed` (+17 tests all green).
 - Введён тест `test_batch_review_retries_do_not_burn_attempt` (неконвергенция REQUEST_CHANGES).
 - Обновлён `code-orchestrator.md` (семантика attempt, пример диспатча при 2 REQUEST_CHANGES).
+- **Изоляция Python (#7):** `.venv` (stdlib-only), `requirements-core.txt` + `requirements-mcp-doc.txt`, `setup_env.ps1`→`.venv`, `.gitignore`. Полный отчёт: `PYTHON_DEPENDENCIES.md` + `легаси/PYTHON_DEPENDENCIES_FINDINGS.md`.
+- **Защита кода (#6):** git-коммит-гейт в `factory_ctl submit` (worker), шаблон `references/handoff-template.md`, правило «Безопасность работы» в промпте.
