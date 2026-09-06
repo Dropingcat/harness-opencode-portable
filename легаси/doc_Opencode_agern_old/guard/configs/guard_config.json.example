@@ -1,0 +1,34 @@
+{
+  "_comment": "Конфиг trust-boundary guard. НЕ коммитить, ключи секретные.",
+  "providers": {
+    "cloud": {
+      "model": "google/gemma-4-26b-a4b-it",
+      "base_url": "https://polza.ai/api/v1/chat/completions",
+      "api_key": "REDACTED-SET-VIA-ENV",
+      "max_tokens": 20,
+      "cost_per_call_rub": 0.001
+    },
+    "local": {
+      "model": "qwen2.5:0.5b",
+      "base_url": "http://127.0.0.1:11434/api/generate",
+      "api_key": null,
+      "max_tokens": 50
+    },
+    "fallback": {
+      "model": "sao10k/l3-lunaris-8b",
+      "base_url": "https://polza.ai/api/v1/chat/completions",
+      "api_key": "REDACTED-SET-VIA-ENV",
+      "max_tokens": 20
+    }
+  },
+  "budget": {
+    "max_cost_rub": 5.0,
+    "warn_threshold_rub": 4.0,
+    "alarm_threshold_rub": 4.8
+  },
+  "security": {
+    "votes": 3,
+    "timeout_sec": 40,
+    "fail_closed": true
+  }
+}

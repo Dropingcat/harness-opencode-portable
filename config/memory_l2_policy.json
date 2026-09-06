@@ -1,0 +1,55 @@
+{
+  "level": "L2",
+  "source": "claim_graph_audit_snapshot",
+  "output_kind": "task_memory",
+  "bindings": {
+    "task_id_paths": [
+      "task.task_id",
+      "task.id",
+      "task_id"
+    ],
+    "task_title_paths": [
+      "task.title",
+      "task.name",
+      "title"
+    ],
+    "snapshot_id_paths": [
+      "snapshot_id",
+      "audit_id",
+      "task.snapshot_id"
+    ],
+    "claim_list_paths": [
+      "claims"
+    ],
+    "audit_list_paths": [
+      "audits",
+      "audit_entries",
+      "validation_events"
+    ],
+    "evidence_list_paths": [
+      "evidence",
+      "evidence_spans"
+    ]
+  },
+  "rules": {
+    "accepted_claim_id_keys": [
+      "claim_id",
+      "id"
+    ],
+    "accepted_audit_reason_code_keys": [
+      "reason_code",
+      "code",
+      "reason_codes"
+    ],
+    "accepted_audit_status_keys": [
+      "status",
+      "result"
+    ],
+    "candidate_lesson_requires": [
+      "reason_codes",
+      "evidence_refs"
+    ],
+    "on_missing_fields": "omit",
+    "dedupe": "stable_json"
+  }
+}

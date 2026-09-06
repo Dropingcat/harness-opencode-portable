@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "nodes": [
+    {
+      "id": "family:code-mcp",
+      "type": "mcp_family"
+    },
+    {
+      "id": "family:research-mcp",
+      "type": "mcp_family"
+    },
+    {
+      "id": "family:document-mcp",
+      "type": "mcp_family"
+    },
+    {
+      "id": "family:search-mcp",
+      "type": "mcp_family"
+    }
+  ],
+  "edges": []
+}

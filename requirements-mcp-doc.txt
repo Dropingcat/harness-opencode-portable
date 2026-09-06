@@ -1,0 +1,10 @@
+# MCP doc_extract_server.py — зависимости (ОПЦИОНАЛЬНЫЙ MCP-сервер)
+# Эти пакеты НУЖНЫ только если используется MCP-сервер извлечения из документов
+# (mcp/doc_extract_server.py). Ядро фабрики от него НЕ зависит.
+# Установка: .venv\Scripts\pip install -r requirements-mcp-doc.txt
+python-docx
+markdownify
+pypdfium2
+openpyxl
+# Примечание: на момент 2026-09-06 в окружении hermes-agent эти пакеты ОТСУТСТВУЮТ,
+# поэтому doc_extract_server неработоспособен, пока их не установят в изолированный venv.

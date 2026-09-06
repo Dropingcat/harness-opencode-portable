@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "policy_id": "code_factory_default",
+  "required_gates": ["reviewer", "tester", "auditor"],
+  "optional_evidence": ["worker", "experimenter"],
+  "gate_semantics": {
+    "reviewer": {
+      "pass": ["APPROVE"],
+      "retry": ["REQUEST_CHANGES"],
+      "terminal_fail": ["REJECT"],
+      "block": ["AMBIGUOUS"]
+    },
+    "tester": {
+      "pass": ["PASS"],
+      "retry": ["FAIL"]
+    },
+    "auditor": {
+      "pass": ["APPROVE"],
+      "retry": ["REQUEST_CHANGES"],
+      "terminal_fail": ["REJECT"],
+      "block": ["INVALID_INPUT"]
+    }
+  },
+  "retry": {
+    "new_attempt_on_retry": true,
+    "attempt_limit_includes_initial": true
+  },
+  "finalization": {
+    "requires_state": "PASSED"
+  }
+}

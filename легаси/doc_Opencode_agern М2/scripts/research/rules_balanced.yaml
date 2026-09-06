@@ -1,0 +1,95 @@
+# rules.yaml — детерминированные правила пост-обработки вердиктов
+# Решения принимаются КОДОМ, не LLM. LLM производит свидетельства, код — решения.
+
+# Пороги confidence
+thresholds:
+  supported: 0.8          # ≥ → SUPPORTED
+  ambiguous: 0.6          # 0.6-0.8 → AMBIGUOUS
+  problematic: 0.6        # < → problematic_thesis
+  tribunal_trigger: 0.8   # advocate confidence ≥ → НЕ запускать L5
+
+# Verdict-правила (после caveat caps)
+verdict_recalculation:
+  # После cap confidence — пересчитать verdict
+  confidence_lt_0.6:
+    action: set_verdict
+    value: UNSUPPORTED
+    reason: "confidence_below_problematic_threshold"
+  confidence_0.6_to_0.8:
+    action: set_verdict
+    value: AMBIGUOUS
+    reason: "confidence_in_ambiguous_range"
+
+# Caveat-правила (применяются ПОСЛЕ advocate)
+caveat_rules:
+  critical_caveat:
+    action: cap_confidence
+    value: 0.6             # critical caveat → confidence не выше 0.6
+    reason: "critical_caveat_caps_confidence"
+  critical_caveat_count_gte_1:
+    action: trigger_tribunal  # ≥1 critical → L5 даже при confidence ≥ 0.8
+    reason: "critical_caveat_triggers_tribunal"
+  caveats_count_gte_2:
+    action: mark_problematic
+    reason: "multiple_caveats_problematic"
+  caveats_count_gte_3:
+    action: cap_confidence
+    value: 0.5
+    reason: "many_caveats_caps_confidence"
+
+# Числовые правила (от numeric_comparator)
+numeric_rules:
+  numeric_mismatch:
+    action: set_verdict
+    value: UNSUPPORTED
+    cap_confidence: 0.3
+    reason: "numeric_mismatch_unsupported"
+  numeric_partial_match:
+    action: cap_confidence
+    value: 0.6
+    reason: "numeric_partial_match_capped"
+  qualifier_mismatch:
+    action: cap_confidence
+    value: 0.5
+    reason: "qualifier_mismatch_capped"
+  no_numeric_data:
+    action: cap_confidence
+    value: 0.7
+    reason: "no_numeric_data_capped"
+
+# Проблемные тезисы
+problematic_rules:
+  verdict_unsupported:
+    action: mark_problematic
+  verdict_ambiguous:
+    action: mark_problematic
+  confidence_lt_0.6:
+    action: mark_problematic
+  caveats_gte_2:
+    action: mark_problematic
+
+# Tribunal (L5)
+tribunal_rules:
+  trigger_when:
+    - critical_caveat_count_gte_1
+    - verdict_ambiguous_after_postprocess
+    - verdict_contradicted
+  skip_when:
+    - no_caveats
+    - confidence_gte_0.8_and_no_critical
+
+# Источник-правила (доверие к типам источников)
+source_trust:
+  primary: 0.9
+  textbook: 0.9
+  review: 0.75
+  educational: 0.7
+  wikipedia: 0.6
+  researchgate: 0.6
+  blog: 0.3
+  local_md: 0.75
+  # Если все источники с trust < 0.6 → cap confidence 0.5
+  low_trust_only:
+    action: cap_confidence
+    value: 0.5
+    reason: "low_trust_sources_only"

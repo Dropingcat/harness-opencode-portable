@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "routes": {
+    "code-implementation": {
+      "match_regex": "(?i)(implement|add|fix|refactor|bug|feature|compile|build|исправ|добав|рефактор|код|тест)",
+      "bucket": "code",
+      "default_profile": "standard"
+    },
+    "code-review": {
+      "match_regex": "(?i)(review|audit|quality|security|ревью|аудит|проверь код)",
+      "bucket": "code",
+      "default_profile": "standard"
+    },
+    "academic-research": {
+      "match_regex": "(?i)(paper|arxiv|openalex|doi|pubmed|literature|citation|study|статья|публикац|литератур|источник)",
+      "bucket": "research",
+      "default_profile": "strict"
+    },
+    "web-research": {
+      "match_regex": "(?i)(web|search|latest|current|url|site|интернет|поиск|сайт|актуальн)",
+      "bucket": "research",
+      "default_profile": "standard"
+    },
+    "opencode-config": {
+      "match_regex": "(?i)(opencode|agent|skill|mcp|plugin|config|router|hook|конфиг|агент|скил|роутер|хук)",
+      "bucket": "integration",
+      "default_profile": "standard"
+    },
+    "document-extraction": {
+      "match_regex": "(?i)(pdf|docx|xlsx|extract|document|документ|извлеч|распарс)",
+      "bucket": "writing",
+      "default_profile": "standard"
+    },
+    "optimization": {
+      "match_regex": "(?i)(optimize|performance|latency|speed|memory|benchmark|ускор|оптимиз|памят|бенч)",
+      "bucket": "code",
+      "default_profile": "strict"
+    },
+    "tech-debt": {
+      "match_regex": "(?i)(tech debt|техдолг|debt|sunset|owner|severity)",
+      "bucket": "integration",
+      "default_profile": "standard"
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "agent": "synthesizer",
+  "categories": [
+    "CAT_SYNTHESIS",
+    "CAT_EVIDENCE_TABLE",
+    "CAT_GAP_DECLARATION"
+  ],
+  "default_bucket": "writing",
+  "capsule": "writing"
+}

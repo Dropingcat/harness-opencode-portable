@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "claim_kinds": {
+    "requirement": {
+      "match_regex": "(?i)^(add|implement|support|need|must|нужно|сделай|добавь)",
+      "priority": 10
+    },
+    "code_change": {
+      "match_regex": "(?i)(refactor|fix|change code|patch|исправ|рефактор|правка)",
+      "priority": 50
+    },
+    "interface": {
+      "match_regex": "(?i)(api|interface|contract|schema|endpoint|интерфейс|контракт|схема)",
+      "priority": 55
+    },
+    "test": {
+      "match_regex": "(?i)(test|pytest|coverage|smoke|проверь|тест)",
+      "priority": 80
+    },
+    "factual": {
+      "match_regex": "(?i)(fact|claim|is it true|правда|факт|утверждение)",
+      "priority": 65
+    },
+    "evidence": {
+      "match_regex": "(?i)(evidence|source|paper|doi|citation|источник|доказатель|статья)",
+      "priority": 70
+    },
+    "config": {
+      "match_regex": "(?i)(config|plugin|mcp|env|setting|конфиг|плагин|настройк)",
+      "priority": 75
+    },
+    "security": {
+      "match_regex": "(?i)(security|guard|injection|secret|безопас|инъекц|секрет)",
+      "priority": 100
+    },
+    "performance": {
+      "match_regex": "(?i)(performance|speed|latency|memory|benchmark|ускор|производит|латент|памят)",
+      "priority": 90
+    },
+    "docs": {
+      "match_regex": "(?i)(docs|readme|document|описать|документ|readme)",
+      "priority": 60
+    },
+    "unresolved_question": {
+      "match_regex": "(?i)(\\?|unclear|not sure|неясно|вопрос)",
+      "priority": 40
+    }
+  }
+}

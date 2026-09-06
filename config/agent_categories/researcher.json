@@ -1,0 +1,9 @@
+{
+  "agent": "researcher",
+  "categories": [
+    "CAT_WEB_SEARCH",
+    "CAT_EXTRACTION"
+  ],
+  "default_bucket": "research",
+  "capsule": "research-core"
+}

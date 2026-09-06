@@ -1,0 +1,1159 @@
+{
+  "version": 1,
+  "nodes": [
+    {
+      "id": "profile:soft",
+      "type": "profile",
+      "name": "soft",
+      "guard_mode": "p0_or_warn"
+    },
+    {
+      "id": "profile:standard",
+      "type": "profile",
+      "name": "standard",
+      "guard_mode": "mandatory_fail_closed_for_untrusted"
+    },
+    {
+      "id": "profile:strict",
+      "type": "profile",
+      "name": "strict",
+      "guard_mode": "mandatory_p0_p2_fail_closed"
+    },
+    {
+      "id": "bucket:code",
+      "type": "bucket",
+      "name": "code",
+      "guard_required": false
+    },
+    {
+      "id": "bucket:research",
+      "type": "bucket",
+      "name": "research",
+      "guard_required": true
+    },
+    {
+      "id": "bucket:integration",
+      "type": "bucket",
+      "name": "integration",
+      "guard_required": true
+    },
+    {
+      "id": "bucket:writing",
+      "type": "bucket",
+      "name": "writing",
+      "guard_required": true
+    },
+    {
+      "id": "bucket:security",
+      "type": "bucket",
+      "name": "security",
+      "guard_required": true
+    },
+    {
+      "id": "capsule:core-orchestration",
+      "type": "capsule",
+      "name": "core-orchestration",
+      "runtime_class": "core",
+      "advertise_by_default": true
+    },
+    {
+      "id": "skill:context-engineering",
+      "type": "skill",
+      "name": "context-engineering",
+      "runtime_class": "core_runtime"
+    },
+    {
+      "id": "skill:doubt-driven-development",
+      "type": "skill",
+      "name": "doubt-driven-development",
+      "runtime_class": "core_runtime"
+    },
+    {
+      "id": "skill:verification-planning",
+      "type": "skill",
+      "name": "verification-planning",
+      "runtime_class": "core_runtime"
+    },
+    {
+      "id": "skill:incremental-implementation",
+      "type": "skill",
+      "name": "incremental-implementation",
+      "runtime_class": "core_runtime"
+    },
+    {
+      "id": "skill:compare",
+      "type": "skill",
+      "name": "compare",
+      "runtime_class": "core_runtime"
+    },
+    {
+      "id": "skill:export",
+      "type": "skill",
+      "name": "export",
+      "runtime_class": "core_runtime"
+    },
+    {
+      "id": "tool:coder_run",
+      "type": "tool",
+      "name": "coder_run",
+      "kind": "mcp",
+      "entrypoint": "mcp/coder_router_server.py"
+    },
+    {
+      "id": "runtime:coder_router_server",
+      "type": "runtime",
+      "provider": "coder_router_server",
+      "kind": "mcp",
+      "entrypoint": "mcp/coder_router_server.py"
+    },
+    {
+      "id": "tool:code_work",
+      "type": "tool",
+      "name": "code_work",
+      "kind": "launcher",
+      "entrypoint": "mcp/launchers/opencode_code_worker.py"
+    },
+    {
+      "id": "runtime:opencode_code_worker",
+      "type": "runtime",
+      "provider": "opencode_code_worker",
+      "kind": "launcher",
+      "entrypoint": "mcp/launchers/opencode_code_worker.py"
+    },
+    {
+      "id": "tool:profile_config",
+      "type": "tool",
+      "name": "profile_config",
+      "kind": "launcher",
+      "entrypoint": "mcp/launchers/opencode_profile_configurator.py"
+    },
+    {
+      "id": "runtime:opencode_profile_configurator",
+      "type": "runtime",
+      "provider": "opencode_profile_configurator",
+      "kind": "launcher",
+      "entrypoint": "mcp/launchers/opencode_profile_configurator.py"
+    },
+    {
+      "id": "capsule:code",
+      "type": "capsule",
+      "name": "code",
+      "runtime_class": "core",
+      "advertise_by_default": true
+    },
+    {
+      "id": "skill:code-factory",
+      "type": "skill",
+      "name": "code-factory",
+      "runtime_class": "core_runtime"
+    },
+    {
+      "id": "skill:code-review-and-quality",
+      "type": "skill",
+      "name": "code-review-and-quality",
+      "runtime_class": "core_runtime"
+    },
+    {
+      "id": "skill:clonedeps",
+      "type": "skill",
+      "name": "clonedeps",
+      "runtime_class": "unclassified"
+    },
+    {
+      "id": "skill:deepwork",
+      "type": "skill",
+      "name": "deepwork",
+      "runtime_class": "reference_only"
+    },
+    {
+      "id": "capsule:research-core",
+      "type": "capsule",
+      "name": "research-core",
+      "runtime_class": "core",
+      "advertise_by_default": true
+    },
+    {
+      "id": "skill:conducting-scientific-research",
+      "type": "skill",
+      "name": "conducting-scientific-research",
+      "runtime_class": "core_runtime"
+    },
+    {
+      "id": "skill:literature-review",
+      "type": "skill",
+      "name": "literature-review",
+      "runtime_class": "core_runtime"
+    },
+    {
+      "id": "skill:citation-management",
+      "type": "skill",
+      "name": "citation-management",
+      "runtime_class": "core_runtime"
+    },
+    {
+      "id": "skill:hypothesis-generation",
+      "type": "skill",
+      "name": "hypothesis-generation",
+      "runtime_class": "unclassified"
+    },
+    {
+      "id": "skill:scientific-critical-thinking",
+      "type": "skill",
+      "name": "scientific-critical-thinking",
+      "runtime_class": "unclassified"
+    },
+    {
+      "id": "skill:physics-verification",
+      "type": "skill",
+      "name": "physics-verification",
+      "runtime_class": "core_runtime"
+    },
+    {
+      "id": "tool:arxiv_search",
+      "type": "tool",
+      "name": "arxiv_search",
+      "kind": "mcp",
+      "entrypoint": "mcp/academic_search_server.py"
+    },
+    {
+      "id": "runtime:academic_search_server",
+      "type": "runtime",
+      "provider": "academic_search_server",
+      "kind": "mcp",
+      "entrypoint": "mcp/academic_search_server.py"
+    },
+    {
+      "id": "tool:openalex_search",
+      "type": "tool",
+      "name": "openalex_search",
+      "kind": "mcp",
+      "entrypoint": "mcp/academic_search_server.py"
+    },
+    {
+      "id": "tool:research_academic",
+      "type": "tool",
+      "name": "research_academic",
+      "kind": "launcher",
+      "entrypoint": "mcp/launchers/opencode_research_academic.py"
+    },
+    {
+      "id": "runtime:opencode_research_academic",
+      "type": "runtime",
+      "provider": "opencode_research_academic",
+      "kind": "launcher",
+      "entrypoint": "mcp/launchers/opencode_research_academic.py"
+    },
+    {
+      "id": "tool:extract_document",
+      "type": "tool",
+      "name": "extract_document",
+      "kind": "mcp",
+      "entrypoint": "mcp/doc_extract_server.py"
+    },
+    {
+      "id": "runtime:doc_extract_server",
+      "type": "runtime",
+      "provider": "doc_extract_server",
+      "kind": "mcp",
+      "entrypoint": "mcp/doc_extract_server.py"
+    },
+    {
+      "id": "tool:searxng_search",
+      "type": "tool",
+      "name": "searxng_search",
+      "kind": "mcp",
+      "entrypoint": "mcp/searxng_search_server.py"
+    },
+    {
+      "id": "runtime:searxng_search_server",
+      "type": "runtime",
+      "provider": "searxng_search_server",
+      "kind": "mcp",
+      "entrypoint": "mcp/searxng_search_server.py"
+    },
+    {
+      "id": "capsule:integration-config",
+      "type": "capsule",
+      "name": "integration-config",
+      "runtime_class": "core",
+      "advertise_by_default": true
+    },
+    {
+      "id": "skill:customize-opencode",
+      "type": "skill",
+      "name": "customize-opencode",
+      "runtime_class": "core_runtime"
+    },
+    {
+      "id": "capsule:writing",
+      "type": "capsule",
+      "name": "writing",
+      "runtime_class": "optional",
+      "advertise_by_default": false
+    },
+    {
+      "id": "skill:scientific-writing",
+      "type": "skill",
+      "name": "scientific-writing",
+      "runtime_class": "unclassified"
+    },
+    {
+      "id": "skill:ml-paper-writing",
+      "type": "skill",
+      "name": "ml-paper-writing",
+      "runtime_class": "unclassified"
+    },
+    {
+      "id": "skill:deslop-ai-lint-skill",
+      "type": "skill",
+      "name": "deslop-ai-lint-skill",
+      "runtime_class": "core_runtime"
+    },
+    {
+      "id": "route:code-implementation",
+      "type": "route",
+      "name": "code-implementation",
+      "match_regex": "(?i)(implement|add|fix|refactor|bug|feature|compile|build|исправ|добав|рефактор|код|тест)"
+    },
+    {
+      "id": "route:code-review",
+      "type": "route",
+      "name": "code-review",
+      "match_regex": "(?i)(review|audit|quality|security|ревью|аудит|проверь код)"
+    },
+    {
+      "id": "route:academic-research",
+      "type": "route",
+      "name": "academic-research",
+      "match_regex": "(?i)(paper|arxiv|openalex|doi|pubmed|literature|citation|study|статья|публикац|литератур|источник)"
+    },
+    {
+      "id": "route:web-research",
+      "type": "route",
+      "name": "web-research",
+      "match_regex": "(?i)(web|search|latest|current|url|site|интернет|поиск|сайт|актуальн)"
+    },
+    {
+      "id": "route:opencode-config",
+      "type": "route",
+      "name": "opencode-config",
+      "match_regex": "(?i)(opencode|agent|skill|mcp|plugin|config|router|hook|конфиг|агент|скил|роутер|хук)"
+    },
+    {
+      "id": "route:document-extraction",
+      "type": "route",
+      "name": "document-extraction",
+      "match_regex": "(?i)(pdf|docx|xlsx|extract|document|документ|извлеч|распарс)"
+    },
+    {
+      "id": "route:optimization",
+      "type": "route",
+      "name": "optimization",
+      "match_regex": "(?i)(optimize|performance|latency|speed|memory|benchmark|ускор|оптимиз|памят|бенч)"
+    },
+    {
+      "id": "route:tech-debt",
+      "type": "route",
+      "name": "tech-debt",
+      "match_regex": "(?i)(tech debt|техдолг|debt|sunset|owner|severity)"
+    },
+    {
+      "id": "tool:research_web",
+      "type": "tool",
+      "name": "research_web",
+      "kind": "launcher",
+      "entrypoint": "mcp/launchers/opencode_research_web.py"
+    },
+    {
+      "id": "runtime:opencode_research_web",
+      "type": "runtime",
+      "provider": "opencode_research_web",
+      "kind": "launcher",
+      "entrypoint": "mcp/launchers/opencode_research_web.py"
+    },
+    {
+      "id": "tool:service_task",
+      "type": "tool",
+      "name": "service_task",
+      "kind": "launcher",
+      "entrypoint": "mcp/launchers/opencode_service_task.py"
+    },
+    {
+      "id": "runtime:opencode_service_task",
+      "type": "runtime",
+      "provider": "opencode_service_task",
+      "kind": "launcher",
+      "entrypoint": "mcp/launchers/opencode_service_task.py"
+    },
+    {
+      "id": "tool:factory_ctl",
+      "type": "tool",
+      "name": "factory_ctl",
+      "kind": "script",
+      "entrypoint": "scripts/code-factory/factory_ctl.py"
+    },
+    {
+      "id": "runtime:code_factory_runtime",
+      "type": "runtime",
+      "provider": "code_factory_runtime",
+      "kind": "script",
+      "entrypoint": "scripts/code-factory/factory_ctl.py"
+    },
+    {
+      "id": "tool:resolve_route",
+      "type": "tool",
+      "name": "resolve_route",
+      "kind": "script",
+      "entrypoint": "scripts/router/resolve_route.py"
+    },
+    {
+      "id": "runtime:router_core",
+      "type": "runtime",
+      "provider": "router_core",
+      "kind": "script",
+      "entrypoint": "scripts/router/resolve_route.py"
+    },
+    {
+      "id": "tool:session_guard",
+      "type": "tool",
+      "name": "session_guard",
+      "kind": "script",
+      "entrypoint": "guard/src/session_guard.py"
+    },
+    {
+      "id": "runtime:doc_guard",
+      "type": "runtime",
+      "provider": "doc_guard",
+      "kind": "script",
+      "entrypoint": "guard/src/session_guard.py"
+    }
+  ],
+  "edges": [
+    {
+      "src": "bucket:code",
+      "rel": "DEFAULT_PROFILE",
+      "dst": "profile:standard"
+    },
+    {
+      "src": "bucket:research",
+      "rel": "DEFAULT_PROFILE",
+      "dst": "profile:strict"
+    },
+    {
+      "src": "bucket:integration",
+      "rel": "DEFAULT_PROFILE",
+      "dst": "profile:standard"
+    },
+    {
+      "src": "bucket:writing",
+      "rel": "DEFAULT_PROFILE",
+      "dst": "profile:strict"
+    },
+    {
+      "src": "bucket:security",
+      "rel": "DEFAULT_PROFILE",
+      "dst": "profile:strict"
+    },
+    {
+      "src": "capsule:core-orchestration",
+      "rel": "DEFAULT_PROFILE",
+      "dst": "profile:standard"
+    },
+    {
+      "src": "capsule:core-orchestration",
+      "rel": "PROVIDES_SKILL",
+      "dst": "skill:context-engineering"
+    },
+    {
+      "src": "skill:context-engineering",
+      "rel": "CLASSIFIED_AS",
+      "dst": "class:core_runtime"
+    },
+    {
+      "src": "capsule:core-orchestration",
+      "rel": "PROVIDES_SKILL",
+      "dst": "skill:doubt-driven-development"
+    },
+    {
+      "src": "skill:doubt-driven-development",
+      "rel": "CLASSIFIED_AS",
+      "dst": "class:core_runtime"
+    },
+    {
+      "src": "capsule:core-orchestration",
+      "rel": "PROVIDES_SKILL",
+      "dst": "skill:verification-planning"
+    },
+    {
+      "src": "skill:verification-planning",
+      "rel": "CLASSIFIED_AS",
+      "dst": "class:core_runtime"
+    },
+    {
+      "src": "capsule:core-orchestration",
+      "rel": "PROVIDES_SKILL",
+      "dst": "skill:incremental-implementation"
+    },
+    {
+      "src": "skill:incremental-implementation",
+      "rel": "CLASSIFIED_AS",
+      "dst": "class:core_runtime"
+    },
+    {
+      "src": "capsule:core-orchestration",
+      "rel": "PROVIDES_SKILL",
+      "dst": "skill:compare"
+    },
+    {
+      "src": "skill:compare",
+      "rel": "CLASSIFIED_AS",
+      "dst": "class:core_runtime"
+    },
+    {
+      "src": "capsule:core-orchestration",
+      "rel": "PROVIDES_SKILL",
+      "dst": "skill:export"
+    },
+    {
+      "src": "skill:export",
+      "rel": "CLASSIFIED_AS",
+      "dst": "class:core_runtime"
+    },
+    {
+      "src": "capsule:core-orchestration",
+      "rel": "USES_TOOL",
+      "dst": "tool:coder_run"
+    },
+    {
+      "src": "tool:coder_run",
+      "rel": "BINDS_RUNTIME",
+      "dst": "runtime:coder_router_server"
+    },
+    {
+      "src": "capsule:core-orchestration",
+      "rel": "USES_TOOL",
+      "dst": "tool:code_work"
+    },
+    {
+      "src": "tool:code_work",
+      "rel": "BINDS_RUNTIME",
+      "dst": "runtime:opencode_code_worker"
+    },
+    {
+      "src": "capsule:core-orchestration",
+      "rel": "USES_TOOL",
+      "dst": "tool:profile_config"
+    },
+    {
+      "src": "tool:profile_config",
+      "rel": "BINDS_RUNTIME",
+      "dst": "runtime:opencode_profile_configurator"
+    },
+    {
+      "src": "capsule:code",
+      "rel": "DEFAULT_PROFILE",
+      "dst": "profile:standard"
+    },
+    {
+      "src": "capsule:code",
+      "rel": "FALLBACK_TO",
+      "dst": "capsule:core-orchestration"
+    },
+    {
+      "src": "capsule:code",
+      "rel": "PROVIDES_SKILL",
+      "dst": "skill:code-factory"
+    },
+    {
+      "src": "skill:code-factory",
+      "rel": "CLASSIFIED_AS",
+      "dst": "class:core_runtime"
+    },
+    {
+      "src": "capsule:code",
+      "rel": "PROVIDES_SKILL",
+      "dst": "skill:code-review-and-quality"
+    },
+    {
+      "src": "skill:code-review-and-quality",
+      "rel": "CLASSIFIED_AS",
+      "dst": "class:core_runtime"
+    },
+    {
+      "src": "capsule:code",
+      "rel": "PROVIDES_SKILL",
+      "dst": "skill:clonedeps"
+    },
+    {
+      "src": "skill:clonedeps",
+      "rel": "CLASSIFIED_AS",
+      "dst": "class:unclassified"
+    },
+    {
+      "src": "capsule:code",
+      "rel": "PROVIDES_SKILL",
+      "dst": "skill:deepwork"
+    },
+    {
+      "src": "skill:deepwork",
+      "rel": "CLASSIFIED_AS",
+      "dst": "class:reference_only"
+    },
+    {
+      "src": "capsule:code",
+      "rel": "USES_TOOL",
+      "dst": "tool:code_work"
+    },
+    {
+      "src": "tool:code_work",
+      "rel": "BINDS_RUNTIME",
+      "dst": "runtime:opencode_code_worker"
+    },
+    {
+      "src": "capsule:code",
+      "rel": "USES_TOOL",
+      "dst": "tool:coder_run"
+    },
+    {
+      "src": "tool:coder_run",
+      "rel": "BINDS_RUNTIME",
+      "dst": "runtime:coder_router_server"
+    },
+    {
+      "src": "capsule:research-core",
+      "rel": "DEFAULT_PROFILE",
+      "dst": "profile:strict"
+    },
+    {
+      "src": "capsule:research-core",
+      "rel": "FALLBACK_TO",
+      "dst": "capsule:core-orchestration"
+    },
+    {
+      "src": "capsule:research-core",
+      "rel": "PROVIDES_SKILL",
+      "dst": "skill:conducting-scientific-research"
+    },
+    {
+      "src": "skill:conducting-scientific-research",
+      "rel": "CLASSIFIED_AS",
+      "dst": "class:core_runtime"
+    },
+    {
+      "src": "capsule:research-core",
+      "rel": "PROVIDES_SKILL",
+      "dst": "skill:literature-review"
+    },
+    {
+      "src": "skill:literature-review",
+      "rel": "CLASSIFIED_AS",
+      "dst": "class:core_runtime"
+    },
+    {
+      "src": "capsule:research-core",
+      "rel": "PROVIDES_SKILL",
+      "dst": "skill:citation-management"
+    },
+    {
+      "src": "skill:citation-management",
+      "rel": "CLASSIFIED_AS",
+      "dst": "class:core_runtime"
+    },
+    {
+      "src": "capsule:research-core",
+      "rel": "PROVIDES_SKILL",
+      "dst": "skill:hypothesis-generation"
+    },
+    {
+      "src": "skill:hypothesis-generation",
+      "rel": "CLASSIFIED_AS",
+      "dst": "class:unclassified"
+    },
+    {
+      "src": "capsule:research-core",
+      "rel": "PROVIDES_SKILL",
+      "dst": "skill:scientific-critical-thinking"
+    },
+    {
+      "src": "skill:scientific-critical-thinking",
+      "rel": "CLASSIFIED_AS",
+      "dst": "class:unclassified"
+    },
+    {
+      "src": "capsule:research-core",
+      "rel": "PROVIDES_SKILL",
+      "dst": "skill:physics-verification"
+    },
+    {
+      "src": "skill:physics-verification",
+      "rel": "CLASSIFIED_AS",
+      "dst": "class:core_runtime"
+    },
+    {
+      "src": "capsule:research-core",
+      "rel": "USES_TOOL",
+      "dst": "tool:arxiv_search"
+    },
+    {
+      "src": "tool:arxiv_search",
+      "rel": "BINDS_RUNTIME",
+      "dst": "runtime:academic_search_server"
+    },
+    {
+      "src": "capsule:research-core",
+      "rel": "USES_TOOL",
+      "dst": "tool:openalex_search"
+    },
+    {
+      "src": "tool:openalex_search",
+      "rel": "BINDS_RUNTIME",
+      "dst": "runtime:academic_search_server"
+    },
+    {
+      "src": "capsule:research-core",
+      "rel": "USES_TOOL",
+      "dst": "tool:research_academic"
+    },
+    {
+      "src": "tool:research_academic",
+      "rel": "BINDS_RUNTIME",
+      "dst": "runtime:opencode_research_academic"
+    },
+    {
+      "src": "capsule:research-core",
+      "rel": "USES_TOOL",
+      "dst": "tool:extract_document"
+    },
+    {
+      "src": "tool:extract_document",
+      "rel": "BINDS_RUNTIME",
+      "dst": "runtime:doc_extract_server"
+    },
+    {
+      "src": "capsule:research-core",
+      "rel": "USES_TOOL",
+      "dst": "tool:searxng_search"
+    },
+    {
+      "src": "tool:searxng_search",
+      "rel": "BINDS_RUNTIME",
+      "dst": "runtime:searxng_search_server"
+    },
+    {
+      "src": "capsule:integration-config",
+      "rel": "DEFAULT_PROFILE",
+      "dst": "profile:standard"
+    },
+    {
+      "src": "capsule:integration-config",
+      "rel": "FALLBACK_TO",
+      "dst": "capsule:core-orchestration"
+    },
+    {
+      "src": "capsule:integration-config",
+      "rel": "PROVIDES_SKILL",
+      "dst": "skill:customize-opencode"
+    },
+    {
+      "src": "skill:customize-opencode",
+      "rel": "CLASSIFIED_AS",
+      "dst": "class:core_runtime"
+    },
+    {
+      "src": "capsule:integration-config",
+      "rel": "PROVIDES_SKILL",
+      "dst": "skill:context-engineering"
+    },
+    {
+      "src": "skill:context-engineering",
+      "rel": "CLASSIFIED_AS",
+      "dst": "class:core_runtime"
+    },
+    {
+      "src": "capsule:integration-config",
+      "rel": "USES_TOOL",
+      "dst": "tool:profile_config"
+    },
+    {
+      "src": "tool:profile_config",
+      "rel": "BINDS_RUNTIME",
+      "dst": "runtime:opencode_profile_configurator"
+    },
+    {
+      "src": "capsule:writing",
+      "rel": "DEFAULT_PROFILE",
+      "dst": "profile:strict"
+    },
+    {
+      "src": "capsule:writing",
+      "rel": "FALLBACK_TO",
+      "dst": "capsule:research-core"
+    },
+    {
+      "src": "capsule:writing",
+      "rel": "PROVIDES_SKILL",
+      "dst": "skill:export"
+    },
+    {
+      "src": "skill:export",
+      "rel": "CLASSIFIED_AS",
+      "dst": "class:core_runtime"
+    },
+    {
+      "src": "capsule:writing",
+      "rel": "PROVIDES_SKILL",
+      "dst": "skill:scientific-writing"
+    },
+    {
+      "src": "skill:scientific-writing",
+      "rel": "CLASSIFIED_AS",
+      "dst": "class:unclassified"
+    },
+    {
+      "src": "capsule:writing",
+      "rel": "PROVIDES_SKILL",
+      "dst": "skill:ml-paper-writing"
+    },
+    {
+      "src": "skill:ml-paper-writing",
+      "rel": "CLASSIFIED_AS",
+      "dst": "class:unclassified"
+    },
+    {
+      "src": "capsule:writing",
+      "rel": "PROVIDES_SKILL",
+      "dst": "skill:deslop-ai-lint-skill"
+    },
+    {
+      "src": "skill:deslop-ai-lint-skill",
+      "rel": "CLASSIFIED_AS",
+      "dst": "class:core_runtime"
+    },
+    {
+      "src": "capsule:writing",
+      "rel": "USES_TOOL",
+      "dst": "tool:extract_document"
+    },
+    {
+      "src": "tool:extract_document",
+      "rel": "BINDS_RUNTIME",
+      "dst": "runtime:doc_extract_server"
+    },
+    {
+      "src": "route:code-implementation",
+      "rel": "ROUTES_TO",
+      "dst": "bucket:code"
+    },
+    {
+      "src": "route:code-implementation",
+      "rel": "DEFAULT_PROFILE",
+      "dst": "profile:standard"
+    },
+    {
+      "src": "route:code-implementation",
+      "rel": "USES_CAPSULE",
+      "dst": "capsule:core-orchestration"
+    },
+    {
+      "src": "route:code-implementation",
+      "rel": "USES_CAPSULE",
+      "dst": "capsule:code"
+    },
+    {
+      "src": "route:code-implementation",
+      "rel": "REQUIRES_SKILL",
+      "dst": "skill:verification-planning"
+    },
+    {
+      "src": "route:code-implementation",
+      "rel": "REQUIRES_SKILL",
+      "dst": "skill:incremental-implementation"
+    },
+    {
+      "src": "route:code-implementation",
+      "rel": "REQUIRES_SKILL",
+      "dst": "skill:code-factory"
+    },
+    {
+      "src": "route:code-review",
+      "rel": "ROUTES_TO",
+      "dst": "bucket:code"
+    },
+    {
+      "src": "route:code-review",
+      "rel": "DEFAULT_PROFILE",
+      "dst": "profile:standard"
+    },
+    {
+      "src": "route:code-review",
+      "rel": "USES_CAPSULE",
+      "dst": "capsule:core-orchestration"
+    },
+    {
+      "src": "route:code-review",
+      "rel": "USES_CAPSULE",
+      "dst": "capsule:code"
+    },
+    {
+      "src": "route:code-review",
+      "rel": "REQUIRES_SKILL",
+      "dst": "skill:code-review-and-quality"
+    },
+    {
+      "src": "route:code-review",
+      "rel": "REQUIRES_SKILL",
+      "dst": "skill:doubt-driven-development"
+    },
+    {
+      "src": "route:academic-research",
+      "rel": "ROUTES_TO",
+      "dst": "bucket:research"
+    },
+    {
+      "src": "route:academic-research",
+      "rel": "DEFAULT_PROFILE",
+      "dst": "profile:strict"
+    },
+    {
+      "src": "route:academic-research",
+      "rel": "USES_CAPSULE",
+      "dst": "capsule:core-orchestration"
+    },
+    {
+      "src": "route:academic-research",
+      "rel": "USES_CAPSULE",
+      "dst": "capsule:research-core"
+    },
+    {
+      "src": "route:academic-research",
+      "rel": "REQUIRES_SKILL",
+      "dst": "skill:literature-review"
+    },
+    {
+      "src": "route:academic-research",
+      "rel": "REQUIRES_SKILL",
+      "dst": "skill:citation-management"
+    },
+    {
+      "src": "route:academic-research",
+      "rel": "REQUIRES_SKILL",
+      "dst": "skill:conducting-scientific-research"
+    },
+    {
+      "src": "route:academic-research",
+      "rel": "REQUIRES_SKILL",
+      "dst": "skill:scientific-critical-thinking"
+    },
+    {
+      "src": "route:web-research",
+      "rel": "ROUTES_TO",
+      "dst": "bucket:research"
+    },
+    {
+      "src": "route:web-research",
+      "rel": "DEFAULT_PROFILE",
+      "dst": "profile:standard"
+    },
+    {
+      "src": "route:web-research",
+      "rel": "USES_CAPSULE",
+      "dst": "capsule:core-orchestration"
+    },
+    {
+      "src": "route:web-research",
+      "rel": "USES_CAPSULE",
+      "dst": "capsule:research-core"
+    },
+    {
+      "src": "route:web-research",
+      "rel": "REQUIRES_SKILL",
+      "dst": "skill:conducting-scientific-research"
+    },
+    {
+      "src": "route:web-research",
+      "rel": "REQUIRES_SKILL",
+      "dst": "skill:physics-verification"
+    },
+    {
+      "src": "route:opencode-config",
+      "rel": "ROUTES_TO",
+      "dst": "bucket:integration"
+    },
+    {
+      "src": "route:opencode-config",
+      "rel": "DEFAULT_PROFILE",
+      "dst": "profile:standard"
+    },
+    {
+      "src": "route:opencode-config",
+      "rel": "USES_CAPSULE",
+      "dst": "capsule:core-orchestration"
+    },
+    {
+      "src": "route:opencode-config",
+      "rel": "USES_CAPSULE",
+      "dst": "capsule:integration-config"
+    },
+    {
+      "src": "route:opencode-config",
+      "rel": "REQUIRES_SKILL",
+      "dst": "skill:customize-opencode"
+    },
+    {
+      "src": "route:opencode-config",
+      "rel": "REQUIRES_SKILL",
+      "dst": "skill:context-engineering"
+    },
+    {
+      "src": "route:document-extraction",
+      "rel": "ROUTES_TO",
+      "dst": "bucket:writing"
+    },
+    {
+      "src": "route:document-extraction",
+      "rel": "DEFAULT_PROFILE",
+      "dst": "profile:standard"
+    },
+    {
+      "src": "route:optimization",
+      "rel": "ROUTES_TO",
+      "dst": "bucket:code"
+    },
+    {
+      "src": "route:optimization",
+      "rel": "DEFAULT_PROFILE",
+      "dst": "profile:strict"
+    },
+    {
+      "src": "route:tech-debt",
+      "rel": "ROUTES_TO",
+      "dst": "bucket:integration"
+    },
+    {
+      "src": "route:tech-debt",
+      "rel": "DEFAULT_PROFILE",
+      "dst": "profile:standard"
+    },
+    {
+      "src": "tool:coder_run",
+      "rel": "BINDS_RUNTIME",
+      "dst": "runtime:coder_router_server"
+    },
+    {
+      "src": "tool:code_work",
+      "rel": "BINDS_RUNTIME",
+      "dst": "runtime:opencode_code_worker"
+    },
+    {
+      "src": "tool:research_academic",
+      "rel": "BINDS_RUNTIME",
+      "dst": "runtime:opencode_research_academic"
+    },
+    {
+      "src": "tool:research_web",
+      "rel": "BINDS_RUNTIME",
+      "dst": "runtime:opencode_research_web"
+    },
+    {
+      "src": "tool:service_task",
+      "rel": "BINDS_RUNTIME",
+      "dst": "runtime:opencode_service_task"
+    },
+    {
+      "src": "tool:profile_config",
+      "rel": "BINDS_RUNTIME",
+      "dst": "runtime:opencode_profile_configurator"
+    },
+    {
+      "src": "tool:arxiv_search",
+      "rel": "BINDS_RUNTIME",
+      "dst": "runtime:academic_search_server"
+    },
+    {
+      "src": "tool:openalex_search",
+      "rel": "BINDS_RUNTIME",
+      "dst": "runtime:academic_search_server"
+    },
+    {
+      "src": "tool:extract_document",
+      "rel": "BINDS_RUNTIME",
+      "dst": "runtime:doc_extract_server"
+    },
+    {
+      "src": "tool:searxng_search",
+      "rel": "BINDS_RUNTIME",
+      "dst": "runtime:searxng_search_server"
+    },
+    {
+      "src": "tool:factory_ctl",
+      "rel": "BINDS_RUNTIME",
+      "dst": "runtime:code_factory_runtime"
+    },
+    {
+      "src": "tool:resolve_route",
+      "rel": "BINDS_RUNTIME",
+      "dst": "runtime:router_core"
+    },
+    {
+      "src": "tool:session_guard",
+      "rel": "BINDS_RUNTIME",
+      "dst": "runtime:doc_guard"
+    }
+  ],
+  "indexes": {
+    "routes": [
+      "route:academic-research",
+      "route:code-implementation",
+      "route:code-review",
+      "route:document-extraction",
+      "route:opencode-config",
+      "route:optimization",
+      "route:tech-debt",
+      "route:web-research"
+    ],
+    "capsules": [
+      "capsule:code",
+      "capsule:core-orchestration",
+      "capsule:integration-config",
+      "capsule:research-core",
+      "capsule:writing"
+    ],
+    "skills": [
+      "skill:citation-management",
+      "skill:clonedeps",
+      "skill:code-factory",
+      "skill:code-review-and-quality",
+      "skill:compare",
+      "skill:conducting-scientific-research",
+      "skill:context-engineering",
+      "skill:customize-opencode",
+      "skill:deepwork",
+      "skill:deslop-ai-lint-skill",
+      "skill:doubt-driven-development",
+      "skill:export",
+      "skill:hypothesis-generation",
+      "skill:incremental-implementation",
+      "skill:literature-review",
+      "skill:ml-paper-writing",
+      "skill:physics-verification",
+      "skill:scientific-critical-thinking",
+      "skill:scientific-writing",
+      "skill:verification-planning"
+    ],
+    "tools": [
+      "tool:arxiv_search",
+      "tool:code_work",
+      "tool:coder_run",
+      "tool:extract_document",
+      "tool:factory_ctl",
+      "tool:openalex_search",
+      "tool:profile_config",
+      "tool:research_academic",
+      "tool:research_web",
+      "tool:resolve_route",
+      "tool:searxng_search",
+      "tool:service_task",
+      "tool:session_guard"
+    ]
+  }
+}

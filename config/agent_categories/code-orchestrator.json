@@ -1,0 +1,10 @@
+{
+  "agent": "code-orchestrator",
+  "categories": [
+    "CAT_TASK_DECOMPOSITION",
+    "CAT_DISPATCH",
+    "CAT_INTEGRATION"
+  ],
+  "default_bucket": "code",
+  "capsule": "core-orchestration"
+}

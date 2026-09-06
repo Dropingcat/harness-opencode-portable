@@ -1,0 +1,62 @@
+{
+  "schema_version": 2,
+  "case_id": "nc-isolated-02",
+  "passed": true,
+  "checks": [
+    {
+      "kind": "file_exists",
+      "passed": true,
+      "failed_check_id": "file_exists:output.json",
+      "expected": "file present",
+      "actual": "present",
+      "diff_hint": "",
+      "fix_proposal": null
+    },
+    {
+      "kind": "jq_path_contains",
+      "passed": true,
+      "failed_check_id": "jq_path_contains:output.json:[.groups[0].group_status]",
+      "expected": [
+        "mismatch"
+      ],
+      "actual": [
+        "mismatch"
+      ],
+      "diff_hint": "missing from [.groups[0].group_status]: []",
+      "fix_proposal": null
+    },
+    {
+      "kind": "jq_path_contains",
+      "passed": true,
+      "failed_check_id": "jq_path_contains:output.json:[.groups[0].claims[0].claim_numbers[0].type]",
+      "expected": [
+        "range"
+      ],
+      "actual": [
+        "range"
+      ],
+      "diff_hint": "missing from [.groups[0].claims[0].claim_numbers[0].type]: []",
+      "fix_proposal": null
+    }
+  ],
+  "env_manifest": {
+    "schema_version": 2,
+    "opencode_version": "1.18.18",
+    "model_id": "opencode/deepseek-v4-flash-free",
+    "node_version": "v22.23.1",
+    "platform": "Linux-aarch64",
+    "skill_under_test": "rivulet-numeric",
+    "skill_bundle_sha": "2a69cb1cd070092723319c43d8be38e1acaa30f9c82445bf4fb2711842315cc2",
+    "skill_sha": "f9a503a60d4902e91b76e0f0c97021103b00a9eb94393c90689f42b54cc0489d",
+    "fixture_sha": "374bc3ab5b751960d75bdf087ed4098d65f9f3241bd8212de9fc6b4772a511d4",
+    "runner": "opencode",
+    "runner_config_sha": "none",
+    "graph_fingerprint": "none",
+    "langgraph_version": "none",
+    "python_version": "3.11.0rc1",
+    "timestamp": "2026-08-18T21:11:26Z"
+  },
+  "last_seen_triggers": [
+    "baseline"
+  ]
+}

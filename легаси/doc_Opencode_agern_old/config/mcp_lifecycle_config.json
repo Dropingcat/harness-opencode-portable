@@ -1,0 +1,65 @@
+{
+  "version": 1,
+  "servers": {
+    "coder_router": {
+      "command": ["python", "E:/Documents/Документы/doc_Opencode_agern/mcp/coder_router_server.py"],
+      "cwd": "E:/Documents/Документы/doc_Opencode_agern/mcp",
+      "env": {},
+      "auto_start": true,
+      "restart_on_failure": true,
+      "max_restarts": 3,
+      "startup_timeout_sec": 10,
+      "health_check": {
+        "enabled": true,
+        "interval_sec": 30,
+        "endpoint": "http://localhost:8001/health"
+      }
+    },
+    "academic_search": {
+      "command": ["python", "E:/Documents/Документы/doc_Opencode_agern/mcp/academic_search_server.py"],
+      "cwd": "E:/Documents/Документы/doc_Opencode_agern/mcp",
+      "env": {},
+      "auto_start": true,
+      "restart_on_failure": true,
+      "max_restarts": 3,
+      "startup_timeout_sec": 10,
+      "health_check": {
+        "enabled": true,
+        "interval_sec": 30,
+        "endpoint": "http://localhost:8002/health"
+      }
+    },
+    "doc_extract": {
+      "command": ["python", "E:/Documents/Документы/doc_Opencode_agern/mcp/doc_extract_server.py"],
+      "cwd": "E:/Documents/Документы/doc_Opencode_agern/mcp",
+      "env": {},
+      "auto_start": true,
+      "restart_on_failure": true,
+      "max_restarts": 3,
+      "startup_timeout_sec": 10,
+      "health_check": {
+        "enabled": true,
+        "interval_sec": 30,
+        "endpoint": "http://localhost:8003/health"
+      }
+    },
+    "searxng_search": {
+      "command": ["python", "E:/Documents/Документы/doc_Opencode_agern/mcp/searxng_search_server.py"],
+      "cwd": "E:/Documents/Документы/doc_Opencode_agern/mcp",
+      "env": {},
+      "auto_start": true,
+      "restart_on_failure": true,
+      "max_restarts": 3,
+      "startup_timeout_sec": 10,
+      "health_check": {
+        "enabled": true,
+        "interval_sec": 30,
+        "endpoint": "http://localhost:8004/health"
+      }
+    }
+  },
+  "global": {
+    "max_concurrent_starts": 2,
+    "shutdown_timeout_sec": 5
+  }
+}

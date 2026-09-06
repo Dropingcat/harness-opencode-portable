@@ -1,0 +1,13 @@
+[
+  {
+    "claim_id": 200,
+    "claim_text": "Steel hardness is 200 HV",
+    "sources": [
+      {
+        "title": "Handbook Steel 45",
+        "type": "textbook",
+        "excerpt": "Steel hardness is 200 HV according to the data."
+      }
+    ]
+  }
+]

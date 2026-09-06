@@ -1,0 +1,33 @@
+{
+  "skill_name": "deslop-ai-lint-skill",
+  "evals": [
+    {
+      "id": 1,
+      "name": "blog-intro-sandwich-rewrite",
+      "prompt": "I've got this blog intro for our engineering blog and it feels really AI-generated to me. Can you review it and then rewrite it so it sounds less like slop? Here's the text:\n\n---\n\nIn today's rapidly evolving technological landscape, the journey toward robust observability has emerged as a pivotal pillar of modern engineering. The real challenge? It's not just about collecting data — it's about harnessing the transformative power of your infrastructure to unlock truly groundbreaking insights. Organizations that embrace a comprehensive observability strategy stand to revolutionize the way their teams navigate the intricate tapestry of distributed systems. In this post, we will delve into the key principles that underscore the importance of proactive monitoring and explore how to elevate your engineering practice to the next level.\n\n---",
+      "expected_output": "A findings report identifying at minimum: vapid opener, mid-sentence question with canned answer, AI vocab cluster, promotional tone, didactic framing. Followed by a rewritten version that cuts the slop and makes concrete claims. Score should be in the Strong band (51-100).",
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "commit-message-chat-paste-aggressive",
+      "prompt": "Please aggressively de-slop this commit message I'm about to push — it clearly has chat paste in it:\n\n---\n\nfeat: update payment retry logic\n\nI've updated the payment retry logic to handle more edge cases. This should improve reliability and user experience significantly.\n\nKey changes:\n- ✅ Added exponential backoff to retry attempts\n- ✅ Implemented idempotency keys for all payment operations\n- 🚀 Enhanced error logging for better debugging\n- 💡 Added circuit breaker pattern to prevent cascading failures\n\nAs a language model, I cannot directly test this in production, but the implementation should be backward compatible with existing integrations.\n\nI hope this helps! Let me know if you'd like me to elaborate on any particular aspect of the implementation, or if there are any other changes you'd like me to make.\n\n---",
+      "expected_output": "A findings report flagging the AI disclaimer and chat sign-off as Very Strong / Strong, the emoji bullets as inappropriate for a commit message, and vague promotional language ('should improve reliability... significantly'). Aggressive rewrite should delete the disclaimer, the sign-off, the emoji, and tighten the body into a real conventional-commits-style message. Score in Strong band (51-100).",
+      "files": []
+    },
+    {
+      "id": 3,
+      "name": "mixed-tech-doc-review-only",
+      "prompt": "Can you review this section of our internal RFC for tone and AI-slop tells? I don't need a rewrite, just tell me what's off and how strongly. Here's the section:\n\n---\n\n## Caching Layer Design\n\nIt is important to note that when designing a distributed caching layer, one must carefully consider the tradeoffs between consistency and availability. This section delves into the key considerations that underscore the importance of thoughtful design.\n\nOur proposal uses a write-through cache backed by Redis clusters in two availability zones. Each write goes to both the primary datastore and the cache synchronously; reads prefer the cache with a 5ms timeout falling back to the primary. We measured a 37% reduction in p99 read latency in staging against the current read-from-primary baseline.\n\nThere are various factors to keep in mind, including the need to handle cache invalidation gracefully. The design leverages Redis's built-in TTL mechanism, set to 15 minutes for most keys. For session data we use a shorter TTL of 60 seconds. We chose these values based on measured access patterns over the last two quarters.\n\n---",
+      "expected_output": "A balanced review noting the hedging phrases ('It is important to note', 'one must carefully consider'), didactic framing ('This section delves into'), AI vocab cluster (delve, underscore, leverage, key), and vague 'various factors'. But also acknowledging that the middle paragraph and TTL paragraph are substantive and specific — concrete numbers, named measurements, rationale. Score should land in Mixed (21-50). Should NOT flag substantive sentences as slop.",
+      "files": []
+    },
+    {
+      "id": 4,
+      "name": "clean-human-prose-negative",
+      "prompt": "Check this draft paragraph for AI slop — does it sound AI-generated?\n\n---\n\nThe migration took three weekends. We split it across two deploys because the schema change needed a backfill pass in between, and the backfill was slow enough that running it during business hours would have pushed read latency past our SLO. In hindsight I'd have sized the database differently going in — we were close to IOPS limits before the backfill and that made the whole window tighter than it should have been. Next time I'd run a dry-run on a staging replica with production-shaped traffic before committing to the schedule.\n\n---",
+      "expected_output": "Report should score Low (0-20). Either no findings or one weak note (maybe the 'In hindsight' framing, but paired with concrete technical detail so arguably fine). The skill should NOT hallucinate findings to justify its existence. Should say plainly that this reads like specific, human-edited engineering prose and does not need a rewrite.",
+      "files": []
+    }
+  ]
+}

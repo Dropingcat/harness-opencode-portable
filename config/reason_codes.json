@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "reason_codes": {
+    "CLAIM_PARSED": "claim extracted from incoming task",
+    "BUCKET_ASSIGNED": "claim routed to execution cell",
+    "EXECUTION_STARTED": "operation admitted and started",
+    "ACCEPTANCE_CHECKS_PASS": "required validation checks passed",
+    "REVIEW_OR_TEST_FAILED": "reviewer or tester rejected current attempt",
+    "BUDGET_OR_DEPTH_EXHAUSTED": "budget, depth, or iteration window exhausted",
+    "GUARD_OR_POLICY_BLOCK": "guard or policy denied continuation",
+    "AUDIT_RECORDED": "audit record attached",
+    "READY_FOR_INTEGRATION": "claim accepted for synthesis/integration",
+    "TARGETED_REWORK_REQUIRED": "only selected claim/bucket must be reworked",
+    "RETRY_STARTED": "next admitted attempt started",
+    "REQUIRES_USER_OR_OPERATOR": "human decision or operator action required",
+    "POLICY_BUDGET_EXHAUSTED_PARTIAL": "technical stop creates PARTIAL, not fake success",
+    "POLICY_GUARD_P0_ONLY": "degraded guard mode allowed only by profile/policy",
+    "POLICY_GUARD_P2_REQUIRED": "strict profile requires semantic/P2 guard",
+    "POLICY_SKILL_NOT_ADVERTISED": "skill exists but is not in active runtime class",
+    "POLICY_PAYLOAD_SHAPE_BLOCKED": "tool payload does not fit declared template",
+    "POLICY_UNTRUSTED_OUTPUT_REQUIRES_GUARD": "untrusted output must pass guard before handoff"
+  }
+}

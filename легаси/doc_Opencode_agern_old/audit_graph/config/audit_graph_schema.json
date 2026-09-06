@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "audit_graph_schema.json",
+  "title": "Audit Graph Snapshot",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["task_id", "claims"],
+  "properties": {
+    "task_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "claims": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["claim_id", "task_id", "text", "status", "reasons", "evidence"],
+        "properties": {
+          "claim_id": {"type": "string", "minLength": 1},
+          "task_id": {"type": "string", "minLength": 1},
+          "text": {"type": "string", "minLength": 1},
+          "status": {
+            "type": "string",
+            "enum": ["draft", "registered", "in_review", "accepted", "rejected", "superseded"]
+          },
+          "reasons": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["code", "detail"],
+              "properties": {
+                "code": {
+                  "type": "string",
+                  "enum": [
+                    "task_created",
+                    "claim_registered",
+                    "evidence_attached",
+                    "review_requested",
+                    "deterministic_check_passed",
+                    "deterministic_check_failed",
+                    "insufficient_evidence",
+                    "contradiction_found",
+                    "claim_accepted",
+                    "claim_rejected",
+                    "claim_superseded",
+                    "state_transition"
+                  ]
+                },
+                "detail": {"type": "string"}
+              }
+            }
+          },
+          "evidence": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["evidence_id", "kind", "uri", "digest", "metadata"],
+              "properties": {
+                "evidence_id": {"type": "string", "minLength": 1},
+                "kind": {
+                  "type": "string",
+                  "enum": ["text", "code", "file", "command_output", "structured"]
+                },
+                "uri": {"type": "string", "minLength": 1},
+                "digest": {"type": "string"},
+                "metadata": {
+                  "type": "object",
+                  "additionalProperties": {"type": "string"}
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

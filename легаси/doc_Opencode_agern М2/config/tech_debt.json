@@ -1,0 +1,71 @@
+{
+  "version": 1,
+  "debts": [
+    {
+      "id": "TD-001",
+      "title": "Хардкод Linux путей",
+      "area": "mcp/launchers/_runner.py, mcp/coder_router_server.py, agents/*.md",
+      "kind": "portability",
+      "severity": "high",
+      "owner": "code-orchestrator",
+      "sunset_at": "2026-09-14",
+      "acceptance": "env-driven paths and smoke pass",
+      "status": "open"
+    },
+    {
+      "id": "TD-009",
+      "title": "Runtime core live integration pending",
+      "area": "live opencode shared/scripts vs module-owned runtime",
+      "kind": "integration",
+      "severity": "critical",
+      "owner": "code-orchestrator",
+      "sunset_at": "2026-09-07",
+      "acceptance": "live OpenCode uses module-owned runtime or synced copy",
+      "status": "open"
+    },
+    {
+      "id": "TD-010",
+      "title": "Policy layer not yet at machine-readable parity",
+      "area": "config/strictness_profiles.json, bucket_contracts.json, claim_state_machine.json, skills_registry.json",
+      "kind": "policy",
+      "severity": "high",
+      "owner": "code-orchestrator",
+      "sunset_at": "2026-09-07",
+      "acceptance": "all core policy files exist and are wired as source of truth",
+      "status": "open"
+    },
+    {
+      "id": "TD-011",
+      "title": "Router contract duplication",
+      "area": "config/*.json vs plugins/tool-skill-contract-router.ts vs docs",
+      "kind": "architecture",
+      "severity": "high",
+      "owner": "code-orchestrator",
+      "sunset_at": "2026-09-14",
+      "acceptance": "plugin loads registry or has validation against registry",
+      "status": "open"
+    },
+    {
+      "id": "TD-012",
+      "title": "Memory policy lacks schema/storage contract",
+      "area": "MEMORY_POLICY.md, config/memory_*_policy.json, scripts/memory/memory_bridge.py",
+      "kind": "memory",
+      "severity": "medium",
+      "owner": "code-orchestrator",
+      "sunset_at": "2026-09-21",
+      "acceptance": "memory lesson schema exists and evidence refs are required; L3 registry wired via memory_bridge",
+      "status": "done"
+    },
+    {
+      "id": "TD-013",
+      "title": "Guard degradation matrix not formalized",
+      "area": "config/guard_policy.json and strictness profiles",
+      "kind": "security",
+      "severity": "high",
+      "owner": "code-orchestrator",
+      "sunset_at": "2026-09-14",
+      "acceptance": "strictness profiles define allowed guard modes",
+      "status": "open"
+    }
+  ]
+}

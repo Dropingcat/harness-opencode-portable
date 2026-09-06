@@ -1,0 +1,9 @@
+{
+  "agent": "writing-orchestrator",
+  "categories": [
+    "CAT_WRITING_PLAN",
+    "CAT_DRAFT_COORDINATION"
+  ],
+  "default_bucket": "writing",
+  "capsule": "writing"
+}

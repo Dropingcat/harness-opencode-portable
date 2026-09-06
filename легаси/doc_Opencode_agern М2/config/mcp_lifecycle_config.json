@@ -1,0 +1,77 @@
+{
+  "version": 1,
+  "servers": {
+    "coder_router": {
+      "command": [
+        "${PYTHON_BIN}",
+        "${OPENCODE_HARNESS_ROOT}/mcp/coder_router_server.py"
+      ],
+      "cwd": "${OPENCODE_HARNESS_ROOT}/mcp",
+      "env": {},
+      "auto_start": true,
+      "restart_on_failure": true,
+      "max_restarts": 3,
+      "startup_timeout_sec": 10,
+      "health_check": {
+        "enabled": false,
+        "mode": "host_managed_stdio"
+      },
+      "transport": "stdio"
+    },
+    "academic_search": {
+      "command": [
+        "${PYTHON_BIN}",
+        "${OPENCODE_HARNESS_ROOT}/mcp/academic_search_server.py"
+      ],
+      "cwd": "${OPENCODE_HARNESS_ROOT}/mcp",
+      "env": {},
+      "auto_start": true,
+      "restart_on_failure": true,
+      "max_restarts": 3,
+      "startup_timeout_sec": 10,
+      "health_check": {
+        "enabled": false,
+        "mode": "host_managed_stdio"
+      },
+      "transport": "stdio"
+    },
+    "doc_extract": {
+      "command": [
+        "${PYTHON_BIN}",
+        "${OPENCODE_HARNESS_ROOT}/mcp/doc_extract_server.py"
+      ],
+      "cwd": "${OPENCODE_HARNESS_ROOT}/mcp",
+      "env": {},
+      "auto_start": true,
+      "restart_on_failure": true,
+      "max_restarts": 3,
+      "startup_timeout_sec": 10,
+      "health_check": {
+        "enabled": false,
+        "mode": "host_managed_stdio"
+      },
+      "transport": "stdio"
+    },
+    "searxng_search": {
+      "command": [
+        "${PYTHON_BIN}",
+        "${OPENCODE_HARNESS_ROOT}/mcp/searxng_search_server.py"
+      ],
+      "cwd": "${OPENCODE_HARNESS_ROOT}/mcp",
+      "env": {},
+      "auto_start": true,
+      "restart_on_failure": true,
+      "max_restarts": 3,
+      "startup_timeout_sec": 10,
+      "health_check": {
+        "enabled": false,
+        "mode": "host_managed_stdio"
+      },
+      "transport": "stdio"
+    }
+  },
+  "global": {
+    "max_concurrent_starts": 2,
+    "shutdown_timeout_sec": 5
+  }
+}

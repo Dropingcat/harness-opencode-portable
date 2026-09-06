@@ -1,0 +1,73 @@
+{
+  "version": 2,
+  "generated": true,
+  "generated_from_policy_hash": "60a301d952bbe35ea9276576a7fc52a3a626cbf06feaa3d7c22041e6d5db806a",
+  "routes": {
+    "academic-research": {
+      "match_regex": "(?i)(paper|arxiv|openalex|doi|pubmed|literature|citation|study|статья|публикац|литератур|источник)",
+      "bucket": "research",
+      "default_profile": "strict",
+      "priority": 75
+    },
+    "code-implementation": {
+      "match_regex": "(?i)(implement|add|fix|refactor|bug|feature|compile|build|исправ|добав|рефактор|код|тест)",
+      "bucket": "code",
+      "default_profile": "standard",
+      "priority": 50
+    },
+    "code-review": {
+      "match_regex": "(?i)(review|audit|quality|security|ревью|аудит|проверь код)",
+      "bucket": "code",
+      "default_profile": "standard",
+      "priority": 90
+    },
+    "document-extraction": {
+      "match_regex": "(?i)(pdf|docx|xlsx|extract|document|документ|извлеч|распарс)",
+      "bucket": "writing",
+      "default_profile": "standard",
+      "priority": 65
+    },
+    "opencode-config": {
+      "match_regex": "(?i)(opencode|agent|skill|mcp|plugin|config|router|hook|конфиг|агент|скил|роутер|хук)",
+      "bucket": "integration",
+      "default_profile": "standard",
+      "priority": 60
+    },
+    "optimization": {
+      "match_regex": "(?i)(optimize|performance|latency|speed|memory|benchmark|ускор|оптимиз|памят|бенч)",
+      "bucket": "code",
+      "default_profile": "strict",
+      "priority": 85
+    },
+    "service-automation": {
+      "match_regex": "(?i)(calendar|gmail|drive|slack|github issue|send email|service|календар|почт|диск|сервис)",
+      "bucket": "integration",
+      "default_profile": "strict",
+      "priority": 82
+    },
+    "tech-debt": {
+      "match_regex": "(?i)(tech debt|техдолг|debt|sunset|owner|severity)",
+      "bucket": "integration",
+      "default_profile": "standard",
+      "priority": 80
+    },
+    "triz-architecture": {
+      "match_regex": "(?i)(triz|ariz|contradiction|ИКР|ideal|trade-off|архитектура|противоречие|refactor architecture)",
+      "bucket": "code",
+      "default_profile": "strict",
+      "priority": 88
+    },
+    "web-research": {
+      "match_regex": "(?i)(web|search|latest|current|url|site|интернет|поиск|сайт|актуальн)",
+      "bucket": "research",
+      "default_profile": "standard",
+      "priority": 70
+    },
+    "writing-prose": {
+      "match_regex": "(?i)(rewrite|writing|prose|article|report|перепиши|написать текст|стиль|редактир)",
+      "bucket": "writing",
+      "default_profile": "standard",
+      "priority": 55
+    }
+  }
+}

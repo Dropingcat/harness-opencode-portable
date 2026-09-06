@@ -1,0 +1,47 @@
+{
+  "kind": "memory_registry",
+  "levels": {
+    "L3": {
+      "lessons": {
+        "28cf522a6a28e26b4476402f118d27f1a886dfd499c10f32f61d31987158a2e1": {
+          "admissions": 1,
+          "evidence_refs": [
+            "factory_smoke-2026-09-01"
+          ],
+          "lesson_text": "PowerShell 5.1 Set-Content -Encoding UTF8 writes UTF-8 BOM; factory_ctl and contract_validator reject BOM as invalid JSON. Write JSON via UTF8Encoding(false).",
+          "reason_codes": [
+            "CONTRACT",
+            "PORTABILITY"
+          ],
+          "sources": [
+            {
+              "added_via": "memory_bridge.add",
+              "snapshot_id": "snap-2026-09-01",
+              "task_id": "post-audit-2026-09-01"
+            }
+          ]
+        },
+        "646ca8420e0026a13e58ff22a632ce6486254b7cda2b1cfc4e899a1b537af6ce": {
+          "admissions": 1,
+          "evidence_refs": [
+            "runbook-junction",
+            "setup_env.ps1"
+          ],
+          "lesson_text": "Memory bridge: API paths must use ASCII junction E:\\opencode_harness on Windows, not cyrillic E:\\Documents\\Документы",
+          "reason_codes": [
+            "PORTABILITY",
+            "RUNTIME"
+          ],
+          "sources": [
+            {
+              "added_via": "memory_bridge.add",
+              "snapshot_id": "snap-2026-09-01",
+              "task_id": "post-audit-2026-09-01"
+            }
+          ]
+        }
+      }
+    }
+  },
+  "version": 1
+}

@@ -1,0 +1,12 @@
+{
+  "level": "L3",
+  "source": "L2_task_memory",
+  "output_kind": "lesson_registry",
+  "promotion": {
+    "minimum_recurring_count": 2,
+    "require_evidence_refs": true,
+    "require_reason_codes": true,
+    "stable_key": "text_plus_reason_codes",
+    "on_missing_fields": "reject"
+  }
+}

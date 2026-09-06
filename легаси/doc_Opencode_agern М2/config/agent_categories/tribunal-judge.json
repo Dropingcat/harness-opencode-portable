@@ -1,0 +1,10 @@
+{
+  "agent": "tribunal-judge",
+  "categories": [
+    "CAT_DIALECTIC",
+    "CAT_VERDICT_CHALLENGE",
+    "CAT_AUDIT_DEFENSE"
+  ],
+  "default_bucket": "security",
+  "capsule": "core-orchestration"
+}

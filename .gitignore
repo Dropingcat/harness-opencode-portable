@@ -1,0 +1,16 @@
+# Изоляция Python-окружения фабрики
+# ==================================
+# Ядро фабрики (scripts/code-factory, orchestration, memory, kanban, router, guard)
+# использует ТОЛЬКО стандартную библиотеку Python 3.11. Внешних пакетов НЕТ.
+
+.venv/
+venv/
+__pycache__/
+*.pyc
+.env
+.runs/
+*.db
+*.db-shm
+*.db-wal
+.tmp_*.json
+служебные/рабочие артефакты не коммитим

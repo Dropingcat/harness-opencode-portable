@@ -1,0 +1,18 @@
+{
+  "task_id": "task.example",
+  "claims": [
+    {
+      "claim_id": "claim.example.1",
+      "task_id": "task.example",
+      "text": "A single deterministic claim under audit.",
+      "status": "registered",
+      "reasons": [
+        {
+          "code": "claim_registered",
+          "detail": "Initial claim registration."
+        }
+      ],
+      "evidence": []
+    }
+  ]
+}

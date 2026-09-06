@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "resolution": {
+    "prefer_explicit_hints": true,
+    "allow_multi_match": true,
+    "multi_match_strategy": "longest_regex_then_strictest_profile",
+    "on_no_match": "ESCALATE",
+    "on_ambiguous_multi_route": "ESCALATE",
+    "require_reason_codes": true,
+    "max_routes_returned": 3
+  }
+}

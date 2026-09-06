@@ -1,0 +1,102 @@
+{
+  "version": 1,
+  "capsules": {
+    "router-core": {
+      "type": "core",
+      "status": "active",
+      "source_of_truth": [
+        "RUNTIME_POLICY_COMPILER.md",
+        "config/runtime_source_manifest.json",
+        "config/routes_authority.json",
+        "config/route_resolution_policy.json",
+        "config/execution_modes.json",
+        "scripts/router/compile_runtime.py",
+        "scripts/router/resolve_route.py"
+      ]
+    },
+    "claim-routing": {
+      "type": "core",
+      "status": "active",
+      "source_of_truth": [
+        "CLAIM_ROUTING_ARCHITECTURE.md",
+        "config/claim_kinds.json",
+        "config/claim_bucket_rules.json",
+        "scripts/router/split_claims.py",
+        "scripts/router/build_task_plan.py"
+      ]
+    },
+    "skill-capsule": {
+      "type": "skill",
+      "status": "active",
+      "source_of_truth": [
+        "SKILL_CAPSULE_ARCHITECTURE.md",
+        "SKILL_GRAPH_ARCHITECTURE.md",
+        "RUNTIME_POLICY_COMPILER.md",
+        "config/skills_registry.json",
+        "config/skill_capsule_policy.json",
+        "config/routes_authority.json",
+        "scripts/router/compile_runtime.py"
+      ]
+    },
+    "audit-graph": {
+      "type": "audit",
+      "status": "active",
+      "source_of_truth": [
+        "audit_graph/README.md",
+        "audit_graph/config/audit_graph_schema.json",
+        "audit_graph/config/task_audit_template.json",
+        "audit_graph/src/audit_graph/application/claim_registry.py"
+      ]
+    },
+    "graph-driven-memory": {
+      "type": "memory",
+      "status": "active",
+      "source_of_truth": [
+        "MEMORY_CAPSULE_ARCHITECTURE.md",
+        "config/memory_l1_policy.json",
+        "config/memory_l2_policy.json",
+        "config/memory_l3_policy.json",
+        "config/memory_registry.json",
+        "scripts/memory/collect_l2.py",
+        "scripts/memory/promote_l2_to_l3.py"
+      ]
+    },
+    "tool-runtime-bindings": {
+      "type": "tool",
+      "status": "active",
+      "source_of_truth": [
+        "TOOL_CAPSULE_ARCHITECTURE.md",
+        "config/tool_families.json",
+        "config/tool_capsule_policy.json",
+        "config/tool_runtime_bindings.json",
+        "config/tool_skill_templates.json",
+        "scripts/router/resolve_tool_capsule.py"
+      ]
+    },
+    "mcp-perimeter": {
+      "type": "mcp",
+      "status": "planned",
+      "source_of_truth": [
+        "mcp/README.md",
+        "mcp/*.py",
+        "mcp/launchers/*.py"
+      ]
+    },
+    "runtime-integration": {
+      "type": "runtime",
+      "status": "active",
+      "source_of_truth": [
+        "RUNTIME_INTEGRATION_ARCHITECTURE.md",
+        "config/runtime_integration_policy.json",
+        "config/opencode_plugin_config.json",
+        "config/mcp_lifecycle_config.json",
+        "config/path_resolution_map.json",
+        "scripts/register_plugin.py",
+        "scripts/start_mcp_servers.py",
+        "scripts/validate_env.py",
+        "scripts/fix_paths.py",
+        "scripts/health_check.py"
+      ]
+    }
+  }
+}
