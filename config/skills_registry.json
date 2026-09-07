@@ -25,7 +25,8 @@
     "markitdown",
     "autoresearch",
     "triz-problem-solving",
-    "writer-core"
+    "writer-core",
+    "writer-review"
   ],
   "optional_domain_skills": [
     "astropy",

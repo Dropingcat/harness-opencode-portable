@@ -1,8 +1,8 @@
 ---
 name: writer-core
-description: "Детерминированный слой фабрики письма: планирование структуры (G1/G2-слоты), semantic RTT draft-check, constrained repair, консолидация версий. Для writing-orchestrator (план/структура будущего текста) и article-writer (контроль черновика против контракта). Polza — только дешёвый guard/парсер."
+description: "Детерминированный слой фабрики письма: планирование структуры (G1/G2-слоты), semantic RTT draft-check, constrained repair, консолидация версий, DOM-контракт прослеживаемости (cli dom), дерево клаймов из 12 графов (graph_builder_hybrid), 89-dim вектор сравнения(graph_vector), ветвистое ревью L1/L2/L3 (cli review). Для writing-orchestrator(план/DOM/рецензия) и article-writer(контроль черновика против контракта/ревью)。Polza—только дешёвый guard/парсер."
 compatibility: opencode 1.15.10+
-version: 0.1.0
+version: 0.2.0
 ---
 
 # writer-core — фабрика письма (детерминированный «компилятор»)
@@ -10,13 +10,13 @@ version: 0.1.0
 Писатель — двухуровневая фабрика: **writing-orchestrator** (планировщик,
 ВЫСШИЙ ранг) + **article-writer** (воркер, mode: all). Этот скилл — то, что
 находится ПОД обоими: детерминированный слой «контракты → слоты → draft →
-semantic RTT → constrained repair». Здесь нет LLM-вызовов: весь слой —
-реализация поверх готовых модулей writer-гибрида.
+semantic RTT → constrained repair → DOM → review». Здесь нет LLM-вызовов: весь слой —
+реализация поверх готовых модулей writer-гибрида (C:\Temp\opencode\writer_verify\hybrid).
 
 | Роль | Ранг | Использование модуля |
-|---|---|---|
-| `writing-orchestrator` | primary, высший | **инструмент планирования**: тема/ResearchBundle → структура будущего текста (секции, слоты, required_claims/artifacts, gaps) → «дерево для заполнения блоками» |
-| `article-writer` | worker (all) | **инструмент контроля**: читает writing_contract.json, после черновика — claim re-extraction draft → RTT-дифф против разрешённых claims → constrained repair (дефект → claim_id → span) |
+|---|---|---|---|
+| `writing-orchestrator` | primary, высший | **инструмент планирования и рецензии**: тема/ResearchBundle → структура будущего текста (секции, слоты, required_claims/artifacts, gaps) → «дерево для заполнения блоками» (plan) → DOM-каркас (dom) → рецензия структуры (review --plan); |
+| `article-writer` | worker (all) | **инструмент контроля и ревью**: читает writing_contract.json, после черновика — claim re-extraction draft → RTT-дифф против разрешённых claims → constrained repair (дефект → claim_id → span); затем ветвистое ревью (review) против DOM/эталонов; |
 | `polza` | вспомогательный тир | дешёвый guard/парсер терминов/формул, fail-closed. НЕ семантика, НЕ главный агент. Главный агент — opencode runtime (LLM-вызовы агента) |
 
 ## Расположение модуля
@@ -24,64 +24,251 @@ semantic RTT → constrained repair». Здесь нет LLM-вызовов: в�
 ```
 C:\Temp\opencode\writer_verify\hybrid\writer_core\
     __init__.py
-    cli.py                  # единый детерминированный CLI (7 команд)
+    cli.py                  # единый детерминированный CLI (10 команд)
     contracts.py            # ResearchBundleLA, WriterContract, Defect, VersionedArtifact
     factory_process.py      # writer-цикл: draft -> RTT -> constrained repair
+    live_cycle.py           # «живой» контур кодекра: bundle->claims->contract->draft->rtt->repair
+    dom_builder.py          # связка writer_core с DOM-контрактом прослеживаемости (cli dom)
+    review.py               # ветвистое ревью L1/L2/L3 с циклами и эскалацией (cli review)
     requirements-writer-core.txt
 ```
 
 Готовые модули импортируются (НЕ копируются): `hybrid_extract` + `md_clean`,
 `graph_builder_hybrid`, `graph_vector`, `structure_annotator`, `consolidation`,
-`rtt_compare` + `t0_ru` + `digest_builder`, `session_memory`, `polza_light`.
-Канонический venv: `E:\Documents\Документы\writer-core\.venv` (Python 3.12.2).
+`rtt_compare` + `t0_ru` + `digest_builder`, `session_memory`, `polza_light`,
+`citation_trace` (scripts/writer). Канонический venv: `E:\Documents\Документы\writer-core\.venv`
+(Python 3.12.2)。
 
-## Workflow (plan → draft → draftcheck → repair)
+## Workflow (plan → DOM → draft → draftcheck → repair → review)
 
 ```text
-[тема/ResearchBundle]                 [writing_contract.json]
-        │                                       │
-        ▼                                       ▼
-  1. plan (orchestrator)          черновик .md (article-writer)
-     structure_plan.json                │
-     (G1-дерево + G2-слоты +            ▼
-      gaps) ───────────────────► 2. draftcheck (детерминированный слой)
-     «дерево для заполнения         re-extraction draft (hybrid_extract)
-      блоками»                      + RTT-дифф против contract-claims
-                                           │
-                              PASS ── approve ──► конец
-                              FAIL ──► 3. constrained repair
-                                       (дефект → claim_id → span, ТОЛЬКО
-                                        дефектные фрагменты; чужие spans
-                                        не модифицируются)
-                                       → повтор draftcheck
-                                       → иттерации ограничены (max 3)
+[тема/ResearchBundle]                [шаблон DOM YAML]         [writing_contract.json]
+        │                                       │                            │
+        ▼                                       ▼                            ▼
+  1. plan (orchestrator)        2. dom (orchestrator)      черновик .md (article-writer)
+      structure_plan.json                 DOM YAML: structure от           │
+      (G1-дерево + G2-слоты +          plan + claims + графы +          ▼
+       gaps)                             uncertainty по происхождению   3. draftcheck (детерминированный слой)
+      «дерево для заполнения              (контракт traceability)      re-extraction draft (hybrid_extract)
+       блоками»                                  │                       + RTT-дифф против contract-claims
+        │                                        ▼                              │
+        └───────────►  DOM-каркас  ←── гейт «нельзя выдать»:    PASS ── approve ──► конец
+                          (document.yaml)    citation_trace.py (exit 0|1|2)    FAIL ──► 4. constrained repair
+                                                                               (дефект → claim_id → span, ТОЛЬКО
+                                                                                дефектные фрагменты; чужие spans
+                                                                                не модифицируются)
+                                                                               → повтор draftcheck
+                                                                               → иттерации ограничены (max 3)
+                                                                               → 5. review (ветвистое ревью L1/L2/L3)
+                                                                                 → эскалация на human при FAIL
 ```
 
-## Команды CLI
+## Traceability и DOM (иерархия истины)
+
+Контракт прослеживаемости — `E:\opencode_harness\shared\writer-traceability-contract.md`
+(WS-18).
+
+ Иерархия истины:
+
+```
+DOM YAML (источник истины: structure + claims + graphs + traceability + uncertainty)
+   ↓
+Готовый текст (один из многих выходов; прослеживаемость в тексте = `[Sxx]`/`[Cxx]` ссылки)
+```
+
+Правила:
+1. Writer пишет текст, но НЕ выдумывает факты — каждый фактический клайм уже есть в DOM。
+  Если в прозе появилось утверждение, которого нет в DOM — это ошибка. Writer обязан
+  сначала добавить claim в DOM (с источником), потом писать。
+2. Если DOM-claim не подтверждён (UNSUPPORTED/OPEN) — в тексте это маркируется
+  неопределённостью, а не подаётся как факт。
+3. Гейт «нельзя выдать» — детерминированный скрипт
+  `E:\opencode_harness\scripts\writer\citation_trace.py`:
+  `python citation_trace.py --text draft.md --dom <slug>-dom.yaml [--strict]`
+  exit 0 = PASS (можно выдавать), exit 1 = FAIL (править и перезапускать). Проверки:
+  `orphan_claim`, `dangling_claim`/`dangling_source`, `masked_uncertainty`,
+  `numeric_unverified`, `dangling_section`, `missing_crossref` (warn).
+4. Writer НЕ ведёт верификацию сам — он **потребляет** её из DOM
+  (`claims[].verification.verdict` приходит из fact-checker; `numeric_comparison` — из numeric_comparator)。
+
+## DOM YAML: как создать
+
+DOM YAML — литературный объект (product/structure/claims/graphs/uncertainty/sources）。
+Создаётся из нашего слоя детерминированно:
+
+```bash
+# Шаблон DOM (литературный объект) — выбор после постановки задачи:
+#   E:\opencode_harness\templates\writer-dom-dissertation.yaml
+
+# Каркас структуры (11 секций автореферата -> главы диссертации):
+$PY -m writer_core.cli plan --topic "Тема диссертации" --out structure_plan.json
+
+# Собрать DOM: structure из plan + claims из hybrid_extract/bundle + графы G3-G15
+#   + uncertainty ПО ПРОИСХОЖДЕНИЮ источников (--source-kind повторяемый):
+$PY -m writer_core.cli dom --template "E:\opencode_harness\templates\writer-dom-dissertation.yaml" \
+    --plan structure_plan.json \
+    --claims claims.json \        # list[claim] | {"claims": [...]} | ResearchBundleLA.json
+    --graphs graphs.json \          # CLI graphs ИЛИ вывод build_paragraph_graphs
+    --source-kind raw_data --source-kind published \
+    --out dom.yaml
+```
+
+Формат `document.yaml` (контракт, иерархия DOM→проза):
+
+```yaml
+product: { id: PROD-001, kind: dissertation|monograph|textbook|paper, title, status }
+structure:                          # базовая структура из шаблона/plan
+  chapters:
+    - id: CH-01
+      sections:
+        - id: SEC-01-01
+          paragraphs:
+            - id: PAR-01-01-01
+              claims: [C-001, C-002]   # какие клаймы параграф выражает
+              expected: RESULT_CLAIM      # слот плана (claim_id-ожидание от research)
+              slot_id: CS_RESULTS_RESULT_CLAIM
+              text: ""                    # заполняется черновиком
+claims:                                # реестр утверждений (id: C-001.., kind, verification)
+  - id: C-001
+    text: "..."
+    kind: factual|derived|assumed
+    evidence: [ { source_id: S-012, span: "p.47, §3.2: «...»" } ]
+    verification: { verdict: SUPPORTED|CONTRADICTED|UNSUPPORTED|AMBIGUOUS|OPEN, confidence: 0.8 }
+graphs:                                # графы связей (kind: support|derivation|conflict|citation_chain)
+  - id: GRAPH-01
+    edges: [ { from: C-001, to: C-002, relation: derived_from|supports|contradicts|depends_on } ]
+uncertainty:                          # неопределённость — первичное поле
+  C-001: { level: established|inferred|assumed|disputed, note: "..." }
+sources:                              # реестр источников
+  - id: S-012
+    ref: "Author. Title. Journal, year, p.47"
+    kind: primary|secondary
+```
+
+Связь слотов с claim_id: `structure[].paragraphs[].claims[]` содержит `claim_id` реестра;
+`expected`/`slot_id` — слот плана, который research должен заполнить утверждением.
+
+Неопределённость ПО ПРОИСХОЖДЕНИЮ (шкала из dom_builder, deterministic):
+
+| `--source-kind` | level |
+|---|---|
+| `raw_data` / `эксперимент` / `черновик первичных данных` | `high` |
+| `published` / `автореферат` / `защищённая диссертация` / `статья` | `low` |
+| `direct_method` | `low` |
+| `indirect_method` | `medium` |
+| `modeling` | `medium-high` |
+| `hypothesis` | `high` |
+| (неизвестное) | `medium` |
+
+## 12 графов и вектор (дерево клаймов)
+
+`graph_builder_hybrid` строит графы реестра из артефакта документа: G1-G16
+(12+ графов; **G4** аргументация (CONCLUDES→derivation), **G5** эпистемика
+(DERIVED_FROM/SUPPORTS/PARTIALLY_SUPPORTS/CONTRADICTS→derivation/support/conflict),**G6** артефакты
+(DERIVED_FROM→derivation), **G14** кохезия/информационный поток (REFERS_TO/COREFERS_WITH→citation_chain)；
+G7 цитатное происхождение, G8 политика/ограничения, G9 зависимости ревизий,
+
+```bash
+# Построить графы из артефакта (G1-G16) + опционально в sqlite:
+$PY -m writer_core.cli graphs --artifact artifact.json --out graphs.json --sqlite graphs.db
+
+# 89-dim вектор для сравнения（cosine + dynamic_metrics: схема — G*_n/G*_e/G*_ratio,
+#   LOO 79% по разбору версий v1-v12)：
+$PY -m writer_core.cli vectorsim --a old.json --b new.json --out vectorsim.json
+```
+
+Работа с деревом клаймов:
+- **G4/G5/G6/G14** маппятся в DOM `graphs[]` при `cli dom --graphs`（kind:
+  support/derivation/conflict/citation_chain, edges: from/to/relation）。
+- **Вектор 89-dim** — для сравнения версий/эталонов: `cosine_similarity` + `dynamic_metrics`
+  (количество графов/рёбер по типам). Чем ближе вектор черновика к вектору эталона —
+  тем ближе структура/аргументация。 Сравнение версий: `cli consolidate` (v1..v12) + `vectorsim`.
+
+## Ревью и рецензирование（L1/L2/L3)
+
+Ветвистое ревью — `cli review`（детерминированно, без LLM）：
+
+```text
+черновик.md
+   ├── L1 (микро): proofreader — стиль/термины/повторы (t0_ru + реестры
+   │               лингвистики: повторы, канцелярит, терминология (объекты v2),
+   │               длина предложений > 30 слов)
+   ├── L2 (мезо): editor — структура/полнота слотов/gaps
+   │               (structure_annotator.classify_paragraph + plan -> GAP_OPEN /
+   │                SECTION_MISSING / ORDER)
+   └── L3 (макро): reviewer — RTT-семантика + traceability
+                    (factory_process.draftcheck + citation_trace)
+         ↓
+   review_report.json (final_verdict + issues по уровням + rounds + escalation)
+```
+
+```bash
+# Ревью черновика против контракта+плана+DOM（L1+L2+L3 параллельно， циклы max 3）：
+$PY -m writer_core.cli review --draft draft.md \
+    --contract writing_contract.json \    # ИЛИ документ-эталон (v8, docx/pdf/md) ИЛИ inline-JSON
+    --plan structure_plan.json \          # для L2-тира (структура/слоты/gaps）
+    --dom dom.yaml \                      # для L3-цитатного гейта（citation_trace）
+    --max-iterations 3 \
+    --out review_report.json
+```
+
+- **Циклы**: при FAIL → constrained repair (ТОЛЬКО по L3-дефектам: defect_type + span) →
+  повторный прогон L1/L2/L3 → максимум `--max-iterations` (по умолчанию 3);
+  остановка: `approved` (PASS), `iteration_limit`, `no_progress` (ремонт не изменил текст).
+
+- **Эскалация на human**: если после цикла вердикт != PASS → `escalation: true`
+  + `escalation_reasons` — semantic/структурные дефекты не устраняются детерминированным
+  constrained repair → требуется approval человека。
+- **Сравнение с эталоном и версиями**: `vectorsim --a черновик.json --b эталон.json`
+  (89-dim cosine/dynamic_metrics; версии v1-v12 — через `consolidate --versions-dir`,
+  эволюция структуры/claims по версиям)。
+
+## Команды CLI (10 команд）
 
 ```bash
 PY=E:\Documents\Документы\writer-core\.venv\Scripts\python.exe
 cd C:\Temp\opencode\writer_verify\hybrid
 
-# 1) Планирование (orchestrator): структура будущего текста по образцу-документу
-$PY -m writer_core.cli plan --doc "F:\1\_STRUCTURED\07_AUTOREF\versions\Автореферат_v8_АКТУАЛЬНАЯ.docx" --out structure_plan.json
-#   или по ResearchBundleLA (без выдумывания секций — только данные бандла):
+# 1) plan — структурный план будущего текста (G1-дерево + G2-слоты + gaps）:
+#   --doc <образец> | --bundle <ResearchBundleLA.json> | --topic "<тема>" (каркас БЕЗ документа)
+$PY -m writer_core.cli plan --topic "Тема диссертации" --out structure_plan.json
 $PY -m writer_core.cli plan --bundle bundle.json --out structure_plan.json
 
-# 2) Контроль черновика (article-writer): RTT-дифф против контракта
+# 2) draftcheck — RTT-дифф черновика против контракта（
 $PY -m writer_core.cli draftcheck --draft draft.md --contract writing_contract.json --out rtt_report.json
-#   rtt_report.json: verdict PASS|FAIL, defects[{defect, claim_id, span, suggestion}]
 
-# 3) Прочие команды
-$PY -m writer_core.cli extract   --doc paper.docx --out artifact.json
-$PY -m writer_core.cli graphs    --artifact artifact.json --out graphs.json --sqlite graphs.db
-$PY -m writer_core.cli annotate  --doc paper.docx --out structure_plan.json
-$PY -m writer_core.cli consolidate --versions-dir "F:\1\_STRUCTURED\07_AUTOREF\versions" --out-dir evolution
+# 3) live-cycle — полный контур кодекра（bundle->contract->draft->rtt->repair）：
+$PY -m writer_core.cli live-cycle --bundle bundle.json --contract writing_contract.json \
+    --draft draft.md --repair --out live_cycle_report.json
+
+# 4) extract — гибридная экстракция документа -> artifact.json
+$PY -m writer_core.cli extract --doc paper.docx --out artifact.json
+
+# 5) graphs — графы реестра G1-G16 из artifact.json (+ --sqlite .db)
+$PY -m writer_core.cli graphs --artifact artifact.json --out graphs.json --sqlite graphs.db
+
+# 6) annotate — разметка структуры документа -> structure_plan.json
+$PY -m writer_core.cli annotate --doc paper.docx --out structure_plan.json
+
+# 7) consolidate — консолидация версий (v1..v12) -> evolution_report.json/.md
+$PY -m writer_core.cli consolidate --versions-dir "F:\1\_STRUCTURED\07_AUTOREF\versions" \
+    --out-dir evolution
+
+# 8) vectorsim — 89-dim cosine + dynamic_metrics двух артефактов
 $PY -m writer_core.cli vectorsim --a old.json --b new.json --out vectorsim.json
+
+# 9) dom — writer_core -> DOM YAML по контракту прослеживаемости (для citation_trace.py)
+$PY -m writer_core.cli dom --template "E:\opencode_harness\templates\writer-dom-dissertation.yaml" \
+    --plan structure_plan.json --claims claims.json --graphs graphs.json \
+    --source-kind raw_data --source-kind published --out dom.yaml
+
+# 10) review — ветвистое ревью（L1 микро + L2 мезо + L3 макро， циклы， эскалация）
+$PY -m writer_core.cli review --draft draft.md --contract writing_contract.json \
+    --plan structure_plan.json --dom dom.yaml --max-iterations 3 --out review_report.json
 ```
 
 Выход — детерминированный JSON; любой сбой на битом вводе — `{"error": ...,
-"fail_closed": true}` и exit code 2.
+"fail_closed": true}` и exit code 2。
 
 ## Контракты
 
@@ -98,33 +285,72 @@ $PY -m writer_core.cli vectorsim --a old.json --b new.json --out vectorsim.json
   `span` (абсолютные координаты в черновике), `suggestion` (вход constrained
   repair).
 - **VersionedArtifact** — `id`, `version`, `content_hash` (sha256 от
-  содержимого, считается функцией, не принимается извне), `created_at`.
+  содержимого, считается функцией, не принимается извне), `created_at`。
+- **DOM YAML** (литературный объект, контракт прослеживаемости:
+ `product` / `structure` (chapters→sections→paragraphs, `claims[]` — claim_id,
+ `expected`/`slot_id` — слот плана) / `claims[]` (id C-xxx, `kind`, `evidence`,
+ `verification.verdict`) / `graphs[]` (kind: support|derivation|conflict|citation_chain) /
+ `uncertainty{}` (level по происхождению) / `sources[]` (id S-xxx, `ref`, `kind`)。
+
+## Что от тебя ждут (контракты входа/выхода)
+
+- **writing-orchestrator** (primary, высший ранг):
+  вход — тема/ResearchBundle/шаблон DOM; выход — `structure_plan.json`（plan）,
+  `dom.yaml`（dom-каркас + uncertainty） и `review_report.json` (рецензия структуры,
+  `review --plan` — L2-тир: полнота слотов/gaps против плана).
+  Ты НЕ пишешь прозу—ты строишь «дерево для заполнения блоками» и контролируешь прослеживаемость。
+- **article-writer** (worker, mode all:
+  вход — `writing_contract.json`/эталон (v8) + черновик .md; выход — `rtt_report.json`
+  （draftcheck） и `review_report.json`（review: L1/L2/L3 против контракта/DOM/плана）.
+ Ты пишешь прозу только из claims DOM, маркируешь неопределённость, чинишь дефекты
+  constrained repair'ом （дефект → claim_id → span）。
+- **polza** — только дешёвый guard/парсер терминов/формул, fail-closed; её вывод НЕ
+  используется для семантических решений этого слоя。
+- **Выход детерминирован**: JSON + exit code; никакой LLM-интерпретации на стороне кода。
+
+
 
 ## Fail-closed принципы
 
 1. LLM свидетельствует, **детерминированный слой решает**: все проверки
-   (re-extraction, RTT-дифф, ремонт) — код, не LLM.
-2. Битый ввод → JSON-ошибка + ненулевой exit code; исключения наружу не
-   пробрасываются из CLI.
+   (re-extraction, RTT-дифф, ремонт, ревью L1/L2/L3, DOM-гейт) — код, не LLM。
+2. Битый ввод → JSON-ошибка + ненулевой exit code (2); исключения наружу не
+   пробрасываются из CLI。
 3. Constrained repair меняет **только** дефектные `claim_id + span`; чужие
-   фрагменты не трогаются (проверяется тестом).
+   фрагменты не трогаются (проверяется тестом)。
 4. Иттерации цикла ограничены (`max_iterations`); при отсутствии прогресса —
-   `no_progress` stop, никогда бесконечный цикл.
+   `no_progress` stop, никогда бесконечный цикл。
 5. Polza — только дешёвый guard/парсер (термины/формулы, fail-closed); её
-   вывод НЕ используется для семантических решений этого слоя.
+   вывод НЕ используется для семантических решений этого слоя。
+6. Гейт «нельзя выдать» — детерминированный `citation_trace.py` (exit 0 = PASS);
+   проверяет claims/источники/неопределённость/числа/секции в тексте против DOM。
+7. Ревью FAIL после цикла → `escalation: true` — требуется approval человека, никогда
+   не «протаскивается» мимо человека。
 
-## H-память (session_memory)
+
+
+## H-память（session_memory）
 
 Кросс-сессионные выводы писателя сохраняются в
 `C:\Temp\opencode\writer_verify\session_memory.json` (модуль `session_memory`,
 схема `writer_verify.session_memory.v1`): `add_entry(секция, value)` /
 `get(секция)`. Секции-примеры: `plan_etalon`, `known_pitfalls`,
-`rtt_thresholds`. Перед тяжёлой диагностикой — читай память; после новых
-находок — дописывай запись дня (append-only история по датам).
+`rtt_thresholds`, `review_etalon_vectors`. Перед тяжёлой диагностикой — читай память; после новых
+находок — дописывай запись дня（append-only история по датам。
+
+
 
 ## Проверка
 
 ```bash
+# py_compile всех модулей writer_core（fail-closed синтаксис）：
+$PY -m py_compile writer_core\cli.py writer_core\dom_builder.py writer_core\review.py \
+    writer_core\live_cycle.py writer_core\contracts.py writer_core\factory_process.py
+
+# CLI help показывает dom/review/live-cycle/plan/draftcheck...:
+$PY -m writer_core.cli --help
+
+# pytest (полный harness）：
 $PY -m pytest C:\Temp\opencode\writer_verify\test_writer_harness.py -q
 ```
 
@@ -132,4 +358,4 @@ $PY -m pytest C:\Temp\opencode\writer_verify\test_writer_harness.py -q
 (defect `causality_upgrade` + claim_id + span), контракты валидны,
 factory_process ограничивает иттерации, constrained repair не трогает чужие
 spans, VersionedArtifact хэш, ResearchBundle маппинг, fail-closed на битый
-ввод.
+ввод, DOM-гейт citation_trace (exit 0|1|2), ревью L1/L2/L3 с циклами/эскалацией。

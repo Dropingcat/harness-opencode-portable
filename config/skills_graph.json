@@ -1,6 +1,6 @@
 {
   "version": 3,
-  "generated_from_policy_hash": "57aa573227fcaf17c15f7e43f8638761e543b6d5fe0190e990c31451c4e22a70",
+  "generated_from_policy_hash": "6676bcbc8732fac4f97e88f13b712758dff818db849bf588adb0a7e1a2ea880a",
   "generated": true,
   "nodes": [
     {
@@ -396,6 +396,12 @@
       "id": "skill:writer-core",
       "type": "skill",
       "name": "writer-core",
+      "runtime_class": "core_runtime"
+    },
+    {
+      "id": "skill:writer-review",
+      "type": "skill",
+      "name": "writer-review",
       "runtime_class": "core_runtime"
     },
     {
@@ -1014,6 +1020,11 @@
     },
     {
       "src": "capsule:writing",
+      "rel": "PROVIDES_SKILL",
+      "dst": "skill:writer-review"
+    },
+    {
+      "src": "capsule:writing",
       "rel": "USES_TOOL",
       "dst": "tool:extract_document"
     },
@@ -1569,6 +1580,11 @@
     },
     {
       "src": "route:writing-prose",
+      "rel": "REQUIRES_SKILL",
+      "dst": "skill:writer-review"
+    },
+    {
+      "src": "route:writing-prose",
       "rel": "ROUTES_TO",
       "dst": "bucket:writing"
     },
@@ -1704,7 +1720,8 @@
       "skill:scientific-writing",
       "skill:triz-problem-solving",
       "skill:verification-planning",
-      "skill:writer-core"
+      "skill:writer-core",
+      "skill:writer-review"
     ],
     "tools": [
       "tool:arxiv_search",
