@@ -11,6 +11,19 @@ Shape the article before researching it. A good article workflow starts by clari
 > - After the task is set and a template is chosen (dissertation/monograph/...), create the **DOM YAML** (`templates/writer-dom-dissertation.yaml`) — the structural file with chapters, sections, and known objects as claims, plus base graphs of known assertions.
 > - Each draft paragraph fills the DOM; new claims request sources (never restate without a citation). When a paragraph is complete, run iterative **stylistic synthesis** using reference works from academic sources (which are themselves split into claims and graphs).
 > - Traceability and uncertainty are primary — they live in the DOM, not in prose.
+>
+> **Deterministic tooling (model-agnostic, run these — do not improvise):**
+> ```
+> # 1. Draft loop: decompose a paragraph, match to DOM, flag new claims needing sources
+> python "${OPENCODE_HARNESS_ROOT}/scripts/writer/draft_loop.py" --text <draft.md> --dom <slug>-dom.yaml --paragraph-id PAR-01-01-01 [--ref refs/] [--apply]
+> #    --apply fills paragraph.text + appends new claims (needs_source) + draft_log (append-only)
+>
+> # 2. Traceability gate: PASS/FAIL before handoff (exit 0/1)
+> python "${OPENCODE_HARNESS_ROOT}/scripts/writer/citation_trace.py" --text <draft.md> --dom <slug>-dom.yaml [--strict]
+> #    FAIL -> fix DOM/text and re-run; never hand off a FAIL
+> ```
+> Both use the deterministic extractor core (`scripts/writer/extractor/`) for span grounding —
+> the LLM proposes claims, the code finds and accepts/rejects them by span.
 
 ## Phase 1: Discover Direction
 
