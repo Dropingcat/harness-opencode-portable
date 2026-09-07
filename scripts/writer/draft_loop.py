@@ -1,0 +1,295 @@
+#!/usr/bin/env python3
+"""draft_loop.py — детерминированный цикл черновиков для DOM YAML (WS-18).
+
+Поток (модель-агностично, код решает):
+  1. Декомпозиция абзаца черновика -> claims (ядро extractor, с координатами start/end).
+  2. Матчинг с DOM: известные claims связываются, НОВЫЕ помечаются needs_source.
+  3. Полнота параграфа: каждый фактический claim либо известен (source есть), либо
+     новый (нужен запрос источника), либо параграф неполон.
+  4. Стилистический синтез: граф абзаца (graph_builder) сравнивается с графами
+     референс-работ из академ-источников (каждая тоже разбита на claims+graphs)
+     -> рекомендации по структуре/стилю.
+
+Режимы:
+  анализ (default): читает DOM + черновик, пишет JSON-отчёт. НИЧЕГО не меняет.
+  --apply: обновляет DOM — заполняет paragraph.text, добавляет новые claims
+           (temp id + needs_source), пишет draft_log. БЕЗОПАСНО (append-only).
+
+Примеры:
+  python draft_loop.py --text draft_para.md --dom slug-dom.yaml
+  python draft_loop.py --text draft_para.md --dom slug-dom.yaml --apply
+  python draft_loop.py --text draft_para.md --dom slug-dom.yaml --ref refs/ --apply
+  python draft_loop.py --text - --dom slug-dom.yaml      # stdin
+"""
+from __future__ import annotations
+
+import argparse
+import json
+import re
+import sys
+from pathlib import Path
+
+try:
+    import yaml
+except ImportError:
+    yaml = None
+
+
+def _load_yaml(path: Path) -> dict:
+    if yaml is None:
+        raise RuntimeError("PyYAML required (pip install PyYAML)")
+    with open(path, "r", encoding="utf-8") as f:
+        data = yaml.safe_load(f) or {}
+    if not isinstance(data, dict):
+        raise ValueError(f"DOM {path} top-level must be mapping")
+    return data
+
+
+def _load_text(path_or_dash: str) -> str:
+    if path_or_dash == "-":
+        return sys.stdin.read()
+    with open(path_or_dash, "r", encoding="utf-8") as f:
+        return f.read()
+
+
+def _norm(s: str) -> str:
+    return re.sub(r"\s+", " ", s.lower()).strip()
+
+
+def _same_semantic(x: str, y: str) -> bool:
+    a = _norm(x).rstrip(".,;!?()")
+    b = _norm(y).rstrip(".,;!?()")
+    return a in b or b in a
+
+
+# ------------------------- 1. декомпозиция -------------------------
+
+def _decompose(text: str, para_id: str) -> tuple[list[dict], dict]:
+    """Декомпозиция абзаца через ядро extractor -> (claims, graphs)."""
+    try:
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        from extractor import extract_all, build_graphs  # type: ignore
+        res = extract_all(text, para_id)
+        claims = [{"text": c.get("text", ""), "start": c.get("start"),
+                   "end": c.get("end"), "kind": c.get("claim_kind", "OBSERVATIONAL")}
+                  for c in res.claims]
+        graphs = build_graphs(
+            {"claims": [{"text": c.get("text", ""), "start": c.get("start"),
+                         "end": c.get("end"), "role": "факт"} for c in res.claims],
+             "objects": res.objects},
+            {"connectors": [], "chreia": [], "figures": [], "morphology": {}},
+            para_id,
+        )
+        return claims, {"nodes": graphs["nodes"], "edges": graphs["edges"]}
+    except Exception:
+        # fallback: предложения без ядра
+        parts = [p.strip() for p in re.split(r"(?<=[.;!?…])\s+(?=[А-ЯЁA-Z0-9«\"(])", text) if p.strip()]
+        claims = [{"text": p, "start": None, "end": None, "kind": "OBSERVATIONAL"} for p in parts]
+        return claims, {"nodes": [], "edges": []}
+
+
+# ------------------------- 2. матчинг с DOM -------------------------
+
+def _match_to_dom(claims: list[dict], dom_claims: list[dict]) -> tuple[list[dict], list[dict]]:
+    """(known, new): известные claims связаны с id в DOM, новые — кандидаты."""
+    known, new = [], []
+    used = set()
+    for c in claims:
+        text = c.get("text", "")
+        best, best_score = None, 0.0
+        for dc in dom_claims:
+            dtext = dc.get("text", "")
+            if not dtext:
+                continue
+            # overlap-эвристика: нормализованное пересечение токенов
+            a = set(_norm(text).split())
+            b = set(_norm(dtext).split())
+            if not a or not b:
+                continue
+            inter = len(a & b)
+            score = inter / max(1, min(len(a), len(b)))
+            if score > best_score:
+                best_score, best = score, dc.get("id")
+        if best and best_score >= 0.55 and best not in used:
+            used.add(best)
+            known.append({**c, "dom_id": best, "match_score": round(best_score, 2)})
+        else:
+            new.append({**c, "needs_source": True})
+    return known, new
+
+
+# ------------------------- 3. полнота параграфа -------------------------
+
+def _paragraph_status(known: list[dict], new: list[dict]) -> dict:
+    all_claims = known + new
+    total = len(all_claims)
+    traced = sum(1 for c in known)
+    needs_source = sum(1 for c in new)
+    incomplete = [c for c in all_claims if not c.get("text")]
+    return {
+        "total_claims": total,
+        "traced_to_dom": traced,
+        "needs_source": needs_source,
+        "incomplete": len(incomplete),
+        "complete": total > 0 and needs_source == 0,
+    }
+
+
+# ------------------------- 4. стилистический синтез -------------------------
+
+def _load_refs(ref_dir: Path) -> list[dict]:
+    refs = []
+    if not ref_dir.is_dir():
+        return refs
+    for f in sorted(ref_dir.glob("*.json")):
+        try:
+            d = json.loads(f.read_text(encoding="utf-8"))
+            if isinstance(d, dict) and ("claims" in d or "graphs" in d):
+                refs.append({**d, "path": str(f)})
+        except Exception:
+            continue
+    return refs
+
+
+def _graph_signature(graphs: dict) -> tuple[str, ...]:
+    """Сигнатура графа: (graph, relation) пары, отсортированные."""
+    sig = set()
+    for e in graphs.get("edges", []):
+        sig.add(f"{e.get('graph', '?')}:{e.get('relation', '?')}")
+    return tuple(sorted(sig))
+
+
+def _suggest_refs(para_graph: dict, refs: list[dict], limit: int = 3) -> list[dict]:
+    """Подобрать референс-работы по сходству структуры графа (стиль/аргументация)."""
+    if not refs:
+        return []
+    psig = set(_graph_signature(para_graph))
+    if not psig:
+        return []
+    scored = []
+    for r in refs:
+        rsig = set(_graph_signature(r.get("graphs", {})))
+        if not rsig:
+            continue
+        inter = len(psig & rsig)
+        score = inter / max(1, len(rsig))
+        if score > 0:
+            scored.append({
+                "ref": r.get("id") or Path(r.get("path", "?")).stem,
+                "title": r.get("title", ""),
+                "graph_similarity": round(score, 2),
+                "shared_edges": sorted(psig & rsig)[:8],
+            })
+    scored.sort(key=lambda x: -x["graph_similarity"])
+    return scored[:limit]
+
+
+# ------------------------- apply: обновление DOM -------------------------
+
+def _apply(dom: dict, para_id: str, text: str, known: list[dict], new: list[dict],
+           dom_path: Path) -> dict:
+    """Заполнить paragraph.text, добавить новые claims (needs_source), draft_log. Append-only."""
+    para = _find_paragraph(dom, para_id)
+    if para is None:
+        raise ValueError(f"paragraph {para_id} not found in DOM structure")
+    para["text"] = text
+    para["claims"] = list({*para.get("claims", []), *[c["dom_id"] for c in known]})
+
+    existing_ids = {str(c.get("id")) for c in dom.get("claims", []) if isinstance(c, dict)}
+    added = 0
+    for c in new:
+        nid = f"C-NEW-{added + 1:03d}"
+        while nid in existing_ids:
+            added += 1
+            nid = f"C-NEW-{added + 1:03d}"
+        existing_ids.add(nid)
+        dom.setdefault("claims", []).append({
+            "id": nid,
+            "text": c.get("text", ""),
+            "kind": "factual",
+            "evidence": [],
+            "needs_source": True,
+            "verification": {"verdict": "OPEN", "confidence": 0.0},
+        })
+        added += 1
+        para.setdefault("claims", []).append(nid)
+
+    # draft_log (append)
+    log = dom.setdefault("draft_log", [])
+    log.append({
+        "id": f"DRAFT-{len(log) + 1:02d}",
+        "paragraph": para_id,
+        "claims_added": added,
+        "claims_linked": len(known),
+        "date": "",
+    })
+    if yaml is not None:
+        with open(dom_path, "w", encoding="utf-8") as f:
+            yaml.safe_dump(dom, f, allow_unicode=True, sort_keys=False, default_flow_style=False)
+    return {"claims_added": added, "claims_linked": len(known), "paragraph": para_id}
+
+
+def _find_paragraph(dom: dict, para_id: str) -> dict | None:
+    for ch in dom.get("structure", {}).get("chapters", []):
+        for s in ch.get("sections", []):
+            for p in s.get("paragraphs", []):
+                if p.get("id") == para_id:
+                    return p
+    return None
+
+
+# ------------------------- main -------------------------
+
+def main() -> int:
+    ap = argparse.ArgumentParser(prog="draft_loop", description="Цикл черновиков DOM (WS-18)")
+    ap.add_argument("--text", required=True, help="путь к черновику абзаца или '-' для stdin")
+    ap.add_argument("--dom", required=True, help="путь к DOM YAML")
+    ap.add_argument("--paragraph-id", required=True, help="id параграфа в DOM (PAR-...)")
+    ap.add_argument("--ref", default=None, help="каталог референс-работ (JSON claims+graphs)")
+    ap.add_argument("--apply", action="store_true", help="обновить DOM (заполнить paragraph, добавить новые claims)")
+    ap.add_argument("--json", action="store_true", help="вывод JSON")
+    args = ap.parse_args()
+
+    try:
+        text = _load_text(args.text)
+        dom = _load_yaml(Path(args.dom))
+    except Exception as e:
+        print(json.dumps({"ok": False, "error": str(e)}, ensure_ascii=False))
+        return 2
+
+    dom_claims = [c for c in dom.get("claims", []) if isinstance(c, dict)]
+    claims, graphs = _decompose(text, args.paragraph_id)
+    known, new = _match_to_dom(claims, dom_claims)
+    status = _paragraph_status(known, new)
+    refs = _load_refs(Path(args.ref)) if args.ref else []
+    suggestions = _suggest_refs(graphs, refs)
+
+    result = {
+        "ok": True,
+        "paragraph": args.paragraph_id,
+        "status": status,
+        "claims_known": known,
+        "claims_new": [{"text": c["text"][:120], "needs_source": True} for c in new],
+        "graph": {"nodes": len(graphs.get("nodes", [])), "edges": len(graphs.get("edges", []))},
+        "style_synthesis": {
+            "refs_available": len(refs),
+            "suggestions": suggestions,
+        },
+    }
+
+    if args.apply:
+        try:
+            applied = _apply(dom, args.paragraph_id, text, known, new, Path(args.dom))
+            result["applied"] = applied
+        except Exception as e:
+            result["ok"] = False
+            result["error"] = str(e)
+            print(json.dumps(result, ensure_ascii=False, indent=2))
+            return 2
+
+    print(json.dumps(result, ensure_ascii=False, indent=2))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
