@@ -173,7 +173,7 @@
 - [x] **Интеграция в процессы** — `writing-orchestration-process.md` (Goal+DOM-блок), `article-writing-process.md` (ссылка), `writing-orchestrator.md` (Phase 3.5: создать DOM после brief, до research). (2026-09-06)
 - [x] **Детерминированный цитатный аудит** `scripts/writer/citation_trace.py` — проверяет: каждое факт. утверждение → claim_id; каждый `[Sxx]` резолвится в sources; нет бесхозных/нерезолвленных ссылок; внутренние `[§N]` валидны; verdict=UNSUPPORTED не подан как факт. Использует дет-ядро декомпозиции (перенесено из writer-core legacy: `scripts/writer/extractor/`). (2026-09-06)
 - [x] **Ядро декомпозиции перенесено в HARNESS** — `scripts/writer/extractor/` (clean stdlib, без pymupdf/pymorphy2/LLM): span_locate даёт абсолютные start/end, graph_builder — rel_pos + abs_span. (2026-09-06)
-- [ ] **Цикл черновиков** — draft → DOM (новые claims запрашивают источники) → параграф заполнен → стилистический синтез по референс-работам (из академ-источников, разбитых на клаймы/графы).
+- [x] **Цикл черновиков** — `scripts/writer/draft_loop.py` (WS-18): декомпозиция абзаца (extractor) → матчинг с DOM (known/new, new → needs_source) → полнота параграфа → стилистический синтез по референс-работам (граф-сигнатуры). `--apply` заполняет paragraph.text, добавляет новые claims (temp id + needs_source), пишет draft_log. (2026-09-06)
 - [x] **Гейт в оркестраторе** — Phase 5.5 + article-writer шаг 8: `citation_trace.py` перед handoff; не PASS → не выдавать. (2026-09-06)
 - [x] **Модель-агностичность** — обвязка работает на любой модели (отладка на DeepSeek, прод на GPT 5/6): вся логика прослеживаемости в коде (citation_trace + extractor), не в промпте. Тесты: `tests/test_citation_trace.py` (8 кейсов PASS/FAIL). (2026-09-06)
 
