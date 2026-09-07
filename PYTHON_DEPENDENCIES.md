@@ -59,6 +59,16 @@
 3. **Лишние пакеты hermes-agent venv** — не трогаем: это окружение самого hermes-agent (плейер, не наш).
    Для нашей фабрики главное — HARNESS `.venv` (изолированный).
 
+## Вердикт по ChemOffice (2026-09-06)
+
+**ChemOffice/ChemScript НЕ используется — переносить в HARNESS нечего.**
+- `E:\барахло\Documents\Default Project` (researcher-core): 0 упоминаний ChemOffice/ChemScript во всём проекте; зависимости только `PyYAML`.
+- HARNESS: химия реализована RDKit-скиллами (`skills/server2-corpus/*`), не ChemOffice.
+- `ChemScript19forPy25/26/31/32.pyd` — бинарники для Python 2.5–3.2, несовместимы с Python 3.11.
+- `PYTHONPATH` (Machine scope) = `C:\Program Files\PerkinElmerInformatics\ChemOffice2019\ChemScript\Lib` — глобальный мусор, идёт первым в `sys.path`, риск теневых модулей.
+
+**Действие (одобрить):** удалить `PYTHONPATH` из Machine scope + рестарт. ChemOffice сам по себе остаётся установленным, трогаем только переменную среды.
+
 ## Как использовать
 ```powershell
 # создать/обновить venv (idempotent)

@@ -6,6 +6,12 @@ Use this process when turning a premise, topic, subject, or rough idea into a re
 
 Shape the article before researching it. A good article workflow starts by clarifying what the piece is trying to do: reader, stance, vibe, thesis, desired points, and boundaries. Research then serves that direction instead of creating a generic source summary.
 
+> **For scientific/engineering works** (dissertation, monograph, textbook, paper), the target is NOT an essay — it is a **traceable argumentation structure**:
+> - Read `${OPENCODE_HARNESS_ROOT}/shared/writer-traceability-contract.md` first.
+> - After the task is set and a template is chosen (dissertation/monograph/...), create the **DOM YAML** (`templates/writer-dom-dissertation.yaml`) — the structural file with chapters, sections, and known objects as claims, plus base graphs of known assertions.
+> - Each draft paragraph fills the DOM; new claims request sources (never restate without a citation). When a paragraph is complete, run iterative **stylistic synthesis** using reference works from academic sources (which are themselves split into claims and graphs).
+> - Traceability and uncertainty are primary — they live in the DOM, not in prose.
+
 ## Phase 1: Discover Direction
 
 Extract or propose:

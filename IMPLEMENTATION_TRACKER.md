@@ -35,6 +35,8 @@
 - [ ] Описать env contract для Windows/Linux.
 - [ ] Нормализовать `OPENCODE_HARNESS_ROOT`, `OPENCODE_RUNS_DIR`, `.kanban.db`, state path.
 - [ ] Заменить `/tmp/factory_state.json` и `/home/orangepi/...`.
+- [x] **`run_research.sh` помечен Linux-only (2026-09-06):** hardcoded `/home/orangepi/*` + bash-зависимости — на Windows НЕ запускать, не чинить, не переносить. Для Windows использовать python-контур (numeric_comparator.py, synthesizer.py, judge_brief.py) + пути из `path_resolution_map.json`. Файл оставлен как Linux-артефакт для Pi, `RESEARCH_RUNNER_SH` на Windows неактивен.
+- [x] **`mcp/doc_extract_server.py` деактивирован (2026-09-06):** `auto_start: false` в `mcp_lifecycle_config.json`. Причина: пакеты pypdfium2/docx/markdownify/openpyxl не установлены, ядро фабрики не зависит. Включить после `pip install -r requirements-mcp-doc.txt` в `.venv` + вернуть `auto_start: true`. Код и requirements оставлены.
 
 ### WS-04b Agent migration
  - [x] Перенести agents/shared в module-owned блок.
@@ -135,6 +137,45 @@
  - [ ] Привязать plugin/runtime к router configs как source of truth.
 
 Статус: router core base создан; graph-backed route plan и grouped claim/bucket plan проходят dry-run.
+
+### WS-16 Repatriation: утраченные артефакты с диска W (когда W будет доступен)
+
+Дыры, найденные ревью связности (2026-09-06). Диск W (`W:\server2`) сейчас **не подключён** — перенести, когда появится.
+
+- [ ] Перенести `agents/security-auditor.md` (ссылка из `shared/orchestration-patterns.md` → `agents/security-auditor.md`, файл отсутствует).
+- [ ] Перенести `agents/test-engineer.md` (ссылка из `shared/orchestration-patterns.md` → `agents/test-engineer.md`, файл отсутствует).
+- [ ] Сверить `shared/code-factory-process.md` с `W:\server2\shared\code-factory-process.md` (текущая ссылка на этот архивный путь; актуализировать API/пути под HARNESS).
+- [ ] Проверить прочие битые ссылки на `W:\server2\*` по всему HARNESS (rg-скан agents/shared/scripts) и восстановить отсутствующие.
+- [ ] Research-исполнительный слой (если найден на W/Z/claimeai-service): `numeric_comparator.py` требует `units.py`, `uncertainty.py`, `formulas.py`; конвейер `run_research.sh` требует `verdict_schemas.py`, `cascade.py`, `circularity.py`, `content_verdict.py`, `factcheck_guard.py`, `merge_numeric.py`, `evidence_contract.py`, `post_processor.py`, `justification_check.py`, `escalation.py` — ВСЕ отсутствуют в HARNESS.
+- [ ] После переноса: перезапустить audit-скан `.md`-ссылок (agents/shared) + `health_check.py` + smoke-запуск `resolve_route.py`/`project_context.py`.
+
+Блокировано: диск `W:` не подключён (проверка: `Test-Path W:\server2`).
+
+### WS-17 Researcher-core вертикаль (Default Project → HARNESS)
+
+Источник вектора: `E:\барахло\Documents\Default Project\16-development-vector.md` (аудит researcher-core, 360 тестов OK). Ядро R0–R3 зрелое, но не вызывается реальным исследованием.
+
+- [ ] **P1 Strangler**: реализовать `HermesLegacyAdapter` (CLI-контракт: input schema, output schema, timeout, audit) поверх `research-orchestrator` + legacy scripts.
+- [ ] **P1 HARNESS**: запитать HARNESS research-контур от `researcher_core` (units/uncertainty/formulas → numeric_comparator), закрыть WS-16 research-часть без диска W.
+- [ ] **P2 legalize**: признать rule-based extraction reference (ADR); не возвращать LLM-claim-parser как обязательный.
+- [ ] **P2 guard**: вынести `doc_guard` path из `guard.py` в config/env (порт); убрать Windows-hardcode.
+- [ ] **P3 ResearchQueue**: + Gap/Conflict-driven targeted operations (Resolve A17, не «ищи по теме»).
+- [ ] **P4 clean**: обновить `malina_research_service_fixture.yaml` до схемы 0.2 → artifact-check зелёный.
+- [ ] **P4 clean**: причесать `runtime.py` (дубли-адаптеры, `rebuild_state_from_events`).
+- [ ] **Критерий**: research-orchestrator доводит документ до WriterContext через runtime; artifact-check 0 high; HARNESS импортирует researcher_core.
+
+### WS-18 Writer: прослеживаемость и неопределённость как первичная структура (DOM YAML)
+
+Цель: научные/инженерные произведения (диссертация, монография, учебная литература) строятся на **прослеживаемости** (утверждение → цепочка цитат) и **неопределённости** (степень подтверждённости) — которые живут в DOM YAML, а не в прозе. Проза = выходной формат DOM.
+
+- [x] **Контракт** `shared/writer-traceability-contract.md` — иерархия истины, формат DOM, рабочий цикл, гейт «нельзя выдать», интеграция с research (verdict/confidence/numeric_comparison). (2026-09-06)
+- [x] **Шаблон** `templates/writer-dom-dissertation.yaml` — structure (главы/секции/параграфы), claims[], graphs[], uncertainty{}, sources[]. (2026-09-06)
+- [x] **Интеграция в процессы** — `writing-orchestration-process.md` (Goal+DOM-блок), `article-writing-process.md` (ссылка), `writing-orchestrator.md` (Phase 3.5: создать DOM после brief, до research). (2026-09-06)
+- [x] **Детерминированный цитатный аудит** `scripts/writer/citation_trace.py` — проверяет: каждое факт. утверждение → claim_id; каждый `[Sxx]` резолвится в sources; нет бесхозных/нерезолвленных ссылок; внутренние `[§N]` валидны; verdict=UNSUPPORTED не подан как факт. Использует дет-ядро декомпозиции (перенесено из writer-core legacy: `scripts/writer/extractor/`). (2026-09-06)
+- [x] **Ядро декомпозиции перенесено в HARNESS** — `scripts/writer/extractor/` (clean stdlib, без pymupdf/pymorphy2/LLM): span_locate даёт абсолютные start/end, graph_builder — rel_pos + abs_span. (2026-09-06)
+- [ ] **Цикл черновиков** — draft → DOM (новые claims запрашивают источники) → параграф заполнен → стилистический синтез по референс-работам (из академ-источников, разбитых на клаймы/графы).
+- [x] **Гейт в оркестраторе** — Phase 5.5 + article-writer шаг 8: `citation_trace.py` перед handoff; не PASS → не выдавать. (2026-09-06)
+- [x] **Модель-агностичность** — обвязка работает на любой модели (отладка на DeepSeek, прод на GPT 5/6): вся логика прослеживаемости в коде (citation_trace + extractor), не в промпте. Тесты: `tests/test_citation_trace.py` (8 кейсов PASS/FAIL). (2026-09-06)
 
 ## Current blockers before continuing major development
 

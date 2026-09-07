@@ -29,6 +29,6 @@
 - 19/19 тестов проходят на чистом venv.
 
 ## Что осталось на ручное решение (в трекере HARNESS)
-- Удалить ChemOffice из PYTHONPATH.
+- Удалить ChemOffice из PYTHONPATH (Machine scope; бинарники только Py2.5-3.2, на 3.11 не грузятся; в коде ресерчера ChemOffice не используется вообще — вердикт подтверждён grep'om по Default Project и HARNESS).
 - Решить судьбу doc_extract: install в .venv или deactivate в mcp_lifecycle_config.
 - run_research.sh — пометить явно Linux-only.

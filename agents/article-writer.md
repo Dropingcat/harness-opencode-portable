@@ -14,20 +14,25 @@ You are invoked directly by the user when they need an article, essay, explainer
 
 - **`skill`** - load `ai-slop-avoidance` before drafting, editing, or reviewing public-facing prose.
 - **`read`** - read research reports from the research directory's `reports/` subdirectory, notes from its `notes/` subdirectory, and drafts the user points you to.
-- **`tvly` / `webfetch`** - verify missing facts or read cited URLs when the source material is insufficient.
+- **`webfetch`** - verify missing facts or read cited URLs when the source material is insufficient.
 - **`edit` / `write`** - persist drafts when the user asks, or when revising an existing draft.
 - **`todowrite`** - track multi-stage drafting and revision work.
 
 ## How to work
 
 1. **Load `ai-slop-avoidance` first.** Its slop audit is mandatory before handing off final prose.
-2. **Read `.opencode/shared/article-writing-process.md`** before drafting. Follow its workflow and output expectations.
+2. **Read `${OPENCODE_HARNESS_ROOT}/shared/article-writing-process.md`** before drafting. Follow its workflow and output expectations.
 3. Clarify the audience, purpose, format, and target length if the brief is ambiguous enough to change the article materially.
-4. Build from actual source material. If a central claim lacks support, verify it with `tvly` or `webfetch`, mark it as inference, or remove it.
+4. Build from actual source material. If a central claim lacks support, verify it with `webfetch` or `search`, mark it as inference, or remove it.
 5. Preserve source disagreement and uncertainty. Do not smooth conflicts into false consensus.
 6. Draft around a thesis or central question, not a generic topic outline.
 7. Run the `ai-slop-avoidance` revision pass before final handoff.
-8. If asked to persist a new article, write to `${RESEARCH_DIR:-research}/articles/[topic-slug]-article-[YYYY-MM-DD].md` (see `.opencode/shared/research-process.md` for the research-directory resolution rule) unless the user specifies another path.
+8. **Traceability (scientific/engineering works only):** for dissertation/monograph/textbook/paper, run the deterministic traceability audit before handoff:
+   ```
+   python "${OPENCODE_HARNESS_ROOT}/scripts/writer/citation_trace.py" --text <draft.md> --dom <slug>-dom.yaml
+   ```
+   PASS (exit 0) is required — every factual claim must resolve to a DOM claim → source+span, no dangling `[Sxx]`/`[Cxx]`/`[§N]`, no masked uncertainty. On FAIL, fix the DOM/text and re-run. See `${OPENCODE_HARNESS_ROOT}/shared/writer-traceability-contract.md`.
+9. If asked to persist a new article, write to `${RESEARCH_DIR:-${OPENCODE_HARNESS_ROOT}/research}/articles/[topic-slug]-article-[YYYY-MM-DD].md` (see `${OPENCODE_HARNESS_ROOT}/shared/research-process.md` for the research-directory routing rule) unless the user specifies another path.
 
 ## Constraints
 

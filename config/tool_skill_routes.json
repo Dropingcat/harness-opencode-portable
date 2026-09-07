@@ -1,7 +1,7 @@
 {
   "version": 2,
   "generated": true,
-  "generated_from_policy_hash": "79d67f10cdd1317ee61dd76dca13eb3bd0fe36e7a24b600b8e5bb78be2b430fe",
+  "generated_from_policy_hash": "57aa573227fcaf17c15f7e43f8638761e543b6d5fe0190e990c31451c4e22a70",
   "invariant": "GENERATED COMPATIBILITY VIEW. Edit routes_authority.json / tool_contracts_authority.json instead.",
   "context_routes": [
     {
@@ -150,7 +150,8 @@
       "when_regex": "(rewrite|writing|prose|article|report|перепиши|написать текст|стиль|редактир)",
       "skills": [
         "deslop-ai-lint-skill",
-        "export"
+        "export",
+        "writer-core"
       ],
       "preferred_tools": [
         "extract_document"

@@ -1,6 +1,11 @@
 #!/bin/bash
 # run_research.sh — детерминированный BRICKS-runner научной верификации.
 #
+# ⚠️ LINUX-ONLY (Pi / WSL). НЕ использовать на Windows напрямую.
+#    Hardcoded /home/orangepi/*, bash-зависимости, MODEL=ollama-cloud/*.
+#    На Windows: python-контур (numeric_comparator.py, synthesizer.py, judge_brief.py)
+#    + пути из config/path_resolution_map.json. См. IMPLEMENTATION_TRACKER.md WS-04.
+#
 # Принцип №0: LLM производит свидетельства. КОД принимает решения.
 # Этот скрипт — КОД. Он ведёт цикл, вызывает детерминированные скрипты в
 # строгом порядке, валидирует артефакты, трекает бюджет/хопы, парсит ответы

@@ -2,6 +2,12 @@
 
 Use this process for articles, essays, explainers, public-facing reports, and substantive prose revisions.
 
+> **For scientific and engineering works** (dissertation, monograph, textbook, paper):
+> the primary contract is `${OPENCODE_HARNESS_ROOT}/shared/writer-traceability-contract.md`.
+> Traceability and uncertainty live in the DOM YAML (see `templates/writer-dom-dissertation.yaml`),
+> NOT in the prose. This process still applies, but the DOM is the source of truth:
+> every factual claim in the text must resolve to a claim_id → source + span + verdict.
+
 ## Inputs
 
 Start by identifying what the user provided:
@@ -22,7 +28,7 @@ If audience, purpose, format, target length, or publication context would materi
 4. Identify the strongest evidence and any real disagreement or uncertainty.
 5. Choose a structure that follows the argument, not a stock template.
 6. Draft with citations or source references attached to the claims they support.
-7. Verify unsupported central claims with `tvly` or `webfetch`, or remove them.
+7. Verify unsupported central claims with `webfetch` or `search`, or remove them.
 8. Run the `ai-slop-avoidance` slop audit before handoff.
 
 ## Draft Standards

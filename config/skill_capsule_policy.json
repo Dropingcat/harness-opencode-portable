@@ -100,7 +100,8 @@
         "export",
         "scientific-writing",
         "ml-paper-writing",
-        "deslop-ai-lint-skill"
+        "deslop-ai-lint-skill",
+        "writer-core"
       ],
       "supported_routes": [
         "document-extraction",

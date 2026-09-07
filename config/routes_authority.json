@@ -279,7 +279,8 @@
       ],
       "skills": [
         "deslop-ai-lint-skill",
-        "export"
+        "export",
+        "writer-core"
       ],
       "preferred_tools": [
         "extract_document"

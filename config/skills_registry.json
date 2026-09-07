@@ -24,7 +24,8 @@
     "physics-verification",
     "markitdown",
     "autoresearch",
-    "triz-problem-solving"
+    "triz-problem-solving",
+    "writer-core"
   ],
   "optional_domain_skills": [
     "astropy",
