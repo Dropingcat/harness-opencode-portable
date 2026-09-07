@@ -29,6 +29,10 @@ if (Test-Path $venvPython) {
     Write-Host "WARN: venv not found at $venvPython; falling back to PATH 'python'"
 }
 
+# Researcher Core (WS-19): детерминированное ядро верификации (numeric/guard/formula)
+[Environment]::SetEnvironmentVariable("RESEARCH_CORE_ROOT", (Join-Path $HARNESS "scripts\researcher"), "User")
+[Environment]::SetEnvironmentVariable("RESEARCH_VERIFY_CLAIMS", (Join-Path $HARNESS "scripts\researcher\verify_claims.py"), "User")
+
 # P2 semantic guard key (хранится вне HARNESS, в переменной окружения, не в репо).
 # Ты сказал, что есть отдельный ключ для guard. Задай его здесь ОДИН раз:
 # $POLZA_GUARD_KEY = "your-separate-guard-key"

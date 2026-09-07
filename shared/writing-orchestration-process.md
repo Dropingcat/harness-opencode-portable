@@ -14,6 +14,10 @@ Shape the article before researching it. A good article workflow starts by clari
 >
 > **Deterministic tooling (model-agnostic, run these — do not improvise):**
 > ```
+> # 0. Verify claims through researcher_core (numeric/guard/formula) BEFORE drafting
+> python "${OPENCODE_HARNESS_ROOT}/scripts/researcher/verify_claims.py" --dom <slug>-dom.yaml [--apply]
+> #    --apply writes verification (verdict/confidence/numeric_comparison) back into DOM claims
+>
 > # 1. Draft loop: decompose a paragraph, match to DOM, flag new claims needing sources
 > python "${OPENCODE_HARNESS_ROOT}/scripts/writer/draft_loop.py" --text <draft.md> --dom <slug>-dom.yaml --paragraph-id PAR-01-01-01 [--ref refs/] [--apply]
 > #    --apply fills paragraph.text + appends new claims (needs_source) + draft_log (append-only)
@@ -24,6 +28,8 @@ Shape the article before researching it. A good article workflow starts by clari
 > ```
 > Both use the deterministic extractor core (`scripts/writer/extractor/`) for span grounding —
 > the LLM proposes claims, the code finds and accepts/rejects them by span.
+> Numeric/guard/formula verification is provided by `scripts/researcher/researcher_core/`
+> (verdict + confidence + numeric_comparison are written back to the DOM before drafting).
 
 ## Phase 1: Discover Direction
 

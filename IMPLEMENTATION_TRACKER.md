@@ -177,6 +177,20 @@
 - [x] **Гейт в оркестраторе** — Phase 5.5 + article-writer шаг 8: `citation_trace.py` перед handoff; не PASS → не выдавать. (2026-09-06)
 - [x] **Модель-агностичность** — обвязка работает на любой модели (отладка на DeepSeek, прод на GPT 5/6): вся логика прослеживаемости в коде (citation_trace + extractor), не в промпте. Тесты: `tests/test_citation_trace.py` (8 кейсов PASS/FAIL). (2026-09-06)
 
+### WS-19 Researcher Core в HARNESS + мост писатель↔ресерчер
+
+Цель: заставить работать в паре писателя и ресерчера. Детерминированное ядро researcher_core переносится в HARNESS и питает верификацию claims писателя.
+
+- [x] **Перенос пакета** `scripts/researcher/researcher_core/` (36 модулей, stdlib+PyYAML) из Default Project. (2026-09-06)
+- [x] **Перенос policy** `config/research_policy.yaml` + **тесты** `tests/researcher/` (37 файлов). (2026-09-06)
+- [x] **360/360 тестов OK** на изолированном .venv в HARNESS. (2026-09-06)
+- [x] **Мосты research-скриптов**: `scripts/research/{units,uncertainty,formulas}.py` → researcher_core (чинит падение numeric_comparator.py на `ModuleNotFoundError`). Проверено: `numeric_comparator` импортируется и даёт MATCH на реальных данных. (2026-09-06)
+- [x] **Мост писатель↔ресерчер** `scripts/researcher/verify_claims.py`: берёт writer DOM YAML (claims+evidence), прогоняет numeric/guard/formula/qualifier через researcher_core, возвращает verification (verdict/confidence/numeric_comparison) совместимо с DOM. `--apply` пишет verification в DOM. (2026-09-06)
+- [x] **Нормализация единиц** (кириллица→латиница: МПа→mpa и т.д.) в verify_claims. (2026-09-06)
+- [x] **Тесты** `tests/test_verify_claims.py` (6 кейсов: MATCH/CONTRADICTED/formula conflict/guard/no-source/apply). (2026-09-06)
+- [ ] **Интеграция в процессы**: `writing-orchestration-process.md` + `article-writer.md` — шаг «verify claims через researcher_core» в цикле черновиков (после draft_loop, перед citation_trace).
+- [ ] **Env**: `RESEARCH_CORE_ROOT`, `RESEARCH_VERIFY_CLAIMS` в setup_env.ps1/sh + validate_env.
+
 ## Current blockers before continuing major development
 
 - [x] WS-01 closed at module level: runtime core imported into `shared/` and `scripts/code-factory/`.
