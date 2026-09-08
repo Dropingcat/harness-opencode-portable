@@ -22,6 +22,12 @@
 >>> **Единственный модуль с внешними пакетами — `mcp/doc_extract_server.py`** (PDF/DOCX/HTML/XLSX → markdown).
     Импорты ленивые (внутри функций), поэтому отсутствие пакетов не ломает старт фабрики.
 
+> **Важно (2026-09-08):** OCR-капсула capability-оверлея (`scripts/capsules/`, `document.ocr`)
+> требует **внешний бинарник Tesseract** (`C:\Program Files\Tesseract-OCR`, v5.4.0, установлен),
+> а НЕ Python-пакет. В `requirements-capability-bundle.txt` он намеренно отсутствует; проба —
+> `shutil.which('tesseract')` (executable probe). Установка/обновление — системный инсталлер
+> UB-Mannheim, не pip. Детали: `DEPENDENCY_MATRIX.md`.
+
 ### 2. Состояние venv (системный, hermes-agent)
 - `sys.executable` = `...\hermes-agent\venv\Scripts\python.exe` (Python 3.11.15)
 - В site-packages — большой мусор от hermes-agent и легаси: aiohttp, fastapi, google-api, edge-tts, openai, etc.

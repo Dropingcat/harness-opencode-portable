@@ -14,3 +14,21 @@ __pycache__/
 *.db-wal
 .tmp_*.json
 служебные/рабочие артефакты не коммитим
+# archives / packed harness snapshots
+*.zip
+*.7z
+*.tar.gz
+*.gz
+
+# stray unpacked copies / duplicate trees
+/\320\235\320\276\320\262\320\260\321\217 \320\277\320\260\320\277\320\272\320\260/
+/resercher-core/
+/writer-core/
+
+# generated runtime artifacts
+/run/
+/worker_*.json
+/capability-install-check.json
+
+/Новая папка/
+/Новая сжатая ZIP-папка.zip
