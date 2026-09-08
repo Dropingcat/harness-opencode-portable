@@ -327,6 +327,89 @@ $PY -m writer_core.cli review --draft draft.md --contract writing_contract.json 
 7. Ревью FAIL после цикла → `escalation: true` — требуется approval человека, никогда
    не «протаскивается» мимо человека。
 
+## Канон данных и знаний (canon_data / canon_knowledge)
+
+**Разделение канона** (модуль `writer_core.canon`): article-writer получает НЕ кашу
+«канон», а два явных контракта:
+
+```text
+canon_data (данные — ЧТО НЕЛЬЗЯ МЕНЯТЬ)
+  ├── data_entries[]: числа+единицы по claims (16 ч, 540°C, 6 мкм...)
+  ├── numeric_compare[]: вердикты researcher (MATCH/MISMATCH/...)
+  ├── formulas[]: formula_name + constant_check
+  └── sources[]: реестр источников (DOI)
+canon_knowledge (знания — ЧТО МОЖНО ПИСАТЬ И КАК)
+  ├── claims[]: id, text, kind, verdict, confidence, level
+  ├── readiness: READY (писать твёрдо) | PROVISIONAL (только tentative_only)
+  ├── hedges{claim_id}: разрешённая хедж-фраза для PROVISIONAL
+  └── research_requests[]: что запросить у researcher для понижения uncertainty
+```
+
+Правила:
+1. Числа/единицы/формулы из `canon_data` — НЕ выдумывать, НЕ менять; проза не
+   противоречит `numeric_compare`.
+2. Утверждения — ТОЛЬКО из `canon_knowledge.claims`; PROVISIONAL — с хеджом из
+   `hedges[]` в ТОМ ЖЕ предложении (иначе гейт `masked_uncertainty`).
+3. Сводка для брифа: `writer_core.canon_brief(dom)` -> {canon_data, canon_knowledge}.
+
+## Контроль научного регистра (register_control)
+
+Модуль `writer_core.register_control` — 4 оси контроля прозы (детерминированно):
+- **R1 РЕФЕРЕНС**: числа без [C-xxx]/[S-xxx] в предложении -> NUMERIC_ORPHAN (BLOCKER)
+- **R2 РЕГИСТР**: 89-dim сходство секции с эталоном (канон v20) -> дрейф стиля
+- **R3 ЛЕКСИКА**: kantseliarit_ratio vs норма 0.10, разговорные маркеры
+- **R4 ТРОПЫ**: публицистические фигуры -> заменить на сухую научную прозу
+
+```bash
+$PY -m writer_core.cli register --draft draft.md --dom dom.yaml --out register_report.json
+```
+
+## Канбан-отчёт (ритуал закрытия, универсальный с секциями)
+
+| Контур | group_name | agent_id (СВОЙ, не единый) |
+|---|---|---|
+| код | `code-factory` | code-orchestrator, coder-worker, ... |
+| писатель | `writing` | writing-orchestrator, article-writer |
+| ресёрчер | `research` | research-orchestrator, claim-parser, fact-checker, ... |
+
+Отчёт — **канонический хелпер** (резолвит секцию по agent_id, регистрирует агента):
+
+```bash
+python E:\opencode_harness\scripts\orchestration\kanban_report.py report writing-orchestrator <task_id> <status> [phase] [progress] [message]
+python E:\opencode_harness\scripts\orchestration\kanban_report.py board [group]    # доска по секциям
+python E:\opencode_harness\scripts\orchestration\kanban_report.py                  # сводка
+```
+
+> ВАЖНО: старая сигнатура `gk.report(agent, task_id, task_name, status, phase, progress, msg)`
+> НЕВЕРНА (позиционные аргументы не совпадают с реальной
+> `report(agent_id, task_name, status, progress, message, task_id, phase)`) — не используй.
+> Остаток нити: `project_context.py` → поле `kanban.rows[].group_name`.
+
+## Поиск и извлечение — маркеры Windows (Search & Extraction Markers)
+
+Проблемы, найденные в живых сессиях писателя на Windows (PowerShell 5.1), и их решения.
+Маркеры дублируются на русском и английском — пиши в обоих вариантах, когда ссылаешься на них.
+
+| Проблема (RU / EN) | Маркер (RU / EN) | Решение |
+|---|---|---|
+| `.doc` не читается python-docx / `.doc` unsupported by python-docx | `.doc` через Word COM / use Word COM `Content.Text` | `$PY -m writer_core.cli extract --doc <file.doc>` (модуль `doc_com.py`, win32com). НЕ `SaveAs` — «Ошибка метода»/"method error" (нестабилен в PS 5.1 COM); бери `$doc.Content.Text` напрямую. |
+| `rg` нет / `rg` is not installed | искать без rg / search without rg | `Select-String -LiteralPath "<файл>" -Pattern "<regex>"` (принимает `-LiteralPath`, не тянет temp). |
+| grep тянет temp-файлы / grep picks up temp files | ограничь поиск целевым каталогом / limit search to target dir | Передавай `path` строго целевой (литобзор/автореферат/`chunks/`), НЕ `C:\Temp\opencode` целиком (там 300+ наших temp-файлов). |
+| системный python без зависимостей / system python missing deps | venv обязателен / use venv | Всегда `$PY = E:\Documents\Документы\writer-core\.venv\Scripts\python.exe` (+ `-X utf8`). Системный python 3.11 падает на `project_context.py`. |
+| кириллица в консоли (mojibake) / Cyrillic mojibake in console | `-X utf8` + `PYTHONIOENCODING` | Запускай `python -X utf8`; `$env:PYTHONIOENCODING="utf-8"` для вывода. ps1-файлы — ASCII-only или с BOM (PS 5.1 читает в cp866). |
+| большие файлы рвут Read / large files break Read | читай чанками / read in chunks | `Read offset/limit` по кускам (lit_review 402K → ch1..ch4 в `C:\Temp\opencode\chunks\`). |
+| Markitdown нет / markitdown missing | используй doc_com / use doc_com | `.doc`/`.docx` — через наш `doc_com.py` (Word COM), не markitdown. |
+| grep-маркеры в .md / grep markers in .md | ищи в целевых файлах / search target files only | Греп по `*.md` тянет `cf_process.txt`/`corpus.txt` — сужай `include` до `*.md` в целевой папке. |
+
+Быстрая проверка окружения (environment probe):
+
+```powershell
+$PY -c "import win32com, razdel, pymorphy3, yaml, docx; print('ENV_OK')"
+```
+
+Если `win32com` нет — `pip install pywin32`; если `razdel`/`pymorphy3` нет — см.
+`writer_core\requirements-writer-core.txt`。
+
 
 
 ## H-память（session_memory）

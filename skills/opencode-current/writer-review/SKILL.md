@@ -167,3 +167,11 @@ draft → L1/L2/L3 (параллельно, threads) → вердикт
 - `writer-core`（детерминированный слой: plan/draftcheck/dom/graphs/vector）。
 - Контракт прослеживаемости: `E:\opencode_harness\shared\writer-traceability-contract.md`
 - Цитатный гейт: `E:\opencode_harness\scripts\writer\citation_trace.py`
+
+## Маркеры Windows (Windows Search & Extraction Markers)
+
+Те же проблемы, что в `writer-core`: `.doc` не читается python-docx → используй
+`writer_core` `doc_com` (`$doc.Content.Text`, НЕ `SaveAs` — «Ошибка метода»/method error);
+`rg` нет → `Select-String -LiteralPath`; grep тянет temp (`C:\Temp\opencode\` 300+ файлов) →
+сужай `path` до целевого; python → venv `E:\Documents\Документы\writer-core\.venv\Scripts\python.exe -X utf8`;
+большие файлы → `Read` чанками. Маркеры пиши на русском и английском.

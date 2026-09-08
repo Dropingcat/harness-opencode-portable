@@ -45,8 +45,14 @@ Start your final report with:
 At the end, run the closing ritual: kanban report + close WS/TD if the article fixed any.
 
 ```
-python -c "import sys; sys.path.insert(0, '${OPENCODE_HARNESS_ROOT}/references/global-kanban'); from global_kanban import GlobalKanban; gk=GlobalKanban(db_path='${OPENCODE_HARNESS_ROOT}/.kanban.db'); gk.report('writing-orchestrator','<task_id>','<title>','<status>','<phase>','<progress>','<итог>')"
+python "E:\opencode_harness\scripts\orchestration\kanban_report.py" report writing-orchestrator "<task_id>" "<status>" "<phase>" "<progress>" "<итог>"
 ```
+
+> Канонический отчёт (универсальный, с реестром секций): agent_id — СВОЙ
+> (writing-orchestrator → секция writing; article-writer → writing; НЕ code-factory).
+> Сигнатура хелпера: `report <agent_id> <task_id> <status> [phase] [progress] [message]`.
+> Доска по секциям: `kanban_report.py board [group]`.
+> Сверка «остатка нити»: `project_context.py` (поле `kanban.rows[].group_name`).
 
 ### Phase 1: Frame The Writing Problem
 

@@ -68,6 +68,9 @@ _HEDGE_MARKERS = (
     "по предварительн", "можно ожидать", "гипотез", "с осторожност",
     "not confirmed", "likely", "possibly", "may indicate", "according to assumption",
     "по нашему предположению", "можно предположить",
+    # русские клише атрибуции (дефект 2): маркируют рискованные клаймы как мягкие
+    "по данным литературы", "по литературным данным", "по данным расчёта",
+    "по оценкам авторов", "по оценкам", "согласно литературе", "по данным",
 )
 
 _NUMERIC_FACT_RE = re.compile(
@@ -90,42 +93,64 @@ def _is_factual(sentence: str) -> bool:
     return bool(_NUMERIC_FACT_RE.search(sentence) or _FACT_PREDICATE_RE.search(sentence))
 
 
+# Робастная сегментация предложений (дефект 1).
+# Инвариант: предложение заканчивается ТОЛЬКО на терминальных . ! ? … (с учётом
+# закрывающих кавычек/скобок и пробела перед следующей заглавной/цифрой). НЕ режем
+# по внутрипредложенческим разделителям ; : — и НЕ режем внутри сокращений с точками
+# (т.е., г., С.И., мас.%, ат.%, десятичные 0.5). Ссылка [C-xxx] и факт-предикат/число
+# должны оставаться в одном сегменте.
+_TERMINAL = ".!?…"
+
+# Точки, которые НЕ являются концом предложения: внутри сокращений/инициалов/чисел.
+# Маскируем их одним символом \x00 (1:1 по длине — координаты не сдвигаются).
+_ABBREV_PROTECT_RE = re.compile(
+    r"(?:"
+    r"[а-яё]{1,4}\.[а-яё]{1,4}\.|"     # т.е. т.д. т.п. т.к. напр. (обе точки)
+    r"[а-яё]{1,5}\.%|"                  # мас.% ат.% (точка перед %)
+    r"[А-ЯЁ][а-яё]?(?:\-[А-ЯЁ][а-яё]?)*\.|"  # инициалы С. Ю.М. Э.Дж. Дж.-С. Н.Н.
+    r"\d+\.\d+|"                        # десятичные 0.05 3.2
+    r"\d{1,4}\s*гг?\.|"                 # 2020 г. 2020 гг.
+    r"\b(?:см|рис|табл|с)\.|"           # см. рис. табл. с. (стр.)
+    r")"
+)
+
+
+def _mask_dots(m: "re.Match[str]") -> str:
+    return m.group(0).replace(".", "\x00")
+
+
+# Граница предложений: терминальная пунктуация + закрывающие + пробел + старт нового.
+# Старт — заглавная/цифра/кавычка/скобка/знак markdown-разметки (**/##/`).
+_SENT_END_RE = re.compile(
+    r"[.!?…]+[»\"'”\)\]]*\s+(?=[А-ЯЁA-Z0-9«\"'(#*_`])"
+)
+
+
 def _sentence_at(text: str, pos: int) -> str:
-    """Предложение, содержащее позицию (берём из context_analyzer ядра, иначе примитивно)."""
-    try:
-        sys.path.insert(0, str(Path(__file__).resolve().parent))
-        from extractor import get_context  # type: ignore
-        ctx = get_context(text, max(0, pos), max(0, pos + 1))
-        if ctx.sentence:
-            return ctx.sentence
-    except Exception:
-        pass
-    s, e = pos, pos
-    while s > 0 and text[s - 1] not in "\n.;!":
+    """Предложение, содержащее позицию (робастно, stdlib)."""
+    t = _ABBREV_PROTECT_RE.sub(_mask_dots, text)
+    s, e = max(0, pos), max(0, pos)
+    n = len(t)
+    while s > 0 and t[s - 1] not in _TERMINAL:
         s -= 1
-    while e < len(text) and text[e] not in "\n.;!":
+    while e < n and t[e] not in _TERMINAL:
         e += 1
     return text[s:e].strip()
 
 
 def _detect_sentences(text: str) -> list[dict]:
-    """Предложения с абсолютными координатами (дет-ядро, fallback примитив)."""
-    try:
-        sys.path.insert(0, str(Path(__file__).resolve().parent))
-        from extractor import extract_all  # type: ignore
-        res = extract_all(text, "PAR-TRACE")
-        return [{"text": c.get("text", ""), "start": c.get("start"),
-                 "end": c.get("end")} for c in res.claims]
-    except Exception:
-        pass
-    parts = [p.strip() for p in re.split(r"(?<=[.;!?…])\s+(?=[А-ЯЁA-Z0-9«\"(])", text) if p.strip()]
-    out, off = [], 0
-    for s in parts:
-        idx = text.find(s, off)
-        if idx < 0:
-            idx = off
-        out.append({"text": s, "start": idx, "end": idx + len(s)})
-        off = idx + len(s)
+    """Предложения с абсолютными координатами (робастно, stdlib)."""
+    t = _ABBREV_PROTECT_RE.sub(_mask_dots, text)
+    out, prev = [], 0
+    for m in _SENT_END_RE.finditer(t):
+        end = m.end()
+        raw = text[prev:end].strip()
+        if raw:
+            out.append({"text": raw, "start": prev, "end": end})
+        prev = end
+    tail = text[prev:].strip()
+    if tail:
+        out.append({"text": tail, "start": prev, "end": len(text)})
     return out
 
 

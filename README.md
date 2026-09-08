@@ -56,6 +56,7 @@ Pass 1 уже содержит копии текущих агентов и skill
 - `RUNTIME_RUNBOOK.md` — последовательность запуска модуля и known gaps.
 - `scripts/setup_env.ps1` / `scripts/setup_env.sh` — bootstrap runtime env.
 - `RUNTIME_HEALTH_AUDIT.md` — фактическая проверка роутеров, MCP и скилов (не-researcher контуры).
+- `RESEARCH_TOOLING_CAPSULE_IMPLEMENTATION_PLAN.md` — сверенный с текущими модулями план SearXNG, academic source resolution, PDF/Office/TIFF inspection, local corpus, evidence и checkpoint capsules.
 - `SKILL_ADDING_CHEATSHEET.md` — официальный способ добавить skill (скрипт `scripts/add_skill.py`).
 - `AGENT_SKILLS_RECONCILIATION.md` — сверка agent-скилов с корпусом (gap: ai-slop-avoidance → заменён `deslop-ai-lint-skill`).
 - `SCRIPT_SCATTER_MAP.md` — карта разброса скриптов/модулей по машине и принцип единого source of truth.

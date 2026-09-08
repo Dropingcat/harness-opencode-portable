@@ -53,11 +53,17 @@ python "${OPENCODE_HARNESS_ROOT}/scripts/orchestration/character_sheet.py" --min
 
 ## 4. Ритуал закрытия (ОБЯЗАТЕЛЬНО, перед итоговым отчётом)
 
-1. **Канбан**: отчитайся в глобальный трекер:
+1. **Канбан**: отчитайся в глобальный трекер — **канонический хелпер с реестром секций**:
    ```bash
-   python -c "import sys; sys.path.insert(0, '${OPENCODE_HARNESS_ROOT}/references/global-kanban'); from global_kanban import GlobalKanban; gk=GlobalKanban(db_path='${OPENCODE_HARNESS_ROOT}/.kanban.db'); gk.report('code-factory','<task_id>','<task_name>','<status>','<phase>','<progress>','<итог>')"
+   python "${OPENCODE_HARNESS_ROOT}/scripts/orchestration/kanban_report.py" report <agent_id> <task_id> <status> [phase] [progress] [message]
    ```
-   > Поле `agent_id` — подставь свой (или держи единый `code-factory`, если работаешь в фабричном контуре).
+   > **agent_id — СВОЙ (по контуру), НЕ единый code-factory.** Реестр секций:
+   > `code-factory` (код), `writing` (writing-orchestrator, article-writer),
+   > `research` (research-orchestrator, claim-parser, fact-checker...), `infra`.
+   > Хелпер сам регистрирует агента с правильной `group_name` (секцией).
+   > Доска по секциям: `kanban_report.py board [group]`; сводка: `kanban_report.py`.
+   > Старая сигнатура `gk.report(agent, task_id, task_name, status, phase, ...)` НЕВЕРНА
+   > (позиционные аргументы не совпадают) — не используй её.
 2. **Трекер/долги**: если закрыл пункт — отметь:
    - `IMPLEMENTATION_TRACKER.md`: `- [ ]` → `- [x]`;
    - `config/tech_debt.json`: `"status":"open"` → `"closed"` (с датой/нотой).

@@ -17,7 +17,9 @@ def board(kb: Path, limit: int = 8):
         conn = sqlite3.connect(str(kb))
         conn.row_factory = sqlite3.Row
         rows = conn.execute(
-            "SELECT * FROM statuses ORDER BY created_at DESC LIMIT ?", (min(limit, 50),)
+            "SELECT s.*, a.group_name FROM statuses s "
+            "JOIN agents a ON s.agent_id = a.id "
+            "ORDER BY s.created_at DESC LIMIT ?", (min(limit, 50),)
         ).fetchall()
         conn.close()
         out = []
@@ -28,6 +30,7 @@ def board(kb: Path, limit: int = 8):
                 "status": d.get("status"), "phase": d.get("phase"),
                 "progress": d.get("progress"), "message": (d.get("message") or "")[:120],
                 "created_at": d.get("created_at"),
+                "group_name": d.get("group_name"),  # секция канбана (code-factory/writing/research)
             })
         return {"rows": out}
     except Exception as e:

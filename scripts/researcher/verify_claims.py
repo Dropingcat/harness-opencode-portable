@@ -14,6 +14,18 @@ formula, guard), совместимый с полем DOM claims[].verification.
 Режим --apply: пишет verification обратно в DOM YAML (append-only: не трогает
 не-verification поля). По умолчанию — read-only (только отчёт).
 
+Append-only правила для verification (курация защищена):
+  1. verdict не даунгрейдится: если у claim уже есть verdict, отличный от OPEN
+     (SUPPORTED/AMBIGUOUS/CONTRADICTED/UNSUPPORTED) — вычисленный НЕ пишется наверх;
+     вердикт пересчитывается только если его нет или он OPEN.
+     Вместе с вердиктом сохраняется и его confidence (не рассогласовывать пару).
+  2. numeric_comparison не стирается: при уже существующем поле оно сохраняется
+     как есть; заполняется только если поля нет.
+  3. guard/formula/qualifier обновляются всегда (дешёвые, не конфликтуют с
+     курацией), если вычислены.
+Fail-closed: битый DOM/claim → JSON {"ok": false, "error": ...}, exit 2;
+исключения наружу не пробрасываются.
+
 Примеры:
   python verify_claims.py --dom <slug>-dom.yaml
   python verify_claims.py --dom <slug>-dom.yaml --apply
@@ -121,6 +133,37 @@ def _verdict_label(status: str) -> str:
     return m.get(status, "AMBIGUOUS")
 
 
+def _merge_verification(existing: dict | None, computed: dict) -> dict:
+    """Append-only merge свежевычисленной verification с уже существующей.
+
+    Курация защищена от перезаписи:
+      1. verdict: вычисленный пишется ТОЛЬКО если текущего нет или он 'OPEN'.
+         Пара (verdict, confidence) обновляется/сохраняется целиком, чтобы не
+         рассогласовывать вердикт с его уверенностью.
+      2. numeric_comparison: заполняется ТОЛЬКО если поля нет (не стирается).
+      3. guard/formula/qualifier: обновляются всегда, если вычислены (не None).
+
+    Прочие ключи existing (error, note, method, …) сохраняются как есть.
+    """
+    existing = existing if isinstance(existing, dict) else {}
+    out = dict(existing)
+
+    cur_verdict = existing.get("verdict")
+    if cur_verdict is None or cur_verdict == "OPEN":
+        out["verdict"] = computed.get("verdict")
+        out["confidence"] = computed.get("confidence")
+
+    if existing.get("numeric_comparison") is None:
+        out["numeric_comparison"] = computed.get("numeric_comparison")
+
+    for key in ("guard", "formula", "qualifier"):
+        val = computed.get(key)
+        if val is not None:
+            out[key] = val
+
+    return out
+
+
 def verify_claim(claim: dict, source_text: str | None, policy: dict | None = None) -> dict:
     """Детерминированная верификация одного claim. Возвращает dict для DOM verification."""
     if not RESEARCHER_OK:
@@ -220,29 +263,37 @@ def main() -> int:
         print(json.dumps({"ok": False, "error": str(e)}, ensure_ascii=False))
         return 2
 
-    sources = {str(s.get("id")): s for s in dom.get("sources", []) if isinstance(s, dict)}
-    claims = dom.get("claims", [])
-    results = []
-    for c in claims:
-        if not isinstance(c, dict):
-            continue
-        cid = c.get("id")
-        # source text: из первого evidence
-        source_text = None
-        ev = c.get("evidence") or []
-        if isinstance(ev, list) and ev:
-            sid = ev[0].get("source_id")
-            src = sources.get(str(sid)) if sid else None
-            if src:
-                source_text = src.get("text") or src.get("ref")
-        v = verify_claim(c, source_text)
-        results.append({"claim_id": cid, **v})
-        if args.apply:
-            c["verification"] = {k: vv for k, vv in v.items() if vv is not None}
+    try:
+        sources = {str(s.get("id")): s for s in dom.get("sources", []) if isinstance(s, dict)}
+        claims = dom.get("claims", [])
+        if not isinstance(claims, list):
+            raise ValueError(f"DOM {args.dom}: claims must be list")
+        results = []
+        for c in claims:
+            if not isinstance(c, dict):
+                raise ValueError(f"DOM {args.dom}: claim must be mapping, got {type(c).__name__}")
+            cid = c.get("id")
+            # source text: из первого evidence
+            source_text = None
+            ev = c.get("evidence") or []
+            if isinstance(ev, list) and ev:
+                sid = ev[0].get("source_id")
+                src = sources.get(str(sid)) if sid else None
+                if src:
+                    source_text = src.get("text") or src.get("ref")
+            v = verify_claim(c, source_text)
+            results.append({"claim_id": cid, **v})
+            if args.apply:
+                # append-only: не даунгрейдить курированный verdict, не стирать
+                # numeric_comparison (см. _merge_verification)
+                c["verification"] = _merge_verification(c.get("verification"), v)
 
-    if args.apply:
-        with open(args.dom, "w", encoding="utf-8") as f:
-            yaml.safe_dump(dom, f, allow_unicode=True, sort_keys=False, default_flow_style=False)
+        if args.apply:
+            with open(args.dom, "w", encoding="utf-8") as f:
+                yaml.safe_dump(dom, f, allow_unicode=True, sort_keys=False, default_flow_style=False)
+    except Exception as exc:
+        print(json.dumps({"ok": False, "error": str(exc)}, ensure_ascii=False))
+        return 2
 
     out = {
         "ok": True,

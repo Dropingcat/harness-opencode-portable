@@ -62,6 +62,31 @@ def _same_semantic(x: str, y: str) -> bool:
     return a in b or b in a
 
 
+# ------------------------- нормализация для матчинга -------------------------
+# Черновик несёт markdown-разметку (**, ~~, [LEGACY], ссылки [C-xxx]/[S-xxx]),
+# которой нет в текстах claims DOM. Перед сравнением сходства обе стороны
+# приводим к чистому виду: убираем разметку, ссылки, стрики; нижний регистр;
+# сжатие пробелов. Ссылки вырезаем и в фазе детерминированного связывания
+# (pass 1), и в текстовом сходстве (pass 2), чтобы не искажали токены.
+
+_CLAIM_REF_RE = re.compile(r"\[(C-[0-9A-Za-z._:-]+)\]")      # только claim-ссылки
+_REF_TOKEN_RE = re.compile(r"\[(?:C|S|§)-[0-9A-Za-z._:-]+\]")  # любые ссылки-маркеры
+_LEGACY_RE = re.compile(r"\[LEGACY\]", re.IGNORECASE)
+_STRIKE_RE = re.compile(r"~~.*?~~", re.DOTALL)  # ~~...~~ = удалённый текст (убираем целиком)
+
+
+def _strip_markdown(s: str) -> str:
+    s = _STRIKE_RE.sub(" ", s)
+    s = _REF_TOKEN_RE.sub(" ", s)
+    s = _LEGACY_RE.sub(" ", s)
+    s = s.replace("**", " ").replace("__", " ").replace("~~", " ")
+    return re.sub(r"[`*_]", " ", s)
+
+
+def _norm_for_match(s: str) -> str:
+    return re.sub(r"\s+", " ", _strip_markdown(s).lower()).strip()
+
+
 # ------------------------- 1. декомпозиция -------------------------
 
 def _decompose(text: str, para_id: str) -> tuple[list[dict], dict]:
@@ -70,7 +95,8 @@ def _decompose(text: str, para_id: str) -> tuple[list[dict], dict]:
         sys.path.insert(0, str(Path(__file__).resolve().parent))
         from extractor import extract_all, build_graphs  # type: ignore
         res = extract_all(text, para_id)
-        claims = [{"text": c.get("text", ""), "start": c.get("start"),
+        claims = [{"text": c.get("text", ""), "span": c.get("raw_span") or c.get("text", ""),
+                   "start": c.get("start"),
                    "end": c.get("end"), "kind": c.get("claim_kind", "OBSERVATIONAL")}
                   for c in res.claims]
         graphs = build_graphs(
@@ -84,35 +110,65 @@ def _decompose(text: str, para_id: str) -> tuple[list[dict], dict]:
     except Exception:
         # fallback: предложения без ядра
         parts = [p.strip() for p in re.split(r"(?<=[.;!?…])\s+(?=[А-ЯЁA-Z0-9«\"(])", text) if p.strip()]
-        claims = [{"text": p, "start": None, "end": None, "kind": "OBSERVATIONAL"} for p in parts]
+        claims = [{"text": p, "span": p, "start": None, "end": None, "kind": "OBSERVATIONAL"} for p in parts]
         return claims, {"nodes": [], "edges": []}
 
 
 # ------------------------- 2. матчинг с DOM -------------------------
 
 def _match_to_dom(claims: list[dict], dom_claims: list[dict]) -> tuple[list[dict], list[dict]]:
-    """(known, new): известные claims связаны с id в DOM, новые — кандидаты."""
+    """(known, new): известные claims связаны с id в DOM, новые — кандидаты.
+
+    Два прохода (детерминированно, без LLM):
+      Pass 1 — связывание по явной ссылке [C-<id>] внутри полного span фрагмента:
+               если <id> есть в DOM, связываем уверенно (match_mode='link'),
+               ДО текстового сходства. Явная ссылка — детерминированный указатель
+               на claim_id (зеркалит гейт citation_trace), дублей не создаёт.
+      Pass 2 — текстовое сходство для фрагментов БЕЗ ссылок (или с битыми
+               ссылками): пересечение нормализованных токенов (markdown/ссылки
+               вырезаны), порог 0.55 НЕ меняется. Один dom-claim на один
+               fuzzy-матч (fuzzy_used), поведение для новых фрагментов
+               (needs_source) сохраняется.
+    """
     known, new = [], []
-    used = set()
+    dom_by_id = {str(dc.get("id")): dc for dc in dom_claims
+                 if isinstance(dc, dict) and dc.get("id")}
+    fuzzy_used: set[str] = set()
+    pending: list[dict] = []
+
+    # Pass 1: детерминированное связывание по [C-<id>]
     for c in claims:
-        text = c.get("text", "")
+        span = c.get("span") or c.get("text", "")
+        refs = _CLAIM_REF_RE.findall(span)
+        cid = next((r for r in refs if r in dom_by_id), None)
+        if cid is not None:
+            known.append({**c, "dom_id": cid, "match_score": 1.0, "match_mode": "link"})
+        else:
+            pending.append(c)
+
+    # Pass 2: текстовое сходство (только для фрагментов без валидной ссылки)
+    for c in pending:
+        text = c.get("span") or c.get("text", "")
+        a = set(_norm_for_match(text).split())
+        if not a:
+            new.append({**c, "needs_source": True})
+            continue
         best, best_score = None, 0.0
         for dc in dom_claims:
             dtext = dc.get("text", "")
             if not dtext:
                 continue
-            # overlap-эвристика: нормализованное пересечение токенов
-            a = set(_norm(text).split())
-            b = set(_norm(dtext).split())
-            if not a or not b:
+            b = set(_norm_for_match(dtext).split())
+            if not b:
                 continue
             inter = len(a & b)
             score = inter / max(1, min(len(a), len(b)))
             if score > best_score:
                 best_score, best = score, dc.get("id")
-        if best and best_score >= 0.55 and best not in used:
-            used.add(best)
-            known.append({**c, "dom_id": best, "match_score": round(best_score, 2)})
+        if best and best_score >= 0.55 and best not in fuzzy_used:
+            fuzzy_used.add(best)
+            known.append({**c, "dom_id": best, "match_score": round(best_score, 2),
+                          "match_mode": "text"})
         else:
             new.append({**c, "needs_source": True})
     return known, new
@@ -241,6 +297,15 @@ def _find_paragraph(dom: dict, para_id: str) -> dict | None:
 # ------------------------- main -------------------------
 
 def main() -> int:
+    # fail-closed, детерминированно: вывод всегда UTF-8 независимо от локали.
+    # Черновик несёт символы вне cp1251 (₆, ⁻², ¹², °C/с), иначе print() падает
+    # UnicodeEncodeError и ломает JSON-поток для вызывающего (harness).
+    for _stream in (sys.stdout, sys.stderr):
+        try:
+            _stream.reconfigure(encoding="utf-8", errors="replace")
+        except (AttributeError, OSError, ValueError):
+            pass
+
     ap = argparse.ArgumentParser(prog="draft_loop", description="Цикл черновиков DOM (WS-18)")
     ap.add_argument("--text", required=True, help="путь к черновику абзаца или '-' для stdin")
     ap.add_argument("--dom", required=True, help="путь к DOM YAML")
@@ -253,16 +318,17 @@ def main() -> int:
     try:
         text = _load_text(args.text)
         dom = _load_yaml(Path(args.dom))
+        dom_claims = [c for c in dom.get("claims", []) if isinstance(c, dict)]
+        claims, graphs = _decompose(text, args.paragraph_id)
+        known, new = _match_to_dom(claims, dom_claims)
+        status = _paragraph_status(known, new)
+        refs = _load_refs(Path(args.ref)) if args.ref else []
+        suggestions = _suggest_refs(graphs, refs)
     except Exception as e:
-        print(json.dumps({"ok": False, "error": str(e)}, ensure_ascii=False))
+        # fail-closed: битый ввод -> JSON с error + fail_closed, exit code 2
+        print(json.dumps({"ok": False, "error": str(e), "fail_closed": True},
+                         ensure_ascii=False))
         return 2
-
-    dom_claims = [c for c in dom.get("claims", []) if isinstance(c, dict)]
-    claims, graphs = _decompose(text, args.paragraph_id)
-    known, new = _match_to_dom(claims, dom_claims)
-    status = _paragraph_status(known, new)
-    refs = _load_refs(Path(args.ref)) if args.ref else []
-    suggestions = _suggest_refs(graphs, refs)
 
     result = {
         "ok": True,
@@ -284,6 +350,7 @@ def main() -> int:
         except Exception as e:
             result["ok"] = False
             result["error"] = str(e)
+            result["fail_closed"] = True
             print(json.dumps(result, ensure_ascii=False, indent=2))
             return 2
 

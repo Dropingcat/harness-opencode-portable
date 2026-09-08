@@ -203,6 +203,52 @@
 - [ ] Подготовить `mcp` section templates.
 - [ ] Проверить `Tab -> code-orchestrator` и соседние primary agents.
 
+### WS-20 Writer: боевой прогон на диссертации — DOM главы 1 → черновик → гейты → git
+
+Цель: первый полный цикл writer-контура на живом материале (диссертация Черенкова Я.В.).
+Артефакты: `F:\1\_STRUCTURED\09_LITERATURE\datasets\nkr_ch1_dom.yaml` + отчёты.
+
+- [x] **Черновик главы 1 с правками** (article-writer): резолюции 2.1–2.9 применены, изменения выделены; ченжлог вынесен в `CHANGELOG_draft_ch1_v2.md`. (2026-09-07)
+- [x] **GAP-блок v20 → глава 1**: клаймы C-501..C-511 встроены (1.3.1, 1.4.5, 1.4.6). (2026-09-07)
+- [x] **STALE → LEGACY**: C-113 (σ-фаза), C-407 (лазерные числа 40ХНМА/38Х2МЮА) — маркер [LEGACY]. (2026-09-07)
+- [x] **Глубины C-211**: RESOLVED по S-021 (ИТОГ) / S-022; depth_calc.py (S-023) — legacy. (2026-09-07)
+- [x] **Гейт прослеживаемости**: `citation_trace.py --strict` на draft_ch1_v2.md → PASS (58/58, 0 дефектов). Для этого исправлены 2 дефекта гейта: сегментация (не режет по `;`/`:`/`—`/точкам в сокращениях) + словарь хеджей пополнен («по данным литературы» и др.) — coder-worker, тесты 8/8. (2026-09-07)
+- [x] **C-406 источник**: S-024 — Каблов и др., ВИАМ 2020 (карбонитриды M(C,N) в азотсодержащих сталях); уровень остаётся disputed (для Р18 нужно ЭДС/ПЭМ). (2026-09-07)
+- [x] **Проза → DOM**: полный `draft_loop.py --apply` — 19/19 paragraph.text заполнено, `claims_added=0`, C-NEW=0; 16/19 traced>0. Три вводных/структурных блока (`PAR-01-02-01`, `PAR-01-03-02`, `PAR-01-04-01`) дают traced=0/new=0 из-за ограничения extractor, но `citation_trace` покрывает 58/58. (2026-09-07)
+- [x] **Версионирование**: git-репозиторий в `F:\1\_STRUCTURED\09_LITERATURE\datasets\`, root-commit `deb48d5` (DOM, черновик, ченжлог, 2 отчёта). (2026-09-07)
+- [x] **Локальный evidence-pass по неопределённостям**: просканированы 77 PDF/DOCX в `F:\1\_STRUCTURED\09_LITERATURE` и 332 PDF в `F:\AnalisysDataSet\pdfs`; C-107 исправлен по отдельной Co-серии Р18 и ПЭМ, C-406/C-409 сверены со статьёй 2024, неподтверждённые числа C-404/C-405/C-407/C-411/C-113 сняты. Итог: 48 SUPPORTED / 10 AMBIGUOUS, citation_trace PASS. (2026-09-08)
+
+### WS-21 Coder: авто-словарь хеджей + дебагинг-протокол writer-контура
+
+Цель: устранить ручные костыли оркестратора — новые хедж-маркеры и подозрительное поведение гейтов чинятся через вызов coder-worker, а не правками текста/кода на лету.
+
+- [ ] **Авто-добавление в словарь**: при обнаружении нового маркера неопределённости, отсутствующего в `_HEDGE_MARKERS` (citation_trace.py), оркестратор формирует заявку → coder-worker добавляет маркер в словарь (с тестом). (WS-20: словарь уже пополнен «по данным литературы», «по данным расчёта», «по оценкам авторов», «согласно литературе».)
+- [x] **Дебагинг-протокол**: любое сомнение/блок оркестратора (гейт FAIL на корректном тексте, неочевидная сегментация, неожиданный verdict) → диспатч coder-worker на диагностику ДО ручных правок. Обкатан на сегментации, matcher draft-loop и деструктивном `verify_claims --apply`. (2026-09-07)
+- [x] **Единый контракт дефекта**: заявка кодеру всегда содержит репро-команду, ожидаемое/фактическое поведение, фрагмент данных и критерий приёмки; применён в трёх заявках WS-20/WS-21. (2026-09-07)
+- [x] **Append-only verification**: `verify_claims --apply` больше не даунгрейдит курированные verdict и не стирает существующий numeric_comparison; unittest 10/10. (2026-09-07)
+
+### WS-22 Research tooling capsules: search → source → document → evidence
+
+Цель: довести существующие MCP/tool/corpus заготовки до рабочего,
+checkpointed контура для ресерчера и писателя без одноразовых конвертеров и
+ручного присвоения научных вердиктов.
+
+Канонический план и сверка с текущей документацией:
+`RESEARCH_TOOLING_CAPSULE_IMPLEMENTATION_PLAN.md`.
+
+- [x] Зафиксировать текущее состояние SearXNG, academic search, doc extraction,
+  local corpus, evidence, runtime lifecycle и code acceptance. (2026-09-08)
+- [ ] Slice 0: устранить противоречия sources of truth и route/capsule statuses.
+- [ ] Slice 1: добавить machine-readable capability preflight.
+- [ ] Slice 2: поднять и smoke-test локальный SearXNG; нормализовать discovery contract.
+- [ ] Slice 3: добавить Crossref/Unpaywall source resolution и дедупликацию.
+- [ ] Slice 4: включить provenance-preserving PDF/Word/Excel inspection.
+- [ ] Slice 5: добавить отдельную TIFF/SEM/EDS capsule.
+- [ ] Slice 6: сделать incremental corpus manifest + SQLite FTS5.
+- [ ] Slice 7: соединить evidence bundle с fact-checker, researcher-core и Writer DOM.
+- [ ] Slice 8: добавить research checkpoint/resume и обязательный code acceptance.
+- [ ] Slice 9: активировать capabilities по одной после standalone и live smoke tests.
+
 ## Rule
 
 Любая новая идея должна попадать либо в policy/config, либо в runtime script, либо в skill/tool template, либо в debt item, либо в tracker workstream.

@@ -38,7 +38,9 @@ python "${OPENCODE_HARNESS_ROOT}/scripts/orchestration/project_context.py"
 - какой research-статус сейчас у контура (runner есть/нет — если `RESEARCH_RUNNER_SH` недоступен, честно скажи: «детерминированный runner недоступен, работаю вручную по контракту»);
 - как эта задача вписывается в архитектуру.
 
-В конце — ритуал закрытия: канбан-отчёт (`gk.report`), закрытие WS/TD research, контроль остатка.
+В конце — ритуал закрытия: канбан-отчёт через канонический хелпер
+(`python "${OPENCODE_HARNESS_ROOT}/scripts/orchestration/kanban_report.py" report research-orchestrator <task_id> <status> [phase] [progress] [message]`,
+agent_id=research-orchestrator → секция research), закрытие WS/TD research, контроль остатка.
 
 ## Workflow (детерминированный runner ведёт цикл, не LLM)
 

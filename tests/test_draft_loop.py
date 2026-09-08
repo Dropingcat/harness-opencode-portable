@@ -50,6 +50,64 @@ class TestDraftLoop(unittest.TestCase):
         self.assertEqual(len(new), 1)
         self.assertTrue(new[0]["needs_source"])
 
+    def test_link_binding_via_c_ref(self):
+        # фрагмент содержит явную ссылку [C-406] -> связывается напрямую,
+        # даже если markdown-разметка искажает текстовое сходство
+        dom = _dom()
+        dom["claims"].append({"id": "C-406",
+                              "text": "Энергия образования нитридов W и Mo на 0,8–1,2 эВ выше, чем у карбидов"})
+        claims = [{"text": "Наблюдаемое сближение параметров решёток",  # обрезанный вид
+                   "span": "Наблюдаемое сближение параметров решёток карбидной и нитридной фаз "
+                           "**может быть связано** с частичным замещением углерода азотом, "
+                           "возможно, [C-406]."}]
+        known, new = dl._match_to_dom(claims, dom["claims"])
+        self.assertEqual(len(known), 1, known)
+        self.assertEqual(known[0]["dom_id"], "C-406")
+        self.assertEqual(known[0]["match_mode"], "link")
+        self.assertEqual(new, [])  # дубль C-NEW не создаётся
+
+    def test_markdown_normalization_keeps_similarity(self):
+        # фрагмент без ссылки, но с markdown-разметкой; нормализация убирает
+        # **...**, [LEGACY] и не ломает текстовое сходство с DOM-claim
+        dom = _dom()
+        dom["claims"].append({"id": "C-406",
+                              "text": "Энергия образования нитридов W и Mo на 0,8–1,2 эВ выше, чем у карбидов"})
+        claims = [{"text": "энергия образования нитридов",
+                   "span": "По данным литературы, энергия образования нитридов W и Mo на 0,8–1,2 эВ выше, "
+                           "чем у соответствующих карбидов. Наблюдаемое сближение решёток **может быть "
+                           "связано** с замещением углерода азотом [LEGACY]."}]
+        known, new = dl._match_to_dom(claims, dom["claims"])
+        self.assertEqual(len(known), 1, known)
+        self.assertEqual(known[0]["dom_id"], "C-406")
+        self.assertEqual(known[0]["match_mode"], "text")
+        self.assertGreaterEqual(known[0]["match_score"], 0.55)
+        self.assertEqual(new, [])
+
+    def test_norm_for_match_strips_markdown_and_refs(self):
+        raw = "**Наблюдаемое** сближение параметров решёток `может быть связано` с замещением [C-406] [LEGACY]"
+        n = dl._norm_for_match(raw)
+        self.assertNotIn("*", n)
+        self.assertNotIn("`", n)
+        self.assertNotIn("[c-406]", n)
+        self.assertNotIn("legacy", n)
+        self.assertIn("сближение", n)
+        self.assertIn("может быть связано", n)
+
+    def test_norm_for_match_removes_strikethrough_content(self):
+        raw = "Старый тезис ~~удалённый фрагмент текста~~ остаётся"
+        n = dl._norm_for_match(raw)
+        self.assertNotIn("удалённый", n)
+        self.assertNotIn("~~", n)
+
+    def test_fragment_without_ref_genuinely_new_needs_source(self):
+        # фрагмент без ссылки, реально новый (нет в DOM) -> needs_source, как раньше
+        claims = [{"text": "гуматы снижают кислотность почвы на 20%",
+                   "span": "Гуматы снижают кислотность почвы на 20% в кислых дерново-подзолистых почвах."}]
+        known, new = dl._match_to_dom(claims, _dom()["claims"])
+        self.assertEqual(known, [])
+        self.assertEqual(len(new), 1)
+        self.assertTrue(new[0]["needs_source"])
+
     def test_paragraph_status_complete(self):
         known = [{"text": "x", "dom_id": "C-001"}]
         new = []

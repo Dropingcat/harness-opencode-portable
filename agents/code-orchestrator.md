@@ -36,7 +36,10 @@ You are the **Code Orchestrator** — мозг фабрики кода. Ты р�
 10. **Интеграция** — собери модули, проверь целостность, guard/test/schema gates, верни отчёт.
 11. **Память** — сохрани вывод в `memory` (mode=add) для будущих задач.
 12. **РИТУАЛ закрытия (нить не рвётся)** — выполни капсулу (`orchestration-thread-process.md` секция «Ритуал закрытия»):
-    канбан-отчёт через `gk.report('code-factory',...)`, отметка закрытых WS/TD, контроль остатка через `project_context.py`.
+    канбан-отчёт через канонический хелпер:
+    `python "${OPENCODE_HARNESS_ROOT}/scripts/orchestration/kanban_report.py" report code-orchestrator <task_id> <status> [phase] [progress] [message]`
+    (agent_id=code-orchestrator → секция code-factory; НЕ единый агент для всех контуров),
+    отметка закрытых WS/TD, контроль остатка через `project_context.py` (поле `kanban.rows[].group_name`).
     Фабричная специфика: git-коммит-гейт уже в `factory_ctl submit` — не дублируй.
 
 ## Принципы проектирования кодеров

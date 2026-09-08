@@ -57,6 +57,35 @@ def _extract_docx(path: str) -> str:
     return "\n\n".join(parts) if parts else "(empty document)"
 
 
+def _extract_doc(path: str) -> str:
+    """.doc (legacy binary) — через Word COM Content.Text (win32com).
+
+    НЕ SaveAs: 'Ошибка метода'/method error (нестабилен в COM из PS 5.1).
+    """
+    import pythoncom
+    import win32com.client
+
+    pythoncom.CoInitialize()
+    word = None
+    try:
+        word = win32com.client.DispatchEx("Word.Application")
+        word.Visible = False
+        word.DisplayAlerts = 0
+        doc = word.Documents.Open(os.path.abspath(path), False, True)
+        try:
+            text = doc.Content.Text
+        finally:
+            doc.Close(False)
+        return text
+    finally:
+        try:
+            if word is not None:
+                word.Quit()
+        except Exception:
+            pass
+        pythoncom.CoUninitialize()
+
+
 def _extract_html(path: str) -> str:
     from markdownify import markdownify as md
     with open(path, encoding="utf-8", errors="replace") as f:
@@ -85,6 +114,7 @@ def _extract_plain(path: str) -> str:
 EXTRACTORS = {
     ".pdf": _extract_pdf,
     ".docx": _extract_docx,
+    ".doc": _extract_doc,
     ".html": _extract_html,
     ".htm": _extract_html,
     ".xlsx": _extract_xlsx,
@@ -115,8 +145,8 @@ async def list_tools() -> list[Tool]:
     return [
         Tool(
             name="extract_document",
-            description="Extract text from a local file (PDF/DOCX/HTML/XLSX/TXT/MD/CSV) as markdown. "
-                        "Use for research-academic: parse downloaded papers, reports, documents.",
+            description="Extract text from a local file (PDF/DOCX/DOC/HTML/XLSX/TXT/MD/CSV) as markdown. "
+                        ".doc via Word COM Content.Text. Use for research-academic: parse downloaded papers, reports, documents.",
             inputSchema={
                 "type": "object",
                 "properties": {
