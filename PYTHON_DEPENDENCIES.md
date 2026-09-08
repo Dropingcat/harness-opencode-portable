@@ -26,7 +26,14 @@
 > требует **внешний бинарник Tesseract** (`C:\Program Files\Tesseract-OCR`, v5.4.0, установлен),
 > а НЕ Python-пакет. В `requirements-capability-bundle.txt` он намеренно отсутствует; проба —
 > `shutil.which('tesseract')` (executable probe). Установка/обновление — системный инсталлер
-> UB-Mannheim, не pip. Детали: `DEPENDENCY_MATRIX.md`.
+> UB-Mannheim, не pip. Языки: `eng`, `osd`, `rus`, `equ` (tessdata_fast). Детали:
+> `DEPENDENCY_MATRIX.md`.
+
+> **Важно (2026-09-08):** `web.discovery` требует **SearXNG-сервис** (HTTP API на
+> `127.0.0.1:8888`). Поднят нативно (без Docker) в `E:\Documents\searxng\` (свой venv,
+> git-клон searxng, Windows-патч для `import pwd`). Это сервис, а не pip-зависимость;
+> preflight проверяет его liveness HTTP-запросом. Автозапуск — Windows Task «SearXNG».
+> Детали: `DEPENDENCY_MATRIX.md`.
 
 ### 2. Состояние venv (системный, hermes-agent)
 - `sys.executable` = `...\hermes-agent\venv\Scripts\python.exe` (Python 3.11.15)
