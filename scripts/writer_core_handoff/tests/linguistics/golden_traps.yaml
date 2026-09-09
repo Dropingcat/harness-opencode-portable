@@ -1,0 +1,37 @@
+schema_version: linguistic-golden/0.3
+fixtures:
+- id: NEG_SCOPE_01
+  source: Эффект наблюдается не во всех образцах.
+  trap: NOT_ALL_vs_ALL_NOT
+  expected:
+    negation_scope: quantifier
+    quantifier: ALL
+- id: COREF_EVENT_01
+  source: Уширение линии возрастает. Это может свидетельствовать об увеличении микродеформаций.
+  trap: event_vs_entity_coreference
+  expected:
+    this_refers_to: increase_event
+- id: MODALITY_01
+  source: Полученные результаты позволяют предположить наличие связи.
+  mutation: Полученные результаты доказывают наличие связи.
+  expected_issue: MODALITY_UPGRADE
+- id: CAUSAL_01
+  source: Параметры коррелируют.
+  mutation: Изменение первого параметра вызывает изменение второго.
+  expected_issue: CAUSALITY_UPGRADE
+- id: SCOPE_01
+  source: Для исследованных образцов Р18 наблюдается рост параметра.
+  mutation: Для стали Р18 характерен рост параметра.
+  expected_issue: SCOPE_EXPANSION
+- id: PRESUP_01
+  source: Дальнейшее увеличение параметра приводит к...
+  trap: presupposes_prior_increase
+  expected_issue: PRESUPPOSITION_CANDIDATE
+- id: CONNECTIVE_01
+  source: A и B наблюдаются независимо. Следовательно, A вызывает B.
+  trap: unjustified_inference_connective
+  expected_issue: DISCOURSE_CONNECTIVE_UNJUSTIFIED
+- id: REFORM_01
+  source: Связь наблюдается в исследованном диапазоне. Иными словами, зависимость
+    универсальна.
+  expected_issue: REFORMULATION_DRIFT

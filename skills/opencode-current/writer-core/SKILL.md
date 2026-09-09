@@ -1,4 +1,4 @@
----
+﻿---
 name: writer-core
 description: "Детерминированный слой фабрики письма: планирование структуры (G1/G2-слоты), semantic RTT draft-check, constrained repair, консолидация версий, DOM-контракт прослеживаемости (cli dom), дерево клаймов из 12 графов (graph_builder_hybrid), 89-dim вектор сравнения(graph_vector), ветвистое ревью L1/L2/L3 (cli review). Для writing-orchestrator(план/DOM/рецензия) и article-writer(контроль черновика против контракта/ревью)。Polza—только дешёвый guard/парсер."
 compatibility: opencode 1.15.10+
@@ -11,7 +11,7 @@ version: 0.2.0
 ВЫСШИЙ ранг) + **article-writer** (воркер, mode: all). Этот скилл — то, что
 находится ПОД обоими: детерминированный слой «контракты → слоты → draft →
 semantic RTT → constrained repair → DOM → review». Здесь нет LLM-вызовов: весь слой —
-реализация поверх готовых модулей writer-гибрида (C:\Temp\opencode\writer_verify\hybrid).
+реализация поверх модулей writer-core из HARNESS (`${OPENCODE_HARNESS_ROOT}/scripts/writer-core`).
 
 | Роль | Ранг | Использование модуля |
 |---|---|---|---|
@@ -22,22 +22,35 @@ semantic RTT → constrained repair → DOM → review». Здесь нет LLM-
 ## Расположение модуля
 
 ```
-C:\Temp\opencode\writer_verify\hybrid\writer_core\
-    __init__.py
-    cli.py                  # единый детерминированный CLI (10 команд)
-    contracts.py            # ResearchBundleLA, WriterContract, Defect, VersionedArtifact
-    factory_process.py      # writer-цикл: draft -> RTT -> constrained repair
-    live_cycle.py           # «живой» контур кодекра: bundle->claims->contract->draft->rtt->repair
-    dom_builder.py          # связка writer_core с DOM-контрактом прослеживаемости (cli dom)
-    review.py               # ветвистое ревью L1/L2/L3 с циклами и эскалацией (cli review)
-    requirements-writer-core.txt
+${OPENCODE_HARNESS_ROOT}/scripts/writer-core/
+    wc_cli.py               # единый детерминированный CLI entry point (запуск из любого cwd)
+    writer_core/
+        __init__.py
+        cli.py              # парсер команд (12 команд)
+        contracts.py        # ResearchBundleLA, WriterContract, Defect, VersionedArtifact
+        factory_process.py  # writer-цикл: draft -> RTT -> constrained repair
+        live_cycle.py       # «живой» контур кодекра: bundle->claims->contract->draft->rtt->repair
+        dom_builder.py      # связка writer_core с DOM-контрактом прослеживаемости (cli dom)
+        review.py           # ветвистое ревью L1/L2/L3 с циклами и эскалацией (cli review)
+        requirements-writer-core.txt
+    v2_extractor/           # детерминированный + LLM-слой экстракции (c5_number, claim_qa, ...)
+    structure_annotator.py  # G1/G2: документ-дерево, план, слоты
+    hybrid_extract.py       # гибридный экстрактор (v2 + T0-digest)
+    graph_builder_hybrid.py # графы G1-G16
+    graph_vector.py         # 89-dim вектор
+    consolidation.py        # консолидация версий
+    rtt_compare.py, t0_ru.py, digest_builder.py, md_clean.py
+    session_memory.py, polza_light.py, weak_llm.py, corpus_runner.py
 ```
 
 Готовые модули импортируются (НЕ копируются): `hybrid_extract` + `md_clean`,
 `graph_builder_hybrid`, `graph_vector`, `structure_annotator`, `consolidation`,
 `rtt_compare` + `t0_ru` + `digest_builder`, `session_memory`, `polza_light`,
 `citation_trace` (scripts/writer). Канонический venv: `E:\Documents\Документы\writer-core\.venv`
-(Python 3.12.2)。
+(Python 3.12.2). Env: `WRITER_CORE_ROOT` (по умолчанию `${OPENCODE_HARNESS_ROOT}/scripts/writer-core`),
+`WRITER_RUNS_DIR` (bootstrap: `${OPENCODE_RUNS_DIR}/writer-core`) и
+`WRITER_LINGUISTICS_REGISTRY_DIR` (bootstrap:
+`${OPENCODE_HARNESS_ROOT}/scripts/writer_core_handoff/linguistics`).
 
 ## Workflow (plan → DOM → draft → draftcheck → repair → review)
 
@@ -65,7 +78,7 @@ C:\Temp\opencode\writer_verify\hybrid\writer_core\
 
 ## Traceability и DOM (иерархия истины)
 
-Контракт прослеживаемости — `E:\opencode_harness\shared\writer-traceability-contract.md`
+Контракт прослеживаемости — `${OPENCODE_HARNESS_ROOT}/shared/writer-traceability-contract.md`
 (WS-18).
 
  Иерархия истины:
@@ -83,7 +96,7 @@ DOM YAML (источник истины: structure + claims + graphs + traceabil
 2. Если DOM-claim не подтверждён (UNSUPPORTED/OPEN) — в тексте это маркируется
   неопределённостью, а не подаётся как факт。
 3. Гейт «нельзя выдать» — детерминированный скрипт
-  `E:\opencode_harness\scripts\writer\citation_trace.py`:
+  `${OPENCODE_HARNESS_ROOT}/scripts/writer/citation_trace.py`:
   `python citation_trace.py --text draft.md --dom <slug>-dom.yaml [--strict]`
   exit 0 = PASS (можно выдавать), exit 1 = FAIL (править и перезапускать). Проверки:
   `orphan_claim`, `dangling_claim`/`dangling_source`, `masked_uncertainty`,
@@ -98,14 +111,14 @@ DOM YAML — литературный объект (product/structure/claims/gra
 
 ```bash
 # Шаблон DOM (литературный объект) — выбор после постановки задачи:
-#   E:\opencode_harness\templates\writer-dom-dissertation.yaml
+#   ${OPENCODE_HARNESS_ROOT}/templates/writer-dom-dissertation.yaml
 
 # Каркас структуры (11 секций автореферата -> главы диссертации):
-$PY -m writer_core.cli plan --topic "Тема диссертации" --out structure_plan.json
+$WCPY $WC plan --topic "Тема диссертации" --out structure_plan.json
 
 # Собрать DOM: structure из plan + claims из hybrid_extract/bundle + графы G3-G15
 #   + uncertainty ПО ПРОИСХОЖДЕНИЮ источников (--source-kind повторяемый):
-$PY -m writer_core.cli dom --template "E:\opencode_harness\templates\writer-dom-dissertation.yaml" \
+$WCPY $WC dom --template "${OPENCODE_HARNESS_ROOT}/templates/writer-dom-dissertation.yaml" \
     --plan structure_plan.json \
     --claims claims.json \        # list[claim] | {"claims": [...]} | ResearchBundleLA.json
     --graphs graphs.json \          # CLI graphs ИЛИ вывод build_paragraph_graphs
@@ -170,11 +183,11 @@ G7 цитатное происхождение, G8 политика/ограни
 
 ```bash
 # Построить графы из артефакта (G1-G16) + опционально в sqlite:
-$PY -m writer_core.cli graphs --artifact artifact.json --out graphs.json --sqlite graphs.db
+$WCPY $WC graphs --artifact artifact.json --out graphs.json --sqlite graphs.db
 
 # 89-dim вектор для сравнения（cosine + dynamic_metrics: схема — G*_n/G*_e/G*_ratio,
 #   LOO 79% по разбору версий v1-v12)：
-$PY -m writer_core.cli vectorsim --a old.json --b new.json --out vectorsim.json
+$WCPY $WC vectorsim --a old.json --b new.json --out vectorsim.json
 ```
 
 Работа с деревом клаймов:
@@ -204,7 +217,7 @@ $PY -m writer_core.cli vectorsim --a old.json --b new.json --out vectorsim.json
 
 ```bash
 # Ревью черновика против контракта+плана+DOM（L1+L2+L3 параллельно， циклы max 3）：
-$PY -m writer_core.cli review --draft draft.md \
+$WCPY $WC review --draft draft.md \
     --contract writing_contract.json \    # ИЛИ документ-эталон (v8, docx/pdf/md) ИЛИ inline-JSON
     --plan structure_plan.json \          # для L2-тира (структура/слоты/gaps）
     --dom dom.yaml \                      # для L3-цитатного гейта（citation_trace）
@@ -223,47 +236,48 @@ $PY -m writer_core.cli review --draft draft.md \
   (89-dim cosine/dynamic_metrics; версии v1-v12 — через `consolidate --versions-dir`,
   эволюция структуры/claims по версиям)。
 
-## Команды CLI (10 команд）
+## Команды CLI (12 команд）
 
 ```bash
-PY=E:\Documents\Документы\writer-core\.venv\Scripts\python.exe
-cd C:\Temp\opencode\writer_verify\hybrid
+WCPY="${PYTHON}"
+WC="${WRITER_CORE_ROOT}/wc_cli.py"
+# Любой cwd. ENV: WRITER_CORE_ROOT (по умолчанию scripts/writer-core), WRITER_RUNS_DIR.
 
 # 1) plan — структурный план будущего текста (G1-дерево + G2-слоты + gaps）:
 #   --doc <образец> | --bundle <ResearchBundleLA.json> | --topic "<тема>" (каркас БЕЗ документа)
-$PY -m writer_core.cli plan --topic "Тема диссертации" --out structure_plan.json
-$PY -m writer_core.cli plan --bundle bundle.json --out structure_plan.json
+$WCPY $WC plan --topic "Тема диссертации" --out structure_plan.json
+$WCPY $WC plan --bundle bundle.json --out structure_plan.json
 
 # 2) draftcheck — RTT-дифф черновика против контракта（
-$PY -m writer_core.cli draftcheck --draft draft.md --contract writing_contract.json --out rtt_report.json
+$WCPY $WC draftcheck --draft draft.md --contract writing_contract.json --out rtt_report.json
 
 # 3) live-cycle — полный контур кодекра（bundle->contract->draft->rtt->repair）：
-$PY -m writer_core.cli live-cycle --bundle bundle.json --contract writing_contract.json \
+$WCPY $WC live-cycle --bundle bundle.json --contract writing_contract.json \
     --draft draft.md --repair --out live_cycle_report.json
 
 # 4) extract — гибридная экстракция документа -> artifact.json
-$PY -m writer_core.cli extract --doc paper.docx --out artifact.json
+$WCPY $WC extract --doc paper.docx --out artifact.json
 
 # 5) graphs — графы реестра G1-G16 из artifact.json (+ --sqlite .db)
-$PY -m writer_core.cli graphs --artifact artifact.json --out graphs.json --sqlite graphs.db
+$WCPY $WC graphs --artifact artifact.json --out graphs.json --sqlite graphs.db
 
 # 6) annotate — разметка структуры документа -> structure_plan.json
-$PY -m writer_core.cli annotate --doc paper.docx --out structure_plan.json
+$WCPY $WC annotate --doc paper.docx --out structure_plan.json
 
 # 7) consolidate — консолидация версий (v1..v12) -> evolution_report.json/.md
-$PY -m writer_core.cli consolidate --versions-dir "F:\1\_STRUCTURED\07_AUTOREF\versions" \
+$WCPY $WC consolidate --versions-dir "F:\1\_STRUCTURED\07_AUTOREF\versions" \
     --out-dir evolution
 
 # 8) vectorsim — 89-dim cosine + dynamic_metrics двух артефактов
-$PY -m writer_core.cli vectorsim --a old.json --b new.json --out vectorsim.json
+$WCPY $WC vectorsim --a old.json --b new.json --out vectorsim.json
 
 # 9) dom — writer_core -> DOM YAML по контракту прослеживаемости (для citation_trace.py)
-$PY -m writer_core.cli dom --template "E:\opencode_harness\templates\writer-dom-dissertation.yaml" \
+$WCPY $WC dom --template "${OPENCODE_HARNESS_ROOT}/templates/writer-dom-dissertation.yaml" \
     --plan structure_plan.json --claims claims.json --graphs graphs.json \
     --source-kind raw_data --source-kind published --out dom.yaml
 
 # 10) review — ветвистое ревью（L1 микро + L2 мезо + L3 макро， циклы， эскалация）
-$PY -m writer_core.cli review --draft draft.md --contract writing_contract.json \
+$WCPY $WC review --draft draft.md --contract writing_contract.json \
     --plan structure_plan.json --dom dom.yaml --max-iterations 3 --out review_report.json
 ```
 
@@ -361,7 +375,7 @@ canon_knowledge (знания — ЧТО МОЖНО ПИСАТЬ И КАК)
 - **R4 ТРОПЫ**: публицистические фигуры -> заменить на сухую научную прозу
 
 ```bash
-$PY -m writer_core.cli register --draft draft.md --dom dom.yaml --out register_report.json
+$WCPY $WC register --draft draft.md --dom dom.yaml --out register_report.json
 ```
 
 ## Канбан-отчёт (ритуал закрытия, универсальный с секциями)
@@ -375,9 +389,9 @@ $PY -m writer_core.cli register --draft draft.md --dom dom.yaml --out register_r
 Отчёт — **канонический хелпер** (резолвит секцию по agent_id, регистрирует агента):
 
 ```bash
-python E:\opencode_harness\scripts\orchestration\kanban_report.py report writing-orchestrator <task_id> <status> [phase] [progress] [message]
-python E:\opencode_harness\scripts\orchestration\kanban_report.py board [group]    # доска по секциям
-python E:\opencode_harness\scripts\orchestration\kanban_report.py                  # сводка
+"${PYTHON}" "${OPENCODE_HARNESS_ROOT}/scripts/orchestration/kanban_report.py" report writing-orchestrator <task_id> <status> [phase] [progress] [message]
+"${PYTHON}" "${OPENCODE_HARNESS_ROOT}/scripts/orchestration/kanban_report.py" board [group]    # доска по секциям
+"${PYTHON}" "${OPENCODE_HARNESS_ROOT}/scripts/orchestration/kanban_report.py"                  # сводка
 ```
 
 > ВАЖНО: старая сигнатура `gk.report(agent, task_id, task_name, status, phase, progress, msg)`
@@ -392,12 +406,12 @@ python E:\opencode_harness\scripts\orchestration\kanban_report.py               
 
 | Проблема (RU / EN) | Маркер (RU / EN) | Решение |
 |---|---|---|
-| `.doc` не читается python-docx / `.doc` unsupported by python-docx | `.doc` через Word COM / use Word COM `Content.Text` | `$PY -m writer_core.cli extract --doc <file.doc>` (модуль `doc_com.py`, win32com). НЕ `SaveAs` — «Ошибка метода»/"method error" (нестабилен в PS 5.1 COM); бери `$doc.Content.Text` напрямую. |
+| `.doc` не читается python-docx / `.doc` unsupported by python-docx | `.doc` через Word COM / use Word COM `Content.Text` | `$WCPY $WC extract --doc <file.doc>` (модуль `doc_com.py`, win32com). НЕ `SaveAs` — «Ошибка метода»/"method error" (нестабилен в PS 5.1 COM); бери `$doc.Content.Text` напрямую. |
 | `rg` нет / `rg` is not installed | искать без rg / search without rg | `Select-String -LiteralPath "<файл>" -Pattern "<regex>"` (принимает `-LiteralPath`, не тянет temp). |
-| grep тянет temp-файлы / grep picks up temp files | ограничь поиск целевым каталогом / limit search to target dir | Передавай `path` строго целевой (литобзор/автореферат/`chunks/`), НЕ `C:\Temp\opencode` целиком (там 300+ наших temp-файлов). |
+| grep тянет temp-файлы / grep picks up temp files | ограничь поиск целевым каталогом / limit search to target dir | Передавай `path` строго целевой (литобзор/автореферат/`chunks/`), не общий временный каталог. |
 | системный python без зависимостей / system python missing deps | venv обязателен / use venv | Всегда `$PY = E:\Documents\Документы\writer-core\.venv\Scripts\python.exe` (+ `-X utf8`). Системный python 3.11 падает на `project_context.py`. |
 | кириллица в консоли (mojibake) / Cyrillic mojibake in console | `-X utf8` + `PYTHONIOENCODING` | Запускай `python -X utf8`; `$env:PYTHONIOENCODING="utf-8"` для вывода. ps1-файлы — ASCII-only или с BOM (PS 5.1 читает в cp866). |
-| большие файлы рвут Read / large files break Read | читай чанками / read in chunks | `Read offset/limit` по кускам (lit_review 402K → ch1..ch4 в `C:\Temp\opencode\chunks\`). |
+| большие файлы рвут Read / large files break Read | читай чанками / read in chunks | `Read offset/limit` по кускам; временные чанки храни в `${WRITER_RUNS_DIR}/chunks/`. |
 | Markitdown нет / markitdown missing | используй doc_com / use doc_com | `.doc`/`.docx` — через наш `doc_com.py` (Word COM), не markitdown. |
 | grep-маркеры в .md / grep markers in .md | ищи в целевых файлах / search target files only | Греп по `*.md` тянет `cf_process.txt`/`corpus.txt` — сужай `include` до `*.md` в целевой папке. |
 
@@ -415,7 +429,7 @@ $PY -c "import win32com, razdel, pymorphy3, yaml, docx; print('ENV_OK')"
 ## H-память（session_memory）
 
 Кросс-сессионные выводы писателя сохраняются в
-`C:\Temp\opencode\writer_verify\session_memory.json` (модуль `session_memory`,
+`${WRITER_RUNS_DIR}/session_memory.json` (модуль `session_memory`,
 схема `writer_verify.session_memory.v1`): `add_entry(секция, value)` /
 `get(секция)`. Секции-примеры: `plan_etalon`, `known_pitfalls`,
 `rtt_thresholds`, `review_etalon_vectors`. Перед тяжёлой диагностикой — читай память; после новых
@@ -431,11 +445,14 @@ $PY -m py_compile writer_core\cli.py writer_core\dom_builder.py writer_core\revi
     writer_core\live_cycle.py writer_core\contracts.py writer_core\factory_process.py
 
 # CLI help показывает dom/review/live-cycle/plan/draftcheck...:
-$PY -m writer_core.cli --help
+$WCPY $WC --help
 
 # pytest (полный harness）：
-$PY -m pytest C:\Temp\opencode\writer_verify\test_writer_harness.py -q
+$WCPY -m pytest %OPENCODE_HARNESS_ROOT%\scripts\writer_core_handoff\tests\test_writer_harness.py -q (или целевой тест из scripts/writer-core/tests)
 ```
+
+После изменения этой harness-копии синхронизируй skill в live OpenCode config и
+перезапусти OpenCode; live-копия не является источником истины.
 
 Покрытие: CLI plan (>= 8 секций + слоты), CLI draftcheck ловит дрейф
 (defect `causality_upgrade` + claim_id + span), контракты валидны,

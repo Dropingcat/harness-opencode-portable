@@ -1,4 +1,4 @@
----
+﻿---
 name: writer-review
 description: "Ревью и рецензирование научных произведений: ветвистое ревью L1/L2/L3 (микро/мезо/макро), сравнение черновика с DOM/эталонами/версиями черновиков, циклы с constrained repair и эскалацией на human. Для article-writer(контроль черновика) и writing-orchestrator(рецензия структуры/эталонов). Детерминированно, без LLM."
 compatibility: opencode 1.15.10+
@@ -25,7 +25,7 @@ approval человека, никогда не «протаскивается» 
 
 ## Что делает
 
-`writer_core.review`（модуль: C:\Temp\opencode\writer_verify\hybrid\writer_core\review.py）:
+`writer_core.review`（модуль: ${OPENCODE_HARNESS_ROOT}/scripts/writer-core/writer_core/review.py）:
 
 детерминированные проверки（без LLM），fail-closed на уровне каждого тира:
 
@@ -48,10 +48,10 @@ approval человека, никогда не «протаскивается» 
 ## Как запустить（review CLI）
 
 ```bash
-PY=E:\Documents\Документы\writer-core\.venv\Scripts\python.exe
-cd C:\Temp\opencode\writer_verify\hybrid
+WCPY="${PYTHON}"
+WC="${WRITER_CORE_ROOT}/wc_cli.py"   # запуск из любого cwd
 
-$PY -m writer_core.cli review \
+$WCPY $WC review \
     --draft draft.md \                          # черновик .md/.txt (роль v12)
     --contract writing_contract.json \         # writing_contract.json ИЛИ документ-эталон
                                                 #   (v8, docx/pdf/md) ИЛИ inline-JSON
@@ -82,7 +82,7 @@ $PY -m writer_core.cli review \
   `graph_vector`（cosine_similarity + dynamic_metrics） — чем ближе вектор черновика
   к вектору эталона, тем ближе структура/аргументация:：
   ```bash
-  $PY -m writer_core.cli vectorsim --a draft.json --b etalon.json --out vectorsim.json
+  $WCPY $WC vectorsim --a draft.json --b etalon.json --out vectorsim.json
   ```
 - **С версиями черновиков**（v1..v12）: `consolidate --versions-dir <dir>` — эволюция
   структуры/claims по версиям（evolution_report.json/.md; similarity между версиями）。
@@ -165,13 +165,16 @@ draft → L1/L2/L3 (параллельно, threads) → вердикт
 ## См. также
 
 - `writer-core`（детерминированный слой: plan/draftcheck/dom/graphs/vector）。
-- Контракт прослеживаемости: `E:\opencode_harness\shared\writer-traceability-contract.md`
-- Цитатный гейт: `E:\opencode_harness\scripts\writer\citation_trace.py`
+- Контракт прослеживаемости: `${OPENCODE_HARNESS_ROOT}/shared/writer-traceability-contract.md`
+- Цитатный гейт: `${OPENCODE_HARNESS_ROOT}/scripts/writer/citation_trace.py`
 
 ## Маркеры Windows (Windows Search & Extraction Markers)
 
 Те же проблемы, что в `writer-core`: `.doc` не читается python-docx → используй
 `writer_core` `doc_com` (`$doc.Content.Text`, НЕ `SaveAs` — «Ошибка метода»/method error);
-`rg` нет → `Select-String -LiteralPath`; grep тянет temp (`C:\Temp\opencode\` 300+ файлов) →
+`rg` нет → `Select-String -LiteralPath`; grep тянет общий temp →
 сужай `path` до целевого; python → venv `E:\Documents\Документы\writer-core\.venv\Scripts\python.exe -X utf8`;
 большие файлы → `Read` чанками. Маркеры пиши на русском и английском.
+
+После изменения этой harness-копии синхронизируй skill в live OpenCode config и
+перезапусти OpenCode; live-копия не является источником истины.

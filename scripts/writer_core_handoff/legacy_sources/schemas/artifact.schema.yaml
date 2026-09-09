@@ -1,0 +1,19 @@
+schema_version: artifact/0.1
+types:
+- FIGURE
+- TABLE
+- EQUATION
+- DATASET
+- CODE_LISTING
+- EXTERNAL_ARTIFACT
+required:
+- id
+- type
+- revision
+- provenance
+- mutability
+mutability:
+- IMMUTABLE_SOURCE
+- DERIVED_REBUILDABLE
+- EDITABLE_VERSIONED
+- LOCKED_APPROVED

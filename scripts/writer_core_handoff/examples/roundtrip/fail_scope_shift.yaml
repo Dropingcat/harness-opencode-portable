@@ -1,0 +1,10 @@
+case_id: RTT_FAIL_SCOPE_001
+contract_claim:
+  id: C3
+  proposition: "Для образцов после обработки при 640 °C наблюдалось снижение показателя."
+  scope:
+    temperature_c: 640
+realization: "Для данной стали характерно снижение показателя после обработки."
+expected:
+  verdict: FAIL
+  reason_codes: [SCOPE_SHIFT_MAJOR]

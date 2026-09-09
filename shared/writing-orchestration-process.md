@@ -14,16 +14,24 @@ Shape the article before researching it. A good article workflow starts by clari
 >
 > **Deterministic tooling (model-agnostic, run these — do not improvise):**
 > ```
+> # Canonical native Writer Core CLI (never use a temp writer_verify checkout)
+> WC="${WRITER_CORE_ROOT}/wc_cli.py"
+>
+> # Plan the structure before drafting
+> "${PYTHON}" "$WC" plan --topic "<confirmed topic>" --out structure_plan.json
+>
 > # 0. Verify claims through researcher_core (numeric/guard/formula) BEFORE drafting
-> python "${OPENCODE_HARNESS_ROOT}/scripts/researcher/verify_claims.py" --dom <slug>-dom.yaml [--apply]
+> "${PYTHON}" "${OPENCODE_HARNESS_ROOT}/scripts/researcher/verify_claims.py" --dom <slug>-dom.yaml [--apply]
 > #    --apply writes verification (verdict/confidence/numeric_comparison) back into DOM claims
 >
 > # 1. Draft loop: decompose a paragraph, match to DOM, flag new claims needing sources
-> python "${OPENCODE_HARNESS_ROOT}/scripts/writer/draft_loop.py" --text <draft.md> --dom <slug>-dom.yaml --paragraph-id PAR-01-01-01 [--ref refs/] [--apply]
+> "${PYTHON}" "${OPENCODE_HARNESS_ROOT}/scripts/writer/draft_loop.py" --text <draft.md> --dom <slug>-dom.yaml --paragraph-id PAR-01-01-01 [--ref refs/] [--apply]
 > #    --apply fills paragraph.text + appends new claims (needs_source) + draft_log (append-only)
 >
 > # 2. Traceability gate: PASS/FAIL before handoff (exit 0/1)
-> python "${OPENCODE_HARNESS_ROOT}/scripts/writer/citation_trace.py" --text <draft.md> --dom <slug>-dom.yaml [--strict]
+> "${PYTHON}" "$WC" draftcheck --draft <draft.md> --contract writing_contract.json --out rtt_report.json
+> "${PYTHON}" "$WC" review --draft <draft.md> --contract writing_contract.json --plan structure_plan.json --dom <slug>-dom.yaml --out review_report.json
+> "${PYTHON}" "${OPENCODE_HARNESS_ROOT}/scripts/writer/citation_trace.py" --text <draft.md> --dom <slug>-dom.yaml [--strict]
 > #    FAIL -> fix DOM/text and re-run; never hand off a FAIL
 > ```
 > Both use the deterministic extractor core (`scripts/writer/extractor/`) for span grounding —
@@ -98,6 +106,8 @@ Use `article-writer` to draft or revise. Provide the Writing Brief and the resea
 
 The draft should serve the brief, not merely summarize the research.
 
+Run `wc_cli.py draftcheck` after each material revision and `wc_cli.py review` before handoff. A failed report blocks handoff; an escalated review requires human approval. These checks supplement rather than replace `verify_claims.py`, `draft_loop.py`, and `citation_trace.py`.
+
 ## Phase 6: Review And Handoff
 
 Before returning the final result, check:
@@ -110,3 +120,7 @@ Before returning the final result, check:
 - Did the article avoid generic AI-style structure and filler?
 
 Return the article with a short note on interpretation, remaining gaps, and useful next revisions.
+
+## Activation
+
+After changing harness agent or skill contracts, sync the harness skill copies to the live OpenCode config and restart OpenCode so the new environment and prompts are loaded. Live copies under `${OPENCODE_CONFIG_DIR}/skills` are deployment artifacts, not the source edited here.

@@ -1,0 +1,41 @@
+schema_version: linguistic-tier-policy/0.3
+tiers:
+  T0:
+    authority: proposal_and_deterministic_checks
+    tasks:
+    - morphology
+    - dependency_parse
+    - numbers_units
+    - basic_agreement
+    - basic_government
+    - candidate_generation
+  T1:
+    authority: bounded_semantic_proposals
+    context: linguistic_digest
+    tasks:
+    - frame_selection
+    - clause_role
+    - simple_coreference
+    - local_repair
+    - lexical_rerank
+  T2:
+    authority: structured_semantic_arbitration
+    context: diagnostic_capsule
+    tasks:
+    - ambiguous_coreference
+    - negation_scope
+    - implicit_warrant
+    - complex_discourse
+    - critical_compression
+  HUMAN:
+    authority: policy_defined_final_decision
+escalation:
+  basis:
+  - claim_criticality
+  - ambiguity_relevance
+  - potential_semantic_delta
+  not_basis_alone:
+  - parser_confidence
+limits:
+  tier2_full_document_default: false
+  tier1_raw_graph_dump_default: false

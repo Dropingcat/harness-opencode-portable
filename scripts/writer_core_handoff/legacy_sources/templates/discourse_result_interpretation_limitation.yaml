@@ -1,0 +1,26 @@
+id: ARG_RESULT_INTERPRETATION_LIMITATION
+version: 1
+kind: discourse_pattern
+preconditions:
+  - at_least_one: [EXPERIMENTAL_RESULT, QUANTITATIVE]
+slots:
+  observation:
+    cardinality: 1
+    claim_kinds: [EXPERIMENTAL_RESULT, QUANTITATIVE]
+  interpretation:
+    cardinality: 1
+    claim_kinds: [INTERPRETIVE, MECHANISTIC, CAUSAL]
+  limitation:
+    cardinality: "0..2"
+relations:
+  - [observation, SUPPORTS, interpretation]
+  - [limitation, QUALIFIES, interpretation]
+constraints:
+  - interpretation.scope <= observation.scope
+  - interpretation.causal_level <= contract_allowed_causal_level
+  - required_qualifiers_must_survive == true
+postconditions:
+  - no_unauthorized_claims
+  - all_required_claims_realized
+metrics:
+  words: {min: 80, max: 220}

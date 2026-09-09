@@ -14,6 +14,11 @@ export DOC_GUARD_PROVIDER="${DOC_GUARD_PROVIDER:-cloud}"
 export PYTHON="${PYTHON:-python3}"
 export HERMES_ROOT="$HARNESS"
 
+# Native Writer Core. Runtime artifacts stay outside the source tree.
+export WRITER_CORE_ROOT="$HARNESS/scripts/writer-core"
+export WRITER_RUNS_DIR="$HARNESS/.runs/writer-core"
+export WRITER_LINGUISTICS_REGISTRY_DIR="$HARNESS/scripts/writer_core_handoff/linguistics"
+
 # OPENCODE_SESSION_DB — real session DB; set if known.
 # export OPENCODE_SESSION_DB="/home/orangepi/.local/share/opencode/opencode.db"
 

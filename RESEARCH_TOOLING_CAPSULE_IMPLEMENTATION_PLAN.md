@@ -66,9 +66,44 @@ with current HARNESS documentation and code.
 | Tool capsules | `TOOL_CAPSULE_ARCHITECTURE.md`, `config/tool_*` | Registry and resolver exist; capsule registry marks tool bindings active | Tracker and hierarchy bindings are stale/incomplete; richer contracts and anti-contracts remain open |
 | MCP capsules | `MCP_CAPSULE_ARCHITECTURE.md`, `config/mcp_*` | Registry, policy, graph, and lifecycle definitions exist | Capsule registry still marks `mcp-perimeter` planned; health checks are disabled; live OpenCode wiring is unverified |
 | Runtime lifecycle | `RUNTIME_RUNBOOK.md`, `scripts/start_mcp_servers.py` | stdio definitions can be validated | Runbook says `start`; script deliberately rejects `start` because lifecycle is host-managed |
-| Capability checks | `scripts/validate_env.py`, `scripts/health_check.py` | Paths, plugin definition, guard, DB, and MCP syntax can be checked | No dependency/backend/end-to-end capability report for PDF/OCR/Office/TIFF/search |
-| Dispatch/checkpoint | `shared/dispatch-retry.md`, code-factory state, audit graph | Retry guidance and code state machinery exist | Research retry assumes no file side effects; no research job manifest, artifact recovery, or task-id/contract validation |
+| Capability checks | `scripts/validate_env.py`, `scripts/health_check.py`, `scripts/router/capability_preflight.py` | Preflight already probes providers (searxng, openalex, arxiv, source_resolver, document_extract, ocr, libreoffice, science/plot/report/corpus/job_runtime) and emits `available/degraded/disabled/missing` | No live search/document activation yet; OCR/LibreOffice/sympy are missing on this machine |
+| Dispatch/checkpoint | `shared/dispatch-retry.md`, code-factory state, audit graph, `scripts/jobs/job_ctl.py` | `job.checkpoint` capability exists via job_runtime and is wired into capability runtime snapshot | Research retry contract still assumes no file side effects; job manifest/artifact resume needs a live smoke test |
 | Code acceptance | `shared/code-factory-process.md`, code agents | Worker/reviewer/tester/auditor roles exist | Writing/research orchestrators can bypass the factory and call a coder without independent review and testing |
+
+### Researcher source reconciliation (verified 2026-09-08)
+
+Canonical researcher source: `E:\барахло\Documents\Default Project` (src layout,
+`pyproject.toml`, `config/research_policy.yaml`, `tests/`, `malina_research_service_fixture.yaml`).
+
+Verified facts:
+
+- `scripts/researcher/researcher_core/` in HARNESS is **byte-identical** to
+  `src/researcher_core/` in Default Project (SHA-256 comparison, 0 diffs in both
+  directions). Package migration is complete.
+- `config/research_policy.yaml` is present in HARNESS; `scripts/research/`
+  bridges (`units`, `uncertainty`, `formulas`, `numeric_comparator`,
+  `synthesizer`, `judge_brief`, `rules_balanced.yaml`, `run_research.sh`) exist.
+- Researcher tests in HARNESS: **360/360 OK** (unittest, no pytest needed).
+  Fix applied: restored missing fixture
+  `tests/fixtures/literature_index_sample.jsonl` (was absent; 2 local_corpus
+  tests failed without it).
+- `scripts/router/capability_preflight.py` + `config/providers_authority.json` +
+  `config/capabilities_authority.json` already implement Slice 1 vocabulary.
+- `scripts/router/resolve_bundle.py` + `compile_capability_runtime.py` +
+  `config/capability_runtime_snapshot.json` already route stage → required
+  capabilities → preflight state (`READY` / `DEGRADED_CAPABILITY` /
+  `BLOCKED_MISSING_CAPABILITY`) → logical tools → escalation.
+- `scripts/jobs/job_ctl.py` already provides `job.checkpoint`.
+
+Remaining migration gaps:
+
+- `malina_research_service_fixture.yaml` is not at HARNESS root (WS-08/
+  audit_graph references it); resolve during Slice 0.
+- `config/runtime_integration_policy.json` plugin path still points to the
+  obsolete `E:/Documents/Документы/doc_Opencode_agern` location.
+- Env wiring `RESEARCH_CORE_ROOT`, `RESEARCH_VERIFY_CLAIMS` is not yet in
+  `scripts/setup_env.*` / `validate_env.py`.
+- Writing process does not yet require `verify_claims` before `citation_trace`.
 
 Documentation conflicts to resolve during Slice 0:
 
@@ -225,22 +260,10 @@ Acceptance:
 
 ### Slice 1: Capability preflight
 
-Extend health checking with a machine-readable report for:
-
-- SearXNG HTTP/JSON availability;
-- MCP Python package;
-- PyMuPDF/pypdfium2 and OCR backend;
-- DOCX, legacy DOC, XLSX/XLS/XLSB support;
-- TIFF metadata and optional scientific-image stack;
-- academic API connectivity;
-- guard and writable run/cache directories.
-
-Acceptance:
-
-- one JSON report distinguishes `available`, `degraded`, `missing`, and
-  `disabled`;
-- agents receive the report before route execution;
-- missing optional dependencies do not break core startup.
+Status: **already implemented** (`scripts/router/capability_preflight.py`,
+`config/providers_authority.json`, `config/capabilities_authority.json`).
+Remaining work: live network smoke (arXiv/OpenAlex/SearXNG responses) and adding
+candidate probes for TIFF/SEM-stack modules in the capability registry.
 
 ### Slice 2: SearXNG discovery vertical
 
@@ -369,6 +392,12 @@ Acceptance:
 - all persisted verdicts have producer and provenance.
 
 ### Slice 8: Checkpointed dispatch and code acceptance
+
+Status: **partially implemented** — `scripts/jobs/job_ctl.py` provides
+`job.checkpoint` and is wired into the capability runtime snapshot. Remaining
+work: research job manifest conventions under `${OPENCODE_RUNS_DIR}`, atomic
+stage registration, artifact recovery on `TERMINATED`, and task-id/contract
+validation for subagent resume.
 
 Deliverables:
 

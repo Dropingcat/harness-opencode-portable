@@ -1,0 +1,124 @@
+# Canonical Document — единый интерфейс между PDF-парсерами и графами.
+#
+# Принцип: НИ ОДИН граф не знает про PDF/абзацы-эвристики. Все коллекторы
+# (C1..C13) читают из этого формата. Смена парсера (GROBID/Docling/Marker/pymupdf)
+# или языка (RU/EN) влияет ТОЛЬКО на адаптер → canonical, не на downstream.
+#
+# См. docs/27_GRAPH_COLLECTORS.md. Зафиксировано 04.09.2026.
+$id: writer-core-2/canonical-document/0.1
+$type: object
+required: [doc_id, source_path, parser, parser_version, language, metadata, blocks]
+
+properties:
+  doc_id: {type: string}                    # ART_BLINOVA_2018
+  source_path: {type: string}
+  parser: {enum: [docling, grobid, marker, pymupdf_fallback, manual]}
+  parser_version: {type: string}
+  language: {enum: [ru, en, bilingual]}
+  parsed_at: {type: string}                 # ISO timestamp
+
+  metadata:
+    type: object
+    properties:
+      title: {type: string}
+      authors: {type: array, items: {type: string}}
+      spec: {type: string}                  # "05.16.01"
+      pages: {type: integer}
+      artifact_type: {enum: [dissertation, autoreferat, article, monograph, report, book, other]}
+
+  blocks:
+    type: array
+    description: >-
+      Линейная последовательность блоков в порядке чтения (reading order).
+      Это единственный источник порядка/иерархии — эвристика размера шрифта НЕ нужна.
+    items:
+      type: object
+      required: [block_id, block_type, text, page]
+      properties:
+        block_id: {type: string}            # "BLK_00001"
+        block_type: {enum: [title, author, abstract, heading, paragraph, caption,
+                             table, figure, formula, list, reference, footer, header]}
+        text: {type: string}
+        page: {type: integer}
+        # Локаторы для точного Evidence span
+        bbox: {type: array, items: {type: number}, minItems: 4, maxItems: 4}
+        # Связь с родительским блоком (иерархия), если парсер её дал:
+        parent: {type: [string, "null"], default: null}
+        level: {type: [integer, "null"], default: null}    # для heading: глубина (1=глава, 2=раздел...)
+        sentences:
+          type: [array, "null"]
+          items:
+            type: object
+            required: [s, si]
+            properties:
+              s: {type: string}
+              si: {type: integer}           # индекс внутри абзаца
+
+  # Структурированные объекты, извлекаемые детерминированно (без LLM)
+  quantities:
+    type: [array, "null"]
+    items:
+      type: object
+      required: [id, block_id, raw, value_lower, value_upper, unit]
+      properties:
+        id: {type: string}
+        block_id: {type: string}
+        raw: {type: string}
+        value_lower: {type: [number, "null"]}
+        value_upper: {type: [number, "null"]}
+        value_exact: {type: [number, "null"]}
+        unit: {type: string}
+        dimension: {type: [string, "null"]}
+        text: {type: string}                 # span-контекст (предложение)
+        si: {type: [integer, "null"]}        # индекс предложения
+
+  citations:
+    type: [array, "null"]
+    items:
+      type: object
+      required: [id, block_id, marker, context]
+      properties:
+        id: {type: string}
+        block_id: {type: string}
+        marker: {type: string}               # "[12]" | "(Иванов, 2005)" | ref id
+        context: {type: string}              # предложение-контекст
+        ref_text: {type: [string, "null"]}   # строка из списка литературы, если резолвится
+
+  formulas:
+    type: [array, "null"]
+    items:
+      type: object
+      required: [id, block_id, latex]
+      properties:
+        id: {type: string}
+        block_id: {type: string}
+        latex: {type: string}
+        spans: {type: [array, "null"], items: {type: string}}
+
+  tables:
+    type: [array, "null"]
+    items:
+      type: object
+      required: [id, block_id, caption]
+      properties:
+        id: {type: string}
+        block_id: {type: string}
+        caption: {type: string}
+        rows: {type: array, items: {type: array, items: {type: string}}}
+
+  figures:
+    type: [array, "null"]
+    items:
+      type: object
+      required: [id, block_id, caption]
+      properties:
+        id: {type: string}
+        block_id: {type: string}
+        caption: {type: string}
+
+# Инварианты:
+# 1. Парсер обязан выдавать reading order (последовательность blocks) — иерархия из него,
+#    а не из font-size эвристик.
+# 2. block_type — типизированный, не «просто текст»: таблицы, формулы, подписи выделены.
+# 3. Смена парсера = новый adapter, формат тот же. Смена языка = разное содержимое, схема та же.
+# 4. LLM не участвует в canonical document; extractor capsule работает НАД этой структурой.

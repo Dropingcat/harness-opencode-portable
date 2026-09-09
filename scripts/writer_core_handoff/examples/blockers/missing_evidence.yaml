@@ -1,0 +1,17 @@
+blocker:
+  id: BLK_0017
+  type: MISSING_EVIDENCE
+  severity: RELEASE_BLOCKING
+  target:
+    claim: C_91
+  origin:
+    validator: WriterContractCompleteness
+  state: OPEN
+  blocks:
+  - PAR_91
+  - SEC_4_CONCLUSION
+  - DOC_CONCLUSION
+  resolution_options:
+  - research_more
+  - weaken_claim
+  - remove_claim

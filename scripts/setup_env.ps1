@@ -1,11 +1,14 @@
 ﻿# Runtime environment bootstrap for OpenCode unified module (Windows PowerShell)
-# NOTE: harness has an ASCII junction at E:\opencode_harness -> real (cyrillic) path.
-# Use the ASCII path in env to avoid console/subprocess codepage breakage.
+# Invoke this script through the preferred harness path (an ASCII junction is fine).
 
 # Run: powershell -ExecutionPolicy Bypass -File scripts/setup_env.ps1
 # or:  . .\scripts\setup_env.ps1
 
-$HARNESS = "E:\opencode_harness"
+if ([string]::IsNullOrWhiteSpace($env:OPENCODE_HARNESS_ROOT)) {
+    $HARNESS = [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot ".."))
+} else {
+    $HARNESS = $env:OPENCODE_HARNESS_ROOT
+}
 
 [Environment]::SetEnvironmentVariable("OPENCODE_HARNESS_ROOT", $HARNESS, "User")
 [Environment]::SetEnvironmentVariable("OPENCODE_RUNS_DIR", (Join-Path $HARNESS ".runs"), "User")
@@ -16,6 +19,11 @@ $HARNESS = "E:\opencode_harness"
 [Environment]::SetEnvironmentVariable("DOC_GUARD_CONFIG", (Join-Path $env:USERPROFILE ".config\opencode\guard_config.json"), "User")
 [Environment]::SetEnvironmentVariable("DOC_GUARD_PROVIDER", "cloud", "User")
 [Environment]::SetEnvironmentVariable("HERMES_ROOT", $HARNESS, "User")
+
+# Native Writer Core. Runtime artifacts stay outside the source tree.
+[Environment]::SetEnvironmentVariable("WRITER_CORE_ROOT", (Join-Path $HARNESS "scripts\writer-core"), "User")
+[Environment]::SetEnvironmentVariable("WRITER_RUNS_DIR", (Join-Path $HARNESS ".runs\writer-core"), "User")
+[Environment]::SetEnvironmentVariable("WRITER_LINGUISTICS_REGISTRY_DIR", (Join-Path $HARNESS "scripts\writer_core_handoff\linguistics"), "User")
 
 # Изолированный Python-venv фабрики (только stdlib; см. requirements-core.txt)
 $venvDir = Join-Path $HARNESS ".venv"

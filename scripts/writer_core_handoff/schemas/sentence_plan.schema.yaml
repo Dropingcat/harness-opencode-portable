@@ -1,0 +1,27 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+title: SentencePlan
+type: object
+required:
+- id
+- semantic_refs
+- frame
+- clauses
+properties:
+  id:
+    type: string
+  semantic_refs:
+    type: array
+    items:
+      type: string
+  frame:
+    type: string
+  clauses:
+    type: array
+  theme_rheme:
+    type: object
+  lexical_choices:
+    type: object
+  forbidden_upgrades:
+    type: array
+    items:
+      type: string

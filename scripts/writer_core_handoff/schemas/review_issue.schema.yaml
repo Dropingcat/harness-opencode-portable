@@ -1,0 +1,15 @@
+schema_version: review-issue/0.1
+required:
+- id
+- target
+- issue_type
+- severity
+- reviewer
+- state
+state:
+- OPEN
+- ACCEPTED
+- REJECTED_WITH_REASON
+- FIXED
+- REVALIDATED
+- CLOSED

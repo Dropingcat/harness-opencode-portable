@@ -1,0 +1,24 @@
+figure:
+  id: FIG_06
+  revision: 5
+  mutability: DERIVED_REBUILDABLE
+  source_data:
+  - DATASET_17@3
+  generation:
+    script: regenerate_ris6.py
+    script_hash: sha256:EXAMPLE
+    parameters:
+      x: delta_a_over_a0
+      y: beta_phys
+  axes:
+    x:
+      quantity: delta_a_over_a0
+      unit: percent
+    y:
+      quantity: beta_phys
+      unit: rad
+  supports:
+  - C_41
+  caption_claims:
+  - C_51
+  freshness: FRESH

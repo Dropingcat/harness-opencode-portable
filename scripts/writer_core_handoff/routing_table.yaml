@@ -1,0 +1,68 @@
+schema_version: writer-routing/0.3
+default_mode: affordance_set
+rule_classes:
+- HARD_INVARIANT
+- CONSTRAINT
+- SIGNAL
+- LEARNED_PREFERENCE
+direct_routes:
+- when: invalid_identifier_or_authority_violation
+  operation: REJECT_TRANSACTION
+  class: HARD_INVARIANT
+- when: generated_artifact_upstream_stale
+  operation: MARK_REBUILD_REQUIRED
+  class: HARD_INVARIANT
+- when: broken_dimension
+  operation: BLOCK_QUANTITATIVE_COMMIT
+  class: HARD_INVARIANT
+environments:
+- state: semantic_rtt_mismatch
+  affordances:
+  - inspect_contract
+  - inspect_evidence
+  - rewrite_span
+  - weaken_modality
+  - restore_scope
+  - remove_causality
+  - request_research
+  - request_expert
+  unavailable:
+  - silent_claim_mutation
+  - silent_evidence_creation
+- state: linguistic_ambiguity_low_impact
+  affordances:
+  - keep_best_parse
+  - request_local_context
+  - rerank_candidate
+  unavailable: []
+- state: linguistic_ambiguity_high_impact
+  affordances:
+  - request_expert
+  - inspect_references
+  - inspect_semantic_contract
+  unavailable:
+  - finalize
+- state: sentence_plan_ready
+  affordances:
+  - select_frame
+  - split_clause
+  - merge_clauses
+  - rerank_lexical_choices
+  - propose_theme_rheme
+  - realize_candidates
+  unavailable:
+  - mutate_researcher_claim
+- state: writer_gap
+  affordances:
+  - weaken_claim
+  - remove_optional_slot
+  - create_research_request
+  - request_human_decision
+  unavailable:
+  - invent_evidence
+- state: style_signal_only
+  affordances:
+  - keep
+  - rewrite_local
+  - select_alternative_frame
+  unavailable: []

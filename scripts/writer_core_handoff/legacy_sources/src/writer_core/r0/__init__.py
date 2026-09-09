@@ -1,0 +1,1 @@
+"""writer-core R0 package."""

@@ -1,0 +1,98 @@
+# Скелет научного отчёта (ГОСТ 7.32)
+document:
+  id: "DOC_SKELETON"
+  genre: "scientific_report"
+  gost: "7.32-2017"
+  skeleton_version: "1.0"
+
+skeleton:
+  - id: "SEC_TITLE"
+    type: "section"
+    title: "Титульный лист"
+    role: "title_page"
+    children:
+      - id: "PAR_TITLE"
+        type: "paragraph"
+        role: "title_page"
+        required: true
+
+  - id: "SEC_ABSTRACT"
+    type: "section"
+    title: "Аннотация"
+    role: "abstract"
+    children:
+      - id: "PAR_ABSTRACT"
+        type: "paragraph"
+        role: "abstract"
+        required: true
+
+  - id: "SEC_INTRO"
+    type: "section"
+    title: "Введение"
+    role: "introduction"
+    children:
+      - id: "PAR_INTRO"
+        type: "paragraph"
+        role: "introduction"
+        required: true
+
+  - id: "SEC_METHODS"
+    type: "section"
+    title: "Методы"
+    role: "methods"
+    children:
+      - id: "PAR_METHODS"
+        type: "paragraph"
+        role: "methods"
+        required: true
+
+  - id: "SEC_RESULTS"
+    type: "section"
+    title: "Результаты"
+    role: "results"
+    children:
+      - id: "PAR_RES"
+        type: "paragraph"
+        role: "results"
+        required: true
+
+  - id: "SEC_DISC"
+    type: "section"
+    title: "Обсуждение"
+    role: "discussion"
+    children:
+      - id: "PAR_DISC"
+        type: "paragraph"
+        role: "discussion"
+        required: true
+
+  - id: "SEC_CONCL"
+    type: "section"
+    title: "Заключение"
+    role: "conclusion"
+    children:
+      - id: "PAR_CONCL"
+        type: "paragraph"
+        role: "conclusion"
+        required: true
+
+  - id: "SEC_LIT"
+    type: "section"
+    title: "Список литературы"
+    role: "literature"
+    children:
+      - id: "PAR_LIT"
+        type: "paragraph"
+        role: "bibliography"
+        required: true
+
+  - id: "SEC_APP"
+    type: "section"
+    title: "Приложения"
+    role: "appendix"
+    required: false
+    children:
+      - id: "PAR_APP"
+        type: "paragraph"
+        role: "appendix"
+        required: false

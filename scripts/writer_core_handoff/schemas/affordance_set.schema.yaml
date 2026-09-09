@@ -1,0 +1,22 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+title: AffordanceSet
+type: object
+required:
+- target
+- hard_invariants
+- affordances
+properties:
+  target:
+    type: string
+  hard_invariants:
+    type: array
+  constraints:
+    type: array
+  signals:
+    type: array
+  learned_preferences:
+    type: array
+  affordances:
+    type: array
+  unavailable_actions:
+    type: array

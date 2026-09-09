@@ -1,0 +1,21 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+title: LinguisticEpisode
+type: object
+required:
+- id
+- context
+- outcome
+- provenance
+properties:
+  id:
+    type: string
+  context:
+    type: object
+  variants:
+    type: array
+  outcome:
+    type: object
+  features:
+    type: object
+  provenance:
+    type: object

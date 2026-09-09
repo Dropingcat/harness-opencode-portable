@@ -238,15 +238,26 @@ checkpointed контура для ресерчера и писателя без
 
 - [x] Зафиксировать текущее состояние SearXNG, academic search, doc extraction,
   local corpus, evidence, runtime lifecycle и code acceptance. (2026-09-08)
-- [ ] Slice 0: устранить противоречия sources of truth и route/capsule statuses.
-- [ ] Slice 1: добавить machine-readable capability preflight.
+- [x] Сверить researcher Default Project → HARNESS: researcher_core байт-в-байт
+  идентичен (SHA-256, 0 diff), research_policy.yaml и research-мосты на месте,
+  тесты 360/360 OK после восстановления фикстуры
+  `tests/fixtures/literature_index_sample.jsonl`. (2026-09-08)
+- [x] Подтвердить capability preflight (providers_authority + capability_preflight.py),
+  bundle-router (resolve_bundle.py + capability_runtime_snapshot.json) и
+  job checkpoint (scripts/jobs/job_ctl.py) как существующую базу для Slice 1/8.
+  (2026-09-08)
+- [ ] Slice 0: устранить противоречия sources of truth и route/capsule statuses;
+  вернуть `malina_research_service_fixture.yaml` в HARNESS root; починить obsolete
+  plugin path в runtime_integration_policy.json.
+- [ ] Slice 1 (доделка): live network smoke для arXiv/OpenAlex/SearXNG; пробы TIFF/SEM в registry.
 - [ ] Slice 2: поднять и smoke-test локальный SearXNG; нормализовать discovery contract.
 - [ ] Slice 3: добавить Crossref/Unpaywall source resolution и дедупликацию.
 - [ ] Slice 4: включить provenance-preserving PDF/Word/Excel inspection.
 - [ ] Slice 5: добавить отдельную TIFF/SEM/EDS capsule.
 - [ ] Slice 6: сделать incremental corpus manifest + SQLite FTS5.
 - [ ] Slice 7: соединить evidence bundle с fact-checker, researcher-core и Writer DOM.
-- [ ] Slice 8: добавить research checkpoint/resume и обязательный code acceptance.
+- [ ] Slice 8 (доделка): research job manifest, artifact resume, проверка task_id;
+  обязательный code acceptance через фабрику.
 - [ ] Slice 9: активировать capabilities по одной после standalone и live smoke tests.
 
 ## Rule

@@ -1,0 +1,15 @@
+build:
+  build_id: BUILD_2026_001
+  document_revision: DOC@42
+  claim_snapshot: RSCH@118
+  policy_snapshot: POLICY_ACADEMIC@7
+  template_versions:
+  - RESULT_LIMITATION@4
+  data_versions:
+  - DATASET_17@3
+  validator_versions:
+  - RTT@2
+  - QUANT@1
+  outputs:
+  - report.docx
+  - report.pdf

@@ -1,0 +1,30 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+title: LinguisticDigest
+type: object
+required:
+- id
+- main_statement
+- affordances
+properties:
+  id:
+    type: string
+  main_statement:
+    type: object
+  scope:
+    type: object
+  modality:
+    type:
+    - string
+    - 'null'
+  causal_force:
+    type:
+    - string
+    - 'null'
+  references:
+    type: array
+  ambiguities:
+    type: array
+  affordances:
+    type: array
+    items:
+      type: string
