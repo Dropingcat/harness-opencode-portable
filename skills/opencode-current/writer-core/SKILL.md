@@ -51,7 +51,7 @@ ${OPENCODE_HARNESS_ROOT}/scripts/writer-core/
 Env: `WRITER_CORE_ROOT` (по умолчанию `${OPENCODE_HARNESS_ROOT}/scripts/writer-core`),
 `WRITER_RUNS_DIR` (bootstrap: `${OPENCODE_RUNS_DIR}/writer-core`) и
 `WRITER_LINGUISTICS_REGISTRY_DIR` (bootstrap:
-`${OPENCODE_HARNESS_ROOT}/scripts/writer_core_handoff/linguistics`).
+`${WRITER_CORE_ROOT}/linguistic_assets`).
 
 ## Workflow (plan → DOM → draft → draftcheck → repair → review)
 

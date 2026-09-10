@@ -17,7 +17,22 @@ import re
 from dataclasses import dataclass, field
 from typing import Any
 
-from razdel import sentenize, tokenize
+try:
+    from razdel import sentenize, tokenize
+except ImportError:  # minimal deterministic fallback for dependency-light RTT checks
+    @dataclass(frozen=True)
+    class _Segment:
+        text: str
+        start: int
+        stop: int
+
+    def sentenize(text: str):
+        for match in re.finditer(r"[^.!?]+(?:[.!?]+|$)", text):
+            yield _Segment(match.group(0), match.start(), match.end())
+
+    def tokenize(text: str):
+        for match in re.finditer(r"\w+|[^\w\s]", text, re.UNICODE):
+            yield _Segment(match.group(0), match.start(), match.end())
 
 from registry_loader import get_registries
 

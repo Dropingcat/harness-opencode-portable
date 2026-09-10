@@ -17,7 +17,10 @@ API = "https://polza.ai/api/v1/chat/completions"
 
 # Auto-calibrated grounding threshold (m_gemma_calib). Read once at import;
 # refresh with reload_default_threshold() after a new calibration run.
-_CALIBRATION_PATH = r"C:\Temp\opencode\writer_verify\gemma_calibration.json"
+_CALIBRATION_PATH = os.path.join(
+    os.environ.get("WRITER_RUNS_DIR", os.path.join(os.path.dirname(os.path.abspath(__file__)), "runs")),
+    "gemma_calibration.json",
+)
 
 
 def _load_default_threshold(path: str | None = None) -> float:

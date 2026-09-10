@@ -23,7 +23,7 @@ if ([string]::IsNullOrWhiteSpace($env:OPENCODE_HARNESS_ROOT)) {
 # Native Writer Core. Runtime artifacts stay outside the source tree.
 [Environment]::SetEnvironmentVariable("WRITER_CORE_ROOT", (Join-Path $HARNESS "scripts\writer-core"), "User")
 [Environment]::SetEnvironmentVariable("WRITER_RUNS_DIR", (Join-Path $HARNESS ".runs\writer-core"), "User")
-[Environment]::SetEnvironmentVariable("WRITER_LINGUISTICS_REGISTRY_DIR", (Join-Path $HARNESS "scripts\writer_core_handoff\linguistics"), "User")
+[Environment]::SetEnvironmentVariable("WRITER_LINGUISTICS_REGISTRY_DIR", (Join-Path $HARNESS "scripts\writer-core\linguistic_assets"), "User")
 
 # Изолированный Python-venv фабрики (только stdlib; см. requirements-core.txt)
 $venvDir = Join-Path $HARNESS ".venv"

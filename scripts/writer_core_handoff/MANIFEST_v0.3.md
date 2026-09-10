@@ -1,5 +1,13 @@
 # MANIFEST v0.3
 
+> Provenance notice (2026-09-10): this table is preserved unchanged as the
+> original v0.3 package manifest. It is not a manifest of the current canonical
+> checkout: the wholesale `legacy_sources/` payload was removed, and selected
+> consumed registries/fixtures were moved to runtime-owned paths under
+> `scripts/writer-core/`. Paths in this historical table are relative to the
+> original handoff package root. No hash below was rewritten to imply a new
+> provenance.
+
 SHA256 | Path
 --- | ---
 `6171b5e0f942ed714b661b3c5921e07cc9a017562400dbf53bb06b53a9c2d044` | `AGENTS.md`

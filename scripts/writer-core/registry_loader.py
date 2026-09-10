@@ -69,7 +69,7 @@ class Registries:
         """First matching lexicon expression contained in entry."""
         for expr, info in self.expr_force.items():
             if expr in entry.lower():
-                return expr, info["epistemic_force"]
+                return expr, info.get("epistemic_force", "")
         return "", ""
 
 

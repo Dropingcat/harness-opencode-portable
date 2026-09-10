@@ -3,13 +3,13 @@
 
 Унифицированный артефакт на параграф, объединяющий два независимых слоя:
 
-  v2 (детерминированный экстрактор, C:\\Temp\\opencode\\writer_verify\\hybrid\\v2_extractor):
+  v2 (детерминированный экстрактор, runtime-owned v2_extractor/):
     - claims   — кандидаты-утверждения с абсолютными координатами (start/end, sentence_idx)
     - objects  — числа+единицы (C5), сталь, химия, годы, аббревиатуры, термины
     - discourse— дискурс-роли (метод/результат/вывод/...) и модальность
     - philology— морфология, стилистические фигуры, хрия, коннекторы (philologcal_layer)
 
-  v0.3 (T0-лингвослой, C:\\Temp\\opencode\\writer_verify\\t0_ru.py + digest_builder.py):
+  v0.3 (runtime-owned T0-лингвослой, t0_ru.py + digest_builder.py):
     - digest — LinguisticDigest (pydantic → dict) на ДОМИНАНТНОМ предложении
       (первом значимом — с claims): main_statement, scope, modality,
       causal_force, discourse_role, ambiguities, affordances, scope_text
@@ -38,11 +38,9 @@ from typing import Any
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
 _WC_ROOT = os.environ.get("WRITER_CORE_ROOT") or _HERE
-_HARNESS_ROOT = os.path.dirname(os.path.dirname(_WC_ROOT))
 _V2_DIR = os.path.join(_WC_ROOT, "v2_extractor")
-_SKELETON = os.path.join(_HARNESS_ROOT, "scripts", "writer_core_handoff", "src_skeleton")
 
-for _p in (_V2_DIR, _WC_ROOT, _SKELETON):
+for _p in (_V2_DIR, _WC_ROOT):
     if _p not in sys.path:
         sys.path.insert(0, _p)
 

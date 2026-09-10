@@ -47,9 +47,7 @@ import re
 import sqlite3
 from typing import Any
 
-_DEFAULT_REGISTRY = (
-    r"E:\Documents\Документы\writer-core\writer_core_handoff\graph_registry.yaml"
-)
+_DEFAULT_REGISTRY = os.path.join(os.path.dirname(os.path.abspath(__file__)), "graph_registry.yaml")
 
 # --------------------------------------------------------------------------
 # registry
@@ -894,7 +892,7 @@ def to_sqlite(graphs_dict: dict, conn: sqlite3.Connection) -> None:
 
 if __name__ == "__main__":
     import sys as _sys
-    _path = r"C:\Temp\opencode\writer_verify\hybrid\sample_artifact.json"
+    _path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "tests", "fixtures", "sample_artifact.json")
     if len(_sys.argv) > 1:
         _path = _sys.argv[1]
     _art = json.load(open(_path, encoding="utf-8"))

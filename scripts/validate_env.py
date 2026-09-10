@@ -22,7 +22,7 @@ def validate_writer_core(repo_root: Path) -> list[str]:
     """Validate native Writer Core locations without importing optional packages."""
     errors: list[str] = []
     expected_root = repo_root / "scripts" / "writer-core"
-    expected_registry = repo_root / "scripts" / "writer_core_handoff" / "linguistics"
+    expected_registry = expected_root / "linguistic_assets"
 
     configured: dict[str, Path] = {}
     for name in (

@@ -8,7 +8,7 @@ L3 semantic module. Pipeline per document:
         -> optional (use_llm=True): propose_variants (weak LLM) + RTT compare(source, variant)
         -> corpus-level aggregates: epistemic force, issues by type/category,
            top connectives, top force lexemes, numeric frequency
-        -> JSON report written to C:\\Temp\\opencode\\writer_verify\\corpus_report.json (utf-8)
+        -> JSON report written below WRITER_RUNS_DIR (utf-8)
 
 Fail-closed: unreadable files are recorded in report["errors"] and never abort the run;
 per-sentence exceptions are counted as sentence_errors and skipped.
@@ -25,9 +25,7 @@ from collections import Counter
 from typing import Any
 
 _WC_ROOT = os.environ.get("WRITER_CORE_ROOT") or os.path.dirname(os.path.abspath(__file__))
-_HARNESS_ROOT = os.path.dirname(os.path.dirname(_WC_ROOT))
-_SKELETON = os.path.join(_HARNESS_ROOT, "scripts", "writer_core_handoff", "src_skeleton")
-for _p in (_WC_ROOT, os.path.join(_WC_ROOT, "v2_extractor"), _SKELETON):
+for _p in (_WC_ROOT, os.path.join(_WC_ROOT, "v2_extractor")):
     if _p not in sys.path:
         sys.path.insert(0, _p)
 
@@ -129,7 +127,7 @@ def run_corpus(paths: list[str], max_sentences: int = 200, use_llm: bool = False
     hard-ceilinged at 1500 — keeps an LLM-free run well under ~60 s.
 
     Returns the report dict and writes it as utf-8 JSON to `report_path`
-    (default C:\\Temp\\opencode\\writer_verify\\corpus_report.json).
+    (default ``scripts/writer-core/runs/corpus_report.json``).
     """
     t_start = time.perf_counter()
     use_llm = bool(use_llm)

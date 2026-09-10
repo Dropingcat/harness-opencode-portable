@@ -840,8 +840,8 @@ if __name__ == "__main__":
     import argparse
 
     ap = argparse.ArgumentParser(description="Консолидация версий автореферата")
-    ap.add_argument("--versions-dir",
-                    default=r"F:\1\_STRUCTURED\07_AUTOREF\versions")
+    ap.add_argument("--versions-dir", default=os.environ.get("WRITER_VERSIONS_DIR"),
+                    required="WRITER_VERSIONS_DIR" not in os.environ)
     ap.add_argument("--max-paragraphs", type=int, default=100)
     args = ap.parse_args()
 

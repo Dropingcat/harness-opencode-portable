@@ -6,10 +6,10 @@
 строятся). Цель: следующий запуск (новый агент/сессия) читает, что уже проверено,
 какие графы эталонно строятся, какой порог gemma, какие известные баги/ловушки.
 
-Файл: JSON (MEMORY_PATH), схема writer_verify.session_memory.v1::
+Файл: JSON (MEMORY_PATH), схема writer_core.session_memory.v1::
 
     {
-      "schema": "writer_verify.session_memory.v1",
+      "schema": "writer_core.session_memory.v1",
       "updated_at": "<ISO-8601>",
       "entries": {"<дата>:<секция>": <значение>, ...},   # append-only история
       "defaults": {"gemma_threshold": 0.4, "etalon_docx": ..., "registry": ..., "golden": ...},
@@ -38,7 +38,7 @@ import json
 import os
 
 MEMORY_PATH = os.path.join(os.environ.get("WRITER_RUNS_DIR", os.path.join(os.path.dirname(os.path.abspath(__file__)), "runs")), "session_memory.json")
-SCHEMA = "writer_verify.session_memory.v1"
+SCHEMA = "writer_core.session_memory.v1"
 
 DEFAULT_MEMORY: dict = {
     "schema": SCHEMA,
@@ -46,9 +46,9 @@ DEFAULT_MEMORY: dict = {
     "entries": {},
     "defaults": {
         "gemma_threshold": 0.4,
-        "etalon_docx": r"F:\1\_STRUCTURED\07_AUTOREF\versions\Автореферат_v8_АКТУАЛЬНАЯ.docx",
-        "registry": r"E:\Documents\Документы\writer-core\writer_core_handoff\graph_registry.yaml",
-        "golden": r"E:\Documents\Документы\writer-core\writer_core_handoff\tests\linguistics\golden_traps.yaml",
+        "etalon_docx": os.environ.get("WRITER_ETALON_DOCX"),
+        "registry": os.path.join(os.path.dirname(os.path.abspath(__file__)), "graph_registry.yaml"),
+        "golden": os.path.join(os.path.dirname(os.path.abspath(__file__)), "tests", "fixtures", "linguistics", "golden_traps.yaml"),
     },
 }
 

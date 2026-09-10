@@ -260,6 +260,21 @@ checkpointed контура для ресерчера и писателя без
   обязательный code acceptance через фабрику.
 - [ ] Slice 9: активировать capabilities по одной после standalone и live smoke tests.
 
+### WS-23 Writer Core: граница handoff specification / runtime
+
+Цель: сохранить handoff v0.3 как спецификацию и provenance, не делая его
+исполняемой зависимостью Writer Core.
+
+- [x] Удалён committed wholesale payload `scripts/writer_core_handoff/legacy_sources/`; `.7z`, cache, `.pyc` и generated outputs не переносятся в runtime. (2026-09-10)
+- [x] M4-2: RTT enums/models находятся в `scripts/writer-core/writer_core/rtt.py`; четыре round-trip fixture и необходимые golden traps исполняются из `scripts/writer-core/tests/fixtures/`; проверены стабильные reason codes и bounded/no-progress repair. (2026-09-10)
+- [x] M4-4: ровно шесть потребляемых linguistic registries перенесены в `scripts/writer-core/linguistic_assets/`; loader fail-closed проверяет обязательные ключи и duplicate identity. (2026-09-10)
+- [x] Удалены `_SKELETON`/handoff imports и stale external absolute runtime paths из Python-кода `scripts/writer-core/`; runtime-owned path base — каталог `scripts/writer-core/`. (2026-09-10)
+- [x] `MANIFEST_v0.3.md` сохранён как исходный provenance manifest с явным уведомлением о несовпадении с текущим checkout; исторические hashes не переписаны. (2026-09-10)
+- [x] Provider authority разделяет генерацию и проверку: `agent.writer` обслуживает `writer.claims.read`/`writer.draft`, а доступный `local.writer_core` имеет более высокий приоритет только для `writer.semantic_validate`; command probe использует явно настроенный `WRITER_PYTHON`. (2026-09-10)
+- [x] Writer agent/skill flow и setup/validation используют переносимые `WRITER_PYTHON`, `WRITER_CORE_ROOT`, `WRITER_RUNS_DIR` и runtime-owned `scripts/writer-core/linguistic_assets`; no-network preflight разрешает claim-load/draft в `agent.writer`, semantic-validation в `local.writer_core`. (2026-09-10)
+- [ ] **Deferred M4-1:** минимальный Researcher→Writer adapter требует отдельного контракта и compatibility tests.
+- [ ] **Deferred M4-3:** aggregate/pre-release wiring verify_claims→citation_trace не входит в boundary rework и требует отдельного route/gate контракта.
+
 ## Rule
 
 Любая новая идея должна попадать либо в policy/config, либо в runtime script, либо в skill/tool template, либо в debt item, либо в tracker workstream.

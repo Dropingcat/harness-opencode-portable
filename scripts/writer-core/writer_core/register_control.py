@@ -93,8 +93,6 @@ def check_lexicon(text: str) -> list[dict]:
     if not text:
         return issues
     try:
-        import sys as _sys
-        _sys.path.insert(0, r"C:\Temp\opencode\writer_verify\hybrid\v2_extractor")
         from philologcal_layer import analyze as phil_analyze
         r = phil_analyze(text)
         if isinstance(r, dict):

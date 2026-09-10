@@ -44,8 +44,7 @@ from typing import Any
 _HERE = os.path.dirname(os.path.abspath(__file__))
 _WC_ROOT = os.environ.get("WRITER_CORE_ROOT") or (os.path.dirname(_HERE) if os.path.basename(_HERE) == "writer_core" else _HERE)
 _HARNESS_ROOT = os.path.dirname(os.path.dirname(_WC_ROOT))
-_SKELETON = os.path.join(_HARNESS_ROOT, "scripts", "writer_core_handoff", "src_skeleton")
-for _p in (_WC_ROOT, os.path.join(_WC_ROOT, "v2_extractor"), _SKELETON, os.path.join(_WC_ROOT, "writer_core")):
+for _p in (_WC_ROOT, os.path.join(_WC_ROOT, "v2_extractor"), os.path.join(_WC_ROOT, "writer_core")):
     if _p not in sys.path:
         sys.path.insert(0, _p)
 

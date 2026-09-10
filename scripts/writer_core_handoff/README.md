@@ -81,7 +81,9 @@ Public/reference corpus → Forensics projections → calibrated hypotheses
 - Researcher Core: epistemic truth and evidence ownership.
 - Data/computation store: immutable/raw and derived computational artifacts.
 - Markdown/DOCX/PDF: reproducible build outputs, **не** truth store.
-- `legacy_sources/`: только исторический контекст и migration evidence.
+- `legacy_sources/`: wholesale payload удалён из canonical checkout; исходные
+  имена и SHA-256 сохранены только в историческом `MANIFEST_v0.3.md` как
+  provenance, а не как доступные runtime-файлы.
 
 ## Главные milestones
 

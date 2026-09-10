@@ -17,7 +17,7 @@ export HERMES_ROOT="$HARNESS"
 # Native Writer Core. Runtime artifacts stay outside the source tree.
 export WRITER_CORE_ROOT="$HARNESS/scripts/writer-core"
 export WRITER_RUNS_DIR="$HARNESS/.runs/writer-core"
-export WRITER_LINGUISTICS_REGISTRY_DIR="$HARNESS/scripts/writer_core_handoff/linguistics"
+export WRITER_LINGUISTICS_REGISTRY_DIR="$HARNESS/scripts/writer-core/linguistic_assets"
 
 # Preserve an explicitly configured Writer Core interpreter. Otherwise prefer a
 # repository-local writer venv and use the general interpreter as an honest

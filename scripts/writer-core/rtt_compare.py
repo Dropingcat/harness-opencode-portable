@@ -5,6 +5,8 @@ Validated against tests/linguistics/golden_traps.yaml (see golden_test.py).
 """
 from __future__ import annotations
 
+import re
+
 from writer_core.rtt import RTTReason, RTTResult
 
 from t0_ru import T0Sentence, analyze_sentence  # noqa: E402
@@ -98,6 +100,67 @@ def compare(source: str, candidate: str) -> RTTResult:
         realization_id="candidate",
         level="sentence",
         verdict=verdict,
+        reason_codes=reasons,
+        notes=notes,
+    )
+
+
+def compare_contract(contract_claim: dict, candidate: str) -> RTTResult:
+    """Compare one handoff-style claim contract with its realization.
+
+    Explicit contract fields take authority over incidental textual signals. This
+    keeps the four v0.3 compatibility fixtures executable without making the
+    broader handoff semantic compiler a runtime dependency.
+    """
+    proposition = str(contract_claim.get("proposition") or "")
+    claim_id = str(contract_claim.get("id") or contract_claim.get("claim_id") or "claim")
+    baseline = compare(proposition, candidate)
+    reasons: list[RTTReason] = []
+    notes: list[str] = []
+
+    scope = contract_claim.get("scope")
+    if isinstance(scope, dict):
+        missing_scope = [str(value) for value in scope.values()
+                         if value is not None and str(value).casefold() not in candidate.casefold()]
+        if missing_scope:
+            reasons.append(RTTReason.SCOPE_SHIFT_MAJOR)
+            notes.append(f"contract scope values omitted: {missing_scope}")
+
+    numeric_refs = contract_claim.get("numeric_refs") or []
+    expected_numbers = [str(ref.get("value")) for ref in numeric_refs
+                        if isinstance(ref, dict) and ref.get("value") is not None]
+    normalized_candidate = candidate.replace(",", ".")
+    if expected_numbers and any(
+            re.search(rf"(?<!\d){re.escape(value.replace(',', '.'))}(?!\d)", normalized_candidate) is None
+            for value in expected_numbers):
+        reasons.append(RTTReason.NUMERIC_DRIFT)
+        notes.append(f"contract numeric values omitted or changed: {expected_numbers}")
+
+    required_qualifiers = [str(q) for q in contract_claim.get("required_qualifiers") or []]
+    candidate_words = set(re.findall(r"[a-zа-яё0-9]+", candidate.casefold()))
+    dropped = []
+    for qualifier in required_qualifiers:
+        qualifier_words = set(re.findall(r"[a-zа-яё0-9]+", qualifier.casefold())) - {
+            "в", "во", "для", "на", "при",
+        }
+        if not qualifier_words or not qualifier_words <= candidate_words:
+            dropped.append(qualifier)
+    if dropped:
+        reasons.append(RTTReason.QUALIFIER_DROPPED)
+        notes.append(f"required qualifiers dropped: {dropped}")
+
+    if RTTReason.CAUSALITY_UPGRADE in baseline.reason_codes:
+        reasons.insert(0, RTTReason.CAUSALITY_UPGRADE)
+    if not reasons:
+        reasons.append(RTTReason.EXACT if proposition.strip() == candidate.strip()
+                       else RTTReason.PARAPHRASE_SAFE)
+
+    safe = reasons in ([RTTReason.EXACT], [RTTReason.PARAPHRASE_SAFE])
+    return RTTResult(
+        contract_id=claim_id,
+        realization_id="candidate",
+        level="sentence",
+        verdict="PASS" if safe else "FAIL",
         reason_codes=reasons,
         notes=notes,
     )
