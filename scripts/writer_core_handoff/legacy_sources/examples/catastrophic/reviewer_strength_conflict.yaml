@@ -1,7 +1,0 @@
-scenario: REVIEWER_STRENGTH_CONFLICT
-review_request: "усилить вывод до причинного"
-epistemic_contract: ASSOCIATION_ONLY
-expected:
-  - REVIEW_CONFLICT_CREATED
-  - NO_CAUSALITY_UPGRADE
-  - DECISION_OR_RESEARCH_REQUIRED

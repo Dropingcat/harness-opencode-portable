@@ -1,15 +1,11 @@
-"""Deterministic RTT comparator over skeleton reason codes (v0.3).
+"""Deterministic RTT comparator over runtime-owned reason codes (v0.3).
 
 Compares T0 digests of source vs candidate; emits RTTReason codes.
 Validated against tests/linguistics/golden_traps.yaml (see golden_test.py).
 """
 from __future__ import annotations
 
-import sys
-
-sys.path.insert(0, r"E:\Documents\Документы\writer-core\writer_core_handoff\src_skeleton")
-
-from writer_core_ir.rtt import RTTReason, RTTResult  # noqa: E402
+from writer_core.rtt import RTTReason, RTTResult
 
 from t0_ru import T0Sentence, analyze_sentence  # noqa: E402
 
@@ -93,7 +89,10 @@ def compare(source: str, candidate: str) -> RTTResult:
         reasons.append(RTTReason.REFORMULATION_DRIFT)
         notes.append("reformulation marker used but semantics drifted")
 
-    verdict = "PASS" if not reasons else "FAIL"
+    if not reasons:
+        reasons.append(RTTReason.EXACT if source.strip() == candidate.strip()
+                       else RTTReason.PARAPHRASE_SAFE)
+    verdict = "PASS" if reasons in ([RTTReason.EXACT], [RTTReason.PARAPHRASE_SAFE]) else "FAIL"
     return RTTResult(
         contract_id="rtt-sentence",
         realization_id="candidate",

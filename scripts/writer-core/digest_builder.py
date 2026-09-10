@@ -1,17 +1,14 @@
-"""Build skeleton LinguisticDigest from T0 signals (deterministic, no LLM).
+"""Build a runtime LinguisticDigest from T0 signals (deterministic, no LLM).
 
-Uses skeleton pydantic models from writer_core_ir (v0.3).
+Uses the minimal runtime-owned pydantic models.
 T0 signals (t0_ru.py) are mapped 1:1 to LinguisticIssue types; every
 heuristic-driven issue records details["heuristic"] for downstream tier policy.
 """
 from __future__ import annotations
 
-import sys
 import uuid
 
-sys.path.insert(0, r"E:\Documents\Документы\writer-core\writer_core_handoff\src_skeleton")
-
-from writer_core_ir.linguistics import (  # noqa: E402
+from writer_core.linguistic_models import (
     AffordanceSet,
     Impact,
     LinguisticDigest,

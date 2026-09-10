@@ -19,6 +19,20 @@ export WRITER_CORE_ROOT="$HARNESS/scripts/writer-core"
 export WRITER_RUNS_DIR="$HARNESS/.runs/writer-core"
 export WRITER_LINGUISTICS_REGISTRY_DIR="$HARNESS/scripts/writer_core_handoff/linguistics"
 
+# Preserve an explicitly configured Writer Core interpreter. Otherwise prefer a
+# repository-local writer venv and use the general interpreter as an honest
+# fallback; capability preflight verifies the required dependencies.
+if [ -n "${WRITER_PYTHON:-}" ]; then
+  if [[ "$WRITER_PYTHON" == */* ]] && [ ! -x "$WRITER_PYTHON" ]; then
+    echo "WARN: configured WRITER_PYTHON is not executable: $WRITER_PYTHON; Writer Core preflight will be degraded" >&2
+  fi
+elif [ -x "$HARNESS/scripts/writer-core/.venv/bin/python" ]; then
+  export WRITER_PYTHON="$HARNESS/scripts/writer-core/.venv/bin/python"
+else
+  export WRITER_PYTHON="$PYTHON"
+  echo "WARN: no dedicated Writer Core venv found; using '$WRITER_PYTHON' and relying on preflight dependency checks" >&2
+fi
+
 # OPENCODE_SESSION_DB — real session DB; set if known.
 # export OPENCODE_SESSION_DB="/home/orangepi/.local/share/opencode/opencode.db"
 

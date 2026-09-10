@@ -46,8 +46,9 @@ ${OPENCODE_HARNESS_ROOT}/scripts/writer-core/
 Готовые модули импортируются (НЕ копируются): `hybrid_extract` + `md_clean`,
 `graph_builder_hybrid`, `graph_vector`, `structure_annotator`, `consolidation`,
 `rtt_compare` + `t0_ru` + `digest_builder`, `session_memory`, `polza_light`,
-`citation_trace` (scripts/writer). Канонический venv: `E:\Documents\Документы\writer-core\.venv`
-(Python 3.12.2). Env: `WRITER_CORE_ROOT` (по умолчанию `${OPENCODE_HARNESS_ROOT}/scripts/writer-core`),
+`citation_trace` (scripts/writer). Интерпретатор задаётся переносимой переменной
+`WRITER_PYTHON`; не подставляй системный Python или машинно-зависимый путь.
+Env: `WRITER_CORE_ROOT` (по умолчанию `${OPENCODE_HARNESS_ROOT}/scripts/writer-core`),
 `WRITER_RUNS_DIR` (bootstrap: `${OPENCODE_RUNS_DIR}/writer-core`) и
 `WRITER_LINGUISTICS_REGISTRY_DIR` (bootstrap:
 `${OPENCODE_HARNESS_ROOT}/scripts/writer_core_handoff/linguistics`).
@@ -97,7 +98,8 @@ DOM YAML (источник истины: structure + claims + graphs + traceabil
   неопределённостью, а не подаётся как факт。
 3. Гейт «нельзя выдать» — детерминированный скрипт
   `${OPENCODE_HARNESS_ROOT}/scripts/writer/citation_trace.py`:
-  `python citation_trace.py --text draft.md --dom <slug>-dom.yaml [--strict]`
+  PowerShell: `$citationTrace = Join-Path $env:OPENCODE_HARNESS_ROOT "scripts\writer\citation_trace.py"; & $env:WRITER_PYTHON $citationTrace --text draft.md --dom <slug>-dom.yaml --strict`.
+  POSIX: `"$WRITER_PYTHON" "$OPENCODE_HARNESS_ROOT/scripts/writer/citation_trace.py" --text draft.md --dom <slug>-dom.yaml --strict`.
   exit 0 = PASS (можно выдавать), exit 1 = FAIL (править и перезапускать). Проверки:
   `orphan_claim`, `dangling_claim`/`dangling_source`, `masked_uncertainty`,
   `numeric_unverified`, `dangling_section`, `missing_crossref` (warn).
@@ -109,21 +111,24 @@ DOM YAML (источник истины: structure + claims + graphs + traceabil
 DOM YAML — литературный объект (product/structure/claims/graphs/uncertainty/sources）。
 Создаётся из нашего слоя детерминированно:
 
-```bash
-# Шаблон DOM (литературный объект) — выбор после постановки задачи:
-#   ${OPENCODE_HARNESS_ROOT}/templates/writer-dom-dissertation.yaml
+Сначала research обязан записать `claims.json` и `writing_contract.json`; DOM не
+собирается по несуществующим входам.
 
-# Каркас структуры (11 секций автореферата -> главы диссертации):
-$WCPY $WC plan --topic "Тема диссертации" --out structure_plan.json
+PowerShell 5.1:
+```powershell
+$wc = Join-Path $env:WRITER_CORE_ROOT "wc_cli.py"
+$template = Join-Path $env:OPENCODE_HARNESS_ROOT "templates\writer-dom-dissertation.yaml"
+& $env:WRITER_PYTHON $wc plan --topic "Тема диссертации" --out structure_plan.json
+& $env:WRITER_PYTHON $wc dom --template $template --plan structure_plan.json --claims claims.json --graphs graphs.json --source-kind raw_data --source-kind published --out dom.yaml
+```
 
-# Собрать DOM: structure из plan + claims из hybrid_extract/bundle + графы G3-G15
-#   + uncertainty ПО ПРОИСХОЖДЕНИЮ источников (--source-kind повторяемый):
-$WCPY $WC dom --template "${OPENCODE_HARNESS_ROOT}/templates/writer-dom-dissertation.yaml" \
-    --plan structure_plan.json \
-    --claims claims.json \        # list[claim] | {"claims": [...]} | ResearchBundleLA.json
-    --graphs graphs.json \          # CLI graphs ИЛИ вывод build_paragraph_graphs
-    --source-kind raw_data --source-kind published \
-    --out dom.yaml
+POSIX:
+```sh
+"$WRITER_PYTHON" "$WRITER_CORE_ROOT/wc_cli.py" plan --topic "Тема диссертации" --out structure_plan.json
+"$WRITER_PYTHON" "$WRITER_CORE_ROOT/wc_cli.py" dom \
+    --template "$OPENCODE_HARNESS_ROOT/templates/writer-dom-dissertation.yaml" \
+    --plan structure_plan.json --claims claims.json --graphs graphs.json \
+    --source-kind raw_data --source-kind published --out dom.yaml
 ```
 
 Формат `document.yaml` (контракт, иерархия DOM→проза):
@@ -181,13 +186,17 @@ sources:                              # реестр источников
 (DERIVED_FROM→derivation), **G14** кохезия/информационный поток (REFERS_TO/COREFERS_WITH→citation_chain)；
 G7 цитатное происхождение, G8 политика/ограничения, G9 зависимости ревизий,
 
-```bash
-# Построить графы из артефакта (G1-G16) + опционально в sqlite:
-$WCPY $WC graphs --artifact artifact.json --out graphs.json --sqlite graphs.db
+PowerShell 5.1:
+```powershell
+$wc = Join-Path $env:WRITER_CORE_ROOT "wc_cli.py"
+& $env:WRITER_PYTHON $wc graphs --artifact artifact.json --out graphs.json --sqlite graphs.db
+& $env:WRITER_PYTHON $wc vectorsim --a old.json --b new.json --out vectorsim.json
+```
 
-# 89-dim вектор для сравнения（cosine + dynamic_metrics: схема — G*_n/G*_e/G*_ratio,
-#   LOO 79% по разбору версий v1-v12)：
-$WCPY $WC vectorsim --a old.json --b new.json --out vectorsim.json
+POSIX:
+```sh
+"$WRITER_PYTHON" "$WRITER_CORE_ROOT/wc_cli.py" graphs --artifact artifact.json --out graphs.json --sqlite graphs.db
+"$WRITER_PYTHON" "$WRITER_CORE_ROOT/wc_cli.py" vectorsim --a old.json --b new.json --out vectorsim.json
 ```
 
 Работа с деревом клаймов:
@@ -215,15 +224,23 @@ $WCPY $WC vectorsim --a old.json --b new.json --out vectorsim.json
    review_report.json (final_verdict + issues по уровням + rounds + escalation)
 ```
 
-```bash
-# Ревью черновика против контракта+плана+DOM（L1+L2+L3 параллельно， циклы max 3）：
-$WCPY $WC review --draft draft.md \
-    --contract writing_contract.json \    # ИЛИ документ-эталон (v8, docx/pdf/md) ИЛИ inline-JSON
-    --plan structure_plan.json \          # для L2-тира (структура/слоты/gaps）
-    --dom dom.yaml \                      # для L3-цитатного гейта（citation_trace）
-    --max-iterations 3 \
-    --out review_report.json
+PowerShell 5.1:
+```powershell
+$wc = Join-Path $env:WRITER_CORE_ROOT "wc_cli.py"
+& $env:WRITER_PYTHON $wc review --draft draft.md --contract writing_contract.json --plan structure_plan.json --dom dom.yaml --max-iterations 3 --out review_report.json
 ```
+
+POSIX:
+```sh
+"$WRITER_PYTHON" "$WRITER_CORE_ROOT/wc_cli.py" review --draft draft.md \
+    --contract writing_contract.json --plan structure_plan.json --dom dom.yaml \
+    --max-iterations 3 --out review_report.json
+```
+
+`--contract` обязателен. Для обычной статьи без переданного/сгенерированного
+контракта `draftcheck` и `review` не запускаются; handoff явно сообщает, что
+deterministic RTT не выполнялся. `--plan` и `--dom` передаются только при наличии
+этих файлов.
 
 - **Циклы**: при FAIL → constrained repair (ТОЛЬКО по L3-дефектам: defect_type + span) →
   повторный прогон L1/L2/L3 → максимум `--max-iterations` (по умолчанию 3);
@@ -238,47 +255,39 @@ $WCPY $WC review --draft draft.md \
 
 ## Команды CLI (12 команд）
 
-```bash
-WCPY="${PYTHON}"
-WC="${WRITER_CORE_ROOT}/wc_cli.py"
-# Любой cwd. ENV: WRITER_CORE_ROOT (по умолчанию scripts/writer-core), WRITER_RUNS_DIR.
+Запуск возможен из любого cwd. Обязательны `WRITER_PYTHON` и
+`WRITER_CORE_ROOT`; DOM-команды также используют `OPENCODE_HARNESS_ROOT`.
 
-# 1) plan — структурный план будущего текста (G1-дерево + G2-слоты + gaps）:
-#   --doc <образец> | --bundle <ResearchBundleLA.json> | --topic "<тема>" (каркас БЕЗ документа)
-$WCPY $WC plan --topic "Тема диссертации" --out structure_plan.json
-$WCPY $WC plan --bundle bundle.json --out structure_plan.json
+PowerShell 5.1:
+```powershell
+$wc = Join-Path $env:WRITER_CORE_ROOT "wc_cli.py"
+$template = Join-Path $env:OPENCODE_HARNESS_ROOT "templates\writer-dom-dissertation.yaml"
+& $env:WRITER_PYTHON $wc plan --topic "Тема диссертации" --out structure_plan.json
+& $env:WRITER_PYTHON $wc plan --bundle bundle.json --out structure_plan.json
+& $env:WRITER_PYTHON $wc draftcheck --draft draft.md --contract writing_contract.json --out rtt_report.json
+& $env:WRITER_PYTHON $wc live-cycle --bundle bundle.json --contract writing_contract.json --draft draft.md --repair --out live_cycle_report.json
+& $env:WRITER_PYTHON $wc extract --doc paper.docx --out artifact.json
+& $env:WRITER_PYTHON $wc graphs --artifact artifact.json --out graphs.json --sqlite graphs.db
+& $env:WRITER_PYTHON $wc annotate --doc paper.docx --out structure_plan.json
+& $env:WRITER_PYTHON $wc consolidate --versions-dir <versions-directory> --out-dir evolution
+& $env:WRITER_PYTHON $wc vectorsim --a old.json --b new.json --out vectorsim.json
+& $env:WRITER_PYTHON $wc dom --template $template --plan structure_plan.json --claims claims.json --graphs graphs.json --source-kind raw_data --source-kind published --out dom.yaml
+& $env:WRITER_PYTHON $wc review --draft draft.md --contract writing_contract.json --plan structure_plan.json --dom dom.yaml --max-iterations 3 --out review_report.json
+```
 
-# 2) draftcheck — RTT-дифф черновика против контракта（
-$WCPY $WC draftcheck --draft draft.md --contract writing_contract.json --out rtt_report.json
-
-# 3) live-cycle — полный контур кодекра（bundle->contract->draft->rtt->repair）：
-$WCPY $WC live-cycle --bundle bundle.json --contract writing_contract.json \
-    --draft draft.md --repair --out live_cycle_report.json
-
-# 4) extract — гибридная экстракция документа -> artifact.json
-$WCPY $WC extract --doc paper.docx --out artifact.json
-
-# 5) graphs — графы реестра G1-G16 из artifact.json (+ --sqlite .db)
-$WCPY $WC graphs --artifact artifact.json --out graphs.json --sqlite graphs.db
-
-# 6) annotate — разметка структуры документа -> structure_plan.json
-$WCPY $WC annotate --doc paper.docx --out structure_plan.json
-
-# 7) consolidate — консолидация версий (v1..v12) -> evolution_report.json/.md
-$WCPY $WC consolidate --versions-dir "F:\1\_STRUCTURED\07_AUTOREF\versions" \
-    --out-dir evolution
-
-# 8) vectorsim — 89-dim cosine + dynamic_metrics двух артефактов
-$WCPY $WC vectorsim --a old.json --b new.json --out vectorsim.json
-
-# 9) dom — writer_core -> DOM YAML по контракту прослеживаемости (для citation_trace.py)
-$WCPY $WC dom --template "${OPENCODE_HARNESS_ROOT}/templates/writer-dom-dissertation.yaml" \
-    --plan structure_plan.json --claims claims.json --graphs graphs.json \
-    --source-kind raw_data --source-kind published --out dom.yaml
-
-# 10) review — ветвистое ревью（L1 микро + L2 мезо + L3 макро， циклы， эскалация）
-$WCPY $WC review --draft draft.md --contract writing_contract.json \
-    --plan structure_plan.json --dom dom.yaml --max-iterations 3 --out review_report.json
+POSIX:
+```sh
+"$WRITER_PYTHON" "$WRITER_CORE_ROOT/wc_cli.py" plan --topic "Тема диссертации" --out structure_plan.json
+"$WRITER_PYTHON" "$WRITER_CORE_ROOT/wc_cli.py" plan --bundle bundle.json --out structure_plan.json
+"$WRITER_PYTHON" "$WRITER_CORE_ROOT/wc_cli.py" draftcheck --draft draft.md --contract writing_contract.json --out rtt_report.json
+"$WRITER_PYTHON" "$WRITER_CORE_ROOT/wc_cli.py" live-cycle --bundle bundle.json --contract writing_contract.json --draft draft.md --repair --out live_cycle_report.json
+"$WRITER_PYTHON" "$WRITER_CORE_ROOT/wc_cli.py" extract --doc paper.docx --out artifact.json
+"$WRITER_PYTHON" "$WRITER_CORE_ROOT/wc_cli.py" graphs --artifact artifact.json --out graphs.json --sqlite graphs.db
+"$WRITER_PYTHON" "$WRITER_CORE_ROOT/wc_cli.py" annotate --doc paper.docx --out structure_plan.json
+"$WRITER_PYTHON" "$WRITER_CORE_ROOT/wc_cli.py" consolidate --versions-dir <versions-directory> --out-dir evolution
+"$WRITER_PYTHON" "$WRITER_CORE_ROOT/wc_cli.py" vectorsim --a old.json --b new.json --out vectorsim.json
+"$WRITER_PYTHON" "$WRITER_CORE_ROOT/wc_cli.py" dom --template "$OPENCODE_HARNESS_ROOT/templates/writer-dom-dissertation.yaml" --plan structure_plan.json --claims claims.json --graphs graphs.json --source-kind raw_data --source-kind published --out dom.yaml
+"$WRITER_PYTHON" "$WRITER_CORE_ROOT/wc_cli.py" review --draft draft.md --contract writing_contract.json --plan structure_plan.json --dom dom.yaml --max-iterations 3 --out review_report.json
 ```
 
 Выход — детерминированный JSON; любой сбой на битом вводе — `{"error": ...,
@@ -374,8 +383,15 @@ canon_knowledge (знания — ЧТО МОЖНО ПИСАТЬ И КАК)
 - **R3 ЛЕКСИКА**: kantseliarit_ratio vs норма 0.10, разговорные маркеры
 - **R4 ТРОПЫ**: публицистические фигуры -> заменить на сухую научную прозу
 
-```bash
-$WCPY $WC register --draft draft.md --dom dom.yaml --out register_report.json
+PowerShell 5.1:
+```powershell
+$wc = Join-Path $env:WRITER_CORE_ROOT "wc_cli.py"
+& $env:WRITER_PYTHON $wc register --draft draft.md --dom dom.yaml --out register_report.json
+```
+
+POSIX:
+```sh
+"$WRITER_PYTHON" "$WRITER_CORE_ROOT/wc_cli.py" register --draft draft.md --dom dom.yaml --out register_report.json
 ```
 
 ## Канбан-отчёт (ритуал закрытия, универсальный с секциями)
@@ -388,10 +404,19 @@ $WCPY $WC register --draft draft.md --dom dom.yaml --out register_report.json
 
 Отчёт — **канонический хелпер** (резолвит секцию по agent_id, регистрирует агента):
 
-```bash
-"${PYTHON}" "${OPENCODE_HARNESS_ROOT}/scripts/orchestration/kanban_report.py" report writing-orchestrator <task_id> <status> [phase] [progress] [message]
-"${PYTHON}" "${OPENCODE_HARNESS_ROOT}/scripts/orchestration/kanban_report.py" board [group]    # доска по секциям
-"${PYTHON}" "${OPENCODE_HARNESS_ROOT}/scripts/orchestration/kanban_report.py"                  # сводка
+PowerShell 5.1:
+```powershell
+$kanbanReport = Join-Path $env:OPENCODE_HARNESS_ROOT "scripts\orchestration\kanban_report.py"
+& $env:WRITER_PYTHON $kanbanReport report writing-orchestrator <task_id> <status> [phase] [progress] [message]
+& $env:WRITER_PYTHON $kanbanReport board [group]
+& $env:WRITER_PYTHON $kanbanReport
+```
+
+POSIX:
+```sh
+"$WRITER_PYTHON" "$OPENCODE_HARNESS_ROOT/scripts/orchestration/kanban_report.py" report writing-orchestrator <task_id> <status> [phase] [progress] [message]
+"$WRITER_PYTHON" "$OPENCODE_HARNESS_ROOT/scripts/orchestration/kanban_report.py" board [group]
+"$WRITER_PYTHON" "$OPENCODE_HARNESS_ROOT/scripts/orchestration/kanban_report.py"
 ```
 
 > ВАЖНО: старая сигнатура `gk.report(agent, task_id, task_name, status, phase, progress, msg)`
@@ -406,11 +431,11 @@ $WCPY $WC register --draft draft.md --dom dom.yaml --out register_report.json
 
 | Проблема (RU / EN) | Маркер (RU / EN) | Решение |
 |---|---|---|
-| `.doc` не читается python-docx / `.doc` unsupported by python-docx | `.doc` через Word COM / use Word COM `Content.Text` | `$WCPY $WC extract --doc <file.doc>` (модуль `doc_com.py`, win32com). НЕ `SaveAs` — «Ошибка метода»/"method error" (нестабилен в PS 5.1 COM); бери `$doc.Content.Text` напрямую. |
+| `.doc` не читается python-docx / `.doc` unsupported by python-docx | `.doc` через Word COM / use Word COM `Content.Text` | PowerShell: `$wc = Join-Path $env:WRITER_CORE_ROOT "wc_cli.py"; & $env:WRITER_PYTHON $wc extract --doc <file.doc>`. POSIX: `"$WRITER_PYTHON" "$WRITER_CORE_ROOT/wc_cli.py" extract --doc <file.doc>`. Модуль `doc_com.py`, win32com; НЕ `SaveAs` — бери `$doc.Content.Text` напрямую. |
 | `rg` нет / `rg` is not installed | искать без rg / search without rg | `Select-String -LiteralPath "<файл>" -Pattern "<regex>"` (принимает `-LiteralPath`, не тянет temp). |
 | grep тянет temp-файлы / grep picks up temp files | ограничь поиск целевым каталогом / limit search to target dir | Передавай `path` строго целевой (литобзор/автореферат/`chunks/`), не общий временный каталог. |
-| системный python без зависимостей / system python missing deps | venv обязателен / use venv | Всегда `$PY = E:\Documents\Документы\writer-core\.venv\Scripts\python.exe` (+ `-X utf8`). Системный python 3.11 падает на `project_context.py`. |
-| кириллица в консоли (mojibake) / Cyrillic mojibake in console | `-X utf8` + `PYTHONIOENCODING` | Запускай `python -X utf8`; `$env:PYTHONIOENCODING="utf-8"` для вывода. ps1-файлы — ASCII-only или с BOM (PS 5.1 читает в cp866). |
+| системный python без зависимостей / system python missing deps | venv обязателен / use venv | Используй только `WRITER_PYTHON`, настроенный на venv фабрики. Не закрепляй машинно-зависимый путь. |
+| кириллица в консоли (mojibake) / Cyrillic mojibake in console | `-X utf8` + `PYTHONIOENCODING` | Запускай `$env:WRITER_PYTHON` / `$WRITER_PYTHON` с `-X utf8`; `$env:PYTHONIOENCODING="utf-8"` для вывода PowerShell. ps1-файлы — ASCII-only или с BOM (PS 5.1 читает в cp866). |
 | большие файлы рвут Read / large files break Read | читай чанками / read in chunks | `Read offset/limit` по кускам; временные чанки храни в `${WRITER_RUNS_DIR}/chunks/`. |
 | Markitdown нет / markitdown missing | используй doc_com / use doc_com | `.doc`/`.docx` — через наш `doc_com.py` (Word COM), не markitdown. |
 | grep-маркеры в .md / grep markers in .md | ищи в целевых файлах / search target files only | Греп по `*.md` тянет `cf_process.txt`/`corpus.txt` — сужай `include` до `*.md` в целевой папке. |
@@ -418,7 +443,12 @@ $WCPY $WC register --draft draft.md --dom dom.yaml --out register_report.json
 Быстрая проверка окружения (environment probe):
 
 ```powershell
-$PY -c "import win32com, razdel, pymorphy3, yaml, docx; print('ENV_OK')"
+& $env:WRITER_PYTHON -X utf8 -c "import win32com, razdel, pymorphy3, yaml, docx; print('ENV_OK')"
+```
+
+POSIX:
+```sh
+"$WRITER_PYTHON" -X utf8 -c "import win32com, razdel, pymorphy3, yaml, docx; print('ENV_OK')"
 ```
 
 Если `win32com` нет — `pip install pywin32`; если `razdel`/`pymorphy3` нет — см.
@@ -429,9 +459,9 @@ $PY -c "import win32com, razdel, pymorphy3, yaml, docx; print('ENV_OK')"
 ## H-память（session_memory）
 
 Кросс-сессионные выводы писателя сохраняются в
-`${WRITER_RUNS_DIR}/session_memory.json` (модуль `session_memory`,
-схема `writer_verify.session_memory.v1`): `add_entry(секция, value)` /
-`get(секция)`. Секции-примеры: `plan_etalon`, `known_pitfalls`,
+`${WRITER_RUNS_DIR}/session_memory.json` (модуль `session_memory`):
+`add_entry(секция, value)` / `get(секция)`. Скилл не объявляет namespace схемы:
+актуальный формат определяет сам модуль. Секции-примеры: `plan_etalon`, `known_pitfalls`,
 `rtt_thresholds`, `review_etalon_vectors`. Перед тяжёлой диагностикой — читай память; после новых
 находок — дописывай запись дня（append-only история по датам。
 
@@ -439,16 +469,20 @@ $PY -c "import win32com, razdel, pymorphy3, yaml, docx; print('ENV_OK')"
 
 ## Проверка
 
-```bash
-# py_compile всех модулей writer_core（fail-closed синтаксис）：
-$PY -m py_compile writer_core\cli.py writer_core\dom_builder.py writer_core\review.py \
-    writer_core\live_cycle.py writer_core\contracts.py writer_core\factory_process.py
+PowerShell 5.1:
+```powershell
+$wc = Join-Path $env:WRITER_CORE_ROOT "wc_cli.py"
+$tests = Join-Path $env:OPENCODE_HARNESS_ROOT "tests"
+& $env:WRITER_PYTHON -m py_compile (Join-Path $env:WRITER_CORE_ROOT "writer_core\cli.py") (Join-Path $env:WRITER_CORE_ROOT "writer_core\dom_builder.py") (Join-Path $env:WRITER_CORE_ROOT "writer_core\review.py") (Join-Path $env:WRITER_CORE_ROOT "writer_core\live_cycle.py") (Join-Path $env:WRITER_CORE_ROOT "writer_core\contracts.py") (Join-Path $env:WRITER_CORE_ROOT "writer_core\factory_process.py")
+& $env:WRITER_PYTHON $wc --help
+& $env:WRITER_PYTHON -m pytest (Join-Path $tests "test_verify_claims.py") (Join-Path $tests "test_draft_loop.py") (Join-Path $tests "test_citation_trace.py") -q
+```
 
-# CLI help показывает dom/review/live-cycle/plan/draftcheck...:
-$WCPY $WC --help
-
-# pytest (полный harness）：
-$WCPY -m pytest %OPENCODE_HARNESS_ROOT%\scripts\writer_core_handoff\tests\test_writer_harness.py -q (или целевой тест из scripts/writer-core/tests)
+POSIX:
+```sh
+"$WRITER_PYTHON" -m py_compile "$WRITER_CORE_ROOT/writer_core/cli.py" "$WRITER_CORE_ROOT/writer_core/dom_builder.py" "$WRITER_CORE_ROOT/writer_core/review.py" "$WRITER_CORE_ROOT/writer_core/live_cycle.py" "$WRITER_CORE_ROOT/writer_core/contracts.py" "$WRITER_CORE_ROOT/writer_core/factory_process.py"
+"$WRITER_PYTHON" "$WRITER_CORE_ROOT/wc_cli.py" --help
+"$WRITER_PYTHON" -m pytest "$OPENCODE_HARNESS_ROOT/tests/test_verify_claims.py" "$OPENCODE_HARNESS_ROOT/tests/test_draft_loop.py" "$OPENCODE_HARNESS_ROOT/tests/test_citation_trace.py" -q
 ```
 
 После изменения этой harness-копии синхронизируй skill в live OpenCode config и

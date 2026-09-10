@@ -12,6 +12,23 @@ Use environment variables instead of hardcoded machine paths:
 - `OPENCODE_RUNS_DIR` — writable run/session directory.
 - `HERMES_ROOT` — optional location of Hermes scripts/data if present.
 - `DOC_GUARD_CONFIG` — path to real guard config outside the bundle.
+- `WRITER_CORE_ROOT` — Writer Core directory containing `wc_cli.py`.
+- `WRITER_PYTHON` — Python executable for Writer Core and writer/research bridge scripts.
+
+Writer commands deliberately do not reuse shell-specific `${PYTHON}` syntax. Set
+`WRITER_PYTHON` before starting OpenCode. PowerShell 5.1 example:
+
+```powershell
+$env:WRITER_PYTHON = $env:PYTHON
+$env:WRITER_CORE_ROOT = Join-Path $env:OPENCODE_HARNESS_ROOT "scripts\writer-core"
+```
+
+POSIX example:
+
+```sh
+export WRITER_PYTHON="${PYTHON:-python3}"
+export WRITER_CORE_ROOT="$OPENCODE_HARNESS_ROOT/scripts/writer-core"
+```
 
 ## Known hardcoded paths to replace
 

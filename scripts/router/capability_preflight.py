@@ -42,8 +42,22 @@ def _probe_one(spec:dict, network:bool=True)->dict:
                 json.loads(raw.decode('utf-8','replace'))
             return {'ok':True,'detail':f'http_json:{url}'}
         if kind=='command':
-            cp=subprocess.run(spec['argv'],cwd=repo_root(),text=True,capture_output=True,timeout=float(spec.get('timeout',5)))
-            return {'ok':cp.returncode==0,'detail':f'exit:{cp.returncode}'}
+            argv=list(spec['argv'])
+            executable_env=spec.get('executable_env')
+            if executable_env:
+                executable=os.environ.get(executable_env) or spec.get('executable_default')
+                if not executable:
+                    return {'ok':False,'detail':f'missing_executable:{executable_env}'}
+                argv.insert(0,executable)
+                executable_source=(
+                    f'env:{executable_env}'
+                    if os.environ.get(executable_env)
+                    else f'default:{executable}'
+                )
+            else:
+                executable_source='argv'
+            cp=subprocess.run(argv,cwd=repo_root(),text=True,capture_output=True,timeout=float(spec.get('timeout',5)))
+            return {'ok':cp.returncode==0,'detail':f'exit:{cp.returncode};executable:{executable_source}'}
         return {'ok':False,'detail':f'unknown_probe:{kind}'}
     except Exception as e:
         return {'ok':False,'detail':f'{kind}:{e.__class__.__name__}:{e}'}

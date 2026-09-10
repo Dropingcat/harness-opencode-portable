@@ -27,17 +27,37 @@ You are invoked directly by the user when they need an article, essay, explainer
 4. Build from actual source material. If a central claim lacks support, verify it with `webfetch` or `search`, mark it as inference, or remove it.
 5. Preserve source disagreement and uncertainty. Do not smooth conflicts into false consensus.
 6. Draft around a thesis or central question, not a generic topic outline.
-7. Persist the draft, then run semantic RTT checking and deterministic review through the canonical CLI:
+7. Persist the draft. Run semantic RTT checking and deterministic review **only when the caller supplied a valid writing contract or this workflow generated one**. Never invent `writing_contract.json`, `structure_plan.json`, or a DOM path merely to satisfy a command.
+
+   PowerShell 5.1:
+   ```powershell
+   $wc = Join-Path $env:WRITER_CORE_ROOT "wc_cli.py"
+   & $env:WRITER_PYTHON $wc draftcheck --draft <draft.md> --contract <writing-contract.json> --out rtt_report.json
+   & $env:WRITER_PYTHON $wc review --draft <draft.md> --contract <writing-contract.json> --max-iterations 3 --out review_report.json
    ```
-   "${PYTHON}" "${WRITER_CORE_ROOT}/wc_cli.py" draftcheck --draft <draft.md> --contract writing_contract.json --out rtt_report.json
-   "${PYTHON}" "${WRITER_CORE_ROOT}/wc_cli.py" review --draft <draft.md> --contract writing_contract.json --plan structure_plan.json --dom <slug>-dom.yaml --max-iterations 3 --out review_report.json
+
+   POSIX:
+   ```sh
+   "$WRITER_PYTHON" "$WRITER_CORE_ROOT/wc_cli.py" draftcheck --draft <draft.md> --contract <writing-contract.json> --out rtt_report.json
+   "$WRITER_PYTHON" "$WRITER_CORE_ROOT/wc_cli.py" review --draft <draft.md> --contract <writing-contract.json> --max-iterations 3 --out review_report.json
    ```
-   Re-check after corrections. Do not hand off RTT/review FAIL; escalate when the review report requires human approval.
+
+   Add `--plan <structure-plan.json>` only when that file exists; add `--dom <slug>-dom.yaml` only for a scientific/engineering workflow after its DOM exists. Re-check after corrections. Do not hand off RTT/review FAIL; escalate when the review report requires human approval. If no contract exists, skip both commands and state in the handoff: `Deterministic RTT/review not run: no writing contract was supplied or generated.`
 8. Run the `ai-slop-avoidance` revision pass before final handoff.
-9. **Traceability (scientific/engineering works only):** run the paragraph draft loop and deterministic traceability audit before handoff:
+9. **Traceability (scientific/engineering works only):** accept `claims.json`, `writing_contract.json`, and the assembled DOM from the orchestrator. Do not start if any is absent. Consume verification already written to the DOM by `verify_claims.py`, then run the paragraph draft loop and deterministic traceability audit before handoff.
+
+   PowerShell 5.1:
+   ```powershell
+   $draftLoop = Join-Path $env:OPENCODE_HARNESS_ROOT "scripts\writer\draft_loop.py"
+   $citationTrace = Join-Path $env:OPENCODE_HARNESS_ROOT "scripts\writer\citation_trace.py"
+   & $env:WRITER_PYTHON $draftLoop --text <draft.md> --dom <slug>-dom.yaml --paragraph-id <PAR-id> --apply
+   & $env:WRITER_PYTHON $citationTrace --text <draft.md> --dom <slug>-dom.yaml
    ```
-   "${PYTHON}" "${OPENCODE_HARNESS_ROOT}/scripts/writer/draft_loop.py" --text <draft.md> --dom <slug>-dom.yaml --paragraph-id <PAR-id> --apply
-   "${PYTHON}" "${OPENCODE_HARNESS_ROOT}/scripts/writer/citation_trace.py" --text <draft.md> --dom <slug>-dom.yaml
+
+   POSIX:
+   ```sh
+   "$WRITER_PYTHON" "$OPENCODE_HARNESS_ROOT/scripts/writer/draft_loop.py" --text <draft.md> --dom <slug>-dom.yaml --paragraph-id <PAR-id> --apply
+   "$WRITER_PYTHON" "$OPENCODE_HARNESS_ROOT/scripts/writer/citation_trace.py" --text <draft.md> --dom <slug>-dom.yaml
    ```
    PASS (exit 0) is required — every factual claim must resolve to a DOM claim → source+span, no dangling `[Sxx]`/`[Cxx]`/`[§N]`, no masked uncertainty. On FAIL, fix the DOM/text and re-run. See `${OPENCODE_HARNESS_ROOT}/shared/writer-traceability-contract.md`.
 10. If asked to persist a new article, write to `${RESEARCH_DIR:-${OPENCODE_HARNESS_ROOT}/research}/articles/[topic-slug]-article-[YYYY-MM-DD].md` (see `${OPENCODE_HARNESS_ROOT}/shared/research-process.md` for the research-directory routing rule) unless the user specifies another path.
@@ -57,3 +77,4 @@ When you return an article or revision, include a brief note after the prose cov
 - Source gaps or claims that still need verification.
 - Material changes made during the slop audit.
 - Whether the draft was persisted and where.
+- Whether deterministic RTT/review ran, including the explicit no-contract reason when skipped.

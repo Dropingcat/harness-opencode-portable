@@ -1,9 +1,0 @@
-scenario: EXPORT_BREAKS_EQUATIONS
-source_ir: EQ_11@4
-export: report.docx
-fault: equation_or_numbering_diverged
-expected:
-  - PARSEBACK_FAIL
-  - EXPORT_BLOCKER_CREATED
-  - SOURCE_IR_UNCHANGED
-  - EXPORT_REBUILD_ONLY

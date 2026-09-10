@@ -47,23 +47,28 @@ approval человека, никогда не «протаскивается» 
 
 ## Как запустить（review CLI）
 
-```bash
-WCPY="${PYTHON}"
-WC="${WRITER_CORE_ROOT}/wc_cli.py"   # запуск из любого cwd
+PowerShell 5.1:
 
-$WCPY $WC review \
-    --draft draft.md \                          # черновик .md/.txt (роль v12)
-    --contract writing_contract.json \         # writing_contract.json ИЛИ документ-эталон
-                                                #   (v8, docx/pdf/md) ИЛИ inline-JSON
-    --plan structure_plan.json \              # structure_plan.json (наш plan --topic) для L2-тира
-    --dom dom.yaml \                          # DOM YAML/JSON для цитатного гейта citation_trace (L3)
-    --max-iterations 3 \                 # максимум циклов ревью (по умолчанию 3)
-    --out review_report.json
+```powershell
+$wc = Join-Path $env:WRITER_CORE_ROOT "wc_cli.py"
+& $env:WRITER_PYTHON $wc review --draft draft.md --contract writing_contract.json --plan structure_plan.json --dom dom.yaml --max-iterations 3 --out review_report.json
 ```
 
-Минимальный запуск — только `--draft` + `--contract`（L1+L3; L2 пропускается,
-если plan не передан — без структурного базиса мезо-тир не запускается
-(не выдумываем секции)。
+POSIX:
+
+```sh
+"$WRITER_PYTHON" "$WRITER_CORE_ROOT/wc_cli.py" review \
+    --draft draft.md --contract writing_contract.json \
+    --plan structure_plan.json --dom dom.yaml \
+    --max-iterations 3 --out review_report.json
+```
+
+`--contract` обязателен для текущего CLI. Поэтому обычная статья без переданного
+или сгенерированного контракта не запускает ни `draftcheck`, ни `review`, а явно
+сообщает, что deterministic RTT не выполнялся. `--plan` и `--dom` опциональны:
+не передавай их, если соответствующих артефактов нет. Минимальный допустимый
+запуск с контрактом — `--draft` + `--contract`; L2 без плана пропускается, а
+traceability без DOM не запускается.
 
 ## Уровни L1/L2/L3
 
@@ -81,8 +86,14 @@ $WCPY $WC review \
 - **С эталоном**（документ-эталон v8 / референсная работа）: 89-dim вектор
   `graph_vector`（cosine_similarity + dynamic_metrics） — чем ближе вектор черновика
   к вектору эталона, тем ближе структура/аргументация:：
-  ```bash
-  $WCPY $WC vectorsim --a draft.json --b etalon.json --out vectorsim.json
+  PowerShell 5.1:
+  ```powershell
+  $wc = Join-Path $env:WRITER_CORE_ROOT "wc_cli.py"
+  & $env:WRITER_PYTHON $wc vectorsim --a draft.json --b etalon.json --out vectorsim.json
+  ```
+  POSIX:
+  ```sh
+  "$WRITER_PYTHON" "$WRITER_CORE_ROOT/wc_cli.py" vectorsim --a draft.json --b etalon.json --out vectorsim.json
   ```
 - **С версиями черновиков**（v1..v12）: `consolidate --versions-dir <dir>` — эволюция
   структуры/claims по версиям（evolution_report.json/.md; similarity между версиями）。
@@ -173,7 +184,9 @@ draft → L1/L2/L3 (параллельно, threads) → вердикт
 Те же проблемы, что в `writer-core`: `.doc` не читается python-docx → используй
 `writer_core` `doc_com` (`$doc.Content.Text`, НЕ `SaveAs` — «Ошибка метода»/method error);
 `rg` нет → `Select-String -LiteralPath`; grep тянет общий temp →
-сужай `path` до целевого; python → venv `E:\Documents\Документы\writer-core\.venv\Scripts\python.exe -X utf8`;
+сужай `path` до целевого; Python запускай только через переносимый
+`WRITER_PYTHON` (PowerShell: `& $env:WRITER_PYTHON -X utf8`, POSIX:
+`"$WRITER_PYTHON" -X utf8`);
 большие файлы → `Read` чанками. Маркеры пиши на русском и английском.
 
 После изменения этой harness-копии синхронизируй skill в live OpenCode config и

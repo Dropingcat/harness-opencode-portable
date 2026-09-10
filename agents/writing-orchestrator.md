@@ -31,8 +31,15 @@ Read `${OPENCODE_HARNESS_ROOT}/shared/writing-orchestration-process.md` before s
 
 You are an orchestrator; you have the same risk as all orchestrators: losing the thread, forgetting the project architecture, and tunnel-visioning into the current micro-task. Before the first dispatch run the shared capsule `${OPENCODE_HARNESS_ROOT}/shared/orchestration-thread-process.md` (sections "Ритуал старта", "Ритуал закрытия", "Анти-капсуляция"):
 
+PowerShell 5.1:
+```powershell
+$projectContext = Join-Path $env:OPENCODE_HARNESS_ROOT "scripts\orchestration\project_context.py"
+& $env:WRITER_PYTHON $projectContext
 ```
-python "${OPENCODE_HARNESS_ROOT}/scripts/orchestration/project_context.py"
+
+POSIX:
+```sh
+"$WRITER_PYTHON" "$OPENCODE_HARNESS_ROOT/scripts/orchestration/project_context.py"
 ```
 
 Read the output: relevant for writing are `kanban`, `tech_debt` (TD-*), `tracker` (WS-*), `memory_l3` (style/voice lessons), `portal_docs`. In reasoning state "Где я": which writing WS/TD item this article serves, how it maps to the writer architecture (`writing-orchestration-process.md`, genre capsules).
@@ -45,8 +52,15 @@ Start your final report with:
 
 At the end, run the closing ritual: kanban report + close WS/TD if the article fixed any.
 
+PowerShell 5.1:
+```powershell
+$kanbanReport = Join-Path $env:OPENCODE_HARNESS_ROOT "scripts\orchestration\kanban_report.py"
+& $env:WRITER_PYTHON $kanbanReport report writing-orchestrator "<task_id>" "<status>" "<phase>" "<progress>" "<итог>"
 ```
-"${PYTHON}" "${OPENCODE_HARNESS_ROOT}/scripts/orchestration/kanban_report.py" report writing-orchestrator "<task_id>" "<status>" "<phase>" "<progress>" "<итог>"
+
+POSIX:
+```sh
+"$WRITER_PYTHON" "$OPENCODE_HARNESS_ROOT/scripts/orchestration/kanban_report.py" report writing-orchestrator "<task_id>" "<status>" "<phase>" "<progress>" "<итог>"
 ```
 
 > Канонический отчёт (универсальный, с реестром секций): agent_id — СВОЙ
@@ -104,28 +118,20 @@ Ask the user to confirm if the brief reflects meaningful choices or tradeoffs. I
 
 For all substantial long-form work, produce the structure plan from the confirmed brief:
 
+PowerShell 5.1:
+```powershell
+$wc = Join-Path $env:WRITER_CORE_ROOT "wc_cli.py"
+& $env:WRITER_PYTHON $wc plan --topic "<confirmed topic>" --out structure_plan.json
 ```
-"${PYTHON}" "${WRITER_CORE_ROOT}/wc_cli.py" plan --topic "<confirmed topic>" --out structure_plan.json
+
+POSIX:
+```sh
+"$WRITER_PYTHON" "$WRITER_CORE_ROOT/wc_cli.py" plan --topic "<confirmed topic>" --out structure_plan.json
 ```
 
-### Phase 3.5: DOM YAML (scientific/engineering works only)
+### Phase 3.5: Prepare scientific research outputs (scientific/engineering works only)
 
-If the piece is a dissertation, monograph, textbook, or paper (not an essay/article), create the **DOM YAML** after the brief is confirmed:
-
-1. Copy `templates/writer-dom-dissertation.yaml` (or the matching template) into the working directory as `<slug>-dom.yaml`.
-2. Fill the base structure: chapters/sections/paragraphs ids.
-3. Add **known objects as claims** (`claims[]`) with `kind`, and **base graphs** (`graphs[]`) of known assertions — BEFORE drafting.
-4. Record initial `uncertainty` for each claim.
-5. State the DOM path in the research prompt so research feeds claims back into it.
-
-This follows `${OPENCODE_HARNESS_ROOT}/shared/writer-traceability-contract.md`.
-
-For scientific/engineering work, assemble the DOM through the canonical CLI, then verify its claims before drafting:
-
-```
-"${PYTHON}" "${WRITER_CORE_ROOT}/wc_cli.py" dom --template "${OPENCODE_HARNESS_ROOT}/templates/writer-dom-dissertation.yaml" --plan structure_plan.json --claims claims.json --out <slug>-dom.yaml
-"${PYTHON}" "${OPENCODE_HARNESS_ROOT}/scripts/researcher/verify_claims.py" --dom <slug>-dom.yaml --apply
-```
+If the piece is a dissertation, monograph, textbook, or paper (not an essay/article), choose the matching DOM template and include the plan slots in the research prompt. **Do not assemble the DOM yet when its claims must come from research.** The research phase must first produce `claims.json` and `writing_contract.json`. This follows `${OPENCODE_HARNESS_ROOT}/shared/writer-traceability-contract.md`.
 
 ### Phase 4: Orchestrate Research
 
@@ -140,6 +146,7 @@ Write one research prompt for the `general` sub-agent. It must include:
 - Source priorities and exclusions.
 - Required output: findings useful for article drafting, not a generic report.
 - A request to preserve disagreement, uncertainty, useful examples, and source URLs.
+- For scientific/engineering work, a required machine-readable claim set containing stable claim ids, propositions/text, source ids and exact evidence spans, plus the fields needed to persist both `claims.json` and `writing_contract.json`.
 
 #### Step 4b — Dispatch
 
@@ -160,6 +167,31 @@ This inline synthesis does not need a multi-model consensus format — it needs 
 
 If the user provided enough source material and asks to avoid additional research, skip this phase and state that choice.
 
+#### Step 4d — Persist consumer inputs
+
+Before dispatching the writer, persist the supported research claims as `claims.json`. Persist `writing_contract.json` as a non-empty `{"claims": [...]}` collection whose entries contain at least `claim_id` and `proposition`; include scope, modality, causal level, forbidden transformations, required qualifiers, and citation policy where known. For scientific/engineering work these two artifacts are mandatory even when research was skipped: derive them from the user-provided sources, not from guesses. Validate that every contract claim id resolves to a claim and evidence source. No downstream command may reference either path before it exists.
+
+### Phase 4.5: Assemble and verify the scientific DOM
+
+For scientific/engineering work only, after research and Step 4d, assemble the DOM and run claim verification **before drafting**.
+
+PowerShell 5.1:
+```powershell
+$wc = Join-Path $env:WRITER_CORE_ROOT "wc_cli.py"
+$template = Join-Path $env:OPENCODE_HARNESS_ROOT "templates\writer-dom-dissertation.yaml"
+$verifyClaims = Join-Path $env:OPENCODE_HARNESS_ROOT "scripts\researcher\verify_claims.py"
+& $env:WRITER_PYTHON $wc dom --template $template --plan structure_plan.json --claims claims.json --out <slug>-dom.yaml
+& $env:WRITER_PYTHON $verifyClaims --dom <slug>-dom.yaml --apply
+```
+
+POSIX:
+```sh
+"$WRITER_PYTHON" "$WRITER_CORE_ROOT/wc_cli.py" dom --template "$OPENCODE_HARNESS_ROOT/templates/writer-dom-dissertation.yaml" --plan structure_plan.json --claims claims.json --out <slug>-dom.yaml
+"$WRITER_PYTHON" "$OPENCODE_HARNESS_ROOT/scripts/researcher/verify_claims.py" --dom <slug>-dom.yaml --apply
+```
+
+This establishes the required scientific gate order: `verify_claims` before the article-writer's `draft_loop`, then `citation_trace` before handoff.
+
 ### Phase 5: Orchestrate Article Writing
 
 Dispatch `article-writer` via `task` with:
@@ -169,11 +201,20 @@ Dispatch `article-writer` via `task` with:
 - Any user preferences gathered in Phase 2.
 - Explicit instruction to load `ai-slop-avoidance`, follow `${OPENCODE_HARNESS_ROOT}/shared/article-writing-process.md`, and run the slop audit before handoff.
 
-The Article Writer should return the article and handoff notes. Require its `draftcheck` and `review` reports. Review the result for alignment with the brief before returning it to the user. For a persisted draft, run the canonical deterministic review as the final structural/semantic check:
+The Article Writer should return the article and handoff notes. Require `draftcheck` and `review` reports only when `writing_contract.json` was supplied or generated. Review the result for alignment with the brief before returning it to the user. For a persisted draft with a contract, run the canonical deterministic review as the final structural/semantic check. Omit `--plan` when no plan exists and omit `--dom` for ordinary articles or whenever no DOM exists.
 
+PowerShell 5.1 (scientific form; remove optional arguments whose artifacts are absent):
+```powershell
+$wc = Join-Path $env:WRITER_CORE_ROOT "wc_cli.py"
+& $env:WRITER_PYTHON $wc review --draft <draft.md> --contract writing_contract.json --plan structure_plan.json --dom <slug>-dom.yaml --max-iterations 3 --out review_report.json
 ```
-"${PYTHON}" "${WRITER_CORE_ROOT}/wc_cli.py" review --draft <draft.md> --contract writing_contract.json --plan structure_plan.json --dom <slug>-dom.yaml --max-iterations 3 --out review_report.json
+
+POSIX (scientific form; remove optional arguments whose artifacts are absent):
+```sh
+"$WRITER_PYTHON" "$WRITER_CORE_ROOT/wc_cli.py" review --draft <draft.md> --contract writing_contract.json --plan structure_plan.json --dom <slug>-dom.yaml --max-iterations 3 --out review_report.json
 ```
+
+If no writing contract exists, run neither `draftcheck` nor `review` and report: `Deterministic RTT/review not run: no writing contract was supplied or generated.`
 
 Do not hand off a failed review; escalate when its report sets `escalation: true`. If prose quality is critical, also run a quick independent pass yourself: verify sources are attached to claims, tone matches the vibe, no invented facts, no generic filler (the `ai-slop-avoidance` checklist).
 
@@ -181,8 +222,15 @@ Do not hand off a failed review; escalate when its report sets `escalation: true
 
 For dissertation/monograph/textbook/paper, run the deterministic traceability audit before handoff:
 
+PowerShell 5.1:
+```powershell
+$citationTrace = Join-Path $env:OPENCODE_HARNESS_ROOT "scripts\writer\citation_trace.py"
+& $env:WRITER_PYTHON $citationTrace --text <draft.md> --dom <slug>-dom.yaml
 ```
-"${PYTHON}" "${OPENCODE_HARNESS_ROOT}/scripts/writer/citation_trace.py" --text <draft.md> --dom <slug>-dom.yaml
+
+POSIX:
+```sh
+"$WRITER_PYTHON" "$OPENCODE_HARNESS_ROOT/scripts/writer/citation_trace.py" --text <draft.md> --dom <slug>-dom.yaml
 ```
 
 - **PASS (exit 0)** — every factual claim resolves to a DOM claim → source+span; no dangling `[Sxx]`/`[Cxx]`/`[§N]`; no masked uncertainty.

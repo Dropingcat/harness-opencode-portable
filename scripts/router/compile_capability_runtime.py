@@ -45,6 +45,15 @@ def validate(base,caps,prov,stages,tools):
             if c not in known_caps: errors.append(f'provider {pid}: unknown capability {c}')
         for key in ('installed_probe','live_probe','probe'):
             if key in p and p[key].get('kind','always') not in valid_probe: errors.append(f'provider {pid}: invalid {key} kind')
+            if key in p and p[key].get('kind')=='command':
+                probe=p[key]; argv=probe.get('argv')
+                if not isinstance(argv,list) or not argv or not all(isinstance(x,str) and x for x in argv):
+                    errors.append(f'provider {pid}: {key} command argv must be a non-empty string list')
+                executable_env=probe.get('executable_env')
+                if executable_env is not None and (not isinstance(executable_env,str) or not executable_env):
+                    errors.append(f'provider {pid}: {key} executable_env must be a non-empty string')
+                if executable_env and not isinstance(probe.get('executable_default'),str):
+                    errors.append(f'provider {pid}: {key} executable_default must be a string')
     return errors
 
 def main()->int:

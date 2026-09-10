@@ -1,7 +1,7 @@
 {
   "version": 2,
   "generated": true,
-  "policy_hash": "f63bdbfad90d55d4e0989b029fa056ad619b0f4ff562f8046bb313494bbe8e57",
+  "policy_hash": "278b533fd0c6726369d600b790c54e7d6ae736f2be946ffd480e399ba4da4529",
   "base_policy_hash": "6676bcbc8732fac4f97e88f13b712758dff818db849bf588adb0a7e1a2ea880a",
   "capabilities": {
     "web.discovery": {
@@ -355,8 +355,6 @@
       "kind": "script",
       "entrypoint": "scripts/writer-core/wc_cli.py",
       "provides": [
-        "writer.claims.read",
-        "writer.draft",
         "writer.semantic_validate"
       ],
       "priority": 110,
@@ -366,8 +364,9 @@
       },
       "live_probe": {
         "kind": "command",
+        "executable_env": "WRITER_PYTHON",
+        "executable_default": "python",
         "argv": [
-          "python",
           "-c",
           "import importlib.util,pathlib; p=pathlib.Path('scripts/writer-core/wc_cli.py'); s=importlib.util.spec_from_file_location('writer_core_probe',p); m=importlib.util.module_from_spec(s); s.loader.exec_module(m); from writer_core.factory_process import draftcheck; r=draftcheck('The probe may validate semantics.',[{'claim_id':'probe','proposition':'The probe may validate semantics.'}]); assert isinstance(r,dict) and not (r.get('re_extraction') or {}).get('errors'), r"
         ],

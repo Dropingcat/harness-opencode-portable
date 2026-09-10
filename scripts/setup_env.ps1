@@ -37,6 +37,28 @@ if (Test-Path $venvPython) {
     Write-Host "WARN: venv not found at $venvPython; falling back to PATH 'python'"
 }
 
+# Writer Core may require dependencies not installed in the harness venv. Keep an
+# explicitly configured interpreter; otherwise use a local writer venv when one
+# exists and fall back visibly to the general Python interpreter.
+$configuredWriterPython = $env:WRITER_PYTHON
+$localWriterPython = Join-Path $HARNESS "scripts\writer-core\.venv\Scripts\python.exe"
+if (-not [string]::IsNullOrWhiteSpace($configuredWriterPython)) {
+    $writerPython = $configuredWriterPython
+    if ([System.IO.Path]::IsPathRooted($writerPython) -and -not (Test-Path $writerPython)) {
+        Write-Host "WARN: configured WRITER_PYTHON not found at $writerPython; Writer Core preflight will be degraded"
+    }
+} elseif (Test-Path $localWriterPython) {
+    $writerPython = $localWriterPython
+} elseif (Test-Path $venvPython) {
+    $writerPython = $venvPython
+    Write-Host "WARN: no dedicated Writer Core venv found; using harness venv and relying on preflight dependency checks"
+} else {
+    $writerPython = "python"
+    Write-Host "WARN: no Writer Core venv found; falling back to PATH 'python' and relying on preflight dependency checks"
+}
+$env:WRITER_PYTHON = $writerPython
+[Environment]::SetEnvironmentVariable("WRITER_PYTHON", $writerPython, "User")
+
 # Researcher Core (WS-19): детерминированное ядро верификации (numeric/guard/formula)
 [Environment]::SetEnvironmentVariable("RESEARCH_CORE_ROOT", (Join-Path $HARNESS "scripts\researcher"), "User")
 [Environment]::SetEnvironmentVariable("RESEARCH_VERIFY_CLAIMS", (Join-Path $HARNESS "scripts\researcher\verify_claims.py"), "User")

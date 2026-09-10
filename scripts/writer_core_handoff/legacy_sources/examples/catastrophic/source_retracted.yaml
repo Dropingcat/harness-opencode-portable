@@ -1,9 +1,0 @@
-scenario: SOURCE_RETRACTED
-event:
-  source_version: SRC_21@2
-  status: RETRACTED
-expected:
-- EVD_88_REASSESS
-- C_41_NOT_FRESH
-- PAR_91_STALE
-- RELEASE_BLOCKER_CREATED

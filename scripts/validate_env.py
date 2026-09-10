@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import os
+import shutil
 from pathlib import Path
 
 
@@ -61,6 +62,16 @@ def validate_writer_core(repo_root: Path) -> list[str]:
     runs_dir = configured.get("WRITER_RUNS_DIR")
     if runs_dir is not None and not runs_dir.is_absolute():
         errors.append(f"WRITER_RUNS_DIR must be absolute, got {runs_dir}")
+
+    writer_python = os.environ.get("WRITER_PYTHON")
+    if not writer_python:
+        errors.append("WRITER_PYTHON is not set")
+    else:
+        resolved_python = shutil.which(writer_python)
+        if resolved_python is None:
+            errors.append(f"WRITER_PYTHON is not executable or was not found: {writer_python}")
+        else:
+            print(f"OK: WRITER_PYTHON = {resolved_python}")
 
     return errors
 
