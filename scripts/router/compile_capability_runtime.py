@@ -52,8 +52,9 @@ def validate(base,caps,prov,stages,tools):
                 executable_env=probe.get('executable_env')
                 if executable_env is not None and (not isinstance(executable_env,str) or not executable_env):
                     errors.append(f'provider {pid}: {key} executable_env must be a non-empty string')
-                if executable_env and not isinstance(probe.get('executable_default'),str):
-                    errors.append(f'provider {pid}: {key} executable_default must be a string')
+                executable_default=probe.get('executable_default')
+                if executable_default is not None and (not isinstance(executable_default,str) or not executable_default):
+                    errors.append(f'provider {pid}: {key} executable_default must be a non-empty string')
     return errors
 
 def main()->int:

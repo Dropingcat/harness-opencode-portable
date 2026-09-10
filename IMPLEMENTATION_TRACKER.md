@@ -188,8 +188,9 @@
 - [x] **Мост писатель↔ресерчер** `scripts/researcher/verify_claims.py`: берёт writer DOM YAML (claims+evidence), прогоняет numeric/guard/formula/qualifier через researcher_core, возвращает verification (verdict/confidence/numeric_comparison) совместимо с DOM. `--apply` пишет verification в DOM. (2026-09-06)
 - [x] **Нормализация единиц** (кириллица→латиница: МПа→mpa и т.д.) в verify_claims. (2026-09-06)
 - [x] **Тесты** `tests/test_verify_claims.py` (6 кейсов: MATCH/CONTRADICTED/formula conflict/guard/no-source/apply). (2026-09-06)
-- [ ] **Интеграция в процессы**: `writing-orchestration-process.md` + `article-writer.md` — шаг «verify claims через researcher_core» в цикле черновиков (после draft_loop, перед citation_trace).
-- [ ] **Env**: `RESEARCH_CORE_ROOT`, `RESEARCH_VERIFY_CLAIMS` в setup_env.ps1/sh + validate_env.
+- [x] **Интеграция в процессы**: `shared/writing-orchestration-process.md`, `agents/writing-orchestrator.md` и `agents/article-writer.md` требуют `verify_claims` до drafting и `citation_trace` до handoff. (2026-09-10)
+- [x] **Env wiring (Windows runtime setup)**: `scripts/setup_env.ps1` публикует `RESEARCH_CORE_ROOT` и `RESEARCH_VERIFY_CLAIMS`; переносимые process/agent команды разрешают тот же модуль от `OPENCODE_HARNESS_ROOT` на обеих платформах. Это не является aggregate release gate. (2026-09-10)
+- [ ] **Остаток WS-19 / Deferred M4-3**: добавить aggregate machine-enforced release routing, которое проверяет успешный результат `verify_claims` до запуска `citation_trace`/выдачи release verdict. Документированный порядок уже существует; deferred-код не заявляется реализованным.
 
 ## Current blockers before continuing major development
 

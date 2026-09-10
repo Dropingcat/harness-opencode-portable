@@ -61,6 +61,28 @@ class CommandProbeTests(unittest.TestCase):
         self.assertFalse(result["available"])
         self.assertTrue(result["implemented"])
 
+    def test_writer_core_requires_nonblank_writer_python_even_when_path_python_works(self):
+        authority = json.loads(
+            (ROOT / "config/providers_authority.json").read_text(encoding="utf-8")
+        )
+        provider = authority["providers"]["local.writer_core"]
+        self.assertNotIn("executable_default", provider["live_probe"])
+
+        python_dir = str(Path(sys.executable).parent)
+        for env_state in ("missing", "blank"):
+            with self.subTest(writer_python=env_state), patch.dict(
+                os.environ, {"PATH": python_dir, "WRITER_PYTHON": ""}, clear=False
+            ):
+                if env_state == "missing":
+                    os.environ.pop("WRITER_PYTHON", None)
+                self.assertIsNotNone(shutil.which("python"))
+                result = PREFLIGHT.probe_provider(provider, network=False)
+
+            self.assertEqual(result["status"], "degraded")
+            self.assertFalse(result["available"])
+            self.assertTrue(result["implemented"])
+            self.assertEqual(result["detail"], "missing_executable:WRITER_PYTHON")
+
 
 class WriterProviderRoutingTests(unittest.TestCase):
     def test_writer_core_only_claims_semantic_validation(self):

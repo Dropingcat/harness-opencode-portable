@@ -248,7 +248,6 @@
       "live_probe": {
         "kind": "command",
         "executable_env": "WRITER_PYTHON",
-        "executable_default": "python",
         "argv": [
           "-c",
           "import importlib.util,pathlib; p=pathlib.Path('scripts/writer-core/wc_cli.py'); s=importlib.util.spec_from_file_location('writer_core_probe',p); m=importlib.util.module_from_spec(s); s.loader.exec_module(m); from writer_core.factory_process import draftcheck; r=draftcheck('The probe may validate semantics.',[{'claim_id':'probe','proposition':'The probe may validate semantics.'}]); assert isinstance(r,dict) and not (r.get('re_extraction') or {}).get('errors'), r"
