@@ -17,6 +17,8 @@ import yaml
 from researcher_core.r0.entities import Claim, EvidenceSpan, Quantity, Source
 from researcher_core.r0.graph import GraphEdge
 from researcher_core.r0.projections import Snapshot
+from researcher_core.relation_assessment import RelationAssessment
+from researcher_core.uncertainty_field import UncertaintyProfile, ReviewWorkField, uncertainty_profile_to_dict, review_work_field_to_dict
 
 
 def build_minimal_service_artifact(
@@ -24,6 +26,9 @@ def build_minimal_service_artifact(
     state: Mapping[str, Claim | Quantity | Source | EvidenceSpan | GraphEdge],
     title: str,
     policy: Any | None = None,
+    relation_assessments: tuple[RelationAssessment, ...] = (),
+    uncertainty_profiles: tuple[UncertaintyProfile, ...] = (),
+    review_work_fields: tuple[ReviewWorkField, ...] = (),
 ) -> dict[str, Any]:
     claims: dict[str, Any] = {}
     quantities: dict[str, Any] = {}
@@ -78,6 +83,9 @@ def build_minimal_service_artifact(
         "claims": claims,
         "quantities": quantities,
         "graph_edges": graph_edges,
+        "relation_assessments": {str(x.meta.id): _relation_assessment_record(x) for x in relation_assessments},
+        "uncertainty_profiles": {str(x.meta.id): uncertainty_profile_to_dict(x) for x in uncertainty_profiles},
+        "review_work_fields": {str(x.meta.id): review_work_field_to_dict(x) for x in review_work_fields},
         "gaps": {},
         "writer_context": {
             "allowed_claims": [],
@@ -159,9 +167,25 @@ def _edge_record(edge: GraphEdge) -> dict[str, Any]:
         "source_id": str(edge.source_id),
         "target_id": str(edge.target_id),
         "edge_kind": edge.edge_kind.value,
+        "state": edge.state.value,
+        "revision": edge.meta.revision,
         "created_at": edge.meta.created_at.isoformat().replace("+00:00", "Z"),
     }
 
+
+
+def _relation_assessment_record(assessment: RelationAssessment) -> dict[str, Any]:
+    return {
+        "edge_id": str(assessment.edge_id),
+        "assessed_edge_revision": assessment.assessed_edge_revision,
+        "edge_kind": assessment.edge_kind.value,
+        "verdict": assessment.verdict.value,
+        "use_state": assessment.use_state.value,
+        "reason_codes": list(assessment.reason_codes),
+        "findings": list(assessment.findings),
+        "supporting_refs": [str(x) for x in assessment.supporting_refs],
+        "validator_versions": dict(assessment.validator_versions),
+    }
 
 def _first_run_id(state: Mapping[str, Claim | Quantity | Source | EvidenceSpan | GraphEdge]) -> str:
     for entity in state.values():

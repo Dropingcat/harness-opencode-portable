@@ -8,7 +8,7 @@ from typing import Protocol
 
 
 _ID_RE = re.compile(r"^[A-Z][A-Z0-9]*_[0-9A-HJKMNP-TV-Z]{26}$")
-ALLOWED_PREFIXES = frozenset({"RUN", "QST", "CLP", "CLM", "QTY", "SRC", "EVD", "EDG", "SCP", "DRV", "ASM", "REC", "GAP", "CNF", "EVT", "TXN", "SNP", "OPR"})
+ALLOWED_PREFIXES = frozenset({"RUN", "QST", "CLP", "CLM", "QTY", "SRC", "EVD", "EDG", "SCP", "DRV", "ASM", "REC", "GAP", "CNF", "EVT", "TXN", "SNP", "OPR", "RRQ", "RCD", "RMP", "RDM", "DCS", "PIT", "RPT", "RTL", "RCH", "RRS", "KDP", "DIA", "RIT", "TEP", "DLG", "TER", "EAP", "EAR", "AIM", "SRP", "SLR", "RAP", "RAS", "UPR", "RWF", "IQC", "IQT", "ARG", "ARL", "AGP", "DDC", "ADC", "DQC", "RPB", "TEX", "PER"})
 _ALPHABET = "0123456789ABCDEFGHJKMNPQRSTVWXYZ"
 _ULID_LENGTH = 26  # debt-scan: ignore-line -- ULID wire format length, not policy heuristic.
 _RANDOM_PART_LENGTH = 16  # debt-scan: ignore-line -- ULID randomness length, not policy heuristic.

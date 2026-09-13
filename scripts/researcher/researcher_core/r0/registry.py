@@ -147,6 +147,43 @@ class InMemoryClaimRegistry:
     def state_snapshot(self) -> dict[str, Claim | Quantity | Source | EvidenceSpan | GraphEdge]:
         return {str(entity_id): entity for entity_id, entity in self.state.items()}
 
+    def update_graph_edge(
+        self,
+        edge: GraphEdge,
+        event: EventEnvelope,
+        *,
+        expected_revision: int,
+    ) -> GraphEdge:
+        """Durably replace one canonical GraphEdge after a lifecycle reducer.
+
+        The reducer owns transition legality; the registry owns canonical state
+        mutation and durable projection. Endpoint entities are untouched.
+        """
+        current = self.state.get(edge.meta.id)
+        if not isinstance(current, GraphEdge):
+            raise KeyError(str(edge.meta.id))
+        if current.meta.revision != expected_revision:
+            raise ValueError("edge revision does not match expected_revision")
+        if edge.meta.revision != expected_revision + 1:
+            raise ValueError("replacement edge revision must increment by one")
+        if (edge.source_id, edge.target_id, edge.edge_kind) != (current.source_id, current.target_id, current.edge_kind):
+            raise ValueError("edge lifecycle update cannot change semantic endpoints or kind")
+        if event.aggregate_id != edge.meta.id or event.aggregate_revision != edge.meta.revision:
+            raise ValueError("edge lifecycle event does not match replacement edge revision")
+
+        uow_factory = self._uow_factory or InMemoryUnitOfWork
+        with uow_factory() as uow:  # type: ignore[call-arg]
+            uow.put_state(edge.meta.id, {"entity": edge})
+            uow.append_event(event)
+            uow.enqueue_outbox(OutboxMessage("projection.update", {"edge": edge.meta.id}))
+            uow.commit()
+
+        self.state[edge.meta.id] = edge
+        self.events.append(event)
+        self.outbox.append(OutboxMessage("projection.update", {"edge": edge.meta.id}))
+        self.snapshots.append(make_snapshot(EntityId.new("SNP", self.clock, self.random_source), self.events, self.state))
+        return edge
+
     def _build_result(self, command: CommandEnvelope, batch: ProposalBatch) -> CommandResult:
         self._pending_entity_by_id: dict[EntityId, Claim | Quantity | Source | EvidenceSpan | GraphEdge] = {}
         self._pending_events: list[EventEnvelope] = []

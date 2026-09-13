@@ -30,6 +30,22 @@ reason_codes:
     description: "Run validates internal trace only, not external truth."
     owner: researcher-core
     tests: [test_reason_code_registry_rejects_unknown]
+  RELATION_PROVENANCE_STALE:
+    description: "Canonical graph relation lost current provenance support and became stale."
+    owner: researcher-core
+    tests: [test_relation_reason_codes_are_registered]
+  RELATION_REVALIDATED:
+    description: "Previously stale graph relation was revalidated against current provenance."
+    owner: researcher-core
+    tests: [test_relation_reason_codes_are_registered]
+  RELATION_INVALIDATED:
+    description: "Graph relation was explicitly invalidated while endpoint entities remain independently addressable."
+    owner: researcher-core
+    tests: [test_relation_reason_codes_are_registered]
+  RESEARCH_CARD_STATE_CHANGED:
+    description: "Research planning card state changed through the ResearchDOM reducer."
+    owner: researcher-core
+    tests: [test_research_card_state_reason_code_is_registered]
 
 heuristics:
   debt.scan.default_fail_on:
@@ -82,6 +98,34 @@ heuristics:
     review_after: {runs: 20}
     failure_if_wrong: [external_artifact_debt_noise, hidden_core_debt_if_overbroad]
     tests: [test_debt_config_excludes_dirs]
+
+  research.planning.max_cards:
+    value:
+      - 80
+    unit: cards
+    applies_to: [research_planning]
+    reason: >-
+      Limits authoritative ResearchDOM growth per planning tree. Large studies expand
+      iteratively instead of materialising every possible topic/method combination at once.
+    owner: researcher-core
+    introduced_in: 0.2.0
+    review_after: {runs: 20}
+    failure_if_wrong: [planning_tree_explosion, premature_pruning]
+    tests: [test_planning_gate_reads_limits_from_policy]
+
+  research.planning.max_depth:
+    value:
+      - 8
+    unit: tree_depth
+    applies_to: [research_planning]
+    reason: >-
+      Caps recursive decomposition depth while allowing objective, direction, discipline,
+      question, method and executable task layers.
+    owner: researcher-core
+    introduced_in: 0.2.0
+    review_after: {runs: 20}
+    failure_if_wrong: [unbounded_decomposition, forced_flattening]
+    tests: [test_planning_gate_reads_limits_from_policy]
 
   research.escalation.max_hops:
     value:

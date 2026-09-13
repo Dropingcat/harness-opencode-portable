@@ -32,3 +32,23 @@ __pycache__/
 
 /Новая папка/
 /Новая сжатая ZIP-папка.zip
+
+# Local deepwork scheduler state
+.slim/deepwork/
+
+# User workspace artifacts (not part of the Harness module)
+.ignore
+agent_control_loop_*.json
+agent_control_loop_*.md
+agent_principles_research.md
+article_agent_control_loop.md
+article_ai_agent_principles.md
+claims.json
+review_report.json
+rtt_report.json
+structure_plan.json
+writing_contract.json
+/легаси/
+/патчи/
+.kanban.db
+.tmp_l2.json

@@ -112,6 +112,10 @@
     "capability.escalation": {
       "trust_class": "router_control",
       "evidence_eligible": false
+    },
+    "tribunal.role.execute": {
+      "trust_class": "semantic_worker",
+      "evidence_eligible": false
     }
   }
 }

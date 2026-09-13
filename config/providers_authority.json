@@ -349,6 +349,33 @@
         "kind": "file",
         "path": "scripts/router/capability_escalation.py"
       }
+    },
+    "existing.opencode_tribunal_role": {
+      "kind": "agent",
+      "tool": "tribunal_role",
+      "provides": [
+        "tribunal.role.execute"
+      ],
+      "priority": 85,
+      "installed_probe": {
+        "kind": "file",
+        "path": "mcp/launchers/opencode_tribunal_role.py"
+      },
+      "live_probe": {
+        "kind": "executable",
+        "name": "opencode"
+      },
+      "role_kinds": [
+        "META",
+        "DOMAIN",
+        "METHOD"
+      ],
+      "execution_contracts": [
+        "IQC",
+        "DQC",
+        "ADC"
+      ],
+      "max_executors_per_contract": 1
     }
   }
 }

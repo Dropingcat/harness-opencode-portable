@@ -1,6 +1,6 @@
 {
   "version": 3,
-  "generated_from_policy_hash": "6676bcbc8732fac4f97e88f13b712758dff818db849bf588adb0a7e1a2ea880a",
+  "generated_from_policy_hash": "8910fd61122b450212d5bc459cdb52acdc02aa3cf6d87a37c5eaa3778e3cdfef",
   "generated": true,
   "nodes": [
     {
@@ -239,6 +239,13 @@
       "provider": "opencode_service_task",
       "kind": "launcher",
       "entrypoint": "mcp/launchers/opencode_service_task.py"
+    },
+    {
+      "id": "runtime:opencode_tribunal_role",
+      "type": "runtime",
+      "provider": "opencode_tribunal_role",
+      "kind": "launcher",
+      "entrypoint": "mcp/launchers/opencode_tribunal_role.py"
     },
     {
       "id": "runtime:router_core",
@@ -770,6 +777,13 @@
       "name": "session_guard",
       "kind": "script",
       "entrypoint": "guard/src/session_guard.py"
+    },
+    {
+      "id": "tool:tribunal_role",
+      "type": "tool",
+      "name": "tribunal_role",
+      "kind": "launcher",
+      "entrypoint": "mcp/launchers/opencode_tribunal_role.py"
     }
   ],
   "edges": [
@@ -1672,6 +1686,11 @@
       "src": "tool:session_guard",
       "rel": "BINDS_RUNTIME",
       "dst": "runtime:doc_guard"
+    },
+    {
+      "src": "tool:tribunal_role",
+      "rel": "BINDS_RUNTIME",
+      "dst": "runtime:opencode_tribunal_role"
     }
   ],
   "indexes": {
@@ -1736,7 +1755,8 @@
       "tool:resolve_route",
       "tool:searxng_search",
       "tool:service_task",
-      "tool:session_guard"
+      "tool:session_guard",
+      "tool:tribunal_role"
     ]
   }
 }

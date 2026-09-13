@@ -65,6 +65,11 @@
       "kind": "script",
       "entrypoint": "guard/src/session_guard.py",
       "provider": "doc_guard"
+    },
+    "tribunal_role": {
+      "kind": "launcher",
+      "entrypoint": "mcp/launchers/opencode_tribunal_role.py",
+      "provider": "opencode_tribunal_role"
     }
   }
 }

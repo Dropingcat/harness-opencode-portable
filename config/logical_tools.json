@@ -48,6 +48,9 @@
     },
     "capability.request": {
       "capability": "capability.escalation"
+    },
+    "tribunal_role": {
+      "capability": "tribunal.role.execute"
     }
   }
 }

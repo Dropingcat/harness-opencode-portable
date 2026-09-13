@@ -1,0 +1,80 @@
+schema_version: harness-remote-acceptance-matrix/1.0
+matrix_id: r4.4-l3b-production-semantic-001
+reference_opencode_version: "1.18.30"
+reference_windows_installer_sha256: dcf723272c930f5dfa73a8561818ae4ad1a346384a859111ffeb554e19ce6567
+
+phases:
+  deterministic:
+    - id: T00
+      name: package_git_integrity
+      blocking: true
+    - id: T01
+      name: environment_identity
+      blocking: true
+    - id: T02
+      name: r4_acceptance
+      blocking: true
+    - id: T03
+      name: compiler_static_gates
+      blocking: true
+    - id: T04
+      name: full_researcher_regression
+      blocking_on_new_failures: true
+    - id: T05
+      name: named_l3_edge_cases
+      blocking: true
+    - id: T06
+      name: production_provider_preflight
+      blocking: true
+
+  semantic:
+    - id: S01
+      name: live_skeptic_q1
+      required: true
+    - id: S02
+      name: live_specialist_a1
+      required: true
+    - id: S03
+      name: conditional_q2_a2
+      required_when: admitted_new_issue_surface
+    - id: S04
+      name: live_conditional_advocate
+      required_when: material_attack_and_defensible_target
+    - id: S05
+      name: prior_only_grounding
+      required: true
+    - id: S06
+      name: branch_isolation
+      required: true
+    - id: S07
+      name: three_run_variability
+      required: true
+
+edge_cases:
+  - wrong_role
+  - wrong_provider
+  - wrong_role_kind
+  - wrong_contract_namespace
+  - zero_healthy_provider
+  - multiple_healthy_provider_candidates
+  - executor_cardinality_exceeded
+  - stale_provider_after_binding
+  - timeout
+  - invalid_json
+  - hidden_sibling_ref
+  - second_role_family
+  - answer_missing_materialized_question
+  - output_contract_missing_or_mismatched
+  - model_prior_misrepresented_as_evidence
+  - advocate_prior_only_defense
+
+return_artifacts:
+  - environment.json
+  - capability_preflight.json
+  - REMOTE_ACCEPTANCE_REPORT.json
+  - SHA256SUMS.txt
+  - semantic_trace.json
+  - prior_only_trace.json
+  - jobs/
+  - artifacts/
+  - opencode_runs/

@@ -12,7 +12,7 @@ from researcher_core.r0.entities import Claim, EvidenceSpan, Quantity, Source
 from researcher_core.r0.entities import EntityMeta
 from researcher_core.r0.enums import ClaimStatus, EdgeKind
 from researcher_core.r0.events import EventEnvelope
-from researcher_core.r0.graph import GraphEdge
+from researcher_core.r0.graph import GraphEdge, GraphEdgeState
 from researcher_core.r0.ids import EntityId
 
 
@@ -79,6 +79,7 @@ def entity_to_event_record(entity: ProjectableEntity) -> EventRecord:
                 "target_id": str(entity.target_id),
                 "edge_kind": entity.edge_kind.value,
                 "attributes": _plain_value(entity.attributes),
+                "state": entity.state.value,
             },
         }
     raise TypeError(f"unsupported projectable entity: {type(entity).__name__}")
@@ -134,6 +135,7 @@ def entity_from_event_record(record: Mapping[str, Any]) -> ProjectableEntity:
             target_id=EntityId(entity_record["target_id"]),
             edge_kind=EdgeKind(entity_record["edge_kind"]),
             attributes=entity_record["attributes"],
+            state=GraphEdgeState(entity_record.get("state", GraphEdgeState.ACTIVE.value)),
         )
     raise ValueError(f"unsupported event entity_type: {entity_type!r}")
 

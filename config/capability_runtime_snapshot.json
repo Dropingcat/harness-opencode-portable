@@ -1,8 +1,8 @@
 {
   "version": 2,
   "generated": true,
-  "policy_hash": "232b19a0c159907c2311abc13dfd7ad64bb460e50b6e66f72d42736f7612e1e8",
-  "base_policy_hash": "6676bcbc8732fac4f97e88f13b712758dff818db849bf588adb0a7e1a2ea880a",
+  "policy_hash": "f9de8128f960000470c286b0b153861ec8ff906b2fa6f3be712dbf1d924e47a0",
+  "base_policy_hash": "8910fd61122b450212d5bc459cdb52acdc02aa3cf6d87a37c5eaa3778e3cdfef",
   "capabilities": {
     "web.discovery": {
       "trust_class": "discovery",
@@ -114,6 +114,10 @@
     },
     "capability.escalation": {
       "trust_class": "router_control",
+      "evidence_eligible": false
+    },
+    "tribunal.role.execute": {
+      "trust_class": "semantic_worker",
       "evidence_eligible": false
     }
   },
@@ -466,6 +470,33 @@
         "kind": "file",
         "path": "scripts/router/capability_escalation.py"
       }
+    },
+    "existing.opencode_tribunal_role": {
+      "kind": "agent",
+      "tool": "tribunal_role",
+      "provides": [
+        "tribunal.role.execute"
+      ],
+      "priority": 85,
+      "installed_probe": {
+        "kind": "file",
+        "path": "mcp/launchers/opencode_tribunal_role.py"
+      },
+      "live_probe": {
+        "kind": "executable",
+        "name": "opencode"
+      },
+      "role_kinds": [
+        "META",
+        "DOMAIN",
+        "METHOD"
+      ],
+      "execution_contracts": [
+        "IQC",
+        "DQC",
+        "ADC"
+      ],
+      "max_executors_per_contract": 1
     }
   },
   "routes": {
@@ -1223,6 +1254,9 @@
     },
     "capability.request": {
       "capability": "capability.escalation"
+    },
+    "tribunal_role": {
+      "capability": "tribunal.role.execute"
     }
   }
 }

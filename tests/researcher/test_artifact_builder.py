@@ -61,6 +61,8 @@ class ArtifactBuilderBubbleTests(unittest.TestCase):
 
         self.assertEqual(check_artifact_text(rendered), [])
         self.assertIn('edge_kind: "derived_from"', rendered)
+        self.assertIn('state: "ACTIVE"', rendered)
+        self.assertIn('revision: 1', rendered)
 
     def test_artifact_builder_renders_source_and_evidence(self) -> None:
         source = Source(meta=EntityMeta(SOURCE_ID, "r0-entity/0.1", 1, RUN_ID, datetime.fromisoformat("2026-08-29T00:00:00+00:00"), ACTOR), source_type="local_document", title="Doc", locator="fixture://doc")
