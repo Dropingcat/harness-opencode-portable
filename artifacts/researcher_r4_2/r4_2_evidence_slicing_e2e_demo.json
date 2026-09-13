@@ -1,0 +1,679 @@
+{
+  "schema_version": "r4.2-evidence-slicing-demo/1.0",
+  "pipeline": [
+    "RelationAssessment",
+    "UncertaintyProfile",
+    "ReviewWorkField",
+    "TribunalCompositionPlan",
+    "TribunalEvidenceBundle"
+  ],
+  "review_work_field": {
+    "schema_version": "review-work-field/1.0",
+    "meta": {
+      "id": "RWF_01M2CER1G0KWZNSKKSF6DSEEF1",
+      "schema_version": "review-work-field/1.0",
+      "revision": 1,
+      "run_id": "RUN_01M2CER1G0GZZHMWTFR7J1MZBZ",
+      "created_at": "2026-09-13T11:30:00+00:00",
+      "created_by": {
+        "actor_type": "AGENT",
+        "actor_id": "researcher"
+      }
+    },
+    "request_id": "RRQ_01M2CER1G0TWMK20GVDC095BKQ",
+    "target_refs": [
+      "EDG_01M2CER1G0PZDJGXJ5BEYJMYNA"
+    ],
+    "uncertainty_profile_ids": [
+      "UPR_01M2CER1G0ZH05M8ZDYX25N98B"
+    ],
+    "readiness": "BLOCKED",
+    "assessment_needs": [
+      {
+        "axis": "METHOD",
+        "level": "BLOCKING",
+        "blocking": true,
+        "target_refs": [
+          "EDG_01M2CER1G0PZDJGXJ5BEYJMYNA",
+          "RAS_01M2CER1G0QFZK2GGTK40RZCHT"
+        ],
+        "source_refs": [
+          "RAS_01M2CER1G0QFZK2GGTK40RZCHT",
+          "EDG_01M2CER1G0PZDJGXJ5BEYJMYNA"
+        ],
+        "question": "Are the methods behind EDG_01M2CER1G0PZDJGXJ5BEYJMYNA compatible with the inference being made?",
+        "assessment_methods": [
+          "METHOD_COMPATIBILITY",
+          "SPECIALIST_REVIEW"
+        ],
+        "completion_criteria": [
+          "establish whether the evidence-generating method is applicable to the relation target"
+        ],
+        "reason_codes": [
+          "uncertainty:method_unknown"
+        ]
+      }
+    ],
+    "open_gap_ids": [],
+    "conflict_ids": [],
+    "relation_assessment_ids": [
+      "RAS_01M2CER1G0QFZK2GGTK40RZCHT"
+    ],
+    "evidence_refs": [
+      "RAS_01M2CER1G0QFZK2GGTK40RZCHT",
+      "EDG_01M2CER1G0PZDJGXJ5BEYJMYNA",
+      "EVD_01M2CER1G0A8MEXYQG0E9ZQYG0",
+      "EVD_01M2CER1G0B23ZQ7HYFRH3BJ6Y"
+    ],
+    "metadata": {
+      "composition_boundary": "R3 defines what must be assessed; R4 selects who assesses it"
+    }
+  },
+  "composition": {
+    "schema_version": "tribunal-composition-plan/1.0",
+    "work_field_id": "RWF_01M2CER1G0KWZNSKKSF6DSEEF1",
+    "permanent_roles": [
+      "critic",
+      "skeptic",
+      "methodologist",
+      "evidence_auditor"
+    ],
+    "dynamic_roles": [
+      "crystallographer",
+      "xrd_specialist"
+    ],
+    "assignments": [
+      {
+        "need_ref": {
+          "key": "ANR-2991242ea1d705856115",
+          "ordinal": 0
+        },
+        "role_ids": [
+          "critic",
+          "skeptic",
+          "methodologist",
+          "crystallographer",
+          "xrd_specialist"
+        ],
+        "reason_codes": [
+          "PERMANENT_POLICY_ROLE",
+          "AXIS_REQUIREMENT",
+          "LINEAGE_MATCH",
+          "BLOCKING_NEED_COVERAGE",
+          "MINIMAL_COVER_SELECTION"
+        ]
+      }
+    ],
+    "role_briefs": [
+      {
+        "role_id": "critic",
+        "assigned_need_refs": [
+          {
+            "key": "ANR-2991242ea1d705856115",
+            "ordinal": 0
+          }
+        ],
+        "evidence_view": {
+          "kind": "CLAIM_PLUS_COUNTEREVIDENCE",
+          "include_provenance": true,
+          "include_previous_conclusions": false,
+          "max_refs": 24
+        },
+        "allowed_capabilities": [
+          "evidence.verify"
+        ],
+        "allowed_tools": [
+          "evidence.verify"
+        ],
+        "expected_output_contract": "TribunalFinding/1.0",
+        "inquiry_depth": 2,
+        "token_budget": 6000
+      },
+      {
+        "role_id": "skeptic",
+        "assigned_need_refs": [
+          {
+            "key": "ANR-2991242ea1d705856115",
+            "ordinal": 0
+          }
+        ],
+        "evidence_view": {
+          "kind": "FRESH_CONTEXT",
+          "include_provenance": false,
+          "include_previous_conclusions": false,
+          "max_refs": 20
+        },
+        "allowed_capabilities": [
+          "evidence.verify"
+        ],
+        "allowed_tools": [
+          "evidence.verify"
+        ],
+        "expected_output_contract": "TribunalFinding/1.0",
+        "inquiry_depth": 2,
+        "token_budget": 6000
+      },
+      {
+        "role_id": "methodologist",
+        "assigned_need_refs": [
+          {
+            "key": "ANR-2991242ea1d705856115",
+            "ordinal": 0
+          }
+        ],
+        "evidence_view": {
+          "kind": "METHOD_ONLY",
+          "include_provenance": true,
+          "include_previous_conclusions": false,
+          "max_refs": 20
+        },
+        "allowed_capabilities": [
+          "science.numeric",
+          "formula.validate",
+          "evidence.verify"
+        ],
+        "allowed_tools": [
+          "science.compute",
+          "evidence.verify"
+        ],
+        "expected_output_contract": "TribunalFinding/1.0",
+        "inquiry_depth": 2,
+        "token_budget": 6000
+      },
+      {
+        "role_id": "crystallographer",
+        "assigned_need_refs": [
+          {
+            "key": "ANR-2991242ea1d705856115",
+            "ordinal": 0
+          }
+        ],
+        "evidence_view": {
+          "kind": "CLAIM_PLUS_SUPPORT",
+          "include_provenance": true,
+          "include_previous_conclusions": false,
+          "max_refs": 24
+        },
+        "allowed_capabilities": [
+          "science.physics",
+          "evidence.verify",
+          "document.text.extract"
+        ],
+        "allowed_tools": [
+          "science.compute",
+          "evidence.verify",
+          "document.inspect"
+        ],
+        "expected_output_contract": "TribunalFinding/1.0",
+        "inquiry_depth": 2,
+        "token_budget": 6000
+      },
+      {
+        "role_id": "xrd_specialist",
+        "assigned_need_refs": [
+          {
+            "key": "ANR-2991242ea1d705856115",
+            "ordinal": 0
+          }
+        ],
+        "evidence_view": {
+          "kind": "METHOD_ONLY",
+          "include_provenance": true,
+          "include_previous_conclusions": false,
+          "max_refs": 24
+        },
+        "allowed_capabilities": [
+          "science.physics",
+          "science.numeric",
+          "evidence.verify",
+          "document.text.extract"
+        ],
+        "allowed_tools": [
+          "science.compute",
+          "evidence.verify",
+          "document.inspect"
+        ],
+        "expected_output_contract": "TribunalFinding/1.0",
+        "inquiry_depth": 2,
+        "token_budget": 6000
+      }
+    ],
+    "policy_version": "0.4.1-l1",
+    "policy_hash": "sha256:e4e822d37961eb76f3eaebd01b7bf4f039d83a83b9b06dcd2037b188be34f559",
+    "composition_fingerprint": "sha256:209bcaf28ba5fe7fc409d51b5e6a427650d923e7ca7bd6ed82c029e0aa292d85",
+    "metadata": {
+      "authority_boundary": "composition only; no Claim/GraphEdge/Gap/truth mutation",
+      "assessment_need_identity": "R4 content-addressed need ref; canonical R3 AssessmentNeed entity id deferred"
+    }
+  },
+  "evidence_bundle": {
+    "schema_version": "tribunal-evidence-bundle/1.0",
+    "work_field_id": "RWF_01M2CER1G0KWZNSKKSF6DSEEF1",
+    "composition_fingerprint": "sha256:209bcaf28ba5fe7fc409d51b5e6a427650d923e7ca7bd6ed82c029e0aa292d85",
+    "bundle_fingerprint": "sha256:7fda4cc330f9f52e7be88de87b77ffdd7d1d539b36fd1ccbd157383a9c9b5929",
+    "slices": [
+      {
+        "schema_version": "tribunal-evidence-slice/1.0",
+        "role_id": "critic",
+        "work_field_id": "RWF_01M2CER1G0KWZNSKKSF6DSEEF1",
+        "composition_fingerprint": "sha256:209bcaf28ba5fe7fc409d51b5e6a427650d923e7ca7bd6ed82c029e0aa292d85",
+        "assigned_need_refs": [
+          {
+            "key": "ANR-2991242ea1d705856115",
+            "ordinal": 0
+          }
+        ],
+        "view_kind": "CLAIM_PLUS_COUNTEREVIDENCE",
+        "include_provenance": true,
+        "include_previous_conclusions": false,
+        "target_projections": [
+          {
+            "target_id": "CLM_01M2CER1G07JB4X6NP5V1GXB96",
+            "entity_type": "Claim",
+            "payload": {
+              "proposition": "BCC lattice expansion after nitriding is attributable to nitrogen uptake.",
+              "claim_type": "causal",
+              "revision": 1
+            }
+          },
+          {
+            "target_id": "EDG_01M2CER1G0PZDJGXJ5BEYJMYNA",
+            "entity_type": "GraphEdge",
+            "payload": {
+              "source_id": "EVD_01M2CER1G0A8MEXYQG0E9ZQYG0",
+              "target_id": "CLM_01M2CER1G07JB4X6NP5V1GXB96",
+              "edge_kind": "supports",
+              "revision": 1
+            }
+          },
+          {
+            "target_id": "EVD_01M2CER1G0A8MEXYQG0E9ZQYG0",
+            "entity_type": "EvidenceSpan",
+            "payload": {
+              "exact_text": "Lattice expansion increased after nitrogen uptake during nitriding.",
+              "text_hash": "sha256:evd-support",
+              "revision": 1,
+              "source_id": "SRC_01M2CER1G01MFTA0BCGAP4D4K5",
+              "locator": "p.5"
+            }
+          }
+        ],
+        "evidence_items": [
+          {
+            "evidence_id": "EVD_01M2CER1G0B23ZQ7HYFRH3BJ6Y",
+            "exact_text": "Residual stress can shift the same diffraction peak without a composition change.",
+            "text_hash": "sha256:evd-counter",
+            "polarity": "COUNTER",
+            "source_id": "SRC_01M2CER1G0DQWE81K4FWRDZKBT",
+            "locator": "p.9",
+            "selection_reasons": [
+              "COUNTER_RELATION"
+            ]
+          }
+        ],
+        "source_projections": [
+          {
+            "source_id": "SRC_01M2CER1G0DQWE81K4FWRDZKBT",
+            "source_type": "journal",
+            "title": "Residual-stress XRD study",
+            "locator": "doi:10/xrd-counter",
+            "content_hash": "sha256:counter"
+          }
+        ],
+        "prior_review_artifacts": [],
+        "missing_refs": [],
+        "status": "READY",
+        "truncated": false,
+        "slice_fingerprint": "sha256:b3f912463f83a500aba8a81abdbf294fffb69408fa76f09e5e0cc4d1954e9711",
+        "metadata": {
+          "selection_boundary": "canonical refs and typed GraphEdge relations only; no free-text source classification",
+          "method_only_semantics": "explicit AssessmentNeed refs plus evidence that is source of an assigned target relation",
+          "missing_refs_fail_visible": true,
+          "nonprojected_control_refs": [
+            "RAS_01M2CER1G0QFZK2GGTK40RZCHT"
+          ]
+        }
+      },
+      {
+        "schema_version": "tribunal-evidence-slice/1.0",
+        "role_id": "skeptic",
+        "work_field_id": "RWF_01M2CER1G0KWZNSKKSF6DSEEF1",
+        "composition_fingerprint": "sha256:209bcaf28ba5fe7fc409d51b5e6a427650d923e7ca7bd6ed82c029e0aa292d85",
+        "assigned_need_refs": [
+          {
+            "key": "ANR-2991242ea1d705856115",
+            "ordinal": 0
+          }
+        ],
+        "view_kind": "FRESH_CONTEXT",
+        "include_provenance": false,
+        "include_previous_conclusions": false,
+        "target_projections": [
+          {
+            "target_id": "CLM_01M2CER1G07JB4X6NP5V1GXB96",
+            "entity_type": "Claim",
+            "payload": {
+              "proposition": "BCC lattice expansion after nitriding is attributable to nitrogen uptake.",
+              "claim_type": "causal",
+              "revision": 1
+            }
+          },
+          {
+            "target_id": "EDG_01M2CER1G0PZDJGXJ5BEYJMYNA",
+            "entity_type": "GraphEdge",
+            "payload": {
+              "revision": 1,
+              "relation_semantics_hidden": true
+            }
+          },
+          {
+            "target_id": "EVD_01M2CER1G0A8MEXYQG0E9ZQYG0",
+            "entity_type": "EvidenceSpan",
+            "payload": {
+              "exact_text": "Lattice expansion increased after nitrogen uptake during nitriding.",
+              "text_hash": "sha256:evd-support",
+              "revision": 1
+            }
+          }
+        ],
+        "evidence_items": [
+          {
+            "evidence_id": "EVD_01M2CER1G0A8MEXYQG0E9ZQYG0",
+            "exact_text": "Lattice expansion increased after nitrogen uptake during nitriding.",
+            "text_hash": "sha256:evd-support",
+            "polarity": "UNLABELED",
+            "source_id": null,
+            "locator": null,
+            "selection_reasons": [
+              "ASSIGNED_RELEVANCE"
+            ]
+          },
+          {
+            "evidence_id": "EVD_01M2CER1G0B23ZQ7HYFRH3BJ6Y",
+            "exact_text": "Residual stress can shift the same diffraction peak without a composition change.",
+            "text_hash": "sha256:evd-counter",
+            "polarity": "UNLABELED",
+            "source_id": null,
+            "locator": null,
+            "selection_reasons": [
+              "ASSIGNED_RELEVANCE"
+            ]
+          }
+        ],
+        "source_projections": [],
+        "prior_review_artifacts": [],
+        "missing_refs": [],
+        "status": "READY",
+        "truncated": false,
+        "slice_fingerprint": "sha256:5ebdca1b94d96bcbf28dfec807facd05e4084cd0c22e8b199b6d9c1bf058b5f5",
+        "metadata": {
+          "selection_boundary": "canonical refs and typed GraphEdge relations only; no free-text source classification",
+          "method_only_semantics": "explicit AssessmentNeed refs plus evidence that is source of an assigned target relation",
+          "missing_refs_fail_visible": true,
+          "nonprojected_control_refs": [
+            "RAS_01M2CER1G0QFZK2GGTK40RZCHT"
+          ]
+        }
+      },
+      {
+        "schema_version": "tribunal-evidence-slice/1.0",
+        "role_id": "methodologist",
+        "work_field_id": "RWF_01M2CER1G0KWZNSKKSF6DSEEF1",
+        "composition_fingerprint": "sha256:209bcaf28ba5fe7fc409d51b5e6a427650d923e7ca7bd6ed82c029e0aa292d85",
+        "assigned_need_refs": [
+          {
+            "key": "ANR-2991242ea1d705856115",
+            "ordinal": 0
+          }
+        ],
+        "view_kind": "METHOD_ONLY",
+        "include_provenance": true,
+        "include_previous_conclusions": false,
+        "target_projections": [
+          {
+            "target_id": "CLM_01M2CER1G07JB4X6NP5V1GXB96",
+            "entity_type": "Claim",
+            "payload": {
+              "proposition": "BCC lattice expansion after nitriding is attributable to nitrogen uptake.",
+              "claim_type": "causal",
+              "revision": 1
+            }
+          },
+          {
+            "target_id": "EDG_01M2CER1G0PZDJGXJ5BEYJMYNA",
+            "entity_type": "GraphEdge",
+            "payload": {
+              "source_id": "EVD_01M2CER1G0A8MEXYQG0E9ZQYG0",
+              "target_id": "CLM_01M2CER1G07JB4X6NP5V1GXB96",
+              "edge_kind": "supports",
+              "revision": 1
+            }
+          },
+          {
+            "target_id": "EVD_01M2CER1G0A8MEXYQG0E9ZQYG0",
+            "entity_type": "EvidenceSpan",
+            "payload": {
+              "exact_text": "Lattice expansion increased after nitrogen uptake during nitriding.",
+              "text_hash": "sha256:evd-support",
+              "revision": 1,
+              "source_id": "SRC_01M2CER1G01MFTA0BCGAP4D4K5",
+              "locator": "p.5"
+            }
+          }
+        ],
+        "evidence_items": [
+          {
+            "evidence_id": "EVD_01M2CER1G0A8MEXYQG0E9ZQYG0",
+            "exact_text": "Lattice expansion increased after nitrogen uptake during nitriding.",
+            "text_hash": "sha256:evd-support",
+            "polarity": "UNLABELED",
+            "source_id": "SRC_01M2CER1G01MFTA0BCGAP4D4K5",
+            "locator": "p.5",
+            "selection_reasons": [
+              "SUPPORT_RELATION",
+              "TARGET_RELATION_SOURCE"
+            ]
+          }
+        ],
+        "source_projections": [
+          {
+            "source_id": "SRC_01M2CER1G01MFTA0BCGAP4D4K5",
+            "source_type": "journal",
+            "title": "Nitriding XRD study",
+            "locator": "doi:10/xrd-support",
+            "content_hash": "sha256:support"
+          }
+        ],
+        "prior_review_artifacts": [],
+        "missing_refs": [],
+        "status": "READY",
+        "truncated": false,
+        "slice_fingerprint": "sha256:090080010140ff852073f6fd0821bcfb202e42d58a0faa582dfb00be9ae90e9f",
+        "metadata": {
+          "selection_boundary": "canonical refs and typed GraphEdge relations only; no free-text source classification",
+          "method_only_semantics": "explicit AssessmentNeed refs plus evidence that is source of an assigned target relation",
+          "missing_refs_fail_visible": true,
+          "nonprojected_control_refs": [
+            "RAS_01M2CER1G0QFZK2GGTK40RZCHT"
+          ]
+        }
+      },
+      {
+        "schema_version": "tribunal-evidence-slice/1.0",
+        "role_id": "crystallographer",
+        "work_field_id": "RWF_01M2CER1G0KWZNSKKSF6DSEEF1",
+        "composition_fingerprint": "sha256:209bcaf28ba5fe7fc409d51b5e6a427650d923e7ca7bd6ed82c029e0aa292d85",
+        "assigned_need_refs": [
+          {
+            "key": "ANR-2991242ea1d705856115",
+            "ordinal": 0
+          }
+        ],
+        "view_kind": "CLAIM_PLUS_SUPPORT",
+        "include_provenance": true,
+        "include_previous_conclusions": false,
+        "target_projections": [
+          {
+            "target_id": "CLM_01M2CER1G07JB4X6NP5V1GXB96",
+            "entity_type": "Claim",
+            "payload": {
+              "proposition": "BCC lattice expansion after nitriding is attributable to nitrogen uptake.",
+              "claim_type": "causal",
+              "revision": 1
+            }
+          },
+          {
+            "target_id": "EDG_01M2CER1G0PZDJGXJ5BEYJMYNA",
+            "entity_type": "GraphEdge",
+            "payload": {
+              "source_id": "EVD_01M2CER1G0A8MEXYQG0E9ZQYG0",
+              "target_id": "CLM_01M2CER1G07JB4X6NP5V1GXB96",
+              "edge_kind": "supports",
+              "revision": 1
+            }
+          },
+          {
+            "target_id": "EVD_01M2CER1G0A8MEXYQG0E9ZQYG0",
+            "entity_type": "EvidenceSpan",
+            "payload": {
+              "exact_text": "Lattice expansion increased after nitrogen uptake during nitriding.",
+              "text_hash": "sha256:evd-support",
+              "revision": 1,
+              "source_id": "SRC_01M2CER1G01MFTA0BCGAP4D4K5",
+              "locator": "p.5"
+            }
+          }
+        ],
+        "evidence_items": [
+          {
+            "evidence_id": "EVD_01M2CER1G0A8MEXYQG0E9ZQYG0",
+            "exact_text": "Lattice expansion increased after nitrogen uptake during nitriding.",
+            "text_hash": "sha256:evd-support",
+            "polarity": "SUPPORT",
+            "source_id": "SRC_01M2CER1G01MFTA0BCGAP4D4K5",
+            "locator": "p.5",
+            "selection_reasons": [
+              "SUPPORT_RELATION",
+              "TARGET_RELATION_SOURCE"
+            ]
+          }
+        ],
+        "source_projections": [
+          {
+            "source_id": "SRC_01M2CER1G01MFTA0BCGAP4D4K5",
+            "source_type": "journal",
+            "title": "Nitriding XRD study",
+            "locator": "doi:10/xrd-support",
+            "content_hash": "sha256:support"
+          }
+        ],
+        "prior_review_artifacts": [],
+        "missing_refs": [],
+        "status": "READY",
+        "truncated": false,
+        "slice_fingerprint": "sha256:73940fb69330ec71d250857d98dacf33b4645d04f57b48ccf4e4ae28a8efda42",
+        "metadata": {
+          "selection_boundary": "canonical refs and typed GraphEdge relations only; no free-text source classification",
+          "method_only_semantics": "explicit AssessmentNeed refs plus evidence that is source of an assigned target relation",
+          "missing_refs_fail_visible": true,
+          "nonprojected_control_refs": [
+            "RAS_01M2CER1G0QFZK2GGTK40RZCHT"
+          ]
+        }
+      },
+      {
+        "schema_version": "tribunal-evidence-slice/1.0",
+        "role_id": "xrd_specialist",
+        "work_field_id": "RWF_01M2CER1G0KWZNSKKSF6DSEEF1",
+        "composition_fingerprint": "sha256:209bcaf28ba5fe7fc409d51b5e6a427650d923e7ca7bd6ed82c029e0aa292d85",
+        "assigned_need_refs": [
+          {
+            "key": "ANR-2991242ea1d705856115",
+            "ordinal": 0
+          }
+        ],
+        "view_kind": "METHOD_ONLY",
+        "include_provenance": true,
+        "include_previous_conclusions": false,
+        "target_projections": [
+          {
+            "target_id": "CLM_01M2CER1G07JB4X6NP5V1GXB96",
+            "entity_type": "Claim",
+            "payload": {
+              "proposition": "BCC lattice expansion after nitriding is attributable to nitrogen uptake.",
+              "claim_type": "causal",
+              "revision": 1
+            }
+          },
+          {
+            "target_id": "EDG_01M2CER1G0PZDJGXJ5BEYJMYNA",
+            "entity_type": "GraphEdge",
+            "payload": {
+              "source_id": "EVD_01M2CER1G0A8MEXYQG0E9ZQYG0",
+              "target_id": "CLM_01M2CER1G07JB4X6NP5V1GXB96",
+              "edge_kind": "supports",
+              "revision": 1
+            }
+          },
+          {
+            "target_id": "EVD_01M2CER1G0A8MEXYQG0E9ZQYG0",
+            "entity_type": "EvidenceSpan",
+            "payload": {
+              "exact_text": "Lattice expansion increased after nitrogen uptake during nitriding.",
+              "text_hash": "sha256:evd-support",
+              "revision": 1,
+              "source_id": "SRC_01M2CER1G01MFTA0BCGAP4D4K5",
+              "locator": "p.5"
+            }
+          }
+        ],
+        "evidence_items": [
+          {
+            "evidence_id": "EVD_01M2CER1G0A8MEXYQG0E9ZQYG0",
+            "exact_text": "Lattice expansion increased after nitrogen uptake during nitriding.",
+            "text_hash": "sha256:evd-support",
+            "polarity": "UNLABELED",
+            "source_id": "SRC_01M2CER1G01MFTA0BCGAP4D4K5",
+            "locator": "p.5",
+            "selection_reasons": [
+              "SUPPORT_RELATION",
+              "TARGET_RELATION_SOURCE"
+            ]
+          }
+        ],
+        "source_projections": [
+          {
+            "source_id": "SRC_01M2CER1G01MFTA0BCGAP4D4K5",
+            "source_type": "journal",
+            "title": "Nitriding XRD study",
+            "locator": "doi:10/xrd-support",
+            "content_hash": "sha256:support"
+          }
+        ],
+        "prior_review_artifacts": [],
+        "missing_refs": [],
+        "status": "READY",
+        "truncated": false,
+        "slice_fingerprint": "sha256:16a84286cbf1b91acc47ba6ce0008ab6d2a86cd888f859fac0736bcff73a33dd",
+        "metadata": {
+          "selection_boundary": "canonical refs and typed GraphEdge relations only; no free-text source classification",
+          "method_only_semantics": "explicit AssessmentNeed refs plus evidence that is source of an assigned target relation",
+          "missing_refs_fail_visible": true,
+          "nonprojected_control_refs": [
+            "RAS_01M2CER1G0QFZK2GGTK40RZCHT"
+          ]
+        }
+      }
+    ],
+    "metadata": {
+      "authority_boundary": "evidence slicing only; no search, Tribunal dialogue or knowledge-state mutation",
+      "view_authority": "EvidenceViewPolicy from TribunalCompositionPlan; worker cannot widen slice"
+    }
+  },
+  "checks": {
+    "claim_status_unchanged": "open",
+    "support_edge_revision_unchanged": 1,
+    "skeptic_blind_provenance": true,
+    "no_dialogue_executed": true
+  }
+}

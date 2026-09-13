@@ -1,0 +1,379 @@
+{
+  "schema_version": "researcher-r4.4-l2a-demo/1.0",
+  "objective": "Demonstrate branch-local conditional Advocate over two independent attack branches.",
+  "graph_before": {
+    "schema_version": "argument-graph-projection/1.0",
+    "meta": {
+      "id": "AGP_01M2CER1G0A06CGWKYAC2B9AVE",
+      "schema_version": "argument-graph-projection/1.0",
+      "revision": 1,
+      "run_id": "RUN_01M2CER1G07XP4VY8YPHZ5G70V",
+      "created_at": "2026-09-13T17:00:00+00:00",
+      "created_by": {
+        "kind": "AGENT",
+        "id": "researcher"
+      }
+    },
+    "argument_ids": [
+      "ARG_01M2CER1G0H1DW7EWNX7NDD0S2",
+      "ARG_01M2CER1G09HRE0BDR1N1TZ7K2",
+      "ARG_01M2CER1G0MQR0V6NG1NWN3JMP"
+    ],
+    "relations": [
+      {
+        "schema_version": "argument-relation/1.0",
+        "meta": {
+          "id": "ARL_01M2CER1G0418P863JBYW7F1TY",
+          "schema_version": "argument-relation/1.0",
+          "revision": 1,
+          "run_id": "RUN_01M2CER1G07XP4VY8YPHZ5G70V",
+          "created_at": "2026-09-13T17:00:00+00:00",
+          "created_by": {
+            "kind": "AGENT",
+            "id": "researcher"
+          }
+        },
+        "kind": "ATTACKS",
+        "source_argument_id": "ARG_01M2CER1G09HRE0BDR1N1TZ7K2",
+        "target_argument_id": "ARG_01M2CER1G0H1DW7EWNX7NDD0S2",
+        "need_refs": [
+          {
+            "key": "ANR-demoadvocate000001",
+            "ordinal": 0
+          }
+        ],
+        "material": true,
+        "state": "ACTIVE",
+        "reason_codes": [
+          "demo"
+        ],
+        "metadata": {}
+      },
+      {
+        "schema_version": "argument-relation/1.0",
+        "meta": {
+          "id": "ARL_01M2CER1G0G7CH5XKQTR6ND3JA",
+          "schema_version": "argument-relation/1.0",
+          "revision": 1,
+          "run_id": "RUN_01M2CER1G07XP4VY8YPHZ5G70V",
+          "created_at": "2026-09-13T17:00:00+00:00",
+          "created_by": {
+            "kind": "AGENT",
+            "id": "researcher"
+          }
+        },
+        "kind": "UNDERCUTS",
+        "source_argument_id": "ARG_01M2CER1G0MQR0V6NG1NWN3JMP",
+        "target_argument_id": "ARG_01M2CER1G0H1DW7EWNX7NDD0S2",
+        "need_refs": [
+          {
+            "key": "ANR-demoadvocate000001",
+            "ordinal": 0
+          }
+        ],
+        "material": true,
+        "state": "ACTIVE",
+        "reason_codes": [
+          "demo"
+        ],
+        "metadata": {}
+      }
+    ],
+    "root_argument_ids": [
+      "ARG_01M2CER1G0H1DW7EWNX7NDD0S2"
+    ],
+    "branch_head_ids": [
+      "ARG_01M2CER1G09HRE0BDR1N1TZ7K2",
+      "ARG_01M2CER1G0MQR0V6NG1NWN3JMP"
+    ],
+    "graph_fingerprint": "sha256:023a32243979ba782146452117c3b2cbfe57aa4402ce04b9ab956cd50a625395",
+    "metadata": {
+      "authority_boundary": "argument topology only; no Claim/GraphEdge truth mutation",
+      "orientation": "newer/source argument -> challenged/replied/defended target argument"
+    }
+  },
+  "activation": {
+    "activate": true,
+    "role_id": "advocate",
+    "challenge_relation_id": "ARL_01M2CER1G0418P863JBYW7F1TY",
+    "challenge_argument_id": "ARG_01M2CER1G09HRE0BDR1N1TZ7K2",
+    "defended_argument_id": "ARG_01M2CER1G0H1DW7EWNX7NDD0S2",
+    "reason_codes": [
+      "MATERIAL_ADMITTED_CHALLENGE",
+      "DEFENSIBLE_ARGUMENT",
+      "VISIBLE_SUPPORT_PRESENT",
+      "ADVOCATE_CONDITIONAL_ACTIVATION"
+    ]
+  },
+  "disclosure": {
+    "schema_version": "dialectic-disclosure-contract/1.0",
+    "id": "DDC_01M2CER1G0KGA6XBVVVDZ9M5M8",
+    "role_id": "advocate",
+    "purpose": "DEFENSE",
+    "argument_graph_id": "AGP_01M2CER1G0A06CGWKYAC2B9AVE",
+    "graph_fingerprint": "sha256:023a32243979ba782146452117c3b2cbfe57aa4402ce04b9ab956cd50a625395",
+    "focus_relation_id": "ARL_01M2CER1G0418P863JBYW7F1TY",
+    "visible_argument_ids": [
+      "ARG_01M2CER1G0H1DW7EWNX7NDD0S2",
+      "ARG_01M2CER1G09HRE0BDR1N1TZ7K2"
+    ],
+    "visible_turn_ids": [
+      "IQT_01M2CER1G01VDGQ0TT7P84HJ80",
+      "IQT_01M2CER1G0SHVTZ7QHCH7DC78V"
+    ],
+    "visible_relation_ids": [
+      "ARL_01M2CER1G0418P863JBYW7F1TY"
+    ],
+    "visible_evidence_refs": [
+      "EVD_01M2CER1G0JS4X03J3GE071FPH",
+      "EVD_01M2CER1G0EFZXY3XX20SRGF25"
+    ],
+    "visible_target_refs": [
+      "CLM_01M2CER1G0BF7VSDPPP0JMYFNW"
+    ],
+    "hidden_argument_ids": [
+      "ARG_01M2CER1G0MQR0V6NG1NWN3JMP"
+    ],
+    "assigned_need_refs": [
+      {
+        "key": "ANR-demoadvocate000001",
+        "ordinal": 0
+      }
+    ],
+    "disclosure_fingerprint": "sha256:c9be3fba0191f2496b1d6731d4ff742c96b4ef06fa1a81ab8c7fefa586b91015",
+    "metadata": {
+      "authority_boundary": "prior-argument disclosure only; no automatic branch broadcast",
+      "evidence_boundary": "Advocate may use only refs already visible in the challenged/defended arguments"
+    }
+  },
+  "defense_contract": {
+    "schema_version": "advocate-defense-contract/1.0",
+    "id": "ADC_01M2CER1G00372D8H8WFDA2H7V",
+    "role_id": "advocate",
+    "disclosure_contract_id": "DDC_01M2CER1G0KGA6XBVVVDZ9M5M8",
+    "disclosure_fingerprint": "sha256:c9be3fba0191f2496b1d6731d4ff742c96b4ef06fa1a81ab8c7fefa586b91015",
+    "challenge_relation_id": "ARL_01M2CER1G0418P863JBYW7F1TY",
+    "challenge_argument_id": "ARG_01M2CER1G09HRE0BDR1N1TZ7K2",
+    "defended_argument_id": "ARG_01M2CER1G0H1DW7EWNX7NDD0S2",
+    "challenge_turn_id": "IQT_01M2CER1G0SHVTZ7QHCH7DC78V",
+    "defended_turn_id": "IQT_01M2CER1G01VDGQ0TT7P84HJ80",
+    "assigned_need_refs": [
+      {
+        "key": "ANR-demoadvocate000001",
+        "ordinal": 0
+      }
+    ],
+    "allowed_evidence_refs": [
+      "EVD_01M2CER1G0JS4X03J3GE071FPH",
+      "EVD_01M2CER1G0EFZXY3XX20SRGF25"
+    ],
+    "allowed_target_refs": [
+      "CLM_01M2CER1G0BF7VSDPPP0JMYFNW"
+    ],
+    "allowed_capabilities": [
+      "evidence.verify"
+    ],
+    "allowed_tools": [
+      "evidence.verify"
+    ],
+    "allowed_outcomes": [
+      "DEFEND",
+      "QUALIFY",
+      "CONCEDE_LOCAL_POINT",
+      "REQUEST_EVIDENCE",
+      "OPEN"
+    ],
+    "token_budget": 6000,
+    "role_instruction_id": "RHI-42345a7048a740fbc7c8",
+    "role_instruction_fingerprint": "sha256:42345a7048a740fbc7c8f8d14bebf3dd7a3b00c2da2ce98a474dc4b8fa6585e6",
+    "policy_version": "0.4.4-l2",
+    "policy_hash": "sha256:f5a7c29a2b52963cc40f398d3dc03c437798eeced53ee95d2fdee5bab54d633d",
+    "contract_fingerprint": "sha256:e4090cd837923f78909ab6d276e6c0cf7375209d532953937557d87b4c65abf4",
+    "metadata": {
+      "authority_boundary": "conditional defense argument only; no truth mutation and no new role admission",
+      "activation_relation": "ARL_01M2CER1G0418P863JBYW7F1TY"
+    }
+  },
+  "response": {
+    "schema_version": "advocate-response/1.0",
+    "contract_id": "ADC_01M2CER1G00372D8H8WFDA2H7V",
+    "outcome": "DEFEND",
+    "turn_id": "IQT_01M2CER1G0V606G3MZ8KB3NGZF",
+    "argument_id": "ARG_01M2CER1G0PZAC51GY55HK7ECX",
+    "relation_ids": [
+      "ARL_01M2CER1G083GRDX2WPBV3KK23",
+      "ARL_01M2CER1G0M9ABT3HTR8S2M0RV"
+    ],
+    "relation_kinds": [
+      "REPLIES_TO",
+      "DEFENDS"
+    ],
+    "next_action": "CONTINUE_CROSS_EXAM",
+    "reason_codes": [
+      "ADVOCATE_POSITION_REQUIRES_ADVERSARIAL_TEST"
+    ]
+  },
+  "graph_after": {
+    "schema_version": "argument-graph-projection/1.0",
+    "meta": {
+      "id": "AGP_01M2CER1G0A06CGWKYAC2B9AVE",
+      "schema_version": "argument-graph-projection/1.0",
+      "revision": 2,
+      "run_id": "RUN_01M2CER1G07XP4VY8YPHZ5G70V",
+      "created_at": "2026-09-13T17:00:00+00:00",
+      "created_by": {
+        "kind": "AGENT",
+        "id": "researcher"
+      }
+    },
+    "argument_ids": [
+      "ARG_01M2CER1G0H1DW7EWNX7NDD0S2",
+      "ARG_01M2CER1G09HRE0BDR1N1TZ7K2",
+      "ARG_01M2CER1G0MQR0V6NG1NWN3JMP",
+      "ARG_01M2CER1G0PZAC51GY55HK7ECX"
+    ],
+    "relations": [
+      {
+        "schema_version": "argument-relation/1.0",
+        "meta": {
+          "id": "ARL_01M2CER1G0418P863JBYW7F1TY",
+          "schema_version": "argument-relation/1.0",
+          "revision": 1,
+          "run_id": "RUN_01M2CER1G07XP4VY8YPHZ5G70V",
+          "created_at": "2026-09-13T17:00:00+00:00",
+          "created_by": {
+            "kind": "AGENT",
+            "id": "researcher"
+          }
+        },
+        "kind": "ATTACKS",
+        "source_argument_id": "ARG_01M2CER1G09HRE0BDR1N1TZ7K2",
+        "target_argument_id": "ARG_01M2CER1G0H1DW7EWNX7NDD0S2",
+        "need_refs": [
+          {
+            "key": "ANR-demoadvocate000001",
+            "ordinal": 0
+          }
+        ],
+        "material": true,
+        "state": "ACTIVE",
+        "reason_codes": [
+          "demo"
+        ],
+        "metadata": {}
+      },
+      {
+        "schema_version": "argument-relation/1.0",
+        "meta": {
+          "id": "ARL_01M2CER1G0G7CH5XKQTR6ND3JA",
+          "schema_version": "argument-relation/1.0",
+          "revision": 1,
+          "run_id": "RUN_01M2CER1G07XP4VY8YPHZ5G70V",
+          "created_at": "2026-09-13T17:00:00+00:00",
+          "created_by": {
+            "kind": "AGENT",
+            "id": "researcher"
+          }
+        },
+        "kind": "UNDERCUTS",
+        "source_argument_id": "ARG_01M2CER1G0MQR0V6NG1NWN3JMP",
+        "target_argument_id": "ARG_01M2CER1G0H1DW7EWNX7NDD0S2",
+        "need_refs": [
+          {
+            "key": "ANR-demoadvocate000001",
+            "ordinal": 0
+          }
+        ],
+        "material": true,
+        "state": "ACTIVE",
+        "reason_codes": [
+          "demo"
+        ],
+        "metadata": {}
+      },
+      {
+        "schema_version": "argument-relation/1.0",
+        "meta": {
+          "id": "ARL_01M2CER1G083GRDX2WPBV3KK23",
+          "schema_version": "argument-relation/1.0",
+          "revision": 1,
+          "run_id": "RUN_01M2CER1G07XP4VY8YPHZ5G70V",
+          "created_at": "2026-09-13T17:00:00+00:00",
+          "created_by": {
+            "kind": "AGENT",
+            "id": "researcher"
+          }
+        },
+        "kind": "REPLIES_TO",
+        "source_argument_id": "ARG_01M2CER1G0PZAC51GY55HK7ECX",
+        "target_argument_id": "ARG_01M2CER1G09HRE0BDR1N1TZ7K2",
+        "need_refs": [
+          {
+            "key": "ANR-demoadvocate000001",
+            "ordinal": 0
+          }
+        ],
+        "material": true,
+        "state": "ACTIVE",
+        "reason_codes": [
+          "ADVOCATE_REPLY_TO_CHALLENGE"
+        ],
+        "metadata": {
+          "advocate_outcome": "DEFEND"
+        }
+      },
+      {
+        "schema_version": "argument-relation/1.0",
+        "meta": {
+          "id": "ARL_01M2CER1G0M9ABT3HTR8S2M0RV",
+          "schema_version": "argument-relation/1.0",
+          "revision": 1,
+          "run_id": "RUN_01M2CER1G07XP4VY8YPHZ5G70V",
+          "created_at": "2026-09-13T17:00:00+00:00",
+          "created_by": {
+            "kind": "AGENT",
+            "id": "researcher"
+          }
+        },
+        "kind": "DEFENDS",
+        "source_argument_id": "ARG_01M2CER1G0PZAC51GY55HK7ECX",
+        "target_argument_id": "ARG_01M2CER1G0H1DW7EWNX7NDD0S2",
+        "need_refs": [
+          {
+            "key": "ANR-demoadvocate000001",
+            "ordinal": 0
+          }
+        ],
+        "material": true,
+        "state": "ACTIVE",
+        "reason_codes": [
+          "ADVOCATE_DEFENSE_BRANCH"
+        ],
+        "metadata": {
+          "advocate_outcome": "DEFEND"
+        }
+      }
+    ],
+    "root_argument_ids": [
+      "ARG_01M2CER1G0H1DW7EWNX7NDD0S2"
+    ],
+    "branch_head_ids": [
+      "ARG_01M2CER1G0MQR0V6NG1NWN3JMP",
+      "ARG_01M2CER1G0PZAC51GY55HK7ECX"
+    ],
+    "graph_fingerprint": "sha256:9764218b054a1171d7dae3e5b0165ce93d0ad8e2afee89e8e95749deb6a8d282",
+    "metadata": {
+      "authority_boundary": "argument topology only; no Claim/GraphEdge truth mutation",
+      "orientation": "newer/source argument -> challenged/replied/defended target argument"
+    }
+  },
+  "assertions": {
+    "sibling_branch_hidden": true,
+    "sibling_evidence_hidden": true,
+    "branch_heads_after": [
+      "ARG_01M2CER1G0MQR0V6NG1NWN3JMP",
+      "ARG_01M2CER1G0PZAC51GY55HK7ECX"
+    ],
+    "root_preserved": true
+  }
+}

@@ -1,0 +1,183 @@
+﻿# Patch version matrix — Harness Researcher/Writer/Coder
+
+Auto-generated 2026-09-13. Папка `патчи/` организована по версиям; изменения патчей
+(код, конфиги, тесты, доки, демо-артефакты) внесены в git-дерево.
+
+## 00_backup_v1
+
+- HARNESS_BACKUP_SHA256SUMS.txt
+- harness_writer_v1_researcher_r1_1.bundle
+- HARNESS-WRITER-V1-RESEARCHER-R1.1-BACKUP-2026-09-12.zip
+- writer_core_handoff_pack.zip
+- writer_core_handoff_pack_v0.2.zip
+- writer_core_handoff_pack_v0.3.zip
+- WRITER-V1-FREEZE-001(1).zip
+- WRITER-V1-FREEZE-001.zip
+
+## 01_stage_2026-09-06
+
+- doc_Opencode_agern_stage2_state_reducer_2026-09-06.zip
+- doc_Opencode_agern_stage3_artifact_provenance_2026-09-06.zip
+- opencode_harness_capability_bundle_router_full_2026-09-08.zip
+
+## 02_r3_5_to_r4
+
+- harness_R3.5_to_R4_handoff_2026-09-13(1)(2).zip
+- harness_R3.5_to_R4_handoff_2026-09-13(1).zip.sha256
+
+## 03_r4_1
+
+- harness_R4.1_to_R4.2_handoff_2026-09-13.zip
+- harness_R4.1_to_R4.2_handoff_2026-09-13.zip.sha256
+- HARNESS-R4.1-COMPLETE-2026-09-13.bundle
+- RESEARCHER-R4.1-TRIBUNAL-COMPOSITION-001.zip
+
+## 04_r4_2
+
+- harness_R4.2_to_R4.3_handoff_2026-09-13.zip
+- harness_R4.2_to_R4.3_handoff_2026-09-13.zip.sha256
+- HARNESS-R4.2-COMPLETE-2026-09-13.bundle
+- HARNESS-R4.2-COMPLETE-2026-09-13.bundle.sha256
+- R4_DECISION_LOG_R4.2.md
+
+## 05_r4_3
+
+- harness_R4.3_to_R4.3.1_handoff_2026-09-13.zip
+- harness_R4.3_to_R4.3.1_handoff_2026-09-13.zip.sha256
+- HARNESS-R4.3-COMPLETE-2026-09-13(1).bundle
+- HARNESS-R4.3-COMPLETE-2026-09-13.bundle
+- R4_NEXT_PHASE_PLAN_R4.3.md
+- RESEARCHER-R4.3-INDEPENDENT-ROLE-001.zip
+
+## 06_r4_4
+
+- harness_R4.4-L1_to_R4.4-L2_handoff_2026-09-13.zip
+- harness_R4.4-L1_to_R4.4-L2_handoff_2026-09-13.zip.sha256
+- harness_R4.4-L2A_to_R4.4-L2B_handoff_2026-09-13(1).zip
+- harness_R4.4-L2A_to_R4.4-L2B_handoff_2026-09-13.zip
+- harness_R4.4-L2A_to_R4.4-L2B_handoff_2026-09-13.zip.sha256
+- harness_R4.4-L2B_to_R4.4-L3_handoff_2026-09-13.zip
+- harness_R4.4-L2B_to_R4.4-L3_handoff_2026-09-13.zip.sha256
+- HARNESS-R4.4-COMPLETE-2026-09-13(1).bundle
+- HARNESS-R4.4-COMPLETE-2026-09-13.bundle
+- HARNESS-R4.4-L2A-COMPLETE-2026-09-13.bundle
+- HARNESS-R4.4-L2B-COMPLETE-2026-09-13.bundle
+- HARNESS-R4.4-L3A-COMPLETE-2026-09-13.bundle
+- RESEARCHER-R4.4-DIALECTIC-OBSERVATION-001.zip
+- RESEARCHER-R4.4-L2A-ARGUMENT-GRAPH-ADVOCATE-001.zip
+- RESEARCHER-R4.4-L2B-DISCLOSURE-BRANCH-HISTORY-001.zip
+
+## 07_r4_4_l3b
+
+- harness_R4.4-L3A_to_R4.4-L3B_handoff_2026-09-13.zip
+- harness_R4.4-L3A_to_R4.4-L3B_handoff_2026-09-13.zip.sha256
+- RESEARCHER-R4.4-L3B-DESIGN-HYPOTHESIS-TRACE-001.zip
+- RESEARCHER-R4.4-L3B-REMOTE-ACCEPTANCE-001(1).zip
+- RESEARCHER-R4.4-L3B-REMOTE-ACCEPTANCE-001.zip
+
+## 90_docs
+
+Разрозненные документы сессий/обзоров (ревизии с суффиксами `(N)` сохранены как есть).
+
+- CONTEXT_PATTERNS_FROM_SESSION_AND_MEMORY(1).md
+- DEPENDENCY_MATRIX.md
+- IMPLEMENTATION_TRACKER(20260913-180314)(1).md
+- IMPLEMENTATION_TRACKER(20260913-180314).md
+- IMPLEMENTATION_TRACKER(20260913-185816).md
+- INTEGRATION_REVIEW.md
+- R4_DECISION_LOG(1).md
+- R4_DECISION_LOG.md
+- R4_NEXT_PHASE_PLAN(1)(2).md
+- R4_NEXT_PHASE_PLAN(2).md
+- R4_NEXT_PHASE_PLAN(3).md
+- R4_NEXT_PHASE_PLAN(4)(1).md
+- R4_NEXT_PHASE_PLAN(4).md
+- R4_NEXT_PHASE_PLAN(6).md
+- R4_NEXT_PHASE_PLAN(7).md
+- R4_NEXT_PHASE_PLAN(8)(1).md
+- R4_NEXT_PHASE_PLAN(8).md
+- README_FIRST(1)(2).md
+- README_INTEGRATION.md
+- REMOTE_ACCEPTANCE_README_FIRST(1).md
+- REMOTE_ACCEPTANCE_README_FIRST.md
+- REMOTE_OPENCODE_ACCEPTANCE_PROTOCOL(1).md
+- REMOTE_OPENCODE_ACCEPTANCE_PROTOCOL.md
+- REMOTE_OPENCODE_ACCEPTANCE_REPORT_TEMPLATE(1).md
+- REMOTE_OPENCODE_ACCEPTANCE_REPORT_TEMPLATE.md
+- REMOTE_OPENCODE_AGENT_INSTRUCTION(1).md
+- REMOTE_OPENCODE_AGENT_INSTRUCTION.md
+- RESEARCHER_FUTURE_HYPOTHESIS_VERIFICATION_CYCLE(1).md
+- RESEARCHER_FUTURE_HYPOTHESIS_VERIFICATION_CYCLE.md
+- RESEARCHER_R4_1_IMPLEMENTATION_REVIEW.md
+- RESEARCHER_R4_1_TRIBUNAL_COMPOSITION_ARCHITECTURE.md
+- RESEARCHER_R4_2_IMPLEMENTATION_REVIEW(1).md
+- RESEARCHER_R4_2_IMPLEMENTATION_REVIEW.md
+- RESEARCHER_R4_3_IMPLEMENTATION_REVIEW.md
+- RESEARCHER_R4_3_INDEPENDENT_ROLE_EXECUTION_ARCHITECTURE.md
+- RESEARCHER_R4_4_FUTURE_RESPONSE_OWNERSHIP_MULTIDISCIPLINARY_REVIEW.md
+- RESEARCHER_R4_4_L2_ARGUMENT_GRAPH_ADVOCATE_ARCHITECTURE.md
+- RESEARCHER_R4_4_L2_IMPLEMENTATION_REVIEW.md
+- RESEARCHER_R4_4_L2_PIPELINE_AUDIT.md
+- RESEARCHER_R4_4_L2B_GENERIC_DISCLOSURE_BRANCH_HISTORY_ARCHITECTURE.md
+- RESEARCHER_R4_4_L2B_IMPLEMENTATION_REVIEW.md
+- RESEARCHER_R4_4_L2B_PIPELINE_AUDIT.md
+- RESEARCHER_R4_4_L3A_IMPLEMENTATION_REVIEW.md
+- RESEARCHER_R4_4_L3A_PIPELINE_AUDIT.md
+- RESEARCHER_R4_4_L3A_PROVIDER_BINDING_ARCHITECTURE.md
+- ROLE_CARD_PORTABLE_DOM_FUTURE.md
+- SESSION_HANDOFF(1)(2).md
+- SESSION_HANDOFF(2).md
+- SESSION_HANDOFF(3).md
+- SESSION_HANDOFF(4).md
+- SESSION_HANDOFF(5).md
+- SESSION_HANDOFF(6).md
+- SESSION_HANDOFF_R4.2_to_R4.3.md
+- TECH_DEBT(1).md
+- TECH_DEBT(2).md
+- TECH_DEBT(3).md
+- TECH_DEBT(4)(1).md
+- TECH_DEBT(4).md
+
+## 99_misc
+
+Частично загруженные/неполные артефакты (`.part`, дубликаты `001`).
+
+- harness_R4.HUk3cLP8.4-L2B_to_R4.4-L3_handoff_2026-09-13.zip.part
+- harness_R4.-mDQzWaf.3_to_R4.3.1_handoff_2026-09-13.zip.part
+- harness_R4.Os8ZDZjs.2_to_R4.3_handoff_2026-09-13.zip.part
+- harness_R4.po6mBzvK.4-L2A_to_R4.4-L2B_handoff_2026-09-13(1).zip.part
+- harness_R4.RhBQaoUM.4-L1_to_R4.4-L2_handoff_2026-09-13.zip.part
+- harness_R4.VzTokxD6.4-L2A_to_R4.4-L2B_handoff_2026-09-13.zip.part
+- HARNESS-FULL-WRITER-RESEARCHER-CODER-001(1).zip
+- HARNESS-FULL-WRITER-RESEARCHER-CODER-001.zip
+- opencode-desktop-linux-amd64(1).DtotDUCR.deb.part
+
+## HARNESS-WRITER-V1-RESEARCHER-R1.1-BACKUP-2026-09-12
+
+Сохранённая папка-бэкап (не перемещалась).
+
+## writer_v1_freeze_package
+
+- APPLY.md
+- IMPLEMENTATION_TRACKER.md
+- SHA256SUMS.json
+- writer_v1_contracts.json
+- WRITER_V1_FREEZE_001_REVIEW.md
+- WRITER_V1_FREEZE_001_SUMMARY.json
+
+## итог
+
+Финальный релиз (не перемещался): FINAL zip, INTEGRATED, recovery bundle, upgrade patch.
+
+- HARNESS-FULL-INTEGRATED-2026-09-13.zip
+- HARNESS-FULL-UPGRADE-001-TO-002-PATCH-001.zip.sha256
+- HARNESS-FULL-WRITER-RESEARCHER-CODER-COMPLETE-2026-09-13.bundle
+- HARNESS-FULL-WRITER-RESEARCHER-CODER-COMPLETE-2026-09-13.bundle.sha256
+- HARNESS-FULL-WRITER-RESEARCHER-CODER-FINAL-2026-09-13.zip
+- HARNESS-FULL-WRITER-RESEARCHER-CODER-FINAL-2026-09-13.zip.sha256
+
+## Примечания
+
+- Код патчей R4.1–R4.4-L3B внесён в `scripts/`, `config/`, `tests/` (сверено по diff-спискам).
+- Доки-архитектуры и демо-артефакты внесены из канонического closure `badb5e2526307bf3ebfb4279cfba6a40b7932bf0`.
+- Локальные `IMPLEMENTATION_TRACKER.md` / `TECH_DEBT.md` (история WS-01..WS-22) сохранены; канонические версии доступны в `итог/`.

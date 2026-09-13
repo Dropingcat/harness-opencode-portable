@@ -1,0 +1,386 @@
+{
+  "demo_schema": "researcher-r4.1-composition-demo/1.0",
+  "scenario": "BCC lattice parameter / XRD interpretation",
+  "input": {
+    "review_work_field_id": "RWF_01M2CER1G0K1ENE8H946XNTJRW",
+    "readiness": "BLOCKED",
+    "assessment_needs": [
+      {
+        "axis": "METHOD",
+        "level": "BLOCKING",
+        "blocking": true,
+        "question": "Can the observed BCC lattice-parameter shift be interpreted under the declared XRD method without an unresolved method mismatch?",
+        "assessment_methods": [
+          "METHOD_COMPATIBILITY",
+          "SPECIALIST_REVIEW"
+        ],
+        "completion_criteria": [
+          "state the XRD method applicability and unresolved limitations"
+        ]
+      },
+      {
+        "axis": "NUMERIC_MEASUREMENT",
+        "level": "BLOCKING",
+        "blocking": true,
+        "question": "Is the lattice-parameter change distinguishable under the stated measurement uncertainty?",
+        "assessment_methods": [
+          "INTERVAL_OVERLAP",
+          "EXPERIMENTAL_RETEST"
+        ],
+        "completion_criteria": [
+          "compare explicit uncertainty intervals under aligned measurement conditions"
+        ]
+      },
+      {
+        "axis": "CAUSALITY",
+        "level": "MATERIAL",
+        "blocking": false,
+        "question": "Are residual-stress and composition alternatives adequately separated before assigning a causal interpretation to the lattice shift?",
+        "assessment_methods": [
+          "CAUSAL_ALTERNATIVES",
+          "CROSS_SOURCE_COMPARISON"
+        ],
+        "completion_criteria": [
+          "enumerate and disposition plausible alternative causes"
+        ]
+      }
+    ],
+    "lineage": {
+      "research_directions": [
+        "phase_transformations_in_crystalline_media"
+      ],
+      "disciplinary_views": [
+        "crystallography",
+        "physics_of_metals"
+      ],
+      "question_types": [
+        "method_applicability",
+        "causal_interpretation"
+      ],
+      "method_views": [
+        "xrd",
+        "x_ray_diffraction"
+      ],
+      "object_profile": [
+        "bcc_lattice_parameter",
+        "near_surface_steel"
+      ]
+    }
+  },
+  "output": {
+    "schema_version": "tribunal-composition-plan/1.0",
+    "work_field_id": "RWF_01M2CER1G0K1ENE8H946XNTJRW",
+    "permanent_roles": [
+      "critic",
+      "skeptic",
+      "methodologist",
+      "evidence_auditor"
+    ],
+    "dynamic_roles": [
+      "crystallographer",
+      "xrd_specialist",
+      "measurement_specialist",
+      "causal_critic"
+    ],
+    "assignments": [
+      {
+        "need_ref": {
+          "key": "ANR-5923ddbd5c6f9dd2f3e2",
+          "ordinal": 0
+        },
+        "role_ids": [
+          "critic",
+          "skeptic",
+          "methodologist",
+          "crystallographer",
+          "xrd_specialist"
+        ],
+        "reason_codes": [
+          "PERMANENT_POLICY_ROLE",
+          "AXIS_REQUIREMENT",
+          "LINEAGE_MATCH",
+          "BLOCKING_NEED_COVERAGE",
+          "MINIMAL_COVER_SELECTION"
+        ]
+      },
+      {
+        "need_ref": {
+          "key": "ANR-b2cab6e21ddad8695027",
+          "ordinal": 1
+        },
+        "role_ids": [
+          "methodologist",
+          "measurement_specialist",
+          "xrd_specialist"
+        ],
+        "reason_codes": [
+          "PERMANENT_POLICY_ROLE",
+          "AXIS_REQUIREMENT",
+          "METHOD_REQUIREMENT",
+          "LINEAGE_MATCH",
+          "BLOCKING_NEED_COVERAGE",
+          "MINIMAL_COVER_SELECTION"
+        ]
+      },
+      {
+        "need_ref": {
+          "key": "ANR-228f29187e8a75aa69bc",
+          "ordinal": 2
+        },
+        "role_ids": [
+          "skeptic",
+          "evidence_auditor",
+          "causal_critic",
+          "crystallographer"
+        ],
+        "reason_codes": [
+          "PERMANENT_POLICY_ROLE",
+          "AXIS_REQUIREMENT",
+          "METHOD_REQUIREMENT",
+          "LINEAGE_MATCH",
+          "MINIMAL_COVER_SELECTION"
+        ]
+      }
+    ],
+    "role_briefs": [
+      {
+        "role_id": "critic",
+        "assigned_need_refs": [
+          {
+            "key": "ANR-5923ddbd5c6f9dd2f3e2",
+            "ordinal": 0
+          }
+        ],
+        "evidence_view": {
+          "kind": "CLAIM_PLUS_COUNTEREVIDENCE",
+          "include_provenance": true,
+          "include_previous_conclusions": false,
+          "max_refs": 24
+        },
+        "allowed_capabilities": [
+          "evidence.verify"
+        ],
+        "allowed_tools": [
+          "evidence.verify"
+        ],
+        "expected_output_contract": "TribunalFinding/1.0",
+        "inquiry_depth": 2,
+        "token_budget": 6000
+      },
+      {
+        "role_id": "skeptic",
+        "assigned_need_refs": [
+          {
+            "key": "ANR-5923ddbd5c6f9dd2f3e2",
+            "ordinal": 0
+          },
+          {
+            "key": "ANR-228f29187e8a75aa69bc",
+            "ordinal": 2
+          }
+        ],
+        "evidence_view": {
+          "kind": "FRESH_CONTEXT",
+          "include_provenance": false,
+          "include_previous_conclusions": false,
+          "max_refs": 20
+        },
+        "allowed_capabilities": [
+          "evidence.verify"
+        ],
+        "allowed_tools": [
+          "evidence.verify"
+        ],
+        "expected_output_contract": "TribunalFinding/1.0",
+        "inquiry_depth": 2,
+        "token_budget": 6000
+      },
+      {
+        "role_id": "methodologist",
+        "assigned_need_refs": [
+          {
+            "key": "ANR-5923ddbd5c6f9dd2f3e2",
+            "ordinal": 0
+          },
+          {
+            "key": "ANR-b2cab6e21ddad8695027",
+            "ordinal": 1
+          }
+        ],
+        "evidence_view": {
+          "kind": "METHOD_ONLY",
+          "include_provenance": true,
+          "include_previous_conclusions": false,
+          "max_refs": 20
+        },
+        "allowed_capabilities": [
+          "science.numeric",
+          "formula.validate",
+          "evidence.verify"
+        ],
+        "allowed_tools": [
+          "science.compute",
+          "evidence.verify"
+        ],
+        "expected_output_contract": "TribunalFinding/1.0",
+        "inquiry_depth": 2,
+        "token_budget": 6000
+      },
+      {
+        "role_id": "evidence_auditor",
+        "assigned_need_refs": [
+          {
+            "key": "ANR-228f29187e8a75aa69bc",
+            "ordinal": 2
+          }
+        ],
+        "evidence_view": {
+          "kind": "FULL_RELEVANT",
+          "include_provenance": true,
+          "include_previous_conclusions": false,
+          "max_refs": 32
+        },
+        "allowed_capabilities": [
+          "evidence.verify",
+          "document.text.extract"
+        ],
+        "allowed_tools": [
+          "evidence.verify",
+          "document.inspect"
+        ],
+        "expected_output_contract": "TribunalFinding/1.0",
+        "inquiry_depth": 2,
+        "token_budget": 6000
+      },
+      {
+        "role_id": "crystallographer",
+        "assigned_need_refs": [
+          {
+            "key": "ANR-5923ddbd5c6f9dd2f3e2",
+            "ordinal": 0
+          },
+          {
+            "key": "ANR-228f29187e8a75aa69bc",
+            "ordinal": 2
+          }
+        ],
+        "evidence_view": {
+          "kind": "CLAIM_PLUS_SUPPORT",
+          "include_provenance": true,
+          "include_previous_conclusions": false,
+          "max_refs": 24
+        },
+        "allowed_capabilities": [
+          "science.physics",
+          "evidence.verify",
+          "document.text.extract"
+        ],
+        "allowed_tools": [
+          "science.compute",
+          "evidence.verify",
+          "document.inspect"
+        ],
+        "expected_output_contract": "TribunalFinding/1.0",
+        "inquiry_depth": 2,
+        "token_budget": 6000
+      },
+      {
+        "role_id": "xrd_specialist",
+        "assigned_need_refs": [
+          {
+            "key": "ANR-5923ddbd5c6f9dd2f3e2",
+            "ordinal": 0
+          },
+          {
+            "key": "ANR-b2cab6e21ddad8695027",
+            "ordinal": 1
+          }
+        ],
+        "evidence_view": {
+          "kind": "METHOD_ONLY",
+          "include_provenance": true,
+          "include_previous_conclusions": false,
+          "max_refs": 24
+        },
+        "allowed_capabilities": [
+          "science.physics",
+          "science.numeric",
+          "evidence.verify",
+          "document.text.extract"
+        ],
+        "allowed_tools": [
+          "science.compute",
+          "evidence.verify",
+          "document.inspect"
+        ],
+        "expected_output_contract": "TribunalFinding/1.0",
+        "inquiry_depth": 2,
+        "token_budget": 6000
+      },
+      {
+        "role_id": "measurement_specialist",
+        "assigned_need_refs": [
+          {
+            "key": "ANR-b2cab6e21ddad8695027",
+            "ordinal": 1
+          }
+        ],
+        "evidence_view": {
+          "kind": "METHOD_ONLY",
+          "include_provenance": true,
+          "include_previous_conclusions": false,
+          "max_refs": 20
+        },
+        "allowed_capabilities": [
+          "science.numeric",
+          "evidence.verify"
+        ],
+        "allowed_tools": [
+          "science.compute",
+          "evidence.verify"
+        ],
+        "expected_output_contract": "TribunalFinding/1.0",
+        "inquiry_depth": 2,
+        "token_budget": 6000
+      },
+      {
+        "role_id": "causal_critic",
+        "assigned_need_refs": [
+          {
+            "key": "ANR-228f29187e8a75aa69bc",
+            "ordinal": 2
+          }
+        ],
+        "evidence_view": {
+          "kind": "CLAIM_PLUS_COUNTEREVIDENCE",
+          "include_provenance": true,
+          "include_previous_conclusions": false,
+          "max_refs": 24
+        },
+        "allowed_capabilities": [
+          "evidence.verify"
+        ],
+        "allowed_tools": [
+          "evidence.verify"
+        ],
+        "expected_output_contract": "TribunalFinding/1.0",
+        "inquiry_depth": 2,
+        "token_budget": 6000
+      }
+    ],
+    "policy_version": "0.4.1-l1",
+    "policy_hash": "sha256:e4e822d37961eb76f3eaebd01b7bf4f039d83a83b9b06dcd2037b188be34f559",
+    "composition_fingerprint": "sha256:c7be030f56951f1de8ea4cdf0577355cb37b01849b2206061d9f98decad29b04",
+    "metadata": {
+      "authority_boundary": "composition only; no Claim/GraphEdge/Gap/truth mutation",
+      "assessment_need_identity": "R4 content-addressed need ref; canonical R3 AssessmentNeed entity id deferred"
+    }
+  },
+  "assertions": {
+    "measurement_specialist_selected": true,
+    "xrd_specialist_selected": true,
+    "crystallographer_selected": true,
+    "causal_critic_selected": true,
+    "knowledge_state_mutation": "none"
+  }
+}
