@@ -231,6 +231,58 @@ class SubprocessJsonProviderTransport:
         return out
 
 
+class PluginBridgeProviderTransport:
+    """Native OpenCode plugin transport for Tribunal.
+
+    Invokes a model through the plugin's `semantic.execute` (read-only child
+    session) instead of a subprocess CLI.  `reverse_call(method, params)` is the
+    bridge peer's full-duplex channel to the plugin; it must be wired by the
+    caller.  Transport-only: no role/evidence authority here.
+
+    The caller passes the already-serialized execution envelope dict (as Core
+    already has it); the transport does not re-serialize or re-validate.
+    """
+
+    def __init__(self, reverse_call: Callable[[str, dict[str, Any]], Any]):
+        self._reverse_call = reverse_call
+
+    def invoke(self, *, binding: RoleProviderBinding, envelope_dict: Mapping[str, Any], timeout_seconds: float) -> Mapping[str, Any]:
+        if binding.status is not ProviderBindingStatus.READY:
+            raise TribunalLiveDialogueError("plugin-bridge transport requires READY binding")
+        request = {
+            "schema": "semantic-execution-request/1.0",
+            "execution_id": str(envelope_dict["id"]),
+            "purpose": _role_execution_kind_to_purpose(binding.execution_kind),
+            "contract_schema": "tribunal-execution-envelope/1.1",
+            "role_ref": str(envelope_dict["role_id"]),
+            "parent_host_session_id": str(envelope_dict["meta"]["run_id"]),
+            "bounded_input": dict(envelope_dict),
+            "expected_output": {"output_contract": dict(envelope_dict.get("output_contract") or {})},
+            "model_policy": {},
+            "permission_profile": "readonly",
+            "timeout_ms": int(timeout_seconds * 1000),
+            "trace": {"binding_id": str(envelope_dict["binding_id"]), "envelope_id": str(envelope_dict["id"])},
+        }
+        try:
+            raw = self._reverse_call("semantic.execute", {"request": json.dumps(request, ensure_ascii=False)})
+        except Exception as exc:  # noqa: BLE001
+            raise TribunalLiveDialogueTimeout(f"plugin-bridge semantic failed:{exc}") from exc
+        tool_result = raw.get("tool_result") if isinstance(raw, Mapping) else raw
+        if not isinstance(tool_result, Mapping):
+            raise TribunalLiveDialogueError("plugin-bridge returned non-object tool_result")
+        return {"semantic_execution_result": tool_result, "execution_envelope": dict(envelope_dict)}
+
+
+def _role_execution_kind_to_purpose(kind: RoleExecutionKind) -> str:
+    mapping = {
+        RoleExecutionKind.FIRST_PASS: "TRIBUNAL_ROLE",
+        RoleExecutionKind.QUESTION: "TRIBUNAL_ROLE",
+        RoleExecutionKind.ANSWER: "TRIBUNAL_ROLE",
+        RoleExecutionKind.DEFENSE: "TRIBUNAL_ROLE",
+    }
+    return mapping.get(kind, "TRIBUNAL_ROLE")
+
+
 def _meta_to_dict(meta: EntityMeta) -> dict[str, Any]:
     return {
         "id": str(meta.id), "schema_version": meta.schema_version, "revision": meta.revision,

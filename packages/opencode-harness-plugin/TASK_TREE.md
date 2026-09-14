@@ -77,15 +77,20 @@
 5.6  semantic gate flag HARNESS_SEMANTIC_ENABLED                     [x]  tool absent unless Core enables
 ```
 
-## 6. Tribunal P4 — plugin transport (после 5)
+## 6. Tribunal P4 — plugin transport
 
 ```
-6.1  plugin provider candidate (priority 120)
-6.2  fresh preflight -> new RPB lineage (no silent CLI fallback)
-6.3  Q1/A1/Q2/A2 + grounding + graph admission через plugin bridge
-6.4  conditional Advocate (DEFENSE/ADC)
-6.5  3 variability runs
+6.1  plugin provider candidate (priority 120)     [x]  PluginBridgeProviderTransport (TribunalProviderTransport protocol)
+6.2  fresh preflight -> new RPB lineage            [ ]  (requires capability preflight wiring for plugin provider)
+6.3  Q1/A1/Q2/A2 + grounding + graph admission через plugin bridge [ ] (transport ready; E2E next)
+6.4  conditional Advocate (DEFENSE/ADC)            [ ]  (transport maps DEFENSE -> TRIBUNAL_ROLE)
+6.5  3 variability runs                            [ ]
 ```
+
+P4 транспорт реализован: `PluginBridgeProviderTransport` вызывает `semantic.execute` через
+bridge full-duplex reverse channel; envelope dict -> SemanticExecutionRequest/1.0 mapping;
+интеграционный тест с реальным bridge peer. Осталось: подключить как provider candidate
+в capability preflight/runtime bindings и прогнать Q1/A1/Q2/A2 E2E через plugin transport.
 
 ## 7. Convergence P5 — Writer/Coder через единый transport
 

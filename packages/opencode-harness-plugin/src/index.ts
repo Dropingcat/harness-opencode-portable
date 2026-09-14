@@ -70,6 +70,38 @@ const plugin: Plugin = async (input) => {
     const snapshot = await probeClient(client, directory)
     const opts = { hostVersion: () => detectedHostVersion, pluginVersion }
 
+    // Full-duplex reverse handler: Core (Python peer) sends semantic.execute
+    // requests; the plugin runs the read-only child session. This is the
+    // transport Core's Tribunal uses when the plugin is the active provider.
+    bridge.onRequest(async (req) => {
+      if (req.method === "semantic.execute") {
+        const params = (req.params ?? {}) as Record<string, unknown>
+        const requestText = typeof params.request === "string" ? params.request : JSON.stringify(params.request ?? {})
+        // Build a minimal host context for the reverse call (no real tool session).
+        const hostVersion = detectedHostVersion
+        const result = await semanticExecute(client, opts).execute(
+          { request: requestText },
+          {
+            sessionID: String(params.host_session_id ?? "reverse"),
+            messageID: "reverse",
+            agent: "harness-core",
+            directory: String(params.directory ?? directory),
+            worktree: String(params.directory ?? directory),
+          } as never,
+        )
+        const rawOutput = typeof result === "string" ? result : result.output
+        try {
+          return { tool_result: JSON.parse(rawOutput) }
+        } catch {
+          return { tool_result: rawOutput }
+        }
+      }
+      if (req.method === "bridge.health") {
+        return { ok: true, protocol: bridge.protocol }
+      }
+      throw new Error(`harness plugin: unsupported reverse method ${req.method}`)
+    })
+
     // Visible load marker via the exact SDK app.log call shape.
     try {
       await client.app.log({
