@@ -104,10 +104,19 @@ const plugin: Plugin = async (input) => {
       }
     }
     hooks.event = async (ev) => {
-      // Capture the real host version from the documented installation event.
-      const e = ev.event as { type?: string; properties?: { version?: string } }
-      if (e?.type === "installation.updated" && e.properties?.version) {
-        detectedHostVersion = e.properties.version
+      // Capture the real host version from documented events.
+      const e = ev.event as {
+        type?: string
+        properties?: { version?: string; info?: { version?: string } }
+      }
+      const v =
+        e?.type === "installation.updated" || e?.type === "installation.update-available"
+          ? e.properties?.version
+          : e?.type === "session.created"
+            ? e.properties?.info?.version
+            : undefined
+      if (v) {
+        detectedHostVersion = v
       }
     }
   } catch (e) {

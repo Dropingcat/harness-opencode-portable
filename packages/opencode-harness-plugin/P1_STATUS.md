@@ -31,13 +31,13 @@ Status: `P1 HOSTLESS PASS / P2 LIVE LOAD + TOOLS VERIFIED / SEMANTIC PENDING`
   - runtime compiler PASS (hash `8910fd...dfef`), capability compiler PASS (hash `f9de81...47a0`).
   - Pre-existing unrelated failure: `test_writer_migration_manifest.py::test_targets_are_contained_by_classification` (manifest maps `semantic-tests -> tests/writer/semantic` under `canonical_root=scripts/writer`); not caused by this package (tracked tree clean).
 
-## P2 live verification (2026-09-14, OpenCode 1.18.30 native)
+## P2 live verification (2026-09-14, OpenCode 1.18.30)
 
-- Plugin loaded through auto-discovery `.opencode/plugins/opencode-harness-plugin.ts` -> re-export of `dist/index.js`.
-- Log marker: `harness plugin loaded protocol=harness-bridge-rpc/1.0 root=E:\opencode_harness ... required_features_ok=true`.
-- `harness_status` invoked by live model (`opencode/big-pickle`), returned real core status (runtime/capability policy present).
-- `harness_run` invoked by live model, routed through the Python core `resolve()` (deterministic `no_route_match` on unmatched task = correct escalation).
-- HostContext/WorkspaceRef normalized from real ToolContext (session/message/agent/directory/worktree).
+- Plugin loaded through explicit registration `.opencode/opencode.json` -> `plugin: ["file:///...dist/index.js"]` (single load, no auto-discovery duplicate).
+- Log marker: `harness plugin loaded protocol=harness-bridge-rpc/1.0 ... required_features_ok=true`.
+- `harness_status` invoked by live model (`opencode/big-pickle`), returned real core status; `host_version` correctly reported as `1.18.30` (captured from `session.created` event).
+- `harness_run` invoked by live model, routed through the Python core `resolve()` (deterministic escalation on unmatched task = correct).
+- Verified in both OpenCode CLI 1.18.30 and Desktop (session agent=`build`).
 - Compatibility record: `compatibility/opencode/1.18.30.json` (semantic status still `NOT_LIVE_CERTIFIED`).
 
 ## P2 (next, live OpenCode)
