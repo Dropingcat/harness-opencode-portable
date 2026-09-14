@@ -30,6 +30,13 @@ __pycache__/
 /worker_*.json
 /capability-install-check.json
 
+# native plugin package: deps/build/installed copy are generated
+packages/opencode-harness-plugin/node_modules/
+packages/opencode-harness-plugin/dist/
+/opencode-harness-plugin-*.tgz
+/.opencode/plugins/
+.pytest_cache/
+
 /Новая папка/
 /Новая сжатая ZIP-папка.zip
 

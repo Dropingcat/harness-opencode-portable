@@ -1,0 +1,47 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://harness.local/schema/semantic-execution-result/1.0",
+  "title": "SemanticExecutionResult",
+  "description": "Runtime status of a semantic execution. Epistemic statuses never belong here.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "execution_id",
+    "runtime_status",
+    "host_session_id",
+    "provider_id",
+    "model_id",
+    "structured_output",
+    "raw_output_ref",
+    "usage",
+    "timing",
+    "host_error",
+    "host_features_fingerprint"
+  ],
+  "properties": {
+    "schema": { "const": "semantic-execution-result/1.0" },
+    "execution_id": { "type": "string", "minLength": 1 },
+    "runtime_status": {
+      "type": "string",
+      "enum": [
+        "COMPLETED",
+        "FAILED",
+        "TIMED_OUT",
+        "CANCELLED",
+        "REJECTED_BY_HOST",
+        "AUTH_REQUIRED",
+        "HOST_UNAVAILABLE"
+      ]
+    },
+    "host_session_id": { "type": "string" },
+    "provider_id": { "type": "string" },
+    "model_id": { "type": "string" },
+    "structured_output": { "type": "object" },
+    "raw_output_ref": { "type": ["string", "null"] },
+    "usage": { "type": "object" },
+    "timing": { "type": "object" },
+    "host_error": { "type": ["string", "null"] },
+    "host_features_fingerprint": { "type": ["string", "null"] }
+  }
+}
