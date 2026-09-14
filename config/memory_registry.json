@@ -61,6 +61,24 @@
             }
           ]
         },
+        "a3134ce09f0354b0702c63528964d016e5e04ba97d535fa5f5efbe4e302e20bb": {
+          "admissions": 1,
+          "evidence_refs": [
+            "C:/Temp/opencode/harness-deploy/remote_acceptance_runs/production_001/LOCAL_DEPLOYMENT_STATUS.md"
+          ],
+          "lesson_text": "При acceptance code-only deployment на Windows нужно явно переопределять OPENCODE_HARNESS_ROOT на deployment root и ставить GIT_CEILING_DIRECTORIES в parent deployment; иначе compiler/preflight может проверить основной репозиторий, а git — ошибочно обнаружить родительский temp repository.",
+          "reason_codes": [
+            "DEPLOYMENT_ROOT_LEAK",
+            "PARENT_GIT_DISCOVERY"
+          ],
+          "sources": [
+            {
+              "added_via": "memory_bridge.add",
+              "snapshot_id": null,
+              "task_id": "DEPLOY-FINAL-20260914"
+            }
+          ]
+        },
         "ce5cf6cc6fc115a3fcd0e872e5768bf549b31e42e65c7badb655c3624e1a4c2b": {
           "admissions": 1,
           "evidence_refs": [
