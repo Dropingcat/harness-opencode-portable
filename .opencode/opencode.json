@@ -1,0 +1,6 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "plugin": [
+    "file:///E:/Documents/Документы/doc_Opencode_agern-new/packages/opencode-harness-plugin/dist/index.js"
+  ]
+}

@@ -100,21 +100,28 @@ def test_doctor_report() -> None:
 
 
 def test_installer_report(tmp_path: Path) -> None:
-    """Installer must copy the entry to the project plugin dir and write a report."""
+    """Installer must register the compiled entry via config plugin: and dedupe on rerun."""
     root = harness_root()
     installer = ROOT / "core" / "install_plugin.py"
     env = dict(os.environ)
     env["OPENCODE_HARNESS_ROOT"] = str(root)
     report = tmp_path / "install.json"
-    proc = subprocess.run(
-        [sys.executable, str(installer), "--target", "project", "--report", str(report)],
-        capture_output=True,
-        text=True,
-        encoding="utf-8",
-        env=env,
-    )
-    assert proc.returncode == 0, proc.stderr
+    # Run twice: the second run must deduplicate, leaving exactly one harness entry.
+    for _ in range(2):
+        proc = subprocess.run(
+            [sys.executable, str(installer), "--target", "project", "--report", str(report)],
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            env=env,
+        )
+        assert proc.returncode == 0, proc.stderr
     data = json.loads(report.read_text(encoding="utf-8"))
     assert data["schema"] == "harness-opencode-plugin-install/1.0"
-    installed = Path(data["entry"])
-    assert installed.is_file()
+    assert data["deduplicated"] is True
+    assert data["plugin_entry"].startswith("file:///")
+    config = Path(data["config"])
+    assert config.is_file()
+    cfg = json.loads(config.read_text(encoding="utf-8"))
+    harness_entries = [p for p in cfg.get("plugin", []) if isinstance(p, str) and "opencode-harness-plugin" in p]
+    assert len(harness_entries) == 1

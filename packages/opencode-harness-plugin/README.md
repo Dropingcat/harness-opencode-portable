@@ -7,16 +7,22 @@ route/role/evidence/truth.
 
 ## Install (standard OpenCode mechanism)
 
-Local (development):
+Explicit registration (canonical; works in CLI and Desktop, no double-load):
 
 ```json
-// opencode.jsonc
+// .opencode/opencode.json
 {
-  "plugin": ["file:///E:/opencode_harness/packages/opencode-harness-plugin/src/index.ts"]
+  "$schema": "https://opencode.ai/config.json",
+  "plugin": ["file:///E:/opencode_harness/packages/opencode-harness-plugin/dist/index.js"]
 }
 ```
 
-Or auto-discovery: copy `src/index.ts` to `.opencode/plugins/opencode-harness-plugin.ts`.
+Automated installer (deduplicates existing harness entries):
+
+```bash
+npm run build   # inside the package
+python packages/opencode-harness-plugin/core/install_plugin.py --target project
+```
 
 npm distribution (transfer to other devices):
 
@@ -24,10 +30,11 @@ npm distribution (transfer to other devices):
 npm pack
 # then on target host:
 npm install /path/to/@harness-opencode-plugin-0.1.0.tgz
-# register in opencode.jsonc as "@harness/opencode-plugin"
+# register the package in opencode config plugin: ["@harness/opencode-plugin"]
 ```
 
-Requires `OPENCODE_HARNESS_ROOT` to point at the Harness checkout.
+Requires `OPENCODE_HARNESS_ROOT` to point at the Harness checkout, or the plugin
+must be installed inside the harness tree (root auto-detected from plugin path).
 
 ## Tools
 
