@@ -1,6 +1,6 @@
-# @harness/opencode-plugin — P1+P2 Status
+# @harness/opencode-plugin — P1+P2+P3 Status
 
-Status: `P1 HOSTLESS PASS / P2 LIVE LOAD + TOOLS VERIFIED / SEMANTIC PENDING`
+Status: `P1 HOSTLESS PASS / P2 LIVE LOAD + TOOLS VERIFIED / P3 SEMANTIC LIVE SMOKE PASS`
 
 ## Boundary
 
@@ -30,6 +30,13 @@ Status: `P1 HOSTLESS PASS / P2 LIVE LOAD + TOOLS VERIFIED / SEMANTIC PENDING`
   - Researcher full: 590 passed + 2 skipped.
   - runtime compiler PASS (hash `8910fd...dfef`), capability compiler PASS (hash `f9de81...47a0`).
   - Pre-existing unrelated failure: `test_writer_migration_manifest.py::test_targets_are_contained_by_classification` (manifest maps `semantic-tests -> tests/writer/semantic` under `canonical_root=scripts/writer`); not caused by this package (tracked tree clean).
+
+## P3 semantic.execute live smoke (2026-09-14, OpenCode 1.18.30)
+
+- Gated behind `HARNESS_SEMANTIC_ENABLED=1` (absent by default; Core enables after live certification).
+- Live call via real model: created isolated child session (`parentID=ses_f5e953b5...`), ran a prompt with NO tools (`tools: {}`), returned `runtime_status=COMPLETED` with `structured_output.text`.
+- Evidence (session created, child loop, prompt stream, tool_use completed) captured in `opencode.log`.
+- Timeout/cancel path unit-tested (fake client: abort called, `TIMED_OUT` returned).
 
 ## P2 live verification (2026-09-14, OpenCode 1.18.30)
 

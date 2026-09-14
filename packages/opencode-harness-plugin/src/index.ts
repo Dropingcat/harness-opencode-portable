@@ -12,6 +12,7 @@ import { fileURLToPath } from "node:url"
 import { spawnBridgePeer, type BridgeHandle } from "./bridge/bridge.js"
 import { harnessStatus } from "./tools/harness_status.js"
 import { harnessRun } from "./tools/harness_run.js"
+import { semanticExecute } from "./tools/semantic_execute.js"
 import { probeClient } from "./host/probe.js"
 
 const PLUGIN_VERSION = "0.1.0"
@@ -96,6 +97,11 @@ const plugin: Plugin = async (input) => {
     hooks.tool = {
       harness_status: harnessStatus(bridge, opts),
       harness_run: harnessRun(bridge, opts),
+    }
+    // P3: semantic_execute is gated behind an explicit flag. Core enables it only
+    // after live certification; until then the tool is absent (not just hidden).
+    if (process.env.HARNESS_SEMANTIC_ENABLED === "1") {
+      hooks.tool.semantic_execute = semanticExecute(client, opts)
     }
     hooks["tool.execute.before"] = async (inputCtx) => {
       const forbidden = ["writer_draft_internal", "writer_repair_internal", "semantic.execute_internal"]

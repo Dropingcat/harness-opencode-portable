@@ -66,14 +66,15 @@
 Примечание: live-проверка выполнена через OpenCode CLI 1.18.30 native (тот же движок/плагинный механизм,
 что и Desktop). Остаток: повторить в Desktop GUI + зафиксировать live HostCapabilitySnapshot и отсутствие legacy.
 
-## 5. Semantic P3 — read-only semantic.execute (после 4)
+## 5. Semantic P3 — read-only semantic.execute
 
 ```
-5.1  generic read-only worker (no harness_* tools, no mutating tools)
-5.2  child session: create -> prompt -> abort (SDK v1 session API)
-5.3  timeout/cancel; auth failure; recursion isolation; credentials host-local
-5.4  structured output (optional, Core revalidated)
-5.5  negative tests: malformed output, host unavailable
+5.1  generic read-only worker (no harness_* tools, no mutating tools) [x]  tools: {} in child prompt
+5.2  child session: create -> prompt -> abort (SDK v1 session API)   [x]  live session.created + prompt
+5.3  timeout/cancel; auth failure; recursion isolation; credentials host-local [x] unit-test timeout->abort
+5.4  structured output (optional, Core revalidated)                   [x]  structured_output.text
+5.5  negative tests: malformed output, host unavailable              [ ]  (partially: BAD_SCHEMA unit)
+5.6  semantic gate flag HARNESS_SEMANTIC_ENABLED                     [x]  tool absent unless Core enables
 ```
 
 ## 6. Tribunal P4 — plugin transport (после 5)
