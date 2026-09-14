@@ -154,7 +154,7 @@ export function spawnBridgePeer(
   const child = spawn(pythonPath, [coreEntry], {
     stdio: ["pipe", "pipe", "pipe"],
     env: { ...process.env, ...env },
-    cwd: process.env.OPENCODE_HARNESS_ROOT,
+    cwd: env.OPENCODE_HARNESS_ROOT || process.env.OPENCODE_HARNESS_ROOT || process.cwd(),
   })
   return new BridgeEndpoint(child, {})
 }

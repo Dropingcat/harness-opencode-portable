@@ -1,6 +1,6 @@
-# @harness/opencode-plugin — P1 Status
+# @harness/opencode-plugin — P1+P2 Status
 
-Status: `IMPLEMENTED / HOSTLESS ACCEPTANCE PASS / LIVE OPENCODE INSTALLATION PENDING`
+Status: `P1 HOSTLESS PASS / P2 LIVE LOAD + TOOLS VERIFIED / SEMANTIC PENDING`
 
 ## Boundary
 
@@ -31,12 +31,21 @@ Status: `IMPLEMENTED / HOSTLESS ACCEPTANCE PASS / LIVE OPENCODE INSTALLATION PEN
   - runtime compiler PASS (hash `8910fd...dfef`), capability compiler PASS (hash `f9de81...47a0`).
   - Pre-existing unrelated failure: `test_writer_migration_manifest.py::test_targets_are_contained_by_classification` (manifest maps `semantic-tests -> tests/writer/semantic` under `canonical_root=scripts/writer`); not caused by this package (tracked tree clean).
 
+## P2 live verification (2026-09-14, OpenCode 1.18.30 native)
+
+- Plugin loaded through auto-discovery `.opencode/plugins/opencode-harness-plugin.ts` -> re-export of `dist/index.js`.
+- Log marker: `harness plugin loaded protocol=harness-bridge-rpc/1.0 root=E:\opencode_harness ... required_features_ok=true`.
+- `harness_status` invoked by live model (`opencode/big-pickle`), returned real core status (runtime/capability policy present).
+- `harness_run` invoked by live model, routed through the Python core `resolve()` (deterministic `no_route_match` on unmatched task = correct escalation).
+- HostContext/WorkspaceRef normalized from real ToolContext (session/message/agent/directory/worktree).
+- Compatibility record: `compatibility/opencode/1.18.30.json` (semantic status still `NOT_LIVE_CERTIFIED`).
+
 ## P2 (next, live OpenCode)
 
-1. Install entry via installer: `python packages/opencode-harness-plugin/core/install_plugin.py --target project`.
-2. Restart OpenCode; verify `harness_status` / `harness_run` visible.
-3. Capture doctor + HostCapabilitySnapshot.
-4. Only then enable read-only `semantic.execute` smoke, then Tribunal transport migration.
+1. Verify in Desktop GUI (same engine; plugin auto-discovery is identical).
+2. Capture HostCapabilitySnapshot from live logs.
+3. Confirm legacy `tool-skill-contract-router.ts` is not loaded simultaneously.
+4. Only then enable read-only `semantic.execute` smoke (P3), then Tribunal transport migration (P4).
 
 ## Rules
 

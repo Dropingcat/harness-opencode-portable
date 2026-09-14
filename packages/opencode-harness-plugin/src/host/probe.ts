@@ -41,6 +41,7 @@ export async function probeClient(
   directory: string,
 ): Promise<HostFeatureSnapshot> {
   const features: HostFeatureProbe[] = [
+    { id: "PLUGIN_LOADED", ok: true, detail: "plugin factory invoked by host" },
     { id: "SDK_CLIENT_AVAILABLE", ok: Boolean(client), detail: "client object present" },
   ]
 

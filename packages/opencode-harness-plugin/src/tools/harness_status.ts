@@ -5,7 +5,10 @@ import { tool } from "@opencode-ai/plugin"
 import type { BridgeHandle } from "../bridge/bridge.js"
 import { normalizeHostContext } from "../host/types.js"
 
-export const harnessStatus = (bridge: BridgeHandle, opts: { hostVersion: string; pluginVersion: string }) =>
+export const harnessStatus = (
+  bridge: BridgeHandle,
+  opts: { hostVersion: () => string; pluginVersion: string },
+) =>
   tool({
     description:
       "Report Harness plugin, bridge and core readiness. Returns protocol, core root, policy presence and host context. No semantic execution.",
@@ -14,7 +17,10 @@ export const harnessStatus = (bridge: BridgeHandle, opts: { hostVersion: string;
     },
     async execute(args, ctx) {
       try {
-        const hostCtx = normalizeHostContext(ctx, { hostVersion: opts.hostVersion, pluginVersion: opts.pluginVersion })
+        const hostCtx = normalizeHostContext(ctx, {
+          hostVersion: opts.hostVersion(),
+          pluginVersion: opts.pluginVersion,
+        })
         const status = await bridge.request("harness.status", {
           host_context: hostCtx,
         })

@@ -116,5 +116,5 @@ def test_installer_report(tmp_path: Path) -> None:
     assert proc.returncode == 0, proc.stderr
     data = json.loads(report.read_text(encoding="utf-8"))
     assert data["schema"] == "harness-opencode-plugin-install/1.0"
-    installed = Path(data["installed"])
+    installed = Path(data["entry"])
     assert installed.is_file()

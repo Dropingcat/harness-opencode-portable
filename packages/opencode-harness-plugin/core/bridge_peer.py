@@ -26,7 +26,8 @@ def _harness_root() -> Path:
     env = __import__("os").environ.get("OPENCODE_HARNESS_ROOT")
     if env:
         return Path(env)
-    return Path(__file__).resolve().parents[2]
+    # <root>/packages/opencode-harness-plugin/core/bridge_peer.py -> parents[3] == <root>
+    return Path(__file__).resolve().parents[3]
 
 
 class BridgeServer:

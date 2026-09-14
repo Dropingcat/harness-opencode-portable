@@ -50,16 +50,21 @@
 3.4  build (dist/)                             [x]  PASS
 ```
 
-## 4. Live P2 — настоящий OpenCode host (BLOCKED: нужен live OpenCode)
+## 4. Live P2 — настоящий OpenCode host (DONE на движке 1.18.30)
 
 ```
-4.1  installer -> project plugin dir           [ ]
-4.2  restart OpenCode; tools visible           [ ]  harness_status / harness_run
-4.3  doctor + HostCapabilitySnapshot           [ ]
-4.4  live probe: session.create/prompt/abort   [ ]
-4.5  legacy plugin НЕ загружен одновременно    [ ]  (M0/RED-1 rule)
-4.6  certification record v1.18.16 -> LIVE     [ ]
+4.1  installer -> project plugin dir           [x]  .opencode/plugins/opencode-harness-plugin.ts
+4.2  plugin load in real OpenCode 1.18.30      [x]  "harness plugin loaded ... required_features_ok=true"
+4.3  harness_status виден и вызван моделью     [x]  live tool_use, вернул core status JSON
+4.4  harness_run виден и вызван моделью        [x]  live tool_use, routed через Python core resolve()
+4.5  HostContext/WorkspaceRef из реального ToolContext [x]  session/message/agent/directory/worktree
+4.6  doctor + HostCapabilitySnapshot           [ ]  (doctor скрипт готов; live snapshot = logs)
+4.7  legacy plugin НЕ загружен одновременно    [ ]  (M0/RED-1 rule; legacy жив в global config)
+4.8  certification record v1.18.30             [x]  compatibility/opencode/1.18.30.json LIVE
 ```
+
+Примечание: live-проверка выполнена через OpenCode CLI 1.18.30 native (тот же движок/плагинный механизм,
+что и Desktop). Остаток: повторить в Desktop GUI + зафиксировать live HostCapabilitySnapshot и отсутствие legacy.
 
 ## 5. Semantic P3 — read-only semantic.execute (после 4)
 

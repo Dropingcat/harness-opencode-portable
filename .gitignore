@@ -35,6 +35,7 @@ packages/opencode-harness-plugin/node_modules/
 packages/opencode-harness-plugin/dist/
 /opencode-harness-plugin-*.tgz
 /.opencode/plugins/
+/.opencode/.mcp.json
 .pytest_cache/
 
 /Новая папка/
