@@ -79,7 +79,7 @@ def test_bridge_peer_hello_and_status() -> None:
 
 
 def test_doctor_report() -> None:
-    """Doctor must produce a machine-readable report."""
+    """Doctor must produce a machine-readable report and pass when no legacy/native conflict."""
     root = harness_root()
     doctor = ROOT / "core" / "doctor.py"
     env = dict(os.environ)
@@ -97,6 +97,9 @@ def test_doctor_report() -> None:
         data = json.loads(report.read_text(encoding="utf-8"))
         assert data["schema"] == "harness-opencode-plugin-doctor/1.0"
         assert data["checks"]
+        # Native is registered in this project; doctor must not report a conflict in the
+        # current clean environment (legacy removed from global config).
+        assert data["ok"] is True, data["conflict_detail"]
 
 
 def test_installer_report(tmp_path: Path) -> None:

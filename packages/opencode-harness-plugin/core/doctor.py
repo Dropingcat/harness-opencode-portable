@@ -40,17 +40,65 @@ def main() -> int:
     for name, ok, detail in checks:
         status["checks"].append({"check": name, "ok": ok, "detail": detail})
 
-    # Legacy conflict: native and legacy must not both be loaded.
-    legacy = root / "plugins" / "tool-skill-contract-router.ts"
+    # Legacy would load ONLY if registered in a config (global/project) or placed in an
+    # auto-discovery dir (.opencode/plugins/). A file in root plugins/ without registration
+    # is not loaded by OpenCode (auto-discovery is .opencode/plugin(s)/ only).
+    legacy_auto = root / ".opencode" / "plugins" / "tool-skill-contract-router.ts"
+
+    # Detect legacy registered in global opencode config.
+    global_cfgs = [
+        Path.home() / ".config" / "opencode" / "opencode.jsonc",
+        Path.home() / ".config" / "opencode" / "opencode.json",
+    ]
+    legacy_in_global = False
+    for gcfg in global_cfgs:
+        if not gcfg.is_file():
+            continue
+        try:
+            gdata = json.loads(gcfg.read_text(encoding="utf-8-sig"))
+        except (json.JSONDecodeError, UnicodeDecodeError):
+            continue
+        plugins = gdata.get("plugin") if isinstance(gdata, dict) else None
+        if isinstance(plugins, list):
+            if any(isinstance(p, str) and "tool-skill-contract-router" in p for p in plugins):
+                legacy_in_global = True
+
+    legacy_would_load = legacy_in_global or legacy_auto.is_file()
+    status["legacy_in_global_config"] = legacy_in_global
+    status["legacy_would_load"] = legacy_would_load
+
+    # Native enabled via project config (.opencode/opencode.json) or auto-discovery.
+    project_cfgs = [
+        root / ".opencode" / "opencode.json",
+        root / "opencode.json",
+        root / "opencode.jsonc",
+    ]
+    native_enabled = False
     native_auto = root / ".opencode" / "plugins" / "opencode-harness-plugin.ts"
-    status["legacy_plugin_present"] = legacy.is_file()
+    for pcfg in project_cfgs:
+        if not pcfg.is_file():
+            continue
+        try:
+            pdata = json.loads(pcfg.read_text(encoding="utf-8-sig"))
+        except (json.JSONDecodeError, UnicodeDecodeError):
+            continue
+        plugins = pdata.get("plugin") if isinstance(pdata, dict) else None
+        if isinstance(plugins, list) and any(
+            isinstance(p, str) and "opencode-harness-plugin" in p for p in plugins
+        ):
+            native_enabled = True
+    status["native_enabled_in_project_config"] = native_enabled
     status["native_plugin_auto_discovered"] = native_auto.is_file()
-    if legacy.is_file() and native_auto.is_file():
+
+    if legacy_would_load and (native_enabled or native_auto.is_file()):
         status["conflict"] = True
-        status["conflict_detail"] = "legacy + native both installed; do not load simultaneously"
+        status["conflict_detail"] = (
+            "legacy + native both load (legacy in global config/plugin dir; native in project config/auto-discovery); "
+            "do not load simultaneously"
+        )
     else:
         status["conflict"] = False
-        status["conflict_detail"] = "no simultaneous legacy/native auto-discovery"
+        status["conflict_detail"] = "no simultaneous legacy/native loading"
 
     status["ok"] = all(c["ok"] for c in status["checks"]) and not status["conflict"]
 

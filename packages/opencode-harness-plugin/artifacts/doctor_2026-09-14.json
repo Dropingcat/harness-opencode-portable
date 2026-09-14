@@ -1,0 +1,38 @@
+{
+  "schema": "harness-opencode-plugin-doctor/1.0",
+  "core_root": "E:\\opencode_harness",
+  "checks": [
+    {
+      "check": "config_dir",
+      "ok": true,
+      "detail": "config present"
+    },
+    {
+      "check": "runtime_snapshot",
+      "ok": true,
+      "detail": "runtime snapshot"
+    },
+    {
+      "check": "capability_snapshot",
+      "ok": true,
+      "detail": "capability snapshot"
+    },
+    {
+      "check": "plugin_package",
+      "ok": true,
+      "detail": "plugin package"
+    },
+    {
+      "check": "bridge_peer",
+      "ok": true,
+      "detail": "bridge peer"
+    }
+  ],
+  "legacy_in_global_config": false,
+  "legacy_would_load": false,
+  "native_enabled_in_project_config": true,
+  "native_plugin_auto_discovered": false,
+  "conflict": false,
+  "conflict_detail": "no simultaneous legacy/native loading",
+  "ok": true
+}
