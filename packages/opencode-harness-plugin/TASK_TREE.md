@@ -83,15 +83,15 @@
 6.1  plugin provider candidate (priority 120)     [x]  PluginBridgeProviderTransport (TribunalProviderTransport protocol)
 6.2  binding selects runtime tool semantic.execute [x]  Q1 E2E: READY binding, runtime_tool=semantic.execute
 6.3  Q1 через plugin bridge + Core admission      [x]  execute_question COMPLETED, InquiryTurn materialized
-6.4  A1/answer path (same transport, answer schema)[~]  transport unit-tested; full Q1+A1 next
+6.4  A1/answer через plugin transport             [x]  execute_answer COMPLETED, ArgumentArtifact QUALIFY, graph REPLIES_TO
 6.5  3 variability runs                            [ ]
 ```
 
-P4 транспорт реализован и пройден E2E для Q1: `compile_question_provider_binding` выбирает
-provider с `runtime_tool=semantic.execute` (kind=agent, т.к. allowed kinds: process/agent/mcp),
-`PluginBridgeProviderTransport` шлёт `semantic.execute` через bridge full-duplex, получает
-`structured_output.text`, парсит JSON, Core материализует `InquiryTurn` (COMPLETED).
-A1 использует тот же транспорт (другой output schema). Осталось: полный Q1+A1 цикл + 3 variability runs.
+P4 транспорт реализован и пройден E2E для **Q1+A1**: binding выбирает `semantic.execute`,
+`PluginBridgeProviderTransport` шлёт `semantic.execute` через bridge full-duplex,
+получает `structured_output.text`, парсит JSON, Core материализует `InquiryTurn` (COMPLETED)
+и `ArgumentArtifact` (QUALIFY), graph admission возвращает REPLIES_TO.
+Осталось: Q2 (question-on-answer) + 3 variability runs.
 
 ## 7. Convergence P5 — Writer/Coder через единый transport
 

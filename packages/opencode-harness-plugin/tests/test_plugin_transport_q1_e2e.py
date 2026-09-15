@@ -47,9 +47,11 @@ from researcher_core.tribunal_inquiry import (
 from researcher_core.tribunal_live_dialogue import (
     JobCtlLiveDialogueAdapter,
     PluginBridgeProviderTransport,
+    admit_live_answer_to_argument_graph,
     compile_execution_envelope,
 )
 from researcher_core.tribunal_provider_binding import (
+    compile_answer_provider_binding,
     compile_question_provider_binding,
     load_provider_binding_policy,
 )
@@ -62,7 +64,7 @@ class Clock:
 
 
 class _PluginBridge:
-    """Fake plugin bridge: returns a valid tribunal-question-draft/1.0 in text."""
+    """Fake plugin bridge: returns the draft matching the request's expected schema."""
 
     def __init__(self) -> None:
         self.requests: list[dict] = []
@@ -71,11 +73,23 @@ class _PluginBridge:
         assert method == "semantic.execute"
         req = json.loads(params["request"])
         self.requests.append(req)
-        draft = json.dumps(
-            {"schema": "tribunal-question-draft/1.0", "question": "Which disclosed observation discriminates the competing explanation?"},
-            ensure_ascii=False,
-        )
-        return {"tool_result": {"ok": True, "runtime_status": "COMPLETED", "structured_output": {"text": draft}}}
+        bounded = req.get("bounded_input") or {}
+        expected = bounded.get("expected_output_schema", "")
+        if expected == "tribunal-question-draft/1.0":
+            draft = {"schema": "tribunal-question-draft/1.0", "question": "Which disclosed observation discriminates the competing explanation?"}
+        else:
+            draft = {
+                "schema": expected,
+                "position": "QUALIFY",
+                "summary": "The interpretation remains qualified because an alternative explanation is not excluded.",
+                "justification": "The disclosed evidence does not independently test the key assumption.",
+                "cited_evidence_refs": list(bounded.get("visible_evidence_refs") or []),
+                "cited_target_refs": list(bounded.get("visible_target_refs") or []),
+                "discoveries": [{"kind": "ASSUMPTION_ISSUE", "statement": "assumes alternative is negligible", "target_refs": list(bounded.get("visible_target_refs") or []), "evidence_refs": list(bounded.get("visible_evidence_refs") or []), "blocking": False}],
+                "additional_evidence_requests": [],
+                "grounding": [{"kind": "DISCLOSED_EVIDENCE", "statement": "Uses disclosed evidence.", "refs": list(bounded.get("visible_evidence_refs") or [])}],
+            }
+        return {"tool_result": {"ok": True, "runtime_status": "COMPLETED", "structured_output": {"text": json.dumps(draft, ensure_ascii=False)}}}
 
 
 @pytest.fixture()
@@ -180,8 +194,44 @@ def test_q1_via_plugin_transport_completes(ctx) -> None:
             current_preflight=ctx.preflight, transport=transport,
             contract=q1c, disclosure=d1, id_factory=ctx.ids, actor=ctx.actor, created_at=ctx.t,
         )
+        assert qrec.status.value == "COMPLETED", qrec.failure_reason
+        assert q1.content.strip()
 
-    assert qrec.status.value == "COMPLETED", qrec.failure_reason
-    assert q1.content.strip()
-    assert plugin.requests[0]["schema"] == "semantic-execution-request/1.0"
+        # ---- A1: answer via the same plugin transport ----
+        answer_instruction = compile_role_instruction_pack(role_id="xrd_specialist", variant=RoleVariantKind.CROSS_EXAM, handbook=ctx.handbook, policy=ctx.policy)
+        ab = compile_answer_provider_binding(
+            contract=q1c, target_argument=attack_a, requested_role_id=None,
+            composition_policy=ctx.policy, binding_policy=ctx.binding_policy,
+            providers_authority=ctx.providers, runtime_bindings=ctx.runtime_bindings,
+            preflight=ctx.preflight, capability_policy_hash=ctx.cap_hash,
+            id_factory=ctx.ids, actor=ctx.actor, created_at=ctx.t,
+        )
+        assert ab.status.value == "READY"
+        assert ab.selected_runtime_tool == "semantic.execute"
+
+        tp1 = {**tp, q1.meta.id: inquiry_turn_to_dict(q1)}
+        aenv = compile_execution_envelope(
+            binding=ab, disclosure=d1, question_contract=q1c, instruction=answer_instruction,
+            argument_payloads=qp, turn_payloads=tp1, ref_payloads=refs,
+            question_turn=q1, id_factory=ctx.ids, actor=ctx.actor, created_at=ctx.t,
+        )
+        a1, a1arg, arec = runtime.execute_answer(
+            parent_state_path=parent_path, binding=ab, envelope=aenv,
+            current_preflight=ctx.preflight, transport=transport,
+            contract=q1c, disclosure=d1, question_turn=q1,
+            id_factory=ctx.ids, actor=ctx.actor, created_at=ctx.t,
+        )
+        assert arec.status.value == "COMPLETED", arec.failure_reason
+        assert a1arg.position == ArgumentPosition.QUALIFY
+
+        # ---- graph admission ----
+        graph2, args2, branch2, reply = admit_live_answer_to_argument_graph(
+            graph=graph1, arguments=args1, branch=branch, question_contract=q1c,
+            answer_argument=a1arg, id_factory=ctx.ids, actor=ctx.actor, created_at=ctx.t,
+        )
+        assert reply.kind == ArgumentRelationKind.REPLIES_TO
+
+    # Both Q1 and A1 went through the plugin transport.
+    assert len(plugin.requests) == 2
     assert plugin.requests[0]["role_ref"] == "skeptic"
+    assert plugin.requests[1]["role_ref"] == "xrd_specialist"
