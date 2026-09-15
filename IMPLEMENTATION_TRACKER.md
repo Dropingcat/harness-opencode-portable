@@ -276,6 +276,15 @@ checkpointed контура для ресерчера и писателя без
 - [ ] **Deferred M4-1:** минимальный Researcher→Writer adapter требует отдельного контракта и compatibility tests.
 - [ ] **Deferred M4-3:** aggregate/pre-release wiring verify_claims→citation_trace не входит в boundary rework и требует отдельного route/gate контракта.
 
+## Machine-readable trackers (2026-09-15)
+
+- `config/tech_debt.json` — канонический реестр долгов (version 2, 65 записей: 50 open / 15 closed);
+  читается `project_context.py`. Источник: `патчи/миграция в плагин/tech_debt_current.json`.
+- `config/development_tracker.json` — глобальный трекер разработки (DEV-01..13 + WS-55A..59A + критический путь);
+  статус: 3 done / 3 in_progress / 7 not_started.
+- `docs/archive/tech-debt-archive.md` — архив legacy r0-реестра и CLOSED_REPORTED записей.
+- `docs/archive/trackers-consolidation-changelog.md` — changelog консолидации и актуальные возможности ветки.
+
 ## Rule
 
 Любая новая идея должна попадать либо в policy/config, либо в runtime script, либо в skill/tool template, либо в debt item, либо в tracker workstream.
