@@ -9,13 +9,20 @@ Contract-first rules honoured here (CODER_DESIGN_PRINCIPLES.md):
   * Contract-first / Immutable contracts — the request must be a valid
     SemanticExecutionRequest/1.0 and the output MUST always be a valid
     SemanticExecutionResult/1.0 (all 12 required fields present, no unknown
-    fields). There is no third "error blob" shape: diagnostics travel in the
-    canonical `host_error` / `runtime_status` fields.
+    fields, correct per-field types). There is no third "error blob" shape:
+    diagnostics travel in the canonical `host_error` / `runtime_status` fields.
+  * Schema-valid fail closed — every fail-closed path returns a dict that
+    validates against SemanticExecutionResult.schema.json. The schema declares
+    `provider_id` / `model_id` / `host_session_id` / `execution_id` as
+    NON-nullable strings, so unknown values are rendered as the non-empty
+    placeholder ``"unknown"`` (never ``None`` and never ``""``). No host
+    session is fabricated: `host_session_id` is ``"unknown"`` on rejections.
   * Fail closed — this module NEVER launches a model. M1 is transport-only:
       - plugin bridge nominally present but not wired -> honest
         HOST_UNAVAILABLE (never a fabricated COMPLETED),
       - legacy CLI fallback -> REJECTED_BY_HOST (the legacy `mcp` boundary is
         out of scope for M1 and must not be imported).
+  * Non-object requests fail closed to REJECTED_BY_HOST, never raise.
   * No OpenCode SDK / no OpenCode types are imported here (stdlib only).
 
 Explicitly out of scope (do not touch): `mcp/launchers/_runner.py`,
@@ -23,15 +30,19 @@ Explicitly out of scope (do not touch): `mcp/launchers/_runner.py`,
 """
 from __future__ import annotations
 
+import json
 import os
-import uuid
 from pathlib import Path
-from typing import Any
 
 # Canonical schema identifiers (see packages/opencode-harness-plugin/schemas).
 SEMANTIC_REQUEST_SCHEMA = "semantic-execution-request/1.0"
 SEMANTIC_RESULT_SCHEMA = "semantic-execution-result/1.0"
 CONTRACT_SCHEMA = "coder-contract/1.0"
+
+# Schema-valid placeholder for unknown string fields (SemanticExecutionResult/1.0
+# declares provider_id/model_id/host_session_id/execution_id as non-nullable
+# strings, so an unknown value must be a non-empty string, never None/"").
+_UNKNOWN = "unknown"
 
 # Valid runtime_status values from SemanticExecutionResult/1.0.
 _RUNTIME_STATUSES = frozenset(
@@ -75,6 +86,10 @@ _REQUEST_REQUIRED = (
     "trace",
 )
 
+# Every top-level field the request schema permits: the required fields plus
+# the optional `role_ref`. Anything else violates additionalProperties=false.
+_REQUEST_ALLOWED = frozenset(_REQUEST_REQUIRED) | {"role_ref"}
+
 
 def classify_purpose(purpose: str) -> str:
     """Map a Coder purpose to its default permission_profile.
@@ -93,13 +108,21 @@ def _role_for_purpose(purpose: str) -> str:
 def _validate_request(req: dict) -> tuple[bool, str]:
     """Structural check of a SemanticExecutionRequest/1.0 dict.
 
-    Returns ``(ok, error)``. Deterministic and side-effect free. Unknown
-    purpose values fail here because the canonical schema enumerates them.
+    Returns ``(ok, error)``. Deterministic and side-effect free. Mirrors the
+    canonical schema: all required fields present, no unknown top-level fields
+    (additionalProperties=false), and per-field types. Unknown purpose values
+    fail here because the canonical schema enumerates them.
     """
     if not isinstance(req, dict):
-        return False, "BAD_SCHEMA: request must be an object"
+        return False, "BAD_SCHEMA: request must be a SemanticExecutionRequest object"
     if req.get("schema") != SEMANTIC_REQUEST_SCHEMA:
         return False, f"BAD_SCHEMA: expected schema={SEMANTIC_REQUEST_SCHEMA!r}"
+    unknown = set(req) - _REQUEST_ALLOWED
+    if unknown:
+        return False, (
+            f"BAD_SCHEMA: unknown fields {sorted(unknown)!r} "
+            "(additionalProperties=false)"
+        )
     for field in _REQUEST_REQUIRED:
         if field not in req:
             return False, f"BAD_SCHEMA: missing required field {field!r}"
@@ -110,18 +133,48 @@ def _validate_request(req: dict) -> tuple[bool, str]:
         return False, "BAD_SCHEMA: purpose must be a non-empty string"
     if purpose not in _PURPOSE_PROFILES:
         return False, f"BAD_SCHEMA: unknown purpose {purpose!r}"
+    if not isinstance(req.get("contract_schema"), str) or not req["contract_schema"]:
+        return False, "BAD_SCHEMA: contract_schema must be a non-empty string"
+    if not isinstance(req.get("parent_host_session_id"), str) or not req["parent_host_session_id"]:
+        return False, "BAD_SCHEMA: parent_host_session_id must be a non-empty string"
+    if not isinstance(req.get("permission_profile"), str) or not req["permission_profile"]:
+        return False, "BAD_SCHEMA: permission_profile must be a non-empty string"
+    if "role_ref" in req and not isinstance(req["role_ref"], str):
+        return False, "BAD_SCHEMA: role_ref must be a string"
     if not isinstance(req.get("bounded_input"), dict):
         return False, "BAD_SCHEMA: bounded_input must be an object"
     if not isinstance(req.get("expected_output"), dict):
         return False, "BAD_SCHEMA: expected_output must be an object"
     if not isinstance(req.get("model_policy"), dict):
         return False, "BAD_SCHEMA: model_policy must be an object"
+    for key in ("provider_id", "model_id", "agent"):
+        if key in req["model_policy"] and not isinstance(req["model_policy"][key], str):
+            return False, f"BAD_SCHEMA: model_policy.{key} must be a string"
     if not isinstance(req.get("trace"), dict):
         return False, "BAD_SCHEMA: trace must be an object"
     timeout_ms = req.get("timeout_ms")
     if not isinstance(timeout_ms, int) or isinstance(timeout_ms, bool) or timeout_ms <= 0:
         return False, "BAD_SCHEMA: timeout_ms must be a positive integer"
     return True, ""
+
+
+def _string_field(value: object, fallback: str = _UNKNOWN) -> str:
+    """Non-empty string, else ``fallback``.
+
+    SemanticExecutionResult/1.0 declares provider_id/model_id/host_session_id/
+    execution_id as plain strings (NOT nullable), so unknown values are
+    rendered as the non-empty placeholder ``"unknown"`` — never None/"".
+    """
+    if isinstance(value, str) and value:
+        return value
+    return fallback
+
+
+def _dict_field(value: object) -> dict:
+    """Plain dict (copied), else {} — never None."""
+    if isinstance(value, dict):
+        return dict(value)
+    return {}
 
 
 def _result(
@@ -138,23 +191,67 @@ def _result(
     timing: dict | None = None,
     host_features_fingerprint: str | None = None,
 ) -> dict:
-    """Build a strict SemanticExecutionResult/1.0 dict (all 12 fields)."""
+    """Build a strict SemanticExecutionResult/1.0 dict (all 12 fields).
+
+    Schema-valid by construction: string fields are non-empty (``"unknown"``
+    fallback), object fields are dicts, nullable fields stay null.
+    """
     if runtime_status not in _RUNTIME_STATUSES:
         raise ValueError(f"invalid runtime_status: {runtime_status!r}")
     return {
         "schema": SEMANTIC_RESULT_SCHEMA,
-        "execution_id": execution_id,
+        "execution_id": _string_field(execution_id),
         "runtime_status": runtime_status,
-        "host_session_id": host_session_id,
-        "provider_id": provider_id,
-        "model_id": model_id,
-        "structured_output": structured_output if structured_output is not None else {},
-        "raw_output_ref": raw_output_ref,
-        "usage": usage if usage is not None else {},
-        "timing": timing if timing is not None else {},
-        "host_error": host_error,
-        "host_features_fingerprint": host_features_fingerprint,
+        "host_session_id": _string_field(host_session_id),
+        "provider_id": _string_field(provider_id),
+        "model_id": _string_field(model_id),
+        "structured_output": _dict_field(structured_output),
+        "raw_output_ref": raw_output_ref if isinstance(raw_output_ref, str) else None,
+        "usage": _dict_field(usage),
+        "timing": _dict_field(timing),
+        "host_error": host_error if isinstance(host_error, str) else None,
+        "host_features_fingerprint": (
+            host_features_fingerprint if isinstance(host_features_fingerprint, str) else None
+        ),
     }
+
+
+def _validate_result(res: dict) -> tuple[bool, str]:
+    """Strict check of a SemanticExecutionResult/1.0 dict.
+
+    Mirrors packages/opencode-harness-plugin/schemas/SemanticExecutionResult.schema.json:
+    all 12 required fields, exact field set (additionalProperties=false) and
+    per-field TYPES — provider_id/model_id/host_session_id are strings (NOT
+    nullable), execution_id is a non-empty string, runtime_status is in the
+    canonical enum. Returns ``(ok, error)``.
+    """
+    required = (
+        "schema", "execution_id", "runtime_status", "host_session_id",
+        "provider_id", "model_id", "structured_output", "raw_output_ref",
+        "usage", "timing", "host_error", "host_features_fingerprint",
+    )
+    if not isinstance(res, dict):
+        return False, "result must be an object"
+    for field in required:
+        if field not in res:
+            return False, f"result missing required field {field!r}"
+    if res.get("schema") != SEMANTIC_RESULT_SCHEMA:
+        return False, f"result schema mismatch: {res.get('schema')!r}"
+    if not isinstance(res.get("runtime_status"), str) or res["runtime_status"] not in _RUNTIME_STATUSES:
+        return False, f"invalid runtime_status: {res.get('runtime_status')!r}"
+    for field in ("execution_id", "host_session_id", "provider_id", "model_id"):
+        if not isinstance(res.get(field), str) or not res[field]:
+            return False, f"{field} must be a non-empty string"
+    for field in ("structured_output", "usage", "timing"):
+        if not isinstance(res.get(field), dict):
+            return False, f"{field} must be an object"
+    for field in ("raw_output_ref", "host_error", "host_features_fingerprint"):
+        if res.get(field) is not None and not isinstance(res.get(field), str):
+            return False, f"{field} must be a string or null"
+    unknown = set(res) - set(required)
+    if unknown:
+        return False, f"unknown fields in result: {sorted(unknown)!r}"
+    return True, ""
 
 
 def _bridge_peer_path() -> Path | None:
@@ -184,15 +281,16 @@ def _execute_via_plugin_bridge(request: dict) -> dict:
 
     M1 status: the bridge peer is present but the reverse channel is NOT yet
     wired into a live stdio bridge session. Honest classification only — the
-    module never fabricates a COMPLETED result.
+    module never fabricates a COMPLETED result. No host session is claimed:
+    `host_session_id` falls back to the schema-valid placeholder ``"unknown"``.
     """
+    model_policy = request.get("model_policy") or {}
     return _result(
         execution_id=request["execution_id"],
         runtime_status="HOST_UNAVAILABLE",
         host_error="plugin bridge not yet wired in M1",
-        host_session_id=request.get("parent_host_session_id"),
-        provider_id=(request.get("model_policy") or {}).get("provider_id"),
-        model_id=(request.get("model_policy") or {}).get("model_id"),
+        provider_id=model_policy.get("provider_id"),
+        model_id=model_policy.get("model_id"),
     )
 
 
@@ -206,13 +304,13 @@ def _legacy_fallback_rejected(request: dict) -> dict:
     profile = request.get("permission_profile", "")
     reason = "legacy CLI fallback not allowed in M1 (DEV-05)"
     detail = f"permission_profile={profile!r}" if profile else "no permission_profile"
+    model_policy = request.get("model_policy") or {}
     return _result(
         execution_id=request["execution_id"],
         runtime_status="REJECTED_BY_HOST",
         host_error=f"{reason}: {detail}",
-        host_session_id=request.get("parent_host_session_id"),
-        provider_id=(request.get("model_policy") or {}).get("provider_id"),
-        model_id=(request.get("model_policy") or {}).get("model_id"),
+        provider_id=model_policy.get("provider_id"),
+        model_id=model_policy.get("model_id"),
     )
 
 
@@ -221,9 +319,10 @@ def execute_coder_semantic(request: dict) -> dict:
 
     Deterministic and fail-closed. Three outcomes:
 
-    1. Request schema invalid -> SemanticExecutionResult/1.0 with
-       ``runtime_status=REJECTED_BY_HOST`` and ``host_error`` starting with
-       ``BAD_SCHEMA`` (canonical statuses carry no separate error code).
+    1. Request schema invalid (including non-object requests) ->
+       SemanticExecutionResult/1.0 with ``runtime_status=REJECTED_BY_HOST`` and
+       ``host_error`` starting with ``BAD_SCHEMA`` (canonical statuses carry no
+       separate error code). Non-object inputs never raise.
     2. Plugin bridge available (env flag + env root + bridge peer file):
        reverse call ``semantic.execute``. Not yet wired in M1, so the honest
        result is ``HOST_UNAVAILABLE`` — never a fabricated COMPLETED.
@@ -234,8 +333,9 @@ def execute_coder_semantic(request: dict) -> dict:
     """
     ok, error = _validate_request(request)
     if not ok:
+        execution_id = request.get("execution_id") if isinstance(request, dict) else None
         return _result(
-            execution_id=str(request.get("execution_id") or ""),
+            execution_id=execution_id,
             runtime_status="REJECTED_BY_HOST",
             host_error=error,
         )
@@ -283,6 +383,13 @@ def build_coder_request(
 def _run_unit_tests() -> int:
     """Stdlib unit tests (no pytest available in this environment)."""
     import unittest
+
+    try:
+        import jsonschema
+
+        _HAVE_JSONSCHEMA = True
+    except ImportError:  # pragma: no cover - environment fallback
+        _HAVE_JSONSCHEMA = False
 
     class SemanticTransportTests(unittest.TestCase):
         def test_build_request_valid(self) -> None:
@@ -356,18 +463,22 @@ def _run_unit_tests() -> int:
                 self.skipTest("plugin bridge peer file not present in this checkout")
             os.environ["HARNESS_SEMANTIC_ENABLED"] = "1"
             os.environ["OPENCODE_HARNESS_ROOT"] = str(root)
-            req = build_coder_request(
-                execution_id="exec-3",
-                purpose="CODE_REVIEW",
-                bounded_input={"task": "t"},
-                expected_output={},
-                worktree="w",
-            )
-            res = execute_coder_semantic(req)
-            self.assertEqual(res["runtime_status"], "HOST_UNAVAILABLE")
-            self.assertIn("plugin bridge not yet wired in M1", res["host_error"])
-            ok, error = _validate_result(res)
-            self.assertTrue(ok, msg=error)
+            try:
+                req = build_coder_request(
+                    execution_id="exec-3",
+                    purpose="CODE_REVIEW",
+                    bounded_input={"task": "t"},
+                    expected_output={},
+                    worktree="w",
+                )
+                res = execute_coder_semantic(req)
+                self.assertEqual(res["runtime_status"], "HOST_UNAVAILABLE")
+                self.assertIn("plugin bridge not yet wired in M1", res["host_error"])
+                ok, error = _validate_result(res)
+                self.assertTrue(ok, msg=error)
+            finally:
+                os.environ.pop("HARNESS_SEMANTIC_ENABLED", None)
+                os.environ.pop("OPENCODE_HARNESS_ROOT", None)
 
         def test_execute_bad_schema(self) -> None:
             res = execute_coder_semantic({"schema": "wrong/1.0", "execution_id": "x"})
@@ -382,6 +493,50 @@ def _run_unit_tests() -> int:
             self.assertIn("execution_id", res["host_error"])
             ok, error = _validate_result(res)
             self.assertTrue(ok, msg=error)
+
+        def test_execute_non_dict_safe(self) -> None:
+            """Non-dict requests fail closed to REJECTED_BY_HOST, never raise."""
+            os.environ.pop("HARNESS_SEMANTIC_ENABLED", None)
+            os.environ.pop("OPENCODE_HARNESS_ROOT", None)
+            for bad in (None, "not-a-dict", ["x", 1], 42, 3.14):
+                with self.subTest(bad=type(bad).__name__):
+                    res = execute_coder_semantic(bad)  # must not raise
+                    self.assertEqual(res["runtime_status"], "REJECTED_BY_HOST")
+                    self.assertTrue(res["host_error"].startswith("BAD_SCHEMA"))
+                    self.assertIn(
+                        "request must be a SemanticExecutionRequest object",
+                        res["host_error"],
+                    )
+                    ok, error = _validate_result(res)
+                    self.assertTrue(ok, msg=error)
+
+        def test_fail_closed_result_schema_valid(self) -> None:
+            """All fail-closed paths validate against the canonical schema."""
+            if not _HAVE_JSONSCHEMA:
+                self.skipTest("jsonschema not installed")
+            schema_path = (
+                Path(__file__).resolve().parents[2]
+                / "packages" / "opencode-harness-plugin" / "schemas"
+                / "SemanticExecutionResult.schema.json"
+            )
+            schema = json.loads(schema_path.read_text(encoding="utf-8"))
+            os.environ.pop("HARNESS_SEMANTIC_ENABLED", None)
+            os.environ.pop("OPENCODE_HARNESS_ROOT", None)
+            req = build_coder_request(
+                execution_id="e", purpose="CODE_WORK",
+                bounded_input={}, expected_output={}, worktree="w",
+            )
+            results = (
+                execute_coder_semantic({"schema": "wrong/1.0", "execution_id": "x"}),
+                execute_coder_semantic({"schema": SEMANTIC_REQUEST_SCHEMA, "purpose": "CODE_WORK"}),
+                execute_coder_semantic(req),
+                execute_coder_semantic(None),
+            )
+            for res in results:
+                with self.subTest(status=res["runtime_status"]):
+                    jsonschema.validate(instance=res, schema=schema)
+                    ok, error = _validate_result(res)
+                    self.assertTrue(ok, msg=error)
 
         def test_validate_timeout(self) -> None:
             base = build_coder_request(execution_id="e", purpose="CODE_WORK",
@@ -400,25 +555,14 @@ def _run_unit_tests() -> int:
             self.assertFalse(ok)
             self.assertIn("purpose", error)
 
-    def _validate_result(res: dict) -> tuple[bool, str]:
-        required = (
-            "schema", "execution_id", "runtime_status", "host_session_id",
-            "provider_id", "model_id", "structured_output", "raw_output_ref",
-            "usage", "timing", "host_error", "host_features_fingerprint",
-        )
-        if not isinstance(res, dict):
-            return False, "result must be an object"
-        for field in required:
-            if field not in res:
-                return False, f"result missing required field {field!r}"
-        if res.get("schema") != SEMANTIC_RESULT_SCHEMA:
-            return False, f"result schema mismatch: {res.get('schema')!r}"
-        if res.get("runtime_status") not in _RUNTIME_STATUSES:
-            return False, f"invalid runtime_status: {res.get('runtime_status')!r}"
-        unknown = set(res) - set(required)
-        if unknown:
-            return False, f"unknown fields in result: {sorted(unknown)!r}"
-        return True, ""
+        def test_validate_unknown_top_level_field(self) -> None:
+            """additionalProperties=false: unknown top-level fields -> BAD_SCHEMA."""
+            base = build_coder_request(execution_id="e", purpose="CODE_WORK",
+                                       bounded_input={}, expected_output={}, worktree="w")
+            bad = dict(base, evil_field=1)
+            ok, error = _validate_request(bad)
+            self.assertFalse(ok)
+            self.assertIn("unknown fields", error)
 
     suite = unittest.defaultTestLoader.loadTestsFromTestCase(SemanticTransportTests)
     runner = unittest.TextTestRunner(verbosity=2)

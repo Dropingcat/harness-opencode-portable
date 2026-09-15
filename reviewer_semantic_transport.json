@@ -1,0 +1,85 @@
+{
+ "module": "semantic_transport",
+ "verdict": "REQUEST_CHANGES",
+ "comments": [
+  {
+   "id": "R1",
+   "severity": "critical",
+   "location": "scripts/code-factory/semantic_transport.py:127-157 (_result), :237-241 (invalid-request path), :189-196 (bridge path), :209-216 (legacy path)",
+   "finding": "Output is NOT valid per the canonical SemanticExecutionResult/1.0 schema. The schema declares provider_id/model_id/host_session_id as type string (NOT nullable), but _result() fills them with None by default. All three fail-closed paths (BAD_SCHEMA, HOST_UNAVAILABLE, REJECTED_BY_HOST) emit None for at least one of these fields. Proven by running the independent tester suite tests/coder/test_semantic_transport_tester.py (15 tests, 13 failures, all 'None is not of type string' via jsonschema against the canonical schema), and reproduced directly: execute_coder_semantic({'schema':'semantic-execution-request/1.0','purpose':'CODE_WORK'})['provider_id'] is None -> jsonschema.validate() raises. The module's own _validate_result() only checks key presence, so the self-tests pass while the canonical contract is violated. The contract requires 'all 12 required fields present, no unknown fields' — the worker's own docstring promise is broken.",
+   "falsification": "Run `python -m unittest discover -s tests/coder -p 'test_*.py' -v` and expect 0 failures; or run `python -c \"import json,sys,os; sys.path.insert(0,'scripts/code-factory'); from semantic_transport import execute_coder_semantic; import jsonschema; r=execute_coder_semantic({'schema':'semantic-execution-request/1.0','purpose':'CODE_WORK'}); jsonschema.validate(r, json.load(open('packages/opencode-harness-plugin/schemas/SemanticExecutionResult.schema.json',encoding='utf-8')))\"` and expect it to exit 0. Currently it raises ValidationError.",
+   "file": "scripts/code-factory/semantic_transport.py",
+   "line": "127",
+   "problem": "Output is NOT valid per the canonical SemanticExecutionResult/1.0 schema. The schema declares provider_id/model_id/host_session_id as type string (NOT nullable), but _result() fills them with None by default. All three fail-closed paths (BAD_SCHEMA, HOST_UNAVAILABLE, REJECTED_BY_HOST) emit None for at least one of these fields. Proven by running the independent tester suite tests/coder/test_semantic_transport_tester.py (15 tests, 13 failures, all 'None is not of type string' via jsonschema against the canonical schema), and reproduced directly: execute_coder_semantic({'schema':'semantic-execution-request/1.0','purpose':'CODE_WORK'})['provider_id'] is None -> jsonschema.validate() raises. The module's own _validate_result() only checks key presence, so the self-tests pass while the canonical contract is violated. The contract requires 'all 12 required fields present, no unknown fields' — the worker's own docstring promise is broken.",
+   "suggestion": "Return schema-valid SemanticExecutionResult on all fail-closed paths (provider_id/model_id/host_session_id as string, execution_id non-empty, host_session_id non-empty); reject non-dict inputs without crashing."
+  },
+  {
+   "id": "R2",
+   "severity": "major",
+   "location": "scripts/code-factory/semantic_transport.py:127-157 (_result), :135-139 (defaults host_session_id/provider_id/model_id=None)",
+   "finding": "The schema also allows but does not require that these three fields be valid non-empty strings; even with explicit values, _result() passes raw None through (e.g. request model_policy={'provider_id': None}). If a caller explicitly passes provider_id=None or model_id=None (as in the legacy/bridge paths where model_policy may be empty), the None again flows into the output and breaks the schema. The empty-string default for provider_id/model_id/host_session_id would be schema-valid for all three statuses (COMPLETED/REJECTED_BY_HOST/HOST_UNAVAILABLE/FAILED/etc.), since the schema constrains only type, not minLength.",
+   "falsification": "Call execute_coder_semantic(build_coder_request(..., model_policy={'provider_id': None})) with HARNESS_SEMANTIC_ENABLED=1 and OPENCODE_HARNESS_ROOT set to this repo; currently the returned provider_id is None and jsonschema.validate() against SemanticExecutionResult.schema.json raises. After the fix it should validate cleanly.",
+   "file": "scripts/code-factory/semantic_transport.py",
+   "line": "127",
+   "problem": "The schema also allows but does not require that these three fields be valid non-empty strings; even with explicit values, _result() passes raw None through (e.g. request model_policy={'provider_id': None}). If a caller explicitly passes provider_id=None or model_id=None (as in the legacy/bridge paths where model_policy may be empty), the None again flows into the output and breaks the schema. The empty-string default for provider_id/model_id/host_session_id would be schema-valid for all three statuses (COMPLETED/REJECTED_BY_HOST/HOST_UNAVAILABLE/FAILED/etc.), since the schema constrains only type, not minLength.",
+   "suggestion": "Return schema-valid SemanticExecutionResult on all fail-closed paths (provider_id/model_id/host_session_id as string, execution_id non-empty, host_session_id non-empty); reject non-dict inputs without crashing."
+  },
+  {
+   "id": "R3",
+   "severity": "major",
+   "location": "scripts/code-factory/semantic_transport.py:93-124 (_validate_request)",
+   "finding": "The schema check does not reject unknown top-level fields. The canonical SemanticExecutionRequest/1.0 schema has additionalProperties=false, but _validate_request() only checks required presence and per-field types. A request with an extra field (e.g. req['evil_field']=1) passes validation and proceeds to the bridge/legacy branch instead of returning REJECTED_BY_HOST BAD_SCHEMA. Proven: adding {'evil_field': 1} to a built request returns (True, '') from _validate_request(). The contract states the module 'validates input' and the request schema forbids unknown fields.",
+   "falsification": "Run: `python -c \"import sys; sys.path.insert(0,'scripts/code-factory'); from semantic_transport import build_coder_request,_validate_request; r=build_coder_request(execution_id='e',purpose='CODE_WORK',bounded_input={},expected_output={},worktree='w'); r['evil_field']=1; print(_validate_request(r))\"`; currently prints (True, ''). Expected: (False, ...) after fix.",
+   "file": "scripts/code-factory/semantic_transport.py",
+   "line": "93",
+   "problem": "The schema check does not reject unknown top-level fields. The canonical SemanticExecutionRequest/1.0 schema has additionalProperties=false, but _validate_request() only checks required presence and per-field types. A request with an extra field (e.g. req['evil_field']=1) passes validation and proceeds to the bridge/legacy branch instead of returning REJECTED_BY_HOST BAD_SCHEMA. Proven: adding {'evil_field': 1} to a built request returns (True, '') from _validate_request(). The contract states the module 'validates input' and the request schema forbids unknown fields.",
+   "suggestion": "Return schema-valid SemanticExecutionResult on all fail-closed paths (provider_id/model_id/host_session_id as string, execution_id non-empty, host_session_id non-empty); reject non-dict inputs without crashing."
+  },
+  {
+   "id": "R4",
+   "severity": "minor",
+   "location": "scripts/code-factory/semantic_transport.py:26 (import uuid)",
+   "finding": "Dead import: `import uuid` is unused anywhere in the module (verified by AST scan). Also `from typing import Any` is unused (only the future-annotations import is needed). Harmless but indicates drift; the module otherwise claims stdlib-only discipline.",
+   "falsification": "Run `python -c \"import ast; t=ast.parse(open('scripts/code-factory/semantic_transport.py',encoding='utf-8').read()); print(any(isinstance(n,ast.Name) and n.id=='uuid' for n in ast.walk(t)))\"`; currently no Name node 'uuid' exists outside the import, confirming the import is unused. After removal the module must still import and its built-in suite must still report OK.",
+   "file": "scripts/code-factory/semantic_transport.py",
+   "line": "26",
+   "problem": "Dead import: `import uuid` is unused anywhere in the module (verified by AST scan). Also `from typing import Any` is unused (only the future-annotations import is needed). Harmless but indicates drift; the module otherwise claims stdlib-only discipline.",
+   "suggestion": "Return schema-valid SemanticExecutionResult on all fail-closed paths (provider_id/model_id/host_session_id as string, execution_id non-empty, host_session_id non-empty); reject non-dict inputs without crashing."
+  }
+ ],
+ "scope_declared": {
+  "scope_in": [
+   "scripts/code-factory/semantic_transport.py",
+   "tests/coder/test_semantic_transport.py",
+   "packages/opencode-harness-plugin/schemas/SemanticExecutionRequest.schema.json",
+   "packages/opencode-harness-plugin/schemas/SemanticExecutionResult.schema.json",
+   "commit f4820b4 diff"
+  ],
+  "scope_out": [
+   "mcp/*",
+   "coder authority",
+   "live model / real bridge wiring",
+   "factory gates",
+   "code-factory runner",
+   "state machine"
+  ]
+ },
+ "out_of_scope_gaps": [
+  {
+   "module": "semantic_transport",
+   "finding": "Commit f4820b4 contains only the two files reviewed; the diff matches the working tree. No additional files to check."
+  },
+  {
+   "module": "semantic_transport",
+   "finding": "No real bridge channel is wired (intentional for M1, fail-closed). The HOST_UNAVAILABLE behavior is honest and correct."
+  },
+  {
+   "module": "semantic_transport",
+   "finding": "The built-in suite (python scripts/code-factory/semantic_transport.py) and tests/coder/test_semantic_transport.py pass (8/8), but they use the same structural _validate_result() that misses the type/null defect — this is a test-blindness gap, not a scope violation."
+  },
+  {
+   "module": "semantic_transport",
+   "finding": "tests/coder/test_semantic_transport_tester.py (independent, tester-authored) fails 13/15 due to R1 — out of the declared scope-in file list but same module; recorded here rather than as a separate scope-in finding."
+  }
+ ]
+}
