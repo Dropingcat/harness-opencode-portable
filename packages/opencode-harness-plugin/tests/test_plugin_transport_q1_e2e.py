@@ -1,10 +1,11 @@
 """
-P4 live E2E: Tribunal Q1 via the native plugin transport.
+P4 deterministic integration: Tribunal Q1/A1/Q2 via the plugin transport adapter.
 
 Runs the real JobCtlLiveDialogueAdapter.execute_question with
 PluginBridgeProviderTransport wired to a fake plugin bridge (the plugin returns
 the structured question draft in text, as the real model would after a child
-session). Proves Core -> transport -> bridge -> plugin -> Core admission.
+session). Exercises Core admission with a fake semantic callback; no real
+OpenCode session, model, or stdio bridge is exercised by this test.
 Mirrors test_r4_4_l3_live_dialogue_e2e structure.
 """
 from __future__ import annotations
@@ -66,8 +67,9 @@ class Clock:
 class _PluginBridge:
     """Fake plugin bridge: returns the draft matching the request's expected schema."""
 
-    def __init__(self) -> None:
+    def __init__(self, answer2_mode="repeat") -> None:
         self.requests: list[dict] = []
+        self.answer2_mode = answer2_mode
 
     def handle(self, method: str, params: dict) -> dict:
         assert method == "semantic.execute"
@@ -77,6 +79,8 @@ class _PluginBridge:
         expected = bounded.get("expected_output_schema", "")
         if expected == "tribunal-question-draft/1.0":
             draft = {"schema": "tribunal-question-draft/1.0", "question": "Which disclosed observation discriminates the competing explanation?"}
+            if bounded["control_contract"]["purpose"] == "QUESTION_ON_ANSWER":
+                draft["question"] = "Which disclosed measurement tests the assumption identified in the previous answer?"
         else:
             draft = {
                 "schema": expected,
@@ -89,6 +93,22 @@ class _PluginBridge:
                 "additional_evidence_requests": [],
                 "grounding": [{"kind": "DISCLOSED_EVIDENCE", "statement": "Uses disclosed evidence.", "refs": list(bounded.get("visible_evidence_refs") or [])}],
             }
+        if expected == "tribunal-answer-draft/1.1" and bounded["control_contract"]["purpose"] == "QUESTION_ON_ANSWER":
+            if self.answer2_mode == "novel":
+                draft["discoveries"][0]["statement"] = "Calibration stability is a distinct untested assumption."
+            if self.answer2_mode == "research":
+                draft["position"] = "OPEN"
+                draft["discoveries"] = []
+                draft["additional_evidence_requests"] = [{
+                    "question": "Obtain an independent stress-sensitive measurement.",
+                    "reason": "Disclosed observations cannot distinguish the alternatives.",
+                    "target_refs": list(bounded["visible_target_refs"]),
+                    "requested_evidence_kinds": ["stress-sensitive XRD"],
+                }]
+            draft["grounding"].append({
+                "kind": "PRIOR_TURN", "statement": "Answers the disclosed Q2.",
+                "refs": [bounded["question_turn_id"]],
+            })
         return {"tool_result": {"ok": True, "runtime_status": "COMPLETED", "structured_output": {"text": json.dumps(draft, ensure_ascii=False)}}}
 
 
@@ -138,7 +158,12 @@ def ctx():
     return c
 
 
-def test_q1_via_plugin_transport_completes(ctx) -> None:
+@pytest.mark.parametrize("answer2_mode, expected_action", [
+    ("repeat", DialecticAction.STOP_NO_PROGRESS),
+    ("research", DialecticAction.REQUEST_LOCAL_RESEARCH),
+    ("novel", DialecticAction.STOP_DEPTH_LIMIT),
+])
+def test_q1_a1_q2_a2_and_observer_decision(ctx, answer2_mode, expected_action) -> None:
     root_turn, root = ctx.base_arg("xrd_specialist", ArgumentPosition.QUALIFY, "root interpretation", ctx.e_support, InquiryTurnKind.FIRST_PASS_ASSESSMENT)
     a_turn, attack_a = ctx.base_arg("skeptic", ArgumentPosition.CHALLENGE, "residual stress alternative", ctx.e_attack, InquiryTurnKind.CHALLENGE)
     rel_a = ArgumentRelation(ctx.meta("ARL", "argument-relation/1.0"), ArgumentRelationKind.ATTACKS, attack_a.meta.id, root.meta.id, (ctx.need,), material=True)
@@ -181,7 +206,7 @@ def test_q1_via_plugin_transport_completes(ctx) -> None:
         id_factory=ctx.ids, actor=ctx.actor, created_at=ctx.t,
     )
 
-    plugin = _PluginBridge()
+    plugin = _PluginBridge(answer2_mode)
     transport = PluginBridgeProviderTransport(plugin.handle)
 
     with tempfile.TemporaryDirectory() as td:
@@ -231,7 +256,120 @@ def test_q1_via_plugin_transport_completes(ctx) -> None:
         )
         assert reply.kind == ArgumentRelationKind.REPLIES_TO
 
-    # Both Q1 and A1 went through the plugin transport.
-    assert len(plugin.requests) == 2
+        # Q2 is authorized by the observer's admitted issue, not by the transport.
+        step1 = observe_branch_dialectic_step(
+            branch=branch2, argument=a1arg, turn=a1,
+            branch_history=challenge.next_branch_history,
+            visible_refs=(ctx.claim, ctx.e_support, ctx.e_attack), chain_turn_count=3,
+        )
+        assert step1.decision.action == DialecticAction.CONTINUE_QUESTION_ON_ANSWER
+        issue = step1.observation.new_issues[0].signature
+        d2 = compile_dialectic_disclosure(
+            role_id="methodologist", purpose=DisclosurePurpose.QUESTION_ON_ANSWER,
+            branch=branch2, graph=graph2, arguments=args2,
+            assigned_need_refs=(ctx.need,), id_factory=ctx.ids, actor=ctx.actor,
+            created_at=ctx.t, focus_argument_id=a1arg.meta.id,
+            focus_turn_id=a1.meta.id, focus_issue_signature=issue,
+        )
+        instruction2 = compile_role_instruction_pack(
+            role_id="methodologist", variant=RoleVariantKind.CROSS_EXAM,
+            handbook=ctx.handbook, policy=ctx.policy,
+        )
+        q2c = compile_question_contract(
+            purpose=QuestionPurpose.QUESTION_ON_ANSWER, role_id="methodologist",
+            disclosure=d2, instruction=instruction2, answer_role_id="xrd_specialist",
+            parent_turn_id=a1.meta.id, id_factory=ctx.ids, actor=ctx.actor,
+            created_at=ctx.t, policy_version=ctx.policy.version,
+            policy_hash=ctx.policy.policy_hash, target_argument_id=a1arg.meta.id,
+            target_turn_id=a1.meta.id, target_issue_signature=issue,
+            admitted_new_issue_signatures=tuple(x.signature for x in step1.observation.new_issues),
+            expected_closure_surface=("MISSING_EVIDENCE", "RESOLVED"), max_followups=0,
+        )
+        q2b = compile_question_provider_binding(
+            contract=q2c, requested_role_id=None, composition_policy=ctx.policy,
+            binding_policy=ctx.binding_policy, providers_authority=ctx.providers,
+            runtime_bindings=ctx.runtime_bindings, preflight=ctx.preflight,
+            capability_policy_hash=ctx.cap_hash, id_factory=ctx.ids,
+            actor=ctx.actor, created_at=ctx.t,
+        )
+        assert q2b.status.value == "READY"
+        assert q2b.meta.id != qb.meta.id
+        q2env = compile_execution_envelope(
+            binding=q2b, disclosure=d2, question_contract=q2c, instruction=instruction2,
+            argument_payloads={k: argument_artifact_to_dict(v) for k, v in args2.items()},
+            turn_payloads={**tp1, a1.meta.id: inquiry_turn_to_dict(a1)},
+            ref_payloads=refs, id_factory=ctx.ids, actor=ctx.actor, created_at=ctx.t,
+        )
+        assert str(a1arg.meta.id) in q2env.material
+        assert str(a1.meta.id) in q2env.material
+        q2, q2rec = runtime.execute_question(
+            parent_state_path=parent_path, binding=q2b, envelope=q2env,
+            current_preflight=ctx.preflight, transport=transport,
+            contract=q2c, disclosure=d2, id_factory=ctx.ids, actor=ctx.actor,
+            created_at=ctx.t,
+        )
+        assert q2rec.status.value == "COMPLETED"
+        assert q2.kind == InquiryTurnKind.QUESTION_ON_ANSWER
+        assert q2.parent_turn_id == a1.meta.id
+        assert q2.contract_id == q2c.meta.id
+        assert q2.role_id == "methodologist"
+        assert q2rec.binding_id == q2b.meta.id
+        assert q2rec.envelope_id == q2env.meta.id
+        assert (td / "artifacts" / f"{q2rec.meta.id}.json").is_file()
+        sent = plugin.requests[2]["bounded_input"]
+        assert sent["control_contract"]["target_issue_signature"] == issue
+        assert sent["control_contract"]["target_turn_id"] == str(a1.meta.id)
+        assert set(sent["material"]) == set(q2env.material)
+
+        a2b = compile_answer_provider_binding(
+            contract=q2c, target_argument=a1arg, requested_role_id=None,
+            composition_policy=ctx.policy, binding_policy=ctx.binding_policy,
+            providers_authority=ctx.providers, runtime_bindings=ctx.runtime_bindings,
+            preflight=ctx.preflight, capability_policy_hash=ctx.cap_hash,
+            id_factory=ctx.ids, actor=ctx.actor, created_at=ctx.t,
+        )
+        a2env = compile_execution_envelope(
+            binding=a2b, disclosure=d2, question_contract=q2c,
+            instruction=answer_instruction,
+            argument_payloads={k: argument_artifact_to_dict(v) for k, v in args2.items()},
+            turn_payloads={**tp1, a1.meta.id: inquiry_turn_to_dict(a1), q2.meta.id: inquiry_turn_to_dict(q2)},
+            ref_payloads=refs, question_turn=q2,
+            id_factory=ctx.ids, actor=ctx.actor, created_at=ctx.t,
+        )
+        assert a2env.question_turn_id == q2.meta.id
+        assert a2env.material[str(q2.meta.id)]["content"] == q2.content
+        a2, a2arg, a2rec = runtime.execute_answer(
+            parent_state_path=parent_path, binding=a2b, envelope=a2env,
+            current_preflight=ctx.preflight, transport=transport,
+            contract=q2c, disclosure=d2, question_turn=q2,
+            id_factory=ctx.ids, actor=ctx.actor, created_at=ctx.t,
+        )
+        assert a2rec.status.value == "COMPLETED"
+        assert a2.parent_turn_id == q2.meta.id
+        assert a2.kind == InquiryTurnKind.REBUTTAL
+        graph3, args3, branch3, reply2 = admit_live_answer_to_argument_graph(
+            graph=graph2, arguments=args2, branch=branch2, question_contract=q2c,
+            answer_argument=a2arg, id_factory=ctx.ids, actor=ctx.actor, created_at=ctx.t,
+        )
+        assert reply2.kind == ArgumentRelationKind.REPLIES_TO
+        assert a2arg.meta.id in args3
+        step2 = observe_branch_dialectic_step(
+            branch=branch3, argument=a2arg, turn=a2,
+            branch_history=step1.next_branch_history,
+            visible_refs=(ctx.claim, ctx.e_support, ctx.e_attack), chain_turn_count=5,
+        )
+        assert step2.decision.action == expected_action
+        if answer2_mode == "novel":
+            assert step2.observation.new_issues
+            assert all(x.signature != issue for x in step2.observation.new_issues)
+        if answer2_mode == "repeat":
+            assert not step2.observation.new_issues
+            assert step2.observation.repeated_issue_signatures
+        assert (td / "artifacts" / f"{a2rec.meta.id}.json").is_file()
+
+    # No Q3 is executed automatically after a stop/research decision.
+    assert len(plugin.requests) == 4
     assert plugin.requests[0]["role_ref"] == "skeptic"
     assert plugin.requests[1]["role_ref"] == "xrd_specialist"
+    assert plugin.requests[2]["role_ref"] == "methodologist"
+    assert plugin.requests[3]["role_ref"] == "xrd_specialist"

@@ -174,6 +174,89 @@ class TribunalDialecticTests(unittest.TestCase):
         self.assertEqual(result.decision.action, DialecticAction.STOP_DEPTH_LIMIT)
 
 
+    def test_q3_followup_is_denied_by_default_after_bounded_cross_exam(self):
+        # Default policy: L3/2 Q/A pairs, no bounded follow-up. After A2 on L3
+        # with a fresh non-blocking issue, the observer must NOT admit Q3 and
+        # stops at the configured depth (canonical L3 behaviour).
+        discovery = InquiryDiscovery(
+            DiscoveryKind.SCOPE_ISSUE,
+            "A distinct calibration assumption remains untested.",
+            (self.need,),
+            blocking=False,
+        )
+        turn, arg = self.pair(kind=InquiryTurnKind.REBUTTAL, discoveries=(discovery,), content="A2 reply")
+        history = DialecticHistory(qa_pair_count=2, issue_signatures=("old-sig",))
+        result = observe_dialectic_step(
+            level=DialecticLevel.L3_QUESTION_ON_ANSWER,
+            argument=arg,
+            turn=turn,
+            history=history,
+        )
+        self.assertEqual(result.decision.action, DialecticAction.STOP_DEPTH_LIMIT)
+
+
+    def test_q3_followup_is_admitted_when_policy_permits_and_issue_is_new(self):
+        # Opt-in bounded follow-up: a NEW non-blocking issue on A2 admits Q3,
+        # but only when Core raised max_question_answer_pairs to 3.
+        discovery = InquiryDiscovery(
+            DiscoveryKind.SCOPE_ISSUE,
+            "A distinct calibration assumption remains untested.",
+            (self.need,),
+            blocking=False,
+        )
+        turn, arg = self.pair(kind=InquiryTurnKind.REBUTTAL, discoveries=(discovery,), content="A2 reply")
+        history = DialecticHistory(qa_pair_count=2, issue_signatures=("old-sig",))
+        policy = DialecticPolicy(
+            max_level=DialecticLevel.L3_QUESTION_ON_ANSWER,
+            max_question_answer_pairs=3,
+            allow_bounded_followup=True,
+        )
+        result = observe_dialectic_step(
+            level=DialecticLevel.L3_QUESTION_ON_ANSWER,
+            argument=arg,
+            turn=turn,
+            history=history,
+            policy=policy,
+        )
+        self.assertEqual(result.decision.action, DialecticAction.CONTINUE_QUESTION_ON_ANSWER)
+        self.assertEqual(result.decision.reason_codes, ("BOUNDED_FOLLOWUP_QA_EXTENSION",))
+        self.assertEqual(result.decision.next_level, DialecticLevel.L3_QUESTION_ON_ANSWER)
+
+
+    def test_q3_followup_denied_for_repeated_issue(self):
+        # Novelty is enforced before the L3 branch: a repeated issue must not
+        # unlock Q3 even when the policy flag is on.
+        repeated = InquiryDiscovery(
+            DiscoveryKind.SCOPE_ISSUE,
+            "Calibration assumption remains untested.",
+            (self.need,),
+            blocking=False,
+        )
+        turn, arg = self.pair(kind=InquiryTurnKind.REBUTTAL, discoveries=(repeated,), content="A2 reply")
+        # Compute the repeated issue signature by observing once against an empty
+        # history, then replay with that signature already active.
+        probe = observe_dialectic_step(
+            level=DialecticLevel.L3_QUESTION_ON_ANSWER,
+            argument=arg,
+            turn=turn,
+            history=DialecticHistory(qa_pair_count=2),
+        )
+        sig = probe.observation.new_issues[0].signature
+        policy = DialecticPolicy(
+            max_level=DialecticLevel.L3_QUESTION_ON_ANSWER,
+            max_question_answer_pairs=3,
+            allow_bounded_followup=True,
+        )
+        result = observe_dialectic_step(
+            level=DialecticLevel.L3_QUESTION_ON_ANSWER,
+            argument=arg,
+            turn=turn,
+            history=DialecticHistory(qa_pair_count=2, issue_signatures=(sig,)),
+            policy=policy,
+        )
+        self.assertEqual(result.decision.action, DialecticAction.STOP_NO_PROGRESS)
+
+
     def test_typed_turn_observer_can_propose_answer_evasion_without_parsing_prose_in_control_code(self):
         turn, arg = self.pair(kind=InquiryTurnKind.ANSWER, content="bounded answer")
         proposal = DialecticIssueProposal(

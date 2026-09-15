@@ -102,6 +102,12 @@ class DialecticPolicy:
     token_budget: int = 6000
     escalate_blocking_discovery: bool = True
     require_novelty_for_followup: bool = True
+    # Opt-in bounded follow-up beyond the default Q/A pair limit. When enabled,
+    # the L3 observer may admit one more question-on-answer (Q3) IF the response
+    # surfaced a NEW non-blocking issue and the turn/token limits are not
+    # exhausted. Deliberately off by default: the canonical dialectic bounds the
+    # process at L3 / two Q/A pairs, and Q3 must be an explicit Core decision.
+    allow_bounded_followup: bool = False
 
     def __post_init__(self) -> None:
         if self.max_turns < 1 or self.max_question_answer_pairs < 1:
@@ -671,6 +677,24 @@ def decide_dialectic_control(
         return _decision(DialecticAction.STOP_NO_PROGRESS, observation.level, "FOLLOWUP_REQUIRES_NOVELTY", issue_sigs)
 
     if observation.level >= policy.max_level:
+        # Opt-in bounded follow-up: Q3 is admitted only as an explicit Core
+        # decision when the response surfaced a NEW non-blocking issue, the
+        # QA-pair slot is available, and the current level is exactly the max.
+        # It stays on the same level (never re-enters L2) and the turn/token
+        # budgets are already enforced above.
+        if (
+            policy.allow_bounded_followup
+            and observation.level is policy.max_level
+            and observation.qa_pair_count <= policy.max_question_answer_pairs
+            and issues
+            and not any(x.blocking for x in issues)
+        ):
+            return _decision(
+                DialecticAction.CONTINUE_QUESTION_ON_ANSWER,
+                observation.level,
+                "BOUNDED_FOLLOWUP_QA_EXTENSION",
+                issue_sigs,
+            )
         return _decision(DialecticAction.STOP_DEPTH_LIMIT, observation.level, "DIALECTIC_DEPTH_LIMIT_REACHED", issue_sigs)
 
     if argument.position is ArgumentPosition.OPEN and not issues:

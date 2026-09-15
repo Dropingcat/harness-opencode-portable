@@ -85,13 +85,28 @@
 6.3  Q1 через plugin bridge + Core admission      [x]  execute_question COMPLETED, InquiryTurn materialized
 6.4  A1/answer через plugin transport             [x]  execute_answer COMPLETED, ArgumentArtifact QUALIFY, graph REPLIES_TO
 6.5  3 variability runs                            [ ]
+6.6  Q2 question-on-answer (deterministic)          [x]  admitted issue -> DQC/RPB/TEX -> IQT/PER
+6.7  Live Q1/A1/Q2 через Desktop и stdio bridge     [ ]
+6.8  A2 + observer: повтор/новизна/исследование     [x]  deterministic, три сценария
+6.9  Q3 bounded follow-up (opt-in)                  [x]  DialecticPolicy.allow_bounded_followup; см. docs/plugin-dialectic/Q3_BOUNDED_FOLLOWUP_CONTRACT.md
 ```
 
-P4 транспорт реализован и пройден E2E для **Q1+A1**: binding выбирает `semantic.execute`,
-`PluginBridgeProviderTransport` шлёт `semantic.execute` через bridge full-duplex,
-получает `structured_output.text`, парсит JSON, Core материализует `InquiryTurn` (COMPLETED)
-и `ArgumentArtifact` (QUALIFY), graph admission возвращает REPLIES_TO.
-Осталось: Q2 (question-on-answer) + 3 variability runs.
+Уточнение evidence (2026-09-15): тест `test_plugin_transport_q1_e2e.py` проверяет
+**Q1+A1+Q2** с настоящим Core и фиктивным semantic callback. Он не запускает
+Desktop, модель или stdio bridge. Provider authority/preflight в нём — тестовые.
+После A1 Core допускает новую проблему, создаёт Q2 для методолога и сохраняет
+связи с ответом A1, проблемой, DQC/RPB/TEX и receipt PER. Проверяются material
+второго вопроса и сохранение receipt; Q1/A1 admission остаётся частью сценария.
+После A2 проверены три исхода по текущему Core: повтор -> STOP_NO_PROGRESS,
+новая неблокирующая проблема -> STOP_DEPTH_LIMIT, запрос недостающих
+доказательств -> REQUEST_LOCAL_RESEARCH. A2 получает материализованный Q2,
+сохраняет parent link, проходит graph admission и создаёт PER.
+Это соответствует исходному `RESEARCHER_R4_4_DIALECTIC_OBSERVER_ARCHITECTURE.md`
+(§11–12) и `decide_dialectic_control`: новизна необходима, но не отменяет
+лимиты. Сравнение содержательного уровня Q3 с Q2 и разрешение Q3 по этому
+критерию пока не реализованы; нужны отдельный контракт и тесты observer.
+Осталось: реальная регистрация provider и live-цикл через bridge,
+затем 3 variability runs. Зелёный callback-тест не закрывает live P4.
 
 ## 7. Convergence P5 — Writer/Coder через единый transport
 
