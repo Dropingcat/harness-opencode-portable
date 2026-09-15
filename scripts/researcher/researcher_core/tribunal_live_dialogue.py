@@ -238,21 +238,19 @@ class PluginBridgeProviderTransport:
     session) instead of a subprocess CLI.  `reverse_call(method, params)` is the
     bridge peer's full-duplex channel to the plugin; it must be wired by the
     caller.  Transport-only: no role/evidence authority here.
-
-    The caller passes the already-serialized execution envelope dict (as Core
-    already has it); the transport does not re-serialize or re-validate.
     """
 
     def __init__(self, reverse_call: Callable[[str, dict[str, Any]], Any]):
         self._reverse_call = reverse_call
 
-    def invoke(self, *, binding: RoleProviderBinding, envelope_dict: Mapping[str, Any], timeout_seconds: float) -> Mapping[str, Any]:
+    def invoke(self, *, binding: RoleProviderBinding, envelope: TribunalExecutionEnvelope, timeout_seconds: float) -> Mapping[str, Any]:
         if binding.status is not ProviderBindingStatus.READY:
             raise TribunalLiveDialogueError("plugin-bridge transport requires READY binding")
+        envelope_dict = execution_envelope_to_dict(envelope)
         request = {
             "schema": "semantic-execution-request/1.0",
             "execution_id": str(envelope_dict["id"]),
-            "purpose": _role_execution_kind_to_purpose(binding.execution_kind),
+            "purpose": _role_execution_kind_to_purpose(envelope.execution_kind),
             "contract_schema": "tribunal-execution-envelope/1.1",
             "role_ref": str(envelope_dict["role_id"]),
             "parent_host_session_id": str(envelope_dict["meta"]["run_id"]),
@@ -270,7 +268,22 @@ class PluginBridgeProviderTransport:
         tool_result = raw.get("tool_result") if isinstance(raw, Mapping) else raw
         if not isinstance(tool_result, Mapping):
             raise TribunalLiveDialogueError("plugin-bridge returned non-object tool_result")
-        return {"semantic_execution_result": tool_result, "execution_envelope": dict(envelope_dict)}
+        runtime_status = tool_result.get("runtime_status")
+        if runtime_status != "COMPLETED":
+            raise TribunalLiveDialogueError(f"plugin-bridge semantic not completed:{runtime_status}")
+        structured = tool_result.get("structured_output") or {}
+        text = structured.get("text") if isinstance(structured, Mapping) else None
+        if not isinstance(text, str) or not text.strip():
+            raise TribunalLiveDialogueError("plugin-bridge returned empty structured text")
+        try:
+            out = json.loads(text)
+        except json.JSONDecodeError as exc:
+            raise TribunalLiveDialogueError(f"plugin-bridge structured text is not JSON:{exc}") from exc
+        if not isinstance(out, Mapping):
+            raise TribunalLiveDialogueError("plugin-bridge structured output must be a JSON object")
+        # Provider output exactly as Core validates it (same contract as the
+        # subprocess transport). Diagnostics live in the bridge/plugin logs.
+        return dict(out)
 
 
 def _role_execution_kind_to_purpose(kind: RoleExecutionKind) -> str:
