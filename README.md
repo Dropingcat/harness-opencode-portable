@@ -31,6 +31,7 @@ Project-scoped: nothing is written to the user's global OpenCode config.
 ├── scripts/                      router, orchestration, code-factory, researcher, writer-core
 ├── skills/opencode-current/      132 skills referenced by runtime routes
 ├── templates/                    reusable templates
+├── AGENT_REPO_ACCESS.md          how an agent gets repo access from a new session
 └── deploy/                       bootstrap.ps1 (Windows) / bootstrap.sh (Linux/macOS)
 ```
 

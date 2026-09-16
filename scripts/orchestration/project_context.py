@@ -117,6 +117,12 @@ def main():
         "factory": factory_state(root),
         "portal_docs": portal_refs(root),
     }
+    # Portable UTF-8 output: avoid UnicodeEncodeError on cp1251 Windows consoles.
+    import sys
+    try:
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
     print(json.dumps(ctx, ensure_ascii=False, indent=2))
 
 
