@@ -1,0 +1,82 @@
+{
+  "module": "bridge_channel",
+  "verdict": "REQUEST_CHANGES",
+  "comments": [
+    {
+      "id": "BRIDGE-01",
+      "severity": "critical",
+      "file": "scripts/code-factory/semantic_transport.py",
+      "line": 412,
+      "problem": "Production round-trip cannot complete: _execute_via_plugin_bridge spawns ONLY the bridge peer and never attaches a plugin-side consumer to the peer's stdout, yet the transport's reader thread reads that same pipe and treats the FIRST line as the response. The peer's first stdout write is its own reverse request ({\"id\": ..., \"method\": \"semantic.execute\", ...}), which has no 'ok' field, so msg.get('ok') is not True and the transport raises 'bridge error ERROR: {reverse request}' -> HOST_UNAVAILABLE. Reproduced deterministically in 0.2s with a plain checkout (HARNESS_SEMANTIC_ENABLED=1 + root set): host_error='plugin bridge failed: bridge error ERROR: {\\'id\\': ..., \\'method\\': \\'semantic.execute\\', ...}'. The E2E test passes only because the test injects _FakePluginRelay which blocks on readline BEFORE the transport's reader thread starts, so the relay consumes the reverse request and the transport reads the real response. In production there is no such relay, so the channel is guaranteed HOST_UNAVAILABLE — honest fail-closed, but the 'forward through reverse' contract is not operational outside the test harness.",
+      "suggestion": "Only accept a line as the response when it carries id == req_id and an 'ok' field; skip/ignore any line that is a reverse request (has 'method' and no 'ok'). Alternatively, stop having the transport compete for the peer's stdout: spawn/attach the plugin-side consumer first (or via env-var handle) so the peer's reverse request is serviced, and have the transport filter responses by id. At minimum, add an integration test that reproduces the production wiring (no relay injected before the transport reader starts) and assert it does not misparse the reverse request as the response.",
+      "falsification": "A production-equivalent run (no test-injected relay) where _execute_via_plugin_bridge returns a plugin-produced semantic_result (COMPLETED) instead of failing with host_error containing 'bridge error ERROR' and the raw reverse request; the observed 0.2s HOST_UNAVAILABLE with the reverse request echoed in host_error would be absent."
+    },
+    {
+      "id": "BRIDGE-02",
+      "severity": "major",
+      "file": "scripts/code-factory/semantic_transport.py",
+      "line": 699,
+      "problem": "Stale assertion in the module's own self-test suite: test_execute_bridge_available_not_wired asserts host_error contains 'plugin bridge not yet wired in M1', but no code path produces that string (it is not in _execute_via_plugin_bridge, _result, or execute_coder_semantic). With the bridge nominally available (flag=1, root set, peer file exists), execute_coder_semantic spawns the real peer; the transport misreads the peer's reverse request as the response (see BRIDGE-01) and returns HOST_UNAVAILABLE with host_error='plugin bridge failed: bridge error ERROR: {reverse request}'. The unit gate fails in a normal checkout.",
+      "suggestion": "Update the assertion to match the actual fail-closed message (e.g. assertIn('plugin bridge failed', res['host_error'])), and pin/clear HARNESS_TRANSPORT in the test so the result is not environment-dependent.",
+      "falsification": "Running `python scripts/code-factory/semantic_transport.py` in a checkout where the peer file exists yields test_execute_bridge_available_not_wired as PASSED (it currently fails with AssertionError)."
+    },
+    {
+      "id": "BRIDGE-03",
+      "severity": "major",
+      "file": "packages/opencode-harness-plugin/core/bridge_peer.py",
+      "line": 144,
+      "problem": "The forward path does not honor the request's canonical timeout_ms (required field, default 180000 in build_coder_request): _semantic_execute (line 61) calls _send_reverse, which calls _await_reverse with the hardcoded default timeout_ms=15000. A healthy plugin that legitimately takes >15s is failed as HANDLER_ERROR ('reverse request timeout') and the transport converts it to HOST_UNAVAILABLE — a fabricated host failure for a healthy execution, breaking forward fidelity of the reverse channel.",
+      "suggestion": "In _semantic_execute, extract timeout_ms from params['request'].get('timeout_ms') (validated positive int) and thread it through _send_reverse -> _await_reverse (optionally capped, e.g. min(request_timeout, upper_bound)), or explicitly document the 15s cap as a contract decision and reject requests whose timeout_ms exceeds it.",
+      "falsification": "A fake plugin that replies 20s after receiving semantic.execute to a request with timeout_ms=60000 yields a plugin-produced result (e.g. COMPLETED) instead of HOST_UNAVAILABLE."
+    },
+    {
+      "id": "BRIDGE-04",
+      "severity": "minor",
+      "file": "scripts/code-factory/semantic_transport.py",
+      "line": 434,
+      "problem": "The fail-closed except handler in _execute_via_plugin_bridge indexes request['execution_id'] without a dict guard. If _execute_via_plugin_bridge is ever called with a non-dict request (private API, but the E2E tests call it directly), KeyError/TypeError is raised inside the handler and escapes, breaking the 'never raise, always schema-valid result' guarantee.",
+      "suggestion": "Use the same defensive pattern as execute_coder_semantic line 508: execution_id = request.get('execution_id') if isinstance(request, dict) else None.",
+      "falsification": "Calling _execute_via_plugin_bridge('not-a-dict', timeout_s=1) returns a schema-valid SemanticExecutionResult/1.0 with runtime_status=HOST_UNAVAILABLE instead of raising KeyError."
+    },
+    {
+      "id": "BRIDGE-05",
+      "severity": "minor",
+      "file": "scripts/code-factory/semantic_transport.py",
+      "line": 450,
+      "problem": "proc.stderr is never drained while the peer subprocess runs (only closed in finally). If the peer or the Python runtime emits enough stderr output to fill the OS pipe buffer (~64KB on Windows), the child blocks on stderr writes and never responds, turning a healthy execution into a timeout -> HOST_UNAVAILABLE. Low probability for the current peer (which writes almost nothing to stderr), but a latent deadlock for a chatty interpreter/runtime.",
+      "suggestion": "Drain stderr concurrently on the reader thread (e.g. read both stdout and stderr in the same loop), or start the peer with stderr=subprocess.DEVNULL once it is confirmed no diagnostics from stderr are needed.",
+      "falsification": "A peer variant that writes 1MB to stderr still has the transport return the plugin's result within the timeout instead of HOST_UNAVAILABLE."
+    }
+  ],
+  "scope_declared": {
+    "scope_in": [
+      "packages/opencode-harness-plugin/core/bridge_peer.py (_semantic_execute forward via reverse)",
+      "scripts/code-factory/semantic_transport.py (_execute_via_plugin_bridge)",
+      "tests/coder/test_bridge_channel_e2e.py",
+      "Contract: forward through reverse RPC",
+      "Contract: fail-closed HOST_UNAVAILABLE (no fabricated COMPLETED)",
+      "Contract: schema-validity of results (SemanticExecutionResult/1.0, all 12 fields)",
+      "Contract: E2E round-trip plugin bridge"
+    ],
+    "scope_out": [
+      "mcp/launchers/_runner.py (legacy CLI boundary)",
+      "mcp/coder_router_server.py, factory gates, Coder authority",
+      "Plugin (TS) side implementation and real model execution",
+      "Schemas JSON files content review (only result validity against them)"
+    ]
+  },
+  "out_of_scope_gaps": [
+    {
+      "module": "bridge_peer",
+      "finding": "bridge_peer._reverse_echo_test (line 128) calls reverse_request('semantic.execute', {'value': ...}) — params shape inconsistent with the request-carrying forward path ({\"request\": ...}); diagnostic helper only, not covered by E2E."
+    },
+    {
+      "module": "bridge_peer",
+      "finding": "The peer does not validate the incoming SemanticExecutionRequest/1.0 before forwarding (validation lives only on the transport side); a non-transport client of the peer could push invalid requests through."
+    },
+    {
+      "module": "semantic_transport",
+      "finding": "E2E has no coverage for the HARNESS_TRANSPORT=cli explicit-CLI rejection path (REJECTED_BY_HOST with the explicit-cli diagnostic), nor for auto-resolution with an unavailable bridge (REJECTED_BY_HOST legacy-fallback diagnostic)."
+    }
+  ]
+}

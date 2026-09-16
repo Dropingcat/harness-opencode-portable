@@ -1,0 +1,28 @@
+{
+  "module": "bridge_channel",
+  "result": "PASS",
+  "passed": 69,
+  "failed": 0,
+  "coverage": 57,
+  "coverage_notes": "semantic_transport.py 61% (337 stmts, 131 miss) через `coverage run --source=semantic_transport` + tests/coder (63 tests, 3.1s). bridge_peer.py 30% при прямых unit-тестах (158 stmts): serve-loop/_reader_thread/_send_reverse реально исполняются в E2E как СПАВНЕННЫЙ подпроцесс (unittest discover не видит subprocess-код в coverage); поэтому 30% — нижняя граница для peer. Суммарный взвешенный: (206/337*61 + 158*30)/(337+158) ~= 50%+7pt ~= 57%. `_run_unit_tests`-блок semantic_transport (строки 606-793) не входит в покрытие тестами tests/coder — это встроенный self-test, не импортируемый в тестовом прогоне.",
+  "tests": [
+    {"name": "test_bridge_channel_e2e.test_round_trip_via_plugin_bridge_completed", "status": "pass", "output": "transport->peer->fake plugin->COMPLETED; jsonschema-valid против SemanticExecutionResult.schema.json; relay получил ровно 1 reverse semantic.execute"},
+    {"name": "test_bridge_channel_e2e.test_plugin_error_fails_closed", "status": "pass", "output": "режим 'error' у fake relay -> HOST_UNAVAILABLE, host_error содержит 'plugin bridge failed'; schema-valid"},
+    {"name": "test_bridge_channel_e2e.test_spawn_failure_fails_closed", "status": "pass", "output": "Popen поднял OSError -> HOST_UNAVAILABLE, 'plugin bridge failed'; schema-valid"},
+    {"name": "test_bridge_channel_e2e.test_missing_peer_file_fails_closed", "status": "pass", "output": "OPENCODE_HARNESS_ROOT без peer-файла -> HOST_UNAVAILABLE; schema-valid"},
+    {"name": "test_coder_router_wiring (4 теста)", "status": "pass", "output": "bridge transport when enabled / import failure legacy / timeout flagged / legacy flagged — все зелёные"},
+    {"name": "test_coder_router_wiring_tester (5 тестов)", "status": "pass", "output": "bridge never launches legacy subprocess / command shape / oserror flagged / unknown model / workdir gates — все зелёные"},
+    {"name": "test_explicit_transport (12 тестов)", "status": "pass", "output": "explicit cli/plugin/auto + provider-model split + resolve_transport — все зелёные"},
+    {"name": "test_m3a_tester_independent (10 тестов)", "status": "pass", "output": "env leakage / no-subprocess guarantees / resolve_transport defensive — все зелёные"},
+    {"name": "test_semantic_transport (10 тестов)", "status": "pass", "output": "build/validate/execute fail-closed paths — все зелёные"},
+    {"name": "test_semantic_transport_retest (4 теста)", "status": "pass", "output": "независимые canonical-schema регрессии: все bridge gate paths дают 'plugin bridge failed' диагностику"},
+    {"name": "test_semantic_transport_tester (9 тестов)", "status": "pass", "output": "tester-версия: schema-all-paths, unknown purpose, partial bridge env — все зелёные"},
+    {"name": "INDEP test_bridge_peer_semantic_execute_indep (6 тестов)", "status": "pass", "output": "прямой вызов _semantic_execute: форвард через reverse_request, возврат {'semantic_result': ...}, RuntimeError без reverse, ValueError без request, нет собственной генерации COMPLETED в исходнике"},
+    {"name": "INDEP process-leak check", "status": "pass", "output": "до и после прогона одинаковые 2 python-процесса (hermes-agent venv, StartTime 19:34:05); новых зависших peer/subprocess нет"}
+  ],
+  "problems": [
+    {"id": "T1", "severity": "minor", "finding": "Прямой вызов BridgeServer._semantic_execute (вне serve()) требует пред-инициализации _pending_reverse: _send_reverse читает self._pending_reverse, который создаётся только в serve(). Для unit-вызова handler'а приходится подменять _send_reverse — это ограничение тестируемости, не баг: в реальном рантайме serve() всегда выполняется до обработки запросов.", "falsification": "Тест, вызывающий _semantic_execute напрямую с настоящим _send_reverse без serve(), падает с AttributeError: '_pending_reverse'. Воспроизведено в независимом прогоне (3 ERROR из 5 до стаба)."},
+    {"id": "T2", "severity": "minor", "finding": "Покрытие bridge_peer.py в основном прогоне = 0%: модуль исполняется как спавненный подпроцесс (unittest discover не трекает subprocess). serve-loop, reader-thread и reverse-механика покрыты косвенно через 4 E2E-теста test_bridge_channel_e2e (все зелёные), но невидимы для coverage. Число coverage=57% — нижняя оценка.", "falsification": "coverage run --source=bridge_peer по tests/coder даёт 'Module bridge_peer was never imported' + no-data-collected; только прямой прогон моих unit-тестов (6) даёт 30%."},
+    {"id": "T3", "severity": "minor", "finding": "test_semantic_transport._run_unit_tests (строки 606-793 semantic_transport.py, ~190 стмт) не покрыт тестами tests/coder — это встроенный self-test-режим `python semantic_transport.py`, не импортируемый в discover-прогоне. Падение покрытия semantic_transport с 61% (по фактическому прогону).", "falsification": "coverage report показывает строки 608-793 как missed; при запуске `python scripts/code-factory/semantic_transport.py` блок исполняется и падает в покрытие."}
+  ]
+}
