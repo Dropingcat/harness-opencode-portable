@@ -106,7 +106,7 @@ class CanonicalRetest(unittest.TestCase):
                             result = self.check_result(
                                 self.request(purpose, policy),
                                 "HOST_UNAVAILABLE" if bridge else "REJECTED_BY_HOST",
-                                "not yet wired" if bridge else "legacy CLI fallback not allowed")
+                                "plugin bridge failed" if bridge else "legacy CLI fallback not allowed")
                             self.assertEqual(result["provider_id"], policy.get("provider_id") or "unknown")
                             self.assertEqual(result["model_id"], policy.get("model_id") or "unknown")
                             self.check_result(None, "REJECTED_BY_HOST", "BAD_SCHEMA")

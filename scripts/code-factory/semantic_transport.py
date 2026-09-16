@@ -353,22 +353,106 @@ def _explicit_cli_rejected(request: dict) -> dict:
     )
 
 
-def _execute_via_plugin_bridge(request: dict) -> dict:
+def _execute_via_plugin_bridge(request: dict, *, timeout_s: float = 30.0) -> dict:
     """Route through the plugin bridge reverse call ``semantic.execute``.
 
-    M1 status: the bridge peer is present but the reverse channel is NOT yet
-    wired into a live stdio bridge session. Honest classification only — the
-    module never fabricates a COMPLETED result. No host session is claimed:
-    `host_session_id` falls back to the schema-valid placeholder ``"unknown"``.
+    M3b: spawn the bridge peer as a subprocess (``python bridge_peer.py``),
+    send the SemanticExecutionRequest as NDJSON on stdin, read the peer's
+    response (one line), and return the plugin's ``semantic_result``.
+
+    Fail-closed: any spawn/IO/JSON/validation failure returns a schema-valid
+    ``SemanticExecutionResult/1.0`` with ``runtime_status=HOST_UNAVAILABLE``.
+    The peer's plugin result is never fabricated here — if the plugin is not
+    reachable, the peer itself will time out the reverse call and return an
+    error envelope, which maps to HOST_UNAVAILABLE.
     """
+    import json as _json
+    import subprocess as _subprocess
+    import sys as _sys
+    import threading as _threading
+    import uuid as _uuid
+
     model_policy = request.get("model_policy") or {}
-    return _result(
-        execution_id=request["execution_id"],
-        runtime_status="HOST_UNAVAILABLE",
-        host_error="plugin bridge not yet wired in M1",
-        provider_id=model_policy.get("provider_id"),
-        model_id=model_policy.get("model_id"),
-    )
+    peer = _bridge_peer_path()
+    proc = None
+    try:
+        if peer is None or not peer.is_file():
+            raise OSError(f"bridge peer not found: {peer}")
+        env = dict(os.environ)
+        env["PYTHONIOENCODING"] = "utf-8"
+        proc = _subprocess.Popen(
+            [_sys.executable, str(peer)],
+            stdin=_subprocess.PIPE,
+            stdout=_subprocess.PIPE,
+            stderr=_subprocess.PIPE,
+            text=True,
+            encoding="utf-8",
+            env=env,
+        )
+        req_id = _uuid.uuid4().hex
+        line = _json.dumps(
+            {"id": req_id, "method": "semantic.execute", "params": {"request": request}},
+            ensure_ascii=False,
+        )
+        assert proc.stdin is not None and proc.stdout is not None
+        proc.stdin.write(line + "\n")
+        proc.stdin.flush()
+
+        buf: list[str] = []
+
+        def _read() -> None:
+            assert proc is not None and proc.stdout is not None
+            l = proc.stdout.readline()
+            if l:
+                buf.append(l)
+
+        reader = _threading.Thread(target=_read, daemon=True)
+        reader.start()
+        reader.join(timeout_s)
+        if not buf:
+            raise TimeoutError(f"no response from plugin bridge within {timeout_s}s")
+        try:
+            msg = _json.loads(buf[0])
+        except _json.JSONDecodeError as exc:
+            raise OSError(f"bridge returned non-JSON response: {exc}") from exc
+        if not isinstance(msg, dict) or msg.get("ok") is not True:
+            err = msg.get("error") if isinstance(msg, dict) else None
+            code = (err or {}).get("code", "ERROR") if isinstance(err, dict) else "ERROR"
+            detail = (err or {}).get("message", "") if isinstance(err, dict) else str(msg)
+            raise OSError(f"bridge error {code}: {detail}")
+        result = msg.get("result")
+        if isinstance(result, dict) and "semantic_result" in result:
+            semantic_result = result["semantic_result"]
+        else:
+            semantic_result = result
+        ok, error = _validate_result(semantic_result)
+        if not ok:
+            raise OSError(f"bridge returned invalid SemanticExecutionResult: {error}")
+        return semantic_result
+    except Exception as exc:  # noqa: BLE001
+        return _result(
+            execution_id=request["execution_id"],
+            runtime_status="HOST_UNAVAILABLE",
+            host_error=f"plugin bridge failed: {exc}",
+            provider_id=model_policy.get("provider_id"),
+            model_id=model_policy.get("model_id"),
+        )
+    finally:
+        if proc is not None:
+            try:
+                proc.kill()
+            except Exception:  # noqa: BLE001
+                pass
+            try:
+                proc.wait(timeout=5)
+            except Exception:  # noqa: BLE001
+                pass
+            for stream in (proc.stdin, proc.stdout, proc.stderr):
+                if stream is not None:
+                    try:
+                        stream.close()
+                    except Exception:  # noqa: BLE001
+                        pass
 
 
 def _legacy_fallback_rejected(request: dict) -> dict:

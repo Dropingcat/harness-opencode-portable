@@ -203,7 +203,7 @@ class ExecuteExplicitPluginTests(EnvIsolationMixin, unittest.TestCase):
         os.environ["OPENCODE_HARNESS_ROOT"] = str(_ROOT)
         res = execute_coder_semantic(_valid_request(), transport="plugin")
         self.assertEqual(res["runtime_status"], "HOST_UNAVAILABLE")
-        self.assertIn("plugin bridge not yet wired in M1", res["host_error"])
+        self.assertIn("plugin bridge failed", res["host_error"])
 
 
 # --- 4. build_coder_request model-id split ----------------------------------

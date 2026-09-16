@@ -177,7 +177,7 @@ class SemanticTransportTests(unittest.TestCase):
             )
             res = execute_coder_semantic(req)
             self.assertEqual(res["runtime_status"], "HOST_UNAVAILABLE")
-            self.assertIn("plugin bridge not yet wired in M1", res["host_error"])
+            self.assertIn("plugin bridge failed", res["host_error"])
             ok, error = _validate_result(res)
             self.assertTrue(ok, msg=error)
         finally:

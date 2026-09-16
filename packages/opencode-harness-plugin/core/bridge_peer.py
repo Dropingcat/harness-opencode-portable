@@ -44,6 +44,24 @@ class BridgeServer:
         self.handlers["bridge.reverse_echo_test"] = self._reverse_echo_test
         self.handlers["harness.status"] = self._status
         self.handlers["harness.run"] = self._run
+        self.handlers["semantic.execute"] = self._semantic_execute
+
+    def _semantic_execute(self, params: Dict[str, Any]) -> Dict[str, Any]:
+        """Forward a SemanticExecutionRequest/1.0 to the plugin via reverse RPC.
+
+        The plugin owns model execution (child session); this peer only carries
+        the request and returns whatever the plugin produced. No result is
+        generated here.
+        """
+        if not self.reverse_request:
+            raise RuntimeError("reverse_request not configured")
+        request = params.get("request")
+        if request is None:
+            raise ValueError("semantic.execute requires params.request")
+        raw = self._send_reverse("semantic.execute", {"request": request})
+        if isinstance(raw, dict) and "tool_result" in raw:
+            return {"semantic_result": raw["tool_result"]}
+        return {"semantic_result": raw}
 
     def _hello(self, params: Dict[str, Any]) -> Dict[str, Any]:
         return {
