@@ -50,6 +50,7 @@ def _load_router(module_name: str = "coder_router_server") -> Any:
 def _clean_env() -> None:
     os.environ.pop("HARNESS_SEMANTIC_ENABLED", None)
     os.environ.pop("OPENCODE_HARNESS_ROOT", None)
+    os.environ.pop("HARNESS_TRANSPORT", None)
     os.environ["CODER_ROUTER_ALLOWED_ROOTS"] = str(_ROOT)
 
 
@@ -91,7 +92,7 @@ class TesterCoderRouterWiringTests(unittest.TestCase):
     def setUp(self) -> None:
         self._saved = {
             k: os.environ.get(k)
-            for k in ("HARNESS_SEMANTIC_ENABLED", "OPENCODE_HARNESS_ROOT", "CODER_ROUTER_ALLOWED_ROOTS")
+            for k in ("HARNESS_SEMANTIC_ENABLED", "OPENCODE_HARNESS_ROOT", "CODER_ROUTER_ALLOWED_ROOTS", "HARNESS_TRANSPORT")
         }
 
     def tearDown(self) -> None:
@@ -108,6 +109,8 @@ class TesterCoderRouterWiringTests(unittest.TestCase):
         _clean_env()
         router = _load_router()
         os.environ.pop("HARNESS_SEMANTIC_ENABLED", None)
+        os.environ.pop("OPENCODE_HARNESS_ROOT", None)
+        os.environ.pop("HARNESS_TRANSPORT", None)
 
         def _raise_oserror(*args: Any, **kwargs: Any) -> Any:
             raise OSError(2, "No such file or directory (mocked)")
@@ -129,6 +132,8 @@ class TesterCoderRouterWiringTests(unittest.TestCase):
         _clean_env()
         router = _load_router()
         os.environ.pop("HARNESS_SEMANTIC_ENABLED", None)
+        os.environ.pop("OPENCODE_HARNESS_ROOT", None)
+        os.environ.pop("HARNESS_TRANSPORT", None)
 
         tmp = Path(tempfile.mkdtemp(prefix="m2_outside_"))
         self.addCleanup(shutil.rmtree, tmp, ignore_errors=True)
@@ -153,6 +158,8 @@ class TesterCoderRouterWiringTests(unittest.TestCase):
         _clean_env()
         router = _load_router()
         os.environ.pop("HARNESS_SEMANTIC_ENABLED", None)
+        os.environ.pop("OPENCODE_HARNESS_ROOT", None)
+        os.environ.pop("HARNESS_TRANSPORT", None)
 
         missing = _ROOT / "does-not-exist-m2-xyz"
         with mock.patch("asyncio.create_subprocess_exec", new=_no_transport_ever), mock.patch.object(
@@ -169,9 +176,10 @@ class TesterCoderRouterWiringTests(unittest.TestCase):
     # --- 3. Bridge path never touches the legacy subprocess ----------------
 
     def test_bridge_never_launches_legacy_subprocess(self) -> None:
-        """HARNESS_SEMANTIC_ENABLED=1 + adapter -> bridge only; subprocess unused."""
+        """Bridge conditions hold (M3a) -> bridge only; subprocess unused."""
         _clean_env()
         os.environ["HARNESS_SEMANTIC_ENABLED"] = "1"
+        os.environ["OPENCODE_HARNESS_ROOT"] = str(_ROOT)
         router = _load_router()
         self.assertFalse(router._LEGACY_ONLY)
 
@@ -206,6 +214,8 @@ class TesterCoderRouterWiringTests(unittest.TestCase):
         _clean_env()
         router = _load_router()
         os.environ.pop("HARNESS_SEMANTIC_ENABLED", None)
+        os.environ.pop("OPENCODE_HARNESS_ROOT", None)
+        os.environ.pop("HARNESS_TRANSPORT", None)
 
         calls: list[tuple] = []
 
@@ -242,6 +252,8 @@ class TesterCoderRouterWiringTests(unittest.TestCase):
         _clean_env()
         router = _load_router()
         os.environ.pop("HARNESS_SEMANTIC_ENABLED", None)
+        os.environ.pop("OPENCODE_HARNESS_ROOT", None)
+        os.environ.pop("HARNESS_TRANSPORT", None)
 
         with mock.patch("asyncio.create_subprocess_exec", new=_no_transport_ever), mock.patch.object(
             router, "execute_coder_semantic", new=_no_transport_ever

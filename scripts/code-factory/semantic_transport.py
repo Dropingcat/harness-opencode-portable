@@ -21,7 +21,16 @@ Contract-first rules honoured here (CODER_DESIGN_PRINCIPLES.md):
       - plugin bridge nominally present but not wired -> honest
         HOST_UNAVAILABLE (never a fabricated COMPLETED),
       - legacy CLI fallback -> REJECTED_BY_HOST (the legacy `mcp` boundary is
-        out of scope for M1 and must not be imported).
+        out of scope for M1 and must not be imported),
+      - an EXPLICIT legacy CLI selection (HARNESS_TRANSPORT=cli /
+        transport="cli") -> REJECTED_BY_HOST with an explicit-cli diagnostic
+        (never a silent launch, never a silent switch to another transport).
+  * Explicit transport selection (M3a): the transport is chosen by the
+    operator via `resolve_transport()` (env `HARNESS_TRANSPORT`,
+    plugin|cli|auto). "auto" resolves to the plugin bridge only when the
+    bridge conditions hold (HARNESS_SEMANTIC_ENABLED=1 + resolvable adapter);
+    otherwise it resolves to "cli" (the legacy path, which M1 rejects).
+    There is NO silent transport switching anywhere.
   * Non-object requests fail closed to REJECTED_BY_HOST, never raise.
   * No OpenCode SDK / no OpenCode types are imported here (stdlib only).
 
@@ -56,6 +65,18 @@ _RUNTIME_STATUSES = frozenset(
         "HOST_UNAVAILABLE",
     }
 )
+
+# Transport selection env var (M3a). Values: plugin | cli | auto. Default
+# "auto" = resolve to the plugin bridge when it is available, else "cli".
+# A MISSING/empty value behaves exactly like "auto" (backwards compatible
+# with the pre-M3a routing, where the flag+adapter decided the transport).
+_TRANSPORT_ENV = "HARNESS_TRANSPORT"
+
+# Canonical transport identifiers used by the router responses.
+TRANSPORT_PLUGIN = "plugin"
+TRANSPORT_CLI = "cli"
+_TRANSPORT_AUTO = "auto"
+_VALID_TRANSPORT_VALUES = frozenset({TRANSPORT_PLUGIN, TRANSPORT_CLI, _TRANSPORT_AUTO})
 
 # Role that actually executes the bounded task, per purpose.
 _ROLE_BY_PURPOSE = {
@@ -276,6 +297,62 @@ def _plugin_bridge_available() -> bool:
     return peer.is_file()
 
 
+def resolve_transport(*, explicit: str | None = None) -> str:
+    """Resolve the transport to use (M3a explicit transport selection).
+
+    ``explicit`` is the operator-chosen transport: ``"plugin"``, ``"cli"``,
+    ``"auto"`` or ``None``. When ``explicit`` is None the value is read from
+    the ``HARNESS_TRANSPORT`` env var; a missing/empty env value behaves as
+    ``"auto"`` (pre-M3a compatible default).
+
+    Resolution rules (deterministic, no I/O beyond the bridge probe):
+
+    * ``"plugin"`` -> ``"plugin"`` (unconditional; fail-closed handling of an
+      unavailable bridge is the caller's job — it must NOT silently switch).
+    * ``"cli"`` -> ``"cli"`` (unconditional).
+    * ``"auto"`` -> ``"plugin"`` iff the plugin bridge conditions hold
+      (``HARNESS_SEMANTIC_ENABLED=1`` + resolvable bridge adapter),
+      otherwise ``"cli"``.
+    * Unknown/empty values -> ``"auto"`` semantics (defensive: a typo in
+      HARNESS_TRANSPORT must never produce a surprise transport).
+
+    Note: in ``"auto"`` mode an unavailable bridge legitimately resolves to
+    ``"cli"``. That is the documented auto behaviour, NOT a silent switch —
+    a silent switch would be ``HARNESS_TRANSPORT=plugin`` + unavailable
+    bridge falling back to the CLI, which is forbidden and handled by the
+    callers as fail-closed (see ``execute_coder_semantic``).
+    """
+    if explicit is None:
+        explicit = os.environ.get(_TRANSPORT_ENV) or _TRANSPORT_AUTO
+    if explicit in _VALID_TRANSPORT_VALUES and explicit != _TRANSPORT_AUTO:
+        # "plugin" / "cli" are unconditional. Unknown values fall through to
+        # auto semantics (defensive: a typo in HARNESS_TRANSPORT must never
+        # produce a surprise transport).
+        return explicit
+    if _plugin_bridge_available():
+        return TRANSPORT_PLUGIN
+    return TRANSPORT_CLI
+
+
+def _explicit_cli_rejected(request: dict) -> dict:
+    """Fail-closed path for an explicit legacy CLI selection.
+
+    M3a rule (DEV-05): when the OPERATOR explicitly selects the CLI transport
+    (HARNESS_TRANSPORT=cli / transport="cli"), M1 must NOT launch OpenCode and
+    must NOT silently switch to another transport. The honest outcome is
+    REJECTED_BY_HOST with a diagnostic that names the explicit selection.
+    """
+    reason = "explicit cli transport selected; not implemented in M1"
+    model_policy = request.get("model_policy") or {}
+    return _result(
+        execution_id=request["execution_id"],
+        runtime_status="REJECTED_BY_HOST",
+        host_error=reason,
+        provider_id=model_policy.get("provider_id"),
+        model_id=model_policy.get("model_id"),
+    )
+
+
 def _execute_via_plugin_bridge(request: dict) -> dict:
     """Route through the plugin bridge reverse call ``semantic.execute``.
 
@@ -314,20 +391,31 @@ def _legacy_fallback_rejected(request: dict) -> dict:
     )
 
 
-def execute_coder_semantic(request: dict) -> dict:
+def execute_coder_semantic(
+    request: dict, *, transport: str | None = None
+) -> dict:
     """Execute (transport) a SemanticExecutionRequest/1.0 for the Coder agent.
 
-    Deterministic and fail-closed. Three outcomes:
+    Deterministic and fail-closed (M3a explicit transport selection). The
+    transport is chosen BEFORE any execution and never silently switched:
 
     1. Request schema invalid (including non-object requests) ->
        SemanticExecutionResult/1.0 with ``runtime_status=REJECTED_BY_HOST`` and
        ``host_error`` starting with ``BAD_SCHEMA`` (canonical statuses carry no
        separate error code). Non-object inputs never raise.
-    2. Plugin bridge available (env flag + env root + bridge peer file):
-       reverse call ``semantic.execute``. Not yet wired in M1, so the honest
-       result is ``HOST_UNAVAILABLE`` — never a fabricated COMPLETED.
-    3. Otherwise: legacy fallback is FORBIDDEN in M1 (no `mcp` import, no
-       model launch) -> ``REJECTED_BY_HOST``.
+    2. ``transport="cli"`` (explicit operator selection) -> ``REJECTED_BY_HOST``
+       with ``host_error="explicit cli transport selected; not implemented in
+       M1"``. The legacy CLI is NEVER launched from M1 and there is NO silent
+       switch to another transport.
+    3. ``transport="plugin"`` -> the plugin bridge path ONLY when the bridge is
+       available; an unavailable bridge fails closed to ``HOST_UNAVAILABLE``
+       (no CLI fallback, no silent switch).
+    4. ``transport=None`` -> resolved via ``resolve_transport()``:
+       - resolves to ``"plugin"`` -> plugin bridge path (HOST_UNAVAILABLE when
+         the bridge is not wired, honest per M1);
+       - resolves to ``"cli"`` -> ``REJECTED_BY_HOST`` with the legacy-fallback
+         diagnostic (M1 never launches a model; the legacy boundary is out of
+         M1 scope).
 
     Always returns a valid SemanticExecutionResult/1.0 dict.
     """
@@ -339,9 +427,32 @@ def execute_coder_semantic(request: dict) -> dict:
             runtime_status="REJECTED_BY_HOST",
             host_error=error,
         )
+
+    explicit_choice = transport is not None
+    selected = transport if explicit_choice else resolve_transport()
+
+    if selected == TRANSPORT_CLI:
+        # "cli" can be reached two ways, with two DIFFERENT diagnostics:
+        #  * explicit transport="cli" (or HARNESS_TRANSPORT=cli) -> the M3a
+        #    explicit-cli diagnostic (never a launch, never a silent switch);
+        #  * auto-resolved (flag/bridge unavailable) -> the pre-M3a legacy
+        #    fallback diagnostic. Both are REJECTED_BY_HOST; M1 never launches.
+        if explicit_choice or os.environ.get(_TRANSPORT_ENV) == TRANSPORT_CLI:
+            return _explicit_cli_rejected(request)
+        return _legacy_fallback_rejected(request)
+
+    # selected == TRANSPORT_PLUGIN (auto with an available bridge or explicit
+    # "plugin"). Explicit "plugin" + unavailable bridge is fail-closed
+    # HOST_UNAVAILABLE — never a CLI fallback.
     if _plugin_bridge_available():
         return _execute_via_plugin_bridge(request)
-    return _legacy_fallback_rejected(request)
+    return _result(
+        execution_id=request["execution_id"],
+        runtime_status="HOST_UNAVAILABLE",
+        host_error="plugin bridge unavailable; fail-closed (no CLI fallback)",
+        provider_id=(request.get("model_policy") or {}).get("provider_id"),
+        model_id=(request.get("model_policy") or {}).get("model_id"),
+    )
 
 
 def build_coder_request(
@@ -364,6 +475,15 @@ def build_coder_request(
     """
     parent_host_session_id = os.environ.get("OPENCODE_SESSION_ID") or "cli"
     trace = {"worktree": worktree}
+    policy = dict(model_policy) if model_policy else {}
+    if "model_id" in policy:
+        provider_id, model_id = _split_provider_model(policy["model_id"])
+        # M3a: "provider/model" -> split at the first "/"; a value WITHOUT "/"
+        # -> provider_id = model_id. An explicit provider_id (the canonical
+        # request field) always wins over the inferred one.
+        policy["model_id"] = model_id
+        if provider_id is not None:
+            policy.setdefault("provider_id", provider_id)
     return {
         "schema": SEMANTIC_REQUEST_SCHEMA,
         "execution_id": execution_id,
@@ -373,11 +493,30 @@ def build_coder_request(
         "parent_host_session_id": parent_host_session_id,
         "bounded_input": dict(bounded_input),
         "expected_output": dict(expected_output),
-        "model_policy": dict(model_policy) if model_policy else {},
+        "model_policy": policy,
         "permission_profile": classify_purpose(purpose),
         "timeout_ms": int(timeout_ms),
         "trace": trace,
     }
+
+
+def _split_provider_model(model_id: str) -> tuple[str | None, str]:
+    """Split a ``provider/model`` model id at the FIRST ``/`` (M3a).
+
+    ``"opencode/big-pickle"`` -> ``("opencode", "big-pickle")``.
+    A value WITHOUT ``/`` -> ``(model_id, model_id)`` (provider_id = model_id
+    per M3a). ``/model`` (empty provider) or a non-string -> ``(None, original)``
+    so the caller leaves provider_id untouched (an empty provider_id would be
+    ambiguous, not a meaningful split).
+    """
+    if isinstance(model_id, str) and "/" in model_id:
+        provider, _, rest = model_id.partition("/")
+        if provider:
+            return provider, rest
+        return None, model_id
+    if isinstance(model_id, str):
+        return model_id, model_id
+    return None, model_id
 
 
 def _run_unit_tests() -> int:

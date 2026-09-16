@@ -54,6 +54,7 @@ def _load_router(module_name: str = "coder_router_server") -> Any:
 def _clean_env() -> None:
     os.environ.pop("HARNESS_SEMANTIC_ENABLED", None)
     os.environ.pop("OPENCODE_HARNESS_ROOT", None)
+    os.environ.pop("HARNESS_TRANSPORT", None)
     os.environ["CODER_ROUTER_ALLOWED_ROOTS"] = str(_ROOT)
 
 
@@ -94,7 +95,7 @@ def _fake_completed_result() -> dict:
 
 class CoderRouterWiringTests(unittest.TestCase):
     def setUp(self) -> None:
-        self._saved = {k: os.environ.get(k) for k in ("HARNESS_SEMANTIC_ENABLED", "OPENCODE_HARNESS_ROOT", "CODER_ROUTER_ALLOWED_ROOTS")}
+        self._saved = {k: os.environ.get(k) for k in ("HARNESS_SEMANTIC_ENABLED", "OPENCODE_HARNESS_ROOT", "CODER_ROUTER_ALLOWED_ROOTS", "HARNESS_TRANSPORT")}
 
     def tearDown(self) -> None:
         for key, value in self._saved.items():
@@ -111,6 +112,8 @@ class CoderRouterWiringTests(unittest.TestCase):
         router = _load_router()
         self.assertFalse(router._LEGACY_ONLY)  # adapter IS importable here
         os.environ.pop("HARNESS_SEMANTIC_ENABLED", None)
+        os.environ.pop("OPENCODE_HARNESS_ROOT", None)
+        os.environ.pop("HARNESS_TRANSPORT", None)
         with mock.patch("asyncio.create_subprocess_exec", new=_fake_create_subprocess_exec):
             out = asyncio.run(
                 router.handle_coder_run({"task": "t", "model_class": "free", "workdir": str(_ROOT)})
@@ -126,6 +129,8 @@ class CoderRouterWiringTests(unittest.TestCase):
         _clean_env()
         router = _load_router()
         os.environ.pop("HARNESS_SEMANTIC_ENABLED", None)
+        os.environ.pop("OPENCODE_HARNESS_ROOT", None)
+        os.environ.pop("HARNESS_TRANSPORT", None)
 
         class _TimedOutProc(_FakeProc):
             def __init__(self) -> None:
@@ -153,13 +158,15 @@ class CoderRouterWiringTests(unittest.TestCase):
     # --- 2. Bridge transport when enabled -----------------------------------
 
     def test_bridge_transport_when_enabled(self) -> None:
-        """HARNESS_SEMANTIC_ENABLED=1 + adapter present -> harness-plugin-bridge.
+        """Bridge conditions hold (M3a) -> harness-plugin-bridge transport.
 
         execute_coder_semantic is mocked to return a schema-valid COMPLETED
         result; the built request is verified against the M1 contract.
         """
         _clean_env()
         os.environ["HARNESS_SEMANTIC_ENABLED"] = "1"
+        os.environ["OPENCODE_HARNESS_ROOT"] = str(_ROOT)
+        os.environ.pop("HARNESS_TRANSPORT", None)  # "auto"
         router = _load_router()
         self.assertFalse(router._LEGACY_ONLY)
 
@@ -187,21 +194,30 @@ class CoderRouterWiringTests(unittest.TestCase):
             schema = json.loads(_RESULT_SCHEMA_PATH.read_text(encoding="utf-8"))
             jsonschema.validate(instance=payload["semantic_result"], schema=schema)
 
-        # The request routed to the adapter honours the M1 contract.
+        # The request routed to the adapter honours the M1 contract (M3a:
+        # model_id is split into provider_id/model_id at the first "/").
         req = captured["req"]
         self.assertEqual(req["purpose"], "CODE_WORK")
         self.assertEqual(req["permission_profile"], "code-worker-write")
         self.assertEqual(req["bounded_input"], {"task": "do work", "workdir": str(_ROOT)})
-        self.assertEqual(req["model_policy"], {"model_id": router.MODEL_BY_CLASS["polza"]})
+        self.assertEqual(
+            req["model_policy"],
+            {
+                "provider_id": router.MODEL_BY_CLASS["polza"].split("/", 1)[0],
+                "model_id": router.MODEL_BY_CLASS["polza"].split("/", 1)[1],
+            },
+        )
         self.assertEqual(req["timeout_ms"], router.TIMEOUT_SECONDS * 1000)
         self.assertEqual(req["trace"], {"worktree": str(_ROOT)})
 
     # --- 3. Import failure of the M1 adapter -> flagged legacy --------------
 
     def test_import_failure_falls_back_legacy(self) -> None:
-        """M1 import fails -> legacy_only=True; even env=1 must NOT bridge."""
+        """M1 import fails -> legacy_only=True; even flag=1 must NOT bridge."""
         _clean_env()
         os.environ["HARNESS_SEMANTIC_ENABLED"] = "1"  # flag alone is not enough
+        os.environ["OPENCODE_HARNESS_ROOT"] = str(_ROOT)
+        os.environ.pop("HARNESS_TRANSPORT", None)  # "auto"
 
         real_import = builtins.__import__
 

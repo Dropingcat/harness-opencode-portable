@@ -19,18 +19,25 @@ from mcp.types import TextContent, Tool
 # M1 semantic transport adapter (DEV-05/TD-062). Import is best-effort: when
 # the adapter module is unavailable the router MUST NOT silently fall back to
 # the legacy CLI — it stays on the legacy path AND flags it in the response
-# (`legacy_only=True`, `transport="opencode_cli_legacy"`).
+# (`legacy_only=True`, `transport="opencode_cli_legacy"`). M3a: transport
+# selection is delegated to M1's `resolve_transport()` (HARNESS_TRANSPORT).
 _CODE_FACTORY_DIR = str(Path(__file__).resolve().parent.parent / "scripts" / "code-factory")
 if _CODE_FACTORY_DIR not in sys.path:
     sys.path.insert(0, _CODE_FACTORY_DIR)
 try:
-    from semantic_transport import build_coder_request, classify_purpose, execute_coder_semantic
+    from semantic_transport import (
+        build_coder_request,
+        classify_purpose,
+        execute_coder_semantic,
+        resolve_transport,
+    )
 
     _LEGACY_ONLY = False
 except ImportError:  # pragma: no cover - exercised by tests/coder/test_coder_router_wiring.py
     build_coder_request = None  # type: ignore[assignment]
     classify_purpose = None  # type: ignore[assignment]
     execute_coder_semantic = None  # type: ignore[assignment]
+    resolve_transport = None  # type: ignore[assignment]
     _LEGACY_ONLY = True
 
 
@@ -44,6 +51,10 @@ MODEL_BY_CLASS = {
 }
 
 _LEGACY_REASON = "plugin bridge not enabled or adapter unavailable"
+
+# transport identifiers in responses (M3a)
+_TRANSPORT_PLUGIN = "harness-plugin-bridge"
+_TRANSPORT_LEGACY = "opencode_cli_legacy"
 
 server = Server("coder-router")
 
@@ -67,6 +78,25 @@ def _is_allowed_workdir(path: Path) -> bool:
 
 def _json_text(payload: dict[str, Any]) -> list[TextContent]:
     return [TextContent(type="text", text=json.dumps(payload, ensure_ascii=False, indent=2))]
+
+
+def _transport_unavailable(payload: dict[str, Any]) -> list[TextContent]:
+    """Fail-closed response: transport NOT available, CLI is NOT called.
+
+    M3a (DEV-05): the operator explicitly selected the plugin transport
+    (HARNESS_TRANSPORT=plugin) but the bridge is not resolvable (M1 adapter
+    ImportError, missing HARNESS_SEMANTIC_ENABLED, or missing bridge peer).
+    There is NO silent fallback to the legacy CLI — the request is rejected
+    with host_error and the CLI subprocess is never launched.
+    """
+    payload.setdefault("ok", False)
+    payload.setdefault("transport", "plugin_transport_unavailable")
+    payload.setdefault("error", "plugin transport requested but unavailable; fail-closed (no CLI fallback)")
+    payload.setdefault(
+        "host_error",
+        "plugin transport unavailable; fail-closed: legacy CLI NOT called",
+    )
+    return _json_text(payload)
 
 
 def _resolve_model(model_class: str) -> str:
@@ -95,26 +125,41 @@ async def handle_coder_run(arguments: dict[str, Any]) -> list[TextContent]:
     except ValueError as exc:
         return _json_text({"ok": False, "error": str(exc), "known_model_classes": sorted(MODEL_BY_CLASS)})
 
-    # Semantic transport (DEV-05): enabled only when BOTH the env flag is set
-    # AND the M1 adapter imported cleanly. Never silent — otherwise legacy.
-    if os.environ.get("HARNESS_SEMANTIC_ENABLED") == "1" and not _LEGACY_ONLY:
-        req = build_coder_request(
-            execution_id=f"coder-{uuid.uuid4().hex}",
-            purpose="CODE_WORK",
-            bounded_input={"task": task, "workdir": str(workdir)},
-            expected_output={},
-            worktree=str(workdir),
-            timeout_ms=TIMEOUT_SECONDS * 1000,
-            model_policy={"model_id": model},
-        )
-        result = execute_coder_semantic(req)
-        return _json_text({
-            "ok": result.get("runtime_status") == "COMPLETED",
-            "transport": "harness-plugin-bridge",
-            "semantic_result": result,
-            "model": model,
-            "workdir": str(workdir),
-        })
+    # Transport selection (M3a, DEV-05): delegated to M1's resolve_transport().
+    # - "plugin" -> plugin path; an unavailable bridge fails closed WITHOUT any
+    #   legacy CLI call (never a silent switch).
+    # - "cli"   -> legacy path (flagged transport="opencode_cli_legacy").
+    # - "auto"  -> plugin iff bridge available, else legacy (documented auto).
+    if not _LEGACY_ONLY:
+        selected = resolve_transport()
+        if selected == "plugin":
+            req = build_coder_request(
+                execution_id=f"coder-{uuid.uuid4().hex}",
+                purpose="CODE_WORK",
+                bounded_input={"task": task, "workdir": str(workdir)},
+                expected_output={},
+                worktree=str(workdir),
+                timeout_ms=TIMEOUT_SECONDS * 1000,
+                model_policy={"model_id": model},
+            )
+            result = execute_coder_semantic(req)
+            return _json_text({
+                "ok": result.get("runtime_status") == "COMPLETED",
+                "transport": _TRANSPORT_PLUGIN,
+                "semantic_result": result,
+                "model": model,
+                "workdir": str(workdir),
+            })
+    else:
+        # M1 adapter unavailable. The ONLY transport available here is the
+        # legacy CLI — but an EXPLICIT plugin selection must fail closed
+        # (DEV-05): no silent CLI fallback for HARNESS_TRANSPORT=plugin.
+        explicit = (os.environ.get("HARNESS_TRANSPORT") or "").strip().lower()
+        if explicit == "plugin":
+            return _transport_unavailable({
+                "model": model,
+                "workdir": str(workdir),
+            })
 
     # Legacy CLI transport: allowed ONLY as an explicit (flagged) fallback.
     cmd = [OPENCODE_BIN, "run", "--pure", "--model", model, "--dir", str(workdir), task]
@@ -138,14 +183,14 @@ async def handle_coder_run(arguments: dict[str, Any]) -> list[TextContent]:
             "ok": False,
             "error": f"opencode timed out after {TIMEOUT_SECONDS}s",
             "model": model,
-            "transport": "opencode_cli_legacy",
+            "transport": _TRANSPORT_LEGACY,
             "legacy_reason": _LEGACY_REASON,
         })
     except OSError as exc:
         return _json_text({
             "ok": False,
             "error": f"failed to start opencode: {exc}",
-            "transport": "opencode_cli_legacy",
+            "transport": _TRANSPORT_LEGACY,
             "legacy_reason": _LEGACY_REASON,
         })
 
@@ -159,7 +204,7 @@ async def handle_coder_run(arguments: dict[str, Any]) -> list[TextContent]:
         "workdir": str(workdir),
         "stdout": stdout,
         "stderr": stderr,
-        "transport": "opencode_cli_legacy",
+        "transport": _TRANSPORT_LEGACY,
         "legacy_reason": _LEGACY_REASON,
     })
 
