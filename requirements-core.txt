@@ -1,6 +1,27 @@
-# Ядро фабрики кода — зависимости Python (core)
-# Фабрика (scripts/code-factory, orchestration, memory, kanban, router, guard)
-# использует ТОЛЬКО стандартную библиотеку Python 3.11. Внешних пакетов не требуется.
-# Этот файл пуст намеренно: requirements.txt существует для перефиксации минимального
-# набора venv. При установке pip install -r requirements-core.txt ничего не ставится.
-# Если какой-то модуль ядра начнёт требовать внешний пакет — внести его сюда С ОБОСНОВАНИЕМ.
+# Harness core runtime (Python 3.11+)
+# Deterministic dependencies for the portable module:
+#   scripts/ (router, orchestration, researcher, writer-core, code-factory)
+#   guard/   (session_guard, guard_runner, semantic_layer)
+#   mcp/     (bundled stdio MCP servers)
+
+# --- Core ---
+PyYAML>=6.0
+requests>=2.31
+sympy>=1.12
+matplotlib>=3.8
+numpy>=1.26
+
+# --- MCP servers (stdio, host-managed by OpenCode) ---
+# mcp SDK 1.x API is required (@server.list_tools decorators); 2.x changed the API.
+mcp>=1.0,<2.0
+
+# --- Document extraction (doc_extract server) ---
+python-docx>=1.1
+markdownify>=0.11
+pypdfium2>=5.0
+openpyxl>=3.1
+PyMuPDF>=1.24
+tifffile>=2024.1
+Pillow>=10
+
+# --- Capability bundle (research/numeric verification) ---

@@ -149,6 +149,61 @@ $envLines = @(
   "WRITER_PYTHON=$python",
   "OPENCODE_CONFIG_DIR=$ROOT\.opencode"
 )
+# --- 8a. SearXNG / optional MCP probe ---
+$searxngUrl = $env:SEARXNG_URL
+if (-not $searxngUrl) { $searxngUrl = "http://127.0.0.1:8888" }
+$searxngOk = $false
+$searxngNote = ""
+if (Test-Path "$ROOT\.venv\Scripts\python.exe") {
+  $probe = & $python -c @"
+import urllib.request, urllib.parse, json, sys
+url = r'$searxngUrl'
+params = urllib.parse.urlencode({'q':'test','format':'json'})
+try:
+    with urllib.request.urlopen(f'{url}/search?{params}', timeout=5) as r:
+        data = json.loads(r.read().decode('utf-8'))
+    print('OK' if data.get('results') is not None else 'EMPTY')
+except Exception as e:
+    print('FAIL:' + str(e))
+"@ 2>&1 | Select-Object -Last 1
+  if ($probe -eq 'OK' -or $probe -eq 'EMPTY') { $searxngOk = $true; $searxngNote = $probe }
+  else { $searxngNote = $probe }
+}
+if ($searxngOk) {
+  Write-OK "SearXNG reachable at $searxngUrl ($searxngNote)"
+  $envLines += "SEARXNG_URL=$searxngUrl"
+} else {
+  Write-Warn "SearXNG NOT reachable at $searxngUrl ($searxngNote). searxng_search MCP will be DEGRADED until a local SearXNG is running (e.g. docker run -p 8888:8080 searxng/searxng)."
+  $envLines += "# SEARXNG_URL=$searxngUrl (unreachable during bootstrap; set when SearXNG is up)"
+}
+
+# --- 8b. MCP optional servers check (doc_extract deps) ---
+Write-Step "MCP optional servers check"
+$docExtractDeps = @("pypdfium2", "docx", "markdownify", "openpyxl")
+$docOk = $true
+foreach ($dep in $docExtractDeps) {
+  $probe = & $python -c "import importlib.util; print('OK' if importlib.util.find_spec('$dep') else 'MISSING')" 2>&1 | Select-Object -Last 1
+  if ($probe -ne 'OK') { $docOk = $false; Write-Warn "doc_extract dep missing: $dep" }
+}
+if ($docOk) { Write-OK "doc_extract server deps present (pypdfium2/docx/markdownify/openpyxl)" }
+else { Write-Warn "doc_extract server will be DEGRADED; run: pip install -r requirements-mcp-doc.txt" }
+
+# --- 8c. MCP server import smoke (all bundled servers must import) ---
+Write-Step "MCP servers import smoke"
+$mcpRoot = "$ROOT\mcp"
+$servers = @("academic_search_server","coder_router_server","searxng_search_server","doc_extract_server")
+$mcpAllOk = $true
+foreach ($srv in $servers) {
+  $probe = & $python -c "import sys; sys.path.insert(0, r'$mcpRoot'); import $srv; print('OK')" 2>&1 | Select-Object -Last 1
+  if ($probe -eq 'OK') { Write-OK "  $srv import OK" } else { Write-Warn "  $srv import FAIL: $probe"; $mcpAllOk = $false }
+}
+$launchers = @("opencode_code_worker","opencode_research_web","opencode_research_academic","opencode_profile_configurator","opencode_service_task","opencode_tribunal_role")
+foreach ($l in $launchers) {
+  $probe = & $python -c "import sys; sys.path.insert(0, r'$ROOT\mcp\launchers'); import $l; print('OK')" 2>&1 | Select-Object -Last 1
+  if ($probe -eq 'OK') { Write-OK "  $l import OK" } else { Write-Warn "  $l import FAIL: $probe"; $mcpAllOk = $false }
+}
+if (-not $mcpAllOk) { Write-Warn "Some MCP modules failed to import; check requirements and re-run bootstrap." }
+
 Set-Content -Path $envPath -Value $envLines -Encoding UTF8
 Write-OK ".env written"
 # Export for the remainder of this session so doctor/health resolve vars.
