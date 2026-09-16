@@ -7,12 +7,31 @@ import os
 import shutil
 import signal
 import subprocess
+import sys
+import uuid
 from pathlib import Path
 from typing import Any
 
 from mcp.server import Server
 from mcp.server.stdio import stdio_server
 from mcp.types import TextContent, Tool
+
+# M1 semantic transport adapter (DEV-05/TD-062). Import is best-effort: when
+# the adapter module is unavailable the router MUST NOT silently fall back to
+# the legacy CLI — it stays on the legacy path AND flags it in the response
+# (`legacy_only=True`, `transport="opencode_cli_legacy"`).
+_CODE_FACTORY_DIR = str(Path(__file__).resolve().parent.parent / "scripts" / "code-factory")
+if _CODE_FACTORY_DIR not in sys.path:
+    sys.path.insert(0, _CODE_FACTORY_DIR)
+try:
+    from semantic_transport import build_coder_request, classify_purpose, execute_coder_semantic
+
+    _LEGACY_ONLY = False
+except ImportError:  # pragma: no cover - exercised by tests/coder/test_coder_router_wiring.py
+    build_coder_request = None  # type: ignore[assignment]
+    classify_purpose = None  # type: ignore[assignment]
+    execute_coder_semantic = None  # type: ignore[assignment]
+    _LEGACY_ONLY = True
 
 
 OPENCODE_BIN = os.environ.get("CODER_ROUTER_OPENCODE") or os.environ.get("OPENCODE_BIN") or shutil.which("opencode") or str(Path.home() / ".opencode" / "bin" / "opencode")
@@ -23,6 +42,8 @@ MODEL_BY_CLASS = {
     "fast": os.environ.get("CODER_ROUTER_FAST_MODEL", "ollama-cloud/glm-5.2"),
     "polza": os.environ.get("CODER_ROUTER_POLZA_MODEL", "polza/deepseek/deepseek-v4-flash-0731"),
 }
+
+_LEGACY_REASON = "plugin bridge not enabled or adapter unavailable"
 
 server = Server("coder-router")
 
@@ -74,6 +95,28 @@ async def handle_coder_run(arguments: dict[str, Any]) -> list[TextContent]:
     except ValueError as exc:
         return _json_text({"ok": False, "error": str(exc), "known_model_classes": sorted(MODEL_BY_CLASS)})
 
+    # Semantic transport (DEV-05): enabled only when BOTH the env flag is set
+    # AND the M1 adapter imported cleanly. Never silent — otherwise legacy.
+    if os.environ.get("HARNESS_SEMANTIC_ENABLED") == "1" and not _LEGACY_ONLY:
+        req = build_coder_request(
+            execution_id=f"coder-{uuid.uuid4().hex}",
+            purpose="CODE_WORK",
+            bounded_input={"task": task, "workdir": str(workdir)},
+            expected_output={},
+            worktree=str(workdir),
+            timeout_ms=TIMEOUT_SECONDS * 1000,
+            model_policy={"model_id": model},
+        )
+        result = execute_coder_semantic(req)
+        return _json_text({
+            "ok": result.get("runtime_status") == "COMPLETED",
+            "transport": "harness-plugin-bridge",
+            "semantic_result": result,
+            "model": model,
+            "workdir": str(workdir),
+        })
+
+    # Legacy CLI transport: allowed ONLY as an explicit (flagged) fallback.
     cmd = [OPENCODE_BIN, "run", "--pure", "--model", model, "--dir", str(workdir), task]
     try:
         proc = await asyncio.create_subprocess_exec(
@@ -91,9 +134,20 @@ async def handle_coder_run(arguments: dict[str, Any]) -> list[TextContent]:
         else:
             os.killpg(proc.pid, signal.SIGKILL)
         await proc.wait()
-        return _json_text({"ok": False, "error": f"opencode timed out after {TIMEOUT_SECONDS}s", "model": model})
+        return _json_text({
+            "ok": False,
+            "error": f"opencode timed out after {TIMEOUT_SECONDS}s",
+            "model": model,
+            "transport": "opencode_cli_legacy",
+            "legacy_reason": _LEGACY_REASON,
+        })
     except OSError as exc:
-        return _json_text({"ok": False, "error": f"failed to start opencode: {exc}"})
+        return _json_text({
+            "ok": False,
+            "error": f"failed to start opencode: {exc}",
+            "transport": "opencode_cli_legacy",
+            "legacy_reason": _LEGACY_REASON,
+        })
 
     stdout = stdout_b.decode("utf-8", errors="replace")
     stderr = stderr_b.decode("utf-8", errors="replace")
@@ -105,6 +159,8 @@ async def handle_coder_run(arguments: dict[str, Any]) -> list[TextContent]:
         "workdir": str(workdir),
         "stdout": stdout,
         "stderr": stderr,
+        "transport": "opencode_cli_legacy",
+        "legacy_reason": _LEGACY_REASON,
     })
 
 
