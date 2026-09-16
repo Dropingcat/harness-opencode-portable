@@ -1,0 +1,50 @@
+{
+  "version": 1,
+  "profiles": {
+    "soft": {
+      "description": "Cheap local harness and draft mode.",
+      "guard_mode": "p0_or_warn",
+      "guard_degradation": {
+        "allowed": ["p0_only", "warn_only_for_local_only_tasks"],
+        "forbidden": ["p2_required"],
+        "reason_code_on_degrade": "POLICY_GUARD_P0_ONLY"
+      },
+      "preferred_execution_mode": "noagents_or_single",
+      "max_iterations": 2,
+      "budget_multiplier": 0.5,
+      "tribunal_required": false,
+      "human_review_required": false,
+      "on_budget_exhaustion": "PARTIAL"
+    },
+    "standard": {
+      "description": "Default production-like orchestration.",
+      "guard_mode": "mandatory_fail_closed_for_untrusted",
+      "guard_degradation": {
+        "allowed": ["p0_only_for_known_local_context"],
+        "forbidden": ["warn_only_for_untrusted_output"],
+        "reason_code_on_degrade": "POLICY_UNTRUSTED_OUTPUT_REQUIRES_GUARD"
+      },
+      "preferred_execution_mode": "worker_reviewer_tester",
+      "max_iterations": 3,
+      "budget_multiplier": 1.0,
+      "tribunal_required": false,
+      "human_review_required": false,
+      "on_budget_exhaustion": "BLOCKED"
+    },
+    "strict": {
+      "description": "High-risk research/security/critical integration work.",
+      "guard_mode": "mandatory_p0_p2_fail_closed",
+      "guard_degradation": {
+        "allowed": [],
+        "forbidden": ["p0_only", "warn_only"],
+        "reason_code_on_degrade": "POLICY_GUARD_P2_REQUIRED"
+      },
+      "preferred_execution_mode": "worker_reviewer_tester_auditor",
+      "max_iterations": 5,
+      "budget_multiplier": 1.5,
+      "tribunal_required": true,
+      "human_review_required": true,
+      "on_budget_exhaustion": "PARTIAL"
+    }
+  }
+}

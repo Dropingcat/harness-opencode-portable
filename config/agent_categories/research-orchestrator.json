@@ -1,0 +1,10 @@
+{
+  "agent": "research-orchestrator",
+  "categories": [
+    "CAT_RESEARCH_PLAN",
+    "CAT_SEARCH",
+    "CAT_SYNTHESIS"
+  ],
+  "default_bucket": "research",
+  "capsule": "research-core"
+}

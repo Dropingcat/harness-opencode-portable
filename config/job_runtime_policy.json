@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "schema": "job-runtime-policy/1.0",
+  "job_states": [
+    "RUNNING",
+    "DEGRADED",
+    "WAITING_RETRY",
+    "BLOCKED",
+    "COMPLETED",
+    "FAILED_NO_OUTPUT",
+    "FAILED_WITH_CHECKPOINT",
+    "TERMINATED_WITH_ARTIFACTS"
+  ],
+  "attempt_states": [
+    "CREATED",
+    "DISPATCHED",
+    "RUNNING",
+    "CHECKPOINTED",
+    "COMPLETED",
+    "FAILED",
+    "TIMED_OUT",
+    "TERMINATED",
+    "LOST"
+  ],
+  "child_modes": [
+    "required",
+    "optional",
+    "detached"
+  ],
+  "completion": {
+    "require_all_declared_stages_terminal": false,
+    "required_children_must_be_terminal": false,
+    "required_artifacts_must_exist": true,
+    "required_gates_must_pass": true,
+    "required_children_must_complete_successfully": true,
+    "require_all_declared_stages_successful_or_skipped": true
+  },
+  "retry": {
+    "reuse_completed_stages": true,
+    "reuse_registered_artifacts": true,
+    "reject_contract_hash_mismatch": true,
+    "reject_external_task_id_reuse_across_contracts": true
+  }
+}

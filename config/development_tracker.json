@@ -1,0 +1,155 @@
+{
+ "version": 1,
+ "updated": "2026-09-15",
+ "critical_path": [
+  "DEV-03",
+  "DEV-04",
+  "DEV-05",
+  "DEV-09"
+ ],
+ "authority_note": "Global development tracker. DEV-01..13 + WS-55A..59A. DEV-03/04 done; DEV-05 in progress (Tribunal done, Writer/Coder pending). DEV-09 requires live production provider trace. Not a replacement for IMPLEMENTATION_TRACKER.md history.",
+ "dev_items": [
+  {
+   "id": "DEV-01",
+   "title": "Reproducible current baseline",
+   "result": "Exact tree/commit/package hashes + baseline commands/results",
+   "status": "done",
+   "evidence": "FINAL 2026-09-13 closure badb5e25; code zip 7d24cd04; Windows deploy deterministic PASS"
+  },
+  {
+   "id": "DEV-02",
+   "title": "Documentation aligned with baseline",
+   "result": "Every implemented claim links to code/test evidence",
+   "status": "in_progress",
+   "evidence": "tech_debt_current consolidated 2026-09-15; TEST_AND_EVIDENCE_MATRIX canonical"
+  },
+  {
+   "id": "DEV-03",
+   "title": "Native Desktop P2",
+   "result": "Real plugin load, tools, HostContext, handshake, health; no double registration; CLI/DB not mandatory",
+   "status": "done",
+   "evidence": "harness plugin loaded 1.18.30; harness_status/harness_run invoked by live model; host_version captured; legacy removed from global config"
+  },
+  {
+   "id": "DEV-04",
+   "title": "Safe semantic smoke",
+   "result": "Read-only worker, recursion isolation, timeout/cancel, output schema, negative cases",
+   "status": "done",
+   "evidence": "semantic_execute live smoke; timeout->abort unit; gated by HARNESS_SEMANTIC_ENABLED; no tools in child session"
+  },
+  {
+   "id": "DEV-05",
+   "title": "Unified semantic transport",
+   "result": "Tribunal first, then Writer/Coder use SemanticExecutionRequest/Result; no silent transport switch",
+   "status": "in_progress",
+"evidence": "Coder M1 DONE (4acef3b); M2 factory DEV05-CODER-CONV-M2 DONE (fe3bb87); M3a factory DEV05-CODER-CONV-M3 DONE: explicit transport selection (plugin/cli/auto), fail-closed when plugin selected (no silent CLI), model provider/model split, 59 unittest. Still NOT live bridge execution: M3b channel + boundary E2E pending. TD-062 remains open.",
+    "next_gate": "M3b: real reverse bridge channel wiring + independent boundary E2E before live model; then Writer convergence; then optional orchestrator agent packaging.",
+    "production_ready": false
+  },
+  {
+   "id": "DEV-06",
+   "title": "Reliable cross-module dispatch",
+   "result": "Live peer dispatch, durable outbox, reconciliation, stable source identity",
+   "status": "not_started",
+   "evidence": "TD-024 open"
+  },
+  {
+   "id": "DEV-07",
+   "title": "Research contract hardening",
+   "result": "TD-017/026-028/032-035 with migration/stale/replay/negative tests",
+   "status": "not_started",
+   "evidence": ""
+  },
+  {
+   "id": "DEV-08",
+   "title": "Tooling/memory/skills reconciliation",
+   "result": "Distinguish implemented vs connected vs live-ready across capsules/tools/skills",
+   "status": "not_started",
+   "evidence": ""
+  },
+  {
+   "id": "DEV-09",
+   "title": "Semantic acceptance/calibration",
+   "result": "Live traces: grounding, false closure, Q2 novelty, Advocate, variability",
+   "status": "not_started",
+   "evidence": "needs live production provider trace"
+  },
+  {
+   "id": "DEV-10",
+   "title": "Legacy retirement",
+   "result": "Separate sunset criteria for legacy hook and CLI; rollback retained",
+   "status": "in_progress",
+   "evidence": "legacy tool-skill-contract-router removed from global config; files retained in repo (TD-056 partial)"
+  },
+  {
+   "id": "DEV-11",
+   "title": "Response ownership",
+   "result": "ResponseAssignment after live traces; Defender remains response function",
+   "status": "not_started",
+   "evidence": "TD-046 open; design documented"
+  },
+  {
+   "id": "DEV-12",
+   "title": "Multidisciplinary ClaimReviewCase",
+   "result": "One Claim, independent facets, non-voting join, dependencies/conflicts/synergy",
+   "status": "not_started",
+   "evidence": "TD-047 open; design documented"
+  },
+  {
+   "id": "DEV-13",
+   "title": "Hypothesis verification lifecycle",
+   "result": "HypothesisCase revisions, competing hypotheses, discriminating tests, evidence independence/digest",
+   "status": "not_started",
+   "evidence": "TD-048/049/050 open; design documented"
+  }
+ ],
+ "workstreams": [
+  {
+   "id": "WS-55A",
+   "title": "CORE-HOST-BOUNDARY-FREEZE",
+   "status": "done",
+   "evidence": "boundary audit, machine matrix, migration plan v2, debt delta v2"
+  },
+  {
+   "id": "WS-56A",
+   "title": "STABLE-HOST-DTO-CONTRACTS",
+   "status": "done",
+   "evidence": "HostContext/WorkspaceRef/SemanticRequest/Result + schemas + round-trip"
+  },
+  {
+   "id": "WS-56B",
+   "title": "BRIDGE-RPC",
+   "status": "done",
+   "evidence": "harness-bridge-rpc/1.0 full-duplex NDJSON, reverse RPC, mismatch tests"
+  },
+  {
+   "id": "WS-57A",
+   "title": "OPENCODE-1.18.30-ADAPTER",
+   "status": "done",
+   "evidence": "plugin load live, tools invoked, host_version 1.18.30, compatibility record"
+  },
+  {
+   "id": "WS-57B",
+   "title": "PLUGIN-DOCTOR",
+   "status": "done",
+   "evidence": "doctor.py detects legacy/native conflict, config-based; PASS on clean env"
+  },
+  {
+   "id": "WS-58A",
+   "title": "GENERIC-SEMANTIC-PROVIDER",
+   "status": "in_progress",
+   "evidence": "PluginBridgeProviderTransport + Tribunal Q1-A2+Q3; Writer/Coder pending (DEV-05)"
+  },
+  {
+   "id": "WS-59A",
+   "title": "HOST-CERTIFICATION",
+   "status": "not_started",
+   "evidence": "clean-install/upgrade/rollback matrix per OpenCode version; TD-053/054 open"
+  }
+ ],
+ "counts": {
+  "dev_done": 3,
+  "dev_in_progress": 3,
+  "dev_not_started": 7
+ }
+}

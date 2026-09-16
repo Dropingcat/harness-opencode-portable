@@ -1,0 +1,381 @@
+{
+  "version": 2,
+  "providers": {
+    "existing.searxng": {
+      "kind": "mcp",
+      "tool": "searxng_search",
+      "provides": [
+        "web.discovery"
+      ],
+      "priority": 100,
+      "installed_probe": {
+        "kind": "file",
+        "path": "mcp/searxng_search_server.py"
+      },
+      "live_probe": {
+        "kind": "http_json",
+        "url": "http://127.0.0.1:8888/search?q=capability-preflight&format=json",
+        "timeout": 1.5
+      }
+    },
+    "existing.openalex": {
+      "kind": "mcp",
+      "tool": "openalex_search",
+      "provides": [
+        "academic.metadata"
+      ],
+      "priority": 90,
+      "installed_probe": {
+        "kind": "file",
+        "path": "mcp/academic_search_server.py"
+      },
+      "live_probe": {
+        "kind": "http_json",
+        "url": "https://api.openalex.org/works?search=capability-preflight&per-page=1",
+        "timeout": 2.0
+      }
+    },
+    "existing.arxiv": {
+      "kind": "mcp",
+      "tool": "arxiv_search",
+      "provides": [
+        "academic.metadata"
+      ],
+      "priority": 70,
+      "installed_probe": {
+        "kind": "file",
+        "path": "mcp/academic_search_server.py"
+      },
+      "live_probe": {
+        "kind": "tcp",
+        "url": "https://export.arxiv.org",
+        "timeout": 2.0
+      }
+    },
+    "local.source_resolver": {
+      "kind": "script",
+      "entrypoint": "scripts/capsules/source_resolve.py",
+      "provides": [
+        "academic.metadata",
+        "source.oa_resolve"
+      ],
+      "priority": 95,
+      "installed_probe": {
+        "kind": "python_module",
+        "module": "requests"
+      },
+      "live_probe": {
+        "kind": "tcp",
+        "url": "https://api.crossref.org",
+        "timeout": 2.0
+      }
+    },
+    "existing.document_extract": {
+      "kind": "mcp",
+      "tool": "extract_document",
+      "provides": [
+        "document.text.extract"
+      ],
+      "priority": 50,
+      "installed_probe": {
+        "kind": "file",
+        "path": "mcp/doc_extract_server.py"
+      },
+      "enabled": false
+    },
+    "local.ocr": {
+      "kind": "external",
+      "command": "tesseract",
+      "provides": [
+        "document.ocr"
+      ],
+      "priority": 70,
+      "installed_probe": {
+        "kind": "executable",
+        "name": "tesseract"
+      }
+    },
+    "local.libreoffice": {
+      "kind": "external",
+      "command": "libreoffice",
+      "provides": [
+        "office.legacy.inspect"
+      ],
+      "priority": 70,
+      "installed_probe": {
+        "kind": "executable",
+        "name": "libreoffice"
+      }
+    },
+    "local.science": {
+      "kind": "script",
+      "entrypoint": "scripts/capsules/science_compute.py",
+      "provides": [
+        "science.numeric",
+        "science.symbolic",
+        "science.physics",
+        "science.chemistry",
+        "formula.validate"
+      ],
+      "priority": 100,
+      "installed_probe": {
+        "kind": "python_module",
+        "module": "sympy"
+      }
+    },
+    "local.plot": {
+      "kind": "script",
+      "entrypoint": "scripts/capsules/plot_render.py",
+      "provides": [
+        "plot.render"
+      ],
+      "priority": 100,
+      "installed_probe": {
+        "kind": "python_module",
+        "module": "matplotlib"
+      }
+    },
+    "local.report": {
+      "kind": "script",
+      "entrypoint": "scripts/capsules/report_compose.py",
+      "provides": [
+        "report.compose"
+      ],
+      "priority": 100,
+      "installed_probe": {
+        "kind": "always"
+      }
+    },
+    "local.corpus": {
+      "kind": "script",
+      "entrypoint": "scripts/capsules/corpus_fts.py",
+      "provides": [
+        "corpus.fts"
+      ],
+      "priority": 100,
+      "installed_probe": {
+        "kind": "sqlite_fts5"
+      }
+    },
+    "local.job_runtime": {
+      "kind": "script",
+      "entrypoint": "scripts/jobs/job_ctl.py",
+      "provides": [
+        "job.checkpoint"
+      ],
+      "priority": 100,
+      "installed_probe": {
+        "kind": "file",
+        "path": "scripts/jobs/job_ctl.py"
+      }
+    },
+    "existing.code_worker": {
+      "kind": "launcher",
+      "tool": "code_work",
+      "provides": [
+        "code.edit",
+        "code.test"
+      ],
+      "priority": 90,
+      "installed_probe": {
+        "kind": "file",
+        "path": "mcp/launchers/opencode_code_worker.py"
+      }
+    },
+    "existing.code_router": {
+      "kind": "mcp",
+      "tool": "coder_run",
+      "provides": [
+        "code.edit",
+        "code.review"
+      ],
+      "priority": 80,
+      "installed_probe": {
+        "kind": "file",
+        "path": "mcp/coder_router_server.py"
+      }
+    },
+    "existing.factory": {
+      "kind": "script",
+      "tool": "factory_ctl",
+      "provides": [
+        "code.acceptance",
+        "evidence.verify"
+      ],
+      "priority": 100,
+      "installed_probe": {
+        "kind": "file",
+        "path": "scripts/code-factory/factory_ctl.py"
+      }
+    },
+    "agent.fact_checker": {
+      "kind": "agent",
+      "agent": "fact-checker",
+      "provides": [
+        "evidence.verify"
+      ],
+      "priority": 95,
+      "installed_probe": {
+        "kind": "file",
+        "path": "agents/fact-checker.md"
+      }
+    },
+    "agent.writer": {
+      "kind": "agent",
+      "agent": "article-writer",
+      "provides": [
+        "writer.claims.read",
+        "writer.draft",
+        "writer.semantic_validate"
+      ],
+      "priority": 100,
+      "installed_probe": {
+        "kind": "file",
+        "path": "agents/article-writer.md"
+      }
+    },
+    "local.writer_core": {
+      "kind": "script",
+      "entrypoint": "scripts/writer-core/wc_cli.py",
+      "provides": [
+        "writer.semantic_validate"
+      ],
+      "priority": 110,
+      "installed_probe": {
+        "kind": "file",
+        "path": "scripts/writer-core/wc_cli.py"
+      },
+      "live_probe": {
+        "kind": "command",
+        "executable_env": "WRITER_PYTHON",
+        "argv": [
+          "-c",
+          "import importlib.util,pathlib; p=pathlib.Path('scripts/writer-core/wc_cli.py'); s=importlib.util.spec_from_file_location('writer_core_probe',p); m=importlib.util.module_from_spec(s); s.loader.exec_module(m); from writer_core.factory_process import draftcheck; r=draftcheck('The probe may validate semantics.',[{'claim_id':'probe','proposition':'The probe may validate semantics.'}]); assert isinstance(r,dict) and not (r.get('re_extraction') or {}).get('errors'), r"
+        ],
+        "timeout": 15
+      }
+    },
+    "agent.code_reviewer": {
+      "kind": "agent",
+      "agent": "code-reviewer",
+      "provides": [
+        "code.review"
+      ],
+      "priority": 100,
+      "installed_probe": {
+        "kind": "file",
+        "path": "agents/code-reviewer.md"
+      }
+    },
+    "local.pdf_inspector": {
+      "kind": "script",
+      "entrypoint": "scripts/capsules/document_inspect.py",
+      "provides": [
+        "document.text.extract",
+        "document.structured.inspect"
+      ],
+      "priority": 100,
+      "installed_probe": {
+        "kind": "python_module",
+        "module": "fitz"
+      }
+    },
+    "local.docx_inspector": {
+      "kind": "script",
+      "entrypoint": "scripts/capsules/document_inspect.py",
+      "provides": [
+        "office.docx.inspect",
+        "document.structured.inspect",
+        "document.text.extract"
+      ],
+      "priority": 95,
+      "installed_probe": {
+        "kind": "python_module",
+        "module": "docx"
+      }
+    },
+    "local.xlsx_inspector": {
+      "kind": "script",
+      "entrypoint": "scripts/capsules/document_inspect.py",
+      "provides": [
+        "office.xlsx.inspect",
+        "document.structured.inspect",
+        "document.text.extract"
+      ],
+      "priority": 95,
+      "installed_probe": {
+        "kind": "python_module",
+        "module": "openpyxl"
+      }
+    },
+    "local.tiff_inspector": {
+      "kind": "script",
+      "entrypoint": "scripts/capsules/scientific_image_inspect.py",
+      "provides": [
+        "image.tiff.inspect",
+        "document.structured.inspect"
+      ],
+      "priority": 95,
+      "installed_probe": {
+        "kind": "python_module",
+        "module": "tifffile"
+      }
+    },
+    "local.search_gateway": {
+      "kind": "script",
+      "entrypoint": "scripts/capsules/search_gateway.py",
+      "provides": [
+        "web.discovery"
+      ],
+      "priority": 110,
+      "installed_probe": {
+        "kind": "python_module",
+        "module": "requests"
+      },
+      "live_probe": {
+        "kind": "http_json",
+        "url": "http://127.0.0.1:8888/search?q=capability-preflight&format=json",
+        "timeout": 1.5
+      }
+    },
+    "local.capability_router": {
+      "kind": "script",
+      "entrypoint": "scripts/router/capability_escalation.py",
+      "provides": [
+        "capability.escalation"
+      ],
+      "priority": 100,
+      "installed_probe": {
+        "kind": "file",
+        "path": "scripts/router/capability_escalation.py"
+      }
+    },
+    "existing.opencode_tribunal_role": {
+      "kind": "agent",
+      "tool": "tribunal_role",
+      "provides": [
+        "tribunal.role.execute"
+      ],
+      "priority": 85,
+      "installed_probe": {
+        "kind": "file",
+        "path": "mcp/launchers/opencode_tribunal_role.py"
+      },
+      "live_probe": {
+        "kind": "executable",
+        "name": "opencode"
+      },
+      "role_kinds": [
+        "META",
+        "DOMAIN",
+        "METHOD"
+      ],
+      "execution_contracts": [
+        "IQC",
+        "DQC",
+        "ADC"
+      ],
+      "max_executors_per_contract": 1
+    }
+  }
+}

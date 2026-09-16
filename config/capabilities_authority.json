@@ -1,0 +1,121 @@
+{
+  "version": 2,
+  "capabilities": {
+    "web.discovery": {
+      "trust_class": "discovery",
+      "evidence_eligible": false
+    },
+    "academic.metadata": {
+      "trust_class": "metadata",
+      "evidence_eligible": false
+    },
+    "source.oa_resolve": {
+      "trust_class": "metadata",
+      "evidence_eligible": false
+    },
+    "document.text.extract": {
+      "trust_class": "untrusted_content",
+      "evidence_eligible": false
+    },
+    "document.structured.inspect": {
+      "trust_class": "untrusted_content",
+      "evidence_eligible": false
+    },
+    "document.ocr": {
+      "trust_class": "derived_untrusted_content",
+      "evidence_eligible": false
+    },
+    "office.docx.inspect": {
+      "trust_class": "untrusted_content",
+      "evidence_eligible": false
+    },
+    "office.xlsx.inspect": {
+      "trust_class": "untrusted_content",
+      "evidence_eligible": false
+    },
+    "office.legacy.inspect": {
+      "trust_class": "untrusted_content",
+      "evidence_eligible": false
+    },
+    "image.tiff.inspect": {
+      "trust_class": "untrusted_content",
+      "evidence_eligible": false
+    },
+    "science.numeric": {
+      "trust_class": "deterministic_computation",
+      "evidence_eligible": true
+    },
+    "science.symbolic": {
+      "trust_class": "deterministic_computation",
+      "evidence_eligible": true
+    },
+    "science.physics": {
+      "trust_class": "deterministic_computation",
+      "evidence_eligible": true
+    },
+    "science.chemistry": {
+      "trust_class": "deterministic_computation",
+      "evidence_eligible": true
+    },
+    "formula.validate": {
+      "trust_class": "deterministic_computation",
+      "evidence_eligible": true
+    },
+    "plot.render": {
+      "trust_class": "derived_artifact",
+      "evidence_eligible": false
+    },
+    "report.compose": {
+      "trust_class": "derived_artifact",
+      "evidence_eligible": false
+    },
+    "corpus.fts": {
+      "trust_class": "local_index",
+      "evidence_eligible": false
+    },
+    "evidence.verify": {
+      "trust_class": "gate",
+      "evidence_eligible": true
+    },
+    "job.checkpoint": {
+      "trust_class": "state_runtime",
+      "evidence_eligible": false
+    },
+    "code.edit": {
+      "trust_class": "side_effect",
+      "evidence_eligible": false
+    },
+    "code.test": {
+      "trust_class": "deterministic_check",
+      "evidence_eligible": true
+    },
+    "code.review": {
+      "trust_class": "agent_evidence",
+      "evidence_eligible": true
+    },
+    "code.acceptance": {
+      "trust_class": "gate",
+      "evidence_eligible": true
+    },
+    "writer.claims.read": {
+      "trust_class": "read_only",
+      "evidence_eligible": false
+    },
+    "writer.draft": {
+      "trust_class": "derived_artifact",
+      "evidence_eligible": false
+    },
+    "writer.semantic_validate": {
+      "trust_class": "gate",
+      "evidence_eligible": true
+    },
+    "capability.escalation": {
+      "trust_class": "router_control",
+      "evidence_eligible": false
+    },
+    "tribunal.role.execute": {
+      "trust_class": "semantic_worker",
+      "evidence_eligible": false
+    }
+  }
+}

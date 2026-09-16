@@ -1,0 +1,24 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://harness.local/schema/workspace-ref/1.0",
+  "title": "WorkspaceRef",
+  "description": "Normalized workspace reference validated by Harness Core. Core never falls back to process cwd.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "kind",
+    "directory",
+    "worktree",
+    "readonly",
+    "identity"
+  ],
+  "properties": {
+    "schema": { "const": "workspace-ref/1.0" },
+    "kind": { "const": "local" },
+    "directory": { "type": "string", "minLength": 1 },
+    "worktree": { "type": "string", "minLength": 1 },
+    "readonly": { "type": "boolean" },
+    "identity": { "type": "string", "pattern": "^sha256:" }
+  }
+}

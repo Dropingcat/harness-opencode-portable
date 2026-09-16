@@ -1,0 +1,29 @@
+{
+    "plugin":  [
+                   "file:///E:/opencode_harness_portable/packages/opencode-harness-plugin/dist/index.js"
+               ],
+    "$schema":  "https://opencode.ai/config.json",
+    "mcp":  {
+                "academic_search":  {
+                                        "args":  [
+                                                     "${OPENCODE_HARNESS_ROOT}/mcp/academic_search_server.py"
+                                                 ],
+                                        "command":  "${PYTHON_BIN}",
+                                        "cwd":  "${OPENCODE_HARNESS_ROOT}/mcp"
+                                    },
+                "coder_router":  {
+                                     "args":  [
+                                                  "${OPENCODE_HARNESS_ROOT}/mcp/coder_router_server.py"
+                                              ],
+                                     "command":  "${PYTHON_BIN}",
+                                     "cwd":  "${OPENCODE_HARNESS_ROOT}/mcp"
+                                 },
+                "searxng_search":  {
+                                       "args":  [
+                                                    "${OPENCODE_HARNESS_ROOT}/mcp/searxng_search_server.py"
+                                                ],
+                                       "command":  "${PYTHON_BIN}",
+                                       "cwd":  "${OPENCODE_HARNESS_ROOT}/mcp"
+                                   }
+            }
+}

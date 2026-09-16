@@ -1,0 +1,45 @@
+{
+  "name": "@harness/opencode-plugin",
+  "version": "0.1.0",
+  "description": "OpenCode native plugin bridge to Harness Core (Writer + Researcher + Coder). Host adapter only; Core authority stays in Harness.",
+  "type": "module",
+  "license": "MIT",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./schema": {
+      "import": "./dist/schema.js",
+      "types": "./dist/schema.d.ts"
+    },
+    "./bridge": {
+      "import": "./dist/bridge/index.js",
+      "types": "./dist/bridge/index.d.ts"
+    }
+  },
+  "files": [
+    "dist",
+    "schemas",
+    "core"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "node --test tests/",
+    "install-plugin": "python core/install_plugin.py"
+  },
+  "dependencies": {
+    "@opencode-ai/plugin": "1.18.16",
+    "@opencode-ai/sdk": "1.18.16"
+  },
+  "devDependencies": {
+    "@types/node": "24.12.2",
+    "typescript": "5.8.2"
+  },
+  "peerDependencies": {
+    "@opencode-ai/plugin": ">=1.18.0"
+  }
+}

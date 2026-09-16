@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "plugin": {
+    "name": "@harness/opencode-plugin",
+    "mode": "native",
+    "package": "@harness/opencode-plugin",
+    "entry_point": "dist/index.js",
+    "project_config": ".opencode/opencode.json",
+    "enabled": true,
+    "auto_load": true
+  }
+}

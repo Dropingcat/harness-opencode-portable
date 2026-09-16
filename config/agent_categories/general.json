@@ -1,0 +1,6 @@
+{
+  "agent": "general",
+  "categories": ["CAT_GENERAL"],
+  "default_bucket": "integration",
+  "capsule": "core-orchestration"
+}

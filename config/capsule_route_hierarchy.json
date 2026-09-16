@@ -1,0 +1,86 @@
+{
+  "version": 1,
+  "layers": [
+    "router-core",
+    "claim-routing",
+    "skill-capsule",
+    "audit-graph",
+    "graph-driven-memory",
+    "tool-runtime-bindings",
+    "mcp-perimeter",
+    "runtime-integration"
+  ],
+  "edges": [
+    {
+      "from": "router-core",
+      "to": "claim-routing",
+      "relation": "refines_task"
+    },
+    {
+      "from": "claim-routing",
+      "to": "skill-capsule",
+      "relation": "selects_capabilities"
+    },
+    {
+      "from": "claim-routing",
+      "to": "audit-graph",
+      "relation": "creates_tracked_units"
+    },
+    {
+      "from": "skill-capsule",
+      "to": "tool-runtime-bindings",
+      "relation": "requires_tools"
+    },
+    {
+      "from": "tool-runtime-bindings",
+      "to": "mcp-perimeter",
+      "relation": "binds_external_runtime"
+    },
+    {
+      "from": "audit-graph",
+      "to": "graph-driven-memory",
+      "relation": "projects_into_memory"
+    },
+    {
+      "from": "mcp-perimeter",
+      "to": "runtime-integration",
+      "relation": "manages_lifecycle"
+    },
+    {
+      "from": "tool-runtime-bindings",
+      "to": "runtime-integration",
+      "relation": "resolves_paths"
+    }
+  ],
+  "route_bindings": {
+    "code-implementation": [
+      "router-core",
+      "claim-routing",
+      "skill-capsule",
+      "audit-graph",
+      "graph-driven-memory"
+    ],
+    "academic-research": [
+      "router-core",
+      "claim-routing",
+      "skill-capsule",
+      "audit-graph",
+      "graph-driven-memory"
+    ],
+    "opencode-config": [
+      "runtime-integration"
+    ],
+    "web-research": [
+      "router-core",
+      "claim-routing",
+      "skill-capsule",
+      "tool-runtime-bindings",
+      "mcp-perimeter",
+      "audit-graph",
+      "graph-driven-memory"
+    ],
+    "tech-debt": [
+      "runtime-integration"
+    ]
+  }
+}

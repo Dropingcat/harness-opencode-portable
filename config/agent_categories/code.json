@@ -1,0 +1,6 @@
+{
+  "agent": "coder",
+  "categories": ["CAT_IMPL", "CAT_TEST", "CAT_INTERFACE", "CAT_REVIEW", "CAT_SECURITY"],
+  "default_bucket": "code",
+  "capsule": "code"
+}

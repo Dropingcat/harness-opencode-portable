@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "hash_algorithm": "sha256",
+  "origins": {
+    "agent_output": {"trust": "internal", "guard_required": false},
+    "local_file": {"trust": "internal", "guard_required": false},
+    "tool_internal": {"trust": "internal", "guard_required": false},
+    "web": {"trust": "untrusted", "guard_required": true},
+    "external_tool": {"trust": "untrusted", "guard_required": true},
+    "subagent": {"trust": "untrusted", "guard_required": true},
+    "user_supplied": {"trust": "untrusted", "guard_required": true}
+  },
+  "accepted_guard_verdicts": ["PASS"],
+  "rejected_guard_verdicts": ["FAIL", "BLOCK", "INVALID"],
+  "evidence_rules": {
+    "agent_output_artifact_required": true,
+    "referenced_untrusted_artifacts_must_be_admissible": true,
+    "sanitized_artifact_must_reference_source": true
+  }
+}

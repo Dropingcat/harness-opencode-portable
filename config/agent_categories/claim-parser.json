@@ -1,0 +1,10 @@
+{
+  "agent": "claim-parser",
+  "categories": [
+    "CAT_CLAIM",
+    "CAT_ATOMIC_STATEMENT",
+    "CAT_SCOPE"
+  ],
+  "default_bucket": "research",
+  "capsule": "research-core"
+}

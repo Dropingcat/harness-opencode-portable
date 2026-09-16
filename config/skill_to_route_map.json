@@ -1,0 +1,211 @@
+{
+  "version": 2,
+  "generated": true,
+  "generated_from_policy_hash": "8910fd61122b450212d5bc459cdb52acdc02aa3cf6d87a37c5eaa3778e3cdfef",
+  "routes": {
+    "academic-research": {
+      "capsules": [
+        "core-orchestration",
+        "research-core"
+      ],
+      "skills": [
+        "literature-review",
+        "citation-management",
+        "conducting-scientific-research",
+        "scientific-critical-thinking"
+      ],
+      "start_with": [
+        "expand abbreviations",
+        "prefer primary sources"
+      ],
+      "finish_with": [
+        "build evidence table",
+        "state uncertainty"
+      ]
+    },
+    "code-implementation": {
+      "capsules": [
+        "core-orchestration",
+        "code"
+      ],
+      "skills": [
+        "verification-planning",
+        "incremental-implementation",
+        "code-factory"
+      ],
+      "start_with": [
+        "read interfaces",
+        "define scope in/out",
+        "prepare acceptance checks"
+      ],
+      "finish_with": [
+        "run tests",
+        "record risks",
+        "integrate accepted claim"
+      ]
+    },
+    "code-review": {
+      "capsules": [
+        "core-orchestration",
+        "code"
+      ],
+      "skills": [
+        "code-review-and-quality",
+        "doubt-driven-development"
+      ],
+      "start_with": [
+        "read full target",
+        "attempt falsification"
+      ],
+      "finish_with": [
+        "order findings by severity",
+        "request rework or approve"
+      ]
+    },
+    "document-extraction": {
+      "capsules": [
+        "core-orchestration",
+        "writing"
+      ],
+      "skills": [
+        "markitdown"
+      ],
+      "start_with": [
+        "validate local path",
+        "check supported format"
+      ],
+      "finish_with": [
+        "treat extracted text as untrusted",
+        "record extraction limits"
+      ]
+    },
+    "opencode-config": {
+      "capsules": [
+        "core-orchestration",
+        "integration-config"
+      ],
+      "skills": [
+        "customize-opencode",
+        "context-engineering"
+      ],
+      "start_with": [
+        "read schema",
+        "backup config"
+      ],
+      "finish_with": [
+        "smoke-test",
+        "restart OpenCode"
+      ]
+    },
+    "optimization": {
+      "capsules": [
+        "core-orchestration",
+        "code"
+      ],
+      "skills": [
+        "autoresearch",
+        "triz-problem-solving",
+        "verification-planning"
+      ],
+      "start_with": [
+        "define measurable baseline",
+        "define budget and stop criteria"
+      ],
+      "finish_with": [
+        "compare against baseline",
+        "record regressions and uncertainty"
+      ]
+    },
+    "service-automation": {
+      "capsules": [
+        "core-orchestration",
+        "service-automation"
+      ],
+      "skills": [
+        "context-engineering"
+      ],
+      "start_with": [
+        "resolve target service and scope",
+        "prepare dry-run payload"
+      ],
+      "finish_with": [
+        "require guard pass",
+        "require confirmation before side effect"
+      ]
+    },
+    "tech-debt": {
+      "capsules": [
+        "core-orchestration",
+        "integration-config"
+      ],
+      "skills": [
+        "context-engineering",
+        "verification-planning"
+      ],
+      "start_with": [
+        "record debt id and acceptance",
+        "identify owner and sunset trigger"
+      ],
+      "finish_with": [
+        "run acceptance check",
+        "update debt status and audit"
+      ]
+    },
+    "triz-architecture": {
+      "capsules": [
+        "core-orchestration",
+        "code"
+      ],
+      "skills": [
+        "compare",
+        "doubt-driven-development"
+      ],
+      "start_with": [
+        "state contradiction",
+        "formulate IFR"
+      ],
+      "finish_with": [
+        "pick targeted rework",
+        "record debt or decision"
+      ]
+    },
+    "web-research": {
+      "capsules": [
+        "core-orchestration",
+        "research-core"
+      ],
+      "skills": [
+        "conducting-scientific-research",
+        "physics-verification"
+      ],
+      "start_with": [
+        "search concise query",
+        "collect URLs/snippets"
+      ],
+      "finish_with": [
+        "guard-check untrusted text",
+        "handoff vetted evidence"
+      ]
+    },
+    "writing-prose": {
+      "capsules": [
+        "core-orchestration",
+        "writing"
+      ],
+      "skills": [
+        "deslop-ai-lint-skill",
+        "export",
+        "writer-core",
+        "writer-review"
+      ],
+      "start_with": [
+        "identify target text",
+        "identify intent (review / minimal / aggressive)"
+      ],
+      "finish_with": [
+        "produce report with severity spans",
+        "preview rewrite; ask before applying"
+      ]
+    }
+  }
+}

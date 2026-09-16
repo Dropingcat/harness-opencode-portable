@@ -1,0 +1,32 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://harness.local/schema/host-context/1.0",
+  "title": "HostContext",
+  "description": "Normalized OpenCode host context crossing the plugin boundary. No raw SDK objects.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "host",
+    "host_version",
+    "plugin_version",
+    "session_id",
+    "message_id",
+    "agent_id",
+    "directory",
+    "worktree"
+  ],
+  "properties": {
+    "schema": { "const": "host-context/1.0" },
+    "host": { "const": "opencode" },
+    "host_version": { "type": "string", "minLength": 1 },
+    "plugin_version": { "type": "string", "minLength": 1 },
+    "session_id": { "type": "string", "minLength": 1 },
+    "message_id": { "type": "string", "minLength": 1 },
+    "agent_id": { "type": "string", "minLength": 1 },
+    "directory": { "type": "string", "minLength": 1 },
+    "worktree": { "type": "string", "minLength": 1 },
+    "project_ref": { "type": "string" },
+    "features_fingerprint": { "type": "string", "pattern": "^sha256:" }
+  }
+}

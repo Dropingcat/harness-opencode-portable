@@ -1,0 +1,29 @@
+{
+  "schema": "harness-opencode-compatibility/1.0",
+  "opencode_version": "1.18.30",
+  "plugin_api_package": "@opencode-ai/plugin@1.18.16",
+  "sdk_package": "@opencode-ai/sdk@1.18.16",
+  "tested_platform": "Windows 10 AMD64, Node 22.23.1, OpenCode CLI 1.18.30 native",
+  "feature_probes": {
+    "PLUGIN_LOADED": "LIVE_VERIFIED",
+    "CUSTOM_TOOL_VISIBLE": "LIVE_VERIFIED harness_status + harness_run",
+    "SDK_CLIENT_AVAILABLE": "LIVE_VERIFIED",
+    "SESSION_CREATE": "verified against package types",
+    "SESSION_PROMPT": "verified against package types",
+    "SESSION_ABORT": "verified against package types",
+    "HOST_CONTEXT": "LIVE_VERIFIED (session/message/agent/directory/worktree normalized)",
+    "WORKSPACE_CONTEXT": "LIVE_VERIFIED",
+    "BRIDGE_FULL_DUPLEX": "hostless test + LIVE harness.status/harness.run through Python peer",
+    "STRUCTURED_OUTPUT": "NOT_LIVE_CERTIFIED",
+    "EVENT_STREAM": "verified against package types"
+  },
+  "semantic_status": "NOT_LIVE_CERTIFIED",
+  "known_upstream_issues": [],
+  "supported_plugin_version_range": ">=1.18.0",
+  "certification_date": "2026-09-14",
+  "evidence": [
+    "harness plugin loaded protocol=harness-bridge-rpc/1.0 required_features_ok=true",
+    "tool harness_status executed by live model opencode/big-pickle, returned core status",
+    "tool harness_run executed by live model, routed through Python core resolve()"
+  ]
+}

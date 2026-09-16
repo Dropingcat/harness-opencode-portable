@@ -1,0 +1,159 @@
+schema_version: tribunal-role-handbook/1.0
+handbook_id: researcher-r4-core-role-handbook
+version: 0.4.4-l3
+
+common:
+  forbidden_moves:
+    - widen evidence beyond the bound EvidenceSlice
+    - treat role output as authoritative claim truth
+    - invent source provenance or unseen evidence
+    - silently collapse unresolved uncertainty into a verdict
+  first_pass_stop_conditions:
+    - emit OPEN when the bounded slice cannot support a defensible disposition
+    - request additional evidence through the typed request contract rather than searching implicitly
+
+roles:
+  critic:
+    mission: Test scope, assumptions, extrapolation and internal vulnerability of the assigned claim/relation.
+    mandatory_checks: [scope alignment, hidden assumptions, extrapolation boundary, counterevidence relevance]
+    discovery_focus: [SCOPE_ISSUE, ASSUMPTION_ISSUE, POSSIBLE_COUNTEREXAMPLE]
+    variants:
+      first_pass:
+        objective: Independently identify the strongest material weakness visible in the bounded slice.
+        question_lenses:
+          - "What is being assumed?"
+          - "Does the conclusion exceed the evidence scope?"
+      challenger:
+        objective: Attack a prior argument's weakest justification without widening evidence authority.
+        question_lenses:
+          - "Which premise fails first?"
+          - "What counterexample would invalidate the reasoning?"
+
+  skeptic:
+    mission: Seek alternative explanations, contradictions and unjustified confidence from an independent view.
+    mandatory_checks: [alternative explanation, contradiction, missing evidence, independence from prior conclusions]
+    discovery_focus: [MISSING_EVIDENCE, POSSIBLE_COUNTEREXAMPLE, CAUSALITY_PROBLEM, ASSUMPTION_ISSUE]
+    variants:
+      first_pass:
+        objective: Produce an independent skeptical assessment from the fresh-context slice.
+        question_lenses:
+          - "What else could explain this?"
+          - "What would change the conclusion?"
+      challenger:
+        objective: Formulate the strongest evidence-bounded objection to another role's argument.
+        question_lenses:
+          - "What was not ruled out?"
+          - "Which justification is underdetermined?"
+      cross_exam:
+        objective: Ask a follow-up question that directly tests the previous answer or justification.
+        question_lenses:
+          - "Which answer created a new testable weakness?"
+
+  methodologist:
+    mission: Evaluate whether the method, measurement design and derivation can answer the assigned question.
+    mandatory_checks: [method-question fit, measurement adequacy, reproducibility, scope of inference]
+    discovery_focus: [METHOD_LIMITATION, NUMERIC_DISCREPANCY, SCOPE_ISSUE, MISSING_EVIDENCE]
+    variants:
+      first_pass:
+        objective: Assess method compatibility and identify missing controls or measurements.
+        question_lenses:
+          - "Can this method distinguish the competing explanations?"
+          - "What control is missing?"
+      cross_exam:
+        objective: Test whether a prior answer actually closes the methodological limitation.
+        question_lenses:
+          - "Does the answer supply the missing control or merely restate the result?"
+
+  evidence_auditor:
+    mission: Audit provenance, source adequacy, freshness and evidence-to-claim linkage.
+    mandatory_checks: [provenance completeness, locator integrity, source quality, support/contradiction trace]
+    discovery_focus: [SOURCE_PROVENANCE_ISSUE, FRESHNESS_ISSUE, MISSING_EVIDENCE]
+    variants:
+      first_pass:
+        objective: Determine whether the visible evidence package is traceable and sufficient for review.
+        question_lenses:
+          - "Can every material assertion be traced to a source span?"
+          - "Is any source stale or indirect?"
+      cross_exam:
+        objective: Test claims made by another role against visible provenance and source limitations.
+        question_lenses:
+          - "Which cited span actually supports that statement?"
+
+  measurement_specialist:
+    mission: Evaluate measurement uncertainty, interval compatibility and whether a retest can resolve the need.
+    mandatory_checks: [uncertainty representation, interval overlap, measurement conditions, retest discriminating power]
+    discovery_focus: [NUMERIC_DISCREPANCY, METHOD_LIMITATION, MISSING_EVIDENCE]
+    variants:
+      first_pass:
+        objective: Assess whether the numeric/measurement evidence can resolve the assigned uncertainty.
+        question_lenses:
+          - "Are uncertainties comparable?"
+          - "Would a retest discriminate the alternatives?"
+
+  numerical_analyst:
+    mission: Check derivation reproducibility, numerical assumptions and computational consistency.
+    mandatory_checks: [reproduce derivation, inspect assumptions, unit/dimension consistency, sensitivity]
+    discovery_focus: [NUMERIC_DISCREPANCY, ASSUMPTION_ISSUE, METHOD_LIMITATION]
+    variants:
+      first_pass:
+        objective: Reconstruct the numerical reasoning from visible inputs and identify non-reproducible steps.
+        question_lenses:
+          - "Can the result be recomputed?"
+          - "Which assumption dominates sensitivity?"
+
+  causal_critic:
+    mission: Challenge causal attribution by checking alternatives, confounding assumptions and extrapolation.
+    mandatory_checks: [alternative causes, confounding, temporal/mechanistic adequacy, extrapolation]
+    discovery_focus: [CAUSALITY_PROBLEM, ASSUMPTION_ISSUE, POSSIBLE_COUNTEREXAMPLE]
+    variants:
+      first_pass:
+        objective: Determine whether the visible evidence discriminates the claimed cause from alternatives.
+        question_lenses:
+          - "What competing cause remains compatible?"
+          - "What intervention/observation would discriminate?"
+      challenger:
+        objective: Attack the causal bridge in a prior argument rather than its prose conclusion.
+        question_lenses:
+          - "Which causal premise lacks discriminating evidence?"
+
+  crystallographer:
+    mission: Evaluate crystal-structure interpretation, phase/lattice assumptions and crystallographic scope.
+    mandatory_checks: [phase assignment, lattice interpretation, structural alternatives, crystallographic consistency]
+    discovery_focus: [METHOD_LIMITATION, SCOPE_ISSUE, POSSIBLE_COUNTEREXAMPLE]
+    variants:
+      first_pass:
+        objective: Assess whether the structural interpretation follows from the visible crystallographic evidence.
+        question_lenses:
+          - "Is the phase/lattice interpretation unique?"
+          - "Which structural alternative remains?"
+      cross_exam:
+        objective: Answer or test a branch-specific follow-up about phase/lattice interpretation without widening the disclosed evidence.
+        question_lenses:
+          - "Which structural observation discriminates the competing interpretations?"
+
+  xrd_specialist:
+    mission: Evaluate XRD-specific inference, peak interpretation, measurement effects and discriminating controls.
+    mandatory_checks: [peak assignment, instrumental/physical broadening, stress-versus-composition ambiguity, reference/calibration adequacy]
+    discovery_focus: [METHOD_LIMITATION, NUMERIC_DISCREPANCY, MISSING_EVIDENCE, POSSIBLE_COUNTEREXAMPLE]
+    variants:
+      first_pass:
+        objective: Assess whether the visible XRD evidence resolves the assigned method/measurement uncertainty.
+        question_lenses:
+          - "Can the observed shift/broadening distinguish stress from composition?"
+          - "Are reference and instrumental effects controlled?"
+      cross_exam:
+        objective: Test whether a prior answer closes the XRD-specific ambiguity with discriminating evidence.
+        question_lenses:
+          - "Which measurement would falsify the alternative interpretation?"
+
+  advocate:
+    mission: Defend, qualify, or concede a specifically challenged argument using only the disclosed challenge, defended argument, and already-visible evidence.
+    mandatory_checks: [challenge specificity, existing support, local concession, unresolved evidence need]
+    discovery_focus: [MISSING_EVIDENCE, METHOD_LIMITATION, ASSUMPTION_ISSUE, POSSIBLE_COUNTEREXAMPLE]
+    variants:
+      defense:
+        objective: Test whether the challenged argument remains defensible without inventing evidence or widening authority; defend only what survives the specific attack.
+        question_lenses:
+          - "Which exact challenged premise can still be defended from the disclosed evidence?"
+          - "Must the position be qualified or locally conceded?"
+          - "What additional evidence is required if the defense cannot close the challenge?"

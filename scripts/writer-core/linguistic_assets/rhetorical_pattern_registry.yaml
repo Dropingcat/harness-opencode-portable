@@ -1,0 +1,40 @@
+schema_version: rhetorical-patterns/0.3
+patterns:
+- id: ACADEMIC_CHREIA
+  moves:
+  - CLAIM
+  - EXPLICATION
+  - EVIDENCE
+  - REASON_OR_MECHANISM?
+  - COUNTERPOSITION?
+  - COMPARISON_OR_EXAMPLE?
+  - BOUNDARY_OR_QUALIFIER?
+  - SYNTHESIS
+  hard_constraints:
+  - no_invented_evidence
+  - counterclaim_not_strawman
+  - synthesis_strength<=evidence_strength
+- id: THESIS_COUNTERCLAIM_SYNTHESIS
+  moves:
+  - THESIS
+  - COUNTERCLAIM
+  - EVALUATION
+  - SYNTHESIS
+- id: PROBLEM_ANALYSIS_SOLUTION
+  moves:
+  - PROBLEM
+  - ANALYSIS
+  - SOLUTION
+  - LIMITATION?
+- id: DEFINITION_EXAMPLE_BOUNDARY
+  moves:
+  - DEFINITION
+  - EXAMPLE
+  - BOUNDARY
+- id: RESULT_ALTERNATIVES_PREFERRED_INTERPRETATION
+  moves:
+  - RESULT
+  - ALTERNATIVE_A
+  - ALTERNATIVE_B?
+  - PREFERRED_INTERPRETATION
+  - LIMITATION?

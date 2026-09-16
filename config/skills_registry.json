@@ -1,0 +1,50 @@
+{
+  "version": 1,
+  "sources": {
+    "opencode_current": "skills/opencode-current",
+    "server2": "W:\\server2\\skills"
+  },
+  "inventory": {
+    "server2_skill_count": 184
+  },
+  "core_runtime_skills": [
+    "code-factory",
+    "context-engineering",
+    "doubt-driven-development",
+    "verification-planning",
+    "incremental-implementation",
+    "code-review-and-quality",
+    "compare",
+    "export",
+    "literature-review",
+    "citation-management",
+    "conducting-scientific-research",
+    "customize-opencode",
+    "deslop-ai-lint-skill",
+    "physics-verification",
+    "markitdown",
+    "autoresearch",
+    "triz-problem-solving",
+    "writer-core",
+    "writer-review"
+  ],
+  "optional_domain_skills": [
+    "astropy",
+    "chembl-database",
+    "drugbank-database",
+    "deepchem",
+    "dask",
+    "geopandas",
+    "fluid-dynamics",
+    "diffdock",
+    "bayesian-inference",
+    "market-research-reports"
+  ],
+  "reference_only_skills": [
+    "infographics",
+    "long-context",
+    "deepwork",
+    "llm-as-judge-evaluation"
+  ],
+  "notes": "First-pass registry only. Full normalization of 184 server skills is still pending. Do not advertise entire corpus by default."
+}

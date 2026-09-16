@@ -1,0 +1,13 @@
+{
+  "sources": [
+    {
+      "claim_id": 102,
+      "sources": [
+        {
+          "title": "S2",
+          "descriptor": "Yield strength 600-650 MPa"
+        }
+      ]
+    }
+  ]
+}

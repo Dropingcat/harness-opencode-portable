@@ -1,0 +1,13 @@
+{
+  "sources": [
+    {
+      "claim_id": 101,
+      "sources": [
+        {
+          "title": "S1",
+          "descriptor": "Steel hardness is 200 HV"
+        }
+      ]
+    }
+  ]
+}

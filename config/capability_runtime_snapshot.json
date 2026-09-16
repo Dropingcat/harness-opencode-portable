@@ -1,0 +1,1262 @@
+{
+  "version": 2,
+  "generated": true,
+  "policy_hash": "f9de8128f960000470c286b0b153861ec8ff906b2fa6f3be712dbf1d924e47a0",
+  "base_policy_hash": "8910fd61122b450212d5bc459cdb52acdc02aa3cf6d87a37c5eaa3778e3cdfef",
+  "capabilities": {
+    "web.discovery": {
+      "trust_class": "discovery",
+      "evidence_eligible": false
+    },
+    "academic.metadata": {
+      "trust_class": "metadata",
+      "evidence_eligible": false
+    },
+    "source.oa_resolve": {
+      "trust_class": "metadata",
+      "evidence_eligible": false
+    },
+    "document.text.extract": {
+      "trust_class": "untrusted_content",
+      "evidence_eligible": false
+    },
+    "document.structured.inspect": {
+      "trust_class": "untrusted_content",
+      "evidence_eligible": false
+    },
+    "document.ocr": {
+      "trust_class": "derived_untrusted_content",
+      "evidence_eligible": false
+    },
+    "office.docx.inspect": {
+      "trust_class": "untrusted_content",
+      "evidence_eligible": false
+    },
+    "office.xlsx.inspect": {
+      "trust_class": "untrusted_content",
+      "evidence_eligible": false
+    },
+    "office.legacy.inspect": {
+      "trust_class": "untrusted_content",
+      "evidence_eligible": false
+    },
+    "image.tiff.inspect": {
+      "trust_class": "untrusted_content",
+      "evidence_eligible": false
+    },
+    "science.numeric": {
+      "trust_class": "deterministic_computation",
+      "evidence_eligible": true
+    },
+    "science.symbolic": {
+      "trust_class": "deterministic_computation",
+      "evidence_eligible": true
+    },
+    "science.physics": {
+      "trust_class": "deterministic_computation",
+      "evidence_eligible": true
+    },
+    "science.chemistry": {
+      "trust_class": "deterministic_computation",
+      "evidence_eligible": true
+    },
+    "formula.validate": {
+      "trust_class": "deterministic_computation",
+      "evidence_eligible": true
+    },
+    "plot.render": {
+      "trust_class": "derived_artifact",
+      "evidence_eligible": false
+    },
+    "report.compose": {
+      "trust_class": "derived_artifact",
+      "evidence_eligible": false
+    },
+    "corpus.fts": {
+      "trust_class": "local_index",
+      "evidence_eligible": false
+    },
+    "evidence.verify": {
+      "trust_class": "gate",
+      "evidence_eligible": true
+    },
+    "job.checkpoint": {
+      "trust_class": "state_runtime",
+      "evidence_eligible": false
+    },
+    "code.edit": {
+      "trust_class": "side_effect",
+      "evidence_eligible": false
+    },
+    "code.test": {
+      "trust_class": "deterministic_check",
+      "evidence_eligible": true
+    },
+    "code.review": {
+      "trust_class": "agent_evidence",
+      "evidence_eligible": true
+    },
+    "code.acceptance": {
+      "trust_class": "gate",
+      "evidence_eligible": true
+    },
+    "writer.claims.read": {
+      "trust_class": "read_only",
+      "evidence_eligible": false
+    },
+    "writer.draft": {
+      "trust_class": "derived_artifact",
+      "evidence_eligible": false
+    },
+    "writer.semantic_validate": {
+      "trust_class": "gate",
+      "evidence_eligible": true
+    },
+    "capability.escalation": {
+      "trust_class": "router_control",
+      "evidence_eligible": false
+    },
+    "tribunal.role.execute": {
+      "trust_class": "semantic_worker",
+      "evidence_eligible": false
+    }
+  },
+  "providers": {
+    "existing.searxng": {
+      "kind": "mcp",
+      "tool": "searxng_search",
+      "provides": [
+        "web.discovery"
+      ],
+      "priority": 100,
+      "installed_probe": {
+        "kind": "file",
+        "path": "mcp/searxng_search_server.py"
+      },
+      "live_probe": {
+        "kind": "http_json",
+        "url": "http://127.0.0.1:8888/search?q=capability-preflight&format=json",
+        "timeout": 1.5
+      }
+    },
+    "existing.openalex": {
+      "kind": "mcp",
+      "tool": "openalex_search",
+      "provides": [
+        "academic.metadata"
+      ],
+      "priority": 90,
+      "installed_probe": {
+        "kind": "file",
+        "path": "mcp/academic_search_server.py"
+      },
+      "live_probe": {
+        "kind": "http_json",
+        "url": "https://api.openalex.org/works?search=capability-preflight&per-page=1",
+        "timeout": 2.0
+      }
+    },
+    "existing.arxiv": {
+      "kind": "mcp",
+      "tool": "arxiv_search",
+      "provides": [
+        "academic.metadata"
+      ],
+      "priority": 70,
+      "installed_probe": {
+        "kind": "file",
+        "path": "mcp/academic_search_server.py"
+      },
+      "live_probe": {
+        "kind": "tcp",
+        "url": "https://export.arxiv.org",
+        "timeout": 2.0
+      }
+    },
+    "local.source_resolver": {
+      "kind": "script",
+      "entrypoint": "scripts/capsules/source_resolve.py",
+      "provides": [
+        "academic.metadata",
+        "source.oa_resolve"
+      ],
+      "priority": 95,
+      "installed_probe": {
+        "kind": "python_module",
+        "module": "requests"
+      },
+      "live_probe": {
+        "kind": "tcp",
+        "url": "https://api.crossref.org",
+        "timeout": 2.0
+      }
+    },
+    "existing.document_extract": {
+      "kind": "mcp",
+      "tool": "extract_document",
+      "provides": [
+        "document.text.extract"
+      ],
+      "priority": 50,
+      "installed_probe": {
+        "kind": "file",
+        "path": "mcp/doc_extract_server.py"
+      },
+      "enabled": false
+    },
+    "local.ocr": {
+      "kind": "external",
+      "command": "tesseract",
+      "provides": [
+        "document.ocr"
+      ],
+      "priority": 70,
+      "installed_probe": {
+        "kind": "executable",
+        "name": "tesseract"
+      }
+    },
+    "local.libreoffice": {
+      "kind": "external",
+      "command": "libreoffice",
+      "provides": [
+        "office.legacy.inspect"
+      ],
+      "priority": 70,
+      "installed_probe": {
+        "kind": "executable",
+        "name": "libreoffice"
+      }
+    },
+    "local.science": {
+      "kind": "script",
+      "entrypoint": "scripts/capsules/science_compute.py",
+      "provides": [
+        "science.numeric",
+        "science.symbolic",
+        "science.physics",
+        "science.chemistry",
+        "formula.validate"
+      ],
+      "priority": 100,
+      "installed_probe": {
+        "kind": "python_module",
+        "module": "sympy"
+      }
+    },
+    "local.plot": {
+      "kind": "script",
+      "entrypoint": "scripts/capsules/plot_render.py",
+      "provides": [
+        "plot.render"
+      ],
+      "priority": 100,
+      "installed_probe": {
+        "kind": "python_module",
+        "module": "matplotlib"
+      }
+    },
+    "local.report": {
+      "kind": "script",
+      "entrypoint": "scripts/capsules/report_compose.py",
+      "provides": [
+        "report.compose"
+      ],
+      "priority": 100,
+      "installed_probe": {
+        "kind": "always"
+      }
+    },
+    "local.corpus": {
+      "kind": "script",
+      "entrypoint": "scripts/capsules/corpus_fts.py",
+      "provides": [
+        "corpus.fts"
+      ],
+      "priority": 100,
+      "installed_probe": {
+        "kind": "sqlite_fts5"
+      }
+    },
+    "local.job_runtime": {
+      "kind": "script",
+      "entrypoint": "scripts/jobs/job_ctl.py",
+      "provides": [
+        "job.checkpoint"
+      ],
+      "priority": 100,
+      "installed_probe": {
+        "kind": "file",
+        "path": "scripts/jobs/job_ctl.py"
+      }
+    },
+    "existing.code_worker": {
+      "kind": "launcher",
+      "tool": "code_work",
+      "provides": [
+        "code.edit",
+        "code.test"
+      ],
+      "priority": 90,
+      "installed_probe": {
+        "kind": "file",
+        "path": "mcp/launchers/opencode_code_worker.py"
+      }
+    },
+    "existing.code_router": {
+      "kind": "mcp",
+      "tool": "coder_run",
+      "provides": [
+        "code.edit",
+        "code.review"
+      ],
+      "priority": 80,
+      "installed_probe": {
+        "kind": "file",
+        "path": "mcp/coder_router_server.py"
+      }
+    },
+    "existing.factory": {
+      "kind": "script",
+      "tool": "factory_ctl",
+      "provides": [
+        "code.acceptance",
+        "evidence.verify"
+      ],
+      "priority": 100,
+      "installed_probe": {
+        "kind": "file",
+        "path": "scripts/code-factory/factory_ctl.py"
+      }
+    },
+    "agent.fact_checker": {
+      "kind": "agent",
+      "agent": "fact-checker",
+      "provides": [
+        "evidence.verify"
+      ],
+      "priority": 95,
+      "installed_probe": {
+        "kind": "file",
+        "path": "agents/fact-checker.md"
+      }
+    },
+    "agent.writer": {
+      "kind": "agent",
+      "agent": "article-writer",
+      "provides": [
+        "writer.claims.read",
+        "writer.draft",
+        "writer.semantic_validate"
+      ],
+      "priority": 100,
+      "installed_probe": {
+        "kind": "file",
+        "path": "agents/article-writer.md"
+      }
+    },
+    "local.writer_core": {
+      "kind": "script",
+      "entrypoint": "scripts/writer-core/wc_cli.py",
+      "provides": [
+        "writer.semantic_validate"
+      ],
+      "priority": 110,
+      "installed_probe": {
+        "kind": "file",
+        "path": "scripts/writer-core/wc_cli.py"
+      },
+      "live_probe": {
+        "kind": "command",
+        "executable_env": "WRITER_PYTHON",
+        "argv": [
+          "-c",
+          "import importlib.util,pathlib; p=pathlib.Path('scripts/writer-core/wc_cli.py'); s=importlib.util.spec_from_file_location('writer_core_probe',p); m=importlib.util.module_from_spec(s); s.loader.exec_module(m); from writer_core.factory_process import draftcheck; r=draftcheck('The probe may validate semantics.',[{'claim_id':'probe','proposition':'The probe may validate semantics.'}]); assert isinstance(r,dict) and not (r.get('re_extraction') or {}).get('errors'), r"
+        ],
+        "timeout": 15
+      }
+    },
+    "agent.code_reviewer": {
+      "kind": "agent",
+      "agent": "code-reviewer",
+      "provides": [
+        "code.review"
+      ],
+      "priority": 100,
+      "installed_probe": {
+        "kind": "file",
+        "path": "agents/code-reviewer.md"
+      }
+    },
+    "local.pdf_inspector": {
+      "kind": "script",
+      "entrypoint": "scripts/capsules/document_inspect.py",
+      "provides": [
+        "document.text.extract",
+        "document.structured.inspect"
+      ],
+      "priority": 100,
+      "installed_probe": {
+        "kind": "python_module",
+        "module": "fitz"
+      }
+    },
+    "local.docx_inspector": {
+      "kind": "script",
+      "entrypoint": "scripts/capsules/document_inspect.py",
+      "provides": [
+        "office.docx.inspect",
+        "document.structured.inspect",
+        "document.text.extract"
+      ],
+      "priority": 95,
+      "installed_probe": {
+        "kind": "python_module",
+        "module": "docx"
+      }
+    },
+    "local.xlsx_inspector": {
+      "kind": "script",
+      "entrypoint": "scripts/capsules/document_inspect.py",
+      "provides": [
+        "office.xlsx.inspect",
+        "document.structured.inspect",
+        "document.text.extract"
+      ],
+      "priority": 95,
+      "installed_probe": {
+        "kind": "python_module",
+        "module": "openpyxl"
+      }
+    },
+    "local.tiff_inspector": {
+      "kind": "script",
+      "entrypoint": "scripts/capsules/scientific_image_inspect.py",
+      "provides": [
+        "image.tiff.inspect",
+        "document.structured.inspect"
+      ],
+      "priority": 95,
+      "installed_probe": {
+        "kind": "python_module",
+        "module": "tifffile"
+      }
+    },
+    "local.search_gateway": {
+      "kind": "script",
+      "entrypoint": "scripts/capsules/search_gateway.py",
+      "provides": [
+        "web.discovery"
+      ],
+      "priority": 110,
+      "installed_probe": {
+        "kind": "python_module",
+        "module": "requests"
+      },
+      "live_probe": {
+        "kind": "http_json",
+        "url": "http://127.0.0.1:8888/search?q=capability-preflight&format=json",
+        "timeout": 1.5
+      }
+    },
+    "local.capability_router": {
+      "kind": "script",
+      "entrypoint": "scripts/router/capability_escalation.py",
+      "provides": [
+        "capability.escalation"
+      ],
+      "priority": 100,
+      "installed_probe": {
+        "kind": "file",
+        "path": "scripts/router/capability_escalation.py"
+      }
+    },
+    "existing.opencode_tribunal_role": {
+      "kind": "agent",
+      "tool": "tribunal_role",
+      "provides": [
+        "tribunal.role.execute"
+      ],
+      "priority": 85,
+      "installed_probe": {
+        "kind": "file",
+        "path": "mcp/launchers/opencode_tribunal_role.py"
+      },
+      "live_probe": {
+        "kind": "executable",
+        "name": "opencode"
+      },
+      "role_kinds": [
+        "META",
+        "DOMAIN",
+        "METHOD"
+      ],
+      "execution_contracts": [
+        "IQC",
+        "DQC",
+        "ADC"
+      ],
+      "max_executors_per_contract": 1
+    }
+  },
+  "routes": {
+    "academic-research": {
+      "default_stage": "discovery",
+      "stages": {
+        "discovery": {
+          "skills": [
+            "conducting-scientific-research",
+            "literature-review"
+          ],
+          "tools": [
+            "search.discovery",
+            "job.checkpoint"
+          ],
+          "required_capabilities": [
+            "job.checkpoint"
+          ],
+          "required_any_of": [
+            [
+              "web.discovery",
+              "academic.metadata"
+            ]
+          ],
+          "optional_capabilities": [
+            "academic.metadata"
+          ],
+          "forbidden_capabilities": [
+            "code.edit"
+          ],
+          "next": [
+            "source-resolution"
+          ]
+        },
+        "source-resolution": {
+          "skills": [
+            "citation-management",
+            "literature-review"
+          ],
+          "tools": [
+            "source.resolve",
+            "job.checkpoint"
+          ],
+          "required_capabilities": [
+            "academic.metadata",
+            "job.checkpoint"
+          ],
+          "optional_capabilities": [
+            "source.oa_resolve"
+          ],
+          "next": [
+            "document-analysis"
+          ]
+        },
+        "document-analysis": {
+          "skills": [
+            "scientific-critical-thinking",
+            "physics-verification"
+          ],
+          "tools": [
+            "document.inspect",
+            "corpus.search",
+            "job.checkpoint"
+          ],
+          "required_capabilities": [
+            "document.text.extract",
+            "job.checkpoint"
+          ],
+          "optional_capabilities": [
+            "document.structured.inspect",
+            "document.ocr",
+            "office.docx.inspect",
+            "office.xlsx.inspect",
+            "image.tiff.inspect",
+            "science.numeric",
+            "science.symbolic",
+            "formula.validate"
+          ],
+          "escalation": {
+            "document.ocr": [
+              "no_text_layer",
+              "low_text_density"
+            ],
+            "image.tiff.inspect": [
+              "scientific_image_input"
+            ]
+          },
+          "next": [
+            "evidence-validation"
+          ]
+        },
+        "evidence-validation": {
+          "skills": [
+            "scientific-critical-thinking",
+            "citation-management"
+          ],
+          "tools": [
+            "evidence.verify",
+            "science.compute",
+            "job.checkpoint"
+          ],
+          "required_capabilities": [
+            "evidence.verify",
+            "job.checkpoint"
+          ],
+          "optional_capabilities": [
+            "science.numeric",
+            "science.symbolic",
+            "formula.validate"
+          ],
+          "next": [
+            "synthesis"
+          ]
+        },
+        "synthesis": {
+          "skills": [
+            "conducting-scientific-research",
+            "scientific-critical-thinking"
+          ],
+          "tools": [
+            "report.compose",
+            "plot.render",
+            "job.checkpoint"
+          ],
+          "required_capabilities": [
+            "report.compose",
+            "job.checkpoint"
+          ],
+          "optional_capabilities": [
+            "plot.render"
+          ],
+          "next": []
+        }
+      }
+    },
+    "web-research": {
+      "default_stage": "discovery",
+      "stages": {
+        "discovery": {
+          "skills": [
+            "conducting-scientific-research"
+          ],
+          "tools": [
+            "search.discovery",
+            "job.checkpoint"
+          ],
+          "required_capabilities": [
+            "web.discovery",
+            "job.checkpoint"
+          ],
+          "optional_capabilities": [
+            "academic.metadata"
+          ],
+          "next": [
+            "document-analysis"
+          ]
+        },
+        "document-analysis": {
+          "skills": [
+            "scientific-critical-thinking"
+          ],
+          "tools": [
+            "document.inspect",
+            "job.checkpoint"
+          ],
+          "required_capabilities": [
+            "document.text.extract",
+            "job.checkpoint"
+          ],
+          "optional_capabilities": [
+            "document.structured.inspect",
+            "document.ocr"
+          ],
+          "next": [
+            "evidence-validation"
+          ]
+        },
+        "evidence-validation": {
+          "skills": [
+            "scientific-critical-thinking"
+          ],
+          "tools": [
+            "evidence.verify",
+            "job.checkpoint"
+          ],
+          "required_capabilities": [
+            "evidence.verify",
+            "job.checkpoint"
+          ],
+          "optional_capabilities": [],
+          "next": [
+            "synthesis"
+          ]
+        },
+        "synthesis": {
+          "skills": [
+            "conducting-scientific-research"
+          ],
+          "tools": [
+            "report.compose",
+            "job.checkpoint"
+          ],
+          "required_capabilities": [
+            "report.compose",
+            "job.checkpoint"
+          ],
+          "optional_capabilities": [
+            "plot.render"
+          ],
+          "next": []
+        }
+      }
+    },
+    "writing-prose": {
+      "default_stage": "claim-load",
+      "stages": {
+        "claim-load": {
+          "skills": [
+            "writer-core",
+            "citation-management"
+          ],
+          "tools": [
+            "document.inspect",
+            "corpus.search",
+            "job.checkpoint"
+          ],
+          "required_capabilities": [
+            "writer.claims.read",
+            "job.checkpoint"
+          ],
+          "optional_capabilities": [
+            "document.text.extract",
+            "corpus.fts"
+          ],
+          "next": [
+            "draft"
+          ]
+        },
+        "draft": {
+          "skills": [
+            "writer-core",
+            "deslop-ai-lint-skill"
+          ],
+          "tools": [
+            "report.compose",
+            "science.compute",
+            "plot.render",
+            "job.checkpoint"
+          ],
+          "required_capabilities": [
+            "writer.draft",
+            "job.checkpoint"
+          ],
+          "optional_capabilities": [
+            "plot.render",
+            "science.numeric",
+            "science.symbolic",
+            "formula.validate"
+          ],
+          "forbidden_capabilities": [
+            "web.discovery",
+            "code.edit"
+          ],
+          "next": [
+            "semantic-validation"
+          ]
+        },
+        "semantic-validation": {
+          "skills": [
+            "writer-review",
+            "scientific-critical-thinking"
+          ],
+          "tools": [
+            "evidence.verify",
+            "science.compute",
+            "job.checkpoint"
+          ],
+          "required_capabilities": [
+            "writer.semantic_validate",
+            "job.checkpoint"
+          ],
+          "optional_capabilities": [
+            "science.numeric",
+            "formula.validate"
+          ],
+          "forbidden_capabilities": [
+            "web.discovery"
+          ],
+          "next": [
+            "repair"
+          ]
+        },
+        "repair": {
+          "skills": [
+            "writer-core",
+            "writer-review"
+          ],
+          "tools": [
+            "report.compose",
+            "job.checkpoint"
+          ],
+          "required_capabilities": [
+            "writer.draft",
+            "job.checkpoint"
+          ],
+          "optional_capabilities": [],
+          "forbidden_capabilities": [
+            "web.discovery"
+          ],
+          "next": []
+        }
+      }
+    },
+    "document-extraction": {
+      "default_stage": "inspect",
+      "stages": {
+        "inspect": {
+          "skills": [
+            "markitdown"
+          ],
+          "tools": [
+            "document.inspect",
+            "scientific_image.inspect",
+            "job.checkpoint"
+          ],
+          "required_capabilities": [
+            "document.text.extract",
+            "job.checkpoint"
+          ],
+          "optional_capabilities": [
+            "document.structured.inspect",
+            "document.ocr",
+            "office.docx.inspect",
+            "office.xlsx.inspect",
+            "office.legacy.inspect",
+            "image.tiff.inspect"
+          ],
+          "escalation": {
+            "document.ocr": [
+              "no_text_layer"
+            ],
+            "office.legacy.inspect": [
+              "legacy_office_input"
+            ]
+          },
+          "next": []
+        }
+      }
+    },
+    "code-implementation": {
+      "default_stage": "reproduce",
+      "stages": {
+        "reproduce": {
+          "skills": [
+            "verification-planning",
+            "doubt-driven-development"
+          ],
+          "tools": [
+            "code.test",
+            "job.checkpoint"
+          ],
+          "required_capabilities": [
+            "code.test",
+            "job.checkpoint"
+          ],
+          "optional_capabilities": [],
+          "next": [
+            "change"
+          ]
+        },
+        "change": {
+          "skills": [
+            "incremental-implementation",
+            "code-factory"
+          ],
+          "tools": [
+            "code.change",
+            "job.checkpoint"
+          ],
+          "required_capabilities": [
+            "code.edit",
+            "job.checkpoint"
+          ],
+          "optional_capabilities": [
+            "science.numeric",
+            "science.symbolic",
+            "formula.validate"
+          ],
+          "next": [
+            "test"
+          ]
+        },
+        "test": {
+          "skills": [
+            "verification-planning"
+          ],
+          "tools": [
+            "code.test",
+            "job.checkpoint"
+          ],
+          "required_capabilities": [
+            "code.test",
+            "job.checkpoint"
+          ],
+          "optional_capabilities": [],
+          "forbidden_capabilities": [
+            "code.review"
+          ],
+          "next": [
+            "review"
+          ]
+        },
+        "review": {
+          "skills": [
+            "code-review-and-quality",
+            "doubt-driven-development"
+          ],
+          "tools": [
+            "code.review",
+            "job.checkpoint"
+          ],
+          "required_capabilities": [
+            "code.review",
+            "job.checkpoint"
+          ],
+          "optional_capabilities": [],
+          "forbidden_capabilities": [
+            "code.edit"
+          ],
+          "next": [
+            "acceptance"
+          ]
+        },
+        "acceptance": {
+          "skills": [
+            "verification-planning"
+          ],
+          "tools": [
+            "code.acceptance",
+            "job.checkpoint"
+          ],
+          "required_capabilities": [
+            "code.acceptance",
+            "job.checkpoint"
+          ],
+          "optional_capabilities": [],
+          "forbidden_capabilities": [
+            "code.edit"
+          ],
+          "next": []
+        }
+      }
+    },
+    "code-review": {
+      "default_stage": "review",
+      "stages": {
+        "review": {
+          "skills": [
+            "code-review-and-quality",
+            "doubt-driven-development"
+          ],
+          "tools": [
+            "code.review",
+            "job.checkpoint"
+          ],
+          "required_capabilities": [
+            "code.review",
+            "job.checkpoint"
+          ],
+          "optional_capabilities": [
+            "code.test"
+          ],
+          "forbidden_capabilities": [
+            "code.edit"
+          ],
+          "next": []
+        }
+      }
+    },
+    "optimization": {
+      "default_stage": "benchmark",
+      "stages": {
+        "benchmark": {
+          "skills": [
+            "autoresearch",
+            "verification-planning"
+          ],
+          "tools": [
+            "code.test",
+            "science.compute",
+            "plot.render",
+            "job.checkpoint"
+          ],
+          "required_capabilities": [
+            "code.test",
+            "job.checkpoint"
+          ],
+          "optional_capabilities": [
+            "science.numeric",
+            "plot.render"
+          ],
+          "next": [
+            "experiment"
+          ]
+        },
+        "experiment": {
+          "skills": [
+            "autoresearch",
+            "incremental-implementation"
+          ],
+          "tools": [
+            "code.change",
+            "code.test",
+            "science.compute",
+            "plot.render",
+            "job.checkpoint"
+          ],
+          "required_capabilities": [
+            "code.edit",
+            "code.test",
+            "job.checkpoint"
+          ],
+          "optional_capabilities": [
+            "science.numeric",
+            "plot.render"
+          ],
+          "next": [
+            "review"
+          ]
+        },
+        "review": {
+          "skills": [
+            "code-review-and-quality"
+          ],
+          "tools": [
+            "code.review",
+            "code.acceptance",
+            "job.checkpoint"
+          ],
+          "required_capabilities": [
+            "code.review",
+            "code.acceptance",
+            "job.checkpoint"
+          ],
+          "optional_capabilities": [],
+          "forbidden_capabilities": [
+            "code.edit"
+          ],
+          "next": []
+        }
+      }
+    },
+    "triz-architecture": {
+      "default_stage": "analysis",
+      "stages": {
+        "analysis": {
+          "skills": [
+            "compare",
+            "doubt-driven-development"
+          ],
+          "tools": [
+            "science.compute",
+            "job.checkpoint"
+          ],
+          "required_capabilities": [
+            "job.checkpoint"
+          ],
+          "optional_capabilities": [
+            "science.numeric",
+            "science.symbolic"
+          ],
+          "forbidden_capabilities": [
+            "code.edit"
+          ],
+          "next": [
+            "change"
+          ]
+        },
+        "change": {
+          "skills": [
+            "incremental-implementation",
+            "code-factory"
+          ],
+          "tools": [
+            "code.change",
+            "job.checkpoint"
+          ],
+          "required_capabilities": [
+            "code.edit",
+            "job.checkpoint"
+          ],
+          "optional_capabilities": [],
+          "next": [
+            "review"
+          ]
+        },
+        "review": {
+          "skills": [
+            "code-review-and-quality"
+          ],
+          "tools": [
+            "code.review",
+            "code.acceptance",
+            "job.checkpoint"
+          ],
+          "required_capabilities": [
+            "code.review",
+            "code.acceptance",
+            "job.checkpoint"
+          ],
+          "forbidden_capabilities": [
+            "code.edit"
+          ],
+          "next": []
+        }
+      }
+    }
+  },
+  "domain_overlays": {
+    "mathematics": {
+      "match_regex": "(equation|formula|derive|integral|matrix|optimization|уравнен|формул|интеграл|матриц|математ)",
+      "skills": [
+        "verification-planning"
+      ],
+      "capabilities": [
+        "science.numeric",
+        "science.symbolic",
+        "formula.validate"
+      ],
+      "tools": [
+        "science.compute"
+      ]
+    },
+    "physics": {
+      "match_regex": "(physics|mechanics|quantum|diffraction|xrd|oscillator|физик|механик|квант|дифрак|рентген|осцилл)",
+      "skills": [
+        "physics-verification",
+        "scientific-critical-thinking"
+      ],
+      "capabilities": [
+        "science.physics",
+        "science.numeric",
+        "science.symbolic",
+        "formula.validate",
+        "plot.render"
+      ],
+      "tools": [
+        "science.compute",
+        "plot.render"
+      ]
+    },
+    "chemistry": {
+      "match_regex": "(chemistry|chemical|molar|stoichiometry|reaction|хими|моляр|стехиометр|реакц)",
+      "skills": [
+        "scientific-critical-thinking"
+      ],
+      "capabilities": [
+        "science.chemistry",
+        "science.numeric",
+        "formula.validate"
+      ],
+      "tools": [
+        "science.compute"
+      ]
+    },
+    "reporting": {
+      "match_regex": "(report|table|chart|figure|plot|отчет|отчёт|таблиц|график|рисунок)",
+      "skills": [
+        "export"
+      ],
+      "capabilities": [
+        "report.compose",
+        "plot.render"
+      ],
+      "tools": [
+        "report.compose",
+        "plot.render"
+      ]
+    },
+    "office-data": {
+      "match_regex": "(docx|doc|xlsx|xls|word|excel|ворд|эксел)",
+      "skills": [
+        "markitdown"
+      ],
+      "capabilities": [
+        "document.structured.inspect",
+        "office.docx.inspect",
+        "office.xlsx.inspect",
+        "office.legacy.inspect"
+      ],
+      "tools": [
+        "document.inspect"
+      ]
+    },
+    "scientific-image": {
+      "match_regex": "(tiff|tif|sem|eds|microscopy|микроскоп|спектр|тифф)",
+      "skills": [
+        "scientific-critical-thinking"
+      ],
+      "capabilities": [
+        "image.tiff.inspect",
+        "plot.render"
+      ],
+      "tools": [
+        "scientific_image.inspect",
+        "plot.render"
+      ]
+    }
+  },
+  "logical_tools": {
+    "search.discovery": {
+      "capability": "web.discovery"
+    },
+    "source.resolve": {
+      "capability": "academic.metadata"
+    },
+    "document.inspect": {
+      "capability": "document.text.extract"
+    },
+    "document.ocr": {
+      "capability": "document.ocr"
+    },
+    "scientific_image.inspect": {
+      "capability": "image.tiff.inspect"
+    },
+    "corpus.search": {
+      "capability": "corpus.fts"
+    },
+    "evidence.verify": {
+      "capability": "evidence.verify"
+    },
+    "science.compute": {
+      "capability": "science.numeric"
+    },
+    "plot.render": {
+      "capability": "plot.render"
+    },
+    "report.compose": {
+      "capability": "report.compose"
+    },
+    "job.checkpoint": {
+      "capability": "job.checkpoint"
+    },
+    "code.change": {
+      "capability": "code.edit"
+    },
+    "code.test": {
+      "capability": "code.test"
+    },
+    "code.review": {
+      "capability": "code.review"
+    },
+    "code.acceptance": {
+      "capability": "code.acceptance"
+    },
+    "capability.request": {
+      "capability": "capability.escalation"
+    },
+    "tribunal_role": {
+      "capability": "tribunal.role.execute"
+    }
+  }
+}

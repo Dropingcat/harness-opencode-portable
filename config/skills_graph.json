@@ -1,0 +1,1762 @@
+{
+  "version": 3,
+  "generated_from_policy_hash": "8910fd61122b450212d5bc459cdb52acdc02aa3cf6d87a37c5eaa3778e3cdfef",
+  "generated": true,
+  "nodes": [
+    {
+      "id": "bucket:code",
+      "type": "bucket",
+      "name": "code",
+      "guard_required": false
+    },
+    {
+      "id": "bucket:integration",
+      "type": "bucket",
+      "name": "integration",
+      "guard_required": true
+    },
+    {
+      "id": "bucket:research",
+      "type": "bucket",
+      "name": "research",
+      "guard_required": true
+    },
+    {
+      "id": "bucket:security",
+      "type": "bucket",
+      "name": "security",
+      "guard_required": true
+    },
+    {
+      "id": "bucket:writing",
+      "type": "bucket",
+      "name": "writing",
+      "guard_required": true
+    },
+    {
+      "id": "capsule:code",
+      "type": "capsule",
+      "name": "code",
+      "runtime_class": "core",
+      "advertise_by_default": true
+    },
+    {
+      "id": "capsule:core-orchestration",
+      "type": "capsule",
+      "name": "core-orchestration",
+      "runtime_class": "core",
+      "advertise_by_default": true
+    },
+    {
+      "id": "capsule:integration-config",
+      "type": "capsule",
+      "name": "integration-config",
+      "runtime_class": "core",
+      "advertise_by_default": true
+    },
+    {
+      "id": "capsule:research-core",
+      "type": "capsule",
+      "name": "research-core",
+      "runtime_class": "core",
+      "advertise_by_default": true
+    },
+    {
+      "id": "capsule:service-automation",
+      "type": "capsule",
+      "name": "service-automation",
+      "runtime_class": "optional",
+      "advertise_by_default": false
+    },
+    {
+      "id": "capsule:writing",
+      "type": "capsule",
+      "name": "writing",
+      "runtime_class": "optional",
+      "advertise_by_default": false
+    },
+    {
+      "id": "profile:soft",
+      "type": "profile",
+      "name": "soft",
+      "guard_mode": "p0_or_warn"
+    },
+    {
+      "id": "profile:standard",
+      "type": "profile",
+      "name": "standard",
+      "guard_mode": "mandatory_fail_closed_for_untrusted"
+    },
+    {
+      "id": "profile:strict",
+      "type": "profile",
+      "name": "strict",
+      "guard_mode": "mandatory_p0_p2_fail_closed"
+    },
+    {
+      "id": "route:academic-research",
+      "type": "route",
+      "name": "academic-research",
+      "match_regex": "(paper|arxiv|openalex|doi|pubmed|literature|citation|study|статья|публикац|литератур|источник)",
+      "priority": 75
+    },
+    {
+      "id": "route:code-implementation",
+      "type": "route",
+      "name": "code-implementation",
+      "match_regex": "(implement|add|fix|refactor|bug|feature|compile|build|исправ|добав|рефактор|код|тест)",
+      "priority": 50
+    },
+    {
+      "id": "route:code-review",
+      "type": "route",
+      "name": "code-review",
+      "match_regex": "(review|audit|quality|security|ревью|аудит|проверь код)",
+      "priority": 90
+    },
+    {
+      "id": "route:document-extraction",
+      "type": "route",
+      "name": "document-extraction",
+      "match_regex": "(pdf|docx|xlsx|extract|document|документ|извлеч|распарс)",
+      "priority": 65
+    },
+    {
+      "id": "route:opencode-config",
+      "type": "route",
+      "name": "opencode-config",
+      "match_regex": "(opencode|agent|skill|mcp|plugin|config|router|hook|конфиг|агент|скил|роутер|хук)",
+      "priority": 60
+    },
+    {
+      "id": "route:optimization",
+      "type": "route",
+      "name": "optimization",
+      "match_regex": "(optimize|performance|latency|speed|memory|benchmark|ускор|оптимиз|памят|бенч)",
+      "priority": 85
+    },
+    {
+      "id": "route:service-automation",
+      "type": "route",
+      "name": "service-automation",
+      "match_regex": "(calendar|gmail|drive|slack|github issue|send email|service|календар|почт|диск|сервис)",
+      "priority": 82
+    },
+    {
+      "id": "route:tech-debt",
+      "type": "route",
+      "name": "tech-debt",
+      "match_regex": "(tech debt|техдолг|debt|sunset|owner|severity)",
+      "priority": 80
+    },
+    {
+      "id": "route:triz-architecture",
+      "type": "route",
+      "name": "triz-architecture",
+      "match_regex": "(triz|ariz|contradiction|ИКР|ideal|trade-off|архитектура|противоречие|refactor architecture)",
+      "priority": 88
+    },
+    {
+      "id": "route:web-research",
+      "type": "route",
+      "name": "web-research",
+      "match_regex": "(web|search|latest|current|url|site|интернет|поиск|сайт|актуальн)",
+      "priority": 70
+    },
+    {
+      "id": "route:writing-prose",
+      "type": "route",
+      "name": "writing-prose",
+      "match_regex": "(rewrite|writing|prose|article|report|перепиши|написать текст|стиль|редактир)",
+      "priority": 55
+    },
+    {
+      "id": "runtime:academic_search_server",
+      "type": "runtime",
+      "provider": "academic_search_server",
+      "kind": "mcp",
+      "entrypoint": "mcp/academic_search_server.py"
+    },
+    {
+      "id": "runtime:code_factory_runtime",
+      "type": "runtime",
+      "provider": "code_factory_runtime",
+      "kind": "script",
+      "entrypoint": "scripts/code-factory/factory_ctl.py"
+    },
+    {
+      "id": "runtime:coder_router_server",
+      "type": "runtime",
+      "provider": "coder_router_server",
+      "kind": "mcp",
+      "entrypoint": "mcp/coder_router_server.py"
+    },
+    {
+      "id": "runtime:doc_extract_server",
+      "type": "runtime",
+      "provider": "doc_extract_server",
+      "kind": "mcp",
+      "entrypoint": "mcp/doc_extract_server.py"
+    },
+    {
+      "id": "runtime:doc_guard",
+      "type": "runtime",
+      "provider": "doc_guard",
+      "kind": "script",
+      "entrypoint": "guard/src/session_guard.py"
+    },
+    {
+      "id": "runtime:opencode_code_worker",
+      "type": "runtime",
+      "provider": "opencode_code_worker",
+      "kind": "launcher",
+      "entrypoint": "mcp/launchers/opencode_code_worker.py"
+    },
+    {
+      "id": "runtime:opencode_profile_configurator",
+      "type": "runtime",
+      "provider": "opencode_profile_configurator",
+      "kind": "launcher",
+      "entrypoint": "mcp/launchers/opencode_profile_configurator.py"
+    },
+    {
+      "id": "runtime:opencode_research_academic",
+      "type": "runtime",
+      "provider": "opencode_research_academic",
+      "kind": "launcher",
+      "entrypoint": "mcp/launchers/opencode_research_academic.py"
+    },
+    {
+      "id": "runtime:opencode_research_web",
+      "type": "runtime",
+      "provider": "opencode_research_web",
+      "kind": "launcher",
+      "entrypoint": "mcp/launchers/opencode_research_web.py"
+    },
+    {
+      "id": "runtime:opencode_service_task",
+      "type": "runtime",
+      "provider": "opencode_service_task",
+      "kind": "launcher",
+      "entrypoint": "mcp/launchers/opencode_service_task.py"
+    },
+    {
+      "id": "runtime:opencode_tribunal_role",
+      "type": "runtime",
+      "provider": "opencode_tribunal_role",
+      "kind": "launcher",
+      "entrypoint": "mcp/launchers/opencode_tribunal_role.py"
+    },
+    {
+      "id": "runtime:router_core",
+      "type": "runtime",
+      "provider": "router_core",
+      "kind": "script",
+      "entrypoint": "scripts/router/resolve_route.py"
+    },
+    {
+      "id": "runtime:searxng_search_server",
+      "type": "runtime",
+      "provider": "searxng_search_server",
+      "kind": "mcp",
+      "entrypoint": "mcp/searxng_search_server.py"
+    },
+    {
+      "id": "skill:autoresearch",
+      "type": "skill",
+      "name": "autoresearch",
+      "runtime_class": "core_runtime"
+    },
+    {
+      "id": "skill:citation-management",
+      "type": "skill",
+      "name": "citation-management",
+      "runtime_class": "core_runtime"
+    },
+    {
+      "id": "skill:clonedeps",
+      "type": "skill",
+      "name": "clonedeps",
+      "runtime_class": "unclassified"
+    },
+    {
+      "id": "skill:code-factory",
+      "type": "skill",
+      "name": "code-factory",
+      "runtime_class": "core_runtime"
+    },
+    {
+      "id": "skill:code-review-and-quality",
+      "type": "skill",
+      "name": "code-review-and-quality",
+      "runtime_class": "core_runtime"
+    },
+    {
+      "id": "skill:compare",
+      "type": "skill",
+      "name": "compare",
+      "runtime_class": "core_runtime"
+    },
+    {
+      "id": "skill:conducting-scientific-research",
+      "type": "skill",
+      "name": "conducting-scientific-research",
+      "runtime_class": "core_runtime"
+    },
+    {
+      "id": "skill:context-engineering",
+      "type": "skill",
+      "name": "context-engineering",
+      "runtime_class": "core_runtime"
+    },
+    {
+      "id": "skill:customize-opencode",
+      "type": "skill",
+      "name": "customize-opencode",
+      "runtime_class": "core_runtime"
+    },
+    {
+      "id": "skill:deepwork",
+      "type": "skill",
+      "name": "deepwork",
+      "runtime_class": "reference_only"
+    },
+    {
+      "id": "skill:deslop-ai-lint-skill",
+      "type": "skill",
+      "name": "deslop-ai-lint-skill",
+      "runtime_class": "core_runtime"
+    },
+    {
+      "id": "skill:doubt-driven-development",
+      "type": "skill",
+      "name": "doubt-driven-development",
+      "runtime_class": "core_runtime"
+    },
+    {
+      "id": "skill:export",
+      "type": "skill",
+      "name": "export",
+      "runtime_class": "core_runtime"
+    },
+    {
+      "id": "skill:hypothesis-generation",
+      "type": "skill",
+      "name": "hypothesis-generation",
+      "runtime_class": "unclassified"
+    },
+    {
+      "id": "skill:incremental-implementation",
+      "type": "skill",
+      "name": "incremental-implementation",
+      "runtime_class": "core_runtime"
+    },
+    {
+      "id": "skill:literature-review",
+      "type": "skill",
+      "name": "literature-review",
+      "runtime_class": "core_runtime"
+    },
+    {
+      "id": "skill:markitdown",
+      "type": "skill",
+      "name": "markitdown",
+      "runtime_class": "core_runtime"
+    },
+    {
+      "id": "skill:ml-paper-writing",
+      "type": "skill",
+      "name": "ml-paper-writing",
+      "runtime_class": "unclassified"
+    },
+    {
+      "id": "skill:physics-verification",
+      "type": "skill",
+      "name": "physics-verification",
+      "runtime_class": "core_runtime"
+    },
+    {
+      "id": "skill:scientific-critical-thinking",
+      "type": "skill",
+      "name": "scientific-critical-thinking",
+      "runtime_class": "unclassified"
+    },
+    {
+      "id": "skill:scientific-writing",
+      "type": "skill",
+      "name": "scientific-writing",
+      "runtime_class": "unclassified"
+    },
+    {
+      "id": "skill:triz-problem-solving",
+      "type": "skill",
+      "name": "triz-problem-solving",
+      "runtime_class": "core_runtime"
+    },
+    {
+      "id": "skill:verification-planning",
+      "type": "skill",
+      "name": "verification-planning",
+      "runtime_class": "core_runtime"
+    },
+    {
+      "id": "skill:writer-core",
+      "type": "skill",
+      "name": "writer-core",
+      "runtime_class": "core_runtime"
+    },
+    {
+      "id": "skill:writer-review",
+      "type": "skill",
+      "name": "writer-review",
+      "runtime_class": "core_runtime"
+    },
+    {
+      "id": "step:finish:academic-research:6968a2546fb7",
+      "type": "step",
+      "stage": "finish",
+      "text": "build evidence table"
+    },
+    {
+      "id": "step:finish:academic-research:cc69c472defc",
+      "type": "step",
+      "stage": "finish",
+      "text": "state uncertainty"
+    },
+    {
+      "id": "step:finish:code-implementation:89c3e3f02008",
+      "type": "step",
+      "stage": "finish",
+      "text": "record risks"
+    },
+    {
+      "id": "step:finish:code-implementation:9aef2b8cdd00",
+      "type": "step",
+      "stage": "finish",
+      "text": "run tests"
+    },
+    {
+      "id": "step:finish:code-implementation:d2d5a01a4b7b",
+      "type": "step",
+      "stage": "finish",
+      "text": "integrate accepted claim"
+    },
+    {
+      "id": "step:finish:code-review:8780c2937343",
+      "type": "step",
+      "stage": "finish",
+      "text": "order findings by severity"
+    },
+    {
+      "id": "step:finish:code-review:b7ff2bb154ad",
+      "type": "step",
+      "stage": "finish",
+      "text": "request rework or approve"
+    },
+    {
+      "id": "step:finish:document-extraction:505235fca427",
+      "type": "step",
+      "stage": "finish",
+      "text": "record extraction limits"
+    },
+    {
+      "id": "step:finish:document-extraction:5b218f4d90a4",
+      "type": "step",
+      "stage": "finish",
+      "text": "treat extracted text as untrusted"
+    },
+    {
+      "id": "step:finish:opencode-config:4caeabceb385",
+      "type": "step",
+      "stage": "finish",
+      "text": "restart OpenCode"
+    },
+    {
+      "id": "step:finish:opencode-config:8580bf855012",
+      "type": "step",
+      "stage": "finish",
+      "text": "smoke-test"
+    },
+    {
+      "id": "step:finish:optimization:75c1e700f0f4",
+      "type": "step",
+      "stage": "finish",
+      "text": "record regressions and uncertainty"
+    },
+    {
+      "id": "step:finish:optimization:a8038788bfb7",
+      "type": "step",
+      "stage": "finish",
+      "text": "compare against baseline"
+    },
+    {
+      "id": "step:finish:service-automation:395d62bae2f7",
+      "type": "step",
+      "stage": "finish",
+      "text": "require confirmation before side effect"
+    },
+    {
+      "id": "step:finish:service-automation:92eb359275dc",
+      "type": "step",
+      "stage": "finish",
+      "text": "require guard pass"
+    },
+    {
+      "id": "step:finish:tech-debt:0c3e71f70f71",
+      "type": "step",
+      "stage": "finish",
+      "text": "run acceptance check"
+    },
+    {
+      "id": "step:finish:tech-debt:a495e7bb0b70",
+      "type": "step",
+      "stage": "finish",
+      "text": "update debt status and audit"
+    },
+    {
+      "id": "step:finish:triz-architecture:184e96c61344",
+      "type": "step",
+      "stage": "finish",
+      "text": "record debt or decision"
+    },
+    {
+      "id": "step:finish:triz-architecture:b2598f50fe9b",
+      "type": "step",
+      "stage": "finish",
+      "text": "pick targeted rework"
+    },
+    {
+      "id": "step:finish:web-research:52fdcfd30794",
+      "type": "step",
+      "stage": "finish",
+      "text": "guard-check untrusted text"
+    },
+    {
+      "id": "step:finish:web-research:7826290a8bf2",
+      "type": "step",
+      "stage": "finish",
+      "text": "handoff vetted evidence"
+    },
+    {
+      "id": "step:finish:writing-prose:0cd0bb97954a",
+      "type": "step",
+      "stage": "finish",
+      "text": "preview rewrite; ask before applying"
+    },
+    {
+      "id": "step:finish:writing-prose:3f7c85d40fb1",
+      "type": "step",
+      "stage": "finish",
+      "text": "produce report with severity spans"
+    },
+    {
+      "id": "step:start:academic-research:016c69d17ed0",
+      "type": "step",
+      "stage": "start",
+      "text": "prefer primary sources"
+    },
+    {
+      "id": "step:start:academic-research:f0d6e2be8e58",
+      "type": "step",
+      "stage": "start",
+      "text": "expand abbreviations"
+    },
+    {
+      "id": "step:start:code-implementation:0a56ce796595",
+      "type": "step",
+      "stage": "start",
+      "text": "prepare acceptance checks"
+    },
+    {
+      "id": "step:start:code-implementation:26e4b03bc47c",
+      "type": "step",
+      "stage": "start",
+      "text": "read interfaces"
+    },
+    {
+      "id": "step:start:code-implementation:7bda8874b484",
+      "type": "step",
+      "stage": "start",
+      "text": "define scope in/out"
+    },
+    {
+      "id": "step:start:code-review:27652a31e62d",
+      "type": "step",
+      "stage": "start",
+      "text": "attempt falsification"
+    },
+    {
+      "id": "step:start:code-review:790440de3de5",
+      "type": "step",
+      "stage": "start",
+      "text": "read full target"
+    },
+    {
+      "id": "step:start:document-extraction:3dae83538a24",
+      "type": "step",
+      "stage": "start",
+      "text": "check supported format"
+    },
+    {
+      "id": "step:start:document-extraction:64d305d1f822",
+      "type": "step",
+      "stage": "start",
+      "text": "validate local path"
+    },
+    {
+      "id": "step:start:opencode-config:4a43e4bd89f9",
+      "type": "step",
+      "stage": "start",
+      "text": "read schema"
+    },
+    {
+      "id": "step:start:opencode-config:e0d0ef01a17a",
+      "type": "step",
+      "stage": "start",
+      "text": "backup config"
+    },
+    {
+      "id": "step:start:optimization:1a86974822f9",
+      "type": "step",
+      "stage": "start",
+      "text": "define measurable baseline"
+    },
+    {
+      "id": "step:start:optimization:37a2d8834899",
+      "type": "step",
+      "stage": "start",
+      "text": "define budget and stop criteria"
+    },
+    {
+      "id": "step:start:service-automation:45a55ff1bd0c",
+      "type": "step",
+      "stage": "start",
+      "text": "resolve target service and scope"
+    },
+    {
+      "id": "step:start:service-automation:5b14e7523d03",
+      "type": "step",
+      "stage": "start",
+      "text": "prepare dry-run payload"
+    },
+    {
+      "id": "step:start:tech-debt:383b51d09baf",
+      "type": "step",
+      "stage": "start",
+      "text": "identify owner and sunset trigger"
+    },
+    {
+      "id": "step:start:tech-debt:f1685b0fd5d1",
+      "type": "step",
+      "stage": "start",
+      "text": "record debt id and acceptance"
+    },
+    {
+      "id": "step:start:triz-architecture:62b58b701127",
+      "type": "step",
+      "stage": "start",
+      "text": "state contradiction"
+    },
+    {
+      "id": "step:start:triz-architecture:a140c7f2f435",
+      "type": "step",
+      "stage": "start",
+      "text": "formulate IFR"
+    },
+    {
+      "id": "step:start:web-research:72cbadabd642",
+      "type": "step",
+      "stage": "start",
+      "text": "collect URLs/snippets"
+    },
+    {
+      "id": "step:start:web-research:96b82099236b",
+      "type": "step",
+      "stage": "start",
+      "text": "search concise query"
+    },
+    {
+      "id": "step:start:writing-prose:25a0452824e8",
+      "type": "step",
+      "stage": "start",
+      "text": "identify target text"
+    },
+    {
+      "id": "step:start:writing-prose:f46ddfc44545",
+      "type": "step",
+      "stage": "start",
+      "text": "identify intent (review / minimal / aggressive)"
+    },
+    {
+      "id": "tool:arxiv_search",
+      "type": "tool",
+      "name": "arxiv_search",
+      "kind": "mcp",
+      "entrypoint": "mcp/academic_search_server.py"
+    },
+    {
+      "id": "tool:code_work",
+      "type": "tool",
+      "name": "code_work",
+      "kind": "launcher",
+      "entrypoint": "mcp/launchers/opencode_code_worker.py"
+    },
+    {
+      "id": "tool:coder_run",
+      "type": "tool",
+      "name": "coder_run",
+      "kind": "mcp",
+      "entrypoint": "mcp/coder_router_server.py"
+    },
+    {
+      "id": "tool:extract_document",
+      "type": "tool",
+      "name": "extract_document",
+      "kind": "mcp",
+      "entrypoint": "mcp/doc_extract_server.py"
+    },
+    {
+      "id": "tool:factory_ctl",
+      "type": "tool",
+      "name": "factory_ctl",
+      "kind": "script",
+      "entrypoint": "scripts/code-factory/factory_ctl.py"
+    },
+    {
+      "id": "tool:openalex_search",
+      "type": "tool",
+      "name": "openalex_search",
+      "kind": "mcp",
+      "entrypoint": "mcp/academic_search_server.py"
+    },
+    {
+      "id": "tool:profile_config",
+      "type": "tool",
+      "name": "profile_config",
+      "kind": "launcher",
+      "entrypoint": "mcp/launchers/opencode_profile_configurator.py"
+    },
+    {
+      "id": "tool:research_academic",
+      "type": "tool",
+      "name": "research_academic",
+      "kind": "launcher",
+      "entrypoint": "mcp/launchers/opencode_research_academic.py"
+    },
+    {
+      "id": "tool:research_web",
+      "type": "tool",
+      "name": "research_web",
+      "kind": "launcher",
+      "entrypoint": "mcp/launchers/opencode_research_web.py"
+    },
+    {
+      "id": "tool:resolve_route",
+      "type": "tool",
+      "name": "resolve_route",
+      "kind": "script",
+      "entrypoint": "scripts/router/resolve_route.py"
+    },
+    {
+      "id": "tool:searxng_search",
+      "type": "tool",
+      "name": "searxng_search",
+      "kind": "mcp",
+      "entrypoint": "mcp/searxng_search_server.py"
+    },
+    {
+      "id": "tool:service_task",
+      "type": "tool",
+      "name": "service_task",
+      "kind": "launcher",
+      "entrypoint": "mcp/launchers/opencode_service_task.py"
+    },
+    {
+      "id": "tool:session_guard",
+      "type": "tool",
+      "name": "session_guard",
+      "kind": "script",
+      "entrypoint": "guard/src/session_guard.py"
+    },
+    {
+      "id": "tool:tribunal_role",
+      "type": "tool",
+      "name": "tribunal_role",
+      "kind": "launcher",
+      "entrypoint": "mcp/launchers/opencode_tribunal_role.py"
+    }
+  ],
+  "edges": [
+    {
+      "src": "bucket:code",
+      "rel": "DEFAULT_PROFILE",
+      "dst": "profile:standard"
+    },
+    {
+      "src": "bucket:integration",
+      "rel": "DEFAULT_PROFILE",
+      "dst": "profile:standard"
+    },
+    {
+      "src": "bucket:research",
+      "rel": "DEFAULT_PROFILE",
+      "dst": "profile:strict"
+    },
+    {
+      "src": "bucket:security",
+      "rel": "DEFAULT_PROFILE",
+      "dst": "profile:strict"
+    },
+    {
+      "src": "bucket:writing",
+      "rel": "DEFAULT_PROFILE",
+      "dst": "profile:strict"
+    },
+    {
+      "src": "capsule:code",
+      "rel": "DEFAULT_PROFILE",
+      "dst": "profile:standard"
+    },
+    {
+      "src": "capsule:code",
+      "rel": "FALLBACK_TO",
+      "dst": "capsule:core-orchestration"
+    },
+    {
+      "src": "capsule:code",
+      "rel": "PROVIDES_SKILL",
+      "dst": "skill:clonedeps"
+    },
+    {
+      "src": "capsule:code",
+      "rel": "PROVIDES_SKILL",
+      "dst": "skill:code-factory"
+    },
+    {
+      "src": "capsule:code",
+      "rel": "PROVIDES_SKILL",
+      "dst": "skill:code-review-and-quality"
+    },
+    {
+      "src": "capsule:code",
+      "rel": "PROVIDES_SKILL",
+      "dst": "skill:deepwork"
+    },
+    {
+      "src": "capsule:code",
+      "rel": "USES_TOOL",
+      "dst": "tool:code_work"
+    },
+    {
+      "src": "capsule:code",
+      "rel": "USES_TOOL",
+      "dst": "tool:coder_run"
+    },
+    {
+      "src": "capsule:core-orchestration",
+      "rel": "DEFAULT_PROFILE",
+      "dst": "profile:standard"
+    },
+    {
+      "src": "capsule:core-orchestration",
+      "rel": "PROVIDES_SKILL",
+      "dst": "skill:compare"
+    },
+    {
+      "src": "capsule:core-orchestration",
+      "rel": "PROVIDES_SKILL",
+      "dst": "skill:context-engineering"
+    },
+    {
+      "src": "capsule:core-orchestration",
+      "rel": "PROVIDES_SKILL",
+      "dst": "skill:doubt-driven-development"
+    },
+    {
+      "src": "capsule:core-orchestration",
+      "rel": "PROVIDES_SKILL",
+      "dst": "skill:export"
+    },
+    {
+      "src": "capsule:core-orchestration",
+      "rel": "PROVIDES_SKILL",
+      "dst": "skill:incremental-implementation"
+    },
+    {
+      "src": "capsule:core-orchestration",
+      "rel": "PROVIDES_SKILL",
+      "dst": "skill:verification-planning"
+    },
+    {
+      "src": "capsule:integration-config",
+      "rel": "DEFAULT_PROFILE",
+      "dst": "profile:standard"
+    },
+    {
+      "src": "capsule:integration-config",
+      "rel": "FALLBACK_TO",
+      "dst": "capsule:core-orchestration"
+    },
+    {
+      "src": "capsule:integration-config",
+      "rel": "PROVIDES_SKILL",
+      "dst": "skill:context-engineering"
+    },
+    {
+      "src": "capsule:integration-config",
+      "rel": "PROVIDES_SKILL",
+      "dst": "skill:customize-opencode"
+    },
+    {
+      "src": "capsule:integration-config",
+      "rel": "USES_TOOL",
+      "dst": "tool:profile_config"
+    },
+    {
+      "src": "capsule:research-core",
+      "rel": "DEFAULT_PROFILE",
+      "dst": "profile:strict"
+    },
+    {
+      "src": "capsule:research-core",
+      "rel": "FALLBACK_TO",
+      "dst": "capsule:core-orchestration"
+    },
+    {
+      "src": "capsule:research-core",
+      "rel": "PROVIDES_SKILL",
+      "dst": "skill:citation-management"
+    },
+    {
+      "src": "capsule:research-core",
+      "rel": "PROVIDES_SKILL",
+      "dst": "skill:conducting-scientific-research"
+    },
+    {
+      "src": "capsule:research-core",
+      "rel": "PROVIDES_SKILL",
+      "dst": "skill:hypothesis-generation"
+    },
+    {
+      "src": "capsule:research-core",
+      "rel": "PROVIDES_SKILL",
+      "dst": "skill:literature-review"
+    },
+    {
+      "src": "capsule:research-core",
+      "rel": "PROVIDES_SKILL",
+      "dst": "skill:physics-verification"
+    },
+    {
+      "src": "capsule:research-core",
+      "rel": "PROVIDES_SKILL",
+      "dst": "skill:scientific-critical-thinking"
+    },
+    {
+      "src": "capsule:research-core",
+      "rel": "USES_TOOL",
+      "dst": "tool:arxiv_search"
+    },
+    {
+      "src": "capsule:research-core",
+      "rel": "USES_TOOL",
+      "dst": "tool:extract_document"
+    },
+    {
+      "src": "capsule:research-core",
+      "rel": "USES_TOOL",
+      "dst": "tool:openalex_search"
+    },
+    {
+      "src": "capsule:research-core",
+      "rel": "USES_TOOL",
+      "dst": "tool:research_academic"
+    },
+    {
+      "src": "capsule:research-core",
+      "rel": "USES_TOOL",
+      "dst": "tool:searxng_search"
+    },
+    {
+      "src": "capsule:service-automation",
+      "rel": "DEFAULT_PROFILE",
+      "dst": "profile:strict"
+    },
+    {
+      "src": "capsule:service-automation",
+      "rel": "FALLBACK_TO",
+      "dst": "capsule:core-orchestration"
+    },
+    {
+      "src": "capsule:service-automation",
+      "rel": "PROVIDES_SKILL",
+      "dst": "skill:context-engineering"
+    },
+    {
+      "src": "capsule:service-automation",
+      "rel": "USES_TOOL",
+      "dst": "tool:service_task"
+    },
+    {
+      "src": "capsule:writing",
+      "rel": "DEFAULT_PROFILE",
+      "dst": "profile:strict"
+    },
+    {
+      "src": "capsule:writing",
+      "rel": "FALLBACK_TO",
+      "dst": "capsule:research-core"
+    },
+    {
+      "src": "capsule:writing",
+      "rel": "PROVIDES_SKILL",
+      "dst": "skill:deslop-ai-lint-skill"
+    },
+    {
+      "src": "capsule:writing",
+      "rel": "PROVIDES_SKILL",
+      "dst": "skill:export"
+    },
+    {
+      "src": "capsule:writing",
+      "rel": "PROVIDES_SKILL",
+      "dst": "skill:ml-paper-writing"
+    },
+    {
+      "src": "capsule:writing",
+      "rel": "PROVIDES_SKILL",
+      "dst": "skill:scientific-writing"
+    },
+    {
+      "src": "capsule:writing",
+      "rel": "PROVIDES_SKILL",
+      "dst": "skill:writer-core"
+    },
+    {
+      "src": "capsule:writing",
+      "rel": "PROVIDES_SKILL",
+      "dst": "skill:writer-review"
+    },
+    {
+      "src": "capsule:writing",
+      "rel": "USES_TOOL",
+      "dst": "tool:extract_document"
+    },
+    {
+      "src": "route:academic-research",
+      "rel": "DEFAULT_PROFILE",
+      "dst": "profile:strict"
+    },
+    {
+      "src": "route:academic-research",
+      "rel": "FINISHES_WITH",
+      "dst": "step:finish:academic-research:6968a2546fb7"
+    },
+    {
+      "src": "route:academic-research",
+      "rel": "FINISHES_WITH",
+      "dst": "step:finish:academic-research:cc69c472defc"
+    },
+    {
+      "src": "route:academic-research",
+      "rel": "REQUIRES_SKILL",
+      "dst": "skill:citation-management"
+    },
+    {
+      "src": "route:academic-research",
+      "rel": "REQUIRES_SKILL",
+      "dst": "skill:conducting-scientific-research"
+    },
+    {
+      "src": "route:academic-research",
+      "rel": "REQUIRES_SKILL",
+      "dst": "skill:literature-review"
+    },
+    {
+      "src": "route:academic-research",
+      "rel": "REQUIRES_SKILL",
+      "dst": "skill:scientific-critical-thinking"
+    },
+    {
+      "src": "route:academic-research",
+      "rel": "ROUTES_TO",
+      "dst": "bucket:research"
+    },
+    {
+      "src": "route:academic-research",
+      "rel": "STARTS_WITH",
+      "dst": "step:start:academic-research:016c69d17ed0"
+    },
+    {
+      "src": "route:academic-research",
+      "rel": "STARTS_WITH",
+      "dst": "step:start:academic-research:f0d6e2be8e58"
+    },
+    {
+      "src": "route:academic-research",
+      "rel": "USES_CAPSULE",
+      "dst": "capsule:core-orchestration"
+    },
+    {
+      "src": "route:academic-research",
+      "rel": "USES_CAPSULE",
+      "dst": "capsule:research-core"
+    },
+    {
+      "src": "route:code-implementation",
+      "rel": "DEFAULT_PROFILE",
+      "dst": "profile:standard"
+    },
+    {
+      "src": "route:code-implementation",
+      "rel": "FINISHES_WITH",
+      "dst": "step:finish:code-implementation:89c3e3f02008"
+    },
+    {
+      "src": "route:code-implementation",
+      "rel": "FINISHES_WITH",
+      "dst": "step:finish:code-implementation:9aef2b8cdd00"
+    },
+    {
+      "src": "route:code-implementation",
+      "rel": "FINISHES_WITH",
+      "dst": "step:finish:code-implementation:d2d5a01a4b7b"
+    },
+    {
+      "src": "route:code-implementation",
+      "rel": "REQUIRES_SKILL",
+      "dst": "skill:code-factory"
+    },
+    {
+      "src": "route:code-implementation",
+      "rel": "REQUIRES_SKILL",
+      "dst": "skill:incremental-implementation"
+    },
+    {
+      "src": "route:code-implementation",
+      "rel": "REQUIRES_SKILL",
+      "dst": "skill:verification-planning"
+    },
+    {
+      "src": "route:code-implementation",
+      "rel": "ROUTES_TO",
+      "dst": "bucket:code"
+    },
+    {
+      "src": "route:code-implementation",
+      "rel": "STARTS_WITH",
+      "dst": "step:start:code-implementation:0a56ce796595"
+    },
+    {
+      "src": "route:code-implementation",
+      "rel": "STARTS_WITH",
+      "dst": "step:start:code-implementation:26e4b03bc47c"
+    },
+    {
+      "src": "route:code-implementation",
+      "rel": "STARTS_WITH",
+      "dst": "step:start:code-implementation:7bda8874b484"
+    },
+    {
+      "src": "route:code-implementation",
+      "rel": "USES_CAPSULE",
+      "dst": "capsule:code"
+    },
+    {
+      "src": "route:code-implementation",
+      "rel": "USES_CAPSULE",
+      "dst": "capsule:core-orchestration"
+    },
+    {
+      "src": "route:code-review",
+      "rel": "DEFAULT_PROFILE",
+      "dst": "profile:standard"
+    },
+    {
+      "src": "route:code-review",
+      "rel": "FINISHES_WITH",
+      "dst": "step:finish:code-review:8780c2937343"
+    },
+    {
+      "src": "route:code-review",
+      "rel": "FINISHES_WITH",
+      "dst": "step:finish:code-review:b7ff2bb154ad"
+    },
+    {
+      "src": "route:code-review",
+      "rel": "REQUIRES_SKILL",
+      "dst": "skill:code-review-and-quality"
+    },
+    {
+      "src": "route:code-review",
+      "rel": "REQUIRES_SKILL",
+      "dst": "skill:doubt-driven-development"
+    },
+    {
+      "src": "route:code-review",
+      "rel": "ROUTES_TO",
+      "dst": "bucket:code"
+    },
+    {
+      "src": "route:code-review",
+      "rel": "STARTS_WITH",
+      "dst": "step:start:code-review:27652a31e62d"
+    },
+    {
+      "src": "route:code-review",
+      "rel": "STARTS_WITH",
+      "dst": "step:start:code-review:790440de3de5"
+    },
+    {
+      "src": "route:code-review",
+      "rel": "USES_CAPSULE",
+      "dst": "capsule:code"
+    },
+    {
+      "src": "route:code-review",
+      "rel": "USES_CAPSULE",
+      "dst": "capsule:core-orchestration"
+    },
+    {
+      "src": "route:document-extraction",
+      "rel": "DEFAULT_PROFILE",
+      "dst": "profile:standard"
+    },
+    {
+      "src": "route:document-extraction",
+      "rel": "FINISHES_WITH",
+      "dst": "step:finish:document-extraction:505235fca427"
+    },
+    {
+      "src": "route:document-extraction",
+      "rel": "FINISHES_WITH",
+      "dst": "step:finish:document-extraction:5b218f4d90a4"
+    },
+    {
+      "src": "route:document-extraction",
+      "rel": "REQUIRES_SKILL",
+      "dst": "skill:markitdown"
+    },
+    {
+      "src": "route:document-extraction",
+      "rel": "ROUTES_TO",
+      "dst": "bucket:writing"
+    },
+    {
+      "src": "route:document-extraction",
+      "rel": "STARTS_WITH",
+      "dst": "step:start:document-extraction:3dae83538a24"
+    },
+    {
+      "src": "route:document-extraction",
+      "rel": "STARTS_WITH",
+      "dst": "step:start:document-extraction:64d305d1f822"
+    },
+    {
+      "src": "route:document-extraction",
+      "rel": "USES_CAPSULE",
+      "dst": "capsule:core-orchestration"
+    },
+    {
+      "src": "route:document-extraction",
+      "rel": "USES_CAPSULE",
+      "dst": "capsule:writing"
+    },
+    {
+      "src": "route:opencode-config",
+      "rel": "DEFAULT_PROFILE",
+      "dst": "profile:standard"
+    },
+    {
+      "src": "route:opencode-config",
+      "rel": "FINISHES_WITH",
+      "dst": "step:finish:opencode-config:4caeabceb385"
+    },
+    {
+      "src": "route:opencode-config",
+      "rel": "FINISHES_WITH",
+      "dst": "step:finish:opencode-config:8580bf855012"
+    },
+    {
+      "src": "route:opencode-config",
+      "rel": "REQUIRES_SKILL",
+      "dst": "skill:context-engineering"
+    },
+    {
+      "src": "route:opencode-config",
+      "rel": "REQUIRES_SKILL",
+      "dst": "skill:customize-opencode"
+    },
+    {
+      "src": "route:opencode-config",
+      "rel": "ROUTES_TO",
+      "dst": "bucket:integration"
+    },
+    {
+      "src": "route:opencode-config",
+      "rel": "STARTS_WITH",
+      "dst": "step:start:opencode-config:4a43e4bd89f9"
+    },
+    {
+      "src": "route:opencode-config",
+      "rel": "STARTS_WITH",
+      "dst": "step:start:opencode-config:e0d0ef01a17a"
+    },
+    {
+      "src": "route:opencode-config",
+      "rel": "USES_CAPSULE",
+      "dst": "capsule:core-orchestration"
+    },
+    {
+      "src": "route:opencode-config",
+      "rel": "USES_CAPSULE",
+      "dst": "capsule:integration-config"
+    },
+    {
+      "src": "route:optimization",
+      "rel": "DEFAULT_PROFILE",
+      "dst": "profile:strict"
+    },
+    {
+      "src": "route:optimization",
+      "rel": "FINISHES_WITH",
+      "dst": "step:finish:optimization:75c1e700f0f4"
+    },
+    {
+      "src": "route:optimization",
+      "rel": "FINISHES_WITH",
+      "dst": "step:finish:optimization:a8038788bfb7"
+    },
+    {
+      "src": "route:optimization",
+      "rel": "REQUIRES_SKILL",
+      "dst": "skill:autoresearch"
+    },
+    {
+      "src": "route:optimization",
+      "rel": "REQUIRES_SKILL",
+      "dst": "skill:triz-problem-solving"
+    },
+    {
+      "src": "route:optimization",
+      "rel": "REQUIRES_SKILL",
+      "dst": "skill:verification-planning"
+    },
+    {
+      "src": "route:optimization",
+      "rel": "ROUTES_TO",
+      "dst": "bucket:code"
+    },
+    {
+      "src": "route:optimization",
+      "rel": "STARTS_WITH",
+      "dst": "step:start:optimization:1a86974822f9"
+    },
+    {
+      "src": "route:optimization",
+      "rel": "STARTS_WITH",
+      "dst": "step:start:optimization:37a2d8834899"
+    },
+    {
+      "src": "route:optimization",
+      "rel": "USES_CAPSULE",
+      "dst": "capsule:code"
+    },
+    {
+      "src": "route:optimization",
+      "rel": "USES_CAPSULE",
+      "dst": "capsule:core-orchestration"
+    },
+    {
+      "src": "route:service-automation",
+      "rel": "DEFAULT_PROFILE",
+      "dst": "profile:strict"
+    },
+    {
+      "src": "route:service-automation",
+      "rel": "FINISHES_WITH",
+      "dst": "step:finish:service-automation:395d62bae2f7"
+    },
+    {
+      "src": "route:service-automation",
+      "rel": "FINISHES_WITH",
+      "dst": "step:finish:service-automation:92eb359275dc"
+    },
+    {
+      "src": "route:service-automation",
+      "rel": "REQUIRES_SKILL",
+      "dst": "skill:context-engineering"
+    },
+    {
+      "src": "route:service-automation",
+      "rel": "ROUTES_TO",
+      "dst": "bucket:integration"
+    },
+    {
+      "src": "route:service-automation",
+      "rel": "STARTS_WITH",
+      "dst": "step:start:service-automation:45a55ff1bd0c"
+    },
+    {
+      "src": "route:service-automation",
+      "rel": "STARTS_WITH",
+      "dst": "step:start:service-automation:5b14e7523d03"
+    },
+    {
+      "src": "route:service-automation",
+      "rel": "USES_CAPSULE",
+      "dst": "capsule:core-orchestration"
+    },
+    {
+      "src": "route:service-automation",
+      "rel": "USES_CAPSULE",
+      "dst": "capsule:service-automation"
+    },
+    {
+      "src": "route:tech-debt",
+      "rel": "DEFAULT_PROFILE",
+      "dst": "profile:standard"
+    },
+    {
+      "src": "route:tech-debt",
+      "rel": "FINISHES_WITH",
+      "dst": "step:finish:tech-debt:0c3e71f70f71"
+    },
+    {
+      "src": "route:tech-debt",
+      "rel": "FINISHES_WITH",
+      "dst": "step:finish:tech-debt:a495e7bb0b70"
+    },
+    {
+      "src": "route:tech-debt",
+      "rel": "REQUIRES_SKILL",
+      "dst": "skill:context-engineering"
+    },
+    {
+      "src": "route:tech-debt",
+      "rel": "REQUIRES_SKILL",
+      "dst": "skill:verification-planning"
+    },
+    {
+      "src": "route:tech-debt",
+      "rel": "ROUTES_TO",
+      "dst": "bucket:integration"
+    },
+    {
+      "src": "route:tech-debt",
+      "rel": "STARTS_WITH",
+      "dst": "step:start:tech-debt:383b51d09baf"
+    },
+    {
+      "src": "route:tech-debt",
+      "rel": "STARTS_WITH",
+      "dst": "step:start:tech-debt:f1685b0fd5d1"
+    },
+    {
+      "src": "route:tech-debt",
+      "rel": "USES_CAPSULE",
+      "dst": "capsule:core-orchestration"
+    },
+    {
+      "src": "route:tech-debt",
+      "rel": "USES_CAPSULE",
+      "dst": "capsule:integration-config"
+    },
+    {
+      "src": "route:triz-architecture",
+      "rel": "DEFAULT_PROFILE",
+      "dst": "profile:strict"
+    },
+    {
+      "src": "route:triz-architecture",
+      "rel": "FINISHES_WITH",
+      "dst": "step:finish:triz-architecture:184e96c61344"
+    },
+    {
+      "src": "route:triz-architecture",
+      "rel": "FINISHES_WITH",
+      "dst": "step:finish:triz-architecture:b2598f50fe9b"
+    },
+    {
+      "src": "route:triz-architecture",
+      "rel": "REQUIRES_SKILL",
+      "dst": "skill:compare"
+    },
+    {
+      "src": "route:triz-architecture",
+      "rel": "REQUIRES_SKILL",
+      "dst": "skill:doubt-driven-development"
+    },
+    {
+      "src": "route:triz-architecture",
+      "rel": "ROUTES_TO",
+      "dst": "bucket:code"
+    },
+    {
+      "src": "route:triz-architecture",
+      "rel": "STARTS_WITH",
+      "dst": "step:start:triz-architecture:62b58b701127"
+    },
+    {
+      "src": "route:triz-architecture",
+      "rel": "STARTS_WITH",
+      "dst": "step:start:triz-architecture:a140c7f2f435"
+    },
+    {
+      "src": "route:triz-architecture",
+      "rel": "USES_CAPSULE",
+      "dst": "capsule:code"
+    },
+    {
+      "src": "route:triz-architecture",
+      "rel": "USES_CAPSULE",
+      "dst": "capsule:core-orchestration"
+    },
+    {
+      "src": "route:web-research",
+      "rel": "DEFAULT_PROFILE",
+      "dst": "profile:standard"
+    },
+    {
+      "src": "route:web-research",
+      "rel": "FINISHES_WITH",
+      "dst": "step:finish:web-research:52fdcfd30794"
+    },
+    {
+      "src": "route:web-research",
+      "rel": "FINISHES_WITH",
+      "dst": "step:finish:web-research:7826290a8bf2"
+    },
+    {
+      "src": "route:web-research",
+      "rel": "REQUIRES_SKILL",
+      "dst": "skill:conducting-scientific-research"
+    },
+    {
+      "src": "route:web-research",
+      "rel": "REQUIRES_SKILL",
+      "dst": "skill:physics-verification"
+    },
+    {
+      "src": "route:web-research",
+      "rel": "ROUTES_TO",
+      "dst": "bucket:research"
+    },
+    {
+      "src": "route:web-research",
+      "rel": "STARTS_WITH",
+      "dst": "step:start:web-research:72cbadabd642"
+    },
+    {
+      "src": "route:web-research",
+      "rel": "STARTS_WITH",
+      "dst": "step:start:web-research:96b82099236b"
+    },
+    {
+      "src": "route:web-research",
+      "rel": "USES_CAPSULE",
+      "dst": "capsule:core-orchestration"
+    },
+    {
+      "src": "route:web-research",
+      "rel": "USES_CAPSULE",
+      "dst": "capsule:research-core"
+    },
+    {
+      "src": "route:writing-prose",
+      "rel": "DEFAULT_PROFILE",
+      "dst": "profile:standard"
+    },
+    {
+      "src": "route:writing-prose",
+      "rel": "FINISHES_WITH",
+      "dst": "step:finish:writing-prose:0cd0bb97954a"
+    },
+    {
+      "src": "route:writing-prose",
+      "rel": "FINISHES_WITH",
+      "dst": "step:finish:writing-prose:3f7c85d40fb1"
+    },
+    {
+      "src": "route:writing-prose",
+      "rel": "REQUIRES_SKILL",
+      "dst": "skill:deslop-ai-lint-skill"
+    },
+    {
+      "src": "route:writing-prose",
+      "rel": "REQUIRES_SKILL",
+      "dst": "skill:export"
+    },
+    {
+      "src": "route:writing-prose",
+      "rel": "REQUIRES_SKILL",
+      "dst": "skill:writer-core"
+    },
+    {
+      "src": "route:writing-prose",
+      "rel": "REQUIRES_SKILL",
+      "dst": "skill:writer-review"
+    },
+    {
+      "src": "route:writing-prose",
+      "rel": "ROUTES_TO",
+      "dst": "bucket:writing"
+    },
+    {
+      "src": "route:writing-prose",
+      "rel": "STARTS_WITH",
+      "dst": "step:start:writing-prose:25a0452824e8"
+    },
+    {
+      "src": "route:writing-prose",
+      "rel": "STARTS_WITH",
+      "dst": "step:start:writing-prose:f46ddfc44545"
+    },
+    {
+      "src": "route:writing-prose",
+      "rel": "USES_CAPSULE",
+      "dst": "capsule:core-orchestration"
+    },
+    {
+      "src": "route:writing-prose",
+      "rel": "USES_CAPSULE",
+      "dst": "capsule:writing"
+    },
+    {
+      "src": "tool:arxiv_search",
+      "rel": "BINDS_RUNTIME",
+      "dst": "runtime:academic_search_server"
+    },
+    {
+      "src": "tool:code_work",
+      "rel": "BINDS_RUNTIME",
+      "dst": "runtime:opencode_code_worker"
+    },
+    {
+      "src": "tool:coder_run",
+      "rel": "BINDS_RUNTIME",
+      "dst": "runtime:coder_router_server"
+    },
+    {
+      "src": "tool:extract_document",
+      "rel": "BINDS_RUNTIME",
+      "dst": "runtime:doc_extract_server"
+    },
+    {
+      "src": "tool:factory_ctl",
+      "rel": "BINDS_RUNTIME",
+      "dst": "runtime:code_factory_runtime"
+    },
+    {
+      "src": "tool:openalex_search",
+      "rel": "BINDS_RUNTIME",
+      "dst": "runtime:academic_search_server"
+    },
+    {
+      "src": "tool:profile_config",
+      "rel": "BINDS_RUNTIME",
+      "dst": "runtime:opencode_profile_configurator"
+    },
+    {
+      "src": "tool:research_academic",
+      "rel": "BINDS_RUNTIME",
+      "dst": "runtime:opencode_research_academic"
+    },
+    {
+      "src": "tool:research_web",
+      "rel": "BINDS_RUNTIME",
+      "dst": "runtime:opencode_research_web"
+    },
+    {
+      "src": "tool:resolve_route",
+      "rel": "BINDS_RUNTIME",
+      "dst": "runtime:router_core"
+    },
+    {
+      "src": "tool:searxng_search",
+      "rel": "BINDS_RUNTIME",
+      "dst": "runtime:searxng_search_server"
+    },
+    {
+      "src": "tool:service_task",
+      "rel": "BINDS_RUNTIME",
+      "dst": "runtime:opencode_service_task"
+    },
+    {
+      "src": "tool:session_guard",
+      "rel": "BINDS_RUNTIME",
+      "dst": "runtime:doc_guard"
+    },
+    {
+      "src": "tool:tribunal_role",
+      "rel": "BINDS_RUNTIME",
+      "dst": "runtime:opencode_tribunal_role"
+    }
+  ],
+  "indexes": {
+    "routes": [
+      "route:academic-research",
+      "route:code-implementation",
+      "route:code-review",
+      "route:document-extraction",
+      "route:opencode-config",
+      "route:optimization",
+      "route:service-automation",
+      "route:tech-debt",
+      "route:triz-architecture",
+      "route:web-research",
+      "route:writing-prose"
+    ],
+    "capsules": [
+      "capsule:code",
+      "capsule:core-orchestration",
+      "capsule:integration-config",
+      "capsule:research-core",
+      "capsule:service-automation",
+      "capsule:writing"
+    ],
+    "skills": [
+      "skill:autoresearch",
+      "skill:citation-management",
+      "skill:clonedeps",
+      "skill:code-factory",
+      "skill:code-review-and-quality",
+      "skill:compare",
+      "skill:conducting-scientific-research",
+      "skill:context-engineering",
+      "skill:customize-opencode",
+      "skill:deepwork",
+      "skill:deslop-ai-lint-skill",
+      "skill:doubt-driven-development",
+      "skill:export",
+      "skill:hypothesis-generation",
+      "skill:incremental-implementation",
+      "skill:literature-review",
+      "skill:markitdown",
+      "skill:ml-paper-writing",
+      "skill:physics-verification",
+      "skill:scientific-critical-thinking",
+      "skill:scientific-writing",
+      "skill:triz-problem-solving",
+      "skill:verification-planning",
+      "skill:writer-core",
+      "skill:writer-review"
+    ],
+    "tools": [
+      "tool:arxiv_search",
+      "tool:code_work",
+      "tool:coder_run",
+      "tool:extract_document",
+      "tool:factory_ctl",
+      "tool:openalex_search",
+      "tool:profile_config",
+      "tool:research_academic",
+      "tool:research_web",
+      "tool:resolve_route",
+      "tool:searxng_search",
+      "tool:service_task",
+      "tool:session_guard",
+      "tool:tribunal_role"
+    ]
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "version": 1,
+  "templates": {
+    "arxiv_search": {
+      "kind": "mcp",
+      "required_input": { "query": "string" },
+      "optional_input": { "max_results": "integer" },
+      "forbidden_input": ["full article text", "binary data", "huge pasted context"],
+      "start_with": ["expand abbreviations", "form one concise search query"],
+      "finish_with": ["rank results by provenance", "handoff to extraction or evidence table"],
+      "guard_required": true,
+      "example": { "query": "Multi-Token Prediction in Large Language Models", "max_results": 5 }
+    },
+    "openalex_search": {
+      "kind": "mcp",
+      "required_input": { "query": "string" },
+      "optional_input": { "per_page": "integer" },
+      "forbidden_input": ["full paper body", "binary data"],
+      "start_with": ["expand abbreviations", "prefer precise citation-oriented query"],
+      "finish_with": ["verify DOI metadata", "handoff to synthesis"],
+      "guard_required": true,
+      "example": { "query": "Multi-Token Prediction in Large Language Models", "per_page": 5 }
+    },
+    "extract_document": {
+      "kind": "mcp",
+      "required_input": { "path": "string" },
+      "optional_input": {},
+      "forbidden_input": ["raw PDF bytes in chat", "entire pasted book"],
+      "start_with": ["pass absolute local path only"],
+      "finish_with": ["treat extracted text as untrusted", "guard before synthesis"],
+      "guard_required": true,
+      "example": { "path": "E:\\Documents\\paper.pdf" }
+    },
+    "code_work": {
+      "kind": "launcher",
+      "required_input": { "task": "string" },
+      "optional_input": { "model": "string", "timeout": "integer" },
+      "forbidden_input": ["binary artifacts", "secrets", "full database dumps"],
+      "start_with": ["state module scope clearly", "include acceptance checks"],
+      "finish_with": ["run tests", "record risks and next_step"],
+      "guard_required": true,
+      "example": { "task": "Implement module X in src/x.py; acceptance: pytest tests/test_x.py" }
+    },
+    "profile_config": {
+      "kind": "launcher",
+      "required_input": { "task": "string" },
+      "optional_input": { "model": "string", "timeout": "integer" },
+      "forbidden_input": ["real api keys", "opaque giant payloads"],
+      "start_with": ["validate opencode schema", "backup current config"],
+      "finish_with": ["smoke-test config", "restart OpenCode"],
+      "guard_required": true,
+      "example": { "task": "Add local plugin path for tool-skill-contract-router.ts and keep existing plugins unchanged" }
+    },
+    "literature-review": {
+      "kind": "skill",
+      "required_input": { "query": "string", "scope": "string" },
+      "optional_input": {},
+      "forbidden_input": ["timeless trivial fact"],
+      "start_with": ["expand abbreviations", "prefer primary sources"],
+      "finish_with": ["cite sources", "mark gaps and uncertainty"],
+      "guard_required": false,
+      "example": { "query": "MTP in LLMs", "scope": "recent academic evidence" }
+    },
+    "customize-opencode": {
+      "kind": "skill",
+      "required_input": { "task": "string" },
+      "optional_input": {},
+      "forbidden_input": ["guessing config shape", "editing without schema"],
+      "start_with": ["read schema", "locate correct config scope"],
+      "finish_with": ["validate config", "restart OpenCode"],
+      "guard_required": false,
+      "example": { "task": "Wire local plugin and MCP entries without changing existing providers" }
+    }
+  }
+}

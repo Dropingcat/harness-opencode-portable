@@ -1,0 +1,45 @@
+{
+  "version": 2,
+  "plugin": {
+    "auto_register": true,
+    "mode": "native",
+    "package": "@harness/opencode-plugin",
+    "project_config": ".opencode/opencode.json",
+    "required": true
+  },
+  "mcp": {
+    "auto_start": true,
+    "servers": ["coder_router", "academic_search", "searxng_search"],
+    "health_check_interval_sec": 30,
+    "startup_timeout_sec": 10
+  },
+  "environment": {
+    "required_vars": [
+      "OPENCODE_HARNESS_ROOT",
+      "PYTHON_BIN"
+    ],
+    "optional_vars": [
+      "OPENCODE_SESSION_DB",
+      "DOC_GUARD_CONFIG",
+      "OPENCODE_CONFIG_DIR",
+      "WRITER_PYTHON"
+    ],
+    "validation": "warn"
+  },
+  "paths": {
+    "hardcoded_patterns": [
+      {"pattern": "/home/orangepi/.config/opencode", "replacement": "${OPENCODE_CONFIG_DIR}"},
+      {"pattern": "/home/orangepi/.hermes", "replacement": "${HERMES_ROOT}"},
+      {"pattern": "/home/orangepi/.opencode", "replacement": "${OPENCODE_CONFIG_DIR}"},
+      {"pattern": "/tmp/opencode/runs", "replacement": "${OPENCODE_RUNS_DIR}"},
+      {"pattern": "/tmp/factory_state.json", "replacement": "${OPENCODE_RUNS_DIR}/factory_state.json"},
+      {"pattern": "/home/orangepi", "replacement": "${HOME}"}
+    ],
+    "scan_extensions": [".md", ".py", ".json", ".jsonc", ".ts", ".js", ".yaml", ".yml"]
+  },
+  "health_check": {
+    "enabled": true,
+    "checks": ["plugin_loaded", "mcp_servers", "guard_running", "db_accessible"],
+    "interval_sec": 60
+  }
+}

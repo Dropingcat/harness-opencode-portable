@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://harness.local/schema/harness-host-integration/2.0",
+  "title": "HarnessHostIntegrationPolicy",
+  "description": "Policy controlling native plugin vs legacy CLI/session-DB behavior. Native mode never requires OPENCODE_BIN or OPENCODE_SESSION_DB.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "mode", "native_plugin", "legacy_cli", "session_db"],
+  "properties": {
+    "schema": { "const": "harness-host-integration/2.0" },
+    "mode": {
+      "type": "string",
+      "enum": ["native", "legacy", "hybrid"]
+    },
+    "native_plugin": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "package": { "type": "string" },
+        "min_protocol": { "type": "string" },
+        "compatibility_dir": { "type": "string" }
+      }
+    },
+    "legacy_cli": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "transport": { "const": "opencode_cli_legacy" },
+        "env_bin": { "type": "string" }
+      }
+    },
+    "session_db": {
+      "type": "object",
+      "properties": {
+        "required": { "const": false },
+        "optional_diagnostics": { "type": "boolean" }
+      }
+    }
+  }
+}

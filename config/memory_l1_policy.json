@@ -1,0 +1,24 @@
+{
+  "level": "L1",
+  "persist": false,
+  "source": "claim_graph_audit_snapshot",
+  "bindings": {
+    "task_id_paths": [
+      "task.task_id",
+      "task.id",
+      "task_id"
+    ],
+    "active_claims_paths": [
+      "claims"
+    ],
+    "audit_refs_paths": [
+      "audits",
+      "audit_entries"
+    ]
+  },
+  "rules": {
+    "capture_only_snapshot_bound_context": true,
+    "derive_only_from_present_fields": true,
+    "on_missing_fields": "omit"
+  }
+}

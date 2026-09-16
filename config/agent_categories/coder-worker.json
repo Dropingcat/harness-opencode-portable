@@ -1,0 +1,9 @@
+{
+  "agent": "coder-worker",
+  "categories": [
+    "CAT_IMPL",
+    "CAT_PATCH"
+  ],
+  "default_bucket": "code",
+  "capsule": "code"
+}

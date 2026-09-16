@@ -1,0 +1,41 @@
+{
+  "version": 1,
+  "families": {
+    "code-tools": {
+      "tools": ["coder_run", "code_work", "factory_ctl"],
+      "allowed_routes": ["code-implementation", "code-review", "optimization"],
+      "guard_required": false,
+      "side_effects": "local_project_only"
+    },
+    "research-tools": {
+      "tools": ["arxiv_search", "openalex_search", "research_academic", "research_web", "searxng_search"],
+      "allowed_routes": ["academic-research", "web-research"],
+      "guard_required": true,
+      "side_effects": "read_only_untrusted"
+    },
+    "document-tools": {
+      "tools": ["extract_document"],
+      "allowed_routes": ["document-extraction", "academic-research", "web-research"],
+      "guard_required": true,
+      "side_effects": "read_only_untrusted"
+    },
+    "integration-tools": {
+      "tools": ["profile_config", "service_task"],
+      "allowed_routes": ["opencode-config", "tech-debt"],
+      "guard_required": true,
+      "side_effects": "external_or_config_mutation"
+    },
+    "guard-tools": {
+      "tools": ["session_guard"],
+      "allowed_routes": ["code-implementation", "academic-research", "web-research", "opencode-config", "tech-debt"],
+      "guard_required": false,
+      "side_effects": "none"
+    },
+    "controller-tools": {
+      "tools": ["resolve_route", "resolve_capsules", "build_skill_graph", "split_claims", "build_task_plan"],
+      "allowed_routes": ["code-implementation", "academic-research", "web-research", "opencode-config", "tech-debt"],
+      "guard_required": false,
+      "side_effects": "none"
+    }
+  }
+}

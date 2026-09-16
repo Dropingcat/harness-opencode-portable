@@ -1,0 +1,50 @@
+{
+  "version": 1,
+  "mappings": [
+    {
+      "pattern": "/home/orangepi/.config/opencode",
+      "replacement": "${OPENCODE_CONFIG_DIR}",
+      "description": "OpenCode config directory"
+    },
+    {
+      "pattern": "/home/orangepi/.hermes",
+      "replacement": "${HERMES_ROOT}",
+      "description": "Hermes root directory"
+    },
+    {
+      "pattern": "/home/orangepi/.opencode",
+      "replacement": "${OPENCODE_CONFIG_DIR}",
+      "description": "Alternative OpenCode config path"
+    },
+    {
+      "pattern": "/tmp/opencode/runs",
+      "replacement": "${OPENCODE_RUNS_DIR}",
+      "description": "OpenCode runs directory"
+    },
+    {
+      "pattern": "/tmp/factory_state.json",
+      "replacement": "${OPENCODE_RUNS_DIR}/factory_state.json",
+      "description": "Factory state file"
+    },
+    {
+      "pattern": "/home/orangepi",
+      "replacement": "${HOME}",
+      "description": "Home directory"
+    },
+    {
+      "pattern": "/home/orangepi/.opencode/bin/opencode",
+      "replacement": "${OPENCODE_BIN}",
+      "description": "OpenCode binary"
+    }
+  ],
+  "scan": {
+    "include_extensions": [".md", ".py", ".json", ".jsonc", ".ts", ".js", ".yaml", ".yml", ".txt"],
+    "exclude_dirs": [".git", "__pycache__", "node_modules", ".venv", "venv", "dist", "build"],
+    "max_file_size_mb": 10
+  },
+  "replacement": {
+    "dry_run_default": true,
+    "backup_original": true,
+    "preserve_formatting": true
+  }
+}

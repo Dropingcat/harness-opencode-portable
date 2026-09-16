@@ -1,0 +1,56 @@
+{
+  "version": 2,
+  "tools": {
+    "search.discovery": {
+      "capability": "web.discovery"
+    },
+    "source.resolve": {
+      "capability": "academic.metadata"
+    },
+    "document.inspect": {
+      "capability": "document.text.extract"
+    },
+    "document.ocr": {
+      "capability": "document.ocr"
+    },
+    "scientific_image.inspect": {
+      "capability": "image.tiff.inspect"
+    },
+    "corpus.search": {
+      "capability": "corpus.fts"
+    },
+    "evidence.verify": {
+      "capability": "evidence.verify"
+    },
+    "science.compute": {
+      "capability": "science.numeric"
+    },
+    "plot.render": {
+      "capability": "plot.render"
+    },
+    "report.compose": {
+      "capability": "report.compose"
+    },
+    "job.checkpoint": {
+      "capability": "job.checkpoint"
+    },
+    "code.change": {
+      "capability": "code.edit"
+    },
+    "code.test": {
+      "capability": "code.test"
+    },
+    "code.review": {
+      "capability": "code.review"
+    },
+    "code.acceptance": {
+      "capability": "code.acceptance"
+    },
+    "capability.request": {
+      "capability": "capability.escalation"
+    },
+    "tribunal_role": {
+      "capability": "tribunal.role.execute"
+    }
+  }
+}

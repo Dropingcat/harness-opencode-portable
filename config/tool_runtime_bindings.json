@@ -1,0 +1,75 @@
+{
+  "version": 1,
+  "tools": {
+    "coder_run": {
+      "kind": "mcp",
+      "entrypoint": "mcp/coder_router_server.py",
+      "provider": "coder_router_server"
+    },
+    "code_work": {
+      "kind": "launcher",
+      "entrypoint": "mcp/launchers/opencode_code_worker.py",
+      "provider": "opencode_code_worker"
+    },
+    "research_academic": {
+      "kind": "launcher",
+      "entrypoint": "mcp/launchers/opencode_research_academic.py",
+      "provider": "opencode_research_academic"
+    },
+    "research_web": {
+      "kind": "launcher",
+      "entrypoint": "mcp/launchers/opencode_research_web.py",
+      "provider": "opencode_research_web"
+    },
+    "service_task": {
+      "kind": "launcher",
+      "entrypoint": "mcp/launchers/opencode_service_task.py",
+      "provider": "opencode_service_task"
+    },
+    "profile_config": {
+      "kind": "launcher",
+      "entrypoint": "mcp/launchers/opencode_profile_configurator.py",
+      "provider": "opencode_profile_configurator"
+    },
+    "arxiv_search": {
+      "kind": "mcp",
+      "entrypoint": "mcp/academic_search_server.py",
+      "provider": "academic_search_server"
+    },
+    "openalex_search": {
+      "kind": "mcp",
+      "entrypoint": "mcp/academic_search_server.py",
+      "provider": "academic_search_server"
+    },
+    "extract_document": {
+      "kind": "mcp",
+      "entrypoint": "mcp/doc_extract_server.py",
+      "provider": "doc_extract_server"
+    },
+    "searxng_search": {
+      "kind": "mcp",
+      "entrypoint": "mcp/searxng_search_server.py",
+      "provider": "searxng_search_server"
+    },
+    "factory_ctl": {
+      "kind": "script",
+      "entrypoint": "scripts/code-factory/factory_ctl.py",
+      "provider": "code_factory_runtime"
+    },
+    "resolve_route": {
+      "kind": "script",
+      "entrypoint": "scripts/router/resolve_route.py",
+      "provider": "router_core"
+    },
+    "session_guard": {
+      "kind": "script",
+      "entrypoint": "guard/src/session_guard.py",
+      "provider": "doc_guard"
+    },
+    "tribunal_role": {
+      "kind": "launcher",
+      "entrypoint": "mcp/launchers/opencode_tribunal_role.py",
+      "provider": "opencode_tribunal_role"
+    }
+  }
+}

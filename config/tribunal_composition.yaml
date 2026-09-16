@@ -1,0 +1,214 @@
+schema_version: tribunal-composition-policy/1.0
+policy_id: researcher-r4-tribunal-composition
+version: 0.4.4-l2
+
+defaults:
+  inquiry_depth: 2
+  token_budget_per_role: 6000
+
+# R4.1 decision: this is an initial policy set, not an architectural constant.
+# Advocate stays conditional/dynamic; Aggregator is outside R4.1 because no live
+# dialogue or verdict aggregation is executed at this boundary.
+permanent_roles:
+  - critic
+  - skeptic
+  - methodologist
+  - evidence_auditor
+
+axis_requirements:
+  NUMERIC_MEASUREMENT: [measurement_specialist]
+  METHOD: [methodologist]
+  CONFLICT: [skeptic]
+  CAUSALITY: [causal_critic]
+  DERIVATION: [numerical_analyst]
+
+method_requirements:
+  INTERVAL_OVERLAP: [measurement_specialist]
+  EXPERIMENTAL_RETEST: [measurement_specialist]
+  DERIVATION_REPRODUCIBILITY: [numerical_analyst]
+  CAUSAL_ALTERNATIVES: [causal_critic]
+  EVIDENCE_QUALITY: [evidence_auditor]
+  CONFLICT_ANALYSIS: [skeptic]
+
+roles:
+  critic:
+    label: Critic
+    kind: META
+    permanent: true
+    supported_axes: [SCOPE, ASSUMPTION, EXTRAPOLATION, CONFLICT]
+    supported_methods: [SCOPE_ALIGNMENT, ASSUMPTION_AUDIT, EXTRAPOLATION_CHECK, CONFLICT_ANALYSIS, SPECIALIST_REVIEW]
+    lineage_tags: []
+    allowed_capabilities: [evidence.verify]
+    allowed_tools: [evidence.verify]
+    evidence_view:
+      kind: CLAIM_PLUS_COUNTEREVIDENCE
+      include_provenance: true
+      include_previous_conclusions: false
+      max_refs: 24
+    expected_output_contract: ArgumentArtifact/1.0
+    equivalence_group: critic
+    selection_priority: 10
+
+  skeptic:
+    label: Skeptic
+    kind: META
+    permanent: true
+    supported_axes: [CONFLICT, EVIDENCE_SUFFICIENCY, CAUSALITY, ASSUMPTION]
+    supported_methods: [CONFLICT_ANALYSIS, CROSS_SOURCE_COMPARISON, CAUSAL_ALTERNATIVES, ASSUMPTION_AUDIT, SPECIALIST_REVIEW]
+    lineage_tags: []
+    allowed_capabilities: [evidence.verify]
+    allowed_tools: [evidence.verify]
+    evidence_view:
+      kind: FRESH_CONTEXT
+      include_provenance: false
+      include_previous_conclusions: false
+      max_refs: 20
+    expected_output_contract: ArgumentArtifact/1.0
+    equivalence_group: skeptic
+    selection_priority: 10
+
+  methodologist:
+    label: Methodologist
+    kind: META
+    permanent: true
+    supported_axes: [METHOD, NUMERIC_MEASUREMENT, SCOPE, DERIVATION]
+    supported_methods: [METHOD_COMPATIBILITY, INTERVAL_OVERLAP, EXPERIMENTAL_RETEST, DERIVATION_REPRODUCIBILITY, SCOPE_ALIGNMENT]
+    lineage_tags: []
+    allowed_capabilities: [science.numeric, formula.validate, evidence.verify]
+    allowed_tools: [science.compute, evidence.verify]
+    evidence_view:
+      kind: METHOD_ONLY
+      include_provenance: true
+      include_previous_conclusions: false
+      max_refs: 20
+    expected_output_contract: ArgumentArtifact/1.0
+    equivalence_group: methodologist
+    selection_priority: 10
+
+  evidence_auditor:
+    label: Evidence Auditor
+    kind: META
+    permanent: true
+    supported_axes: [EVIDENCE_SUFFICIENCY, SOURCE_PROVENANCE, FRESHNESS, CONFLICT]
+    supported_methods: [EVIDENCE_QUALITY, PROVENANCE_CHECK, FRESHNESS_CHECK, CROSS_SOURCE_COMPARISON, CONFLICT_ANALYSIS]
+    lineage_tags: []
+    allowed_capabilities: [evidence.verify, document.text.extract]
+    allowed_tools: [evidence.verify, document.inspect]
+    evidence_view:
+      kind: FULL_RELEVANT
+      include_provenance: true
+      include_previous_conclusions: false
+      max_refs: 32
+    expected_output_contract: ArgumentArtifact/1.0
+    equivalence_group: evidence_auditor
+    selection_priority: 10
+
+  measurement_specialist:
+    label: Measurement Specialist
+    kind: METHOD
+    permanent: false
+    supported_axes: [NUMERIC_MEASUREMENT, METHOD]
+    supported_methods: [INTERVAL_OVERLAP, EXPERIMENTAL_RETEST, METHOD_COMPATIBILITY]
+    lineage_tags: []
+    allowed_capabilities: [science.numeric, evidence.verify]
+    allowed_tools: [science.compute, evidence.verify]
+    evidence_view:
+      kind: METHOD_ONLY
+      include_provenance: true
+      include_previous_conclusions: false
+      max_refs: 20
+    expected_output_contract: ArgumentArtifact/1.0
+    equivalence_group: measurement_specialist
+    selection_priority: 10
+
+  numerical_analyst:
+    label: Numerical Analyst
+    kind: METHOD
+    permanent: false
+    supported_axes: [NUMERIC_MEASUREMENT, DERIVATION]
+    supported_methods: [INTERVAL_OVERLAP, DERIVATION_REPRODUCIBILITY, ASSUMPTION_AUDIT]
+    lineage_tags: []
+    allowed_capabilities: [science.numeric, science.symbolic, formula.validate]
+    allowed_tools: [science.compute]
+    evidence_view:
+      kind: METHOD_ONLY
+      include_provenance: true
+      include_previous_conclusions: false
+      max_refs: 20
+    expected_output_contract: ArgumentArtifact/1.0
+    equivalence_group: numerical_analyst
+    selection_priority: 10
+
+  causal_critic:
+    label: Causal Critic
+    kind: METHOD
+    permanent: false
+    supported_axes: [CAUSALITY, ASSUMPTION, EXTRAPOLATION]
+    supported_methods: [CAUSAL_ALTERNATIVES, ASSUMPTION_AUDIT, EXTRAPOLATION_CHECK]
+    lineage_tags: []
+    allowed_capabilities: [evidence.verify]
+    allowed_tools: [evidence.verify]
+    evidence_view:
+      kind: CLAIM_PLUS_COUNTEREVIDENCE
+      include_provenance: true
+      include_previous_conclusions: false
+      max_refs: 24
+    expected_output_contract: ArgumentArtifact/1.0
+    equivalence_group: causal_critic
+    selection_priority: 10
+
+  crystallographer:
+    label: Crystallographer
+    kind: DOMAIN
+    permanent: false
+    supported_axes: [METHOD, SCOPE, CAUSALITY]
+    supported_methods: [METHOD_COMPATIBILITY, SCOPE_ALIGNMENT, CAUSAL_ALTERNATIVES, SPECIALIST_REVIEW]
+    lineage_tags: [crystallography, crystallographer, crystal_structure]
+    allowed_capabilities: [science.physics, evidence.verify, document.text.extract]
+    allowed_tools: [science.compute, evidence.verify, document.inspect]
+    evidence_view:
+      kind: CLAIM_PLUS_SUPPORT
+      include_provenance: true
+      include_previous_conclusions: false
+      max_refs: 24
+    expected_output_contract: ArgumentArtifact/1.0
+    equivalence_group: crystallographer
+    selection_priority: 10
+
+  xrd_specialist:
+    label: XRD Specialist
+    kind: METHOD
+    permanent: false
+    supported_axes: [METHOD, NUMERIC_MEASUREMENT, SCOPE]
+    supported_methods: [METHOD_COMPATIBILITY, INTERVAL_OVERLAP, EXPERIMENTAL_RETEST, SCOPE_ALIGNMENT, SPECIALIST_REVIEW]
+    lineage_tags: [xrd, diffraction, x_ray_diffraction, рентгенография, дифракция]
+    allowed_capabilities: [science.physics, science.numeric, evidence.verify, document.text.extract]
+    allowed_tools: [science.compute, evidence.verify, document.inspect]
+    evidence_view:
+      kind: METHOD_ONLY
+      include_provenance: true
+      include_previous_conclusions: false
+      max_refs: 24
+    expected_output_contract: ArgumentArtifact/1.0
+    equivalence_group: xrd_specialist
+    selection_priority: 10
+
+  advocate:
+    label: Advocate
+    kind: META
+    permanent: false
+    # Conditional-only role: empty need coverage keeps ordinary R4.1 composition
+    # from selecting Advocate. R4.4 activation is a separate admitted contract.
+    supported_axes: []
+    supported_methods: []
+    lineage_tags: []
+    allowed_capabilities: [evidence.verify]
+    allowed_tools: [evidence.verify]
+    evidence_view:
+      kind: CLAIM_PLUS_SUPPORT
+      include_provenance: true
+      include_previous_conclusions: true
+      max_refs: 16
+    expected_output_contract: ArgumentArtifact/1.0
+    equivalence_group: advocate
+    selection_priority: 100

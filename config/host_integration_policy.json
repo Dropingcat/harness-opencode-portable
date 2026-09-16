@@ -1,0 +1,20 @@
+{
+  "$schema": "https://harness.local/schema/harness-host-integration/2.0",
+  "schema": "harness-host-integration/2.0",
+  "mode": "native",
+  "native_plugin": {
+    "enabled": true,
+    "package": "@harness/opencode-plugin",
+    "min_protocol": "harness-bridge-rpc/1.0",
+    "compatibility_dir": "compatibility/opencode"
+  },
+  "legacy_cli": {
+    "enabled": false,
+    "transport": "opencode_cli_legacy",
+    "env_bin": "OPENCODE_BIN"
+  },
+  "session_db": {
+    "required": false,
+    "optional_diagnostics": true
+  }
+}

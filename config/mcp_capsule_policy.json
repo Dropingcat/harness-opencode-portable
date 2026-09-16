@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "selection": {
+    "prefer_family_before_server": true,
+    "require_allowed_route_match": true,
+    "block_side_effect_servers_without_guard": true,
+    "require_mcp_health_check": true,
+    "block_unknown_mcp_family": true
+  },
+  "family_priority": {
+    "code-implementation": [
+      "code-mcp"
+    ],
+    "academic-research": [
+      "research-mcp",
+      "document-mcp"
+    ],
+    "web-research": [
+      "search-mcp",
+      "research-mcp",
+      "document-mcp"
+    ],
+    "document-extraction": [
+      "document-mcp"
+    ]
+  }
+}

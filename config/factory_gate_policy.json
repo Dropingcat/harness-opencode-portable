@@ -1,0 +1,36 @@
+{
+  "version": 1,
+  "policy_id": "code_factory_default",
+  "required_gates": ["reviewer", "tester", "auditor"],
+  "optional_evidence": ["worker", "experimenter"],
+  "gate_semantics": {
+    "reviewer": {
+      "pass": ["APPROVE"],
+      "retry": ["REQUEST_CHANGES"],
+      "terminal_fail": ["REJECT"],
+      "block": ["AMBIGUOUS"]
+    },
+    "tester": {
+      "pass": ["PASS"],
+      "retry": ["FAIL"]
+    },
+    "auditor": {
+      "pass": ["APPROVE"],
+      "retry": ["REQUEST_CHANGES"],
+      "terminal_fail": ["REJECT"],
+      "block": ["INVALID_INPUT"]
+    }
+  },
+  "retry": {
+    "new_attempt_on_rework": true,
+    "attempt_limit_includes_initial": true,
+    "note": "attempt открывается только при реальной сдаче воркером исправления (state=REWORK); RETRY-сигналы ревьюеров/тестеров накапливаются в рамках текущего attempt и не тратят лимит"
+  },
+  "finalization": {
+    "requires_state": "PASSED"
+  },
+  "convergence": {
+    "review_fail_tribunal_threshold": 2,
+    "note": "Модуль, у которого ревью не прошло threshold раз подряд без PASS (RETRY/FAIL), помечается флагом tribunal_required. Код решает; оркестратор обязан диспатчить аудитора (code-auditor, только метаданные процесса) до следующих фиксов."
+  }
+}

@@ -1,0 +1,11 @@
+schema_version: tribunal-provider-binding-policy/1.0
+policy_id: researcher-r4-tribunal-provider-binding
+version: 0.4.4-l3
+execution_capability: tribunal.role.execute
+require_live_execution_ready: true
+max_executors_per_contract: 1
+allowed_provider_kinds: [process, agent, mcp]
+allowed_contract_namespaces: [IQC, DQC, ADC]
+selection_order: [priority_desc, provider_id_asc]
+fail_on_requested_wrong_provider: true
+fail_on_executor_cardinality_exceeded: true

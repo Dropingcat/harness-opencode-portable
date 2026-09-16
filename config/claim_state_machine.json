@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "states": [
+    "NEW",
+    "CLUSTERED",
+    "ROUTED",
+    "IN_PROGRESS",
+    "VALIDATED",
+    "AUDITED",
+    "ACCEPTED",
+    "REWORK",
+    "PARTIAL",
+    "BLOCKED",
+    "ESCALATED",
+    "REJECTED"
+  ],
+  "transitions": [
+    { "from": "NEW", "to": "CLUSTERED", "reason_code": "CLAIM_PARSED" },
+    { "from": "CLUSTERED", "to": "ROUTED", "reason_code": "BUCKET_ASSIGNED" },
+    { "from": "ROUTED", "to": "IN_PROGRESS", "reason_code": "EXECUTION_STARTED" },
+    { "from": "IN_PROGRESS", "to": "VALIDATED", "reason_code": "ACCEPTANCE_CHECKS_PASS" },
+    { "from": "IN_PROGRESS", "to": "REWORK", "reason_code": "REVIEW_OR_TEST_FAILED" },
+    { "from": "IN_PROGRESS", "to": "PARTIAL", "reason_code": "BUDGET_OR_DEPTH_EXHAUSTED" },
+    { "from": "IN_PROGRESS", "to": "BLOCKED", "reason_code": "GUARD_OR_POLICY_BLOCK" },
+    { "from": "VALIDATED", "to": "AUDITED", "reason_code": "AUDIT_RECORDED" },
+    { "from": "AUDITED", "to": "ACCEPTED", "reason_code": "READY_FOR_INTEGRATION" },
+    { "from": "AUDITED", "to": "REWORK", "reason_code": "TARGETED_REWORK_REQUIRED" },
+    { "from": "REWORK", "to": "IN_PROGRESS", "reason_code": "RETRY_STARTED" },
+    { "from": "BLOCKED", "to": "ESCALATED", "reason_code": "REQUIRES_USER_OR_OPERATOR" }
+  ]
+}

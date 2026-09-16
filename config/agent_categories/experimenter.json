@@ -1,0 +1,10 @@
+{
+  "agent": "experimenter",
+  "categories": [
+    "CAT_EXPERIMENT",
+    "CAT_METRIC",
+    "CAT_BENCHMARK"
+  ],
+  "default_bucket": "code",
+  "capsule": "code"
+}

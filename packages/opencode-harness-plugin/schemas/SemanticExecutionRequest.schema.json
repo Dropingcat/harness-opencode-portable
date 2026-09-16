@@ -1,0 +1,53 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://harness.local/schema/semantic-execution-request/1.0",
+  "title": "SemanticExecutionRequest",
+  "description": "Generic bounded semantic request from Harness Core to the OpenCode plugin.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "execution_id",
+    "purpose",
+    "contract_schema",
+    "parent_host_session_id",
+    "bounded_input",
+    "expected_output",
+    "model_policy",
+    "permission_profile",
+    "timeout_ms",
+    "trace"
+  ],
+  "properties": {
+    "schema": { "const": "semantic-execution-request/1.0" },
+    "execution_id": { "type": "string", "minLength": 1 },
+    "purpose": {
+      "type": "string",
+      "enum": [
+        "TRIBUNAL_ROLE",
+        "WRITER_DRAFT",
+        "WRITER_REPAIR",
+        "WRITER_REVIEW",
+        "CODE_WORK",
+        "CODE_REVIEW",
+        "CODE_TEST_ANALYSIS"
+      ]
+    },
+    "contract_schema": { "type": "string", "minLength": 1 },
+    "role_ref": { "type": "string" },
+    "parent_host_session_id": { "type": "string", "minLength": 1 },
+    "bounded_input": { "type": "object" },
+    "expected_output": { "type": "object" },
+    "model_policy": {
+      "type": "object",
+      "properties": {
+        "provider_id": { "type": "string" },
+        "model_id": { "type": "string" },
+        "agent": { "type": "string" }
+      }
+    },
+    "permission_profile": { "type": "string", "minLength": 1 },
+    "timeout_ms": { "type": "integer", "minimum": 1 },
+    "trace": { "type": "object" }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "selection": {
+    "prefer_family_before_tool": true,
+    "prefer_read_only_for_research": true,
+    "block_side_effect_tools_without_guard": true,
+    "block_unknown_tool_family": true,
+    "require_allowed_route_match": true
+  },
+  "family_priority": {
+    "code-implementation": ["controller-tools", "code-tools", "guard-tools"],
+    "academic-research": ["controller-tools", "research-tools", "document-tools", "guard-tools"],
+    "web-research": ["controller-tools", "research-tools", "document-tools", "guard-tools"],
+    "opencode-config": ["controller-tools", "integration-tools", "guard-tools"],
+    "tech-debt": ["controller-tools", "integration-tools", "guard-tools"]
+  }
+}

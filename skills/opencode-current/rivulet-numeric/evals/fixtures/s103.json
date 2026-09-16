@@ -1,0 +1,13 @@
+{
+  "sources": [
+    {
+      "claim_id": 103,
+      "sources": [
+        {
+          "title": "S3",
+          "descriptor": "Твёрдость 200 HV"
+        }
+      ]
+    }
+  ]
+}

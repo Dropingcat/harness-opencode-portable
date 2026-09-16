@@ -1,0 +1,107 @@
+{
+  "kind": "memory_registry",
+  "levels": {
+    "L3": {
+      "lessons": {
+        "163eb32181ca63f952aca05f0b21eead35b6989313d245905d4d00a0625b141d": {
+          "admissions": 1,
+          "evidence_refs": [
+            "REPORT_reconciliation.md",
+            "REPORT_uncertainty.md",
+            "nkr_ch1_dom.yaml"
+          ],
+          "lesson_text": "Writer-контур обкатан на диссертации: литературный DOM (nkr_ch1_dom.yaml, 58 claims) — конкорданс НКР↔автореферат v20; verify_claims --apply (guard PASS, 44 SUPPORTED/14 AMBIGUOUS) + citation_trace PASS при хеджах из словаря гейта (предположи/по-видимому/возможно/может); PowerShell 5.1 НЕ поддерживает heredoc <<'PY' — пиши python-скрипт в файл; извлечение .doc/.docx — Word COM через Content.Text + WriteAllText UTF8 (SaveAs кодом 7 падает).",
+          "reason_codes": [
+            "powershell_heredoc_no",
+            "word_com_extract",
+            "writer_dom_ok"
+          ],
+          "sources": [
+            {
+              "added_via": "memory_bridge.add",
+              "snapshot_id": null,
+              "task_id": null
+            }
+          ]
+        },
+        "28cf522a6a28e26b4476402f118d27f1a886dfd499c10f32f61d31987158a2e1": {
+          "admissions": 1,
+          "evidence_refs": [
+            "factory_smoke-2026-09-01"
+          ],
+          "lesson_text": "PowerShell 5.1 Set-Content -Encoding UTF8 writes UTF-8 BOM; factory_ctl and contract_validator reject BOM as invalid JSON. Write JSON via UTF8Encoding(false).",
+          "reason_codes": [
+            "CONTRACT",
+            "PORTABILITY"
+          ],
+          "sources": [
+            {
+              "added_via": "memory_bridge.add",
+              "snapshot_id": "snap-2026-09-01",
+              "task_id": "post-audit-2026-09-01"
+            }
+          ]
+        },
+        "646ca8420e0026a13e58ff22a632ce6486254b7cda2b1cfc4e899a1b537af6ce": {
+          "admissions": 1,
+          "evidence_refs": [
+            "runbook-junction",
+            "setup_env.ps1"
+          ],
+          "lesson_text": "Memory bridge: API paths must use ASCII junction E:\\opencode_harness on Windows, not cyrillic E:\\Documents\\Документы",
+          "reason_codes": [
+            "PORTABILITY",
+            "RUNTIME"
+          ],
+          "sources": [
+            {
+              "added_via": "memory_bridge.add",
+              "snapshot_id": "snap-2026-09-01",
+              "task_id": "post-audit-2026-09-01"
+            }
+          ]
+        },
+        "a3134ce09f0354b0702c63528964d016e5e04ba97d535fa5f5efbe4e302e20bb": {
+          "admissions": 1,
+          "evidence_refs": [
+            "C:/Temp/opencode/harness-deploy/remote_acceptance_runs/production_001/LOCAL_DEPLOYMENT_STATUS.md"
+          ],
+          "lesson_text": "При acceptance code-only deployment на Windows нужно явно переопределять OPENCODE_HARNESS_ROOT на deployment root и ставить GIT_CEILING_DIRECTORIES в parent deployment; иначе compiler/preflight может проверить основной репозиторий, а git — ошибочно обнаружить родительский temp repository.",
+          "reason_codes": [
+            "DEPLOYMENT_ROOT_LEAK",
+            "PARENT_GIT_DISCOVERY"
+          ],
+          "sources": [
+            {
+              "added_via": "memory_bridge.add",
+              "snapshot_id": null,
+              "task_id": "DEPLOY-FINAL-20260914"
+            }
+          ]
+        },
+        "ce5cf6cc6fc115a3fcd0e872e5768bf549b31e42e65c7badb655c3624e1a4c2b": {
+          "admissions": 1,
+          "evidence_refs": [
+            "NKR-CH1-001",
+            "bf87518",
+            "scripts/researcher/verify_claims.py",
+            "tests/test_verify_claims.py"
+          ],
+          "lesson_text": "Writer DOM verification must be append-only: automated verify_claims --apply may fill OPEN or missing fields, but must never downgrade curated verdicts or erase an existing numeric_comparison. Run draft_loop in dry-run before final --apply to catch unlinked factual sentences without polluting the claim registry.",
+          "reason_codes": [
+            "DRAFT_LOOP_DRY_RUN",
+            "WRITER_DOM_APPEND_ONLY"
+          ],
+          "sources": [
+            {
+              "added_via": "writing-orchestrator",
+              "snapshot_id": null,
+              "task_id": "NKR-CH1-001"
+            }
+          ]
+        }
+      }
+    }
+  },
+  "version": 1
+}
