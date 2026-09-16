@@ -42,9 +42,9 @@
    "title": "Unified semantic transport",
    "result": "Tribunal first, then Writer/Coder use SemanticExecutionRequest/Result; no silent transport switch",
    "status": "in_progress",
-"evidence": "Coder M1 DONE (4acef3b); M2 factory DEV05-CODER-CONV-M2 DONE (fe3bb87); M3a factory DEV05-CODER-CONV-M3 DONE: explicit transport selection (plugin/cli/auto), fail-closed when plugin selected (no silent CLI), model provider/model split, 59 unittest. Still NOT live bridge execution: M3b channel + boundary E2E pending. TD-062 remains open.",
-    "next_gate": "M3b: real reverse bridge channel wiring + independent boundary E2E before live model; then Writer convergence; then optional orchestrator agent packaging.",
-    "production_ready": false
+   "evidence": "Coder M1/M2/M3a/M3b factory DONE: semantic_transport adapter, router wiring, explicit transport, real reverse bridge channel with plugin-side consumer. 81 coder tests. Boundary E2E passes (fake plugin_side). Writer convergence + live model remain.",
+   "next_gate": "Writer convergence (DEV-05 finish); then DEV-09 live calibration with real model",
+   "production_ready": false
   },
   {
    "id": "DEV-06",
