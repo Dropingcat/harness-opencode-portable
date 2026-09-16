@@ -1,0 +1,43 @@
+{
+  "module": "explicit_transport",
+  "verdict": "APPROVE",
+  "comments": [
+    {
+      "file": "tests/coder/test_m3a_tester_independent.py",
+      "line": 1,
+      "problem": "Независимый tester-файл M3a (покрывает критичный zero-call кейс: explicit plugin + нет bridge -> HOST_UNAVAILABLE c assert на 0 subprocess-вызовов, defensive-матрицу resolve_transport, env-leakage guard) не включён в коммит M3 (untracked по `git status`). Правило фабрики 'код без тестов не принимается' и scope M3a ('tests/coder/test_coder_router_wiring*.py адаптированы') подразумевают, что весь тест-набор модуля находится в репозитории; при следующем checkout независимая проверка fail-closed потеряется.",
+      "suggestion": "Закоммитить tests/coder/test_m3a_tester_independent.py в тот же M3a-коммит (или отдельным тестовым коммитом до закрытия ворот), чтобы репозиторий содержал полный набор тестов модуля.",
+      "falsification": "Если `git ls-files` покажет tests/coder/test_m3a_tester_independent.py как tracked (закоммиченный) файл в момент проверки ворот — замечание невалидно."
+    },
+    {
+      "file": "scripts/code-factory/semantic_transport.py",
+      "line": 432,
+      "problem": "Явный transport=\"auto\" не резолвится через resolve_transport(): explicit_choice=True, selected=\"auto\" попадает в plugin-ветку и при недоступном bridge возвращает HOST_UNAVAILABLE, тогда как transport=None (тоже auto-семантика по env) при недоступном bridge резолвится в \"cli\" и возвращает REJECTED_BY_HOST (legacy-fallback диагностика). Один и тот же режим \"auto\" на одном API даёт разные статусы/диагностики в зависимости от способа передачи. Docstring (пп.2-4) этот случай не описывает.",
+      "suggestion": "Либо резолвить \"auto\" через resolve_transport() и в явной передаче (selected = resolve_transport(explicit=transport) при transport==\"auto\"), либо явно задокументировать, что transport=\"auto\" трактуется как \"plugin\" (fail-closed), и добавить тест на этот кейс.",
+      "falsification": "Если вызов execute_coder_semantic(req, transport=\"auto\") в окружении без bridge вернёт REJECTED_BY_HOST с legacy-fallback диагностикой (или замечание опровергнуто тестом, фиксирующим текущее поведение как контрактное) — замечание невалидно."
+    },
+    {
+      "file": "mcp/coder_router_server.py",
+      "line": 157,
+      "problem": "Нормализация HARNESS_TRANSPORT несогласована между ветками router: в _LEGACY_ONLY-ветке значение нормализуется `.strip().lower()`, а основная ветка делегирует в resolve_transport(), который НЕ нормализует (только точное совпадение). Следствие: HARNESS_TRANSPORT=\" Plugin \" при _LEGACY_ONLY=True -> fail-closed (plugin), а при _LEGACY_ONLY=False + недоступный bridge -> auto-семантика -> legacy CLI (с меткой). Одно и то же env-значение даёт разный транспорт в зависимости от импортируемости M1-адаптера.",
+      "suggestion": "Убрать `.strip().lower()` из _LEGACY_ONLY-ветки и полагаться на resolve_transport()/авто-семантику для любого нестандартного значения, либо нормализовать значение в resolve_transport() единообразно. Минимум — синхронизировать обе ветки.",
+      "falsification": "Если при HARNESS_TRANSPORT=\" Plugin \" (с пробелами/регистром) router возвращает одинаковый транспорт и одинаковую fail-closed/legacy-ветку при _LEGACY_ONLY=True и _LEGACY_ONLY=False — замечание невалидно."
+    }
+  ],
+  "scope_declared": {
+    "scope_in": [
+      "scripts/code-factory/semantic_transport.py (resolve_transport, execute_coder_semantic(transport=...), model split)",
+      "mcp/coder_router_server.py (resolve_transport вместо HARNESS_SEMANTIC_ENABLED-условия)",
+      "tests/coder/test_explicit_transport.py (новый), test_coder_router_wiring*.py (адаптированы)",
+      "канонические схемы SemanticExecutionRequest/Result"
+    ],
+    "scope_out": [
+      "реальная live-модель",
+      "реальный bridge-канал (M3a — детерминированная часть, mock-тестируемая)",
+      "mcp/launchers/_runner.py",
+      "authority/gates (не изменены, подтверждено git diff коммита 858691e)",
+      "другие файлы"
+    ]
+  },
+  "out_of_scope_gaps": []
+}
