@@ -1,0 +1,24 @@
+{
+  "module": "coder_router_wiring",
+  "result": "PASS",
+  "passed": 32,
+  "failed": 0,
+  "coverage": 85,
+  "coverage_notes": "coverage run --source=mcp --data-file=.coverage_m2 -m unittest discover -s tests/coder; mcp/coder_router_server.py: 95 stmts, 14 miss, 85%. Uncovered: L25 sys.path insert guard, L55 _allowed_roots raw-env branch (legacy default root only in tests), L74 _resolve_model exact-ID branch, L84 empty-task validation, L135 timeout branch proc.kill for nt (timeout-branch response covered via _TimedOutProc; kill() hit), L169 list_tools MCP SDK surface (stdio server not started), L192-196 unknown tool/JSON args in call_tool, L200-201 stdio main, L205 __main__. All required M2 contract branches (legacy success/timeout/OSError flagged, bridge via HARNESS_SEMANTIC_ENABLED=1 + schema-valid semantic_result, ImportError M1 -> legacy_only, workdir gating before transport, unknown model_class) are executed and asserted.",
+  "tests": [
+    {"name": "test_legacy_transport_flagged (worker)", "status": "pass", "status_detail": "no HARNESS_SEMANTIC_ENABLED -> transport=opencode_cli_legacy + legacy_reason, ok, exit_code 0"},
+    {"name": "test_legacy_timeout_is_flagged (worker)", "status": "pass", "status_detail": "mock create_subprocess_exec -> _TimedOutProc -> TimeoutError branch -> transport=opencode_cli_legacy, 'timed out' in error"},
+    {"name": "test_bridge_transport_when_enabled (worker)", "status": "pass", "status_detail": "HARNESS_SEMANTIC_ENABLED=1 -> harness-plugin-bridge; semantic_result jsonschema-valid against SemanticExecutionResult/1.0; request honors M1 contract (purpose/permission_profile/bounded_input/model_policy/timeout_ms/trace.worktree)"},
+    {"name": "test_import_failure_falls_back_legacy (worker)", "status": "pass", "status_detail": "blocked builtins.__import__ for semantic_transport -> _LEGACY_ONLY=True; env=1 alone does NOT bridge; transport=opencode_cli_legacy"},
+    {"name": "test_legacy_oserror_is_flagged (tester, R3)", "status": "pass", "status_detail": "mock create_subprocess_exec raising OSError -> transport=opencode_cli_legacy + legacy_reason, 'failed to start opencode' in error; no crash"},
+    {"name": "test_workdir_outside_allowed_roots_fails_before_transport (tester)", "status": "pass", "status_detail": "temp dir outside allowed roots -> error; subprocess AND execute_coder_semantic never called; no 'transport' key"},
+    {"name": "test_workdir_missing_fails_before_transport (tester)", "status": "pass", "status_detail": "nonexistent workdir -> error; no transport reached"},
+    {"name": "test_bridge_never_launches_legacy_subprocess (tester)", "status": "pass", "status_detail": "bridge path: create_subprocess_exec captured 0 calls; semantic_result jsonschema-valid"},
+    {"name": "test_legacy_command_shape_captured (tester)", "status": "pass", "status_detail": "legacy cmd == [OPENCODE_BIN, run, --pure, --model M, --dir D, task], cwd=workdir (fixed: args forwarded positionally, not list(args[0]))"},
+    {"name": "test_unknown_model_class_errors_before_transport (tester)", "status": "pass", "status_detail": "ValueError response before legacy/bridge; known_model_classes present; no transport key"},
+    {"name": "test_semantic_transport.py (worker, 10 tests)", "status": "pass", "status_detail": "M1 adapter contract: build/validate schema, fail-closed REJECTED_BY_HOST/HOST_UNAVAILABLE, BAD_SCHEMA paths"},
+    {"name": "test_semantic_transport_retest.py (worker, 4 tests)", "status": "pass", "status_detail": "canonical jsonschema regressions: non-dict inputs, missing required fields, invalid field matrix, all bridge gate paths (validators check_schema upfront)"},
+    {"name": "test_semantic_transport_tester.py (tester, 8 tests)", "status": "pass", "status_detail": "non-object inputs fail closed, wrong types -> BAD_SCHEMA, partial bridge env, build request schema-valid, classify_purpose default, result schema all paths"}
+  ],
+  "problems": []
+}

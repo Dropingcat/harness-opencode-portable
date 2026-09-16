@@ -42,7 +42,9 @@
    "title": "Unified semantic transport",
    "result": "Tribunal first, then Writer/Coder use SemanticExecutionRequest/Result; no silent transport switch",
    "status": "in_progress",
-   "evidence": "PluginBridgeProviderTransport; Q1/A1/Q2/A2/Q3 deterministic E2E; Writer/Coder still on legacy CLI launchers (TD-062)"
+    "evidence": "Coder M1 DONE (4acef3b); M2 factory DEV05-CODER-CONV-M2 DONE, reviewer/tester/auditor PASS, 32 local unittest. M2 is mock-tested router wiring, NOT live bridge execution. Tribunal Q1-A2 is callback-fixture integration; Q3 admission unit tests are not live Q3 E2E. TD-062 remains open.",
+    "next_gate": "M3: explicit transport selection; plugin import/unavailability must not select CLI automatically; separate provider/model IDs; real session correlation and channel wiring; independent boundary E2E before live model.",
+    "production_ready": false
   },
   {
    "id": "DEV-06",

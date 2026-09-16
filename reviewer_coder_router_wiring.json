@@ -1,0 +1,104 @@
+{
+  "module": "coder_router_wiring",
+  "verdict": "APPROVE",
+  "comments": [
+    {
+      "id": "V1",
+      "kind": "positive_verification",
+      "file": "mcp/coder_router_server.py",
+      "line": 110,
+      "problem": "Открытых in-scope дефектов не выявлено. Это положительное подтверждение, не замечание о дефекте: semantic_result поступает из execute_coder_semantic, а legacy success/timeout/OSError ответы содержат transport и legacy_reason. Приёмка ограничена bounded mock-tested M2.",
+      "suggestion": "Сохранить APPROVE для исходного M2; production rollout рассматривать отдельно с учётом out_of_scope_gaps.",
+      "falsification": "Подтверждение опровергнет воспроизводимый in-scope тест, в котором router подменяет результат execute_coder_semantic либо legacy success/timeout/OSError ответ не содержит transport или legacy_reason."
+    }
+  ],
+  "acceptance_boundary": "Принята только ограниченная mock-tested проводка M2 по исходному контракту. Это не разрешение production rollout и не подтверждение live semantic execution.",
+  "scope_declared": {
+    "scope_in": [
+      "mcp/coder_router_server.py",
+      "tests/coder/test_coder_router_wiring.py"
+    ],
+    "supporting_evidence": [
+      "tests/coder/test_coder_router_wiring_tester.py",
+      "scripts/code-factory/semantic_transport.py (только API reference)",
+      "packages/opencode-harness-plugin/schemas/SemanticExecutionRequest.schema.json",
+      "packages/opencode-harness-plugin/schemas/SemanticExecutionResult.schema.json"
+    ],
+    "scope_out": ["semantic_transport.py implementation", "factory gates", "live model", "live bridge", "production rollout"]
+  },
+  "prior_comment_resolutions": [
+    {
+      "id": "R1",
+      "status": "WITHDRAWN",
+      "file": "mcp/coder_router_server.py",
+      "line": 27,
+      "reason": "Неиспользуемый импорт classify_purpose не доказывает функционального дефекта или обхода permission_profile. Импорт явно предусмотрен исходным контрактом согласно уточнению заказчика. Предыдущее приписывание намерения и severity major необоснованны; требование удаления снято."
+    },
+    {
+      "id": "R2",
+      "status": "WITHDRAWN",
+      "file": "mcp/coder_router_server.py",
+      "line": 101,
+      "reason": "Контракт разрешает placeholder M1. build_coder_request сам читает OPENCODE_SESSION_ID либо использует cli; его API не принимает parent_host_session_id. Parent session запроса и host_session_id результата — разные поля. M2 не обязан создавать реальную host-сессию; предыдущая рекомендация менять env или bounded_input снята."
+    },
+    {
+      "id": "R3",
+      "status": "RESOLVED",
+      "file": "tests/coder/test_coder_router_wiring_tester.py",
+      "line": 106,
+      "reason": "test_legacy_oserror_is_flagged подменяет create_subprocess_exec функцией, бросающей OSError, и проверяет ok=false, transport, legacy_reason и error (строки 112–123). Тест реально запущен и прошёл; условие фальсификации прежнего замечания выполнено."
+    }
+  ],
+  "verification": {
+    "command": "python -B -m unittest discover -s tests/coder -p \"test_coder_router_wiring*.py\" -v",
+    "result": "PASS",
+    "passed": 10,
+    "failed": 0,
+    "environment": "Windows; TEMP/TMP направлены в C:\\Temp\\opencode",
+    "limitations": "Legacy subprocess и bridge execution замоканы. Live OpenCode/model/bridge не запускались. Production-файлы не изменялись."
+  },
+  "out_of_scope_gaps": [
+    {
+      "id": "G1",
+      "module": "coder_router_transport_selection_next_contract",
+      "finding": "Маркировка fallback после исполнения не заменяет предварительный выбор оператора: enabled bridge + ImportError приводит к CLI по исходному M2. Это блокер production rollout в следующем контракте, не дефект bounded M2.",
+      "severity": "critical",
+      "file": "mcp/coder_router_server.py",
+      "line": 100,
+      "problem": "Метка fallback в ответе не является предварительным явным выбором оператора. При HARNESS_SEMANTIC_ENABLED=1 и ImportError адаптера текущий код запускает legacy CLI. Это соответствует исходному M2, но не даёт согласия оператора на смену транспорта.",
+      "suggestion": "В следующем контракте сделать это блокером production rollout: при недоступном bridge закрывать выполнение без CLI, если оператор заранее явно не выбрал legacy. Добавить негативный тест enabled+ImportError без предварительного legacy opt-in и отдельный тест явного выбора.",
+      "falsification": "Блокер снят, когда тест enabled+ImportError без явного legacy opt-in доказывает ноль вызовов subprocess и fail-closed результат, а CLI запускается только после проверяемого предварительного выбора оператора.",
+      "blocks": "production rollout under next contract; not bounded M2 acceptance"
+    },
+    {
+      "id": "G2",
+      "module": "semantic_transport_live_channel",
+      "finding": "Реальный канал M1 не подключён; mock-tested M2 не подтверждает live semantic execution.",
+      "severity": "major",
+      "file": "scripts/code-factory/semantic_transport.py",
+      "line": 279,
+      "problem": "Реальный канал M1 не подключён: адаптер возвращает честный HOST_UNAVAILABLE при номинально доступном bridge, а COMPLETED в wiring-тестах приходит из mock. Приёмка M2 не подтверждает работу реального канала.",
+      "suggestion": "Зафиксировать подключение и проверку реального канала отдельным последующим контрактом до заявления о production-ready bridge; live-прогон не является условием текущего M2.",
+      "falsification": "Отдельная проверка подключённого канала показывает реальный host-owned execution result и корреляцию execution_id/session без подмены execute_coder_semantic."
+    },
+    {
+      "id": "G3",
+      "module": "semantic_transport_host_model_resolution",
+      "finding": "model_policy.model_id содержит полную строку provider/model без отдельного provider_id; совместимость с реальным host resolver остаётся непроверенной за пределами M2.",
+      "severity": "major",
+      "file": "mcp/coder_router_server.py",
+      "line": 108,
+      "problem": "model_policy.model_id сейчас содержит всю строку provider/model, provider_id отдельно не передаётся. Это допустимо по текущей строковой схеме, но совместимость такого представления с реальным host resolver не доказана mock-тестами.",
+      "suggestion": "В следующем интеграционном контракте определить представление provider_id/model_id и проверить его на host resolver, включая model ID с внутренними слешами. Не расширять требования M2 задним числом.",
+      "falsification": "Документированный контракт host resolver и интеграционный тест подтверждают корректный выбор provider/model при текущем полном model_id либо при отдельно согласованной нормализации."
+    }
+  ],
+  "adversarial_checks": {
+    "domain_coverage": "PASS для bounded M2: legacy маркировка, bridge routing, request construction, authority boundary и mocked transports; rollout выделен отдельно.",
+    "fact_concept_consistency": "PASS: R1/R2 отозваны как необоснованные претензии, R3 закрыт наблюдаемым успешным тестом.",
+    "concept_diversity": "Проверены раздельно выбор транспорта, обработка ошибок и валидация до транспорта; генерация альтернативных архитектур вне задачи.",
+    "source_specificity": "Источники — конкретные локальные файлы и строки; внешние DOI/URL для этой проверки не требуются.",
+    "triz_correctness": "N/A: ТРИЗ-принципы и ИКР не формулировались; запрет глаголов-нарушителей ИКР неприменим.",
+    "estimates_realism": "PASS: вывод ограничен 10 реально прошедшими mock-тестами; оценки готовности live канала и production не заявлены."
+  }
+}
