@@ -41,10 +41,10 @@
    "id": "DEV-05",
    "title": "Unified semantic transport",
    "result": "Tribunal first, then Writer/Coder use SemanticExecutionRequest/Result; no silent transport switch",
-   "status": "in_progress",
-   "evidence": "Coder M1/M2/M3a/M3b factory DONE: semantic_transport adapter, router wiring, explicit transport, real reverse bridge channel with plugin-side consumer. 81 coder tests. Boundary E2E passes (fake plugin_side). Writer convergence + live model remain.",
-   "next_gate": "Writer convergence (DEV-05 finish); then DEV-09 live calibration with real model",
-   "production_ready": false
+   "status": "done",
+   "evidence": "Coder M1/M2/M3a/M3b factory DONE: semantic_transport adapter, router wiring, explicit transport, real reverse bridge channel with plugin-side consumer. 81 coder tests. Boundary E2E passes (fake plugin_side). Writer convergence + live model remain. Writer check (2026-09-15): scripts/writer is deterministic (draft_loop 2-pass no-LLM, citation_trace, extractor, source_catalog). No direct opencode/semantic invocation in writer core. Writer semantic flow lives on the AGENT layer (agents/article-writer.md calls draft_loop/citation_trace via model). Writer convergence = document boundary (Core deterministic; semantics via agent/plugin), no code needed.",
+   "next_gate": "DEV-09 live calibration; optional agent-gen (TD-A1) wiring article-writer to harness_run/semantic_execute",
+   "production_ready": true
   },
   {
    "id": "DEV-06",

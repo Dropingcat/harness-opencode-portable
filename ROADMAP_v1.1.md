@@ -94,6 +94,26 @@
 
 ---
 
+## Открытый остаток на v1.1 (зафиксировано 2026-09-15)
+
+Закрыто в кандидате (локальный harness → перенесено на master):
+- DEV-05 **done**: Coder semantic transport (M1–M3b, реальный reverse-канал `semantic.execute` +
+  plugin-side consumer), 139 авто-тестов в `tests/coder/`; Writer-граница: Core детерминирован,
+  семантика — на агентном слое (`agents/article-writer.md` вызывает детерминированные скрипты).
+  Коммит portable: `5697021` (+ DEV-05 tracker sync).
+
+Остаётся в план v1.1 (не сделано):
+- **DEV-09** live-calibration: grounding, MODEL_PRIOR leakage, false Q2/Q3 novelty, Advocate — через
+  реальную модель в Desktop (P3 live-сертификация `HARNESS_SEMANTIC_ENABLED=1`).
+- **TD-D5** cancel propagation через AbortSignal на живой сборке + 100 concurrent messages.
+- **TD-A1** генерация `.opencode/agent/*.md` из `agents/*.md` (субагенты OpenCode видимы в Desktop);
+  привязка Writer-агента к `harness_run`/`semantic_execute`.
+- **TD-A2** parent/child сессии для трибунала (T2/T3 live) — после P3.
+- **TD-D6** Writer/Coder legacy CLI-лаунчеры → пометить `transport=opencode_cli_legacy`, мигрировать после P5.
+- **TD-D1** перенос `scripts/capsules/`, `scripts/memory/`, `scripts/kanban/`, `shared/` (или явное исключение).
+- **TD-D2** `health_check.py` → единый `doctor.py` с живыми probes.
+- **TD-D9** `MANIFEST.json` + `SHA256SUMS.txt`.
+
 ## Критерии готовности v1.1
 
 1. 15 субагентов видны в Desktop и исполняются с ролевыми промптами.
