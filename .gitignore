@@ -60,3 +60,4 @@ writing_contract.json
 /патчи/
 .kanban.db
 .tmp_l2.json
+.coverage
