@@ -45,6 +45,20 @@
   (webfetch, searxng_search, doc_extract) с кэшем скоринга.
 - [ ] **P3**: live-сертификация `semantic.execute` → `HARNESS_SEMANTIC_ENABLED=1`.
 
+## Фаза 3a — Трибунал (live-версия)
+
+- [x] **T1 (P0)**: портировать `scripts/jobs/job_ctl.py` + зависимости; проверить импорт
+  `tribunal_live_dialogue` на чистом клоне (без исходника рядом). *(закрыто в v1.0.1-commit: job_ctl.py перенесён, трибунал импортируется из чистой репы)*
+- [ ] **T2 (P4)**: мигрировать `SubprocessJsonProviderTransport` → дочерняя сессия OpenCode
+  (`semantic.execute` / `harness.dispatch`).
+- [ ] **T3 (P4)**: судьи трибунала — изолированные дочерние сессии (parent/child), `TribunalExecutionEnvelope`
+  как контракт, ответ через `DDC/DQC admission`.
+- [ ] **T4**: `tribunal-judge` в генераторе `.opencode/agent/*.md`; `harness.dispatch` поддерживает
+  `tribunal.role.execute`.
+- [ ] **T5**: зарегистрировать живого провайдера «OpenCode Desktop agent» с
+  `execution_capability: tribunal.role.execute`; связать с `semantic.execute`/`harness.dispatch`.
+- [ ] E2E: live-трибунал (5 ролей) через Desktop, ответ проходит детерминированный admission.
+
 ## Фаза 4 — Стабильность
 
 - [ ] Перенести `tests/` плагина (7 файлов) и адаптировать под v1.1.

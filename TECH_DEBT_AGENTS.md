@@ -85,6 +85,69 @@
 
 ---
 
+## 3a. Технический долг: Трибунал и его live-версия
+
+### TD-T1. Трибунал перенесён, но **не самодостаточен** (критический долг переносимости)
+- **Факт**: все 11 модулей трибунала скопированы
+  (`tribunal_advocate/argument_graph/composition/dialectic/disclosure/evidence/inquiry/
+  live_dialogue/provider_binding/role_handbook/role_runtime`), конфиги
+  (`tribunal_composition.yaml`, `tribunal_provider_binding.yaml`, `tribunal_role_handbook.yaml`,
+  `tribunal_role_provider_contract.md`) — на месте.
+- **Проблема**: `tribunal_live_dialogue.py:21` и `tribunal_role_runtime.py` делают
+  `from scripts.jobs import job_ctl`, а **`scripts/jobs/` НЕ перенесён** в репу. Сейчас импорт
+  «работает» только потому, что venv запускается из каталога исходника
+  (`E:\...\doc_Opencode_agern-new` попадает в `sys.path` через `''`). **На чистом сервере
+  трибунал не загрузится** — `ModuleNotFoundError: No module named 'scripts.jobs'`.
+- **Задача**: портировать `scripts/jobs/job_ctl.py` (и его зависимости) в репу;
+  проверить, что `import researcher_core.tribunal_live_dialogue` работает на чистом клоне
+  без исходника рядом.
+- **Приоритет**: **P0** (ломает переносимость трибунала).
+
+### TD-T2. Live-диалог трибунала требует `scripts/jobs` и transport, которого нет в v1
+- **Факт**: `tribunal_live_dialogue.py` содержит `SubprocessJsonProviderTransport` (реальный процессный
+  границы для E2E) и `LogicalToolProviderTransport` (адаптер к логическому tool-рантайму).
+  Реальный live-вызов роли идёт через `job_ctl.create/save/event` + `subprocess`.
+- **Проблема**: в v1 нет ни одного **живого** транспорта, подключённого к OpenCode:
+  - `semantic.execute` выключен (`HARNESS_SEMANTIC_ENABLED` не задан);
+  - plugin не умеет `harness.dispatch` (TD-I4);
+  - `job_ctl` без `scripts/jobs` недоступен на чистом сервере (TD-T1).
+  Значит «live»-часть трибунала в v1 **недостижима** из Desktop: трибунал может работать только
+  детерминированно/на подложке, а живой диалог ролей через модель — нет.
+- **Задача (P4)**: после live-сертификации `semantic.execute` мигрировать транспорт трибунала:
+  `SubprocessJsonProviderTransport` → дочерняя сессия OpenCode (`semantic.execute` /
+  `harness.dispatch`); `RoleProviderBinding` остаётся (роль/авторитет/провайдер разделены).
+
+### TD-T3. Трибунал не имеет дочерних сессий (parent/child)
+- **Факт**: плагин умеет `session.create` с `parentID` (подтверждено в P3 smoke), но
+  `tribunal_role_runtime.py` / `live_dialogue` не используют дочерние сессии OpenCode.
+- **Проблема**: судьи трибунала (физик/методолог/скептик/адвокат/агрегатор) должны исполняться
+  в **изолированных** сессиях (нет утечки контекста между ролями), но сейчас такого нет.
+- **Задача (P4)**: каждый судья — отдельная дочерняя сессия; `TribunalExecutionEnvelope`
+  передаётся как контракт; ответ проходит `DDC/DQC admission` (детерминированный, уже есть
+  в `tribunal_disclosure.py`/`tribunal_inquiry.py`).
+
+### TD-T4. Нет live-ролей судей через agent-интерфейс
+- **Факт**: в `agents/` есть роль `tribunal-judge.md` (спецификация), но она **не зарегистрирована**
+  как субагент OpenCode (TD-A1) и не привязана к модели (TD-A3).
+- **Проблема**: судья не может быть вызван как `@tribunal-judge`; live-трибунал не «видит»
+  провайдера через OpenCode.
+- **Задача**: включить `tribunal-judge` в генератор `.opencode/agent/*.md` (Фаза 1);
+  в `harness.dispatch` — поддержка `tribunal.role.execute` (execution_capability из
+  `config/tribunal_provider_binding.yaml`).
+
+### TD-T5. Provider binding настроен, но исполнимых провайдеров нет
+- **Факт**: `config/tribunal_provider_binding.yaml`:
+  `execution_capability: tribunal.role.execute`, `require_live_execution_ready: true`,
+  `allowed_provider_kinds: [process, agent, mcp]`, `selection_order: [priority_desc, provider_id_asc]`.
+- **Проблема**: в реестре нет ни одного **зарегистрированного живого провайдера** с этим
+  capability (нет записи «процесс/агент/MCP, который реально умеет `tribunal.role.execute`»).
+  Binding детерминированно вернёт `NO_HEALTHY_PROVIDER` — трибунал fail-closed, что **корректно
+  по дизайну**, но означает: live-трибунал в v1 недоступен намеренно.
+- **Задача**: в v1.1 зарегистрировать провайдера «OpenCode Desktop agent» с
+  `tribunal.role.execute` и связать с `semantic.execute`/`harness.dispatch`.
+
+---
+
 ## 4. Дорожная карта v1.1
 
 ### Фаза 1 — Агенты (базовая интеграция)
