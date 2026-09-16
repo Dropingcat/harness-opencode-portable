@@ -1,0 +1,39 @@
+{
+  "task_id": "DEV05-CODER-CONV",
+  "module": "semantic_transport",
+  "phase": "M1 coder semantic transport adapter",
+  "process_metadata": {
+    "attempt": 2,
+    "attempt_limit": 3,
+    "iteration": 1,
+    "iteration_limit": 3,
+    "rework_rounds": 1,
+    "event_count": 13,
+    "artifact_count": 5,
+    "budget_spent_rub": 0.0,
+    "budget_max_rub": 20.0,
+    "gate_set": {"reviewer": "PASS", "tester": "PASS", "auditor": "PENDING"},
+    "required_gates": ["reviewer", "tester", "auditor"],
+    "tribunal_required": [],
+    "provenance_errors": [],
+    "stop_reason": "awaiting:auditor"
+  },
+  "reviewer_verdict": "APPROVE",
+  "reviewer_evidence": "R1/T1/T2 closed; 18/18 external + 11/11 builtin + 20/20 schema checks verified fresh; old FAIL reports historical",
+  "tester_verdict": "PASS",
+  "tester_evidence": "33 passed, 0 failed; jsonschema against canonical SemanticExecutionResult/1.0 for all fail-closed paths; non-dict input safe",
+  "worker_history": [
+    {"round": 1, "outcome": "REWORK", "note": "R1/T1/T2: null provider/model/host ids, empty execution_id, AttributeError on non-dict"},
+    {"round": 2, "outcome": "PASS", "note": "schema-valid fail-closed, non-dict safe, typed _validate_result"}
+  ],
+  "scope_discipline": {
+    "in_scope": ["scripts/code-factory/semantic_transport.py", "tests/coder/*semantic*", "2 canonical schemas"],
+    "out_of_scope_kept": ["mcp/launchers/*", "coder_router_server.py", "factory gates", "live model", "real bridge wiring"]
+  },
+  "known_remaining": {
+    "live_wiring": "M1 is contract adapter only; bridge/semantic execution not wired to Coder runtime yet",
+    "td_062": "open (unified semantic transport not complete)",
+    "dev_05": "in_progress",
+    "legacy_fallback": "M1 intentionally blocks CLI fallback; explicit decision, not silent"
+  }
+}

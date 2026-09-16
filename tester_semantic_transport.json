@@ -1,105 +1,48 @@
 {
- "module": "semantic_transport",
- "result": "FAIL",
- "passed": 10,
- "failed": 5,
- "coverage_notes": "coverage.py 7.16.0 (env: PYTHONPATH=scripts/code-factory, --source=semantic_transport): 45% (74/165 stmts). Missing: host_session_id/provider_id/model_id propagation lines (107, 110, 116), _result ValueError branch (143), entire built-in _run_unit_tests suite (285-426, 430). Uncovered because: (a) results with non-None provider_id/model_id/host_session_id are never produced by any path in M1 (see T2), (b) built-in self-test block runs only via `python scripts/code-factory/semantic_transport.py`, not via unittest discover.",
- "tests": [
-  {
-   "name": "test_build_request_valid (worker)",
-   "status": "pass",
-   "output": "ok"
-  },
-  {
-   "name": "test_build_request_roles_and_profiles (worker)",
-   "status": "pass",
-   "output": "ok"
-  },
-  {
-   "name": "test_execute_fail_closed_legacy (worker)",
-   "status": "pass",
-   "output": "ok"
-  },
-  {
-   "name": "test_execute_bridge_available_not_wired (worker)",
-   "status": "pass",
-   "output": "ok"
-  },
-  {
-   "name": "test_execute_bad_schema (worker)",
-   "status": "pass",
-   "output": "ok"
-  },
-  {
-   "name": "test_execute_missing_execution_id (worker)",
-   "status": "pass",
-   "output": "ok"
-  },
-  {
-   "name": "test_build_request_validates_against_json_schema (tester)",
-   "status": "pass",
-   "output": "build_coder_request output valid per SemanticExecutionRequest.schema.json for all 3 purposes (required fields, additionalProperties=false, purpose enum, timeout_ms>=1)"
-  },
-  {
-   "name": "test_build_request_trace_carries_worktree (tester)",
-   "status": "pass",
-   "output": "worktree travels in trace only; no top-level unknown field"
-  },
-  {
-   "name": "test_classify_purpose_default (tester)",
-   "status": "pass",
-   "output": "unknown/empty -> semantic-worker-readonly; known -> code-worker-write / code-reviewer-readonly / code-tester-readonly"
-  },
-  {
-   "name": "test_execute_partial_bridge_env_fail_closed (tester)",
-   "status": "pass",
-   "output": "flag xor root set -> REJECTED_BY_HOST (legacy), bridge not reached"
-  },
-  {
-   "name": "test_execute_non_object_no_exception (tester)",
-   "status": "fail",
-   "output": "execute_coder_semantic(None|'str'|['x']|42) raises AttributeError '...' object has no attribute 'get' at semantic_transport.py:238 (request.get(...)); contract says 'Always returns a valid SemanticExecutionResult/1.0 dict'. 4/4 subcases crashed."
-  },
-  {
-   "name": "test_execute_bad_schema_wrong_types (tester)",
-   "status": "fail",
-   "output": "6 type-violation cases (bounded_input list, model_policy str, timeout_ms True/0/-5, trace list): runtime_status=REJECTED_BY_HOST returned correctly, but _assert_result_schema_valid failed: jsonschema ValidationError 'None is not of type string' at provider_id (also model_id null). 6/6 subcases failed."
-  },
-  {
-   "name": "test_execute_unknown_purpose_full_request (tester)",
-   "status": "fail",
-   "output": "runtime_status=REJECTED_BY_HOST and host_error starts with BAD_SCHEMA (correct), but result fails SemanticExecutionResult.schema.json: provider_id=None, model_id=None"
-  },
-  {
-   "name": "test_execute_valid_no_bridge_fail_closed (tester)",
-   "status": "fail",
-   "output": "fail-closed legacy path works (REJECTED_BY_HOST + 'legacy CLI fallback not allowed in M1' + DEV-05), but result invalid per SemanticExecutionResult.schema.json: provider_id=None, model_id=None, host_session_id='cli'"
-  },
-  {
-   "name": "test_result_schema_all_paths (tester)",
-   "status": "fail",
-   "output": "bad-schema path: execution_id='' (schema minLength 1) and provider_id/model_id None; legacy path: provider_id/model_id None; bridge path: HOST_UNAVAILABLE + provider_id/model_id None; all violate SemanticExecutionResult.schema.json ('None is not of type string')"
-  }
- ],
- "problems": [
-  {
-   "id": "T1",
-   "severity": "major",
-   "finding": "execute_coder_semantic crashes on any non-dict request (None, str, list, int): AttributeError at semantic_transport.py:238 `request.get(...)`, because _validate_request returns (False, ...) but execute_coder_semantic still calls request.get() on the raw non-dict value. Directly violates the module's own contract: 'Always returns a valid SemanticExecutionResult/1.0 dict' and the fail-closed rule.",
-   "falsification": "Run: execute_coder_semantic(None) — any non-dict input reproduces the AttributeError. In this run 4/4 non-dict inputs crashed."
-  },
-  {
-   "id": "T2",
-   "severity": "major",
-   "finding": "Results are NOT valid SemanticExecutionResult/1.0 per the canonical schema (packages/opencode-harness-plugin/schemas/SemanticExecutionResult.schema.json). The schema declares provider_id/model_id/host_session_id as plain strings (NOT null) and execution_id as minLength=1, but M1 results carry provider_id=None, model_id=None on every rejection path and execution_id='' when the request lacks an execution_id (bad-schema path). All 3 transport paths (BAD_SCHEMA, legacy REJECTED_BY_HOST, bridge HOST_UNAVAILABLE) produce schema-invalid results.",
-   "falsification": "Run jsonschema.validate(execute_coder_semantic(build_coder_request(...)), SemanticExecutionResult.schema.json) with HARNESS_SEMANTIC_ENABLED unset -> ValidationError 'None is not of type string' at ['provider_id']. Same for the no-execution_id bad-schema request (execution_id='' fails minLength 1). Reproduced for all 3 paths in this run."
-  },
-  {
-   "id": "T3",
-   "severity": "minor",
-   "finding": "Result schema contract and implementation disagree at the schema level: the canonical schema has NO nullable string fields (SemanticExecutionResult.schema.json lines 37-45: host_session_id/provider_id/model_id are `type: string`, not `[\"string\", \"null\"]`), while semantic_transport._result defaults them to None. Either the schema should allow null (and host_session_id should be null on rejections, not 'cli') or the implementation must omit/placeholder them. The worker's mirror-check in the existing tests cannot catch this because it only checks field presence.",
-   "falsification": "Diff _result() defaults (host_session_id=None, provider_id=None, model_id=None) against SemanticExecutionResult.schema.json: every rejection result fails on provider_id/model_id; the legacy path additionally sets host_session_id='cli' which is wrong for a rejection (host never had a session)."
-  }
- ],
- "coverage": 45.0
+  "module": "semantic_transport",
+  "result": "PASS",
+  "passed": 33,
+  "failed": 0,
+  "coverage": 0,
+  "tests": [
+    {"name": "discovery/worker/test_build_request_roles_and_profiles", "result": "PASS"},
+    {"name": "discovery/worker/test_build_request_valid", "result": "PASS"},
+    {"name": "discovery/worker/test_execute_bad_schema", "result": "PASS"},
+    {"name": "discovery/worker/test_execute_bridge_available_not_wired", "result": "PASS"},
+    {"name": "discovery/worker/test_execute_fail_closed_legacy", "result": "PASS"},
+    {"name": "discovery/worker/test_execute_missing_execution_id", "result": "PASS"},
+    {"name": "discovery/worker/test_execute_non_dict_safe", "result": "PASS"},
+    {"name": "discovery/worker/test_execute_unknown_top_level_field_rejected", "result": "PASS"},
+    {"name": "discovery/worker/test_fail_closed_schema_valid", "result": "PASS"},
+    {"name": "discovery/retest/test_all_bridge_gate_paths_purposes_and_identity_policies", "result": "PASS"},
+    {"name": "discovery/retest/test_every_required_field_missing_is_schema_valid_rejection", "result": "PASS"},
+    {"name": "discovery/retest/test_invalid_field_matrix_is_schema_valid_rejection", "result": "PASS"},
+    {"name": "discovery/retest/test_non_dict_inputs_are_schema_valid_rejections", "result": "PASS"},
+    {"name": "discovery/tester/test_build_request_trace_carries_worktree", "result": "PASS"},
+    {"name": "discovery/tester/test_build_request_validates_against_json_schema", "result": "PASS"},
+    {"name": "discovery/tester/test_classify_purpose_default", "result": "PASS"},
+    {"name": "discovery/tester/test_execute_bad_schema_wrong_types", "result": "PASS"},
+    {"name": "discovery/tester/test_execute_non_object_no_exception", "result": "PASS"},
+    {"name": "discovery/tester/test_execute_partial_bridge_env_fail_closed", "result": "PASS"},
+    {"name": "discovery/tester/test_execute_unknown_purpose_full_request", "result": "PASS"},
+    {"name": "discovery/tester/test_execute_valid_no_bridge_fail_closed", "result": "PASS"},
+    {"name": "discovery/tester/test_result_schema_all_paths", "result": "PASS"},
+    {"name": "builtin/test_build_request_roles_and_profiles", "result": "PASS"},
+    {"name": "builtin/test_build_request_valid", "result": "PASS"},
+    {"name": "builtin/test_execute_bad_schema", "result": "PASS"},
+    {"name": "builtin/test_execute_bridge_available_not_wired", "result": "PASS"},
+    {"name": "builtin/test_execute_fail_closed_legacy", "result": "PASS"},
+    {"name": "builtin/test_execute_missing_execution_id", "result": "PASS"},
+    {"name": "builtin/test_execute_non_dict_safe", "result": "PASS"},
+    {"name": "builtin/test_fail_closed_result_schema_valid", "result": "PASS"},
+    {"name": "builtin/test_validate_purpose_missing", "result": "PASS"},
+    {"name": "builtin/test_validate_timeout", "result": "PASS"},
+    {"name": "builtin/test_validate_unknown_top_level_field", "result": "PASS"}
+  ],
+  "problems": [
+    "Coverage was not measured in this re-test; coverage=0 is an explicit unmeasured sentinel, not measured zero coverage. No stale coverage reused.",
+    "Fresh run on HEAD 0ed07c7: python -m unittest discover -s tests/coder -v => 22 passed, 0 failed, 0 skipped; python scripts/code-factory/semantic_transport.py => 11 passed, 0 failed, 0 skipped. Total 33 executed test methods across two suites; overlapping behaviors and subtests are not counted as additional tests.",
+    "No failures observed. Independent tests require installed jsonschema without fallback and load both actual canonical schemas from packages/opencode-harness-plugin/schemas. Every result in the independent matrix is validated: invalid/non-dict request rejection, forbidden legacy fallback, and available-but-unwired bridge. Matrix includes all required-field omissions, invalid field types, all three Coder purposes, six bridge gate environments, and empty/explicit provider/model identities.",
+    "Only an independent test file and this report were changed. No models executed, real host configuration edited, commits created, or factory_ctl invoked. Live bridge execution remains out of scope for transport-only M1."
+  ]
 }
