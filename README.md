@@ -14,7 +14,9 @@ Project-scoped: nothing is written to the user's global OpenCode config.
   wired as OpenCode subagents. Tribunal ported and self-contained; **live**
   tribunal (semantic role execution) is **not** reachable until P4.
 - **v1.1** — planned: OpenCode subagents, dynamic role prompts, harness memory,
-  role contracts, native guard, live tribunal. See `ROADMAP_v1.1.md` and `TECH_DEBT_AGENTS.md`.
+  role contracts, native guard, live tribunal, plus reconciliation with the
+  canonical "migration to plugin" documentation (`патчи/миграция в плагин`,
+  TD-D* ledger). See `ROADMAP_v1.1.md` and `TECH_DEBT_AGENTS.md`.
 
 ## Layout
 

@@ -148,6 +148,109 @@
 
 ---
 
+## 3b. Сверка v1 с документацией «миграция в плагин» (архив 2026-09-14)
+
+Сверка проведена против пакета документов `E:\opencode_harness\патчи\миграция в плагин`
+(`PROJECT_STATE.md`, `CURRENT_ARCHITECTURE.md`, `OPENCODE_NATIVE_PLUGIN_CURRENT.md`,
+`HARNESS_OPENCODE_INTERFACE_CONTROL.md`, `HARNESS_OPENCODE_BOUNDARY_AUDIT_V1.md`,
+`HARNESS_PLUGIN_BOUNDARY_MATRIX.json`, `TEST_AND_EVIDENCE_MATRIX.md`, `TECH_DEBT_CURRENT.md`,
+`HARNESS_NATIVE_PLUGIN_MIGRATION_PLAN_V2.md`, `NEXT_PHASE_PLAN.md`, `NEXT_SESSION_HANDOFF.md`).
+
+### TD-D1. **Списки модулей в документации vs фактический состав v1** (расхождение переноса)
+- **Факт**: `CURRENT_ARCHITECTURE.md` (§5 Module inventory) и `BOUNDARY_MATRIX.json` перечисляют
+  подсистемы, которые **есть в исходнике, но НЕ перенесены в v1**:
+  - `scripts/writer/` (канонический Writer CLI) — **отсутствует** (в v1 только `writer-core`);
+  - `scripts/kanban/` — отсутствует;
+  - `scripts/memory/` — отсутствует (уже отмечено TD-I2);
+  - `scripts/capsules/` — отсутствует;
+  - `shared/` (research-orchestration-process.md и др.) — отсутствует.
+- **Влияние**: Writer в v1 недоступен как authority-модуль; kanban/memory/capsules — недоступны.
+  Это не «план», а **фактическая неполнота переноса** относительно объявленной архитектуры.
+- **Задача v1.1**: портировать `scripts/writer/`, `scripts/capsules/`, `scripts/memory/`,
+  `scripts/kanban/`, `shared/` (или явно задокументировать их исключение из v1).
+
+### TD-D2. **`health_check.py` всё ещё legacy-ориентирован** (документация требует замены)
+- **Факт**: `HARNESS_OPENCODE_INTERFACE_CONTROL.md` §2 RED-6 и `BOUNDARY_MATRIX.json` требуют
+  заменить `scripts/health_check.py` (legacy: «plugin registered + DB accessible») на
+  **plugin-aware doctor** (plugin loaded probe, bridge handshake, core health, protocol compat,
+  host feature snapshot, semantic provider readiness).
+- **Проблема**: в v1 `health_check.py` исправлен под native-проверку (plugin URI), но **не стал
+  полноценным doctor**: нет bridge handshake probe, нет host feature snapshot, нет semantic
+  provider readiness. `doctor.py` (`packages/.../core/doctor.py`) — статичен (config presence).
+- **Задача**: свести `health_check.py` → `doctor.py` как единый канонический health-инструмент
+  с живыми probes (bridge.hello, harness.status, capability snapshot).
+
+### TD-D3. **`config/opencode_plugin_config.json` и `scripts/register_plugin.py`** — статус в v1
+- **Факт**: `INTERFACE_CONTROL.md` §12 и `BOUNDARY_MATRIX.json` помечают:
+  - `config/opencode_plugin_config.json` → REPLACE (by npm/local plugin package config);
+  - `scripts/register_plugin.py` → REPLACE (by installer).
+- **Проблема**: в v1 `opencode_plugin_config.json` переписан под native (mode=native), а
+  `register_plugin.py` переписан под project-scoped — **функционально закрыто**, но формально
+  не совпадает с целевой архитектурой (нет «installer/package registration»).
+- **Задача**: понизить приоритет; документировать, что `register_plugin.py` в v1 — временный
+  project-scoped helper, канонический путь — bootstrap + `.opencode/opencode.json`.
+
+### TD-D4. **Capability hash расходится с документацией**
+- **Факт**: документация (`TEST_AND_EVIDENCE_MATRIX.md`, `PROJECT_STATE.md`) заявляет
+  capability compiler hash `60105d715f8df50917156216b085f85ee25a2b1deb62947e041bd8537a1a9076`.
+- **Реальность**: исходник и v1 дают `f9de8128f960000470c286b0b153861ec8ff906b2fa6f3be712dbf1d924e47a0`
+  (base = runtime `8910fd…`, совпадает). Документация **устарела** (или относится к другому дереву).
+- **Действие**: не наш долг; зафиксировать в доке расхождение (документация не синхронизирована с кодом).
+
+### TD-D5. **`semantic.execute` reverse adapter не имеет cancel/timeout E2E на v1**
+- **Факт**: `INTERFACE_CONTROL.md` §1.2/§10 требует `AbortSignal → harness.cancel → session abort`,
+  и M2 acceptance включает cancellation + 100 concurrent messages.
+- **Проблема**: в v1 bridge-тесты (hostless) **не перенесены** (TD-F2), cancel propagation
+  не проверен на живой сборке; `semantic_execute.ts` есть, но не сертифицирован.
+- **Задача**: перенести bridge-тесты; добавить cancel/timeout E2E (частично уже в дорожной карте).
+
+### TD-D6. **Writer/Coder «semantic launcher leakage» сохранена** (legacy CLI)
+- **Факт**: `INTERFACE_CONTROL.md` §1.6/RED-5: `mcp/coder_router_server.py`,
+  `mcp/launchers/opencode_code_worker.py`, `_runner.py`, `opencode_research_*`,
+  `opencode_tribunal_role.py` используют прямой `opencode run` (CLI legacy transport).
+- **Проблема**: в v1 все эти launchers на месте и **не мигрированы** на `semantic.execute`.
+  Это legacy-путь, который должен остаться только как явный fallback, но не стать production.
+- **Задача**: зафиксировать `transport=opencode_cli_legacy` для них; не мигрировать до
+  сертификации plugin semantic E2E (по `NEXT_PHASE_PLAN.md` — это P5).
+
+### TD-D7. **`scripts/jobs/job_ctl.py` перенесён, но нет канонических job-тестов**
+- **Факт**: `INTERFACE_CONTROL.md` §1.2 называет `job_ctl.py` canonical Job/Attempt runtime
+  с event-sourced JSON state, attempts, children, artifacts, stages, gates, reconciliation.
+- **Проблема**: файл перенесён (закрыт TD-T1), но в v1 **нет тестов** Job/Attempt runtime
+  и нет маппинга host_session_id ↔ Job ID (корреляция — metadata, не Job ID).
+- **Задача**: добавить smoke-тест `job_ctl` и задокументировать host_ref mapping
+  (OpenCode session ≠ Harness Job).
+
+### TD-D8. **Документация P1→P2 status**: `compatibility/opencode/1.18.30.json` утверждает больше, чем доказывает
+- **Факт**: `TEST_AND_EVIDENCE_MATRIX.md` строго различает evidence-уровни: `HOSTLESS_REPORTED`,
+  `LIVE_CERTIFIED`, `PENDING`. В v1 `compatibility/opencode/1.18.30.json` содержит
+  `LIVE_VERIFIED` для `PLUGIN_LOADED`, `CUSTOM_TOOL_VISIBLE`, `BRIDGE_FULL_DUPLEX`,
+  `SESSION_CREATE/...` — но P1_STATUS.md сам говорит `P3 SEMANTIC LIVE SMOKE PASS` на движке
+  1.18.30 (событие `session.created`).
+- **Проблема**: mix: часть capability `LIVE_VERIFIED` (plugin load/tools) — согласовано с
+  P1_STATUS (P2 live verification 2026-09-14); часть — `verified against package types` (session
+  API). Это **не чистый LIVE_CERTIFIED** по строгой шкале документации.
+- **Задача**: в v1.1 привести `compatibility/*.json` к шкале `TEST_AND_EVIDENCE_MATRIX.md`
+  (`LIVE_CERTIFIED` только после live P2 gate на чистой установке).
+
+### TD-D9. **Отсутствуют канонические машинные файлы из README_FIRST**
+- **Факт**: `README_FIRST(2).md` перечисляет канонические machine-файлы: `MANIFEST.json`,
+  `SHA256SUMS.txt`, `config/decision_aliases.json`. В v1 их **нет**.
+- **Проблема**: нет инвентаря точного дерева и чексумм — невозможно верифицировать
+  «что в поставке» против объявленного состава.
+- **Задача (низкий приоритет)**: сгенерировать `MANIFEST.json` + `SHA256SUMS.txt`
+  из текущего release tree + `decision_aliases.json`.
+
+### TD-D10. **Дублирование route-данных (TD-003) в v1 не проверено**
+- **Факт**: `TECH_DEBT_CURRENT.md` (TD-003, RECONCILE_REQUIRED): «Дублирование route данных
+  JSON vs TS»; `RECONCILIATION_REQUIRED.md` требует проверить exact release tree.
+- **Проблема**: в v1 `runtime_snapshot.json` (компилируемый) и TS-схемы — потенциально
+  рассинхронизированы; нет автоматической проверки соответствия.
+- **Задача**: в v1.1 добавить validation «snapshot ↔ schemas» в `compile_runtime.py --check`
+  (или отдельный скрипт).
+
+---
+
 ## 4. Дорожная карта v1.1
 
 ### Фаза 1 — Агенты (базовая интеграция)

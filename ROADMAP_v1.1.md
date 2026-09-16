@@ -59,6 +59,23 @@
   `execution_capability: tribunal.role.execute`; связать с `semantic.execute`/`harness.dispatch`.
 - [ ] E2E: live-трибунал (5 ролей) через Desktop, ответ проходит детерминированный admission.
 
+## Фаза 3b — Сверка с документацией «миграция в плагин» (TD-D*)
+
+- [ ] **D1**: портировать `scripts/writer/`, `scripts/capsules/`, `scripts/memory/`, `scripts/kanban/`,
+  `shared/` (или явно задокументировать исключение из v1).
+- [ ] **D2**: свести `health_check.py` → `doctor.py` как единый health-инструмент с живыми probes
+  (bridge.hello, harness.status, capability snapshot, semantic provider readiness).
+- [ ] **D3**: задокументировать `register_plugin.py` как временный project-scoped helper;
+  канонический путь — bootstrap + `.opencode/opencode.json`.
+- [ ] **D4**: зафиксировать расхождение capability hash в документации (f9de81 ≠ 60105d).
+- [ ] **D5**: перенести bridge-тесты; добавить cancel/timeout E2E.
+- [ ] **D6**: пометить CLI-лаунчеры `transport=opencode_cli_legacy`; не мигрировать до P5.
+- [ ] **D7**: добавить smoke-тест `job_ctl` + документация host_ref mapping.
+- [ ] **D8**: привести `compatibility/opencode/*.json` к шкале `TEST_AND_EVIDENCE_MATRIX.md`
+  (`LIVE_CERTIFIED` только после live P2 gate).
+- [ ] **D9**: сгенерировать `MANIFEST.json` + `SHA256SUMS.txt` + `decision_aliases.json`.
+- [ ] **D10**: validation «snapshot ↔ schemas» в `compile_runtime.py --check`.
+
 ## Фаза 4 — Стабильность
 
 - [ ] Перенести `tests/` плагина (7 файлов) и адаптировать под v1.1.
@@ -74,3 +91,9 @@
 3. Память читается и пишется; контекст попадает в промпты.
 4. Guard-гейт закрывает untrusted-инструменты.
 5. `doctor.py` + `health_check.py` — HEALTHY; bridge smoke green.
+6. Модули Writer/capsules/memory/kanban/shared либо перенесены, либо явно исключены (TD-D1).
+7. `health_check.py`/`doctor.py` — единый doctor с живыми probes (TD-D2).
+8. CLI-лаунчеры явно помечены legacy fallback (TD-D6).
+9. `MANIFEST.json` + `SHA256SUMS.txt` присутствуют (TD-D9).
+10. Совместимость с документацией: capability hash расхождение зафиксировано (TD-D4),
+    compatibility-записи приведены к строгой шкале evidence (TD-D8).
