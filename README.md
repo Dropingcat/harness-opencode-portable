@@ -7,6 +7,14 @@ MCP servers and 132 skills are connected automatically.
 
 Project-scoped: nothing is written to the user's global OpenCode config.
 
+## Versions
+
+- **v1** (tag `v1`) — native plugin + deterministic routing + full agent specs +
+  runtime policy + MCP + bootstrap. Agents are role specifications; **not yet**
+  wired as OpenCode subagents.
+- **v1.1** — planned: OpenCode subagents, dynamic role prompts, harness memory,
+  role contracts, native guard. See `ROADMAP_v1.1.md` and `TECH_DEBT_AGENTS.md`.
+
 ## Layout
 
 ```
