@@ -25,6 +25,17 @@ Contract-first rules honoured here (CODER_DESIGN_PRINCIPLES.md):
       - an EXPLICIT legacy CLI selection (HARNESS_TRANSPORT=cli /
         transport="cli") -> REJECTED_BY_HOST with an explicit-cli diagnostic
         (never a silent launch, never a silent switch to another transport).
+  * Plugin-side consumer (M3b, BRIDGE-01): the transport itself IS the
+    consumer of the peer's stdout. It reads every line the peer writes,
+    distinguishes REVERSE REQUESTS (have ``method``, no ``ok``) from RESPONSES
+    (have ``id`` + ``ok``) and only ever treats a line with
+    ``id == req_id`` AND ``ok`` as the answer to its own ``semantic.execute``.
+    A reverse request for ``semantic.execute`` is serviced BY THE TRANSPORT
+    through the injectable plugin-side: ``plugin_side: Callable[[dict], dict] |
+    None`` (BRIDGE-01..05). When ``plugin_side`` is NOT provided a reverse
+    request is a hard fail-closed path — HOST_UNAVAILABLE, never a fabricated
+    COMPLETED (no fake model, ever). ``execute_coder_semantic`` may forward a
+    ``plugin_side`` (default None).
   * Explicit transport selection (M3a): the transport is chosen by the
     operator via `resolve_transport()` (env `HARNESS_TRANSPORT`,
     plugin|cli|auto). "auto" resolves to the plugin bridge only when the
@@ -41,6 +52,7 @@ from __future__ import annotations
 
 import json
 import os
+import time as _time
 from pathlib import Path
 
 # Canonical schema identifiers (see packages/opencode-harness-plugin/schemas).
@@ -353,22 +365,235 @@ def _explicit_cli_rejected(request: dict) -> dict:
     )
 
 
-def _execute_via_plugin_bridge(request: dict) -> dict:
+def _execute_via_plugin_bridge(
+    request: dict,
+    *,
+    timeout_s: float = 30.0,
+    plugin_side: object | None = None,
+) -> dict:
     """Route through the plugin bridge reverse call ``semantic.execute``.
 
-    M1 status: the bridge peer is present but the reverse channel is NOT yet
-    wired into a live stdio bridge session. Honest classification only — the
-    module never fabricates a COMPLETED result. No host session is claimed:
-    `host_session_id` falls back to the schema-valid placeholder ``"unknown"``.
+    M3b: spawn the bridge peer as a subprocess (``python bridge_peer.py``),
+    send the SemanticExecutionRequest as NDJSON on stdin, then act as the
+    PLUGIN-SIDE CONSUMER of the peer's stdout (BRIDGE-01..05).
+
+    The peer forwards the request to its stdout as a REVERSE request
+    (``{"id", "method": "semantic.execute", "params": {"request": ...}}``,
+    no ``ok`` field). This function reads every line and classifies it:
+
+    * reverse request (has ``method``, no ``ok``) — never treated as the
+      answer to our own call. A ``semantic.execute`` reverse request is
+      serviced IN-PROCESS via ``plugin_side(params)`` when provided; the
+      reply is written back to the peer's stdin, exactly as a real plugin
+      would answer. Without ``plugin_side`` a reverse request is an honest
+      fail-closed HOST_UNAVAILABLE — a COMPLETED is NEVER fabricated here.
+    * response — only a line with ``id == req_id`` AND ``ok`` is accepted as
+      the answer; anything else is skipped (never misparsed as a response).
+
+    ``proc.stderr`` is drained concurrently in a background reader thread
+    (BRIDGE-05) so a chatty interpreter can never block the child.
+
+    Fail-closed: any spawn/IO/JSON/validation failure returns a schema-valid
+    ``SemanticExecutionResult/1.0`` with ``runtime_status=HOST_UNAVAILABLE``.
+    The peer's plugin result is never fabricated here — if the plugin is not
+    reachable, the peer itself will time out the reverse call and return an
+    error envelope, which maps to HOST_UNAVAILABLE.
     """
-    model_policy = request.get("model_policy") or {}
-    return _result(
-        execution_id=request["execution_id"],
-        runtime_status="HOST_UNAVAILABLE",
-        host_error="plugin bridge not yet wired in M1",
-        provider_id=model_policy.get("provider_id"),
-        model_id=model_policy.get("model_id"),
-    )
+    import json as _json
+    import subprocess as _subprocess
+    import sys as _sys
+    import threading as _threading
+    import uuid as _uuid
+
+    model_policy = request.get("model_policy") if isinstance(request, dict) else None
+    model_policy = model_policy if isinstance(model_policy, dict) else {}
+    peer = _bridge_peer_path()
+    proc = None
+    try:
+        if peer is None or not peer.is_file():
+            raise OSError(f"bridge peer not found: {peer}")
+        env = dict(os.environ)
+        env["PYTHONIOENCODING"] = "utf-8"
+        proc = _subprocess.Popen(
+            [_sys.executable, str(peer)],
+            stdin=_subprocess.PIPE,
+            stdout=_subprocess.PIPE,
+            stderr=_subprocess.PIPE,
+            text=True,
+            encoding="utf-8",
+            env=env,
+        )
+        req_id = _uuid.uuid4().hex
+        line = _json.dumps(
+            {"id": req_id, "method": "semantic.execute", "params": {"request": request}},
+            ensure_ascii=False,
+        )
+        assert proc.stdin is not None and proc.stdout is not None and proc.stderr is not None
+        proc.stdin.write(line + "\n")
+        proc.stdin.flush()
+
+        # BRIDGE-05: drain stderr in the background so the child can never
+        # block on a full OS pipe buffer while we wait for the response.
+        def _drain_stderr() -> None:
+            assert proc is not None and proc.stderr is not None
+            for _chunk in proc.stderr:
+                pass
+
+        stderr_drainer = _threading.Thread(target=_drain_stderr, daemon=True)
+        stderr_drainer.start()
+
+        # Plugin-side consumer loop: read stdout line-by-line, service reverse
+        # requests, and pick out the response for OUR req_id (BRIDGE-01).
+        deadline = _time.monotonic() + timeout_s
+        while _time.monotonic() < deadline:
+            if proc.poll() is not None:
+                raise OSError(f"bridge peer exited before responding (rc={proc.returncode})")
+            out_line = proc.stdout.readline()
+            if not out_line:
+                # Empty read means EOF on the peer's stdout.
+                raise OSError("bridge peer closed stdout without responding")
+            try:
+                msg = _json.loads(out_line)
+            except _json.JSONDecodeError as exc:
+                # Never misparse: a non-JSON line is not our response.
+                continue
+            if not isinstance(msg, dict):
+                continue
+            if _is_reverse_request(msg):
+                # A reverse request is NOT an answer to our call. We serve it
+                # ourselves when a plugin-side consumer is injected.
+                if msg.get("method") == "semantic.execute":
+                    rid = msg.get("id")
+                    _serve_reverse_request(proc, rid, msg.get("params") or {}, plugin_side)
+                continue
+            # A response carries OUR id and an ``ok`` field (True or False).
+            # ``ok: False`` is a real error envelope from the peer (e.g. the
+            # reverse call failed) — never skipped, never misread as a success.
+            if msg.get("id") != req_id or "ok" not in msg:
+                continue
+            if msg.get("ok") is not True:
+                err = msg.get("error") if isinstance(msg.get("error"), dict) else {}
+                code = err.get("code", "ERROR") if isinstance(err, dict) else "ERROR"
+                detail = err.get("message", "") if isinstance(err, dict) else str(msg)
+                raise OSError(f"bridge error {code}: {detail}")
+            result = msg.get("result")
+            if isinstance(result, dict) and "semantic_result" in result:
+                semantic_result = result["semantic_result"]
+            else:
+                semantic_result = result
+            ok, error = _validate_result(semantic_result)
+            if not ok:
+                raise OSError(f"bridge returned invalid SemanticExecutionResult: {error}")
+            return semantic_result
+        raise TimeoutError(f"no response from plugin bridge within {timeout_s}s")
+    except Exception as exc:  # noqa: BLE001
+        execution_id = request.get("execution_id") if isinstance(request, dict) else None
+        return _result(
+            execution_id=execution_id,
+            runtime_status="HOST_UNAVAILABLE",
+            host_error=f"plugin bridge failed: {exc}",
+            provider_id=model_policy.get("provider_id"),
+            model_id=model_policy.get("model_id"),
+        )
+    finally:
+        if proc is not None:
+            try:
+                proc.kill()
+            except Exception:  # noqa: BLE001
+                pass
+            try:
+                proc.wait(timeout=5)
+            except Exception:  # noqa: BLE001
+                pass
+            for stream in (proc.stdin, proc.stdout, proc.stderr):
+                if stream is not None:
+                    try:
+                        stream.close()
+                    except Exception:  # noqa: BLE001
+                        pass
+
+
+def _is_reverse_request(msg: dict) -> bool:
+    """A reverse request: has ``method`` and no ``ok``.
+
+    The peer's own reverse requests (``{"id", "method", "params"}``) carry no
+    ``ok`` field and MUST never be misparsed as a response to our call.
+    """
+    return isinstance(msg.get("method"), str) and bool(msg.get("method")) and "ok" not in msg
+
+
+def _serve_reverse_request(
+    proc: object,
+    rid: object,
+    params: dict,
+    plugin_side: object | None,
+) -> None:
+    """Serve one ``semantic.execute`` reverse request from the peer.
+
+    BRIDGE-01: the transport is the plugin-side consumer. With an injected
+    ``plugin_side`` callable the reverse request is serviced IN-PROCESS (the
+    plugin's ``{"tool_result": ...}`` envelope is written back to the peer's
+    stdin, exactly as a real plugin would answer). Without ``plugin_side`` a
+    COMPLETED is NEVER fabricated: the peer receives a hard error envelope,
+    which it converts into an honest HOST_UNAVAILABLE result.
+    """
+    import json as _json
+
+    def _write(reply: dict) -> None:
+        assert proc.stdin is not None
+        try:
+            proc.stdin.write(_json.dumps(reply, ensure_ascii=False) + "\n")
+            proc.stdin.flush()
+        except (BrokenPipeError, OSError, ValueError):
+            pass
+
+    if not callable(plugin_side):
+        # No plugin-side consumer injected: honest fail-closed, never a
+        # fabricated COMPLETED. The peer maps this error to HOST_UNAVAILABLE.
+        _write(
+            {
+                "id": rid,
+                "ok": False,
+                "error": {"code": "PLUGIN_SIDE_UNAVAILABLE", "message": "no plugin-side consumer wired"},
+            }
+        )
+        return
+    request = params.get("request") if isinstance(params, dict) else None
+    if not isinstance(request, dict):
+        _write(
+            {
+                "id": rid,
+                "ok": False,
+                "error": {"code": "BAD_REQUEST", "message": "semantic.execute requires params.request"},
+            }
+        )
+        return
+    try:
+        tool_result = plugin_side(request)
+    except Exception as exc:  # noqa: BLE001
+        _write(
+            {
+                "id": rid,
+                "ok": False,
+                "error": {"code": "PLUGIN_SIDE_ERROR", "message": str(exc)},
+            }
+        )
+        return
+    if isinstance(tool_result, dict) and "semantic_result" in tool_result:
+        semantic_result = tool_result["semantic_result"]
+    else:
+        semantic_result = tool_result
+    ok, error = _validate_result(semantic_result)
+    if not ok:
+        _write(
+            {
+                "id": rid,
+                "ok": False,
+                "error": {"code": "PLUGIN_SIDE_ERROR", "message": f"invalid SemanticExecutionResult: {error}"},
+            }
+        )
+        return
+    _write({"id": rid, "ok": True, "result": {"tool_result": semantic_result}})
 
 
 def _legacy_fallback_rejected(request: dict) -> dict:
@@ -392,7 +617,7 @@ def _legacy_fallback_rejected(request: dict) -> dict:
 
 
 def execute_coder_semantic(
-    request: dict, *, transport: str | None = None
+    request: dict, *, transport: str | None = None, plugin_side: object | None = None
 ) -> dict:
     """Execute (transport) a SemanticExecutionRequest/1.0 for the Coder agent.
 
@@ -416,6 +641,13 @@ def execute_coder_semantic(
        - resolves to ``"cli"`` -> ``REJECTED_BY_HOST`` with the legacy-fallback
          diagnostic (M1 never launches a model; the legacy boundary is out of
          M1 scope).
+
+    ``plugin_side`` (M3b, BRIDGE-01) is forwarded to the plugin bridge path
+    when it resolves to ``"plugin"``: a callable ``plugin_side(request) -> dict``
+    that SERVES the peer's ``semantic.execute`` reverse request in-process,
+    exactly as a real plugin would. When ``None`` (the default) a reverse
+    request is an honest fail-closed HOST_UNAVAILABLE — a COMPLETED result is
+    never fabricated.
 
     Always returns a valid SemanticExecutionResult/1.0 dict.
     """
@@ -445,7 +677,7 @@ def execute_coder_semantic(
     # "plugin"). Explicit "plugin" + unavailable bridge is fail-closed
     # HOST_UNAVAILABLE — never a CLI fallback.
     if _plugin_bridge_available():
-        return _execute_via_plugin_bridge(request)
+        return _execute_via_plugin_bridge(request, plugin_side=plugin_side)
     return _result(
         execution_id=request["execution_id"],
         runtime_status="HOST_UNAVAILABLE",
@@ -596,12 +828,15 @@ def _run_unit_tests() -> int:
 
         def test_execute_bridge_available_not_wired(self) -> None:
             # Simulate a nominally available bridge: flag + env root + peer file.
+            # HARNESS_TRANSPORT is pinned to "plugin" so the outcome never
+            # depends on the surrounding environment (BRIDGE-02).
             root = Path(__file__).resolve().parents[2]
             peer = root / "packages" / "opencode-harness-plugin" / "core" / "bridge_peer.py"
             if not peer.is_file():
                 self.skipTest("plugin bridge peer file not present in this checkout")
             os.environ["HARNESS_SEMANTIC_ENABLED"] = "1"
             os.environ["OPENCODE_HARNESS_ROOT"] = str(root)
+            os.environ["HARNESS_TRANSPORT"] = "plugin"
             try:
                 req = build_coder_request(
                     execution_id="exec-3",
@@ -610,14 +845,20 @@ def _run_unit_tests() -> int:
                     expected_output={},
                     worktree="w",
                 )
+                # BRIDGE-01: no plugin-side consumer is wired here, so the
+                # bridge path MUST fail closed honestly (HOST_UNAVAILABLE) —
+                # never a fabricated COMPLETED, never a misparsed reverse
+                # request leaking into host_error.
                 res = execute_coder_semantic(req)
                 self.assertEqual(res["runtime_status"], "HOST_UNAVAILABLE")
-                self.assertIn("plugin bridge not yet wired in M1", res["host_error"])
+                self.assertIn("plugin bridge failed", res["host_error"])
+                self.assertNotIn("semantic.execute", res["host_error"])
                 ok, error = _validate_result(res)
                 self.assertTrue(ok, msg=error)
             finally:
                 os.environ.pop("HARNESS_SEMANTIC_ENABLED", None)
                 os.environ.pop("OPENCODE_HARNESS_ROOT", None)
+                os.environ.pop("HARNESS_TRANSPORT", None)
 
         def test_execute_bad_schema(self) -> None:
             res = execute_coder_semantic({"schema": "wrong/1.0", "execution_id": "x"})

@@ -48,6 +48,10 @@
 - [ ] **I5**: native guard: `tool.execute.before` → `guard/src/session_guard.py` для untrusted
   (webfetch, searxng_search, doc_extract) с кэшем скоринга.
 - [ ] **P3**: live-сертификация `semantic.execute` → `HARNESS_SEMANTIC_ENABLED=1`.
+  > **Частично готово (local harness, DEV-05 M3b, 2026-09-15)**: реальный reverse-канал
+  > `semantic.execute` (bridge_peer handler + plugin-side consumer в semantic_transport),
+  > timeout_ms пробрасывается, boundary E2E + 139 авто-тестов в `tests/coder/` (скопированы
+  > на эту ветку). Осталось: live-сертификация на Desktop + cancel через AbortSignal.
 
 ## Фаза 3a — Трибунал (live-версия)
 
@@ -55,6 +59,8 @@
   `tribunal_live_dialogue` на чистом клоне (без исходника рядом). *(закрыто в v1.0.1-commit: job_ctl.py перенесён, трибунал импортируется из чистой репы)*
 - [ ] **T2 (P4)**: мигрировать `SubprocessJsonProviderTransport` → дочерняя сессия OpenCode
   (`semantic.execute` / `harness.dispatch`).
+  > **Частично готово**: локальный `PluginBridgeProviderTransport` + `semantic_transport.py`
+  > (Coder, DEV-05 M1–M3b) уже дают контрактный транспорт; Writer-конвергенция и live-трибунал остаются.
 - [ ] **T3 (P4)**: судьи трибунала — изолированные дочерние сессии (parent/child), `TribunalExecutionEnvelope`
   как контракт, ответ через `DDC/DQC admission`.
 - [ ] **T4**: `tribunal-judge` в генераторе `.opencode/agent/*.md`; `harness.dispatch` поддерживает

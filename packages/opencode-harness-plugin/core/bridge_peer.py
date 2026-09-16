@@ -21,6 +21,24 @@ CONTRACT_SCHEMAS = [
     "semantic-execution-result/1.0",
 ]
 
+# Default reverse-call timeout when the request carries no usable timeout_ms.
+_REVERSE_TIMEOUT_MS_DEFAULT = 15000
+# Upper bound for a request's timeout_ms threaded into the reverse call.
+_REVERSE_TIMEOUT_MS_CAP = 120000
+
+
+def _request_timeout_ms(request: Any) -> int | None:
+    """Request timeout_ms for the reverse call, capped, else None (default).
+
+    Only a positive int (bool is not an int for this purpose) is honoured.
+    ``None`` means "use the peer's default reverse timeout".
+    """
+    if isinstance(request, dict):
+        value = request.get("timeout_ms")
+        if isinstance(value, int) and not isinstance(value, bool) and value > 0:
+            return min(value, _REVERSE_TIMEOUT_MS_CAP)
+    return None
+
 
 def _harness_root() -> Path:
     env = __import__("os").environ.get("OPENCODE_HARNESS_ROOT")
@@ -44,6 +62,31 @@ class BridgeServer:
         self.handlers["bridge.reverse_echo_test"] = self._reverse_echo_test
         self.handlers["harness.status"] = self._status
         self.handlers["harness.run"] = self._run
+        self.handlers["semantic.execute"] = self._semantic_execute
+
+    def _semantic_execute(self, params: Dict[str, Any]) -> Dict[str, Any]:
+        """Forward a SemanticExecutionRequest/1.0 to the plugin via reverse RPC.
+
+        The plugin owns model execution (child session); this peer only carries
+        the request and returns whatever the plugin produced. No result is
+        generated here.
+
+        BRIDGE-03: the request's canonical ``timeout_ms`` (required field,
+        default 180000) is threaded into the reverse call (capped at
+        ``_REVERSE_TIMEOUT_MS_CAP``) so a healthy plugin that legitimately
+        takes longer than the old hardcoded 15s is NOT failed as a fabricated
+        host failure.
+        """
+        if not self.reverse_request:
+            raise RuntimeError("reverse_request not configured")
+        request = params.get("request")
+        if request is None:
+            raise ValueError("semantic.execute requires params.request")
+        timeout_ms = _request_timeout_ms(request)
+        raw = self._send_reverse("semantic.execute", {"request": request}, timeout_ms=timeout_ms)
+        if isinstance(raw, dict) and "tool_result" in raw:
+            return {"semantic_result": raw["tool_result"]}
+        return {"semantic_result": raw}
 
     def _hello(self, params: Dict[str, Any]) -> Dict[str, Any]:
         return {
@@ -114,16 +157,20 @@ class BridgeServer:
         self._shutdown_requested = True
         return {"ok": True, "message": "shutting down"}
 
-    def _send_reverse(self, method: str, params: Dict[str, Any]) -> Any:
-        """Issue a full-duplex request to the plugin and await its response."""
+    def _send_reverse(self, method: str, params: Dict[str, Any], timeout_ms: int | None = None) -> Any:
+        """Issue a full-duplex request to the plugin and await its response.
+
+        ``timeout_ms`` (when given) is the caller's per-call bound forwarded to
+        ``_await_reverse``; ``None`` falls back to the default reverse timeout.
+        """
         import uuid
 
         rid = str(uuid.uuid4())
         self._pending_reverse[rid] = {"resolved": False, "result": None, "error": None}
         self._write({"id": rid, "method": method, "params": params})
-        return self._await_reverse(rid)
+        return self._await_reverse(rid, timeout_ms or _REVERSE_TIMEOUT_MS_DEFAULT)
 
-    def _await_reverse(self, rid: str, timeout_ms: int = 15000) -> Any:
+    def _await_reverse(self, rid: str, timeout_ms: int = _REVERSE_TIMEOUT_MS_DEFAULT) -> Any:
         import time
 
         deadline = time.time() + timeout_ms / 1000.0

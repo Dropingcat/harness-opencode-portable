@@ -228,7 +228,13 @@
   и M2 acceptance включает cancellation + 100 concurrent messages.
 - **Проблема**: в v1 bridge-тесты (hostless) **не перенесены** (TD-F2), cancel propagation
   не проверен на живой сборке; `semantic_execute.ts` есть, но не сертифицирован.
-- **Задача**: перенести bridge-тесты; добавить cancel/timeout E2E (частично уже в дорожной карте).
+- **Частично закрыто (local harness, DEV-05 M1–M3b, 2026-09-15)**: в `scripts/code-factory/semantic_transport.py`
+  и `packages/opencode-harness-plugin/core/bridge_peer.py` реализован реальный reverse-канал
+  `semantic.execute` с plugin-side consumer; timeout_ms пробрасывается из request (кап 120000);
+  добавлен boundary E2E `tests/coder/test_bridge_channel_e2e.py` (таймаут, отказ плагина, спавн-сбой,
+  missing peer → HOST_UNAVAILABLE) + 58 авто-тестов `test_bridge_peer_autotests.py` (итого 139 в tests/coder).
+- **Задача (v1.1)**: перенести эти тесты в portable (уже скопированы в `tests/coder/` на этой ветке),
+  добавить cancel propagation через AbortSignal на живой сборке Desktop; live-сертификация P3 остаётся.
 
 ### TD-D6. **Writer/Coder «semantic launcher leakage» сохранена** (legacy CLI)
 - **Факт**: `INTERFACE_CONTROL.md` §1.6/RED-5: `mcp/coder_router_server.py`,
