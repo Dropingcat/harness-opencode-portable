@@ -1,0 +1,68 @@
+{
+ "schema": "researcher-verification-artifact/1.0",
+ "date": "2026-09-17",
+ "scenario": "researcher-pipeline",
+ "route": "academic-research",
+ "model_used": "polza/deepseek/deepseek-v4-flash-0731 (калибровочные данные)",
+ "search_sources": {
+  "arxiv_results": 8,
+  "openalex_results": 8
+ },
+ "claims": [
+  {
+   "claim_id": "CLM-1",
+   "statement": "Изменение параметра решётки в Ce1-xZrxO2 связано преимущественно с изменением состава твёрдого раствора (правило Вегарда).",
+   "status": "OPEN",
+   "grounding": "MODEL_PRIOR (из калибровки T-01: a(CeO2)~5.41, a(ZrO2)~5.09-5.13, x=0.5 -> ~5.25-5.27 А; источник не раскрыт)",
+   "evidence_candidates": [
+    {
+     "id": "EVD-10",
+     "source": "openalex",
+     "title": "Cerium-based metal organic frameworks with UiO-66 architecture: synthesis, properties and redox catalytic activity",
+     "doi": "https://doi.org/10.1039/c5cc02606g",
+     "relevance": "candidate"
+    },
+    {
+     "id": "EVD-11",
+     "source": "openalex",
+     "title": "Redox Active Cerium Oxide Nanoparticles: Current Status and Burning Issues",
+     "doi": "https://doi.org/10.1002/smll.202102342",
+     "relevance": "candidate"
+    },
+    {
+     "id": "EVD-12",
+     "source": "openalex",
+     "title": "Fundamentals and Catalytic Applications of CeO 2 -Based Materials",
+     "doi": "https://doi.org/10.1021/acs.chemrev.5b00603",
+     "relevance": "candidate"
+    },
+    {
+     "id": "EVD-13",
+     "source": "openalex",
+     "title": "Review of solid oxide fuel cell materials: cathode, anode, and electrolyte",
+     "doi": "https://doi.org/10.1007/s41825-020-00029-8",
+     "relevance": "candidate"
+    }
+   ],
+   "verdict": "UNSUPPORTED",
+   "reason": "Число 5.32 А из MODEL_PRIOR, раскрытого источника нет. Найденные кандидаты (openalex) требуют проверки соответствия составу x=0.5 и методу (XRD).",
+   "needs_evidence": [
+    "XRD-данные Ce0.5Zr0.5O2 (a, 2theta/d), условия съёмки",
+    "первичный источник по составу/параметру решётки"
+   ]
+  },
+  {
+   "claim_id": "CLM-2",
+   "statement": "Для t-критерия (двусторонний, alpha=0.05, power=0.8, d=0.5) требуется n=63 на группу.",
+   "status": "RESOLVED",
+   "grounding": "DERIVATION_FROM_VISIBLE (формула: n = 2*(z_{1-a/2}+z_{1-b})^2/d^2; z0.975=1.959964, z0.8=0.841621 -> 62.79 -> ceil 63)",
+   "evidence_candidates": [],
+   "verdict": "SUPPORTED",
+   "reason": "Детерминированный расчёт подтверждён кодом (2026-09-17). Совпадает с расчётом модели в калибровке."
+  }
+ ],
+ "search_noise": {
+  "observation": "arXiv поиск по теме твёрдых растворов/XRD возвращает нерелевантные результаты (lattice QCD, B->Kll) — `all:` запрос слабо селективен для этой предметной области.",
+  "recommendation": "Для XRD/материаловедения приоритет: OpenAlex + специализированные базы; arXiv-канал калибровать или исключить."
+ }
+}
