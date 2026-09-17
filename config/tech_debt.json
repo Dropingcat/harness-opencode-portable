@@ -3,8 +3,8 @@
  "updated": "2026-09-15",
  "authority_note": "Canonical registry migrated from патчи/миграция в плагин/tech_debt_current.json (65 records). project_context.py counts status=open. CLOSED_REPORTED maps to closed; RECONCILE_REQUIRED stays open until exact-tree verification.",
  "counts": {
-  "total": 65,
-  "open": 50,
+  "total": 66,
+  "open": 51,
   "closed": 15
  },
  "debts": [
@@ -1567,6 +1567,22 @@
    "target": null,
    "supersedes": null,
    "related": null
+  },
+  {
+   "id": "TD-066",
+   "title": "harness_run live-инструмент возвращает no_route_match при рабочем bridge_peer (peer mismatch)",
+   "area": "OpenCode Native Plugin / Router / harness_run tool",
+   "kind": "integration",
+   "severity": "critical",
+   "owner": "code-orchestrator",
+   "sunset_at": "2026-09-24",
+   "acceptance": "harness_run без route и bridge_peer с той же задачей дают одинаковый маршрут (детерминированно); peer-процесс инструмента идентифицирован; прогон в чистом окружении воспроизводим",
+   "status": "open",
+   "status_detail": "OPEN_CURRENT",
+   "presentation_category": "ACTIVE",
+   "source_status": "open",
+   "progress": "2026-09-17: harness_run (эта среда) без route -> no_route_match для непустых задач; прямой bridge_peer (тот же snapshot, policy_hash 8910fd) -> academic-research/code-implementation. Расхождение воспроизведено стабильно. Вероятная причина: инструмент исполняет другой peer-процесс (кэш/транспорт). Требуется идентификация peer, исправление до production.",
+   "notes": "Прогоны сценариев временно выполняются с явным route; авто-детект требует фикса до прод-версии. Нужен четкий fallback или безальтернативный роутинг."
   }
  ]
 }
