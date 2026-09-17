@@ -132,7 +132,10 @@ class BridgeServer:
         if scripts_dir not in _sys.path:
             _sys.path.insert(0, scripts_dir)
 
-        task = params.get("task") or ""
+        task = params.get("task")
+        if not isinstance(task, str) or not task.strip():
+            raise ValueError("BAD_REQUEST: harness.run requires a non-empty task")
+        task = task.strip()
         route = params.get("route")
         profile = params.get("profile")
 
