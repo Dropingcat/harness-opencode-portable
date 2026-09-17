@@ -71,8 +71,9 @@
    "id": "DEV-09",
    "title": "Semantic acceptance/calibration",
    "result": "Live traces: grounding, false closure, Q2 novelty, Advocate, variability",
-   "status": "not_started",
-   "evidence": "needs live production provider trace"
+   "status": "in_progress",
+   "evidence": "First live report received (2026-09-17, deepseek-v4-flash-0731). MODEL_PRIOR leakage confirmed (T-01 Vegard/5.41-5.24Å, T-05 advocate rationalization); T-02 model self-downgraded to hypothesis (QUALIFY) - positive; T-04 numeric prior (64); T-06 variability=0 at router level. BUT router claim (no_route_match 4/4) NOT reproduced: resolve() and bridge_peer both route correctly; no_route_match only on empty task. Report T-01/T-03/T-06 partly self-modeled. Calibration requires valid re-run with confirmed route_id per call. See docs/plugin-dialectic/DEV09_VERIFICATION.md",
+   "next_gate": "Re-run calibration with verified harness_run calls (non-empty task, confirmed route_id); then calibrate observer thresholds (TD-042), issue identity (TD-044), advocate admission"
   },
   {
    "id": "DEV-10",
