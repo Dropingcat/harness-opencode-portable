@@ -14,7 +14,7 @@ export const harnessRun = (
     description:
       "Run a deterministic Harness request through Core routing (Writer/Researcher/Coder route resolution and bundle). Returns route/bundle/readiness. This tool does not execute a semantic model.",
     args: {
-      task: tool.schema.string().describe("Task text to route"),
+      task: tool.schema.string().describe("Task text to route").min(1),
       route: tool.schema.string().optional().describe("Explicit route id (e.g. academic-research, code-implementation, writing-prose)"),
       profile: tool.schema.enum(["soft", "standard", "strict"]).optional(),
     },
