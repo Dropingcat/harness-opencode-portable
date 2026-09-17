@@ -3,9 +3,9 @@
  "updated": "2026-09-15",
  "authority_note": "Canonical registry migrated from патчи/миграция в плагин/tech_debt_current.json (65 records). project_context.py counts status=open. CLOSED_REPORTED maps to closed; RECONCILE_REQUIRED stays open until exact-tree verification.",
  "counts": {
-  "total": 65,
-  "open": 50,
-  "closed": 15
+  "total": 68,
+  "open": 52,
+  "closed": 16
  },
  "debts": [
   {
@@ -1567,6 +1567,56 @@
    "target": null,
    "supersedes": null,
    "related": null
+  },
+  {
+   "id": "TD-066",
+   "title": "harness_run live-инструмент возвращает no_route_match при рабочем bridge_peer (peer mismatch)",
+   "area": "OpenCode Native Plugin / Router / harness_run tool",
+   "kind": "integration",
+   "severity": "critical",
+   "owner": "code-orchestrator",
+   "sunset_at": "2026-09-24",
+   "acceptance": "harness_run без route и bridge_peer с той же задачей дают одинаковый маршрут (детерминированно); peer-процесс инструмента идентифицирован; прогон в чистом окружении воспроизводим",
+   "status": "open",
+   "status_detail": "OPEN_CURRENT",
+   "presentation_category": "ACTIVE",
+   "source_status": "open",
+   "progress": "2026-09-17: harness_run (эта среда) без route -> no_route_match для непустых задач; прямой bridge_peer (тот же snapshot, policy_hash 8910fd) -> academic-research/code-implementation. Расхождение воспроизведено стабильно. Вероятная причина: инструмент исполняет другой peer-процесс (кэш/транспорт). Требуется идентификация peer, исправление до production.",
+   "notes": "Прогоны сценариев временно выполняются с явным route; авто-детект требует фикса до прод-версии. Нужен четкий fallback или безальтернативный роутинг."
+  },
+  {
+   "id": "TD-067",
+   "title": "doc_extract_server зависит от неустановленных MCP-doc зависимостей (pypdfium2/docx/markdownify/openpyxl)",
+   "area": "MCP / doc_extract / bootstrap",
+   "kind": "deployment",
+   "severity": "medium",
+   "owner": "code-orchestrator",
+   "sunset_at": "2026-09-24",
+   "acceptance": "bootstrap устанавливает requirements-mcp-doc.txt; doc_extract работает из чистой установки; тест извлечения PDF/DOCX/HTML проходит",
+   "status": "closed",
+   "closed_at": "2026-09-17",
+   "resolution": "Зависимости установлены вручную (pypdfium2 5.13.0, python-docx 1.2.0, markdownify 1.2.3, openpyxl 3.1.5). Требуется закрепить в bootstrap (TD-067 acceptance) — установка вручную не гарантирует воспроизводимость.",
+   "acceptance_result": "extract fns доступны; deps import OK",
+   "status_detail": "CLOSED_REPORTED",
+   "presentation_category": "CLOSED_ARCHIVE",
+   "source_status": "done",
+   "progress": "Ручная установка закрыла блокер; bootstrap-интеграция остаётся (см. acceptance)."
+  },
+  {
+   "id": "TD-068",
+   "title": "Writer DOM extractor не извлекает числовые/фактические claims",
+   "area": "scripts/writer/extractor/extraction_engine.py",
+   "kind": "extraction",
+   "severity": "high",
+   "owner": "researcher-orchestrator",
+   "sunset_at": "2026-09-24",
+   "acceptance": "extract_all возвращает claim для: (a) \"Параметр решётки CeO2 равен 5.41 А\", (b) \"x=0.5 даёт a=5.32 А\", (c) \"соединение ингибирует hERG при 10 мкМ\"; тесты на числовые предикаты",
+   "status": "open",
+   "status_detail": "OPEN_CURRENT",
+   "presentation_category": "ACTIVE",
+   "source_status": "open",
+   "progress": "2026-09-17 проверено: extract_all ловит только глагольные формы (\"Мы показали, что X\", \"X вызывает Y\"). Числовые предикаты (равен a, x=0.5 даёт, IC50=8.2) -> 0 claims. Это блокирует верификацию количественных утверждений через claims-цикл.",
+   "notes": "Фальсификация: extract_all('Параметр решётки CeO2 равен 5.41 А.') -> len(claims)==0 (ожидается >0)."
   }
  ]
 }
