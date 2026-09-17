@@ -1,0 +1,232 @@
+{
+  "document_path": "C:\\Temp\\opencode\\writer_sample2.md",
+  "meta": {
+    "chars": 124,
+    "count": 1,
+    "errors": [],
+    "table_count": 0
+  },
+  "paragraphs": [
+    {
+      "claims": [
+        {
+          "class": "A_claim_candidate",
+          "end": 124,
+          "hedged": null,
+          "kind": "OBSERVATIONAL",
+          "qa_method": "exact",
+          "qa_status": "GROUNDED",
+          "raw_span": "Состав твёрдого раствора влияет на параметр решётки.",
+          "role": "факт",
+          "sentence_idx": 2,
+          "start": 72,
+          "text": "Состав твёрдого раствора влияет на параметр решётки."
+        }
+      ],
+      "digest": {
+        "affordances": [
+          "inspect_contract",
+          "restore_scope",
+          "rewrite_span"
+        ],
+        "ambiguities": [
+          {
+            "details": {
+              "head": "параметр",
+              "heuristic": "scope_np_without_research_attr"
+            },
+            "impact": "MEDIUM",
+            "target": "sentence",
+            "type": "SCOPE_EXPANSION"
+          }
+        ],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "Состав твёрдого раствора влияет на параметр решётки."
+        },
+        "modality": "assertive",
+        "scope": {
+          "restricted": false
+        },
+        "scope_text": "Состав твёрдого раствора влияет на параметр решётки."
+      },
+      "discourse": [],
+      "links": {
+        "claim_to_digest": [
+          {
+            "claim": 0,
+            "overlap": 1.0,
+            "sentence": 2
+          }
+        ],
+        "object_to_claim": []
+      },
+      "objects": [],
+      "page": null,
+      "paragraph_id": "writer_sample2_P0000",
+      "philology": {
+        "chreia": [
+          {
+            "part": "evidence",
+            "sentence_idx": 0,
+            "text": "Остаточные напряжения смещают пик при 2θ≈44.3°."
+          }
+        ],
+        "connectors": [],
+        "figures": [],
+        "morphology": {
+          "function_word_ratio": 0.2,
+          "gerund_ratio": 0.0,
+          "kantseliarit_ratio": 0.0,
+          "noun_like_ratio": 0.0,
+          "participle_ratio": 0.0,
+          "passive_participle_ratio": 0.0,
+          "verb_like_ratio": 0.0,
+          "word_count": 15
+        }
+      },
+      "sentences": [
+        {
+          "end": 47,
+          "sentence_idx": 0,
+          "start": 0,
+          "text": "Остаточные напряжения смещают пик при 2θ≈44.3°.",
+          "tokens": [
+            {
+              "end": 10,
+              "idx": 0,
+              "pos": 0,
+              "start": 0,
+              "text": "Остаточные"
+            },
+            {
+              "end": 21,
+              "idx": 1,
+              "pos": 1,
+              "start": 11,
+              "text": "напряжения"
+            },
+            {
+              "end": 29,
+              "idx": 2,
+              "pos": 2,
+              "start": 22,
+              "text": "смещают"
+            },
+            {
+              "end": 33,
+              "idx": 3,
+              "pos": 3,
+              "start": 30,
+              "text": "пик"
+            },
+            {
+              "end": 37,
+              "idx": 4,
+              "pos": 4,
+              "start": 34,
+              "text": "при"
+            },
+            {
+              "end": 47,
+              "idx": 5,
+              "pos": 5,
+              "start": 38,
+              "text": "2θ≈44.3°."
+            }
+          ]
+        },
+        {
+          "end": 71,
+          "sentence_idx": 1,
+          "start": 48,
+          "text": "Это требует калибровки.",
+          "tokens": [
+            {
+              "end": 51,
+              "idx": 0,
+              "pos": 0,
+              "start": 48,
+              "text": "Это"
+            },
+            {
+              "end": 59,
+              "idx": 1,
+              "pos": 1,
+              "start": 52,
+              "text": "требует"
+            },
+            {
+              "end": 71,
+              "idx": 2,
+              "pos": 2,
+              "start": 60,
+              "text": "калибровки."
+            }
+          ]
+        },
+        {
+          "end": 124,
+          "sentence_idx": 2,
+          "start": 72,
+          "text": "Состав твёрдого раствора влияет на параметр решётки.",
+          "tokens": [
+            {
+              "end": 78,
+              "idx": 0,
+              "pos": 0,
+              "start": 72,
+              "text": "Состав"
+            },
+            {
+              "end": 87,
+              "idx": 1,
+              "pos": 1,
+              "start": 79,
+              "text": "твёрдого"
+            },
+            {
+              "end": 96,
+              "idx": 2,
+              "pos": 2,
+              "start": 88,
+              "text": "раствора"
+            },
+            {
+              "end": 103,
+              "idx": 3,
+              "pos": 3,
+              "start": 97,
+              "text": "влияет"
+            },
+            {
+              "end": 106,
+              "idx": 4,
+              "pos": 4,
+              "start": 104,
+              "text": "на"
+            },
+            {
+              "end": 115,
+              "idx": 5,
+              "pos": 5,
+              "start": 107,
+              "text": "параметр"
+            },
+            {
+              "end": 124,
+              "idx": 6,
+              "pos": 6,
+              "start": 116,
+              "text": "решётки."
+            }
+          ]
+        }
+      ],
+      "text": "Остаточные напряжения смещают пик при 2θ≈44.3°. Это требует калибровки.\nСостав твёрдого раствора влияет на параметр решётки."
+    }
+  ],
+  "tables": []
+}

@@ -1,0 +1,17 @@
+{
+  "a": "C:\\Temp\\opencode\\writer_extract.json",
+  "b": "C:\\Temp\\opencode\\writer_extract2.json",
+  "cosine": 0.9993,
+  "dynamic_metrics": {
+    "delta_causal": 0.0,
+    "delta_claims": 0.0,
+    "delta_edges_total": 0.0,
+    "delta_grounded": 0.0,
+    "delta_modality_upgrade": 0.0,
+    "delta_nodes_total": 0.0,
+    "delta_scope_expansion": 0.0,
+    "delta_supports": 0.0,
+    "nodes_label": "stable"
+  },
+  "schema": "writer_core.vectorsim.v1"
+}

@@ -1,0 +1,11 @@
+{
+  "schema": "writer_core.register_control.v1",
+  "verdict": "PASS",
+  "issues": [],
+  "issues_by_axis": {
+    "R1": [],
+    "R2": [],
+    "R3": [],
+    "R4": []
+  }
+}

@@ -1,0 +1,2891 @@
+{
+  "artifact": "C:\\Temp\\opencode\\writer_extract.json",
+  "errors": [],
+  "generated_by": "writer_core.cli.graphs",
+  "graphs": {
+    "writer_sample_P0000": {
+      "built": 7,
+      "graphs": {
+        "G13_linguistic_structure": {
+          "edges": [
+            {
+              "dst": "G13_linguistic_structure__Sentence__writer_sample_P0000__000",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0000"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__DocumentSpan__writer_sample_P0000__000"
+            },
+            {
+              "dst": "G13_linguistic_structure__Clause__writer_sample_P0000__000",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0000"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Sentence__writer_sample_P0000__000"
+            },
+            {
+              "dst": "G13_linguistic_structure__Token__writer_sample_P0000__000",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0000"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Clause__writer_sample_P0000__000"
+            },
+            {
+              "dst": "G13_linguistic_structure__Token__writer_sample_P0000__001",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0000"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Clause__writer_sample_P0000__000"
+            },
+            {
+              "dst": "G13_linguistic_structure__Token__writer_sample_P0000__002",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0000"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Clause__writer_sample_P0000__000"
+            },
+            {
+              "dst": "G13_linguistic_structure__Token__writer_sample_P0000__003",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0000"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Clause__writer_sample_P0000__000"
+            },
+            {
+              "dst": "G13_linguistic_structure__Token__writer_sample_P0000__004",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0000"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Clause__writer_sample_P0000__000"
+            },
+            {
+              "dst": "G13_linguistic_structure__Token__writer_sample_P0000__005",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0000"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Clause__writer_sample_P0000__000"
+            },
+            {
+              "dst": "G13_linguistic_structure__Token__writer_sample_P0000__006",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0000"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Clause__writer_sample_P0000__000"
+            },
+            {
+              "dst": "G13_linguistic_structure__Token__writer_sample_P0000__007",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0000"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Clause__writer_sample_P0000__000"
+            },
+            {
+              "dst": "G13_linguistic_structure__Token__writer_sample_P0000__008",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0000"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Clause__writer_sample_P0000__000"
+            },
+            {
+              "dst": "G13_linguistic_structure__Token__writer_sample_P0000__009",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0000"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Clause__writer_sample_P0000__000"
+            },
+            {
+              "dst": "G13_linguistic_structure__Token__writer_sample_P0000__010",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0000"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Clause__writer_sample_P0000__000"
+            },
+            {
+              "dst": "G13_linguistic_structure__Token__writer_sample_P0000__011",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0000"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Clause__writer_sample_P0000__000"
+            },
+            {
+              "dst": "G13_linguistic_structure__Token__writer_sample_P0000__012",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0000"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Clause__writer_sample_P0000__000"
+            },
+            {
+              "dst": "G13_linguistic_structure__Sentence__writer_sample_P0000__001",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0000"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__DocumentSpan__writer_sample_P0000__000"
+            },
+            {
+              "dst": "G13_linguistic_structure__Clause__writer_sample_P0000__001",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0000"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Sentence__writer_sample_P0000__001"
+            },
+            {
+              "dst": "G13_linguistic_structure__Token__writer_sample_P0000__013",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0000"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Clause__writer_sample_P0000__001"
+            },
+            {
+              "dst": "G13_linguistic_structure__Token__writer_sample_P0000__014",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0000"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Clause__writer_sample_P0000__001"
+            },
+            {
+              "dst": "G13_linguistic_structure__Token__writer_sample_P0000__015",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0000"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Clause__writer_sample_P0000__001"
+            },
+            {
+              "dst": "G13_linguistic_structure__Token__writer_sample_P0000__016",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0000"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Clause__writer_sample_P0000__001"
+            },
+            {
+              "dst": "G13_linguistic_structure__Token__writer_sample_P0000__017",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0000"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Clause__writer_sample_P0000__001"
+            },
+            {
+              "dst": "G13_linguistic_structure__Token__writer_sample_P0000__018",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0000"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Clause__writer_sample_P0000__001"
+            },
+            {
+              "dst": "G13_linguistic_structure__Token__writer_sample_P0000__019",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0000"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Clause__writer_sample_P0000__001"
+            },
+            {
+              "dst": "G13_linguistic_structure__Token__writer_sample_P0000__020",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0000"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Clause__writer_sample_P0000__001"
+            },
+            {
+              "dst": "G13_linguistic_structure__Token__writer_sample_P0000__021",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0000"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Clause__writer_sample_P0000__001"
+            },
+            {
+              "dst": "G13_linguistic_structure__Token__writer_sample_P0000__022",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0000"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Clause__writer_sample_P0000__001"
+            },
+            {
+              "dst": "G13_linguistic_structure__Token__writer_sample_P0000__023",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0000"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Clause__writer_sample_P0000__001"
+            },
+            {
+              "dst": "G13_linguistic_structure__Sentence__writer_sample_P0000__002",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0000"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__DocumentSpan__writer_sample_P0000__000"
+            },
+            {
+              "dst": "G13_linguistic_structure__Clause__writer_sample_P0000__002",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0000"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Sentence__writer_sample_P0000__002"
+            },
+            {
+              "dst": "G13_linguistic_structure__Token__writer_sample_P0000__024",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0000"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Clause__writer_sample_P0000__002"
+            },
+            {
+              "dst": "G13_linguistic_structure__Token__writer_sample_P0000__025",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0000"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Clause__writer_sample_P0000__002"
+            },
+            {
+              "dst": "G13_linguistic_structure__Token__writer_sample_P0000__026",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0000"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Clause__writer_sample_P0000__002"
+            },
+            {
+              "dst": "G13_linguistic_structure__Token__writer_sample_P0000__027",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0000"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Clause__writer_sample_P0000__002"
+            },
+            {
+              "dst": "G13_linguistic_structure__Token__writer_sample_P0000__028",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0000"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Clause__writer_sample_P0000__002"
+            },
+            {
+              "dst": "G13_linguistic_structure__Token__writer_sample_P0000__029",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0000"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Clause__writer_sample_P0000__002"
+            },
+            {
+              "dst": "G13_linguistic_structure__Token__writer_sample_P0000__030",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0000"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Clause__writer_sample_P0000__002"
+            },
+            {
+              "dst": "G13_linguistic_structure__Token__writer_sample_P0000__031",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0000"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Clause__writer_sample_P0000__002"
+            },
+            {
+              "dst": "G13_linguistic_structure__Token__writer_sample_P0000__032",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0000"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Clause__writer_sample_P0000__002"
+            },
+            {
+              "dst": "G13_linguistic_structure__Token__writer_sample_P0000__033",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0000"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Clause__writer_sample_P0000__002"
+            },
+            {
+              "dst": "G13_linguistic_structure__Token__writer_sample_P0000__034",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0000"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Clause__writer_sample_P0000__002"
+            },
+            {
+              "dst": "G13_linguistic_structure__Token__writer_sample_P0000__035",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0000"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Clause__writer_sample_P0000__002"
+            }
+          ],
+          "nodes": [
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__DocumentSpan__writer_sample_P0000__000",
+              "props": {
+                "end": 262,
+                "para": "writer_sample_P0000",
+                "start": 0,
+                "text": "Изменение параметра решётки в системе Ce1-xZrxO2 связано преимущественно\nс изменением состава твёрдого раствора. Согласно правилу Вегарда, параметр a\nлинейно зависит от мольной доли компонентов. Для x"
+              },
+              "type": "DocumentSpan"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Sentence__writer_sample_P0000__000",
+              "props": {
+                "end": 112,
+                "index": 0,
+                "para": "writer_sample_P0000",
+                "start": 0,
+                "text": "Изменение параметра решётки в системе Ce1-xZrxO2 связано преимущественно с изменением состава твёрдого раствора."
+              },
+              "type": "Sentence"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Clause__writer_sample_P0000__000",
+              "props": {
+                "end": 112,
+                "index": 0,
+                "para": "writer_sample_P0000",
+                "start": 0,
+                "text": "Изменение параметра решётки в системе Ce1-xZrxO2 связано преимущественно с изменением состава твёрдого раствора."
+              },
+              "type": "Clause"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Token__writer_sample_P0000__000",
+              "props": {
+                "end": 9,
+                "para": "writer_sample_P0000",
+                "pos": 0,
+                "start": 0,
+                "text": "Изменение"
+              },
+              "type": "Token"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Token__writer_sample_P0000__001",
+              "props": {
+                "end": 19,
+                "para": "writer_sample_P0000",
+                "pos": 1,
+                "start": 10,
+                "text": "параметра"
+              },
+              "type": "Token"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Token__writer_sample_P0000__002",
+              "props": {
+                "end": 27,
+                "para": "writer_sample_P0000",
+                "pos": 2,
+                "start": 20,
+                "text": "решётки"
+              },
+              "type": "Token"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Token__writer_sample_P0000__003",
+              "props": {
+                "end": 29,
+                "para": "writer_sample_P0000",
+                "pos": 3,
+                "start": 28,
+                "text": "в"
+              },
+              "type": "Token"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Token__writer_sample_P0000__004",
+              "props": {
+                "end": 37,
+                "para": "writer_sample_P0000",
+                "pos": 4,
+                "start": 30,
+                "text": "системе"
+              },
+              "type": "Token"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Token__writer_sample_P0000__005",
+              "props": {
+                "end": 48,
+                "para": "writer_sample_P0000",
+                "pos": 5,
+                "start": 38,
+                "text": "Ce1-xZrxO2"
+              },
+              "type": "Token"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Token__writer_sample_P0000__006",
+              "props": {
+                "end": 56,
+                "para": "writer_sample_P0000",
+                "pos": 6,
+                "start": 49,
+                "text": "связано"
+              },
+              "type": "Token"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Token__writer_sample_P0000__007",
+              "props": {
+                "end": 72,
+                "para": "writer_sample_P0000",
+                "pos": 7,
+                "start": 57,
+                "text": "преимущественно"
+              },
+              "type": "Token"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Token__writer_sample_P0000__008",
+              "props": {
+                "end": 74,
+                "para": "writer_sample_P0000",
+                "pos": 8,
+                "start": 73,
+                "text": "с"
+              },
+              "type": "Token"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Token__writer_sample_P0000__009",
+              "props": {
+                "end": 85,
+                "para": "writer_sample_P0000",
+                "pos": 9,
+                "start": 75,
+                "text": "изменением"
+              },
+              "type": "Token"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Token__writer_sample_P0000__010",
+              "props": {
+                "end": 93,
+                "para": "writer_sample_P0000",
+                "pos": 10,
+                "start": 86,
+                "text": "состава"
+              },
+              "type": "Token"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Token__writer_sample_P0000__011",
+              "props": {
+                "end": 102,
+                "para": "writer_sample_P0000",
+                "pos": 11,
+                "start": 94,
+                "text": "твёрдого"
+              },
+              "type": "Token"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Token__writer_sample_P0000__012",
+              "props": {
+                "end": 112,
+                "para": "writer_sample_P0000",
+                "pos": 12,
+                "start": 103,
+                "text": "раствора."
+              },
+              "type": "Token"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Sentence__writer_sample_P0000__001",
+              "props": {
+                "end": 193,
+                "index": 1,
+                "para": "writer_sample_P0000",
+                "start": 112,
+                "text": "Согласно правилу Вегарда, параметр a линейно зависит от мольной доли компонентов."
+              },
+              "type": "Sentence"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Clause__writer_sample_P0000__001",
+              "props": {
+                "end": 193,
+                "index": 0,
+                "para": "writer_sample_P0000",
+                "start": 112,
+                "text": "Согласно правилу Вегарда, параметр a линейно зависит от мольной доли компонентов."
+              },
+              "type": "Clause"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Token__writer_sample_P0000__013",
+              "props": {
+                "end": 120,
+                "para": "writer_sample_P0000",
+                "pos": 0,
+                "start": 112,
+                "text": "Согласно"
+              },
+              "type": "Token"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Token__writer_sample_P0000__014",
+              "props": {
+                "end": 128,
+                "para": "writer_sample_P0000",
+                "pos": 1,
+                "start": 121,
+                "text": "правилу"
+              },
+              "type": "Token"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Token__writer_sample_P0000__015",
+              "props": {
+                "end": 137,
+                "para": "writer_sample_P0000",
+                "pos": 2,
+                "start": 129,
+                "text": "Вегарда,"
+              },
+              "type": "Token"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Token__writer_sample_P0000__016",
+              "props": {
+                "end": 146,
+                "para": "writer_sample_P0000",
+                "pos": 3,
+                "start": 138,
+                "text": "параметр"
+              },
+              "type": "Token"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Token__writer_sample_P0000__017",
+              "props": {
+                "end": 148,
+                "para": "writer_sample_P0000",
+                "pos": 4,
+                "start": 147,
+                "text": "a"
+              },
+              "type": "Token"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Token__writer_sample_P0000__018",
+              "props": {
+                "end": 156,
+                "para": "writer_sample_P0000",
+                "pos": 5,
+                "start": 149,
+                "text": "линейно"
+              },
+              "type": "Token"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Token__writer_sample_P0000__019",
+              "props": {
+                "end": 164,
+                "para": "writer_sample_P0000",
+                "pos": 6,
+                "start": 157,
+                "text": "зависит"
+              },
+              "type": "Token"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Token__writer_sample_P0000__020",
+              "props": {
+                "end": 167,
+                "para": "writer_sample_P0000",
+                "pos": 7,
+                "start": 165,
+                "text": "от"
+              },
+              "type": "Token"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Token__writer_sample_P0000__021",
+              "props": {
+                "end": 175,
+                "para": "writer_sample_P0000",
+                "pos": 8,
+                "start": 168,
+                "text": "мольной"
+              },
+              "type": "Token"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Token__writer_sample_P0000__022",
+              "props": {
+                "end": 180,
+                "para": "writer_sample_P0000",
+                "pos": 9,
+                "start": 176,
+                "text": "доли"
+              },
+              "type": "Token"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Token__writer_sample_P0000__023",
+              "props": {
+                "end": 193,
+                "para": "writer_sample_P0000",
+                "pos": 10,
+                "start": 181,
+                "text": "компонентов."
+              },
+              "type": "Token"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Sentence__writer_sample_P0000__002",
+              "props": {
+                "end": 260,
+                "index": 2,
+                "para": "writer_sample_P0000",
+                "start": 193,
+                "text": "Для x=0.5 расчёт даёт a≈5.27 А при a(CeO2)=5.41 А и a(ZrO2)=5.13 А."
+              },
+              "type": "Sentence"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Clause__writer_sample_P0000__002",
+              "props": {
+                "end": 260,
+                "index": 0,
+                "para": "writer_sample_P0000",
+                "start": 193,
+                "text": "Для x=0.5 расчёт даёт a≈5.27 А при a(CeO2)=5.41 А и a(ZrO2)=5.13 А."
+              },
+              "type": "Clause"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Token__writer_sample_P0000__024",
+              "props": {
+                "end": 196,
+                "para": "writer_sample_P0000",
+                "pos": 0,
+                "start": 193,
+                "text": "Для"
+              },
+              "type": "Token"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Token__writer_sample_P0000__025",
+              "props": {
+                "end": 202,
+                "para": "writer_sample_P0000",
+                "pos": 1,
+                "start": 197,
+                "text": "x=0.5"
+              },
+              "type": "Token"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Token__writer_sample_P0000__026",
+              "props": {
+                "end": 209,
+                "para": "writer_sample_P0000",
+                "pos": 2,
+                "start": 203,
+                "text": "расчёт"
+              },
+              "type": "Token"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Token__writer_sample_P0000__027",
+              "props": {
+                "end": 214,
+                "para": "writer_sample_P0000",
+                "pos": 3,
+                "start": 210,
+                "text": "даёт"
+              },
+              "type": "Token"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Token__writer_sample_P0000__028",
+              "props": {
+                "end": 221,
+                "para": "writer_sample_P0000",
+                "pos": 4,
+                "start": 215,
+                "text": "a≈5.27"
+              },
+              "type": "Token"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Token__writer_sample_P0000__029",
+              "props": {
+                "end": 223,
+                "para": "writer_sample_P0000",
+                "pos": 5,
+                "start": 222,
+                "text": "А"
+              },
+              "type": "Token"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Token__writer_sample_P0000__030",
+              "props": {
+                "end": 227,
+                "para": "writer_sample_P0000",
+                "pos": 6,
+                "start": 224,
+                "text": "при"
+              },
+              "type": "Token"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Token__writer_sample_P0000__031",
+              "props": {
+                "end": 240,
+                "para": "writer_sample_P0000",
+                "pos": 7,
+                "start": 228,
+                "text": "a(CeO2)=5.41"
+              },
+              "type": "Token"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Token__writer_sample_P0000__032",
+              "props": {
+                "end": 242,
+                "para": "writer_sample_P0000",
+                "pos": 8,
+                "start": 241,
+                "text": "А"
+              },
+              "type": "Token"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Token__writer_sample_P0000__033",
+              "props": {
+                "end": 244,
+                "para": "writer_sample_P0000",
+                "pos": 9,
+                "start": 243,
+                "text": "и"
+              },
+              "type": "Token"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Token__writer_sample_P0000__034",
+              "props": {
+                "end": 257,
+                "para": "writer_sample_P0000",
+                "pos": 10,
+                "start": 245,
+                "text": "a(ZrO2)=5.13"
+              },
+              "type": "Token"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Token__writer_sample_P0000__035",
+              "props": {
+                "end": 260,
+                "para": "writer_sample_P0000",
+                "pos": 11,
+                "start": 258,
+                "text": "А."
+              },
+              "type": "Token"
+            }
+          ]
+        },
+        "G14_cohesion_information_flow": {
+          "edges": [],
+          "nodes": [
+            {
+              "graph": "G14_cohesion_information_flow",
+              "id": "G14_cohesion_information_flow__Theme__writer_sample_P0000__000",
+              "props": {
+                "para": "writer_sample_P0000",
+                "text": "Изменение параметра решётки в системе Ce1-xZrxO2 связано преимущественно с изменением состава твёрдого раствора."
+              },
+              "type": "Theme"
+            }
+          ]
+        },
+        "G15_pragmatic_rhetorical": {
+          "edges": [
+            {
+              "dst": "G15_pragmatic_rhetorical__RhetoricalMove__writer_sample_P0000__000",
+              "graph": "G15_pragmatic_rhetorical",
+              "props": {
+                "para": "writer_sample_P0000"
+              },
+              "relation": "INTERPRETS",
+              "src": "G15_pragmatic_rhetorical__RhetoricalMove__writer_sample_P0000__000"
+            },
+            {
+              "dst": "G15_pragmatic_rhetorical__RhetoricalMove__writer_sample_P0000__000",
+              "graph": "G15_pragmatic_rhetorical",
+              "props": {
+                "para": "writer_sample_P0000"
+              },
+              "relation": "INTERPRETS",
+              "src": "G15_pragmatic_rhetorical__RhetoricalMove__writer_sample_P0000__001"
+            }
+          ],
+          "nodes": [
+            {
+              "graph": "G15_pragmatic_rhetorical",
+              "id": "G15_pragmatic_rhetorical__RhetoricalMove__writer_sample_P0000__000",
+              "props": {
+                "para": "writer_sample_P0000",
+                "part": "evidence",
+                "text": "Согласно правилу Вегарда, параметр a линейно зависит от мольной доли компонентов"
+              },
+              "type": "RhetoricalMove"
+            },
+            {
+              "graph": "G15_pragmatic_rhetorical",
+              "id": "G15_pragmatic_rhetorical__RhetoricalMove__writer_sample_P0000__001",
+              "props": {
+                "para": "writer_sample_P0000",
+                "part": "evidence",
+                "text": "Для x=0.5 расчёт даёт a≈5.27 А при a(CeO2)=5.41 А и a(ZrO2)=5.13 А."
+              },
+              "type": "RhetoricalMove"
+            },
+            {
+              "graph": "G15_pragmatic_rhetorical",
+              "id": "G15_pragmatic_rhetorical__CommunicativeAct__writer_sample_P0000__000",
+              "props": {
+                "act": "assert",
+                "claim": 0,
+                "end": 112,
+                "para": "writer_sample_P0000",
+                "start": 0,
+                "text": "Изменение параметра решётки в системе Ce1-xZrxO2 связано преимущественно с изменением состава твёрдого раствора."
+              },
+              "type": "CommunicativeAct"
+            }
+          ]
+        },
+        "G3_discourse": {
+          "edges": [],
+          "nodes": [
+            {
+              "graph": "G3_discourse",
+              "id": "G3_discourse__ParagraphIntent__writer_sample_P0000__000",
+              "props": {
+                "intent": "expository",
+                "para": "writer_sample_P0000",
+                "source": "digest"
+              },
+              "type": "ParagraphIntent"
+            },
+            {
+              "graph": "G3_discourse",
+              "id": "G3_discourse__TopicFocus__writer_sample_P0000__000",
+              "props": {
+                "para": "writer_sample_P0000",
+                "text": "Изменение параметра решётки в системе Ce1-xZrxO2 связано преимущественно с изменением состава твёрдого раствора."
+              },
+              "type": "TopicFocus"
+            }
+          ]
+        },
+        "G4_argument": {
+          "edges": [
+            {
+              "dst": "G4_argument__BackingRef__writer_sample_P0000__000",
+              "graph": "G4_argument",
+              "props": {
+                "para": "writer_sample_P0000"
+              },
+              "relation": "USES_AS_BACKING",
+              "src": "G4_argument__ArgumentInstance__writer_sample_P0000__000"
+            },
+            {
+              "dst": "G4_argument__BackingRef__writer_sample_P0000__001",
+              "graph": "G4_argument",
+              "props": {
+                "para": "writer_sample_P0000"
+              },
+              "relation": "USES_AS_BACKING",
+              "src": "G4_argument__ArgumentInstance__writer_sample_P0000__000"
+            }
+          ],
+          "nodes": [
+            {
+              "graph": "G4_argument",
+              "id": "G4_argument__ArgumentInstance__writer_sample_P0000__000",
+              "props": {
+                "para": "writer_sample_P0000",
+                "role": "Toulmin",
+                "text": "Изменение параметра решётки в системе Ce1-xZrxO2 связано преимущественно с изменением состава твёрдого раствора."
+              },
+              "type": "ArgumentInstance"
+            },
+            {
+              "graph": "G4_argument",
+              "id": "G4_argument__BackingRef__writer_sample_P0000__000",
+              "props": {
+                "para": "writer_sample_P0000",
+                "role": "evidence",
+                "text": "Согласно правилу Вегарда, параметр a линейно зависит от мольной доли компонентов"
+              },
+              "type": "BackingRef"
+            },
+            {
+              "graph": "G4_argument",
+              "id": "G4_argument__BackingRef__writer_sample_P0000__001",
+              "props": {
+                "para": "writer_sample_P0000",
+                "role": "evidence",
+                "text": "Для x=0.5 расчёт даёт a≈5.27 А при a(CeO2)=5.41 А и a(ZrO2)=5.13 А."
+              },
+              "type": "BackingRef"
+            }
+          ]
+        },
+        "G5_epistemic_projection": {
+          "edges": [
+            {
+              "dst": "G5_epistemic_projection__ScopeRef__writer_sample_P0000__000",
+              "graph": "G5_epistemic_projection",
+              "props": {
+                "para": "writer_sample_P0000"
+              },
+              "relation": "APPLIES_WITHIN",
+              "src": "G5_epistemic_projection__ClaimRef__writer_sample_P0000__000"
+            }
+          ],
+          "nodes": [
+            {
+              "graph": "G5_epistemic_projection",
+              "id": "G5_epistemic_projection__ClaimRef__writer_sample_P0000__000",
+              "props": {
+                "end": 112,
+                "kind": "OBSERVATIONAL",
+                "para": "writer_sample_P0000",
+                "qa_status": "GROUNDED",
+                "role": "факт",
+                "start": 0,
+                "strength": null,
+                "text": "Изменение параметра решётки в системе Ce1-xZrxO2 связано преимущественно с изменением состава твёрдого раствора."
+              },
+              "type": "ClaimRef"
+            },
+            {
+              "graph": "G5_epistemic_projection",
+              "id": "G5_epistemic_projection__ScopeRef__writer_sample_P0000__000",
+              "props": {
+                "para": "writer_sample_P0000",
+                "restricted": false,
+                "scope": {
+                  "restricted": false
+                }
+              },
+              "type": "ScopeRef"
+            }
+          ]
+        },
+        "G6_artifact_symbol": {
+          "edges": [],
+          "nodes": [
+            {
+              "graph": "G6_artifact_symbol",
+              "id": "G6_artifact_symbol__Formula__writer_sample_P0000__000",
+              "props": {
+                "class": "B_chemical",
+                "end": 236,
+                "para": "writer_sample_P0000",
+                "raw": "CeO2",
+                "start": 232
+              },
+              "type": "Formula"
+            },
+            {
+              "graph": "G6_artifact_symbol",
+              "id": "G6_artifact_symbol__Formula__writer_sample_P0000__001",
+              "props": {
+                "class": "B_chemical",
+                "end": 253,
+                "para": "writer_sample_P0000",
+                "raw": "ZrO2",
+                "start": 249
+              },
+              "type": "Formula"
+            }
+          ]
+        }
+      },
+      "paragraph_id": "writer_sample_P0000",
+      "skipped": [
+        {
+          "graph": "G10_execution",
+          "in_registry": true,
+          "reason": "event log: нет Run/Operation данных в артефакте"
+        },
+        {
+          "graph": "G10_vocabulary",
+          "in_registry": false,
+          "reason": "отсутствует в реестре v0.3 (реестр определяет G10_execution); Term/Definition строятся в G6_artifact_symbol"
+        },
+        {
+          "graph": "G11_forensics_fingerprint",
+          "in_registry": true,
+          "reason": "корпус/автор-уровень: нет AuthorProfile/verdict в артефакте параграфа"
+        },
+        {
+          "graph": "G12_work_lineage",
+          "in_registry": true,
+          "reason": "генеалогия работ: нет Work/Edition/перевод-связей в артефакте"
+        },
+        {
+          "graph": "G16_linguistic_memory",
+          "in_registry": true,
+          "reason": "session/corpus learning: нет данных в артефакте параграфа"
+        },
+        {
+          "graph": "G1_document_structure",
+          "in_registry": true,
+          "reason": "doc-level: paragraph artifact не содержит дерева документа"
+        },
+        {
+          "graph": "G2_writing_decomposition",
+          "in_registry": true,
+          "reason": "planning-level: нет WritingObjective/Goal в артефакте параграфа"
+        },
+        {
+          "graph": "G7_citation_provenance",
+          "in_registry": true,
+          "reason": "нет citation-маркеров (CitationMarker/ArtifactRef) в гибридном артефакте"
+        },
+        {
+          "graph": "G8_policy_constraint",
+          "in_registry": true,
+          "reason": "static policy registry: нет политик в артефакте параграфа"
+        },
+        {
+          "graph": "G9_revision_dependency",
+          "in_registry": true,
+          "reason": "нет revision/review данных на уровне параграфа"
+        }
+      ]
+    },
+    "writer_sample_P0001": {
+      "built": 7,
+      "graphs": {
+        "G13_linguistic_structure": {
+          "edges": [
+            {
+              "dst": "G13_linguistic_structure__Sentence__writer_sample_P0001__000",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0001"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__DocumentSpan__writer_sample_P0001__000"
+            },
+            {
+              "dst": "G13_linguistic_structure__Clause__writer_sample_P0001__000",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0001"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Sentence__writer_sample_P0001__000"
+            },
+            {
+              "dst": "G13_linguistic_structure__Token__writer_sample_P0001__000",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0001"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Clause__writer_sample_P0001__000"
+            },
+            {
+              "dst": "G13_linguistic_structure__Token__writer_sample_P0001__001",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0001"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Clause__writer_sample_P0001__000"
+            },
+            {
+              "dst": "G13_linguistic_structure__Token__writer_sample_P0001__002",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0001"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Clause__writer_sample_P0001__000"
+            },
+            {
+              "dst": "G13_linguistic_structure__Token__writer_sample_P0001__003",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0001"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Clause__writer_sample_P0001__000"
+            },
+            {
+              "dst": "G13_linguistic_structure__Token__writer_sample_P0001__004",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0001"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Clause__writer_sample_P0001__000"
+            },
+            {
+              "dst": "G13_linguistic_structure__Token__writer_sample_P0001__005",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0001"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Clause__writer_sample_P0001__000"
+            },
+            {
+              "dst": "G13_linguistic_structure__Token__writer_sample_P0001__006",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0001"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Clause__writer_sample_P0001__000"
+            },
+            {
+              "dst": "G13_linguistic_structure__Token__writer_sample_P0001__007",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0001"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Clause__writer_sample_P0001__000"
+            },
+            {
+              "dst": "G13_linguistic_structure__Token__writer_sample_P0001__008",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0001"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Clause__writer_sample_P0001__000"
+            },
+            {
+              "dst": "G13_linguistic_structure__Token__writer_sample_P0001__009",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0001"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Clause__writer_sample_P0001__000"
+            },
+            {
+              "dst": "G13_linguistic_structure__Token__writer_sample_P0001__010",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0001"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Clause__writer_sample_P0001__000"
+            },
+            {
+              "dst": "G13_linguistic_structure__Token__writer_sample_P0001__011",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0001"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Clause__writer_sample_P0001__000"
+            },
+            {
+              "dst": "G13_linguistic_structure__Sentence__writer_sample_P0001__001",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0001"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__DocumentSpan__writer_sample_P0001__000"
+            },
+            {
+              "dst": "G13_linguistic_structure__Clause__writer_sample_P0001__001",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0001"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Sentence__writer_sample_P0001__001"
+            },
+            {
+              "dst": "G13_linguistic_structure__Token__writer_sample_P0001__012",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0001"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Clause__writer_sample_P0001__001"
+            },
+            {
+              "dst": "G13_linguistic_structure__Token__writer_sample_P0001__013",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0001"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Clause__writer_sample_P0001__001"
+            },
+            {
+              "dst": "G13_linguistic_structure__Token__writer_sample_P0001__014",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0001"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Clause__writer_sample_P0001__001"
+            },
+            {
+              "dst": "G13_linguistic_structure__Token__writer_sample_P0001__015",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0001"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Clause__writer_sample_P0001__001"
+            },
+            {
+              "dst": "G13_linguistic_structure__Token__writer_sample_P0001__016",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0001"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Clause__writer_sample_P0001__001"
+            },
+            {
+              "dst": "G13_linguistic_structure__Token__writer_sample_P0001__017",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0001"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Clause__writer_sample_P0001__001"
+            },
+            {
+              "dst": "G13_linguistic_structure__Token__writer_sample_P0001__018",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0001"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Clause__writer_sample_P0001__001"
+            },
+            {
+              "dst": "G13_linguistic_structure__Sentence__writer_sample_P0001__002",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0001"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__DocumentSpan__writer_sample_P0001__000"
+            },
+            {
+              "dst": "G13_linguistic_structure__Clause__writer_sample_P0001__002",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0001"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Sentence__writer_sample_P0001__002"
+            },
+            {
+              "dst": "G13_linguistic_structure__Token__writer_sample_P0001__019",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0001"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Clause__writer_sample_P0001__002"
+            },
+            {
+              "dst": "G13_linguistic_structure__Token__writer_sample_P0001__020",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0001"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Clause__writer_sample_P0001__002"
+            },
+            {
+              "dst": "G13_linguistic_structure__Token__writer_sample_P0001__021",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0001"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Clause__writer_sample_P0001__002"
+            },
+            {
+              "dst": "G13_linguistic_structure__Token__writer_sample_P0001__022",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0001"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Clause__writer_sample_P0001__002"
+            },
+            {
+              "dst": "G13_linguistic_structure__Token__writer_sample_P0001__023",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0001"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Clause__writer_sample_P0001__002"
+            }
+          ],
+          "nodes": [
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__DocumentSpan__writer_sample_P0001__000",
+              "props": {
+                "end": 154,
+                "para": "writer_sample_P0001",
+                "start": 0,
+                "text": "Мы показали, что соединение A ингибирует канал hERG при концентрации 10 мкМ.\nАвторы сообщают IC50 = 8.2 мкМ (n=3). Это согласуется с предыдущими работами."
+              },
+              "type": "DocumentSpan"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Sentence__writer_sample_P0001__000",
+              "props": {
+                "end": 76,
+                "index": 0,
+                "para": "writer_sample_P0001",
+                "start": 0,
+                "text": "Мы показали, что соединение A ингибирует канал hERG при концентрации 10 мкМ."
+              },
+              "type": "Sentence"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Clause__writer_sample_P0001__000",
+              "props": {
+                "end": 76,
+                "index": 0,
+                "para": "writer_sample_P0001",
+                "start": 0,
+                "text": "Мы показали, что соединение A ингибирует канал hERG при концентрации 10 мкМ."
+              },
+              "type": "Clause"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Token__writer_sample_P0001__000",
+              "props": {
+                "end": 2,
+                "para": "writer_sample_P0001",
+                "pos": 0,
+                "start": 0,
+                "text": "Мы"
+              },
+              "type": "Token"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Token__writer_sample_P0001__001",
+              "props": {
+                "end": 12,
+                "para": "writer_sample_P0001",
+                "pos": 1,
+                "start": 3,
+                "text": "показали,"
+              },
+              "type": "Token"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Token__writer_sample_P0001__002",
+              "props": {
+                "end": 16,
+                "para": "writer_sample_P0001",
+                "pos": 2,
+                "start": 13,
+                "text": "что"
+              },
+              "type": "Token"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Token__writer_sample_P0001__003",
+              "props": {
+                "end": 27,
+                "para": "writer_sample_P0001",
+                "pos": 3,
+                "start": 17,
+                "text": "соединение"
+              },
+              "type": "Token"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Token__writer_sample_P0001__004",
+              "props": {
+                "end": 29,
+                "para": "writer_sample_P0001",
+                "pos": 4,
+                "start": 28,
+                "text": "A"
+              },
+              "type": "Token"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Token__writer_sample_P0001__005",
+              "props": {
+                "end": 40,
+                "para": "writer_sample_P0001",
+                "pos": 5,
+                "start": 30,
+                "text": "ингибирует"
+              },
+              "type": "Token"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Token__writer_sample_P0001__006",
+              "props": {
+                "end": 46,
+                "para": "writer_sample_P0001",
+                "pos": 6,
+                "start": 41,
+                "text": "канал"
+              },
+              "type": "Token"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Token__writer_sample_P0001__007",
+              "props": {
+                "end": 51,
+                "para": "writer_sample_P0001",
+                "pos": 7,
+                "start": 47,
+                "text": "hERG"
+              },
+              "type": "Token"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Token__writer_sample_P0001__008",
+              "props": {
+                "end": 55,
+                "para": "writer_sample_P0001",
+                "pos": 8,
+                "start": 52,
+                "text": "при"
+              },
+              "type": "Token"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Token__writer_sample_P0001__009",
+              "props": {
+                "end": 68,
+                "para": "writer_sample_P0001",
+                "pos": 9,
+                "start": 56,
+                "text": "концентрации"
+              },
+              "type": "Token"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Token__writer_sample_P0001__010",
+              "props": {
+                "end": 71,
+                "para": "writer_sample_P0001",
+                "pos": 10,
+                "start": 69,
+                "text": "10"
+              },
+              "type": "Token"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Token__writer_sample_P0001__011",
+              "props": {
+                "end": 76,
+                "para": "writer_sample_P0001",
+                "pos": 11,
+                "start": 72,
+                "text": "мкМ."
+              },
+              "type": "Token"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Sentence__writer_sample_P0001__001",
+              "props": {
+                "end": 114,
+                "index": 1,
+                "para": "writer_sample_P0001",
+                "start": 77,
+                "text": "Авторы сообщают IC50 = 8.2 мкМ (n=3)."
+              },
+              "type": "Sentence"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Clause__writer_sample_P0001__001",
+              "props": {
+                "end": 114,
+                "index": 0,
+                "para": "writer_sample_P0001",
+                "start": 77,
+                "text": "Авторы сообщают IC50 = 8.2 мкМ (n=3)."
+              },
+              "type": "Clause"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Token__writer_sample_P0001__012",
+              "props": {
+                "end": 83,
+                "para": "writer_sample_P0001",
+                "pos": 0,
+                "start": 77,
+                "text": "Авторы"
+              },
+              "type": "Token"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Token__writer_sample_P0001__013",
+              "props": {
+                "end": 92,
+                "para": "writer_sample_P0001",
+                "pos": 1,
+                "start": 84,
+                "text": "сообщают"
+              },
+              "type": "Token"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Token__writer_sample_P0001__014",
+              "props": {
+                "end": 97,
+                "para": "writer_sample_P0001",
+                "pos": 2,
+                "start": 93,
+                "text": "IC50"
+              },
+              "type": "Token"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Token__writer_sample_P0001__015",
+              "props": {
+                "end": 99,
+                "para": "writer_sample_P0001",
+                "pos": 3,
+                "start": 98,
+                "text": "="
+              },
+              "type": "Token"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Token__writer_sample_P0001__016",
+              "props": {
+                "end": 103,
+                "para": "writer_sample_P0001",
+                "pos": 4,
+                "start": 100,
+                "text": "8.2"
+              },
+              "type": "Token"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Token__writer_sample_P0001__017",
+              "props": {
+                "end": 107,
+                "para": "writer_sample_P0001",
+                "pos": 5,
+                "start": 104,
+                "text": "мкМ"
+              },
+              "type": "Token"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Token__writer_sample_P0001__018",
+              "props": {
+                "end": 114,
+                "para": "writer_sample_P0001",
+                "pos": 6,
+                "start": 108,
+                "text": "(n=3)."
+              },
+              "type": "Token"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Sentence__writer_sample_P0001__002",
+              "props": {
+                "end": 154,
+                "index": 2,
+                "para": "writer_sample_P0001",
+                "start": 115,
+                "text": "Это согласуется с предыдущими работами."
+              },
+              "type": "Sentence"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Clause__writer_sample_P0001__002",
+              "props": {
+                "end": 154,
+                "index": 0,
+                "para": "writer_sample_P0001",
+                "start": 115,
+                "text": "Это согласуется с предыдущими работами."
+              },
+              "type": "Clause"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Token__writer_sample_P0001__019",
+              "props": {
+                "end": 118,
+                "para": "writer_sample_P0001",
+                "pos": 0,
+                "start": 115,
+                "text": "Это"
+              },
+              "type": "Token"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Token__writer_sample_P0001__020",
+              "props": {
+                "end": 130,
+                "para": "writer_sample_P0001",
+                "pos": 1,
+                "start": 119,
+                "text": "согласуется"
+              },
+              "type": "Token"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Token__writer_sample_P0001__021",
+              "props": {
+                "end": 132,
+                "para": "writer_sample_P0001",
+                "pos": 2,
+                "start": 131,
+                "text": "с"
+              },
+              "type": "Token"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Token__writer_sample_P0001__022",
+              "props": {
+                "end": 144,
+                "para": "writer_sample_P0001",
+                "pos": 3,
+                "start": 133,
+                "text": "предыдущими"
+              },
+              "type": "Token"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Token__writer_sample_P0001__023",
+              "props": {
+                "end": 154,
+                "para": "writer_sample_P0001",
+                "pos": 4,
+                "start": 145,
+                "text": "работами."
+              },
+              "type": "Token"
+            }
+          ]
+        },
+        "G14_cohesion_information_flow": {
+          "edges": [],
+          "nodes": [
+            {
+              "graph": "G14_cohesion_information_flow",
+              "id": "G14_cohesion_information_flow__Theme__writer_sample_P0001__000",
+              "props": {
+                "para": "writer_sample_P0001",
+                "text": "Мы показали, что соединение A ингибирует канал hERG при концентрации 10 мкМ."
+              },
+              "type": "Theme"
+            }
+          ]
+        },
+        "G15_pragmatic_rhetorical": {
+          "edges": [
+            {
+              "dst": "G15_pragmatic_rhetorical__RhetoricalMove__writer_sample_P0001__000",
+              "graph": "G15_pragmatic_rhetorical",
+              "props": {
+                "para": "writer_sample_P0001"
+              },
+              "relation": "INTERPRETS",
+              "src": "G15_pragmatic_rhetorical__RhetoricalMove__writer_sample_P0001__000"
+            }
+          ],
+          "nodes": [
+            {
+              "graph": "G15_pragmatic_rhetorical",
+              "id": "G15_pragmatic_rhetorical__RhetoricalMove__writer_sample_P0001__000",
+              "props": {
+                "para": "writer_sample_P0001",
+                "part": "evidence",
+                "text": "Авторы сообщают IC50 = 8.2 мкМ (n=3)."
+              },
+              "type": "RhetoricalMove"
+            },
+            {
+              "graph": "G15_pragmatic_rhetorical",
+              "id": "G15_pragmatic_rhetorical__CommunicativeAct__writer_sample_P0001__000",
+              "props": {
+                "act": "assert_report",
+                "claim": 0,
+                "end": 76,
+                "para": "writer_sample_P0001",
+                "start": 0,
+                "text": "Мы показали, что соединение A ингибирует канал hERG при концентрации 10 мкМ."
+              },
+              "type": "CommunicativeAct"
+            }
+          ]
+        },
+        "G3_discourse": {
+          "edges": [],
+          "nodes": [
+            {
+              "graph": "G3_discourse",
+              "id": "G3_discourse__ParagraphIntent__writer_sample_P0001__000",
+              "props": {
+                "intent": "expository",
+                "para": "writer_sample_P0001",
+                "source": "digest"
+              },
+              "type": "ParagraphIntent"
+            },
+            {
+              "graph": "G3_discourse",
+              "id": "G3_discourse__TopicFocus__writer_sample_P0001__000",
+              "props": {
+                "para": "writer_sample_P0001",
+                "text": "Мы показали, что соединение A ингибирует канал hERG при концентрации 10 мкМ."
+              },
+              "type": "TopicFocus"
+            }
+          ]
+        },
+        "G4_argument": {
+          "edges": [
+            {
+              "dst": "G4_argument__BackingRef__writer_sample_P0001__000",
+              "graph": "G4_argument",
+              "props": {
+                "para": "writer_sample_P0001"
+              },
+              "relation": "USES_AS_BACKING",
+              "src": "G4_argument__ArgumentInstance__writer_sample_P0001__000"
+            }
+          ],
+          "nodes": [
+            {
+              "graph": "G4_argument",
+              "id": "G4_argument__ArgumentInstance__writer_sample_P0001__000",
+              "props": {
+                "para": "writer_sample_P0001",
+                "role": "Toulmin",
+                "text": "Мы показали, что соединение A ингибирует канал hERG при концентрации 10 мкМ."
+              },
+              "type": "ArgumentInstance"
+            },
+            {
+              "graph": "G4_argument",
+              "id": "G4_argument__BackingRef__writer_sample_P0001__000",
+              "props": {
+                "para": "writer_sample_P0001",
+                "role": "evidence",
+                "text": "Авторы сообщают IC50 = 8.2 мкМ (n=3)."
+              },
+              "type": "BackingRef"
+            }
+          ]
+        },
+        "G5_epistemic_projection": {
+          "edges": [
+            {
+              "dst": "G5_epistemic_projection__ScopeRef__writer_sample_P0001__000",
+              "graph": "G5_epistemic_projection",
+              "props": {
+                "para": "writer_sample_P0001"
+              },
+              "relation": "APPLIES_WITHIN",
+              "src": "G5_epistemic_projection__ClaimRef__writer_sample_P0001__000"
+            }
+          ],
+          "nodes": [
+            {
+              "graph": "G5_epistemic_projection",
+              "id": "G5_epistemic_projection__ClaimRef__writer_sample_P0001__000",
+              "props": {
+                "end": 76,
+                "kind": "OBSERVATIONAL",
+                "para": "writer_sample_P0001",
+                "qa_status": "GROUNDED",
+                "role": "факт",
+                "start": 0,
+                "strength": null,
+                "text": "Мы показали, что соединение A ингибирует канал hERG при концентрации 10 мкМ."
+              },
+              "type": "ClaimRef"
+            },
+            {
+              "graph": "G5_epistemic_projection",
+              "id": "G5_epistemic_projection__ScopeRef__writer_sample_P0001__000",
+              "props": {
+                "para": "writer_sample_P0001",
+                "restricted": false,
+                "scope": {
+                  "numeric_mentions": [
+                    "10 мкМ"
+                  ],
+                  "restricted": false
+                }
+              },
+              "type": "ScopeRef"
+            }
+          ]
+        },
+        "G6_artifact_symbol": {
+          "edges": [
+            {
+              "dst": "G6_artifact_symbol__Unit__writer_sample_P0001__000",
+              "graph": "G6_artifact_symbol",
+              "props": {
+                "para": "writer_sample_P0001",
+                "unit": "мкм"
+              },
+              "relation": "HAS_UNIT",
+              "src": "G6_artifact_symbol__Quantity__writer_sample_P0001__000"
+            },
+            {
+              "dst": "G6_artifact_symbol__Unit__writer_sample_P0001__001",
+              "graph": "G6_artifact_symbol",
+              "props": {
+                "para": "writer_sample_P0001",
+                "unit": "мкм"
+              },
+              "relation": "HAS_UNIT",
+              "src": "G6_artifact_symbol__Quantity__writer_sample_P0001__001"
+            }
+          ],
+          "nodes": [
+            {
+              "graph": "G6_artifact_symbol",
+              "id": "G6_artifact_symbol__Quantity__writer_sample_P0001__000",
+              "props": {
+                "end": 74,
+                "para": "writer_sample_P0001",
+                "raw": "10мкМ",
+                "start": 69,
+                "unit": "мкм",
+                "value_lower": 10.0,
+                "value_upper": 10.0
+              },
+              "type": "Quantity"
+            },
+            {
+              "graph": "G6_artifact_symbol",
+              "id": "G6_artifact_symbol__Unit__writer_sample_P0001__000",
+              "props": {
+                "para": "writer_sample_P0001",
+                "unit": "мкм"
+              },
+              "type": "Unit"
+            },
+            {
+              "graph": "G6_artifact_symbol",
+              "id": "G6_artifact_symbol__Quantity__writer_sample_P0001__001",
+              "props": {
+                "end": 106,
+                "para": "writer_sample_P0001",
+                "raw": "8.2мкМ",
+                "start": 100,
+                "unit": "мкм",
+                "value_lower": 8.2,
+                "value_upper": 8.2
+              },
+              "type": "Quantity"
+            },
+            {
+              "graph": "G6_artifact_symbol",
+              "id": "G6_artifact_symbol__Unit__writer_sample_P0001__001",
+              "props": {
+                "para": "writer_sample_P0001",
+                "unit": "мкм"
+              },
+              "type": "Unit"
+            },
+            {
+              "graph": "G6_artifact_symbol",
+              "id": "G6_artifact_symbol__Formula__writer_sample_P0001__000",
+              "props": {
+                "class": "B_chemical",
+                "end": 97,
+                "para": "writer_sample_P0001",
+                "raw": "IC50",
+                "start": 93
+              },
+              "type": "Formula"
+            }
+          ]
+        }
+      },
+      "paragraph_id": "writer_sample_P0001",
+      "skipped": [
+        {
+          "graph": "G10_execution",
+          "in_registry": true,
+          "reason": "event log: нет Run/Operation данных в артефакте"
+        },
+        {
+          "graph": "G10_vocabulary",
+          "in_registry": false,
+          "reason": "отсутствует в реестре v0.3 (реестр определяет G10_execution); Term/Definition строятся в G6_artifact_symbol"
+        },
+        {
+          "graph": "G11_forensics_fingerprint",
+          "in_registry": true,
+          "reason": "корпус/автор-уровень: нет AuthorProfile/verdict в артефакте параграфа"
+        },
+        {
+          "graph": "G12_work_lineage",
+          "in_registry": true,
+          "reason": "генеалогия работ: нет Work/Edition/перевод-связей в артефакте"
+        },
+        {
+          "graph": "G16_linguistic_memory",
+          "in_registry": true,
+          "reason": "session/corpus learning: нет данных в артефакте параграфа"
+        },
+        {
+          "graph": "G1_document_structure",
+          "in_registry": true,
+          "reason": "doc-level: paragraph artifact не содержит дерева документа"
+        },
+        {
+          "graph": "G2_writing_decomposition",
+          "in_registry": true,
+          "reason": "planning-level: нет WritingObjective/Goal в артефакте параграфа"
+        },
+        {
+          "graph": "G7_citation_provenance",
+          "in_registry": true,
+          "reason": "нет citation-маркеров (CitationMarker/ArtifactRef) в гибридном артефакте"
+        },
+        {
+          "graph": "G8_policy_constraint",
+          "in_registry": true,
+          "reason": "static policy registry: нет политик в артефакте параграфа"
+        },
+        {
+          "graph": "G9_revision_dependency",
+          "in_registry": true,
+          "reason": "нет revision/review данных на уровне параграфа"
+        }
+      ]
+    },
+    "writer_sample_P0002": {
+      "built": 4,
+      "graphs": {
+        "G13_linguistic_structure": {
+          "edges": [
+            {
+              "dst": "G13_linguistic_structure__Sentence__writer_sample_P0002__000",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0002"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__DocumentSpan__writer_sample_P0002__000"
+            },
+            {
+              "dst": "G13_linguistic_structure__Clause__writer_sample_P0002__000",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0002"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Sentence__writer_sample_P0002__000"
+            },
+            {
+              "dst": "G13_linguistic_structure__Token__writer_sample_P0002__000",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0002"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Clause__writer_sample_P0002__000"
+            },
+            {
+              "dst": "G13_linguistic_structure__Token__writer_sample_P0002__001",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0002"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Clause__writer_sample_P0002__000"
+            },
+            {
+              "dst": "G13_linguistic_structure__Token__writer_sample_P0002__002",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0002"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Clause__writer_sample_P0002__000"
+            },
+            {
+              "dst": "G13_linguistic_structure__Token__writer_sample_P0002__003",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0002"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Clause__writer_sample_P0002__000"
+            },
+            {
+              "dst": "G13_linguistic_structure__Token__writer_sample_P0002__004",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0002"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Clause__writer_sample_P0002__000"
+            },
+            {
+              "dst": "G13_linguistic_structure__Token__writer_sample_P0002__005",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0002"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Clause__writer_sample_P0002__000"
+            },
+            {
+              "dst": "G13_linguistic_structure__Token__writer_sample_P0002__006",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0002"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Clause__writer_sample_P0002__000"
+            },
+            {
+              "dst": "G13_linguistic_structure__Sentence__writer_sample_P0002__001",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0002"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__DocumentSpan__writer_sample_P0002__000"
+            },
+            {
+              "dst": "G13_linguistic_structure__Clause__writer_sample_P0002__001",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0002"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Sentence__writer_sample_P0002__001"
+            },
+            {
+              "dst": "G13_linguistic_structure__Token__writer_sample_P0002__007",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0002"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Clause__writer_sample_P0002__001"
+            },
+            {
+              "dst": "G13_linguistic_structure__Token__writer_sample_P0002__008",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0002"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Clause__writer_sample_P0002__001"
+            },
+            {
+              "dst": "G13_linguistic_structure__Token__writer_sample_P0002__009",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0002"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Clause__writer_sample_P0002__001"
+            },
+            {
+              "dst": "G13_linguistic_structure__Token__writer_sample_P0002__010",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0002"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Clause__writer_sample_P0002__001"
+            },
+            {
+              "dst": "G13_linguistic_structure__Token__writer_sample_P0002__011",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0002"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Clause__writer_sample_P0002__001"
+            },
+            {
+              "dst": "G13_linguistic_structure__Token__writer_sample_P0002__012",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0002"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Clause__writer_sample_P0002__001"
+            },
+            {
+              "dst": "G13_linguistic_structure__Token__writer_sample_P0002__013",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0002"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Clause__writer_sample_P0002__001"
+            },
+            {
+              "dst": "G13_linguistic_structure__Token__writer_sample_P0002__014",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0002"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Clause__writer_sample_P0002__001"
+            },
+            {
+              "dst": "G13_linguistic_structure__Token__writer_sample_P0002__015",
+              "graph": "G13_linguistic_structure",
+              "props": {
+                "para": "writer_sample_P0002"
+              },
+              "relation": "HEAD_OF",
+              "src": "G13_linguistic_structure__Clause__writer_sample_P0002__001"
+            }
+          ],
+          "nodes": [
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__DocumentSpan__writer_sample_P0002__000",
+              "props": {
+                "end": 124,
+                "para": "writer_sample_P0002",
+                "start": 0,
+                "text": "Остаточные напряжения смещают дифракционный пик при 2θ≈44.3°.\nСдвиг зависит от метода съёмки и требует отдельной калибровки."
+              },
+              "type": "DocumentSpan"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Sentence__writer_sample_P0002__000",
+              "props": {
+                "end": 61,
+                "index": 0,
+                "para": "writer_sample_P0002",
+                "start": 0,
+                "text": "Остаточные напряжения смещают дифракционный пик при 2θ≈44.3°."
+              },
+              "type": "Sentence"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Clause__writer_sample_P0002__000",
+              "props": {
+                "end": 61,
+                "index": 0,
+                "para": "writer_sample_P0002",
+                "start": 0,
+                "text": "Остаточные напряжения смещают дифракционный пик при 2θ≈44.3°."
+              },
+              "type": "Clause"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Token__writer_sample_P0002__000",
+              "props": {
+                "end": 10,
+                "para": "writer_sample_P0002",
+                "pos": 0,
+                "start": 0,
+                "text": "Остаточные"
+              },
+              "type": "Token"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Token__writer_sample_P0002__001",
+              "props": {
+                "end": 21,
+                "para": "writer_sample_P0002",
+                "pos": 1,
+                "start": 11,
+                "text": "напряжения"
+              },
+              "type": "Token"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Token__writer_sample_P0002__002",
+              "props": {
+                "end": 29,
+                "para": "writer_sample_P0002",
+                "pos": 2,
+                "start": 22,
+                "text": "смещают"
+              },
+              "type": "Token"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Token__writer_sample_P0002__003",
+              "props": {
+                "end": 43,
+                "para": "writer_sample_P0002",
+                "pos": 3,
+                "start": 30,
+                "text": "дифракционный"
+              },
+              "type": "Token"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Token__writer_sample_P0002__004",
+              "props": {
+                "end": 47,
+                "para": "writer_sample_P0002",
+                "pos": 4,
+                "start": 44,
+                "text": "пик"
+              },
+              "type": "Token"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Token__writer_sample_P0002__005",
+              "props": {
+                "end": 51,
+                "para": "writer_sample_P0002",
+                "pos": 5,
+                "start": 48,
+                "text": "при"
+              },
+              "type": "Token"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Token__writer_sample_P0002__006",
+              "props": {
+                "end": 61,
+                "para": "writer_sample_P0002",
+                "pos": 6,
+                "start": 52,
+                "text": "2θ≈44.3°."
+              },
+              "type": "Token"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Sentence__writer_sample_P0002__001",
+              "props": {
+                "end": 124,
+                "index": 1,
+                "para": "writer_sample_P0002",
+                "start": 62,
+                "text": "Сдвиг зависит от метода съёмки и требует отдельной калибровки."
+              },
+              "type": "Sentence"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Clause__writer_sample_P0002__001",
+              "props": {
+                "end": 124,
+                "index": 0,
+                "para": "writer_sample_P0002",
+                "start": 62,
+                "text": "Сдвиг зависит от метода съёмки и требует отдельной калибровки."
+              },
+              "type": "Clause"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Token__writer_sample_P0002__007",
+              "props": {
+                "end": 67,
+                "para": "writer_sample_P0002",
+                "pos": 0,
+                "start": 62,
+                "text": "Сдвиг"
+              },
+              "type": "Token"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Token__writer_sample_P0002__008",
+              "props": {
+                "end": 75,
+                "para": "writer_sample_P0002",
+                "pos": 1,
+                "start": 68,
+                "text": "зависит"
+              },
+              "type": "Token"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Token__writer_sample_P0002__009",
+              "props": {
+                "end": 78,
+                "para": "writer_sample_P0002",
+                "pos": 2,
+                "start": 76,
+                "text": "от"
+              },
+              "type": "Token"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Token__writer_sample_P0002__010",
+              "props": {
+                "end": 85,
+                "para": "writer_sample_P0002",
+                "pos": 3,
+                "start": 79,
+                "text": "метода"
+              },
+              "type": "Token"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Token__writer_sample_P0002__011",
+              "props": {
+                "end": 92,
+                "para": "writer_sample_P0002",
+                "pos": 4,
+                "start": 86,
+                "text": "съёмки"
+              },
+              "type": "Token"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Token__writer_sample_P0002__012",
+              "props": {
+                "end": 94,
+                "para": "writer_sample_P0002",
+                "pos": 5,
+                "start": 93,
+                "text": "и"
+              },
+              "type": "Token"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Token__writer_sample_P0002__013",
+              "props": {
+                "end": 102,
+                "para": "writer_sample_P0002",
+                "pos": 6,
+                "start": 95,
+                "text": "требует"
+              },
+              "type": "Token"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Token__writer_sample_P0002__014",
+              "props": {
+                "end": 112,
+                "para": "writer_sample_P0002",
+                "pos": 7,
+                "start": 103,
+                "text": "отдельной"
+              },
+              "type": "Token"
+            },
+            {
+              "graph": "G13_linguistic_structure",
+              "id": "G13_linguistic_structure__Token__writer_sample_P0002__015",
+              "props": {
+                "end": 124,
+                "para": "writer_sample_P0002",
+                "pos": 8,
+                "start": 113,
+                "text": "калибровки."
+              },
+              "type": "Token"
+            }
+          ]
+        },
+        "G15_pragmatic_rhetorical": {
+          "edges": [
+            {
+              "dst": "G15_pragmatic_rhetorical__RhetoricalMove__writer_sample_P0002__000",
+              "graph": "G15_pragmatic_rhetorical",
+              "props": {
+                "para": "writer_sample_P0002"
+              },
+              "relation": "INTERPRETS",
+              "src": "G15_pragmatic_rhetorical__RhetoricalMove__writer_sample_P0002__000"
+            }
+          ],
+          "nodes": [
+            {
+              "graph": "G15_pragmatic_rhetorical",
+              "id": "G15_pragmatic_rhetorical__RhetoricalMove__writer_sample_P0002__000",
+              "props": {
+                "para": "writer_sample_P0002",
+                "part": "evidence",
+                "text": "Остаточные напряжения смещают дифракционный пик при 2θ≈44.3°."
+              },
+              "type": "RhetoricalMove"
+            }
+          ]
+        },
+        "G3_discourse": {
+          "edges": [
+            {
+              "dst": "G3_discourse__DiscourseMove__writer_sample_P0002__000",
+              "graph": "G3_discourse",
+              "props": {
+                "para": "writer_sample_P0002"
+              },
+              "relation": "MOTIVATES",
+              "src": "G3_discourse__ParagraphIntent__writer_sample_P0002__000"
+            },
+            {
+              "dst": "G3_discourse__TopicFocus__writer_sample_P0002__000",
+              "graph": "G3_discourse",
+              "props": {
+                "para": "writer_sample_P0002"
+              },
+              "relation": "ELABORATES",
+              "src": "G3_discourse__DiscourseMove__writer_sample_P0002__000"
+            }
+          ],
+          "nodes": [
+            {
+              "graph": "G3_discourse",
+              "id": "G3_discourse__ParagraphIntent__writer_sample_P0002__000",
+              "props": {
+                "intent": "expository",
+                "para": "writer_sample_P0002",
+                "source": "digest"
+              },
+              "type": "ParagraphIntent"
+            },
+            {
+              "graph": "G3_discourse",
+              "id": "G3_discourse__TopicFocus__writer_sample_P0002__000",
+              "props": {
+                "para": "writer_sample_P0002",
+                "text": "Остаточные напряжения смещают дифракционный пик при 2θ≈44.3°."
+              },
+              "type": "TopicFocus"
+            },
+            {
+              "graph": "G3_discourse",
+              "id": "G3_discourse__DiscourseMove__writer_sample_P0002__000",
+              "props": {
+                "marker": "метод",
+                "para": "writer_sample_P0002",
+                "role": "method"
+              },
+              "type": "DiscourseMove"
+            }
+          ]
+        },
+        "G4_argument": {
+          "edges": [
+            {
+              "dst": "G4_argument__BackingRef__writer_sample_P0002__000",
+              "graph": "G4_argument",
+              "props": {
+                "para": "writer_sample_P0002"
+              },
+              "relation": "USES_AS_BACKING",
+              "src": "G4_argument__ArgumentInstance__writer_sample_P0002__000"
+            }
+          ],
+          "nodes": [
+            {
+              "graph": "G4_argument",
+              "id": "G4_argument__ArgumentInstance__writer_sample_P0002__000",
+              "props": {
+                "para": "writer_sample_P0002",
+                "role": "Toulmin",
+                "text": "Остаточные напряжения смещают дифракционный пик при 2θ≈44.3°."
+              },
+              "type": "ArgumentInstance"
+            },
+            {
+              "graph": "G4_argument",
+              "id": "G4_argument__BackingRef__writer_sample_P0002__000",
+              "props": {
+                "para": "writer_sample_P0002",
+                "role": "evidence",
+                "text": "Остаточные напряжения смещают дифракционный пик при 2θ≈44.3°."
+              },
+              "type": "BackingRef"
+            }
+          ]
+        }
+      },
+      "paragraph_id": "writer_sample_P0002",
+      "skipped": [
+        {
+          "graph": "G10_execution",
+          "in_registry": true,
+          "reason": "event log: нет Run/Operation данных в артефакте"
+        },
+        {
+          "graph": "G10_vocabulary",
+          "in_registry": false,
+          "reason": "отсутствует в реестре v0.3 (реестр определяет G10_execution); Term/Definition строятся в G6_artifact_symbol"
+        },
+        {
+          "graph": "G11_forensics_fingerprint",
+          "in_registry": true,
+          "reason": "корпус/автор-уровень: нет AuthorProfile/verdict в артефакте параграфа"
+        },
+        {
+          "graph": "G12_work_lineage",
+          "in_registry": true,
+          "reason": "генеалогия работ: нет Work/Edition/перевод-связей в артефакте"
+        },
+        {
+          "graph": "G16_linguistic_memory",
+          "in_registry": true,
+          "reason": "session/corpus learning: нет данных в артефакте параграфа"
+        },
+        {
+          "graph": "G1_document_structure",
+          "in_registry": true,
+          "reason": "doc-level: paragraph artifact не содержит дерева документа"
+        },
+        {
+          "graph": "G2_writing_decomposition",
+          "in_registry": true,
+          "reason": "planning-level: нет WritingObjective/Goal в артефакте параграфа"
+        },
+        {
+          "graph": "G7_citation_provenance",
+          "in_registry": true,
+          "reason": "нет citation-маркеров (CitationMarker/ArtifactRef) в гибридном артефакте"
+        },
+        {
+          "graph": "G8_policy_constraint",
+          "in_registry": true,
+          "reason": "static policy registry: нет политик в артефакте параграфа"
+        },
+        {
+          "graph": "G9_revision_dependency",
+          "in_registry": true,
+          "reason": "нет revision/review данных на уровне параграфа"
+        }
+      ]
+    }
+  },
+  "schema": "writer_core.graphs.v1",
+  "skipped": [
+    {
+      "graph": "G10_execution",
+      "in_registry": true,
+      "reason": "event log: нет Run/Operation данных в артефакте"
+    },
+    {
+      "graph": "G10_vocabulary",
+      "in_registry": false,
+      "reason": "отсутствует в реестре v0.3 (реестр определяет G10_execution); Term/Definition строятся в G6_artifact_symbol"
+    },
+    {
+      "graph": "G11_forensics_fingerprint",
+      "in_registry": true,
+      "reason": "корпус/автор-уровень: нет AuthorProfile/verdict в артефакте параграфа"
+    },
+    {
+      "graph": "G12_work_lineage",
+      "in_registry": true,
+      "reason": "генеалогия работ: нет Work/Edition/перевод-связей в артефакте"
+    },
+    {
+      "graph": "G16_linguistic_memory",
+      "in_registry": true,
+      "reason": "session/corpus learning: нет данных в артефакте параграфа"
+    },
+    {
+      "graph": "G1_document_structure",
+      "in_registry": true,
+      "reason": "doc-level: paragraph artifact не содержит дерева документа"
+    },
+    {
+      "graph": "G2_writing_decomposition",
+      "in_registry": true,
+      "reason": "planning-level: нет WritingObjective/Goal в артефакте параграфа"
+    },
+    {
+      "graph": "G7_citation_provenance",
+      "in_registry": true,
+      "reason": "нет citation-маркеров (CitationMarker/ArtifactRef) в гибридном артефакте"
+    },
+    {
+      "graph": "G8_policy_constraint",
+      "in_registry": true,
+      "reason": "static policy registry: нет политик в артефакте параграфа"
+    },
+    {
+      "graph": "G9_revision_dependency",
+      "in_registry": true,
+      "reason": "нет revision/review данных на уровне параграфа"
+    },
+    {
+      "graph": "G10_execution",
+      "in_registry": true,
+      "reason": "event log: нет Run/Operation данных в артефакте"
+    },
+    {
+      "graph": "G10_vocabulary",
+      "in_registry": false,
+      "reason": "отсутствует в реестре v0.3 (реестр определяет G10_execution); Term/Definition строятся в G6_artifact_symbol"
+    },
+    {
+      "graph": "G11_forensics_fingerprint",
+      "in_registry": true,
+      "reason": "корпус/автор-уровень: нет AuthorProfile/verdict в артефакте параграфа"
+    },
+    {
+      "graph": "G12_work_lineage",
+      "in_registry": true,
+      "reason": "генеалогия работ: нет Work/Edition/перевод-связей в артефакте"
+    },
+    {
+      "graph": "G16_linguistic_memory",
+      "in_registry": true,
+      "reason": "session/corpus learning: нет данных в артефакте параграфа"
+    },
+    {
+      "graph": "G1_document_structure",
+      "in_registry": true,
+      "reason": "doc-level: paragraph artifact не содержит дерева документа"
+    },
+    {
+      "graph": "G2_writing_decomposition",
+      "in_registry": true,
+      "reason": "planning-level: нет WritingObjective/Goal в артефакте параграфа"
+    },
+    {
+      "graph": "G7_citation_provenance",
+      "in_registry": true,
+      "reason": "нет citation-маркеров (CitationMarker/ArtifactRef) в гибридном артефакте"
+    },
+    {
+      "graph": "G8_policy_constraint",
+      "in_registry": true,
+      "reason": "static policy registry: нет политик в артефакте параграфа"
+    },
+    {
+      "graph": "G9_revision_dependency",
+      "in_registry": true,
+      "reason": "нет revision/review данных на уровне параграфа"
+    },
+    {
+      "graph": "G10_execution",
+      "in_registry": true,
+      "reason": "event log: нет Run/Operation данных в артефакте"
+    },
+    {
+      "graph": "G10_vocabulary",
+      "in_registry": false,
+      "reason": "отсутствует в реестре v0.3 (реестр определяет G10_execution); Term/Definition строятся в G6_artifact_symbol"
+    },
+    {
+      "graph": "G11_forensics_fingerprint",
+      "in_registry": true,
+      "reason": "корпус/автор-уровень: нет AuthorProfile/verdict в артефакте параграфа"
+    },
+    {
+      "graph": "G12_work_lineage",
+      "in_registry": true,
+      "reason": "генеалогия работ: нет Work/Edition/перевод-связей в артефакте"
+    },
+    {
+      "graph": "G16_linguistic_memory",
+      "in_registry": true,
+      "reason": "session/corpus learning: нет данных в артефакте параграфа"
+    },
+    {
+      "graph": "G1_document_structure",
+      "in_registry": true,
+      "reason": "doc-level: paragraph artifact не содержит дерева документа"
+    },
+    {
+      "graph": "G2_writing_decomposition",
+      "in_registry": true,
+      "reason": "planning-level: нет WritingObjective/Goal в артефакте параграфа"
+    },
+    {
+      "graph": "G7_citation_provenance",
+      "in_registry": true,
+      "reason": "нет citation-маркеров (CitationMarker/ArtifactRef) в гибридном артефакте"
+    },
+    {
+      "graph": "G8_policy_constraint",
+      "in_registry": true,
+      "reason": "static policy registry: нет политик в артефакте параграфа"
+    },
+    {
+      "graph": "G9_revision_dependency",
+      "in_registry": true,
+      "reason": "нет revision/review данных на уровне параграфа"
+    }
+  ],
+  "sqlite": null
+}

@@ -1,0 +1,133 @@
+{
+  "checked": [
+    {
+      "claim_id": "C1",
+      "matched": true,
+      "notes": [],
+      "overlap": 12,
+      "reasons": [
+        "PARAPHRASE_SAFE"
+      ]
+    },
+    {
+      "claim_id": "C2",
+      "matched": true,
+      "notes": [],
+      "overlap": 7,
+      "reasons": [
+        "PARAPHRASE_SAFE"
+      ]
+    }
+  ],
+  "contract_path": "C:\\Temp\\opencode\\writer_contract.json",
+  "defects": [],
+  "draft_path": "C:\\Temp\\opencode\\writer_sample.md",
+  "generated_by": "writer_core.factory_process.draftcheck",
+  "re_extraction": {
+    "claims": [
+      {
+        "claim_id": "DRAFT_P0001_C0",
+        "end": 167,
+        "paragraph_id": "DRAFT_P0001",
+        "qa_status": "GROUNDED",
+        "raw_span": "Изменение параметра решётки в системе Ce1-xZrxO2 связано преимущественно с изменением состава твёрдого раствора.",
+        "sentence_idx": 0,
+        "start": 55,
+        "text": "Изменение параметра решётки в системе Ce1-xZrxO2 связано преимущественно с изменением состава твёрдого раствора."
+      },
+      {
+        "claim_id": "DRAFT_P0002_C0",
+        "end": 394,
+        "paragraph_id": "DRAFT_P0002",
+        "qa_status": "GROUNDED",
+        "raw_span": "Мы показали, что соединение A ингибирует канал hERG при концентрации 10 мкМ.",
+        "sentence_idx": 0,
+        "start": 318,
+        "text": "Мы показали, что соединение A ингибирует канал hERG при концентрации 10 мкМ."
+      }
+    ],
+    "digests": [
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "# CeO2-ZrO2 Solid Solution: Lattice Parameter Analysis"
+        },
+        "modality": "assertive",
+        "scope": {
+          "restricted": false
+        },
+        "scope_text": "# CeO2-ZrO2 Solid Solution: Lattice Parameter Analysis"
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "Изменение параметра решётки в системе Ce1-xZrxO2 связано преимущественно с изменением состава твёрдого раствора."
+        },
+        "modality": "assertive",
+        "scope": {
+          "restricted": false
+        },
+        "scope_text": "Изменение параметра решётки в системе Ce1-xZrxO2 связано преимущественно с изменением состава твёрдого раствора."
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "Мы показали, что соединение A ингибирует канал hERG при концентрации 10 мкМ."
+        },
+        "modality": "assertive",
+        "scope": {
+          "numeric_mentions": [
+            "10 мкМ"
+          ],
+          "restricted": false
+        },
+        "scope_text": "Мы показали, что соединение A ингибирует канал hERG при концентрации 10 мкМ."
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "Остаточные напряжения смещают дифракционный пик при 2θ≈44.3°."
+        },
+        "modality": "assertive",
+        "scope": {
+          "numeric_mentions": [
+            "44.3"
+          ],
+          "restricted": false
+        },
+        "scope_text": "Остаточные напряжения смещают дифракционный пик при 2θ≈44.3°."
+      }
+    ],
+    "errors": []
+  },
+  "schema": "writer_core.rtt_report.v1",
+  "verdict": "PASS"
+}
