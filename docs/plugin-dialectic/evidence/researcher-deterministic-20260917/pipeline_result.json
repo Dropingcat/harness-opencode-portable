@@ -1,0 +1,71 @@
+{
+ "schema": "researcher-pipeline-deterministic/1.0",
+ "date": "2026-09-17",
+ "query": "cerium zirconium oxide solid solution lattice parameter XRD",
+ "channels": {
+  "arxiv": 5,
+  "openalex": 6,
+  "searxng": 8
+ },
+ "total_unique": 19,
+ "top_candidates": [
+  {
+   "channel": "searxng",
+   "title": "Ceria-zirconia - Wikipedia",
+   "relevance": 5,
+   "url": "https://en.wikipedia.org/wiki/Ceria-zirconia",
+   "doi": ""
+  },
+  {
+   "channel": "searxng",
+   "title": "mp-1019596: CeZrO4 (tetragonal, P4/nbm, 125) - Materials Project",
+   "relevance": 5,
+   "url": "https://legacy.materialsproject.org/materials/mp-1019596/",
+   "doi": ""
+  },
+  {
+   "channel": "searxng",
+   "title": "XRD and UV-Vis diffuse reflectance analysis of CeO2–ZrO2 solid ...",
+   "relevance": 4,
+   "url": "https://www.ias.ac.in/article/fulltext/jcsc/113/05-06/0651-0658",
+   "doi": ""
+  },
+  {
+   "channel": "searxng",
+   "title": "XRD patterns of cerium zirconium oxide solid electrolytes",
+   "relevance": 3,
+   "url": "https://www.researchgate.net/figure/RD-patterns-of-cerium-zirconium-oxide-solid-electrolytes_fig2_304375232",
+   "doi": ""
+  },
+  {
+   "channel": "searxng",
+   "title": "Tuning the electrochemical performance of ceria-zirconia solid ...",
+   "relevance": 3,
+   "url": "https://www.sciencedirect.com/science/article/pii/S2950264024000157",
+   "doi": ""
+  },
+  {
+   "channel": "searxng",
+   "title": "XRD patterns of cerium oxide nanoparticles. | Download Scientific Diagram",
+   "relevance": 3,
+   "url": "https://www.researchgate.net/figure/XRD-patterns-of-cerium-oxide-nanoparticles_fig1_355316778",
+   "doi": ""
+  }
+ ],
+ "extracts": [
+  {
+   "source": "https://en.wikipedia.org/wiki/Ceria-zirconia",
+   "title": "Ceria-zirconia - Wikipedia",
+   "excerpt": "Ceria-zirconia - Wikipedia\n\n[Jump to content](#bodyContent)\n\nMain menu\n\nMain menu\n\nmove to sidebar\nhide\n\nNavigation\n\n* [Main page](/wiki/Main_Page \"Visit the main page [z]\")\n* [Contents](/wiki/Wikipedia:Contents \"Guides to browsing Wikipedia\")\n* [Current events](/wiki/Portal:Current_events \"Articles related to current events\")\n* [Random article](/wiki/Special:Random \"Visit a randomly selected article [x]\")\n* [About Wikipedia](/wiki/Wikipedia:About \"Learn about Wikipedia and how it works\")\n* [Contact us](//en.wikipedia.org/wiki/Wikipedia:Contact_us \"How to contact Wikipedia\")\n\nContribute\n\n* [He",
+   "status": "extracted"
+  },
+  {
+   "source": "https://legacy.materialsproject.org/materials/mp-1019596/",
+   "title": "mp-1019596: CeZrO4 (tetragonal, P4/nbm, 125) - Materials Project",
+   "excerpt": " mp-1019596: CeZrO4 (tetragonal, P4/nbm, 125)\n\n\n\n\n\n[![](/static/images/Logo/Mp-logo-v5.ad467cf84f15.png)](/)\n\n* [Home](/)\n* [About](#) \n  + [About](/about)\n  + [Forum](https://discuss.matsci.org/c/materials-project)\n  + [Press](/press)\n  + [Publications](/references)\n  + [Citing](/citing)\n  + [Infrastructure](/infrastructure)\n* [Apps](#) \n  + [Materials Explorer](/janrain/loginpage/?next=/#search/materials/)\n  + [Battery Explorer](/janrain/loginpage/?next=/#search/batteries/)\n  + [Crystal Toolkit](/janrain/loginpage/?next=/#apps/xtaltoolkit)\n  + [Structure Predictor](/janrain/loginpage/?next=/",
+   "status": "extracted"
+  }
+ ],
+ "verdict": "PARTIALLY_SUPPORTED",
+ "verdict_basis": "strong_relevant=True, extract_ok=True"
+}

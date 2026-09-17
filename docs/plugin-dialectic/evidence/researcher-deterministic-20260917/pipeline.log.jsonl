@@ -1,0 +1,12 @@
+{"ts": "2026-09-17T22:41:42", "action": "search:arxiv", "result": "", "note": "start"}
+{"ts": "2026-09-17T22:41:42", "action": "search:arxiv", "result": "5 hits", "note": ""}
+{"ts": "2026-09-17T22:41:42", "action": "search:openalex", "result": "", "note": "start"}
+{"ts": "2026-09-17T22:41:43", "action": "search:openalex", "result": "6 hits", "note": ""}
+{"ts": "2026-09-17T22:41:43", "action": "search:searxng", "result": "", "note": "start"}
+{"ts": "2026-09-17T22:41:44", "action": "search:searxng", "result": "8 hits", "note": ""}
+{"ts": "2026-09-17T22:41:44", "action": "dedup+rank", "result": "19 unique, top relevance=5", "note": ""}
+{"ts": "2026-09-17T22:41:44", "action": "extract:select", "result": "2 candidates with url", "note": ""}
+{"ts": "2026-09-17T22:41:45", "action": "extract", "result": "OK https://en.wikipedia.org/wiki/Ceria-zirconia", "note": "chars=600"}
+{"ts": "2026-09-17T22:41:47", "action": "extract", "result": "OK https://legacy.materialsproject.org/materials/mp-1019596/", "note": "chars=600"}
+{"ts": "2026-09-17T22:41:47", "action": "verdict", "result": "PARTIALLY_SUPPORTED", "note": "strong=True extract=True"}
+{"ts": "2026-09-17T22:41:47", "action": "artifact", "result": "saved researcher_deterministic_20260917/pipeline_result.json", "note": ""}
