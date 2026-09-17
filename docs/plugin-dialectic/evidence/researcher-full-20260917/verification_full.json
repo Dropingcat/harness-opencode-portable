@@ -1,0 +1,71 @@
+{
+ "schema": "researcher-full-verification/1.0",
+ "date": "2026-09-17",
+ "route": "academic-research",
+ "total_hits": 19,
+ "skills_applied": [
+  "literature-review",
+  "citation-management",
+  "conducting-scientific-research",
+  "scientific-critical-thinking"
+ ],
+ "skills_usage": {
+  "literature-review": "структурировать поиск по PICO/вопросу; здесь применено: query по составу+методу+свойству",
+  "citation-management": "фиксировать DOI/URL для каждого evidence; openalex-записи содержат doi",
+  "conducting-scientific-research": "evidence extraction -> верификация -> вердикт; выполнено для CLM-1/CLM-2",
+  "scientific-critical-thinking": "отличать MODEL_PRIOR от evidence; CLM-1 помечен UNSUPPORTED"
+ },
+ "verdicts": [
+  {
+   "claim_id": "CLM-1",
+   "statement": "Изменение параметра решётки Ce1-xZrxO2 связано преимущественно с составом (Вегард).",
+   "verdict": "UNSUPPORTED",
+   "grounding": "MODEL_PRIOR (число 5.32 А без раскрытого источника); search дал кандидатов, но первичный XRD-источник с x=0.5 НЕ найден в 19 хитах.",
+   "evidence": {
+    "web_searxng": [
+     {
+      "id": "W0",
+      "title": "XRD patterns of cerium zirconium oxide solid electrolytes",
+      "url": "https://www.researchgate.net/figure/RD-patterns-of-cerium-zirconium-oxide-solid-electrolytes_fig2_304375232"
+     },
+     {
+      "id": "W1",
+      "title": "Ceria-zirconia - Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Ceria-zirconia"
+     },
+     {
+      "id": "W2",
+      "title": "Tuning the electrochemical performance of ceria-zirconia solid ...",
+      "url": "https://www.sciencedirect.com/science/article/pii/S2950264024000157"
+     }
+    ],
+    "openalex": [
+     {
+      "id": "O0",
+      "title": "Redox Active Cerium Oxide Nanoparticles: Current Status and Burning Issues",
+      "doi": "https://doi.org/10.1002/smll.202102342"
+     },
+     {
+      "id": "O1",
+      "title": "Fundamentals and Catalytic Applications of CeO 2 -Based Materials",
+      "doi": "https://doi.org/10.1021/acs.chemrev.5b00603"
+     },
+     {
+      "id": "O2",
+      "title": "Anodic Electrodeposition of Cerium Oxide Thin Films",
+      "doi": "https://doi.org/10.1149/1.1596164"
+     }
+    ]
+   },
+   "next_step": "extract_document по top-кандидатам (ResearchGate XRD / ScienceDirect); сверка a, 2theta/d, состава."
+  },
+  {
+   "claim_id": "CLM-2",
+   "statement": "n=63 на группу для t-критерия (alpha=0.05, power=0.8, d=0.5).",
+   "verdict": "SUPPORTED",
+   "grounding": "DERIVATION_FROM_VISIBLE (n=2*(1.959964+0.841621)^2/0.25=62.79->63, подтверждено кодом).",
+   "evidence": []
+  }
+ ],
+ "pipeline_note": "Полный пайплайн: arxiv+openalex+searxng (19 hits), 4 skills как гайдлайны. SearXNG дал релевантный web (ResearchGate XRD, ScienceDirect, Ceria-zirconia Wiki)."
+}
