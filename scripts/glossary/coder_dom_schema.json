@@ -1,0 +1,112 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://harness.local/schema/coder-dom/1.0",
+  "title": "Coder DOM",
+  "description": "DOM YAML-капсула для разработки кода: структура функций + графы связей + статусы. Аналог Writer DOM для Coder.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "product", "structure", "graphs"],
+  "properties": {
+    "schema": { "const": "coder-dom/1.0" },
+    "product": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "status", "contours"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "kind": { "const": "code" },
+        "status": { "enum": ["drafted", "active", "archived"] },
+        "language": { "type": "string" },
+        "contours": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "structure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["contours"],
+      "properties": {
+        "contours": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "modules"],
+            "properties": {
+              "id": { "type": "string" },
+              "display": { "type": "string" },
+              "modules": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["path", "functions"],
+                  "properties": {
+                    "path": { "type": "string" },
+                    "functions": {
+                      "type": "array",
+                      "items": { "$ref": "#/definitions/function" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "graphs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["G-call", "G-import", "G-stub", "G-ownership"],
+      "properties": {
+        "G-call": { "$ref": "#/definitions/graph" },
+        "G-import": { "$ref": "#/definitions/graph" },
+        "G-stub": { "$ref": "#/definitions/graph" },
+        "G-ownership": { "$ref": "#/definitions/graph" }
+      }
+    },
+    "uncertainty": { "type": "object" },
+    "counts": { "type": "object" },
+    "generated_at": { "type": ["string", "null"] },
+    "fingerprint": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" }
+  },
+  "definitions": {
+    "function": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "signature", "contour", "status"],
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "signature": { "type": "string" },
+        "io": {
+          "type": "object",
+          "properties": {
+            "inputs": { "type": "array", "items": { "type": "string" } },
+            "outputs": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "contour": { "type": "string" },
+        "routing": { "type": "string" },
+        "status": { "enum": ["stub", "interface", "drafted", "done"] },
+        "stub_ref": { "type": ["string", "null"] },
+        "calls": { "type": "array", "items": { "type": "string" } },
+        "called_by": { "type": "array", "items": { "type": "string" } },
+        "uses": { "type": "array", "items": { "type": "string" } },
+        "doc": { "type": "string" }
+      }
+    },
+    "graph": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["node_types", "edge_types"],
+      "properties": {
+        "node_types": { "type": "array", "items": { "type": "string" } },
+        "edge_types": { "type": "array", "items": { "type": "string" } },
+        "edges": { "type": "array", "items": { "type": "object" } },
+        "counts": { "type": "object" },
+        "assignments": { "type": "array" }
+      }
+    }
+  }
+}
