@@ -1,0 +1,59 @@
+{
+  "module": "writer-fix-td087-088-085",
+  "result": "PASS",
+  "passed": 7,
+  "failed": 0,
+  "coverage": 95,
+  "coverage_notes": "Coverage.py 7.16.0, in-process CLI+unit scenarios, 397 statements: dom_builder.py 296/305=97.0%, register_control.py 81/92=88.0%, overall 377/397=95.0%. Missing: dom_builder -> yaml=None fallback (недостижимо), load_template not-mapping/not-found branches partially, qa_uncertainty edge branches; register_control -> philology import failure branch, R2 vector real path (требует etalon_profiles+graph_vector).",
+  "tests": [
+    {
+      "name": "T1 py_compile both modules",
+      "status": "pass",
+      "output": "dom_builder: exit=0; register_control: exit=0"
+    },
+    {
+      "name": "T2 TD-087 dom full (plan+qwen2): valid, unique sources, evidence refs ok",
+      "status": "pass",
+      "output": "exit=0 dom_valid=true validation.errors=[] sources=['S-001','S-002','S-003'] (no dup S-001) claims=['C-001'..'C-007'] evidence_refs_ok=True (C-003..C-005->S-002, C-006..C-007->S-003)"
+    },
+    {
+      "name": "T3 TD-088 claims monotonic C-001..C-00N, no C-9XXX/C-XXXb/c, uncertainty match",
+      "status": "pass",
+      "output": "claims=C-001..C-007 монотонно контигуально, нет C-9XXX и chr-суффиксов; все pipeline-claims (C-003..C-007) присутствуют в uncertainty; template-плейсхолдеры C-001/C-002 не покрыты uncertainty (см. problems P1)"
+    },
+    {
+      "name": "T4 TD-085 register probe -> PASS_WITH_MINOR, n_issues=1 (R3)",
+      "status": "pass",
+      "output": "verdict=PASS_WITH_MINOR n_issues=1 issues_by_axis={R1:0,R2:0,R3:1,R4:0}"
+    },
+    {
+      "name": "T5 TD-085 register clean -> PASS, n_issues=0",
+      "status": "pass",
+      "output": "verdict=PASS n_issues=0"
+    },
+    {
+      "name": "T6 regression dom no qwen -> dom_valid=true",
+      "status": "pass",
+      "output": "exit=0 dom_valid=true validation.errors=[] sources=['S-001'] unique"
+    },
+    {
+      "name": "T7 regression qwen 1 card -> unique claims/sources",
+      "status": "pass",
+      "output": "exit=0 dom_valid=true claims=C-001..C-005 монотонно, sources=['S-001','S-002'] без дублей"
+    }
+  ],
+  "problems": [
+    {
+      "id": "P1",
+      "severity": "minor",
+      "finding": "template-claims C-001/C-002 (пустые плейсхолдеры из writer-dom-dissertation.yaml) не имеют записей в uncertainty после build_dom с qwen/plan; uncertainty покрывает только pipeline-claims и source-ключи. Не регрессия фикса TD-087/088 (git diff подтверждает: наложение {**existing, **qunc} не удаляет и не требует покрытия плейсхолдеров) — latent-gap вне scope фикса.",
+      "falsification": "python -c: yaml.safe_load(dom_full.yaml)['uncertainty'] keys = {S-001,C-003,C-004,C-005,C-006,C-007}, отсутствуют C-001,C-002 при claims=[C-001..C-007]. Пайплайн-claims (с текстом) все покрыты — контракт 'uncertainty содержит те же id' для сгенерированных claims выполнен."
+    },
+    {
+      "id": "P2",
+      "severity": "info",
+      "finding": "register_control.check_reference_pickup: span всегда [0,0] (не реальные координаты), а уровень severity=BLOCKER для NUMERIC_ORPHAN при severity='BLOCKER' — вне scope TD-085 (там про verdict-согласованность).",
+      "falsification": "чтение register_control.py: строка 63 'span': [0, 0]; контракт фикса TD-085 требует только verdict=n_issues-согласованность."
+    }
+  ]
+}

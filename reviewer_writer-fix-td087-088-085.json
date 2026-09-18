@@ -1,0 +1,75 @@
+{
+  "module": "writer-fix-td087-088-085",
+  "verdict": "APPROVE",
+  "comments": [
+    {
+      "id": "R1",
+      "severity": "minor",
+      "file": "scripts/writer-core/writer_core/dom_builder.py",
+      "line": "463 (комментарий), 479-480 (pass-through)",
+      "problem": "Комментарий в build_dom заявляет «итог строго монотонный (C-001..C-00N)», но неколлизирующие qwen claim id проходят без перенумерации (ветка else: new_id = cid). Для канонического шаблона (claims C-001,C-002) все qwen id коллизируют и последовательность строго монотонна (воспроизведено: C-001..C-007), НО при шаблоне с дыркой (например claims=[C-001,C-003]) qwen claim C-002 не коллизирует, проходит как есть и добавляется ПОСЛЕ перенумерованных: итог [C-001,C-003,C-004,C-002] — порядок не монотонный. Дублей/C-9XXX/b-суффиксов при этом нет.",
+      "suggestion": "Либо перенумеровывать ВСЕ qwen claims в хвост (C-{max+1}..) независимо от коллизии (тогда инвариант C-001..C-00N гарантирован всегда), либо смягчить комментарий до фактического инварианта: «нет дублей, нет C-9XXX, нет chr-суффиксов; для канонического шаблона — строго монотонно».",
+      "falsification": "Опровергается, если собрать DOM с шаблоном claims=[C-001,C-003] и qwen_extra с двумя claims (C-001,C-002) и наблюдать итог [C-001,C-003,C-002,C-004] или любой строго монотонный порядок — тогда замечание невоспроизводимо и снимается."
+    },
+    {
+      "id": "R2",
+      "severity": "info",
+      "file": "scripts/writer-core/writer_core/dom_builder.py",
+      "line": "505-506 (setdefault _qwen_errors), 520-554 (validate_dom)",
+      "problem": "Частичный сбой импорта qwen-карточек (errors из qwen_to_dom) кладётся в _qwen_errors, но не попадает в _validation.errors: dom_valid=true даже если карточки были выброшены. Наблюдается и в до-фиксе (не регрессия данного коммита), но TD-087 приёмка «errors=[]» при наличии битой карточки даёт ложный зелёный.",
+      "suggestion": "Включить счётчик _qwen_errors в validate_dom или в CLI-вывод (например поле validation.qwen_errors=N), чтобы частичный импорт был видим потребителю (citation_trace/uncertainty).",
+      "falsification": "Опровергается, если при --qwen-dir с одной валидной + одной битой карточкой dom_valid=false или CLI сообщает об ошибке импорта."
+    },
+    {
+      "id": "R3",
+      "severity": "info",
+      "file": "scripts/writer-core/writer_core/cli.py",
+      "line": "571 (cmd_register, вне scope данного фикса)",
+      "problem": "cmd_register читает draft с encoding='utf-8' (не utf-8-sig). Файлы, записанные PowerShell Set-Content -Encoding UTF8, содержат BOM, который просачивается в текст issue (наблюдено: '\\ufeffТвёрдость...' в issue.text). На вердикты/детекцию маркеров не влияет (проверено: 'ну' и 'так сказать' находятся корректно, R1 срабатывает с BOM), но засоряет вывод и span-текст.",
+      "suggestion": "Использовать encoding='utf-8-sig' при чтении draft (как в cmd_plan/cmd_draftcheck), либо strips BOM.",
+      "falsification": "Опровергается, если прочитать draft с BOM через register и в issues[].text нет символа \\ufeff."
+    },
+    {
+      "id": "R4",
+      "severity": "info",
+      "file": "scripts/writer-core/writer_core/register_control.py",
+      "line": "174-176 (фильтр blocking)",
+      "problem": "Фильтр blocking распознаёт только MAJOR/CRITICAL/BLOCKER; любое иное/будущее значение severity (например 'ERROR', 'WARNING') считается неблокирующим и даёт PASS_WITH_MINOR вместо FAIL. Текущие оси эмитят только MINOR/MAJOR/BLOCKER (проверено), поэтому латентно.",
+      "suggestion": "Сделать fail-closed: неизвестный severity трактовать как блокирующий (иначе ветка else по умолчанию занижает вердикт).",
+      "falsification": "Опровергается, если добавить в любую ось issue с severity='ERROR' и register_check вернёт FAIL."
+    }
+  ],
+  "scope_declared": {
+    "files_reviewed": [
+      "scripts/writer-core/writer_core/dom_builder.py (_next_free_id, build_dom dedup/sid_remap/evidence fix, qwen_to_dom si/ci)",
+      "scripts/writer-core/writer_core/register_control.py (register_check verdict PASS/PASS_WITH_MINOR/FAIL + verdict_detail)"
+    ],
+    "tds": ["TD-087 sources dedup + sid_remap + evidence fix", "TD-088 монотонные claim id без b/c и C-9XXX + uncertainty", "TD-085 честный verdict register_check"],
+    "verification_performed": [
+      "py_compile обоих файлов — OK",
+      "TD-087: реальный прогон wc_cli.py dom --template writer-dom-dissertation.yaml --plan plan.json --qwen-dir qwen_cards --source-kind published → dom_valid=true, sources=[S-001,S-002,S-003] без дублей, errors=[], exit 0",
+      "TD-088: claims=[C-001..C-007] монотонны, нет b/c и C-9XXX; evidence.source_id ∈ {S-002,S-003} (переименованные); uncertainty покрывает все qwen claims (C-003..C-007)",
+      "TD-085: draft «ну, так сказать» → PASS_WITH_MINOR, n_issues=1; чистый → PASS",
+      "Крайние случаи: (а) dom без --qwen-dir → dom_valid=true; (б) одна карточка с 1 conclusion → [C-001,C-002,C-003], нет C-001b; (в) две карточки → S-001,S-002,S-003 монотонно; (г) R1 NUMERIC_ORPHAN BLOCKER + --dom → FAIL",
+      "Регрессия: python -m unittest discover -s tests → 7/7 OK"
+    ]
+  },
+  "out_of_scope_gaps": [
+    {
+      "module": "writer-core/cli.py",
+      "finding": "cmd_register читает draft с encoding='utf-8' вместо utf-8-sig — BOM просачивается в issue.text (косметика, вердикты не ломает). Вне scope фикса."
+    },
+    {
+      "module": "writer-core/register_control.py (R2)",
+      "finding": "check_register_vector всегда возвращает [] (заглушка: graph_vector/etalon_profiles не подключены к CLI) — ось R2 не эмитит issues, verdict никогда не зависит от R2. Пред-существующее, вне scope."
+    },
+    {
+      "module": "writer-core/dom_builder.py",
+      "finding": "При --source-kind ветка dom['uncertainty']=unc затирает uncertainty шаблона для placeholder-claims C-001/C-002 (в финальном DOM у C-001/C-002 нет записи uncertainty). Пред-существующее (не в диффе), но стоит учесть при трактовке «uncertainty согласована»."
+    },
+    {
+      "module": "writer-core/dom_builder.py",
+      "finding": "qwen_extra.errors (битые карточки) не попадают в _validation.errors — dom_valid=true при частичном импорте (см. R2)."
+    }
+  ]
+}

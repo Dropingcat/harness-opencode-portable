@@ -1,0 +1,25 @@
+{
+  "verdict": "APPROVE",
+  "justification": "Процесс в целом соблюдён: все три сабмита прошли контрактную валидацию кодом (worker/reviewer/tester → VALID), ревьюер дал APPROVE с 4 фальсифицируемыми замечаниями (1 minor + 3 info), тестер — реальный PASS 7/7 с coverage 95% (воспроизведён мной: py_compile OK, unittest 7/7 OK). Детерминизм подтверждён: dom_valid выводится кодом fail-closed (`valid = not errs`), verdict register вычисляется кодом из issues (PASS/PASS_WITH_MINOR/FAIL), что я воспроизвёл вызовом register_check. Запись worker-JSON оркестратором из возвращённого отчёта — процедурное отклонение от правила «всё через файлы», но НЕ фабрикация: контент независимо подтверждён ревьюером, тестером, оркестраторскими прогонами и моими воспроизведениями; evidence зарегистрирован под actor=worker, hash-chain цела (integrity_errors=[]). Роли не смешаны: ревьюер явно ограничил scope и зафиксировал out-of-scope gaps. Минорные замечания (R1-R4) зафиксированы, фальсифицируемы и не блокируют приёмку по gate policy.",
+  "process_analysis": {
+    "contracts_respected": true,
+    "iteration_count": 0,
+    "iteration_limit": 3,
+    "role_violation": false,
+    "evidence_honesty": "worker JSON записан оркестратором (воркер упёрся в лимит шагов), но контент — фактический отчёт воркера, независимо подтверждённый ревьюером (APPROVE + реальные прогоны), тестером (PASS 7/7, coverage 95%, subprocess+coverage) и оркестратором (собственные прогоны TD-085/087/088). Воспроизведено мной: py_compile=0, unittest 7/7 OK, register_check('ну, так сказать')→PASS_WITH_MINOR+verdict_detail, register_check('чистый')→PASS. Event-chain: 8 событий, integrity_errors=[]. Процедурное отклонение (запись evidence не самим агентом) зафиксировано как lesson, но не является фабрикацией.",
+    "remaining_risks": [
+      "R1 (minor): при шаблоне claims с дыркой (напр. [C-001,C-003]) неколлизирующий qwen claim проходит без перенумерации → итог немонотонен. Зафиксировано ревьюером с falsification.",
+      "R2 (info): _qwen_errors (битые qwen-карточки) не попадают в _validation.errors → dom_valid=true при частичном импорте.",
+      "R4 (info, fail-open): неизвестный severity трактуется как неблокирующий → PASS_WITH_MINOR вместо FAIL.",
+      "R3 (info): BOM просачивается в issue.text при чтении draft через cmd_register (косметика).",
+      "Procedural: воркер не успел записать JSON в лимите шагов — оркестратор записал за него. Нужен lesson: budget exhaustion воркера должен давать PARTIAL/BLOCKED, а не косвенную запись evidence."
+    ],
+    "reviewer_args_assessment": "APPROVE обоснован: все 4 замечания конкретны, локализованы (файл+строки), каждое снабжено falsification. Минор R1 не блокирует приёмку по gate policy (reviewer pass=APPROVE). Scope честно ограничен, out-of-scope gaps явно перечислены.",
+    "worker_args_assessment": "Воркер декларирует фиксы TD-087/088/085; в notes честно указано, что прогоны выполнены оркестратором, а не воркером (отсутствует присвоение чужих свидетельств). Код компилируется, тесты проходят."
+  },
+  "requirements": [
+    "Записать lesson: при budget exhaustion воркера фиксировать PARTIAL/BLOCKED по policy, оркестратор не должен записывать evidence от имени агента (исключение — только при независимом подтверждении и с пометкой о процедурном отклонении).",
+    "Зарегистрировать/оставить открытыми TD на R1 (монотонность при шаблоне с дыркой), R2 (qwen_errors в validation), R4 (fail-closed для неизвестных severity)."
+  ],
+  "recommended_next_gate": "finalize (после APPROVE аудитора цикл перейдёт в PASSED; оркестратор вызывает factory_ctl finalize)"
+}
