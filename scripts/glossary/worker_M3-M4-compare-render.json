@@ -1,0 +1,17 @@
+{
+  "module": "M3-M4-compare-render",
+  "code": "scripts/glossary/compare_trees.py, scripts/glossary/render_glossary.py",
+  "description": "Сравнение деревьев (PORTABLE_DELTA) + рендер GLOSSARY.md из function_index.json",
+  "notes": [
+    "M3 compare_trees.py: --base <function_index.json> --target <function_index.json> [--out <path.md>]. Дефолт out = <base_dir>/PORTABLE_DELTA.md. Считает per-contour дельту: модули (posix-пути) и публичные функции, присутствующие в base (workspace) и отсутствующие в target (portable); маркдаун со сводкой, списком модулей «перенести в v1.1» (TD-D1) и списком функций по контурам с модулем-источником. Импорт: compute_delta(base_index, target_index) -> dict; рендер: render_delta(delta) -> str.",
+    "M4 render_glossary.py: --index <function_index.json> [--out <path.md>] [--label <str>]. Дефолт out = <index_dir>/GLOSSARY.md, label = meta.label. Строит «# Harness Glossary — <label>»: раздел «Полный список функций по контурам» (counts + до 3 файлов-примеров), затем контуры (по алфавиту id) -> модули (по пути) -> публичные функции/классы/методы с сигнатурами (без префикса def/class), первой строкой docstring (до 140 симв., '—' если пусто) и номером строки. Импорт: render_glossary(index: dict, label: str) -> str.",
+    "Запуск пример (делает оркестратор, сам не запускал на реальных данных): python scripts/glossary/compare_trees.py --base docs/glossary/function_index.json --target <portable>/function_index.json --out <portable>/PORTABLE_DELTA.md; python scripts/glossary/render_glossary.py --index <portable>/function_index.json --label portable --out <portable>/GLOSSARY.md",
+    "Функциональная дельта считает только top-level публичные функции (kind=function), классы/методы не входят (по контракту «публичные функции»). Функция считается отсутствующей, если (contour, name) нет в target; для функции-дубликата в base берётся лексически первый модуль.",
+    "Схема индекса читается дефензивно (get с дефолтами) — отсутствующие ключи дают пустые коллекции, а не краш.",
+    "Существующие docs/glossary/*.md не тронуты; gen_api_index.py не менялся. Проверено: python -m py_compile обоих OK; smoke-тест импортируемых функций на синтетических данных (C:\\Temp\\opencode\\m3m4_smoke.py) — SMOKE_OK: дельта 2 модуля/2 функции, рендер GLOSSARY с классами и методами."
+  ],
+  "files": [
+    "scripts/glossary/compare_trees.py",
+    "scripts/glossary/render_glossary.py"
+  ]
+}
