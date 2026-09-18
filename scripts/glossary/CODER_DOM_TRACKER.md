@@ -14,16 +14,16 @@
 - [x] A1. `gen_api_index.py` — AST-реестр public функций/классов (signature/doc/decorators/line/contour/index). (есть)
 - [x] A2. `compare_trees.py` — дельта workspace vs portable (PORTABLE_DELTA.md). (есть)
 - [x] A3. `render_glossary.py` — рендер GLOSSARY.md из JSON. (есть)
-- [ ] A4. **Рёбра CALLS** (граф вызовов) — расширить gen_api_index (PyCG/pyan3 или ast-рёбра сами).
-- [ ] A5. **Stub-детекция** — пустое тело vs Protocol/ABC; статус `stub`/`interface`.
-- [ ] A6. **coder_dom_build.py** — сборка `coder_dom.yaml` из gen_api_index + рёбра + stubs + owners.
+- [x] A4. **Рёбра CALLS** — `call_graph.py` (stdlib ast, поле confidence; 1804 узла/1522 рёбра workspace, 641/1289 portable).
+- [x] A5. **Stub-детекция** — `stub_detect.py` (interface=Protocol/ABC vs stub=pass/NotImpl+маркер; 23 интерфейса, 0 стубов).
+- [x] A6. **coder_dom_build.py** — сборка `coder_dom.yaml` (752 функции, 18 контуров workspace; 641/11 portable; детерминирован).
 
 ## Блок B. Coder DOM YAML (капсула)
 
-- [ ] B1. Схема `coder_dom.yaml` (product+structure+graphs+uncertainty, зеркалит Writer DOM).
-- [ ] B2. Графы: G-call (CALLS), G-import (IMPORTS), G-stub (STUB/INTERFACE), G-ownership (OWNED_BY).
-- [ ] B3. Поля функции: id, name, signature, io, contour, routing, status, calls, called_by.
-- [ ] B4. verify-гейт (pre-commit): перегенерация coder_dom → diff=0 (schema drift fail).
+- [x] B1. Схема `coder_dom.yaml` (product+structure+graphs+uncertainty, зеркалит Writer DOM) + `coder_dom_schema.json` (JSON Schema coder-dom/1.0, валиден).
+- [~] B2. Графы: G-call (CALLS), G-import (IMPORTS), G-stub (STUB/INTERFACE), G-ownership (OWNED_BY). [G-call/G-import/G-stub в build; G-ownership — ручной слой, TODO]
+- [x] B3. Поля функции: id, name, signature, io, contour, routing, status, calls, called_by. (в build)
+- [ ] B4. verify-гейт (pre-commit): перегенерация coder_dom → diff=0 (schema drift fail). (TODO)
 
 ## Блок C. Интеграция и мульти-разработка
 

@@ -112,6 +112,7 @@ def build_coder_dom(root: str | Path, include_tests: bool = False) -> dict[str, 
         "structure": {"contours": structure},
         "graphs": {
             "G-call": {"node_types": ["function"], "edge_types": ["CALLS"], "edges": g_call},
+            "G-import": {"node_types": ["module"], "edge_types": ["IMPORTS"], "edges": []},
             "G-stub": {"node_types": ["function"], "edge_types": ["STUB", "INTERFACE"],
                        "counts": stubs["counts"]},
             "G-ownership": {"node_types": ["function"], "edge_types": ["OWNED_BY"]},

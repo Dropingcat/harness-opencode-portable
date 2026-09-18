@@ -1,0 +1,60 @@
+# Coder DOM — шаблон капсулы (аналог writer-dom-dissertation.yaml)
+# Копируй в корень проекта как coder_dom.yaml, заполняй по образцу.
+# Генерация: scripts/glossary/coder_dom_build.py (авто) + ручные блоки (ownership).
+schema: coder-dom/1.0
+
+product:
+  id: "CDOM-001"
+  kind: code
+  status: drafted          # drafted | active | archived
+  language: python
+  contours:                # контуры проекта (из registry)
+    - router
+    - researcher
+    - writer-core
+    - code-factory
+    - plugin
+
+structure:
+  contours:
+    - id: researcher
+      display: Researcher
+      modules:
+        - path: researcher_core/tribunal_live_dialogue.py
+          functions:
+            - id: "F-001"
+              name: "execute_question"
+              signature: "execute_question(parent_state_path, binding, envelope, transport, ...) -> (InquiryTurn, Receipt)"
+              io:
+                inputs: ["parent_state_path: Path", "binding: RoleProviderBinding", "envelope: TribunalExecutionEnvelope", "transport: TribunalProviderTransport"]
+                outputs: ["InquiryTurn", "Receipt"]
+              contour: researcher
+              routing: "coder-worker:research-tribunal"   # кто развивает (G-ownership)
+              status: done                                # stub | interface | drafted | done
+              stub_ref: null                              # issue-ссылка если stub
+              calls: ["compile_execution_envelope", "transport.invoke"]
+              called_by: ["Q1A1 loop"]
+              uses: ["config/tribunal_composition.yaml"]
+              doc: "Выполняет вопрос трибунала через провайдер-транспорт."
+
+graphs:
+  G-call:
+    node_types: [function]
+    edge_types: [CALLS]
+    edges: []
+  G-import:
+    node_types: [module]
+    edge_types: [IMPORTS]
+  G-stub:
+    node_types: [function]
+    edge_types: [STUB, INTERFACE]
+  G-ownership:
+    node_types: [function]
+    edge_types: [OWNED_BY]
+    assignments:          # ручной слой: функция -> владелец (агент/разработчик)
+      - function: "F-001"
+        owner: "coder-worker:research-tribunal"
+
+uncertainty: {}           # функции с неопределённым io/статусом (аналог writer uncertainty)
+
+fingerprint: "sha256:..." # вычисляется coder_dom_build.py (JCS-стабильный)
