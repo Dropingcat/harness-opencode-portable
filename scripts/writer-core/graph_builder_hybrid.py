@@ -794,15 +794,17 @@ def _build_g7(art: dict, reg: dict) -> _GraphAcc | None:
       ClaimRef EXTRACTED_FROM → ArtifactRef    (span artifact_ref ∩ span claim)
       ClaimRef SUPPORTED_BY → EvidenceRef      (claim.evidence / claim.source_id)
 
-    Если claims пуст, но есть citations/artifact_refs — ноды CitationMarker/
-    ArtifactRef всё равно строятся (граф НЕ пуст, не skipped). Возвращает None
-    только когда в артефакте нет НИ citations, НИ artifact_refs, НИ claims.
+    ГРАФ СТРОИТСЯ ТОЛЬКО при наличии citation-маркеров ИЛИ ссылок на артефакты
+    (citations/artifact_refs). Если есть ТОЛЬКО claims — возвращает None (граф
+    skipped): ClaimRef-ноды добавляются как дополнение к citation-следу, но не
+    сами по себе (T8). Если claims пуст, но есть citations/artifact_refs — ноды
+    CitationMarker/ArtifactRef строятся (граф НЕ пуст, не skipped).
     """
     citations = art.get("citations") or []
     artifact_refs = art.get("artifact_refs") or []
+    if not citations and not artifact_refs:
+        return None  # T8: без citation-следа G7 не строится (даже с claims)
     claims = art.get("claims") or []
-    if not citations and not artifact_refs and not claims:
-        return None
     acc = _GraphAcc("G7_citation_provenance", reg)
     para_id = art.get("paragraph_id", "")
     acc.set_para(para_id)
@@ -862,13 +864,33 @@ def _build_g7(art: dict, reg: dict) -> _GraphAcc | None:
 # Политика параграфа -> policy-файл репозитория -> тип узла реестра G8.
 # Детерминированная таблица (документируется в docstring _build_g8):
 #   сигналы  -> (policy-файл в config/, тип узла реестра G8)
-_POLICY_SIGNALS: list[tuple[tuple[str, ...], tuple[str, str]]] = [
-    (("guard", "блокиров", "blocked", "block"), ("guard_policy.json", "GlobalPolicy")),
-    (("policy", "route", "rout"), ("route_resolution_policy.json", "DomainPolicy")),
-    (("не должен", "нельзя", "запрещ", "запрет", "must not"),
-     ("factory_gate_policy.json", "ReviewPolicy")),
-    (("риск", "risk", "job runtime"), ("job_runtime_policy.json", "RiskPolicy")),
+# Каждый сигнал помечен типом контекста: "ru" (русский маркер — достаточно
+# word-boundary), "lat" (латинский — требуется русский маркер-сосед ИЛИ
+# не-code-контекст, см. R1).
+_POLICY_SIGNALS: list[tuple[tuple[str, str], tuple[str, str]]] = [
+    (("guard", "lat"), ("guard_policy.json", "GlobalPolicy")),
+    (("блокиров", "ru"), ("guard_policy.json", "GlobalPolicy")),
+    (("policy", "lat"), ("route_resolution_policy.json", "DomainPolicy")),
+    (("route", "lat"), ("route_resolution_policy.json", "DomainPolicy")),
+    (("rout", "lat"), ("route_resolution_policy.json", "DomainPolicy")),
+    (("не должен", "ru"), ("factory_gate_policy.json", "ReviewPolicy")),
+    (("нельзя", "ru"), ("factory_gate_policy.json", "ReviewPolicy")),
+    (("запрещ", "ru"), ("factory_gate_policy.json", "ReviewPolicy")),
+    (("запрет", "ru"), ("factory_gate_policy.json", "ReviewPolicy")),
+    (("must not", "lat"), ("factory_gate_policy.json", "ReviewPolicy")),
+    (("риск", "ru"), ("job_runtime_policy.json", "RiskPolicy")),
+    (("risk", "lat"), ("job_runtime_policy.json", "RiskPolicy")),
 ]
+
+# Русские маркеры-соседи: их наличие рядом с латинским сигналом (в пределах
+# окна) разрешает срабатывание латинского сигнала вне code-блоков (R1).
+_RU_POLICY_MARKERS = ("политик", "правил", "запрещ", "запрет", "не должен",
+                      "нельзя", "риск", "guard", "блокиров", "огранич",
+                      "требовани", "обязан", "контрол")
+
+_FENCE_RE = re.compile(r"```")
+# Окно контекста вокруг латинского сигнала (символов) для русского маркера.
+_RU_CONTEXT_WINDOW = 80
 
 # Полный реестр policy-файлов -> типы G8 (для docstring и проверки существования).
 _POLICY_FILES_TO_TYPES: dict[str, str] = {
@@ -908,6 +930,33 @@ def _repo_config_dir() -> str | None:
     return None
 
 
+def _in_fence_block(text: str, pos: int) -> bool:
+    """Сигнал на позиции pos внутри fenced code-блока ```...``` (R1).
+
+    Детерминированный скан: чётные открывающие ``` -> блок, нечётные ->
+    закрывающие. Позиция внутри [open, close) считается code-контекстом.
+    """
+    fences = [m.start() for m in _FENCE_RE.finditer(text)]
+    for i in range(0, len(fences) - 1, 2):
+        if fences[i] <= pos < fences[i + 1]:
+            return True
+    return False
+
+
+def _ru_context_ok(text: str, pos: int, window: int = _RU_CONTEXT_WINDOW) -> bool:
+    """Русский маркер-сосед политики в окне вокруг позиции (R1).
+
+    Для латинских сигналов (policy/route/risk/guard/block) требуем русский
+    контекст ('политик', 'правил', 'запрещ', 'не должен', 'guard' и т.п.)
+    в пределах window символов до/после — иначе сигнал считается кодом/именем
+    идентификатора и отбрасывается.
+    """
+    lo = max(0, pos - window)
+    hi = min(len(text), pos + window)
+    ctx = text[lo:hi].lower()
+    return any(marker in ctx for marker in _RU_POLICY_MARKERS)
+
+
 def _build_g8(art: dict, reg: dict) -> _GraphAcc | None:
     """G8_policy_constraint: Policy-ноды + APPLIES_TO между ними.
 
@@ -920,22 +969,24 @@ def _build_g8(art: dict, reg: dict) -> _GraphAcc | None:
     реализовано как «Policy APPLIES_TO Policy» (rule_resolution между активными
     политиками параграфа). Это решение задокументировано: типы строго из реестра.
 
+    АНТИ-ЛОЖНЫЙ-ПОЗИТИВ (R1): латинские сигналы (policy/route/risk/guard/block)
+    НЕ матчатся внутри fenced code-блоков (```...```) и требуют русский
+    маркер-сосед в окне (_RU_POLICY_MARKERS, _RU_CONTEXT_WINDOW=80 символов).
+    Пример: 'action = policy(percept)' без русского контекста -> G8 skipped.
+
     Консервативно и детерминированно:
       УСЛОВИЯ построения (оба):
         1) в config/ репозитория есть РЕАЛЬНЫЙ policy-файл из реестра
-           _POLICY_FILES_TO_TYPES (guard_policy.json, route_resolution_policy.json,
-           factory_gate_policy.json, job_runtime_policy.json, memory_l1/l2/l3_
-           policy.json, skill_capsule_policy.json, tool_capsule_policy.json,
-           mcp_capsule_policy.json, runtime_integration_policy.json,
-           artifact_provenance_policy.json, host_integration_policy.json);
-        2) в тексте параграфа найден сигнал политики ("guard", "policy",
-           "не должен", "запрещ", "BLOCK", "must not", "риск", ...).
+           _POLICY_FILES_TO_TYPES;
+        2) в тексте параграфа найден валидный сигнал политики (русский маркер
+           ИЛИ латинский с русским соседом вне code-блока).
 
       Маппинг сигнал -> policy-файл -> тип узла (таблица _POLICY_SIGNALS):
-        guard/блокиров/blocked/block -> guard_policy.json            -> GlobalPolicy
-        policy/route/rout            -> route_resolution_policy.json -> DomainPolicy
-        не должен/нельзя/запрещ/must not -> factory_gate_policy.json -> ReviewPolicy
-        риск/risk/job runtime        -> job_runtime_policy.json      -> RiskPolicy
+        guard/блокиров            -> guard_policy.json            -> GlobalPolicy
+        policy/route/rout         -> route_resolution_policy.json -> DomainPolicy
+        не должен/нельзя/запрещ/запрет/must not -> factory_gate_policy.json
+                                                              -> ReviewPolicy
+        риск/risk                 -> job_runtime_policy.json      -> RiskPolicy
 
       Построение: для КАЖДОГО совпавшего сигнала — одна Policy-нода
       (policy_file/policy_id/signal/span). Если совпало >= 2 сигналов — между
@@ -952,14 +1003,20 @@ def _build_g8(art: dict, reg: dict) -> _GraphAcc | None:
         return None  # нет реального policy-файла в config/ — не фабрикуем
     # собрать ВСЕ совпавшие сигналы (порядок таблицы детерминирован)
     hits: list[tuple[str, str, str, list[int]]] = []  # (signal, file, type, span)
-    for signals, (fname, ntype) in _POLICY_SIGNALS:
+    for (sig, ctx_kind), (fname, ntype) in _POLICY_SIGNALS:
         if not os.path.isfile(os.path.join(cfg, fname)):
             continue  # файла нет — правило не применимо
-        for sig in signals:
-            sp = _find_span(sig, text)
-            if sp:
-                hits.append((sig, fname, ntype, sp))
-                break  # один сигнал на правило (первый в тексте)
+        sp = _find_span(sig, text)
+        if not sp:
+            continue
+        pos = sp[0]
+        # R1: латинский сигнал в code-блоке ИЛИ без русского соседа — пропуск
+        if ctx_kind == "lat":
+            if _in_fence_block(text, pos):
+                continue
+            if not _ru_context_ok(text, pos):
+                continue
+        hits.append((sig, fname, ntype, sp))
     if not hits:
         return None  # сигнала нет в тексте — честно skipped
     acc = _GraphAcc("G8_policy_constraint", reg)
@@ -1050,6 +1107,9 @@ def _build_g9(art: dict, reg: dict) -> _GraphAcc | None:
             claim_by_id[cid_] = ci
 
     rev_ids: list[str] = []
+    # R2: кэш ClaimRef по (claim index) -> node_id — одна нода на claim,
+    # GENERATED_FROM от всех revisions идёт к общей ноде.
+    claimref_by_idx: dict[int, str] = {}
     for r in revisions:
         rid = str(r.get("id") or r.get("revision_id") or
                   f"rev_{len(rev_ids):03d}")
@@ -1075,12 +1135,17 @@ def _build_g9(art: dict, reg: dict) -> _GraphAcc | None:
                 elif ref in claim_by_id:
                     ci = claim_by_id[ref]
                 if ci is not None:
-                    cid = acc.add_node(
-                        "ClaimRef",
-                        {"text": claims[ci].get("text", "")[:200], "claim": ci,
-                         "span": _span_list(claims[ci].get("start"),
-                                            claims[ci].get("end"))}, para_id)
-                    acc.add_edge(rid, cid, "GENERATED_FROM", para=para_id)
+                    if ci not in claimref_by_idx:
+                        cid = acc.add_node(
+                            "ClaimRef",
+                            {"text": claims[ci].get("text", "")[:200],
+                             "claim": ci,
+                             "span": _span_list(claims[ci].get("start"),
+                                                claims[ci].get("end"))},
+                            para_id)
+                        claimref_by_idx[ci] = cid
+                    acc.add_edge(rid, claimref_by_idx[ci], "GENERATED_FROM",
+                                 para=para_id)
 
     # SUPERSEDES: последовательные версии
     for a, b in zip(rev_ids, rev_ids[1:]):

@@ -1,0 +1,32 @@
+{
+  "module": "writer-citations-g7-g8-g9",
+  "result": "FAIL",
+  "passed": 15,
+  "failed": 2,
+  "coverage": 72,
+  "coverage_notes": "coverage.py 7.16.0, in-process driver по реальным acceptance-путям: hybrid_extract.py 68%, graph_builder_hybrid.py 73%, combined 72% (957 stmts). Не покрыто: .docx/.pdf-пути (нет фикстур), fallback razdel-сплиттера, sqlite-края, ветви QA-фолбэков (claim_qa недоступен/исключения). Основные ветки TD-083/G7/G8/G9 и регрессии покрыты.",
+  "tests": [
+    {"name": "T1_compile_hybrid_extract", "status": "pass", "output": "python -m py_compile hybrid_extract.py -> OK, exit 0"},
+    {"name": "T2_compile_graph_builder_hybrid", "status": "pass", "output": "python -m py_compile graph_builder_hybrid.py -> OK, exit 0"},
+    {"name": "T3_extract_exit0", "status": "pass", "output": "wc_cli.py extract --doc writer_probe.md --out a.json -> exit 0, 12 параграфов, 0 ошибок"},
+    {"name": "T4_td083_keys", "status": "pass", "output": "Все 12 параграфов содержат citations/artifact_refs/source_links + старые claims/digest/links/sentences/text. Итого citations=3, source_links=3 (алиас citations), artifact_refs=0 (в probe репозиторий-путь docs/agent_control_loop.md в backticks, а не [Text](url) — by design; unit-тест с [Text](docs/...) даёт artifact_refs=2)"},
+    {"name": "T5_citation_spans_valid", "status": "pass", "output": "Все citation span: list[int,int], 0<=start<end<=len(text), сегмент является [Text](url); 0 нарушений"},
+    {"name": "T6_legacy_keys_preserved", "status": "pass", "output": "claims>=1 параграф, digest/sentences/links во всех 12; source_links==citations (алиас)"},
+    {"name": "T7_g7_built_on_linked_para", "status": "pass", "output": "G7 built на writer_probe_P0001 и P0011 (параграфы со ссылками), НЕ в skipped; ноды CitationMarker x2/x1"},
+    {"name": "T8_g7_skipped_on_linkless", "status": "fail", "output": "На параграфах без ссылок с claims (P0005, P0010) G7 построен (ClaimRef-only, 1 нода), а не skipped. Нарушение acceptance #3. Из 10 linkless-параграфов на 2 G7 в graphs, а не в skipped"},
+    {"name": "T9_registry_types_only", "status": "pass", "output": "validate_against_registry по всем графам всех 12 параграфов -> 0 нарушений (node/edge types строго из graph_registry.yaml)"},
+    {"name": "T10_g8_built_on_policy_para", "status": "pass", "output": "G8 built только на writer_probe_P0009 (содержит 'policy' в псевдокоде): нода DomainPolicy, policy_file=route_resolution_policy.json (файл реально существует в config/)"},
+    {"name": "T11_g8_skipped_elsewhere", "status": "pass", "output": "G8 skipped на остальных 11 параграфах с причиной 'нет policy-сигнала...'"},
+    {"name": "T12_g9_skipped", "status": "pass", "output": "G9 skipped на всех 12 параграфах с причиной 'нет revision-данных (revisions/draft_log/editions)'. Unit-проверка: artifact с revisions -> G9 built (RevisionRef/SUPERSEDES/GENERATED_FROM)"},
+    {"name": "T13_regression_built", "status": "pass", "output": "G3/G4/G5/G6/G13/G14/G15 все built (G3,G13 на всех параграфах; G4/G5/G6/G14/G15 минимум на 1)"},
+    {"name": "T14_registry_zero_violations", "status": "pass", "output": "validate_against_registry: 0 нарушений по всему graphs.json"},
+    {"name": "T15_graphs_cli_exit0", "status": "pass", "output": "wc_cli.py graphs --artifact a.json --out g.json -> exit 0, 12 параграфов, 0 errors"},
+    {"name": "T16_old_artifact_no_crash", "status": "pass", "output": "wc_cli.py graphs --artifact probe_artifact.json -> exit 0, 0 errors"},
+    {"name": "T17_old_artifact_skipped", "status": "fail", "output": "Literal acceptance #7 не выполнен полностью: G7 built ClaimRef-only на claim-параграфах (P0005/P0010), G8 built на P0009 (текст содержит 'policy', policy-файл существует). G9 skipped корректно. Нет краша; поведение детерминированно и семантически обосновано, но критерий 'G7/G8/G9 skipped' на старом artifact нарушен"}
+  ],
+  "problems": [
+    {"id": "T8", "severity": "major", "finding": "G7_citation_provenance строится (не skipped) на параграфах БЕЗ ссылок, если есть claims: P0005/P0010 в a.json (0 citations, 1 claim) дают graphs[pid].graphs['G7_citation_provenance'] с 1 нодой ClaimRef. Acceptance #3 требует skipped с причиной на параграфе без ссылок.", "falsification": "a.json: writer_probe_P0005 и writer_probe_P0010 имеют citations=[] и claims=[{...}]; в g.json G7_citation_provenance присутствует в graphs для обоих, в skipped отсутствует. _build_g7 возвращает acc при любых claims (docstring: 'Возвращает None только когда нет НИ citations, НИ artifact_refs, НИ claims') — решение противоречит контракту теста."},
+    {"id": "T17", "severity": "minor", "finding": "Backward-compat acceptance #7 ('G7/G8/G9 skipped' на старом artifact) выполнен не буквально: G8 построен на P0009 (в тексте псевдокода 'action = policy(percept)', в config/ есть route_resolution_policy.json), G7 построен ClaimRef-only на claim-параграфах. Краша нет, G9 skipped. Поведение детерминированное и grounded; расхождение — следствие того, что старый probe содержит policy-сигнал, а не дефект билдера.", "falsification": "probe_artifact.json: paragraphs[9].text содержит 'action = policy(percept)'; graphs_old.json: writer_probe_P0009 -> graphs.G8_policy_constraint.nodes=[DomainPolicy]. Если acceptance требует skipped строго — билдер не может отличить 'старый' artifact от 'нового' без признака версии."},
+    {"id": "T4", "severity": "info", "finding": "artifact_refs=0 на writer_probe.md, хотя в тексте есть docs/agent_control_loop.md. Причина: ссылка в backticks, а не [Text](url); TD-083 извлекает artifact_refs только из markdown-ссылок. Unit-тест с [внутренний документ](docs/agent_control_loop.md) даёт artifact_refs=2 — функциональность работает.", "falsification": "a.json: все 12 параграфов artifact_refs=[]. check_unit.py: hybrid_extract_paragraph('[внутренний документ](docs/agent_control_loop.md) ...') -> artifact_refs=[{'path':'docs/agent_control_loop.md',...}]. Не дефект, а ожидаемое поведение экстракции."}
+  ]
+}

@@ -284,7 +284,7 @@ def _claims_in_sentence(claims: list[dict], sent_idx: int) -> list[dict]:
 # TD-083: citation-маркеры и ссылки на артефакты репозитория
 # -------------------------------------------------------------------------
 
-_MD_LINK_RE = re.compile(r"\[([^\]]+)\]\(([^)\s]+)\)")
+_MD_LINK_RE = re.compile(r"\[([^\]]+)\]\(([^)\s]*)\)")
 # Путь репозитория: относительный docs/..., скрипт/исходник *.py, документ *.md,
 # либо config/... — всё, что НЕ является внешним http(s) URL или якорем (#...).
 _REPO_ARTIFACT_RE = re.compile(
@@ -301,12 +301,34 @@ def _extract_md_links(text: str) -> list[dict]:
     """Markdown-ссылки `[Text](url)` -> [{"text", "url", "span": [start, end]}].
 
     span — координаты ВСЕЙ ссылки `[Text](url)` в исходном тексте параграфа
-    (start от '[' до конца ')').
+    (start от '[' до закрывающей ')').
+
+    URL-часть поддерживает вложенные скобки (R4): `[x](https://a/(b))` даёт
+    url='https://a/(b)'. Первичный regex `[^)\s]*` останавливается на первой
+    ')'; затем балансируем скобки depth-сканированием от открывающей '(' ссылки
+    (depth=1): url заканчивается на ')' при depth==0. Это CommonMark-поведение.
     """
     out: list[dict] = []
     for m in _MD_LINK_RE.finditer(text):
-        out.append({"text": m.group(1), "url": m.group(2),
-                    "span": [m.start(), m.end()]})
+        url = m.group(2)
+        end = m.end()
+        if url.count("(") > url.count(")"):
+            # вложенные скобки: досканировать до баланса depth (CommonMark)
+            depth = 1  # открывающая '(' ссылки уже потреблена
+            i = m.start(2)
+            while i < len(text):
+                ch = text[i]
+                if ch == "(":
+                    depth += 1
+                elif ch == ")":
+                    depth -= 1
+                    if depth == 0:
+                        break
+                i += 1
+            end = i + 1  # после закрывающей ')' ссылки
+            url = text[m.start(2):i]
+        out.append({"text": m.group(1), "url": url,
+                    "span": [m.start(), end]})
     return out
 
 
@@ -393,7 +415,8 @@ def hybrid_extract_paragraph(text: str, para_id: str, page: int | None = None) -
                    [{"text", "url", "span": [start, end]}]
       artifact_refs — TD-083: только ссылки на пути репозитория (docs/...,
                    *.py, *.md, config/...) -> [{"path", "span": [start, end]}]
-      source_links — TD-083: полный список markdown-ссылок (алиас citations)
+      source_links — TD-083: полный список markdown-ссылок (НЕЗАВИСИМАЯ КОПИЯ
+                   citations — list(citations), не алиас; R5)
     """
     text = (text or "").strip()
     artifact: dict = {
@@ -457,7 +480,7 @@ def hybrid_extract_paragraph(text: str, para_id: str, page: int | None = None) -
         "links": links,
         "citations": citations,
         "artifact_refs": artifact_refs,
-        "source_links": citations,
+        "source_links": list(citations),
     })
     return artifact
 

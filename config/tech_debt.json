@@ -3,9 +3,9 @@
   "updated": "2026-09-18",
   "authority_note": "Canonical registry migrated from патчи/миграция в плагин/tech_debt_current.json (65 records). project_context.py counts status=open. CLOSED_REPORTED maps to closed; RECONCILE_REQUIRED stays open until exact-tree verification.",
   "counts": {
-    "total": 97,
-    "open": 78,
-    "closed": 19
+    "total": 99,
+    "open": 79,
+    "closed": 20
   },
   "debts": [
     {
@@ -1977,11 +1977,14 @@
       "owner": "coder-worker:research",
       "sunset_at": "2026-10-10",
       "acceptance": "verify_claim(None|'str'|42|list) возвращает dict схемы вердикта (fail-closed), не AttributeError; тест test_verify_claim_non_dict_input_returns_verdict_dict зелёный",
-      "status": "open",
-      "status_detail": "OPEN_CURRENT",
-      "presentation_category": "ACTIVE",
+      "status": "closed",
+      "status_detail": "CLOSED",
+      "presentation_category": "CLOSED_ARCHIVE",
       "source_status": "open",
-      "progress": "2026-09-18 E2E через капсулу: воркер добавил тест test_verify_claim_non_dict_input_returns_verdict_dict; 4 subtest падают (None/'not a dict'/42/['text'] -> AttributeError claim.get). main() fail-closed работает (exit 2), но функция контракт нарушает. Капсульный цикл подтверждён: lookup->context->edit->STALE->regen->OK."
+      "progress": "2026-09-18 E2E через капсулу: воркер добавил тест test_verify_claim_non_dict_input_returns_verdict_dict; 4 subtest падают (None/'not a dict'/42/['text'] -> AttributeError claim.get). main() fail-closed работает (exit 2), но функция контракт нарушает. Капсульный цикл подтверждён: lookup->context->edit->STALE->regen->OK.",
+      "closed_at": "2026-09-18",
+      "resolution": "Fail-closed guard в verify_claim (не-dict -> dict-вердикт с error). Фабрика CD003-FIX DONE (reviewer/tester/auditor PASS, 11/11 unittest).",
+      "acceptance_result": "11/11 unittest OK; verify_claim(None|'str'|42|list) -> dict без TypeError"
     },
     {
       "id": "TD-091",
@@ -2078,6 +2081,37 @@
       "source_status": "open",
       "notes": "Тестер writer-citations-g7-g8-g9 T8 (major): P0005/P0010 (0 citations, 1 claim) дают G7 с 1 нодой ClaimRef вместо skipped. Теперь claims-only не должны строить citation-граф.",
       "progress": "2026-09-18: зафиксировано из tester T8."
+    },
+    {
+      "id": "CD-004",
+      "title": "Pre-commit hook: проверка coder_dom в sync + stub-детекция на коммит",
+      "area": "pre-commit (или git hooks), scripts/glossary/verify_coder_dom.py + stub_detect.py",
+      "kind": "tooling",
+      "severity": "medium",
+      "owner": "coder-worker:factory",
+      "sunset_at": "2026-10-10",
+      "acceptance": "при git commit: verify_coder_dom.py не даёт STALE (авто-fix или fail с подсказкой); stub_detect не пропускает новые не-осознанные заглушки (status=stub без # stub: маркера); настройка через .pre-commit-config.yaml или hooks/",
+      "status": "open",
+      "status_detail": "OPEN_CURRENT",
+      "presentation_category": "ACTIVE",
+      "source_status": "open",
+      "progress": "2026-09-18: verify-гейт (verify_coder_dom.py) уже работает (STALE->regen->OK). Осталось обернуть в pre-commit hook + добавить stub-детекцию на коммит."
+    },
+    {
+      "id": "TD-097",
+      "title": "Раздел результатов SEM/EDS Р18 540C: 8 подразделов и их проза в главе результатов",
+      "area": "03_RESULTS/SEM_EDS_R18_540C (DOM C-SEM-001..008, RESULTS_SECTION_BRIEF.md, NUMBER_LEDGER)",
+      "kind": "process",
+      "severity": "medium",
+      "owner": "writing-orchestrator",
+      "sunset_at": "2026-10-25",
+      "acceptance": "написаны 8 подразделов главы результатов: (1) методика и provenance; (2) морфология + приборные метаданные (SU3500, 30 кВ, BSE-COMP+SE); (3) профили N 8/12/24 ч; (4) метрики ΔN, AUC, x10/x50 + sensitivity; (5) локальная неоднородность (12 ч — max repeat spread); (6) разделение градиента и W-богатых выбросов; (7) немонотонность SEM↔XRD осторожно как гипотеза; (8) ограничения метода. Каждый подраздел ссылается на claim C-SEM-* и строки NUMBER_LEDGER; проза проходит citation_trace/проверку DOM.",
+      "status": "open",
+      "status_detail": "OPEN_CURRENT",
+      "presentation_category": "ACTIVE",
+      "source_status": "open",
+      "progress": "2026-09-18: DOM C-SEM-001..008, RESULTS_SECTION_BRIEF.md и NUMBER_LEDGER готовы; проза подразделов не написана. XRD-канон не выбран (TD-093); SEM↔XRD немонотонность — только гипотеза по решению пользователя.",
+      "notes": "Связано с TD-092 (пакер) и TD-093 (XRD-канон)."
     }
   ]
 }

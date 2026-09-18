@@ -1,0 +1,9 @@
+{
+  "module": "verify_claim_fix",
+  "verdict": "APPROVE",
+  "comments": [
+    {"id": "R1", "severity": "minor", "file": "scripts/researcher/verify_claims.py", "line": "171-174", "problem": "Fail-closed guard возвращает OPEN-вердикт с error 'claim must be a dict' — корректно по контракту (не бросает). RESEARCHER_OK-блок сохранён после guard, что не меняет прежнее поведение при валидном dict.", "suggestion": "Принять как есть; в будущем можно флажок invalid_input для отделения от научного OPEN.", "falsification": "verify_claim(None) возвращает dict с verdict=OPEN и error; verify_claim({'text':'x'}) проходит RESEARCHER_OK-путь как раньше."}
+  ],
+  "scope_declared": {"scope_in": ["scripts/researcher/verify_claims.py: verify_claim guard"], "scope_out": ["main()", "логика guard/числа/qualifier", "другие функции"]},
+  "out_of_scope_gaps": []
+}

@@ -1,0 +1,14 @@
+{
+  "module": "verify_claim_fix",
+  "result": "PASS",
+  "passed": 11,
+  "failed": 0,
+  "coverage": 82,
+  "coverage_notes": "tests/test_verify_claims.py: Ran 11 tests OK. Новый test_verify_claim_non_dict_input_returns_verdict_dict (4 subtest: None/'not a dict'/42/['text']) все проходят, dict без TypeError. Существующие 10 тестов не сломаны. Coverage ~82% на verify_claim (guard/числа/qualifier ветки).",
+  "tests": [
+    {"name": "test_verify_claim_non_dict_input_returns_verdict_dict", "status": "pass", "output": "4 subtest не-dict -> dict-вердикт, без TypeError"},
+    {"name": "test_broken_claim_fail_closed_exit_2", "status": "pass", "output": "main() fail-closed сохранён"},
+    {"name": "прочие 9 существующих", "status": "pass", "output": "не затронуты"}
+  ],
+  "problems": []
+}

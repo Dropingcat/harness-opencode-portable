@@ -228,7 +228,10 @@
 - [x] **Единый контракт дефекта**: заявка кодеру всегда содержит репро-команду, ожидаемое/фактическое поведение, фрагмент данных и критерий приёмки; применён в трёх заявках WS-20/WS-21. (2026-09-07)
 - [x] **Append-only verification**: `verify_claims --apply` больше не даунгрейдит курированные verdict и не стирает существующий numeric_comparison; unittest 10/10. (2026-09-07)
 
-### WS-22 Research tooling capsules: search → source → document → evidence
+### WS-22
+
+- [x] **SEM/EDS R18 540C packaged**: 17 raw files + TIFF metadata + 6 profiles/300 pts; DOM results `sem_eds_r18_results_dom.yaml` (C-SEM-001..008); NUMBER_LEDGER, TRACEABILITY_AUDIT PASS. (2026-09-18)
+- [x] **TD-091/TD-092 filed** (network-drop checkpoint standard, deterministic SEM packager as reusable CLI). (2026-09-18) Research tooling capsules: search → source → document → evidence
 
 Цель: довести существующие MCP/tool/corpus заготовки до рабочего,
 checkpointed контура для ресерчера и писателя без одноразовых конвертеров и
