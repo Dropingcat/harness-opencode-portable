@@ -1,0 +1,1701 @@
+{
+  "checked": [
+    {
+      "claim_id": "ACL-001",
+      "matched": true,
+      "notes": [],
+      "overlap": 3,
+      "reasons": [
+        "PARAPHRASE_SAFE"
+      ]
+    },
+    {
+      "claim_id": "ACL-002",
+      "matched": true,
+      "notes": [],
+      "overlap": 6,
+      "reasons": [
+        "NEGATION_FLIP"
+      ]
+    },
+    {
+      "claim_id": "ACL-003",
+      "matched": true,
+      "notes": [],
+      "overlap": 5,
+      "reasons": [
+        "PARAPHRASE_SAFE"
+      ]
+    },
+    {
+      "claim_id": "ACL-004",
+      "matched": true,
+      "notes": [],
+      "overlap": 3,
+      "reasons": [
+        "PARAPHRASE_SAFE"
+      ]
+    },
+    {
+      "claim_id": "ACL-005",
+      "matched": true,
+      "notes": [],
+      "overlap": 3,
+      "reasons": [
+        "NEGATION_FLIP"
+      ]
+    },
+    {
+      "claim_id": "ACL-006",
+      "matched": true,
+      "notes": [],
+      "overlap": 3,
+      "reasons": [
+        "NEGATION_FLIP"
+      ]
+    },
+    {
+      "claim_id": "ACL-007",
+      "matched": true,
+      "notes": [],
+      "overlap": 2,
+      "reasons": [
+        "PARAPHRASE_SAFE"
+      ]
+    },
+    {
+      "claim_id": "ACL-008",
+      "matched": true,
+      "notes": [],
+      "overlap": 3,
+      "reasons": [
+        "NEGATION_FLIP"
+      ]
+    },
+    {
+      "claim_id": "ACL-009",
+      "matched": true,
+      "notes": [
+        "scope restrictor dropped"
+      ],
+      "overlap": 5,
+      "reasons": [
+        "SCOPE_EXPANSION"
+      ]
+    },
+    {
+      "claim_id": "ACL-010",
+      "matched": true,
+      "notes": [
+        "qualifiers lost: ['может']"
+      ],
+      "overlap": 9,
+      "reasons": [
+        "QUALIFIER_LOSS",
+        "NEGATION_FLIP"
+      ]
+    },
+    {
+      "claim_id": "ACL-011",
+      "matched": true,
+      "notes": [],
+      "overlap": 1,
+      "reasons": [
+        "PARAPHRASE_SAFE"
+      ]
+    },
+    {
+      "claim_id": "ACL-012",
+      "matched": true,
+      "notes": [
+        "qualifiers lost: ['может']"
+      ],
+      "overlap": 2,
+      "reasons": [
+        "QUALIFIER_LOSS"
+      ]
+    },
+    {
+      "claim_id": "ACL-013",
+      "matched": true,
+      "notes": [],
+      "overlap": 2,
+      "reasons": [
+        "NEGATION_FLIP"
+      ]
+    },
+    {
+      "claim_id": "ACL-014",
+      "matched": true,
+      "notes": [],
+      "overlap": 4,
+      "reasons": [
+        "PARAPHRASE_SAFE"
+      ]
+    },
+    {
+      "claim_id": "ACL-015",
+      "matched": true,
+      "notes": [],
+      "overlap": 2,
+      "reasons": [
+        "PARAPHRASE_SAFE"
+      ]
+    },
+    {
+      "claim_id": "ACL-016",
+      "matched": true,
+      "notes": [],
+      "overlap": 3,
+      "reasons": [
+        "PARAPHRASE_SAFE"
+      ]
+    },
+    {
+      "claim_id": "ACL-017",
+      "matched": true,
+      "notes": [],
+      "overlap": 1,
+      "reasons": [
+        "NEGATION_FLIP"
+      ]
+    },
+    {
+      "claim_id": "ACL-018",
+      "matched": true,
+      "notes": [],
+      "overlap": 3,
+      "reasons": [
+        "NEGATION_FLIP"
+      ]
+    }
+  ],
+  "contract_path": "agent_control_loop_writing_contract.json",
+  "defects": [],
+  "draft_path": "article_agent_control_loop.md",
+  "generated_by": "writer_core.factory_process.draftcheck",
+  "re_extraction": {
+    "claims": [
+      {
+        "claim_id": "DRAFT_P0002_C0",
+        "end": 654,
+        "paragraph_id": "DRAFT_P0002",
+        "qa_status": "GROUNDED",
+        "raw_span": "Опыт локального harness показывает другой критерий качества: не длину автономного пробега, а устройство **control plane**.",
+        "sentence_idx": 0,
+        "start": 532,
+        "text": "Опыт локального harness показывает другой критерий качества: не длину автономного пробега, а устройство **control plane*"
+      },
+      {
+        "claim_id": "DRAFT_P0005_C0",
+        "end": 1413,
+        "paragraph_id": "DRAFT_P0005",
+        "qa_status": "GROUNDED",
+        "raw_span": "**Work plane** выполняет содержательную работу: декомпозирует задачу, пишет код или текст, вызывает инструменты, формулирует гипотезы, собирает наблюдения, предлагает маршрут.",
+        "sentence_idx": 0,
+        "start": 1238,
+        "text": "**Work plane** выполняет содержательную работу: декомпозирует задачу, пишет код или текст, вызывает инструменты, формули"
+      },
+      {
+        "claim_id": "DRAFT_P0008_C0",
+        "end": 2766,
+        "paragraph_id": "DRAFT_P0008",
+        "qa_status": "GROUNDED",
+        "raw_span": "Отсюда следует практическая граница: модель может предложить `DONE`, но только reducer вправе материализовать `DONE`.",
+        "sentence_idx": 0,
+        "start": 2649,
+        "text": "Отсюда следует практическая граница: модель может предложить `DONE`, но только reducer вправе материализовать `DONE`."
+      },
+      {
+        "claim_id": "DRAFT_P0008_C1",
+        "end": 2840,
+        "paragraph_id": "DRAFT_P0008",
+        "qa_status": "GROUNDED",
+        "raw_span": "Модель может назвать артефакт безопасным, но admission определяет policy.",
+        "sentence_idx": 1,
+        "start": 2767,
+        "text": "Модель может назвать артефакт безопасным, но admission определяет policy."
+      },
+      {
+        "claim_id": "DRAFT_P0008_C2",
+        "end": 2949,
+        "paragraph_id": "DRAFT_P0008",
+        "qa_status": "GROUNDED",
+        "raw_span": "Модель может рекомендовать ещё одну попытку, но лимит и тип следующего перехода принадлежат stop controller.",
+        "sentence_idx": 2,
+        "start": 2841,
+        "text": "Модель может рекомендовать ещё одну попытку, но лимит и тип следующего перехода принадлежат stop controller."
+      },
+      {
+        "claim_id": "DRAFT_P0012_C0",
+        "end": 3622,
+        "paragraph_id": "DRAFT_P0012",
+        "qa_status": "GROUNDED",
+        "raw_span": "Только затем события сворачиваются в состояние, а control plane выбирает следующий переход.",
+        "sentence_idx": 4,
+        "start": 3531,
+        "text": "Только затем события сворачиваются в состояние, а control plane выбирает следующий переход."
+      },
+      {
+        "claim_id": "DRAFT_P0014_C0",
+        "end": 4959,
+        "paragraph_id": "DRAFT_P0014",
+        "qa_status": "GROUNDED",
+        "raw_span": "Диаграмма полезна как проектная карта: она показывает, где решение должно иметь владельца и где незавершённость нельзя переименовывать в успех.",
+        "sentence_idx": 2,
+        "start": 4816,
+        "text": "Диаграмма полезна как проектная карта: она показывает, где решение должно иметь владельца и где незавершённость нельзя п"
+      },
+      {
+        "claim_id": "DRAFT_P0021_C0",
+        "end": 7140,
+        "paragraph_id": "DRAFT_P0021",
+        "qa_status": "GROUNDED",
+        "raw_span": "Раньше reviewer `APPROVE` мог преждевременно перевести задачу в `PASSED`, хотя tester gate ещё не был получен.",
+        "sentence_idx": 1,
+        "start": 7030,
+        "text": "Раньше reviewer `APPROVE` мог преждевременно перевести задачу в `PASSED`, хотя tester gate ещё не был получен."
+      },
+      {
+        "claim_id": "DRAFT_P0023_C0",
+        "end": 7594,
+        "paragraph_id": "DRAFT_P0023",
+        "qa_status": "GROUNDED",
+        "raw_span": "В code-factory untrusted artifact должен быть зарегистрирован с hash и provenance, а затем допущен guard; альтернативой служит отдельно хешированный sanitized derivative, связанный с исходником.",
+        "sentence_idx": 1,
+        "start": 7400,
+        "text": "В code-factory untrusted artifact должен быть зарегистрирован с hash и provenance, а затем допущен guard; альтернативой "
+      },
+      {
+        "claim_id": "DRAFT_P0029_C0",
+        "end": 11409,
+        "paragraph_id": "DRAFT_P0029",
+        "qa_status": "GROUNDED",
+        "raw_span": "Хотя каталог приводит `/ship` как пример, текущий non-legacy artifact и отдельный merge validator при проверке не найдены; поэтому «Independent fan-out + explicit merge» остаётся `DOCUMENTED POLICY`, а не обкатанным end-to-end механизмом [orchestration-patterns.md](shared/orchestration-patterns.md), [IMPLEMENTATION_TRACKER.md](IMPLEMENTATION_TRACKER.md).",
+        "sentence_idx": 4,
+        "start": 11053,
+        "text": "Хотя каталог приводит `/ship` как пример, текущий non-legacy artifact и отдельный merge validator при проверке не найден"
+      },
+      {
+        "claim_id": "DRAFT_P0037_C0",
+        "end": 14141,
+        "paragraph_id": "DRAFT_P0037",
+        "qa_status": "GROUNDED",
+        "raw_span": "Уже принятые части не следует пересобирать без причины.",
+        "sentence_idx": 4,
+        "start": 14086,
+        "text": "Уже принятые части не следует пересобирать без причины."
+      },
+      {
+        "claim_id": "DRAFT_P0037_C1",
+        "end": 14547,
+        "paragraph_id": "DRAFT_P0037",
+        "qa_status": "GROUNDED",
+        "raw_span": "3. **Replan** меняет декомпозицию, стратегию или маршрут, потому что сигналы показывают ошибочность прежнего плана.",
+        "sentence_idx": 6,
+        "start": 14432,
+        "text": "3. **Replan** меняет декомпозицию, стратегию или маршрут, потому что сигналы показывают ошибочность прежнего плана."
+      },
+      {
+        "claim_id": "DRAFT_P0048_C0",
+        "end": 18653,
+        "paragraph_id": "DRAFT_P0048",
+        "qa_status": "GROUNDED",
+        "raw_span": "Он отвечает на разные вопросы следующего уровня. `PARTIAL` позволяет использовать подтверждённую часть результата, не маскируя пробелы. `BLOCKED` сообщает, что продолжение возможно после внешнего изменения — permission, dependency, budget. `UNRESOLVABLE` означает, что доступными средствами условие не разрешается. `ESCALATED` фиксирует передачу решения.",
+        "sentence_idx": 3,
+        "start": 18299,
+        "text": "Он отвечает на разные вопросы следующего уровня. `PARTIAL` позволяет использовать подтверждённую часть результата, не ма"
+      },
+      {
+        "claim_id": "DRAFT_P0049_C0",
+        "end": 18899,
+        "paragraph_id": "DRAFT_P0049",
+        "qa_status": "GROUNDED",
+        "raw_span": "Третья failure story показывает, почему control plane обязан контролировать даже банальные единицы.",
+        "sentence_idx": 0,
+        "start": 18800,
+        "text": "Третья failure story показывает, почему control plane обязан контролировать даже банальные единицы."
+      },
+      {
+        "claim_id": "DRAFT_P0049_C1",
+        "end": 19253,
+        "paragraph_id": "DRAFT_P0049",
+        "qa_status": "GROUNDED",
+        "raw_span": "Бюджет, заданный числом без единицы и владельца, не является бюджетом.",
+        "sentence_idx": 4,
+        "start": 19183,
+        "text": "Бюджет, заданный числом без единицы и владельца, не является бюджетом."
+      },
+      {
+        "claim_id": "DRAFT_P0059_C0",
+        "end": 22970,
+        "paragraph_id": "DRAFT_P0059",
+        "qa_status": "GROUNDED",
+        "raw_span": "2. **Определяйте успех через GateSet текущей попытки.** Missing, stale и silent gate — не `PASS`.",
+        "sentence_idx": 1,
+        "start": 22873,
+        "text": "2. **Определяйте успех через GateSet текущей попытки.** Missing, stale и silent gate — не `PASS`."
+      },
+      {
+        "claim_id": "DRAFT_P0059_C1",
+        "end": 23226,
+        "paragraph_id": "DRAFT_P0059",
+        "qa_status": "GROUNDED",
+        "raw_span": "Не позволяйте порядку regex стать архитектурным решением.",
+        "sentence_idx": 4,
+        "start": 23169,
+        "text": "Не позволяйте порядку regex стать архитектурным решением."
+      },
+      {
+        "claim_id": "DRAFT_P0060_C0",
+        "end": 24614,
+        "paragraph_id": "DRAFT_P0060",
+        "qa_status": "GROUNDED",
+        "raw_span": "Качество агента проявляется не в том, как долго он способен продолжать работу, а в том, насколько система умеет отказать его output в статусе решения.",
+        "sentence_idx": 0,
+        "start": 24464,
+        "text": "Качество агента проявляется не в том, как долго он способен продолжать работу, а в том, насколько система умеет отказать"
+      },
+      {
+        "claim_id": "DRAFT_P0062_C0",
+        "end": 24953,
+        "paragraph_id": "DRAFT_P0062",
+        "qa_status": "GROUNDED",
+        "raw_span": "Статусы в статье означают следующее:",
+        "sentence_idx": 1,
+        "start": 24917,
+        "text": "Статусы в статье означают следующее:"
+      }
+    ],
+    "digests": [
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "# Контур управления ИИ-агентом: как оркестратор принимает решения и останавливает цикл"
+        },
+        "modality": "assertive",
+        "scope": {
+          "restricted": false
+        },
+        "scope_text": "# Контур управления ИИ-агентом: как оркестратор принимает решения и останавливает цикл"
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "ИИ-агент может вернуть убедительный ответ, приложить diff, написать `APPROVE` и сообщить, что задача завершена."
+        },
+        "modality": "assertive",
+        "scope": {
+          "restricted": false
+        },
+        "scope_text": "ИИ-агент может вернуть убедительный ответ, приложить diff, написать `APPROVE` и сообщить, что задача завершена."
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "Опыт локального harness показывает другой критерий качества: не длину автономного пробега, а устройство **control plane**."
+        },
+        "modality": "assertive",
+        "scope": {
+          "negation": true,
+          "restricted": false
+        },
+        "scope_text": "Опыт локального harness показывает другой критерий качества: не длину автономного пробега, а устройство **control plane**."
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "## Два контура вместо одного «умного агента»"
+        },
+        "modality": "assertive",
+        "scope": {
+          "restricted": false
+        },
+        "scope_text": "## Два контура вместо одного «умного агента»"
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "restore_scope",
+          "rewrite_span"
+        ],
+        "ambiguities": [
+          {
+            "details": {
+              "head": "два",
+              "heuristic": "scope_np_without_research_attr"
+            },
+            "impact": "MEDIUM",
+            "target": "sentence",
+            "type": "SCOPE_EXPANSION"
+          }
+        ],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "Полезно разделить агентную систему на два контура."
+        },
+        "modality": "assertive",
+        "scope": {
+          "restricted": false
+        },
+        "scope_text": "Полезно разделить агентную систему на два контура."
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "remove_causality",
+          "request_expert",
+          "request_research",
+          "rewrite_span",
+          "weaken_modality"
+        ],
+        "ambiguities": [
+          {
+            "details": {
+              "causal_force": "CAUSAL",
+              "heuristic": "causal_marker_without_hedge"
+            },
+            "impact": "HIGH",
+            "target": "sentence",
+            "type": "CAUSALITY_UPGRADE"
+          }
+        ],
+        "causal_force": "CAUSAL",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "**Work plane** выполняет содержательную работу: декомпозирует задачу, пишет код или текст, вызывает инструменты, формулирует гипотезы, собирает наблюдения, предлагает маршрут."
+        },
+        "modality": "assertive",
+        "scope": {
+          "restricted": false
+        },
+        "scope_text": "**Work plane** выполняет содержательную работу: декомпозирует задачу, пишет код или текст, вызывает инструменты, формулирует гипотезы, собирает наблюдения, предлагает маршрут."
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "restore_scope",
+          "rewrite_span"
+        ],
+        "ambiguities": [
+          {
+            "details": {
+              "head": "другой",
+              "heuristic": "scope_np_without_research_attr"
+            },
+            "impact": "MEDIUM",
+            "target": "sentence",
+            "type": "SCOPE_EXPANSION"
+          }
+        ],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "**Control plane** отвечает на другой класс вопросов: какой контракт действует, допустим ли выбранный маршрут, зарегистрирован ли артефакт, какие gates обязательны для текущей попытки, исчерпан ли бюджет, надо ли повторить операцию, переделать часть результата, перепланировать работу или остановиться"
+        },
+        "modality": "assertive",
+        "scope": {
+          "restricted": false
+        },
+        "scope_text": "**Control plane** отвечает на другой класс вопросов: какой контракт действует, допустим ли выбранный маршрут, зарегистрирован ли артефакт, какие gates обязательны для текущей попытки, исчерпан ли бюджет, надо ли повторить операцию, переделать часть результата, перепланировать работу или остановиться."
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "В локальной code-factory такое разделение не только описано, но и частично обкатано (`IMPLEMENTED/EXERCISED`)."
+        },
+        "modality": "assertive",
+        "scope": {
+          "negation": true,
+          "restricted": false
+        },
+        "scope_text": "В локальной code-factory такое разделение не только описано, но и частично обкатано (`IMPLEMENTED/EXERCISED`)."
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "Отсюда следует практическая граница: модель может предложить `DONE`, но только reducer вправе материализовать `DONE`."
+        },
+        "modality": "assertive",
+        "scope": {
+          "restricted": false
+        },
+        "scope_text": "Отсюда следует практическая граница: модель может предложить `DONE`, но только reducer вправе материализовать `DONE`."
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "## Реконструированный управляющий цикл"
+        },
+        "modality": "assertive",
+        "scope": {
+          "restricted": false
+        },
+        "scope_text": "## Реконструированный управляющий цикл"
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "Полный цикл удобно читать как цепочку из девяти операций:"
+        },
+        "modality": "assertive",
+        "scope": {
+          "restricted": false
+        },
+        "scope_text": "Полный цикл удобно читать как цепочку из девяти операций:"
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "`goal → classify → scope → contract → dispatch → evidence/provenance → verify → reduce → decide`."
+        },
+        "modality": "assertive",
+        "scope": {
+          "restricted": false
+        },
+        "scope_text": "`goal → classify → scope → contract → dispatch → evidence/provenance → verify → reduce → decide`."
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "Только затем события сворачиваются в состояние, а control plane выбирает следующий переход."
+        },
+        "modality": "assertive",
+        "scope": {
+          "restricted": false
+        },
+        "scope_text": "Только затем события сворачиваются в состояние, а control plane выбирает следующий переход."
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "```mermaid\nstateDiagram-v2\n    [*] --> Goal\n    Goal --> Classify\n    Classify --> Scope\n    Scope --> Contract\n    Contract --> Dispatch\n    Dispatch --> RegisterEvidence: output / tool result\n    Dispatch --> Retry: transient provider failure\n    Retry --> Dispatch: same operation, budget availabl"
+        },
+        "modality": "assertive",
+        "scope": {
+          "restricted": false
+        },
+        "scope_text": "```mermaid\nstateDiagram-v2\n    [*] --> Goal\n    Goal --> Classify\n    Classify --> Scope\n    Scope --> Contract\n    Contract --> Dispatch\n    Dispatch --> RegisterEvidence: output / tool result\n    Dispatch --> Retry: transient provider failure\n    Retry --> Dispatch: same operation, budget available\n    Retry --> Escalated: retry budget exhausted\n    RegisterEvidence --> Verify: hash + provenance + admission\n    Verify --> Reduce: gate events\n    Reduce --> Decide\n    Decide --> Done: current GateSet PASS\n    Decide --> SelectiveRework: failed bounded scope\n    SelectiveRework --> Contract: new attempt contract\n    Decide --> Replan: decomposition or strategy invalid\n    Replan --> Classify\n    Decide --> Partial\n    Decide --> Blocked\n    Decide --> Unresolvable\n    Decide --> Escalated\n    Done --> [*]\n    Partial --> [*]\n    Blocked --> [*]\n    Unresolvable --> [*]\n    Escalated --> [*]\n```"
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "Диаграмма полезна как проектная карта: она показывает, где решение должно иметь владельца и где незавершённость нельзя переименовывать в успех."
+        },
+        "modality": "assertive",
+        "scope": {
+          "restricted": false
+        },
+        "scope_text": "Диаграмма полезна как проектная карта: она показывает, где решение должно иметь владельца и где незавершённость нельзя переименовывать в успех."
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "## Кто чем владеет"
+        },
+        "modality": "assertive",
+        "scope": {
+          "restricted": false
+        },
+        "scope_text": "## Кто чем владеет"
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "restore_scope",
+          "rewrite_span"
+        ],
+        "ambiguities": [
+          {
+            "details": {
+              "head": "того",
+              "heuristic": "scope_np_without_research_attr"
+            },
+            "impact": "MEDIUM",
+            "target": "sentence",
+            "type": "SCOPE_EXPANSION"
+          }
+        ],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "Оркестратор нужен не для того, чтобы «быть умнее» worker."
+        },
+        "modality": "assertive",
+        "scope": {
+          "negation": true,
+          "restricted": false
+        },
+        "scope_text": "Оркестратор нужен не для того, чтобы «быть умнее» worker."
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "| Объект решения | Что может предложить work plane | Чем владеет control plane |\n|---|---|---|\n| Route | candidate, kind, decomposition | допустимый bucket, profile и execution mode |\n| Artifact | реализация, отчёт, observation | schema, hash, origin, admission |\n| Gates | findings и рекомендации | "
+        },
+        "modality": "assertive",
+        "scope": {
+          "restricted": false
+        },
+        "scope_text": "| Объект решения | Что может предложить work plane | Чем владеет control plane |\n|---|---|---|\n| Route | candidate, kind, decomposition | допустимый bucket, profile и execution mode |\n| Artifact | реализация, отчёт, observation | schema, hash, origin, admission |\n| Gates | findings и рекомендации | required GateSet и typed outcome |\n| State | описание прогресса | reducer projection из событий |\n| Memory | candidate lesson | promotion/rejection с evidence refs |\n| Budget | оценка нужной глубины | фактические лимиты и exhaustion rule |\n| Stop | рекомендация продолжить или закончить | retry, rework, replan, block, escalate, finalize |"
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "Роли worker, reviewer, tester и process auditor в проекте разделены контрактами (`DOCUMENTED POLICY`)."
+        },
+        "modality": "assertive",
+        "scope": {
+          "restricted": false
+        },
+        "scope_text": "Роли worker, reviewer, tester и process auditor в проекте разделены контрактами (`DOCUMENTED POLICY`)."
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "### GateSet before success"
+        },
+        "modality": "assertive",
+        "scope": {
+          "restricted": false
+        },
+        "scope_text": "### GateSet before success"
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "В default policy новых code-factory runs обязательны reviewer, tester и auditor gates."
+        },
+        "modality": "assertive",
+        "scope": {
+          "restricted": false
+        },
+        "scope_text": "В default policy новых code-factory runs обязательны reviewer, tester и auditor gates."
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "Раньше reviewer `APPROVE` мог преждевременно перевести задачу в `PASSED`, хотя tester gate ещё не был получен."
+        },
+        "modality": "assertive",
+        "scope": {
+          "negation": true,
+          "restricted": false
+        },
+        "scope_text": "Раньше reviewer `APPROVE` мог преждевременно перевести задачу в `PASSED`, хотя tester gate ещё не был получен."
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "### Evidence before verdict"
+        },
+        "modality": "assertive",
+        "scope": {
+          "restricted": false
+        },
+        "scope_text": "### Evidence before verdict"
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "В code-factory untrusted artifact должен быть зарегистрирован с hash и provenance, а затем допущен guard; альтернативой служит отдельно хешированный sanitized derivative, связанный с исходником."
+        },
+        "modality": "assertive",
+        "scope": {
+          "restricted": false
+        },
+        "scope_text": "В code-factory untrusted artifact должен быть зарегистрирован с hash и provenance, а затем допущен guard; альтернативой служит отдельно хешированный sanitized derivative, связанный с исходником."
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "Но `Guard PASS` означает только admission по конкретной policy."
+        },
+        "modality": "assertive",
+        "scope": {
+          "restricted": false
+        },
+        "scope_text": "Но `Guard PASS` означает только admission по конкретной policy."
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "## Как выбрать форму оркестрации"
+        },
+        "modality": "assertive",
+        "scope": {
+          "restricted": false
+        },
+        "scope_text": "## Как выбрать форму оркестрации"
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "Добавление агентов — не автоматическое усиление системы."
+        },
+        "modality": "assertive",
+        "scope": {
+          "negation": true,
+          "restricted": false
+        },
+        "scope_text": "Добавление агентов — не автоматическое усиление системы."
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "restore_scope",
+          "rewrite_span"
+        ],
+        "ambiguities": [
+          {
+            "details": {
+              "head": "ветвь",
+              "heuristic": "scope_np_without_research_attr"
+            },
+            "impact": "MEDIUM",
+            "target": "sentence",
+            "type": "SCOPE_EXPANSION"
+          }
+        ],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "| Сигнал задачи | Форма | Обязательная защита |\n|---|---|---|\n| Один артефакт, одна перспектива | Direct invocation | Schema и acceptance checks по риску |\n| Маршрут полностью известен и алгоритмизируем | Deterministic workflow или NoAgents | Validator, tests, policy gate; полная NoAgents-ветка в пр"
+        },
+        "modality": "assertive",
+        "scope": {
+          "negation": true,
+          "restricted": false
+        },
+        "scope_text": "| Сигнал задачи | Форма | Обязательная защита |\n|---|---|---|\n| Один артефакт, одна перспектива | Direct invocation | Schema и acceptance checks по риску |\n| Маршрут полностью известен и алгоритмизируем | Deterministic workflow или NoAgents | Validator, tests, policy gate; полная NoAgents-ветка в проекте пока `PROPOSED/BACKLOG` |\n| Неопределённость ограничена одной областью ответственности | Single-agent loop | Tool guards, budget, stop controller |\n| Подзадачи независимы | Fan-out/fan-in | Контракт на ветвь, отсутствие shared mutable state, explicit merge |\n| Один артефакт требует разных типов проверки | Worker–reviewer–tester–auditor | GateSet текущей попытки; конкретный состав ролей зависит от продукта |\n| Есть конкурирующие гипотезы, которые должны опровергать друг друга | Adversarial team | Hypothesis ledger и convergence rule; режим platform-dependent и экспериментален |\n| Не хватает permission или сохраняется high-impact ambiguity | Human escalation | Revised contract либо explicit approval |"
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "Основание этой таблицы — локальный каталог паттернов и profile-scoped execution modes (`DOCUMENTED POLICY`) [orchestration-patterns.md](shared/orchestration-patterns.md), [execution_modes.json](config/execution_modes.json)."
+        },
+        "modality": "assertive",
+        "scope": {
+          "restricted": false
+        },
+        "scope_text": "Основание этой таблицы — локальный каталог паттернов и profile-scoped execution modes (`DOCUMENTED POLICY`) [orchestration-patterns.md](shared/orchestration-patterns.md), [execution_modes.json](config/execution_modes.json)."
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [
+          {
+            "details": {
+              "connective": {
+                "form": "поэтому",
+                "relation": "CONSEQUENCE",
+                "requires_argument_support": true,
+                "requires_semantic_equivalence": false
+              }
+            },
+            "impact": "MEDIUM",
+            "target": "sentence",
+            "type": "DISCOURSE_CONNECTIVE_UNJUSTIFIED"
+          }
+        ],
+        "causal_force": "NONE",
+        "discourse_role": "connective",
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "Хотя каталог приводит `/ship` как пример, текущий non-legacy artifact и отдельный merge validator при проверке не найдены; поэтому «Independent fan-out + explicit merge» остаётся `DOCUMENTED POLICY`, а не обкатанным end-to-end механизмом [orchestration-patterns.md](shared/orchestration-patterns.md),"
+        },
+        "modality": "assertive",
+        "scope": {
+          "negation": true,
+          "restricted": false
+        },
+        "scope_text": "Хотя каталог приводит `/ship` как пример, текущий non-legacy artifact и отдельный merge validator при проверке не найдены; поэтому «Independent fan-out + explicit merge» остаётся `DOCUMENTED POLICY`, а не обкатанным end-to-end механизмом [orchestration-patterns.md](shared/orchestration-patterns.md), [IMPLEMENTATION_TRACKER.md](IMPLEMENTATION_TRACKER.md)."
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "**Fresh-context challenge** решает другую задачу."
+        },
+        "modality": "assertive",
+        "scope": {
+          "restricted": false
+        },
+        "scope_text": "**Fresh-context challenge** решает другую задачу."
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "## Маршрут как компилируемая policy"
+        },
+        "modality": "assertive",
+        "scope": {
+          "restricted": false
+        },
+        "scope_text": "## Маршрут как компилируемая policy"
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "Routing тоже нельзя оставлять случайным побочным эффектом prompt или порядка условий."
+        },
+        "modality": "assertive",
+        "scope": {
+          "restricted": false
+        },
+        "scope_text": "Routing тоже нельзя оставлять случайным побочным эффектом prompt или порядка условий."
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "restore_scope",
+          "rewrite_span"
+        ],
+        "ambiguities": [
+          {
+            "details": {
+              "head": "claims",
+              "heuristic": "scope_np_without_research_attr"
+            },
+            "impact": "MEDIUM",
+            "target": "sentence",
+            "type": "SCOPE_EXPANSION"
+          }
+        ],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "Текущий router сначала детерминированно разделяет запрос на claims, назначает им kind, bucket и stable ID, затем строит per-claim и grouped execution plan."
+        },
+        "modality": "assertive",
+        "scope": {
+          "restricted": false
+        },
+        "scope_text": "Текущий router сначала детерминированно разделяет запрос на claims, назначает им kind, bucket и stable ID, затем строит per-claim и grouped execution plan."
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "Смысл compiled routing policy не только в скорости."
+        },
+        "modality": "assertive",
+        "scope": {
+          "negation": true,
+          "restricted": false
+        },
+        "scope_text": "Смысл compiled routing policy не только в скорости."
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "## Четыре разных способа продолжить работу"
+        },
+        "modality": "assertive",
+        "scope": {
+          "restricted": false
+        },
+        "scope_text": "## Четыре разных способа продолжить работу"
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "Слово «повторить» скрывает разные операции:"
+        },
+        "modality": "assertive",
+        "scope": {
+          "restricted": false
+        },
+        "scope_text": "Слово «повторить» скрывает разные операции:"
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "Уже принятые части не следует пересобирать без причины."
+        },
+        "modality": "assertive",
+        "scope": {
+          "negation": true,
+          "restricted": false
+        },
+        "scope_text": "Уже принятые части не следует пересобирать без причины."
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "Упрощённый control loop может выглядеть так:"
+        },
+        "modality": "assertive",
+        "scope": {
+          "restricted": false
+        },
+        "scope_text": "Упрощённый control loop может выглядеть так:"
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "```text\nstate = reducer.replay(event_log, frozen_policy)"
+        },
+        "modality": "assertive",
+        "scope": {
+          "restricted": false
+        },
+        "scope_text": "```text\nstate = reducer.replay(event_log, frozen_policy)"
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "while not state.terminal:\n    contract = compile_contract(goal, claims, risk, capabilities, state)\n    route = resolve_route(contract, policy_snapshot)\n    if route.invalid_or_unavailable:\n        return ESCALATED(reason=route.reason)"
+        },
+        "modality": "assertive",
+        "scope": {
+          "restricted": false
+        },
+        "scope_text": "while not state.terminal:\n    contract = compile_contract(goal, claims, risk, capabilities, state)\n    route = resolve_route(contract, policy_snapshot)\n    if route.invalid_or_unavailable:\n        return ESCALATED(reason=route.reason)"
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "result = dispatch(route, contract)\n    if result.transient_failure:\n        if retry_budget.available_for_same_operation():\n            continue  # RETRY: контракт не меняется\n        return BLOCKED(reason=\"dispatch_retry_exhausted\")"
+        },
+        "modality": "assertive",
+        "scope": {
+          "negation": true,
+          "restricted": false
+        },
+        "scope_text": "result = dispatch(route, contract)\n    if result.transient_failure:\n        if retry_budget.available_for_same_operation():\n            continue  # RETRY: контракт не меняется\n        return BLOCKED(reason=\"dispatch_retry_exhausted\")"
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "artifact = register_hash_and_provenance(result)\n    admission = guard(artifact)\n    events = verify_current_attempt(artifact, admission, contract.gates)\n    state = reducer.apply(events)"
+        },
+        "modality": "assertive",
+        "scope": {
+          "restricted": false
+        },
+        "scope_text": "artifact = register_hash_and_provenance(result)\n    admission = guard(artifact)\n    events = verify_current_attempt(artifact, admission, contract.gates)\n    state = reducer.apply(events)"
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "if state.gates_all_pass:\n        return DONE\n    if state.no_progress:\n        return ESCALATED(reason=\"no_progress\")\n    if state.failed_scope_is_bounded:\n        goal = selective_rework(state.failed_scope)\n    elif state.plan_invalid:\n        goal = replan(goal, state.process_signals)\n    elif sta"
+        },
+        "modality": "assertive",
+        "scope": {
+          "restricted": false
+        },
+        "scope_text": "if state.gates_all_pass:\n        return DONE\n    if state.no_progress:\n        return ESCALATED(reason=\"no_progress\")\n    if state.failed_scope_is_bounded:\n        goal = selective_rework(state.failed_scope)\n    elif state.plan_invalid:\n        goal = replan(goal, state.process_signals)\n    elif state.budget_exhausted:\n        return typed_non_success(state.reason)\n```"
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "Псевдокод намеренно не фиксирует формулу `attempt_limit`."
+        },
+        "modality": "assertive",
+        "scope": {
+          "negation": true,
+          "restricted": false
+        },
+        "scope_text": "Псевдокод намеренно не фиксирует формулу `attempt_limit`."
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "Отдельный переносимый паттерн — **No-progress cut-off**."
+        },
+        "modality": "assertive",
+        "scope": {
+          "restricted": false
+        },
+        "scope_text": "Отдельный переносимый паттерн — **No-progress cut-off**."
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "## Остановка должна быть честной и типизированной"
+        },
+        "modality": "assertive",
+        "scope": {
+          "restricted": false
+        },
+        "scope_text": "## Остановка должна быть честной и типизированной"
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "Timeout, budget exhaustion и отсутствие capability — не разновидности успеха."
+        },
+        "modality": "assertive",
+        "scope": {
+          "negation": true,
+          "restricted": false
+        },
+        "scope_text": "Timeout, budget exhaustion и отсутствие capability — не разновидности успеха."
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "`BLOCKED` сообщает, что продолжение возможно после внешнего изменения — permission, dependency, budget."
+        },
+        "modality": "assertive",
+        "scope": {
+          "restricted": false
+        },
+        "scope_text": "`BLOCKED` сообщает, что продолжение возможно после внешнего изменения — permission, dependency, budget."
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "Третья failure story показывает, почему control plane обязан контролировать даже банальные единицы."
+        },
+        "modality": "assertive",
+        "scope": {
+          "restricted": false
+        },
+        "scope_text": "Третья failure story показывает, почему control plane обязан контролировать даже банальные единицы."
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "## Нить выполнения и память — не одно и то же"
+        },
+        "modality": "assertive",
+        "scope": {
+          "negation": true,
+          "restricted": false
+        },
+        "scope_text": "## Нить выполнения и память — не одно и то же"
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "restore_scope",
+          "rewrite_span"
+        ],
+        "ambiguities": [
+          {
+            "details": {
+              "head": "роль",
+              "heuristic": "scope_np_without_research_attr"
+            },
+            "impact": "MEDIUM",
+            "target": "sentence",
+            "type": "SCOPE_EXPANSION"
+          }
+        ],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "Долгий prompt history кажется памятью, но плохо подходит на роль состояния."
+        },
+        "modality": "assertive",
+        "scope": {
+          "restricted": false
+        },
+        "scope_text": "Долгий prompt history кажется памятью, но плохо подходит на роль состояния."
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "Четвёртая failure story — re-review с передачей всей истории вместо текущего модуля, последнего diff и unresolved findings."
+        },
+        "modality": "assertive",
+        "scope": {
+          "restricted": false
+        },
+        "scope_text": "Четвёртая failure story — re-review с передачей всей истории вместо текущего модуля, последнего diff и unresolved findings."
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "Long-term memory имеет ещё более узкую роль."
+        },
+        "modality": "assertive",
+        "scope": {
+          "restricted": false
+        },
+        "scope_text": "Long-term memory имеет ещё более узкую роль."
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "## Неустранимые одним принципом trade-offs"
+        },
+        "modality": "assertive",
+        "scope": {
+          "restricted": false
+        },
+        "scope_text": "## Неустранимые одним принципом trade-offs"
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "У control plane нет единственной правильной настройки."
+        },
+        "modality": "assertive",
+        "scope": {
+          "restricted": false
+        },
+        "scope_text": "У control plane нет единственной правильной настройки."
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "- **User-driven против bounded autonomous orchestration.** Каталог паттернов предпочитает явные пользовательские checkpoints и короткие команды; code-orchestrator, напротив, описывает автономную декомпозицию и dispatch."
+        },
+        "modality": "assertive",
+        "scope": {
+          "restricted": false
+        },
+        "scope_text": "- **User-driven против bounded autonomous orchestration.** Каталог паттернов предпочитает явные пользовательские checkpoints и короткие команды; code-orchestrator, напротив, описывает автономную декомпозицию и dispatch."
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "restore_scope",
+          "rewrite_span"
+        ],
+        "ambiguities": [
+          {
+            "details": {
+              "heuristic": "universal_without_scope_restriction",
+              "universals": [
+                "универсальный"
+              ]
+            },
+            "impact": "MEDIUM",
+            "target": "sentence",
+            "type": "SCOPE_EXPANSION"
+          }
+        ],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "Эти напряжения в репозитории не сведены в одну ADR и не должны сглаживаться в универсальный best practice (`DOCUMENTED POLICY`)."
+        },
+        "modality": "assertive",
+        "scope": {
+          "negation": true,
+          "restricted": false,
+          "risk": "SCOPE_EXPANSION",
+          "type": "universal"
+        },
+        "scope_text": "Эти напряжения в репозитории не сведены в одну ADR и не должны сглаживаться в универсальный best practice (`DOCUMENTED POLICY`)."
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "## Практические правила проектирования"
+        },
+        "modality": "assertive",
+        "scope": {
+          "restricted": false
+        },
+        "scope_text": "## Практические правила проектирования"
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "2. **Определяйте успех через GateSet текущей попытки.** Missing, stale и silent gate — не `PASS`."
+        },
+        "modality": "assertive",
+        "scope": {
+          "negation": true,
+          "numeric_mentions": [
+            "2"
+          ],
+          "restricted": false
+        },
+        "scope_text": "2. **Определяйте успех через GateSet текущей попытки.** Missing, stale и silent gate — не `PASS`."
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "Качество агента проявляется не в том, как долго он способен продолжать работу, а в том, насколько система умеет отказать его output в статусе решения."
+        },
+        "modality": "assertive",
+        "scope": {
+          "negation": true,
+          "restricted": false
+        },
+        "scope_text": "Качество агента проявляется не в том, как долго он способен продолжать работу, а в том, насколько система умеет отказать его output в статусе решения."
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "## Локальные источники и статус доказательств"
+        },
+        "modality": "assertive",
+        "scope": {
+          "restricted": false
+        },
+        "scope_text": "## Локальные источники и статус доказательств"
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "Статусы в статье означают следующее:"
+        },
+        "modality": "assertive",
+        "scope": {
+          "restricted": false
+        },
+        "scope_text": "Статусы в статье означают следующее:"
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "- **IMPLEMENTED/EXERCISED** — механизм найден в runtime/config и поддержан локальными тестами или наблюдаемым запуском; это не равнозначно production validation."
+        },
+        "modality": "assertive",
+        "scope": {
+          "negation": true,
+          "restricted": false
+        },
+        "scope_text": "- **IMPLEMENTED/EXERCISED** — механизм найден в runtime/config и поддержан локальными тестами или наблюдаемым запуском; это не равнозначно production validation."
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "Основные источники: [UNIFIED_ORCHESTRATION_PRINCIPLES.md](UNIFIED_ORCHESTRATION_PRINCIPLES.md), [STATE_REDUCER_ARCHITECTURE.md](STATE_REDUCER_ARCHITECTURE.md), [STAGE2_ATTEMPT_GATESET_STATE_REDUCER_2026-09-06.md](STAGE2_ATTEMPT_GATESET_STATE_REDUCER_2026-09-06.md), [CLAIM_ROUTING_ARCHITECTURE.md](CL"
+        },
+        "modality": "assertive",
+        "scope": {
+          "numeric_mentions": [
+            "09",
+            "06.",
+            "09",
+            "06.",
+            "09"
+          ],
+          "restricted": false
+        },
+        "scope_text": "Основные источники: [UNIFIED_ORCHESTRATION_PRINCIPLES.md](UNIFIED_ORCHESTRATION_PRINCIPLES.md), [STATE_REDUCER_ARCHITECTURE.md](STATE_REDUCER_ARCHITECTURE.md), [STAGE2_ATTEMPT_GATESET_STATE_REDUCER_2026-09-06.md](STAGE2_ATTEMPT_GATESET_STATE_REDUCER_2026-09-06.md), [CLAIM_ROUTING_ARCHITECTURE.md](CLAIM_ROUTING_ARCHITECTURE.md), [MEMORY_POLICY.md](MEMORY_POLICY.md), [DYNAMIC_HEURISTICS.md](DYNAMIC_HEURISTICS.md), [DEEP_REVIEW_2026-09-06.md](DEEP_REVIEW_2026-09-06.md), [orchestration-patterns.md](shared/orchestration-patterns.md), [orchestration-thread-process.md](shared/orchestration-thread-process.md), [dispatch-retry.md](shared/dispatch-retry.md), [state_reducer.py](scripts/code-factory/state_reducer.py), [code_factory_runner.py](scripts/code-factory/code_factory_runner.py), [test_runtime_core.py](tests/test_runtime_core.py), [THREAT_MODEL.md](guard/docs/THREAT_MODEL.md) и [ARCHITECTURE.md](guard/docs/ARCHITECTURE.md)."
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "Открытые ограничения: не доказаны единая executable FSM `goal→decide`, unified `REPLAN`, полный словарь terminal states, full NoAgents branch, current `/ship` merge validator и полное live guard wiring."
+        },
+        "modality": "assertive",
+        "scope": {
+          "negation": true,
+          "restricted": false
+        },
+        "scope_text": "Открытые ограничения: не доказаны единая executable FSM `goal→decide`, unified `REPLAN`, полный словарь terminal states, full NoAgents branch, current `/ship` merge validator и полное live guard wiring."
+      }
+    ],
+    "errors": []
+  },
+  "schema": "writer_core.rtt_report.v1",
+  "verdict": "PASS"
+}

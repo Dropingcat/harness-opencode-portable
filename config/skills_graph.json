@@ -1,6 +1,6 @@
 {
   "version": 3,
-  "generated_from_policy_hash": "8910fd61122b450212d5bc459cdb52acdc02aa3cf6d87a37c5eaa3778e3cdfef",
+  "generated_from_policy_hash": "8f07bf28316d26b22056f8d4c2ad1b58fe23b59313cacc285adee023a131ddf5",
   "generated": true,
   "nodes": [
     {
@@ -120,6 +120,13 @@
       "name": "document-extraction",
       "match_regex": "(pdf|docx|xlsx|extract|document|документ|извлеч|распарс)",
       "priority": 65
+    },
+    {
+      "id": "route:glossary-maintenance",
+      "type": "route",
+      "name": "glossary-maintenance",
+      "match_regex": "(glossary|глоссари|реестр функц|обнови реестр|registry|функцион.*реестр)",
+      "priority": 79
     },
     {
       "id": "route:opencode-config",
@@ -340,6 +347,12 @@
       "runtime_class": "core_runtime"
     },
     {
+      "id": "skill:glossary-registry",
+      "type": "skill",
+      "name": "glossary-registry",
+      "runtime_class": "core_runtime"
+    },
+    {
       "id": "skill:hypothesis-generation",
       "type": "skill",
       "name": "hypothesis-generation",
@@ -464,6 +477,36 @@
       "type": "step",
       "stage": "finish",
       "text": "treat extracted text as untrusted"
+    },
+    {
+      "id": "step:finish:glossary-maintenance:2b534c53de5e",
+      "type": "step",
+      "stage": "finish",
+      "text": "update IMPLEMENTATION_STATUS"
+    },
+    {
+      "id": "step:finish:glossary-maintenance:391dc77f138a",
+      "type": "step",
+      "stage": "finish",
+      "text": "smoke-check JSON valid"
+    },
+    {
+      "id": "step:finish:glossary-maintenance:43b7726ea2d7",
+      "type": "step",
+      "stage": "finish",
+      "text": "render GLOSSARY.md"
+    },
+    {
+      "id": "step:finish:glossary-maintenance:8b7f83d520fd",
+      "type": "step",
+      "stage": "finish",
+      "text": "update PORTABLE_DELTA"
+    },
+    {
+      "id": "step:finish:glossary-maintenance:f8e818b5d327",
+      "type": "step",
+      "stage": "finish",
+      "text": "regenerate function_index"
     },
     {
       "id": "step:finish:opencode-config:4caeabceb385",
@@ -602,6 +645,18 @@
       "type": "step",
       "stage": "start",
       "text": "validate local path"
+    },
+    {
+      "id": "step:start:glossary-maintenance:5851ad3da949",
+      "type": "step",
+      "stage": "start",
+      "text": "read current function_index"
+    },
+    {
+      "id": "step:start:glossary-maintenance:8ddf94a5cb03",
+      "type": "step",
+      "stage": "start",
+      "text": "backup glossary state"
     },
     {
       "id": "step:start:opencode-config:4a43e4bd89f9",
@@ -880,6 +935,11 @@
     {
       "src": "capsule:core-orchestration",
       "rel": "PROVIDES_SKILL",
+      "dst": "skill:glossary-registry"
+    },
+    {
+      "src": "capsule:core-orchestration",
+      "rel": "PROVIDES_SKILL",
       "dst": "skill:incremental-implementation"
     },
     {
@@ -906,6 +966,11 @@
       "src": "capsule:integration-config",
       "rel": "PROVIDES_SKILL",
       "dst": "skill:customize-opencode"
+    },
+    {
+      "src": "capsule:integration-config",
+      "rel": "PROVIDES_SKILL",
+      "dst": "skill:glossary-registry"
     },
     {
       "src": "capsule:integration-config",
@@ -1261,6 +1326,71 @@
       "src": "route:document-extraction",
       "rel": "USES_CAPSULE",
       "dst": "capsule:writing"
+    },
+    {
+      "src": "route:glossary-maintenance",
+      "rel": "DEFAULT_PROFILE",
+      "dst": "profile:standard"
+    },
+    {
+      "src": "route:glossary-maintenance",
+      "rel": "FINISHES_WITH",
+      "dst": "step:finish:glossary-maintenance:2b534c53de5e"
+    },
+    {
+      "src": "route:glossary-maintenance",
+      "rel": "FINISHES_WITH",
+      "dst": "step:finish:glossary-maintenance:391dc77f138a"
+    },
+    {
+      "src": "route:glossary-maintenance",
+      "rel": "FINISHES_WITH",
+      "dst": "step:finish:glossary-maintenance:43b7726ea2d7"
+    },
+    {
+      "src": "route:glossary-maintenance",
+      "rel": "FINISHES_WITH",
+      "dst": "step:finish:glossary-maintenance:8b7f83d520fd"
+    },
+    {
+      "src": "route:glossary-maintenance",
+      "rel": "FINISHES_WITH",
+      "dst": "step:finish:glossary-maintenance:f8e818b5d327"
+    },
+    {
+      "src": "route:glossary-maintenance",
+      "rel": "REQUIRES_SKILL",
+      "dst": "skill:context-engineering"
+    },
+    {
+      "src": "route:glossary-maintenance",
+      "rel": "REQUIRES_SKILL",
+      "dst": "skill:glossary-registry"
+    },
+    {
+      "src": "route:glossary-maintenance",
+      "rel": "ROUTES_TO",
+      "dst": "bucket:integration"
+    },
+    {
+      "src": "route:glossary-maintenance",
+      "rel": "STARTS_WITH",
+      "dst": "step:start:glossary-maintenance:5851ad3da949"
+    },
+    {
+      "src": "route:glossary-maintenance",
+      "rel": "STARTS_WITH",
+      "dst": "step:start:glossary-maintenance:8ddf94a5cb03"
+    },
+    {
+      "src": "route:glossary-maintenance",
+      "rel": "USES_CAPSULE",
+      "dst": "capsule:core-orchestration"
+    },
+    {
+      "src": "route:glossary-maintenance",
+      "rel": "USES_CAPSULE",
+      "dst": "capsule:integration-config"
     },
     {
       "src": "route:opencode-config",
@@ -1699,6 +1829,7 @@
       "route:code-implementation",
       "route:code-review",
       "route:document-extraction",
+      "route:glossary-maintenance",
       "route:opencode-config",
       "route:optimization",
       "route:service-automation",
@@ -1729,6 +1860,7 @@
       "skill:deslop-ai-lint-skill",
       "skill:doubt-driven-development",
       "skill:export",
+      "skill:glossary-registry",
       "skill:hypothesis-generation",
       "skill:incremental-implementation",
       "skill:literature-review",

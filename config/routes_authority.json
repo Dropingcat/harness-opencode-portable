@@ -298,6 +298,38 @@
         "preview rewrite; ask before applying"
       ]
     },
+    "glossary-maintenance": {
+      "match_regex": "(glossary|глоссари|реестр функц|обнови реестр|registry|функцион.*реестр)",
+      "bucket": "integration",
+      "default_profile": "standard",
+      "priority": 79,
+      "capsules": [
+        "core-orchestration",
+        "integration-config"
+      ],
+      "skills": [
+        "glossary-registry",
+        "context-engineering"
+      ],
+      "preferred_tools": [
+        "profile_config"
+      ],
+      "guard_required": true,
+      "triz_required": false,
+      "agent": "glossary-maintainer",
+      "agent_hint": "Regenerate function index (gen_api_index.py), render GLOSSARY.md, update PORTABLE_DELTA + IMPLEMENTATION_STATUS, sync docs to both trees, smoke-check JSON.",
+      "start_with": [
+        "read current function_index",
+        "backup glossary state"
+      ],
+      "finish_with": [
+        "regenerate function_index",
+        "render GLOSSARY.md",
+        "update PORTABLE_DELTA",
+        "update IMPLEMENTATION_STATUS",
+        "smoke-check JSON valid"
+      ]
+    },
     "service-automation": {
       "match_regex": "(calendar|gmail|drive|slack|github issue|send email|service|календар|почт|диск|сервис)",
       "bucket": "integration",

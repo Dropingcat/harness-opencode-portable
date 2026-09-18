@@ -10,13 +10,15 @@
         "verification-planning",
         "incremental-implementation",
         "compare",
-        "export"
+        "export",
+        "glossary-registry"
       ],
       "supported_routes": [
         "academic-research",
         "code-implementation",
         "code-review",
         "document-extraction",
+        "glossary-maintenance",
         "opencode-config",
         "optimization",
         "service-automation",
@@ -81,9 +83,11 @@
       "advertise_by_default": true,
       "provided_skills": [
         "customize-opencode",
-        "context-engineering"
+        "context-engineering",
+        "glossary-registry"
       ],
       "supported_routes": [
+        "glossary-maintenance",
         "opencode-config",
         "tech-debt"
       ],

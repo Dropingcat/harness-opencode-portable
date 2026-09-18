@@ -129,6 +129,8 @@ def resolve(task_text: str, hints: dict | None = None) -> dict:
         "guard_untrusted_tools": untrusted_selected,
         "start_with": route_meta.get("start_with", []),
         "finish_with": route_meta.get("finish_with", []),
+        "agent": route_meta.get("agent"),
+        "agent_hint": route_meta.get("agent_hint", ""),
         "reason_codes": ["BUCKET_ASSIGNED"],
         "snapshot_backed": True,
         "policy_hash": snap["policy_hash"],

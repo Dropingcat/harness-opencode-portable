@@ -1,0 +1,499 @@
+{
+  "schema": "writer_core.review_report.v1",
+  "generated_by": "writer_core.review.REVIEW_CYCLE",
+  "created_at": "2026-09-18T10:23:26+00:00",
+  "inputs": {
+    "draft": "article_agent_control_loop.md",
+    "contract": "agent_control_loop_writing_contract.json",
+    "plan": "writer_core.structure_plan.v1",
+    "dom": null,
+    "max_iterations": 1,
+    "max_contract_claims": null,
+    "draft_chars": 26654
+  },
+  "iterations": 1,
+  "final_verdict": "FAIL",
+  "stopped_reason": "no_progress",
+  "escalation": true,
+  "escalation_reasons": [
+    "вердикт FAIL после 1 итераций (максимум 1): semantic/структурные дефекты не устраняются детерминированным constrained repair — требуется approval человека",
+    "constrained repair не изменил текст (нерепарируемые дефекты: claim_omission/структурные gaps) — нет сходимости"
+  ],
+  "issues_by_level": {
+    "L1": [
+      {
+        "level": "L1",
+        "type": "REPETITION",
+        "span": [
+          2170,
+          2560
+        ],
+        "text": "При повторном проигрывании reducer должен получить ту же проекцию; повреждение цепочки обнаруживается тестами [STATE_REDUCER_ARCHITECTURE.md](STATE_REDUCER_ARCHITECTURE.md), [STAGE2_ATTEMPT_GATESET_ST",
+        "suggestion": "слово «reducer» повторяется 7 раз(а) в одном предложении — заменить часть повторов (синоним/местоимение/опущение)",
+        "severity": "MINOR",
+        "word": "reducer",
+        "count": 7
+      },
+      {
+        "level": "L1",
+        "type": "LONG_SENTENCE",
+        "span": [
+          2170,
+          2560
+        ],
+        "text": "При повторном проигрывании reducer должен получить ту же проекцию; повреждение цепочки обнаруживается тестами [STATE_REDUCER_ARCHITECTURE.md](STATE_REDUCER_ARCHITECTURE.md), [STAGE2_ATTEMPT_GATESET_ST",
+        "suggestion": "предложение из 42 слов — разбить на несколько (целевая длина <= 30)",
+        "severity": "MINOR",
+        "words": 42
+      },
+      {
+        "level": "L1",
+        "type": "REPETITION",
+        "span": [
+          3636,
+          4663
+        ],
+        "text": "```mermaid\nstateDiagram-v2\n    [*] --> Goal\n    Goal --> Classify\n    Classify --> Scope\n    Scope --> Contract\n    Contract --> Dispatch\n    Dispatch --> RegisterEvidence: output / tool result\n    Di",
+        "suggestion": "слово «decide» повторяется 8 раз(а) в одном предложении — заменить часть повторов (синоним/местоимение/опущение)",
+        "severity": "MINOR",
+        "word": "decide",
+        "count": 8
+      },
+      {
+        "level": "L1",
+        "type": "LONG_SENTENCE",
+        "span": [
+          3636,
+          4663
+        ],
+        "text": "```mermaid\nstateDiagram-v2\n    [*] --> Goal\n    Goal --> Classify\n    Classify --> Scope\n    Scope --> Contract\n    Contract --> Dispatch\n    Dispatch --> RegisterEvidence: output / tool result\n    Di",
+        "suggestion": "предложение из 86 слов — разбить на несколько (целевая длина <= 30)",
+        "severity": "MINOR",
+        "words": 86
+      },
+      {
+        "level": "L1",
+        "type": "LONG_SENTENCE",
+        "span": [
+          5103,
+          5875
+        ],
+        "text": "Компактно оно выглядит так:\n\n| Объект решения | Что может предложить work plane | Чем владеет control plane |\n|---|---|---|\n| Route | candidate, kind, decomposition | допустимый bucket, profile и exec",
+        "suggestion": "предложение из 77 слов — разбить на несколько (целевая длина <= 30)",
+        "severity": "MINOR",
+        "words": 77
+      },
+      {
+        "level": "L1",
+        "type": "REPETITION",
+        "span": [
+          6792,
+          7001
+        ],
+        "text": "`DONE` разрешён только после `PASSED` [state_reducer.py](scripts/code-factory/state_reducer.py), [test_runtime_core.py](tests/test_runtime_core.py), [factory_gate_policy.json](config/factory_gate_poli",
+        "suggestion": "слово «factory» повторяется 3 раз(а) в одном предложении — заменить часть повторов (синоним/местоимение/опущение)",
+        "severity": "MINOR",
+        "word": "factory",
+        "count": 3
+      },
+      {
+        "level": "L1",
+        "type": "REPETITION",
+        "span": [
+          7618,
+          7974
+        ],
+        "text": "Неизвестная или недопустимая ссылка на артефакт не должна обновлять gates (`IMPLEMENTED/EXERCISED`) [artifact_provenance_policy.json](config/artifact_provenance_policy.json), [code_factory_runner.py](",
+        "suggestion": "слово «code» повторяется 4 раз(а) в одном предложении — заменить часть повторов (синоним/местоимение/опущение)",
+        "severity": "MINOR",
+        "word": "code",
+        "count": 4
+      },
+      {
+        "level": "L1",
+        "type": "LONG_SENTENCE",
+        "span": [
+          7618,
+          7974
+        ],
+        "text": "Неизвестная или недопустимая ссылка на артефакт не должна обновлять gates (`IMPLEMENTED/EXERCISED`) [artifact_provenance_policy.json](config/artifact_provenance_policy.json), [code_factory_runner.py](",
+        "suggestion": "предложение из 41 слов — разбить на несколько (целевая длина <= 30)",
+        "severity": "MINOR",
+        "words": 41
+      },
+      {
+        "level": "L1",
+        "type": "REPETITION",
+        "span": [
+          8133,
+          8524
+        ],
+        "text": "Локальная threat model фиксирует semantic, multi-hop, taint-loss и compaction blind spots; сама оценка частично основана на локальных и синтетических данных и признаёт недостаточность для production (",
+        "suggestion": "слово «guard» повторяется 4 раз(а) в одном предложении — заменить часть повторов (синоним/местоимение/опущение)",
+        "severity": "MINOR",
+        "word": "guard",
+        "count": 4
+      },
+      {
+        "level": "L1",
+        "type": "LONG_SENTENCE",
+        "span": [
+          8133,
+          8524
+        ],
+        "text": "Локальная threat model фиксирует semantic, multi-hop, taint-loss и compaction blind spots; сама оценка частично основана на локальных и синтетических данных и признаёт недостаточность для production (",
+        "suggestion": "предложение из 42 слов — разбить на несколько (целевая длина <= 30)",
+        "severity": "MINOR",
+        "words": 42
+      },
+      {
+        "level": "L1",
+        "type": "REPETITION",
+        "span": [
+          8525,
+          8804
+        ],
+        "text": "С терминологией excessive agency это согласуется лишь на уровне направления: OWASP рекомендует минимизировать функции, полномочия и автономию и проверять high-impact actions вне решения самой модели [",
+        "suggestion": "слово «owasp» повторяется 3 раз(а) в одном предложении — заменить часть повторов (синоним/местоимение/опущение)",
+        "severity": "MINOR",
+        "word": "owasp",
+        "count": 3
+      },
+      {
+        "level": "L1",
+        "type": "REPETITION",
+        "span": [
+          9014,
+          9476
+        ],
+        "text": "Похожее терминологическое разделение между workflows и agents использует Anthropic, а OpenAI рекомендует сначала исчерпать возможности single-agent подхода; это сопоставление терминов, не внешнее дока",
+        "suggestion": "слово «agents» повторяется 5 раз(а) в одном предложении — заменить часть повторов (синоним/местоимение/опущение)",
+        "severity": "MINOR",
+        "word": "agents",
+        "count": 5
+      },
+      {
+        "level": "L1",
+        "type": "LONG_SENTENCE",
+        "span": [
+          9014,
+          9476
+        ],
+        "text": "Похожее терминологическое разделение между workflows и agents использует Anthropic, а OpenAI рекомендует сначала исчерпать возможности single-agent подхода; это сопоставление терминов, не внешнее дока",
+        "suggestion": "предложение из 45 слов — разбить на несколько (целевая длина <= 30)",
+        "severity": "MINOR",
+        "words": 45
+      },
+      {
+        "level": "L1",
+        "type": "REPETITION",
+        "span": [
+          9478,
+          10717
+        ],
+        "text": "| Сигнал задачи | Форма | Обязательная защита |\n|---|---|---|\n| Один артефакт, одна перспектива | Direct invocation | Schema и acceptance checks по риску |\n| Маршрут полностью известен и алгоритмизиру",
+        "suggestion": "слово «execution» повторяется 3 раз(а) в одном предложении — заменить часть повторов (синоним/местоимение/опущение)",
+        "severity": "MINOR",
+        "word": "execution",
+        "count": 3
+      },
+      {
+        "level": "L1",
+        "type": "LONG_SENTENCE",
+        "span": [
+          9478,
+          10717
+        ],
+        "text": "| Сигнал задачи | Форма | Обязательная защита |\n|---|---|---|\n| Один артефакт, одна перспектива | Direct invocation | Schema и acceptance checks по риску |\n| Маршрут полностью известен и алгоритмизиру",
+        "suggestion": "предложение из 129 слов — разбить на несколько (целевая длина <= 30)",
+        "severity": "MINOR",
+        "words": 129
+      },
+      {
+        "level": "L1",
+        "type": "LONG_SENTENCE",
+        "span": [
+          11082,
+          11438
+        ],
+        "text": "Хотя каталог приводит `/ship` как пример, текущий non-legacy artifact и отдельный merge validator при проверке не найдены; поэтому «Independent fan-out + explicit merge» остаётся `DOCUMENTED POLICY`, ",
+        "suggestion": "предложение из 31 слов — разбить на несколько (целевая длина <= 30)",
+        "severity": "MINOR",
+        "words": 31
+      },
+      {
+        "level": "L1",
+        "type": "REPETITION",
+        "span": [
+          12651,
+          13102
+        ],
+        "text": "Router и compiled snapshot проверяются локальными тестами (`IMPLEMENTED/EXERCISED`), но полный Claim→Audit→Snapshot runtime и end-to-end selective claim repair ещё не собраны [CLAIM_ROUTING_ARCHITECTU",
+        "suggestion": "слово «claim» повторяется 4 раз(а) в одном предложении — заменить часть повторов (синоним/местоимение/опущение)",
+        "severity": "MINOR",
+        "word": "claim",
+        "count": 4
+      },
+      {
+        "level": "L1",
+        "type": "LONG_SENTENCE",
+        "span": [
+          12651,
+          13102
+        ],
+        "text": "Router и compiled snapshot проверяются локальными тестами (`IMPLEMENTED/EXERCISED`), но полный Claim→Audit→Snapshot runtime и end-to-end selective claim repair ещё не собраны [CLAIM_ROUTING_ARCHITECTU",
+        "suggestion": "предложение из 50 слов — разбить на несколько (целевая длина <= 30)",
+        "severity": "MINOR",
+        "words": 50
+      },
+      {
+        "level": "L1",
+        "type": "LONG_SENTENCE",
+        "span": [
+          14179,
+          14468
+        ],
+        "text": "В code-factory непосредственно обкатаны attempt-local rework и очистка gates для новой попытки, но не полный claim-level ремонт во всех доменах (`IMPLEMENTED/EXERCISED` частично) [state_reducer.py](sc",
+        "suggestion": "предложение из 34 слов — разбить на несколько (целевая длина <= 30)",
+        "severity": "MINOR",
+        "words": 34
+      },
+      {
+        "level": "L1",
+        "type": "REPETITION",
+        "span": [
+          15017,
+          15292
+        ],
+        "text": "Tribunal trigger после повторных review failures обкатан, но его локальные thresholds нельзя универсализировать [code-orchestrator.md](agents/code-orchestrator.md), [state_reducer.py](scripts/code-fac",
+        "suggestion": "слово «code» повторяется 3 раз(а) в одном предложении — заменить часть повторов (синоним/местоимение/опущение)",
+        "severity": "MINOR",
+        "word": "code",
+        "count": 3
+      },
+      {
+        "level": "L1",
+        "type": "REPETITION",
+        "span": [
+          15294,
+          16499
+        ],
+        "text": "Упрощённый control loop может выглядеть так:\n\n```text\nstate = reducer.replay(event_log, frozen_policy)\n\nwhile not state.terminal:\n    contract = compile_contract(goal, claims, risk, capabilities, stat",
+        "suggestion": "слово «state» повторяется 12 раз(а) в одном предложении — заменить часть повторов (синоним/местоимение/опущение)",
+        "severity": "MINOR",
+        "word": "state",
+        "count": 12
+      },
+      {
+        "level": "L1",
+        "type": "LONG_SENTENCE",
+        "span": [
+          15294,
+          16499
+        ],
+        "text": "Упрощённый control loop может выглядеть так:\n\n```text\nstate = reducer.replay(event_log, frozen_policy)\n\nwhile not state.terminal:\n    contract = compile_contract(goal, claims, risk, capabilities, stat",
+        "suggestion": "предложение из 125 слов — разбить на несколько (целевая длина <= 30)",
+        "severity": "MINOR",
+        "words": 125
+      },
+      {
+        "level": "L1",
+        "type": "REPETITION",
+        "span": [
+          16670,
+          17063
+        ],
+        "text": "Нельзя выбирать intended semantics без решения владельца контракта или публиковать точное правило как согласованное [STAGE2_ATTEMPT_GATESET_STATE_REDUCER_2026-09-06.md](STAGE2_ATTEMPT_GATESET_STATE_RE",
+        "suggestion": "слово «reducer» повторяется 4 раз(а) в одном предложении — заменить часть повторов (синоним/местоимение/опущение)",
+        "severity": "MINOR",
+        "word": "reducer",
+        "count": 4
+      },
+      {
+        "level": "L1",
+        "type": "LONG_SENTENCE",
+        "span": [
+          16670,
+          17063
+        ],
+        "text": "Нельзя выбирать intended semantics без решения владельца контракта или публиковать точное правило как согласованное [STAGE2_ATTEMPT_GATESET_STATE_REDUCER_2026-09-06.md](STAGE2_ATTEMPT_GATESET_STATE_RE",
+        "suggestion": "предложение из 46 слов — разбить на несколько (целевая длина <= 30)",
+        "severity": "MINOR",
+        "words": 46
+      },
+      {
+        "level": "L1",
+        "type": "REPETITION",
+        "span": [
+          17122,
+          17489
+        ],
+        "text": "В writer-core детерминированный repair loop сравнивает артефакт до и после исправления и завершает цикл с `no_progress`, если текст не изменился, не дожидаясь номинального iteration limit (`IMPLEMENTE",
+        "suggestion": "слово «core» повторяется 4 раз(а) в одном предложении — заменить часть повторов (синоним/местоимение/опущение)",
+        "severity": "MINOR",
+        "word": "core",
+        "count": 4
+      },
+      {
+        "level": "L1",
+        "type": "LONG_SENTENCE",
+        "span": [
+          17122,
+          17489
+        ],
+        "text": "В writer-core детерминированный repair loop сравнивает артефакт до и после исправления и завершает цикл с `no_progress`, если текст не изменился, не дожидаясь номинального iteration limit (`IMPLEMENTE",
+        "suggestion": "предложение из 40 слов — разбить на несколько (целевая длина <= 30)",
+        "severity": "MINOR",
+        "words": 40
+      },
+      {
+        "level": "L1",
+        "type": "REPETITION",
+        "span": [
+          20662,
+          20960
+        ],
+        "text": "Promotion в L3 требует evidence refs и reason codes; текущий state всё равно восстанавливается из event log (`IMPLEMENTED/EXERCISED`) [MEMORY_POLICY.md](MEMORY_POLICY.md), [IMPLEMENTATION_TRACKER.md](",
+        "suggestion": "слово «code» повторяется 3 раз(а) в одном предложении — заменить часть повторов (синоним/местоимение/опущение)",
+        "severity": "MINOR",
+        "word": "code",
+        "count": 3
+      },
+      {
+        "level": "L1",
+        "type": "REPETITION",
+        "span": [
+          25431,
+          26364
+        ],
+        "text": "Основные источники: [UNIFIED_ORCHESTRATION_PRINCIPLES.md](UNIFIED_ORCHESTRATION_PRINCIPLES.md), [STATE_REDUCER_ARCHITECTURE.md](STATE_REDUCER_ARCHITECTURE.md), [STAGE2_ATTEMPT_GATESET_STATE_REDUCER_20",
+        "suggestion": "слово «architecture» повторяется 6 раз(а) в одном предложении — заменить часть повторов (синоним/местоимение/опущение)",
+        "severity": "MINOR",
+        "word": "architecture",
+        "count": 6
+      },
+      {
+        "level": "L1",
+        "type": "LONG_SENTENCE",
+        "span": [
+          25431,
+          26364
+        ],
+        "text": "Основные источники: [UNIFIED_ORCHESTRATION_PRINCIPLES.md](UNIFIED_ORCHESTRATION_PRINCIPLES.md), [STATE_REDUCER_ARCHITECTURE.md](STATE_REDUCER_ARCHITECTURE.md), [STAGE2_ATTEMPT_GATESET_STATE_REDUCER_20",
+        "suggestion": "предложение из 96 слов — разбить на несколько (целевая длина <= 30)",
+        "severity": "MINOR",
+        "words": 96
+      }
+    ],
+    "L2": [
+      {
+        "level": "L2",
+        "type": "SECTION_MISSING",
+        "slot_id": null,
+        "section": "RELEVANCE",
+        "span": null,
+        "text": "секция «RELEVANCE» отсутствует в черновике",
+        "suggestion": "добавить секцию «RELEVANCE» с требуемым содержимым",
+        "severity": "BLOCKER"
+      },
+      {
+        "level": "L2",
+        "type": "SECTION_MISSING",
+        "slot_id": null,
+        "section": "OBJECT_SUBJECT",
+        "span": null,
+        "text": "секция «OBJECT_SUBJECT» отсутствует в черновике",
+        "suggestion": "добавить секцию «OBJECT_SUBJECT» с требуемым содержимым",
+        "severity": "BLOCKER"
+      },
+      {
+        "level": "L2",
+        "type": "SECTION_MISSING",
+        "slot_id": null,
+        "section": "TOPIC_STATE",
+        "span": null,
+        "text": "секция «TOPIC_STATE» отсутствует в черновике",
+        "suggestion": "добавить секцию «TOPIC_STATE» с требуемым содержимым",
+        "severity": "BLOCKER"
+      },
+      {
+        "level": "L2",
+        "type": "SECTION_MISSING",
+        "slot_id": null,
+        "section": "GOAL",
+        "span": null,
+        "text": "секция «GOAL» отсутствует в черновике",
+        "suggestion": "добавить секцию «GOAL» с требуемым содержимым",
+        "severity": "BLOCKER"
+      },
+      {
+        "level": "L2",
+        "type": "SECTION_MISSING",
+        "slot_id": null,
+        "section": "NOVELTY",
+        "span": null,
+        "text": "секция «NOVELTY» отсутствует в черновике",
+        "suggestion": "добавить секцию «NOVELTY» с требуемым содержимым",
+        "severity": "BLOCKER"
+      },
+      {
+        "level": "L2",
+        "type": "SECTION_MISSING",
+        "slot_id": null,
+        "section": "METHODS",
+        "span": null,
+        "text": "секция «METHODS» отсутствует в черновике",
+        "suggestion": "добавить секцию «METHODS» с требуемым содержимым",
+        "severity": "BLOCKER"
+      },
+      {
+        "level": "L2",
+        "type": "SECTION_MISSING",
+        "slot_id": null,
+        "section": "RESULTS",
+        "span": null,
+        "text": "секция «RESULTS» отсутствует в черновике",
+        "suggestion": "добавить секцию «RESULTS» с требуемым содержимым",
+        "severity": "BLOCKER"
+      },
+      {
+        "level": "L2",
+        "type": "SECTION_MISSING",
+        "slot_id": null,
+        "section": "CONCLUSION",
+        "span": null,
+        "text": "секция «CONCLUSION» отсутствует в черновике",
+        "suggestion": "добавить секцию «CONCLUSION» с требуемым содержимым",
+        "severity": "BLOCKER"
+      },
+      {
+        "level": "L2",
+        "type": "SECTION_MISSING",
+        "slot_id": null,
+        "section": "LITERATURE",
+        "span": null,
+        "text": "секция «LITERATURE» отсутствует в черновике",
+        "suggestion": "добавить секцию «LITERATURE» с требуемым содержимым",
+        "severity": "BLOCKER"
+      }
+    ],
+    "L3": []
+  },
+  "rtt_defects_final": [],
+  "trace_checks_final": null,
+  "repaired_spans": [],
+  "rounds": [
+    {
+      "iteration": 0,
+      "verdict": "FAIL",
+      "reasons": [
+        "L2_STRUCTURE_BLOCKERS"
+      ],
+      "n_l1": 29,
+      "n_l2": 9,
+      "n_l3_defects": 0,
+      "trace_verdict": null,
+      "changed": false
+    }
+  ]
+}

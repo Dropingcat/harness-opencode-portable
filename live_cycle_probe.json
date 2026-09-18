@@ -1,0 +1,59 @@
+{
+  "constrained_repair_demo": null,
+  "created_at": "2026-09-18T10:23:23+00:00",
+  "draft": {
+    "n_claims_extracted": 19
+  },
+  "generated_by": "writer_core.live_cycle.run_live_cycle",
+  "inputs": {
+    "bundle": "agent_control_loop_claims.json",
+    "contract": "agent_control_loop_writing_contract.json",
+    "draft_chars": 26654,
+    "max_contract_claims": 40
+  },
+  "research_bundle": {
+    "n_claims": 18,
+    "sample": [
+      {
+        "claim_id": "ACL-001",
+        "proposition": "В локальной архитектуре модель производит предложения и свидетельства, а детерми..."
+      },
+      {
+        "claim_id": "ACL-002",
+        "proposition": "В code-factory authoritative task state вычисляет reducer из append-only hash-ch..."
+      },
+      {
+        "claim_id": "ACL-003",
+        "proposition": "Успех code-factory требует PASS всех required gates одного текущего attempt; отд..."
+      }
+    ]
+  },
+  "rtt_diff": {
+    "defects_by_type": {},
+    "defects_summary": [],
+    "n_defects": 0,
+    "verdict": "PASS"
+  },
+  "schema": "writer_core.live_cycle_report.v1",
+  "writer_contract": {
+    "n_claims": 18,
+    "n_claims_used": 18,
+    "sample": [
+      {
+        "claim_id": "ACL-001",
+        "modality": "assertive_local",
+        "proposition": "В локальной архитектуре модель производит предложения и свидетельства, а детерми..."
+      },
+      {
+        "claim_id": "ACL-002",
+        "modality": "assertive_verified",
+        "proposition": "В code-factory authoritative task state вычисляет reducer из append-only hash-ch..."
+      },
+      {
+        "claim_id": "ACL-003",
+        "modality": "assertive_verified",
+        "proposition": "Успех code-factory требует PASS всех required gates одного текущего attempt; отд..."
+      }
+    ]
+  }
+}
