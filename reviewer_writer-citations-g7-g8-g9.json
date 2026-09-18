@@ -1,0 +1,92 @@
+{
+  "module": "writer-citations-g7-g8-g9",
+  "verdict": "REQUEST_CHANGES",
+  "comments": [
+    {
+      "file": "scripts/writer-core/graph_builder_hybrid.py",
+      "line": 959,
+      "severity": "major",
+      "problem": "Ложный позитив G8: сигнал 'policy' (строка 867) матчится на идентификаторе 'policy' в псевдокоде 'action = policy(percept)' (probe1, параграф writer_probe_P0009). В результате на параграфе без реального политического контекста строится нода DomainPolicy с сигналом 'policy' — граф семантически ложный. Word-boundary \\b не защищает от латинских идентификаторов/кода.",
+      "suggestion": "Ограничить латинские сигналы (policy/route/risk/guard/block) контекстом: не матчить внутри fenced code blocks (```...```) и/или требовать русский маркер-сосед ('политика', 'правило') для срабатывания; либо задокументировать эвристику как контекстно-независимую.",
+      "falsification": "Если прогнать документ с псевдокодом 'action = policy(percept)' без русского политического контекста и G8 не построится (вернёт skipped) — замечание опровергнуто. Наблюдаемое поведение: G8 построен с нодой DomainPolicy."
+    },
+    {
+      "file": "scripts/writer-core/graph_builder_hybrid.py",
+      "line": 1078,
+      "severity": "major",
+      "problem": "G9 дублирует ClaimRef-ноды: при двух revisions с одинаковым added_claims=['c1'] создаются ДВЕ идентичные ClaimRef-ноды (claim=0, одинаковый span/text), по одной на каждую revision. При N revisions с одинаковым claim будет N ClaimRef-нод — граф раздувается, теряется идентичность ноды (ClaimRef должен быть один на claim).",
+      "suggestion": "Дедуплицировать ClaimRef: кэш по (claim_id/claim index) -> node_id, переиспользовать существующую ноду, создавать ребро GENERATED_FROM от RevisionRef к общей ноде.",
+      "falsification": "Если в G9 при 2 revisions с одинаковым added_claims=['c1'] число ClaimRef-нод равно 1 (а не 2) — замечание опровергнуто. Наблюдаемое: 2 ClaimRef-ноды с одинаковым props.claim=0."
+    },
+    {
+      "file": "scripts/writer-core/tests/test_runtime_boundary.py",
+      "line": 1,
+      "severity": "major",
+      "problem": "Нет unit-тестов на новые функции TD-083: _extract_citation_markers, _is_repo_path, _build_g7, _build_g8, _build_g9, реестровая валидация G7/G8/G9, edge cases (empty/cit-only/no-policy/no-rev), legacy artifact без citations. Процесс (shared/code-factory-process.md, 'Правила', п.6 'Код без тестов не принимается') требует тестовое покрытие. Единственный тест-файл покрывает rtt_compare/registries/factory_process, не hybrid_extract/graph_builder_hybrid.",
+      "suggestion": "Добавить tests/test_citations_graphs.py: (1) extract из md с 3 ссылками -> 3 citations + корректные span; (2) _is_repo_path таблица (repo path/URL/якорь); (3) build_paragraph_graphs на синтетических артефактах: G7 built/skipped, G8 built при сигнале + файле в config/, G9 built при revisions; (4) validate_against_registry = [] для всех; (5) legacy artifact без citations не падает.",
+      "falsification": "Если в scripts/writer-core/tests/ появится тестовый файл с покрытием TD-083 (цитирование, G7/G8/G9, edge cases) и он зелёный — замечание опровергнуто. Сейчас в tests/ только test_runtime_boundary.py, TD-083 не покрыт."
+    },
+    {
+      "file": "scripts/writer-core/hybrid_extract.py",
+      "line": 287,
+      "severity": "minor",
+      "problem": "_MD_LINK_RE с классом [^)\\s]+ не поддерживает вложенные скобки в URL: для '[x](https://a/(b))' возвращает url='https://a/(b' (обрезано на первой ')'), span [0,17] вместо [0,18]. CommonMark допускает (b) в URL; ссылки вида wikipedia/arxiv могут содержать скобки.",
+      "suggestion": "Использовать балансировку скобок в URL-части (счётчик вложенности) или regex вида r'\\[([^\\]]+)\\]\\(([^)\\s]+)(?:\\([^)]*\\))*[)\\s]*\\)' с последующей проверкой.",
+      "falsification": "Если _extract_md_links('[x](https://a/(b))') вернёт url='https://a/(b))' (полный, с закрывающей) — замечание опровергнуто. Наблюдаемое: url='https://a/(b'."
+    },
+    {
+      "file": "scripts/writer-core/hybrid_extract.py",
+      "line": 460,
+      "severity": "minor",
+      "problem": "source_links = citations (та же ссылка на тот же список, не копия). Дублирует данные в каждом артефакте параграфа (~2x объём JSON для link-полей) без дополнительной информации. Поле заявлено в контракте TD-083 как отдельное.",
+      "suggestion": "Либо хранить source_links как копию (list(citations)) чтобы алиас не маскировал мутацию, либо оставить один источник и задокументировать source_links как алиас в схеме; в любом случае зафиксировать семантику в docstring.",
+      "falsification": "Если source_links содержит данные, отличные от citations (например, включает ссылки из других полей), или является независимой копией с отдельной судьбой — замечание опровергнуто. Наблюдаемое: source_links is citations (тот же объект)."
+    },
+    {
+      "file": "scripts/writer-core/graph_builder_hybrid.py",
+      "line": 1112,
+      "severity": "minor",
+      "problem": "Выход cmd_graphs содержит skipped по КАЖДОМУ параграфу — при 12 параграфах один и тот же skipped-граф (G10_execution, G1 и т.д.) повторяется 12 раз в итоговом graphs.json (шум 132+ записей). G10_vocabulary дополнительно помечена in_registry: False, хотя её нет в реестре — запись в skipped для несуществующего графа семантически спорна.",
+      "suggestion": "В cmd_graphs агрегировать skipped по графу (count/paragraphs) либо документировать per-paragraph семантику в schema; для G10_vocabulary убрать из skipped или добавить явный флаг 'not_in_registry'.",
+      "falsification": "Если итоговый graphs.json при N параграфах содержит skipped без повторов (по одному на граф) или schema явно документирует per-paragraph дублирование — замечание опровергнуто. Наблюдаемое: 12 копий каждого skipped-графа."
+    }
+  ],
+  "scope_declared": {
+    "files": [
+      "scripts/writer-core/hybrid_extract.py",
+      "scripts/writer-core/graph_builder_hybrid.py"
+    ],
+    "features": [
+      "TD-083 extract citations (citations/artifact_refs/source_links поля)",
+      "G7_citation_provenance builder",
+      "G8_policy_constraint builder",
+      "G9_revision_dependency builder",
+      "Регистрация в _BUILDERS (10 графов)",
+      "_SKIPPED_REASONS для G7/G8/G9"
+    ],
+    "verified": {
+      "py_compile": "OK",
+      "extract_probe": "12 paragraphs, 0 errors, 3 citations суммарно (2+1), spans точные (match=True), старые ключи (claims/digest/links/sentences/objects/discourse/philology) на месте",
+      "graphs_probe": "exit 0, 0 errors, G7 built на 4 параграфах, G8 на 1, G9 на 0; skipped с причинами и in_registry",
+      "registry_g8": "ПОДТВЕРЖДЕНО: G8 node_types НЕ содержит ClaimRef (только 13 Policy-типов), edge_types EXTENDS/OVERRIDES/CONFLICTS_WITH/APPLIES_TO. Решение воркера 'Policy APPLIES_TO Policy' корректно и реестр не нарушает. validate_against_registry=[] для всех тестов",
+      "edge_cases": "empty->G7/G8/G9 skipped; cit-only->G7 built (ноды без рёбер); no-policy->G8 skipped; no-rev->G9 skipped; 2 сигнала->APPLIES_TO между Policy",
+      "regression": "G3(12)/G4(4)/G5(2)/G6(2)/G13(12)/G14(4)/G15(5) строятся; wc_cli.py graphs exit 0 на всех артефактах",
+      "legacy_artifact": "без citations/artifact_refs/source_links -> graphs exit 0, 0 errors",
+      "existing_tests": "7/7 PASS (test_runtime_boundary)"
+    }
+  },
+  "out_of_scope_gaps": [
+    {
+      "module": "writer-core/graph_vector.py",
+      "finding": "89-dim вектор сравнения артефактов (wc_cli vectorsim) не учитывает новые поля citations/artifact_refs — сравнение документов игнорирует цитатный след. Вне scope TD-083, но влияет на downstream (vectorsim/consolidation)."
+    },
+    {
+      "module": "writer-core/dom_builder.py + citation_trace.py",
+      "finding": "DOM-контракт прослеживаемости (wc_cli dom --graphs) принимает graphs.json, но не проверено, что новые G7/G8/G9 типы узлов/рёбер корректно транслируются в DOM YAML. Вне scope, требует отдельной проверки при включении G7 в DOM."
+    },
+    {
+      "module": "config/policy-файлы",
+      "finding": "G8 читает policy_id из config/*.json при каждом параграфе (I/O без кэша). На больших корпусах (500+ параграфов) это 500+ json.load. Оптимизация не в scope, но стоит учесть."
+    }
+  ]
+}

@@ -166,6 +166,13 @@ def _merge_verification(existing: dict | None, computed: dict) -> dict:
 
 def verify_claim(claim: dict, source_text: str | None, policy: dict | None = None) -> dict:
     """Детерминированная верификация одного claim. Возвращает dict для DOM verification."""
+    # CD-003: fail-closed guard на не-dict claim (None/str/int/list/...) — вернуть
+    # вердикт-схему, не бросать AttributeError на claim.get('text').
+    if not isinstance(claim, dict):
+        return {"verdict": "OPEN", "confidence": 0.0, "numeric_comparison": None,
+                "formula": None, "guard": None, "qualifier": None,
+                "error": "claim must be a dict"}
+
     if not RESEARCHER_OK:
         return {"verdict": "AMBIGUOUS", "confidence": 0.0,
                 "error": f"researcher_core import failed: {_IMPORT_ERR}"}
