@@ -367,6 +367,22 @@ def _sources_and_uncertainty(source_kinds: list[str]) -> tuple[list[dict], dict]
 # 5. build_dom — собрать DOM по контракту + сохранить YAML
 # ---------------------------------------------------------------------------
 
+def _next_free_id(existing: set[str], base: str) -> str:
+    """Ближайший свободный id с префиксом base относительно множества existing.
+
+    base='S-' -> S-001, S-002, ...; base='C-9001' -> C-9001, C-9002, ...
+    (номер в base сохраняется, если он свободен). Гарантирует уникальность.
+    """
+    m = re.match(r"^(.*?)(\d+)$", base)
+    if m:
+        prefix, num = m.group(1), int(m.group(2))
+    else:
+        prefix, num = base, 1
+    while f"{prefix}{num:03d}" in existing:
+        num += 1
+    return f"{prefix}{num:03d}"
+
+
 def build_dom(template_path: str, plan: dict | None = None,
               claims: list[dict] | None = None,
               graphs: dict | None = None,
@@ -417,27 +433,75 @@ def build_dom(template_path: str, plan: dict | None = None,
 
     # Qwen evidence-корпус (литература): слить sources/claims/uncertainty
     if qwen_extra:
-        dom.setdefault("sources", []).extend(qwen_extra.get("sources") or [])
-        # перенумерация claims: избежать дублей id с шаблоном/plan (C-001..)
-        existing_ids = {str(c.get("id")) for c in dom.get("claims") or []}
+        # TD-087: dedup источников — qwen генерирует S-001.. с нуля и может
+        # совпасть с S-xxx из plan/_sources_and_uncertainty/шаблона. Перенумеруем
+        # коллизии монотонно (максимальный существующий номер + 1) и правим
+        # evidence[].source_id у qwen-claims, ссылающихся на переименованный sid.
+        dom.setdefault("sources", [])
+        dom.setdefault("claims", [])
+        existing_sids = {str(s.get("id")) for s in dom["sources"]
+                         if isinstance(s, dict) and s.get("id")}
+        sid_remap: dict[str, str] = {}
+        qwen_sources: list[dict] = []
+        for s in (qwen_extra.get("sources") or []):
+            if not isinstance(s, dict):
+                continue
+            sid = str(s.get("id") or "")
+            if sid and sid in existing_sids:
+                new_sid = _next_free_id(existing_sids, sid)
+                s = dict(s)
+                s["id"] = new_sid
+                sid_remap[sid] = new_sid
+            if s.get("id"):
+                existing_sids.add(str(s["id"]))
+            qwen_sources.append(s)
+        dom["sources"].extend(qwen_sources)
+
+        # перенумерация claims: единый монотонный генератор ID (TD-088).
+        # qwen_to_dom даёт локально монотонные C-001..; коллизии с шаблоном/plan
+        # перенумеровываются продолжением после максимального существующего номера
+        # -> итог строго монотонный (C-001..C-00N), без C-9XXX и без C-XXXb/c.
+        existing_ids = {str(c.get("id")) for c in dom["claims"]
+                        if isinstance(c, dict) and c.get("id")}
+        max_cnum = 0
+        for cid in existing_ids:
+            m = re.match(r"^C-(\d+)$", cid)
+            if m:
+                max_cnum = max(max_cnum, int(m.group(1)))
+        id_map: dict[str, str] = {}
         qwen_claims: list[dict] = []
         for c in (qwen_extra.get("claims") or []):
             cid = str(c.get("id") or "")
             if cid in existing_ids:
-                # перенумеровать: C-XXX -> C-9XXX (вне зоны шаблона)
-                new_id = f"C-9{cid[2:]}"
-                c = dict(c)
-                c["id"] = new_id
-                # перенести uncertainty
-                qunc = qwen_extra.get("uncertainty") or {}
-                if cid in qunc:
-                    qunc[new_id] = qunc.pop(cid)
+                max_cnum += 1
+                new_id = _next_free_id(existing_ids, f"C-{max_cnum:03d}")
+                id_map[cid] = new_id
+            else:
+                new_id = cid
+            # TD-087: обновить ссылки evidence[].source_id на переименованные sids
+            c = dict(c)
+            c["id"] = new_id
+            if sid_remap:
+                ev = []
+                for e in (c.get("evidence") or []):
+                    if isinstance(e, dict):
+                        e = dict(e)
+                        src_id = str(e.get("source_id") or "")
+                        if src_id in sid_remap:
+                            e["source_id"] = sid_remap[src_id]
+                    ev.append(e)
+                c["evidence"] = ev
             qwen_claims.append(c)
-            existing_ids.add(c.get("id"))
-        dom.setdefault("claims", []).extend(qwen_claims)
+            existing_ids.add(new_id)
+        dom["claims"].extend(qwen_claims)
         dom.setdefault("graphs", []).extend(qwen_extra.get("graphs") or [])
-        dom["uncertainty"] = {**(dom.get("uncertainty") or {}),
-                              **(qwen_extra.get("uncertainty") or {})}
+        # uncertainty: применить полный маппинг id (старый -> новый) к копии —
+        # маппинг может пересекаться (C-001->C-003 и C-003->C-005), поэтому
+        # строим новый dict, а не мутируем исходный
+        qunc = {}
+        for old_id, val in (qwen_extra.get("uncertainty") or {}).items():
+            qunc[id_map.get(old_id, old_id)] = val
+        dom["uncertainty"] = {**(dom.get("uncertainty") or {}), **qunc}
         if qwen_extra.get("errors"):
             dom.setdefault("_qwen_errors", qwen_extra["errors"])
 
@@ -514,6 +578,9 @@ def qwen_to_dom(yaml_paths: list[str]) -> dict:
 
     Каждый файл (reference + conclusions + experiments) -> source S-xxx (DOI)
     + claims C-xxx (conclusions, kind по маркерам) + uncertainty.
+    Нумерация ЛОКАЛЬНАЯ и независимая: sources S-001.. (si), claims C-001..
+    (ci, монотонный, без chr-суффиксов). Глобальную перенумерацию при слиянии
+    с plan/шаблоном выполняет build_dom (dedup S-xxx и C-xxx).
     Fail-closed: битый файл пропускается с errors.
     """
     _require_yaml()
@@ -522,7 +589,12 @@ def qwen_to_dom(yaml_paths: list[str]) -> dict:
     uncertainty: dict = {}
     graphs: list[dict] = []
     errors: list[str] = []
+    # TD-088: независимые монотонные счётчики — si для sources, ci для claims.
+    # Раньше один счётчик si использовался и для sources, и для claims, из-за чего
+    # при нескольких conclusions появлялись C-001b/C-001c (chr-суффиксы). Теперь
+    # каждый conclusion получает уникальный монотонный C-{ci:03d} без суффиксов.
     si = 0
+    ci = 0
 
     for path in yaml_paths:
         try:
@@ -547,11 +619,12 @@ def qwen_to_dom(yaml_paths: list[str]) -> dict:
             "kind": "primary" if ref.get("doi") else "secondary",
             "accessed": "2026-09-07",
         })
-        # conclusions -> claims (уникальные id на каждый conclusion)
-        for j, concl in enumerate(card.get("conclusions") or []):
+        # conclusions -> claims (уникальные монотонные id на каждый conclusion)
+        for concl in card.get("conclusions") or []:
             if not isinstance(concl, str) or not concl.strip():
                 continue
-            cid = f"C-{si:03d}{chr(97 + j % 26)}" if j > 0 else f"C-{si:03d}"
+            ci += 1
+            cid = f"C-{ci:03d}"
             claims.append({
                 "id": cid,
                 "text": concl.strip(),

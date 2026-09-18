@@ -141,7 +141,14 @@ def check_tropes(text: str) -> list[dict]:
 
 def register_check(text: str, dom: dict | None = None,
                    etalon_profiles: dict | None = None) -> dict:
-    """Полный register-control: 4 оси -> {verdict, issues_by_axis}."""
+    """Полный register-control: 4 оси -> {verdict, verdict_detail, issues_by_axis}.
+
+    Вердикт честно согласован с issues (TD-085):
+      - n_issues == 0                         -> PASS
+      - есть issues, все severity minor/info  -> PASS_WITH_MINOR
+      - есть severity MAJOR/CRITICAL/BLOCKER  -> FAIL
+    `verdict_detail` фиксирует причину. `issues_by_axis` сохраняется как раньше.
+    """
     out = {
         "schema": "writer_core.register_control.v1",
         "verdict": "PASS",
@@ -152,8 +159,33 @@ def register_check(text: str, dom: dict | None = None,
     out["issues_by_axis"]["R2"] = check_register_vector(text, None, etalon_profiles)
     out["issues_by_axis"]["R3"] = check_lexicon(text)
     out["issues_by_axis"]["R4"] = check_tropes(text)
+
+    # TD-085: verdict не противоречит issues. Раньше verdict=PASS даже при
+    # n_issues>0 (R3 COLLOQUIAL MINOR), а FAIL ставился только на BLOCKER.
+    all_issues: list[dict] = []
     for axis, lst in out["issues_by_axis"].items():
         for b in lst:
-            out["verdict"] = "FAIL" if b.get("level") == "BLOCKER" else out["verdict"]
-    out["verdict"] = "PASS" if out["verdict"] != "FAIL" else "FAIL"
+            b = dict(b)
+            b.setdefault("axis", axis)
+            all_issues.append(b)
+    out["issues"] = all_issues
+
+    n_issues = len(all_issues)
+    blocking = [b for b in all_issues
+                if str(b.get("severity") or b.get("level") or "").upper()
+                in ("MAJOR", "CRITICAL", "BLOCKER")]
+    if n_issues == 0:
+        out["verdict"] = "PASS"
+        out["verdict_detail"] = "issues отсутствуют"
+    elif blocking:
+        out["verdict"] = "FAIL"
+        out["verdict_detail"] = (
+            f"n_issues={n_issues}, blocking={len(blocking)} "
+            f"(severity MAJOR/CRITICAL/BLOCKER) — правки обязательны"
+        )
+    else:
+        out["verdict"] = "PASS_WITH_MINOR"
+        out["verdict_detail"] = (
+            f"n_issues={n_issues}, все severity minor/info — некритичные правки"
+        )
     return out
