@@ -3,8 +3,8 @@
  "updated": "2026-09-15",
  "authority_note": "Canonical registry migrated from патчи/миграция в плагин/tech_debt_current.json (65 records). project_context.py counts status=open. CLOSED_REPORTED maps to closed; RECONCILE_REQUIRED stays open until exact-tree verification.",
  "counts": {
-  "total": 76,
-  "open": 60,
+  "total": 78,
+  "open": 62,
   "closed": 16
  },
  "debts": [
@@ -1744,6 +1744,38 @@
    "presentation_category": "ACTIVE",
    "source_status": "open",
    "progress": "2026-09-18: sync_to_live.py существует, но для docs/glossary применялся ручной Copy-Item; рассинхронизация возможна (подтверждено: TD-073/075 потерялись при параллельной перезаписи tech_debt.json)."
+  },
+  {
+   "id": "TD-077",
+   "title": "Отдельные контракты для code-reviewer и code-tester + инструменты исполнения (иначе галлюцинируют и дают кодеру подложные данные)",
+   "area": "scripts/code-factory/contract_validator.py + factory_ctl.py + агентские промпты (agents/code-reviewer.md, agents/code-tester.md)",
+   "kind": "process",
+   "severity": "critical",
+   "owner": "code-orchestrator",
+   "sunset_at": "2026-10-10",
+   "acceptance": "reviewer/tester контракты требуют evidence реального исполнения (команды, вывод, файлы-артефакты, coverage-отчёт), а не только числовые поля; валидатор проверяет наличие ссылок на фактические результаты; агенты не могут выдать вердикт без исполнения; кодер получает от ревью/тестов только проверяемые данные",
+   "status": "open",
+   "status_detail": "OPEN_CURRENT",
+   "presentation_category": "ACTIVE",
+   "source_status": "open",
+   "progress": "2026-09-18: contract_validator.py требует от reviewer только module/verdict/comments/falsification (>5 chars) и от tester module/result/passed/failed/coverage — ЧИСЛОВЫЕ/текстовые поля без обязательного доказательства исполнения. Подтверждено опытом: reviewer/tester галлюцинируют вердикты/покрытие; кодер, получая подложные данные, переделывает работу (пример: numeric_validator — тестер дал coverage 78 и FAIL, но без реального coverage-отчёта). Нужны: (а) отдельные контракты reviewer/tester с evidence полями (commands_run, output_refs, coverage_report), (б) инструменты исполнения (sandbox/runner для запуска тестов и статического ревью), (в) валидатор, проверяющий, что evidence ссылается на реальные файлы.",
+   "notes": "Связано с TD-068 (числовой экстрактор: reviewer настаивал на токенизаторе — правильно, но без инструментов это было мнение, не проверка)."
+  },
+  {
+   "id": "TD-078",
+   "title": "В коде 23 пустые функции (не в долге): разделить Protocol/ABC-интерфейсы (норма) от реальных заглушек (долг); зафиксировать в реестре",
+   "area": "scripts/researcher (ports.py, capsules.py, r0/ids.py, tribunal_live_dialogue.py, tribunal_role_runtime.py)",
+   "kind": "code-quality",
+   "severity": "high",
+   "owner": "researcher-orchestrator",
+   "sunset_at": "2026-10-10",
+   "acceptance": "детектор различает interface (Protocol/ABC/abstractmethod) vs stub (конкретная пустая); каждый stub имеет статус stub+issue; G-stub граф в coder_dom",
+   "status": "open",
+   "status_detail": "OPEN_CURRENT",
+   "presentation_category": "ACTIVE",
+   "source_status": "open",
+   "progress": "2026-09-18: инвентаризация — 23 пустые функции в scripts/researcher. Большинство (ports.py 18) — Protocol-интерфейсы (намеренные, тела ... — корректно). НО: tribunal_role_runtime.py:46 execute(...) -> RoleWorkerDraft в @dataclass — реальная заглушка (не Protocol). capsules.py:run, r0/ids.py:randrange/now_ms, tribunal_live_dialogue.py:invoke — требуют классификации. Проблема: не аннотировано, не в долге, нет реестра. Связано с TD-076 (Coder DOM) и TD-077.",
+   "notes": "Фальсификация: python stub-detector на scripts/researcher -> список; затем вручную проверить каждый на Protocol/ABC."
   }
  ]
 }
