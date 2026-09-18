@@ -1,0 +1,185 @@
+product:
+  id: PROD-001
+  kind: dissertation
+  template: dissertation
+  status: drafted
+  language: ru
+  meta:
+    degree: candidate | doctor
+    field: ''
+    university: ''
+  title: влияние состава Ce1-xZrxO2 на параметр решётки и каталитическую активность
+structure:
+  chapters:
+  - id: CH-01
+    title: Титул
+    sections:
+    - id: SEC-01-01
+      title: Титул
+      paragraphs: []
+  - id: CH-02
+    title: Введение
+    sections:
+    - id: SEC-02-01
+      title: Актуальность темы
+      paragraphs:
+      - id: PAR-02-01-01
+        claims: []
+        text: ''
+        expected: PROBLEM_STATEMENT
+        slot_id: CS_RELEVANCE_PROBLEM_STATEMENT
+        kind: claim
+    - id: SEC-02-02
+      title: Объект и предмет исследования
+      paragraphs:
+      - id: PAR-02-02-01
+        claims: []
+        text: ''
+        expected: SCOPE_STATEMENT
+        slot_id: CS_OBJECT_SUBJECT_SCOPE_STATEMENT
+        kind: claim
+    - id: SEC-02-03
+      title: Состояние исследований
+      paragraphs:
+      - id: PAR-02-03-01
+        claims: []
+        text: ''
+        expected: PRIOR_ART_SUMMARY
+        slot_id: CS_TOPIC_STATE_PRIOR_ART_SUMMARY
+        kind: claim
+    - id: SEC-02-04
+      title: Цель работы
+      paragraphs:
+      - id: PAR-02-04-01
+        claims: []
+        text: ''
+        expected: GOAL_STATEMENT
+        slot_id: CS_GOAL_GOAL_STATEMENT
+        kind: claim
+    - id: SEC-02-05
+      title: Задачи исследования
+      paragraphs:
+      - id: PAR-02-05-01
+        claims: []
+        text: ''
+        expected: TASK_STATEMENT
+        slot_id: CS_TASKS_TASK_STATEMENT
+        kind: claim
+    - id: SEC-02-06
+      title: Научная новизна
+      paragraphs:
+      - id: PAR-02-06-01
+        claims: []
+        text: ''
+        expected: NOVELTY_CLAIM
+        slot_id: CS_NOVELTY_NOVELTY_CLAIM
+        kind: claim
+  - id: CH-03
+    title: Методы
+    sections:
+    - id: SEC-03-01
+      title: Методы исследования
+      paragraphs:
+      - id: PAR-03-01-01
+        claims: []
+        text: ''
+        expected: METHOD_STATEMENT
+        slot_id: CS_METHODS_METHOD_STATEMENT
+        kind: claim
+      - id: PAR-03-01-02
+        claims: []
+        text: ''
+        expected: METHOD_DESC
+        slot_id: AS_METHODS_METHOD_DESC
+        kind: artifact
+  - id: CH-04
+    title: Результаты
+    sections:
+    - id: SEC-04-01
+      title: Результаты
+      paragraphs:
+      - id: PAR-04-01-01
+        claims: []
+        text: ''
+        expected: RESULT_CLAIM
+        slot_id: CS_RESULTS_RESULT_CLAIM
+        kind: claim
+      - id: PAR-04-01-02
+        claims: []
+        text: ''
+        expected: QUANTITY
+        slot_id: AS_RESULTS_QUANTITY
+        kind: artifact
+      - id: PAR-04-01-03
+        claims: []
+        text: ''
+        expected: TABLE
+        slot_id: AS_RESULTS_TABLE
+        kind: artifact
+      - id: PAR-04-01-04
+        claims: []
+        text: ''
+        expected: FIGURE
+        slot_id: AS_RESULTS_FIGURE
+        kind: artifact
+  - id: CH-05
+    title: Выводы
+    sections:
+    - id: SEC-05-01
+      title: Выводы
+      paragraphs:
+      - id: PAR-05-01-01
+        claims: []
+        text: ''
+        expected: CONCLUSION_CLAIM
+        slot_id: CS_CONCLUSION_CONCLUSION_CLAIM
+        kind: claim
+  - id: CH-06
+    title: Литература
+    sections:
+    - id: SEC-06-01
+      title: Список литературы
+      paragraphs:
+      - id: PAR-06-01-01
+        claims: []
+        text: ''
+        expected: CITATION
+        slot_id: AS_LITERATURE_CITATION
+        kind: artifact
+claims:
+- id: C-001
+  text: Изменение параметра решётки в системе Ce1-xZrxO2 связано преимущественно с
+    изменением состава твёрдого раствора.
+  kind: assumed
+  evidence: []
+  verification:
+    verdict: SUPPORTED
+    confidence: 0.8
+- id: C-002
+  text: Мы показали, что соединение A ингибирует канал hERG при концентрации 10 мкМ.
+  kind: assumed
+  evidence: []
+  verification:
+    verdict: SUPPORTED
+    confidence: 0.8
+graphs:
+- id: GRAPH-01
+  kind: support
+  edges:
+  - from: G3_discourse__ParagraphIntent__writer_sample_P0002__000
+    to: G3_discourse__DiscourseMove__writer_sample_P0002__000
+    relation: supports
+uncertainty:
+  C-001:
+    level: assumed
+    note: ''
+  C-002:
+    level: assumed
+    note: ''
+sources:
+- id: S-000
+  ref: ''
+  doi: null
+  url: null
+  kind: primary
+  accessed: ''

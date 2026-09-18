@@ -1,0 +1,20 @@
+{
+ "claims": [
+  {
+   "claim_id": "CLM-W0",
+   "text": "Изменение параметра решётки в системе Ce1-xZrxO2 связано преимущественно с изменением состава твёрдого раствора.",
+   "class": "A_claim_candidate",
+   "kind": "OBSERVATIONAL",
+   "qa_status": "GROUNDED",
+   "role": "факт"
+  },
+  {
+   "claim_id": "CLM-W1",
+   "text": "Мы показали, что соединение A ингибирует канал hERG при концентрации 10 мкМ.",
+   "class": "A_claim_candidate",
+   "kind": "OBSERVATIONAL",
+   "qa_status": "GROUNDED",
+   "role": "факт"
+  }
+ ]
+}

@@ -1,0 +1,874 @@
+{
+  "document_path": "C:\\Temp\\opencode\\writer_sample.md",
+  "meta": {
+    "chars": 540,
+    "count": 3,
+    "errors": [],
+    "table_count": 0
+  },
+  "paragraphs": [
+    {
+      "claims": [
+        {
+          "class": "A_claim_candidate",
+          "end": 112,
+          "hedged": null,
+          "kind": "OBSERVATIONAL",
+          "qa_method": "exact",
+          "qa_status": "GROUNDED",
+          "raw_span": "Изменение параметра решётки в системе Ce1-xZrxO2 связано преимущественно с изменением состава твёрдого раствора.",
+          "role": "факт",
+          "sentence_idx": 0,
+          "start": 0,
+          "text": "Изменение параметра решётки в системе Ce1-xZrxO2 связано преимущественно с изменением состава твёрдого раствора."
+        }
+      ],
+      "digest": {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "Изменение параметра решётки в системе Ce1-xZrxO2 связано преимущественно с изменением состава твёрдого раствора."
+        },
+        "modality": "assertive",
+        "scope": {
+          "restricted": false
+        },
+        "scope_text": "Изменение параметра решётки в системе Ce1-xZrxO2 связано преимущественно с изменением состава твёрдого раствора."
+      },
+      "discourse": [],
+      "links": {
+        "claim_to_digest": [
+          {
+            "claim": 0,
+            "overlap": 1.0,
+            "sentence": 0
+          }
+        ],
+        "object_to_claim": []
+      },
+      "objects": [
+        {
+          "class": "B_chemical",
+          "end": 236,
+          "id": "writer_sample_P0000_F0",
+          "raw": "CeO2",
+          "start": 232
+        },
+        {
+          "class": "B_chemical",
+          "end": 253,
+          "id": "writer_sample_P0000_F1",
+          "raw": "ZrO2",
+          "start": 249
+        }
+      ],
+      "page": null,
+      "paragraph_id": "writer_sample_P0000",
+      "philology": {
+        "chreia": [
+          {
+            "part": "evidence",
+            "sentence_idx": 1,
+            "text": "Согласно правилу Вегарда, параметр a линейно зависит от мольной доли компонентов"
+          },
+          {
+            "part": "evidence",
+            "sentence_idx": 2,
+            "text": "Для x=0.5 расчёт даёт a≈5.27 А при a(CeO2)=5.41 А и a(ZrO2)=5.13 А."
+          }
+        ],
+        "connectors": [],
+        "figures": [],
+        "morphology": {
+          "function_word_ratio": 0.231,
+          "gerund_ratio": 0.0,
+          "kantseliarit_ratio": 0.026,
+          "noun_like_ratio": 0.026,
+          "participle_ratio": 0.0,
+          "passive_participle_ratio": 0.0,
+          "verb_like_ratio": 0.026,
+          "word_count": 39
+        }
+      },
+      "sentences": [
+        {
+          "end": 112,
+          "sentence_idx": 0,
+          "start": 0,
+          "text": "Изменение параметра решётки в системе Ce1-xZrxO2 связано преимущественно с изменением состава твёрдого раствора.",
+          "tokens": [
+            {
+              "end": 9,
+              "idx": 0,
+              "pos": 0,
+              "start": 0,
+              "text": "Изменение"
+            },
+            {
+              "end": 19,
+              "idx": 1,
+              "pos": 1,
+              "start": 10,
+              "text": "параметра"
+            },
+            {
+              "end": 27,
+              "idx": 2,
+              "pos": 2,
+              "start": 20,
+              "text": "решётки"
+            },
+            {
+              "end": 29,
+              "idx": 3,
+              "pos": 3,
+              "start": 28,
+              "text": "в"
+            },
+            {
+              "end": 37,
+              "idx": 4,
+              "pos": 4,
+              "start": 30,
+              "text": "системе"
+            },
+            {
+              "end": 48,
+              "idx": 5,
+              "pos": 5,
+              "start": 38,
+              "text": "Ce1-xZrxO2"
+            },
+            {
+              "end": 56,
+              "idx": 6,
+              "pos": 6,
+              "start": 49,
+              "text": "связано"
+            },
+            {
+              "end": 72,
+              "idx": 7,
+              "pos": 7,
+              "start": 57,
+              "text": "преимущественно"
+            },
+            {
+              "end": 74,
+              "idx": 8,
+              "pos": 8,
+              "start": 73,
+              "text": "с"
+            },
+            {
+              "end": 85,
+              "idx": 9,
+              "pos": 9,
+              "start": 75,
+              "text": "изменением"
+            },
+            {
+              "end": 93,
+              "idx": 10,
+              "pos": 10,
+              "start": 86,
+              "text": "состава"
+            },
+            {
+              "end": 102,
+              "idx": 11,
+              "pos": 11,
+              "start": 94,
+              "text": "твёрдого"
+            },
+            {
+              "end": 112,
+              "idx": 12,
+              "pos": 12,
+              "start": 103,
+              "text": "раствора."
+            }
+          ]
+        },
+        {
+          "end": 193,
+          "sentence_idx": 1,
+          "start": 112,
+          "text": "Согласно правилу Вегарда, параметр a линейно зависит от мольной доли компонентов.",
+          "tokens": [
+            {
+              "end": 120,
+              "idx": 0,
+              "pos": 0,
+              "start": 112,
+              "text": "Согласно"
+            },
+            {
+              "end": 128,
+              "idx": 1,
+              "pos": 1,
+              "start": 121,
+              "text": "правилу"
+            },
+            {
+              "end": 137,
+              "idx": 2,
+              "pos": 2,
+              "start": 129,
+              "text": "Вегарда,"
+            },
+            {
+              "end": 146,
+              "idx": 3,
+              "pos": 3,
+              "start": 138,
+              "text": "параметр"
+            },
+            {
+              "end": 148,
+              "idx": 4,
+              "pos": 4,
+              "start": 147,
+              "text": "a"
+            },
+            {
+              "end": 156,
+              "idx": 5,
+              "pos": 5,
+              "start": 149,
+              "text": "линейно"
+            },
+            {
+              "end": 164,
+              "idx": 6,
+              "pos": 6,
+              "start": 157,
+              "text": "зависит"
+            },
+            {
+              "end": 167,
+              "idx": 7,
+              "pos": 7,
+              "start": 165,
+              "text": "от"
+            },
+            {
+              "end": 175,
+              "idx": 8,
+              "pos": 8,
+              "start": 168,
+              "text": "мольной"
+            },
+            {
+              "end": 180,
+              "idx": 9,
+              "pos": 9,
+              "start": 176,
+              "text": "доли"
+            },
+            {
+              "end": 193,
+              "idx": 10,
+              "pos": 10,
+              "start": 181,
+              "text": "компонентов."
+            }
+          ]
+        },
+        {
+          "end": 260,
+          "sentence_idx": 2,
+          "start": 193,
+          "text": "Для x=0.5 расчёт даёт a≈5.27 А при a(CeO2)=5.41 А и a(ZrO2)=5.13 А.",
+          "tokens": [
+            {
+              "end": 196,
+              "idx": 0,
+              "pos": 0,
+              "start": 193,
+              "text": "Для"
+            },
+            {
+              "end": 202,
+              "idx": 1,
+              "pos": 1,
+              "start": 197,
+              "text": "x=0.5"
+            },
+            {
+              "end": 209,
+              "idx": 2,
+              "pos": 2,
+              "start": 203,
+              "text": "расчёт"
+            },
+            {
+              "end": 214,
+              "idx": 3,
+              "pos": 3,
+              "start": 210,
+              "text": "даёт"
+            },
+            {
+              "end": 221,
+              "idx": 4,
+              "pos": 4,
+              "start": 215,
+              "text": "a≈5.27"
+            },
+            {
+              "end": 223,
+              "idx": 5,
+              "pos": 5,
+              "start": 222,
+              "text": "А"
+            },
+            {
+              "end": 227,
+              "idx": 6,
+              "pos": 6,
+              "start": 224,
+              "text": "при"
+            },
+            {
+              "end": 240,
+              "idx": 7,
+              "pos": 7,
+              "start": 228,
+              "text": "a(CeO2)=5.41"
+            },
+            {
+              "end": 242,
+              "idx": 8,
+              "pos": 8,
+              "start": 241,
+              "text": "А"
+            },
+            {
+              "end": 244,
+              "idx": 9,
+              "pos": 9,
+              "start": 243,
+              "text": "и"
+            },
+            {
+              "end": 257,
+              "idx": 10,
+              "pos": 10,
+              "start": 245,
+              "text": "a(ZrO2)=5.13"
+            },
+            {
+              "end": 260,
+              "idx": 11,
+              "pos": 11,
+              "start": 258,
+              "text": "А."
+            }
+          ]
+        }
+      ],
+      "text": "Изменение параметра решётки в системе Ce1-xZrxO2 связано преимущественно\nс изменением состава твёрдого раствора. Согласно правилу Вегарда, параметр a\nлинейно зависит от мольной доли компонентов. Для x=0.5 расчёт даёт a≈5.27 А\nпри a(CeO2)=5.41 А и a(ZrO2)=5.13 А."
+    },
+    {
+      "claims": [
+        {
+          "class": "A_claim_candidate",
+          "end": 76,
+          "hedged": null,
+          "kind": "OBSERVATIONAL",
+          "qa_method": "exact",
+          "qa_status": "GROUNDED",
+          "raw_span": "Мы показали, что соединение A ингибирует канал hERG при концентрации 10 мкМ.",
+          "role": "факт",
+          "sentence_idx": 0,
+          "start": 0,
+          "text": "Мы показали, что соединение A ингибирует канал hERG при концентрации 10 мкМ."
+        }
+      ],
+      "digest": {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "Мы показали, что соединение A ингибирует канал hERG при концентрации 10 мкМ."
+        },
+        "modality": "assertive",
+        "scope": {
+          "numeric_mentions": [
+            "10 мкМ"
+          ],
+          "restricted": false
+        },
+        "scope_text": "Мы показали, что соединение A ингибирует канал hERG при концентрации 10 мкМ."
+      },
+      "discourse": [],
+      "links": {
+        "claim_to_digest": [
+          {
+            "claim": 0,
+            "overlap": 1.0,
+            "sentence": 0
+          }
+        ],
+        "object_to_claim": [
+          {
+            "claim": 0,
+            "object": 0
+          }
+        ]
+      },
+      "objects": [
+        {
+          "class": "B_number",
+          "dimension": "length",
+          "end": 74,
+          "id": "writer_sample_P0001_Q0",
+          "raw": "10мкМ",
+          "start": 69,
+          "unit": "мкм",
+          "value_lower": 10.0,
+          "value_upper": 10.0
+        },
+        {
+          "class": "B_number",
+          "dimension": "length",
+          "end": 106,
+          "id": "writer_sample_P0001_Q1",
+          "raw": "8.2мкМ",
+          "start": 100,
+          "unit": "мкм",
+          "value_lower": 8.2,
+          "value_upper": 8.2
+        },
+        {
+          "class": "B_chemical",
+          "end": 97,
+          "id": "writer_sample_P0001_F2",
+          "raw": "IC50",
+          "start": 93
+        }
+      ],
+      "page": null,
+      "paragraph_id": "writer_sample_P0001",
+      "philology": {
+        "chreia": [
+          {
+            "part": "evidence",
+            "sentence_idx": 1,
+            "text": "Авторы сообщают IC50 = 8.2 мкМ (n=3)."
+          }
+        ],
+        "connectors": [],
+        "figures": [],
+        "morphology": {
+          "function_word_ratio": 0.19,
+          "gerund_ratio": 0.0,
+          "kantseliarit_ratio": 0.048,
+          "noun_like_ratio": 0.048,
+          "participle_ratio": 0.0,
+          "passive_participle_ratio": 0.0,
+          "verb_like_ratio": 0.048,
+          "word_count": 21
+        }
+      },
+      "sentences": [
+        {
+          "end": 76,
+          "sentence_idx": 0,
+          "start": 0,
+          "text": "Мы показали, что соединение A ингибирует канал hERG при концентрации 10 мкМ.",
+          "tokens": [
+            {
+              "end": 2,
+              "idx": 0,
+              "pos": 0,
+              "start": 0,
+              "text": "Мы"
+            },
+            {
+              "end": 12,
+              "idx": 1,
+              "pos": 1,
+              "start": 3,
+              "text": "показали,"
+            },
+            {
+              "end": 16,
+              "idx": 2,
+              "pos": 2,
+              "start": 13,
+              "text": "что"
+            },
+            {
+              "end": 27,
+              "idx": 3,
+              "pos": 3,
+              "start": 17,
+              "text": "соединение"
+            },
+            {
+              "end": 29,
+              "idx": 4,
+              "pos": 4,
+              "start": 28,
+              "text": "A"
+            },
+            {
+              "end": 40,
+              "idx": 5,
+              "pos": 5,
+              "start": 30,
+              "text": "ингибирует"
+            },
+            {
+              "end": 46,
+              "idx": 6,
+              "pos": 6,
+              "start": 41,
+              "text": "канал"
+            },
+            {
+              "end": 51,
+              "idx": 7,
+              "pos": 7,
+              "start": 47,
+              "text": "hERG"
+            },
+            {
+              "end": 55,
+              "idx": 8,
+              "pos": 8,
+              "start": 52,
+              "text": "при"
+            },
+            {
+              "end": 68,
+              "idx": 9,
+              "pos": 9,
+              "start": 56,
+              "text": "концентрации"
+            },
+            {
+              "end": 71,
+              "idx": 10,
+              "pos": 10,
+              "start": 69,
+              "text": "10"
+            },
+            {
+              "end": 76,
+              "idx": 11,
+              "pos": 11,
+              "start": 72,
+              "text": "мкМ."
+            }
+          ]
+        },
+        {
+          "end": 114,
+          "sentence_idx": 1,
+          "start": 77,
+          "text": "Авторы сообщают IC50 = 8.2 мкМ (n=3).",
+          "tokens": [
+            {
+              "end": 83,
+              "idx": 0,
+              "pos": 0,
+              "start": 77,
+              "text": "Авторы"
+            },
+            {
+              "end": 92,
+              "idx": 1,
+              "pos": 1,
+              "start": 84,
+              "text": "сообщают"
+            },
+            {
+              "end": 97,
+              "idx": 2,
+              "pos": 2,
+              "start": 93,
+              "text": "IC50"
+            },
+            {
+              "end": 99,
+              "idx": 3,
+              "pos": 3,
+              "start": 98,
+              "text": "="
+            },
+            {
+              "end": 103,
+              "idx": 4,
+              "pos": 4,
+              "start": 100,
+              "text": "8.2"
+            },
+            {
+              "end": 107,
+              "idx": 5,
+              "pos": 5,
+              "start": 104,
+              "text": "мкМ"
+            },
+            {
+              "end": 114,
+              "idx": 6,
+              "pos": 6,
+              "start": 108,
+              "text": "(n=3)."
+            }
+          ]
+        },
+        {
+          "end": 154,
+          "sentence_idx": 2,
+          "start": 115,
+          "text": "Это согласуется с предыдущими работами.",
+          "tokens": [
+            {
+              "end": 118,
+              "idx": 0,
+              "pos": 0,
+              "start": 115,
+              "text": "Это"
+            },
+            {
+              "end": 130,
+              "idx": 1,
+              "pos": 1,
+              "start": 119,
+              "text": "согласуется"
+            },
+            {
+              "end": 132,
+              "idx": 2,
+              "pos": 2,
+              "start": 131,
+              "text": "с"
+            },
+            {
+              "end": 144,
+              "idx": 3,
+              "pos": 3,
+              "start": 133,
+              "text": "предыдущими"
+            },
+            {
+              "end": 154,
+              "idx": 4,
+              "pos": 4,
+              "start": 145,
+              "text": "работами."
+            }
+          ]
+        }
+      ],
+      "text": "Мы показали, что соединение A ингибирует канал hERG при концентрации 10 мкМ.\nАвторы сообщают IC50 = 8.2 мкМ (n=3). Это согласуется с предыдущими работами."
+    },
+    {
+      "claims": [],
+      "digest": {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "Остаточные напряжения смещают дифракционный пик при 2θ≈44.3°."
+        },
+        "modality": "assertive",
+        "scope": {
+          "numeric_mentions": [
+            "44.3"
+          ],
+          "restricted": false
+        },
+        "scope_text": "Остаточные напряжения смещают дифракционный пик при 2θ≈44.3°."
+      },
+      "discourse": [
+        {
+          "class": "C_discourse",
+          "marker": "метод",
+          "role": "method"
+        }
+      ],
+      "links": {
+        "claim_to_digest": [],
+        "object_to_claim": []
+      },
+      "objects": [],
+      "page": null,
+      "paragraph_id": "writer_sample_P0002",
+      "philology": {
+        "chreia": [
+          {
+            "part": "evidence",
+            "sentence_idx": 0,
+            "text": "Остаточные напряжения смещают дифракционный пик при 2θ≈44.3°."
+          }
+        ],
+        "connectors": [],
+        "figures": [],
+        "morphology": {
+          "function_word_ratio": 0.2,
+          "gerund_ratio": 0.0,
+          "kantseliarit_ratio": 0.0,
+          "noun_like_ratio": 0.0,
+          "participle_ratio": 0.067,
+          "passive_participle_ratio": 0.067,
+          "verb_like_ratio": 0.0,
+          "word_count": 15
+        }
+      },
+      "sentences": [
+        {
+          "end": 61,
+          "sentence_idx": 0,
+          "start": 0,
+          "text": "Остаточные напряжения смещают дифракционный пик при 2θ≈44.3°.",
+          "tokens": [
+            {
+              "end": 10,
+              "idx": 0,
+              "pos": 0,
+              "start": 0,
+              "text": "Остаточные"
+            },
+            {
+              "end": 21,
+              "idx": 1,
+              "pos": 1,
+              "start": 11,
+              "text": "напряжения"
+            },
+            {
+              "end": 29,
+              "idx": 2,
+              "pos": 2,
+              "start": 22,
+              "text": "смещают"
+            },
+            {
+              "end": 43,
+              "idx": 3,
+              "pos": 3,
+              "start": 30,
+              "text": "дифракционный"
+            },
+            {
+              "end": 47,
+              "idx": 4,
+              "pos": 4,
+              "start": 44,
+              "text": "пик"
+            },
+            {
+              "end": 51,
+              "idx": 5,
+              "pos": 5,
+              "start": 48,
+              "text": "при"
+            },
+            {
+              "end": 61,
+              "idx": 6,
+              "pos": 6,
+              "start": 52,
+              "text": "2θ≈44.3°."
+            }
+          ]
+        },
+        {
+          "end": 124,
+          "sentence_idx": 1,
+          "start": 62,
+          "text": "Сдвиг зависит от метода съёмки и требует отдельной калибровки.",
+          "tokens": [
+            {
+              "end": 67,
+              "idx": 0,
+              "pos": 0,
+              "start": 62,
+              "text": "Сдвиг"
+            },
+            {
+              "end": 75,
+              "idx": 1,
+              "pos": 1,
+              "start": 68,
+              "text": "зависит"
+            },
+            {
+              "end": 78,
+              "idx": 2,
+              "pos": 2,
+              "start": 76,
+              "text": "от"
+            },
+            {
+              "end": 85,
+              "idx": 3,
+              "pos": 3,
+              "start": 79,
+              "text": "метода"
+            },
+            {
+              "end": 92,
+              "idx": 4,
+              "pos": 4,
+              "start": 86,
+              "text": "съёмки"
+            },
+            {
+              "end": 94,
+              "idx": 5,
+              "pos": 5,
+              "start": 93,
+              "text": "и"
+            },
+            {
+              "end": 102,
+              "idx": 6,
+              "pos": 6,
+              "start": 95,
+              "text": "требует"
+            },
+            {
+              "end": 112,
+              "idx": 7,
+              "pos": 7,
+              "start": 103,
+              "text": "отдельной"
+            },
+            {
+              "end": 124,
+              "idx": 8,
+              "pos": 8,
+              "start": 113,
+              "text": "калибровки."
+            }
+          ]
+        }
+      ],
+      "text": "Остаточные напряжения смещают дифракционный пик при 2θ≈44.3°.\nСдвиг зависит от метода съёмки и требует отдельной калибровки."
+    }
+  ],
+  "tables": []
+}

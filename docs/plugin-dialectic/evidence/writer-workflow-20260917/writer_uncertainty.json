@@ -1,0 +1,16 @@
+{
+  "status_map": {
+    "C-001": "PROVISIONAL",
+    "C-002": "PROVISIONAL"
+  },
+  "research_requests": [],
+  "tentative_phrases": {
+    "C-001": "По имеющимся данным можно говорить",
+    "C-002": "По имеющимся данным можно говорить"
+  },
+  "n_readiness": {
+    "READY": 0,
+    "PROVISIONAL": 2
+  },
+  "schema": "writer_core.uncertainty_bridge.v1"
+}

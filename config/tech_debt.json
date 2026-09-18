@@ -3,8 +3,8 @@
  "updated": "2026-09-15",
  "authority_note": "Canonical registry migrated from патчи/миграция в плагин/tech_debt_current.json (65 records). project_context.py counts status=open. CLOSED_REPORTED maps to closed; RECONCILE_REQUIRED stays open until exact-tree verification.",
  "counts": {
-  "total": 68,
-  "open": 52,
+  "total": 69,
+  "open": 53,
   "closed": 16
  },
  "debts": [
@@ -1617,6 +1617,22 @@
    "source_status": "open",
    "progress": "2026-09-17 проверено: extract_all ловит только глагольные формы (\"Мы показали, что X\", \"X вызывает Y\"). Числовые предикаты (равен a, x=0.5 даёт, IC50=8.2) -> 0 claims. Это блокирует верификацию количественных утверждений через claims-цикл.",
    "notes": "Фальсификация: extract_all('Параметр решётки CeO2 равен 5.41 А.') -> len(claims)==0 (ожидается >0)."
+  },
+  {
+   "id": "TD-069",
+   "title": "uncertainty_bridge не распознаёт уровень 'assumed' из DOM -> research_requests не создаются",
+   "area": "scripts/writer-core/writer_core/uncertainty_bridge.py + dom builder",
+   "kind": "workflow",
+   "severity": "high",
+   "owner": "research-orchestrator",
+   "sunset_at": "2026-09-24",
+   "acceptance": "uncertainty: level=\"assumed\" маппится в research_request (как high/medium); end-to-end dom->uncertainty->research_requests непуст; тест на assumed/средний уровень",
+   "status": "open",
+   "status_detail": "OPEN_CURRENT",
+   "presentation_category": "ACTIVE",
+   "source_status": "open",
+   "progress": "2026-09-17: dom строит claims с verification.verdict=SUPPORTED, confidence=0.8 и uncertainty.level=\"assumed\". uncertainty_bridge._claim_level возвращает \"assumed\" (не в low/medium/high) -> ветка else -> PROVISIONAL без research_request. Итог: research_requests=[] - передача долга ресерчеру не происходит. Это блокирует workflow \"долг неопределённости -> ресерчер\".",
+   "notes": "Фальсификация: запустить wc_cli dom+uncertainty на writer_sample; n_readiness=PROVISIONAL 2, но research_requests=[] (ожидалось 2 при level assumed->high/medium)."
   }
  ]
 }
