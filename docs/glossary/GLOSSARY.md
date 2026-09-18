@@ -4,41 +4,17 @@
 «По принципу Python-библиотек»: контур → модуль → публичные функции/классы с сигнатурами.
 
 ## Полный список функций по контурам
-- `add_skill.py`: 13 публичных функций (файлы: scripts/add_skill.py)
 - `code-factory`: 51 публичных функций (файлы: scripts/code-factory/code_factory_runner.py, scripts/code-factory/contract_validator.py, scripts/code-factory/factory_ctl.py и др.)
-- `fix_paths.py`: 5 публичных функций (файлы: scripts/fix_paths.py)
+- `glossary`: 8 публичных функций (файлы: scripts/glossary/compare_trees.py, scripts/glossary/gen_api_index.py, scripts/glossary/render_glossary.py и др.)
 - `guard`: 17 публичных функций (файлы: guard/src/adversarial_build.py, guard/src/guard_runner.py, guard/src/semantic_layer.py и др.)
-- `health_check.py`: 6 публичных функций (файлы: scripts/health_check.py)
 - `jobs`: 12 публичных функций (файлы: scripts/jobs/job_ctl.py)
 - `mcp`: 32 публичных функций (файлы: mcp/academic_search_server.py, mcp/coder_router_server.py, mcp/doc_extract_server.py и др.)
 - `orchestration`: 22 публичных функций (файлы: scripts/orchestration/character_sheet.py, scripts/orchestration/delegation_score.py, scripts/orchestration/idle_tasks.py и др.)
 - `plugin`: 5 публичных функций (файлы: packages/opencode-harness-plugin/core/bridge_peer.py, packages/opencode-harness-plugin/core/doctor.py, packages/opencode-harness-plugin/core/install_plugin.py и др.)
-- `register_plugin.py`: 4 публичных функций (файлы: scripts/register_plugin.py)
 - `researcher`: 224 публичных функций (файлы: scripts/researcher/researcher_core/__init__.py, scripts/researcher/researcher_core/artifact.py, scripts/researcher/researcher_core/artifact_builder.py и др.)
 - `router`: 57 публичных функций (файлы: scripts/router/build_skill_graph.py, scripts/router/build_task_plan.py, scripts/router/capability_escalation.py и др.)
-- `run_researcher_acceptance.py`: 3 публичных функций (файлы: scripts/run_researcher_acceptance.py)
-- `start_mcp_servers.py`: 4 публичных функций (файлы: scripts/start_mcp_servers.py)
-- `sync_to_live.py`: 4 публичных функций (файлы: scripts/sync_to_live.py)
-- `validate_env.py`: 4 публичных функций (файлы: scripts/validate_env.py)
+- `scripts`: 43 публичных функций (файлы: scripts/add_skill.py, scripts/fix_paths.py, scripts/health_check.py и др.)
 - `writer-core`: 166 публичных функций (файлы: scripts/writer-core/consolidation.py, scripts/writer-core/corpus_runner.py, scripts/writer-core/digest_builder.py и др.)
-
-## Add Skill.py
-
-### `scripts/add_skill.py`
-
-- `repo_root() -> Path` — — [строка 31]
-- `read_json(p: Path) -> dict` — — [строка 35]
-- `write_json(p: Path, data: dict) -> None` — — [строка 39]
-- `normalize_name(raw: str) -> str` — — [строка 43]
-- `find_skill_dir(root: Path, name: str) -> Path | None` — — [строка 47]
-- `validate_skill(skill_dir: Path, name: str) -> list[str]` — — [строка 55]
-- `add_to_registry(reg: dict, name: str, cls: str) -> bool` — — [строка 71]
-- `add_to_capsule(caps: dict, name: str, capsule: str) -> bool` — — [строка 86]
-- `add_to_route_map(route_map: dict, route: str, name: str) -> bool` — — [строка 99]
-- `run_graph_build(root: Path) -> bool` — — [строка 112]
-- `run_route_check(root: Path, route: str | None) -> bool` — — [строка 122]
-- `sync_live(root: Path, name: str) -> None` — — [строка 138]
-- `main() -> int` — — [строка 150]
 
 ## Code Factory
 
@@ -111,15 +87,24 @@
 - `verify_event_chain(events: list[dict]) -> list[str]` — — [строка 44]
 - `reduce_events(events: list[dict], policy: dict | None = None) -> dict` — — [строка 159]
 
-## Fix Paths.py
+## Glossary
 
-### `scripts/fix_paths.py`
+### `scripts/glossary/compare_trees.py`
 
-- `load_json(path: Path) -> dict` — — [строка 13]
-- `resolve_env(value: str) -> str` — Resolve ${VAR} patterns. [строка 17]
-- `scan_files(root: Path, extensions: list, exclude_dirs: list) -> list[Path]` — — [строка 25]
-- `fix_file(filepath: Path, mappings: list, dry_run: bool = True, backup: bool = True) -> tuple[bool, int]` — — [строка 35]
-- `main() -> int` — — [строка 61]
+- `load_index(path: str | Path) -> dict[str, Any]` — Read a function_index.json registry (utf-8). [строка 29]
+- `compute_delta(base_index: dict[str, Any], target_index: dict[str, Any]) -> dict[str, Any]` — Compute per-contour module/function deltas between two registries. [строка 78]
+- `render_delta(delta: dict[str, Any]) -> str` — Render the delta dict as the PORTABLE_DELTA.md markdown document. [строка 148]
+- `main(argv: list[str] | None = None) -> int` — — [строка 202]
+
+### `scripts/glossary/gen_api_index.py`
+
+- `scan_tree(root: str | Path, label: str = 'workspace', include_tests: bool = False) -> dict` — Scan the tree and return the registry dict (see module docstring for the schema). [строка 275]
+- `main(argv: list[str] | None = None) -> int` — — [строка 344]
+
+### `scripts/glossary/render_glossary.py`
+
+- `render_glossary(index: dict[str, Any], label: str) -> str` — Render the full GLOSSARY.md document for a registry and label. [строка 75]
+- `main(argv: list[str] | None = None) -> int` — — [строка 130]
 
 ## Guard
 
@@ -164,17 +149,6 @@
 - `human_report(result)` — Человекочитаемый вывод. [строка 461]
 - `main()` — — [строка 490]
 - `OpenDBError(Exception)` — Не удалось открыть/прочитать файл БД (graceful, без traceback). [строка 332]
-
-## Health Check.py
-
-### `scripts/health_check.py`
-
-- `harness_root() -> Path` — — [строка 13]
-- `check_plugin_loaded() -> tuple[bool, str]` — — [строка 34]
-- `check_mcp_definitions() -> tuple[bool, str]` — — [строка 62]
-- `check_guard_running() -> tuple[bool, str]` — — [строка 72]
-- `check_db_accessible() -> tuple[bool, str]` — — [строка 83]
-- `main() -> int` — — [строка 98]
 
 ## Jobs
 
@@ -316,15 +290,6 @@
 
 - `harness_root() -> Path` — — [строка 19]
 - `main() -> int` — — [строка 48]
-
-## Register Plugin.py
-
-### `scripts/register_plugin.py`
-
-- `harness_root() -> Path` — — [строка 14]
-- `register() -> int` — — [строка 44]
-- `unregister() -> int` — — [строка 57]
-- `main() -> int` — — [строка 67]
 
 ## Researcher
 
@@ -1332,15 +1297,53 @@
 - `split_claims(task_text: str) -> dict` — — [строка 40]
 - `main() -> int` — — [строка 67]
 
-## Run Researcher Acceptance.py
+## Scripts
+
+### `scripts/add_skill.py`
+
+- `repo_root() -> Path` — — [строка 31]
+- `read_json(p: Path) -> dict` — — [строка 35]
+- `write_json(p: Path, data: dict) -> None` — — [строка 39]
+- `normalize_name(raw: str) -> str` — — [строка 43]
+- `find_skill_dir(root: Path, name: str) -> Path | None` — — [строка 47]
+- `validate_skill(skill_dir: Path, name: str) -> list[str]` — — [строка 55]
+- `add_to_registry(reg: dict, name: str, cls: str) -> bool` — — [строка 71]
+- `add_to_capsule(caps: dict, name: str, capsule: str) -> bool` — — [строка 86]
+- `add_to_route_map(route_map: dict, route: str, name: str) -> bool` — — [строка 99]
+- `run_graph_build(root: Path) -> bool` — — [строка 112]
+- `run_route_check(root: Path, route: str | None) -> bool` — — [строка 122]
+- `sync_live(root: Path, name: str) -> None` — — [строка 138]
+- `main() -> int` — — [строка 150]
+
+### `scripts/fix_paths.py`
+
+- `load_json(path: Path) -> dict` — — [строка 13]
+- `resolve_env(value: str) -> str` — Resolve ${VAR} patterns. [строка 17]
+- `scan_files(root: Path, extensions: list, exclude_dirs: list) -> list[Path]` — — [строка 25]
+- `fix_file(filepath: Path, mappings: list, dry_run: bool = True, backup: bool = True) -> tuple[bool, int]` — — [строка 35]
+- `main() -> int` — — [строка 61]
+
+### `scripts/health_check.py`
+
+- `harness_root() -> Path` — — [строка 13]
+- `check_plugin_loaded() -> tuple[bool, str]` — — [строка 34]
+- `check_mcp_definitions() -> tuple[bool, str]` — — [строка 62]
+- `check_guard_running() -> tuple[bool, str]` — — [строка 72]
+- `check_db_accessible() -> tuple[bool, str]` — — [строка 83]
+- `main() -> int` — — [строка 98]
+
+### `scripts/register_plugin.py`
+
+- `harness_root() -> Path` — — [строка 14]
+- `register() -> int` — — [строка 44]
+- `unregister() -> int` — — [строка 57]
+- `main() -> int` — — [строка 67]
 
 ### `scripts/run_researcher_acceptance.py`
 
 - `env() -> dict[str, str]` — — [строка 41]
 - `run(argv: list[str]) -> int` — — [строка 51]
 - `main() -> int` — — [строка 56]
-
-## Start Mcp Servers.py
 
 ### `scripts/start_mcp_servers.py`
 
@@ -1349,16 +1352,12 @@
 - `validate_server(name: str, cfg: dict) -> tuple[bool, str]` — — [строка 41]
 - `main() -> int` — — [строка 63]
 
-## Sync To Live.py
-
 ### `scripts/sync_to_live.py`
 
 - `repo_root() -> Path` — — [строка 27]
 - `live_root() -> Path` — — [строка 31]
 - `plan_copy(src_root: Path, dst_root: Path, rel: str, pattern: str, dst_rel: str | None = None) -> list[tuple[Path, Path]]` — — [строка 35]
 - `main() -> int` — — [строка 47]
-
-## Validate Env.py
 
 ### `scripts/validate_env.py`
 

@@ -95,6 +95,7 @@ def compute_delta(base_index: dict[str, Any], target_index: dict[str, Any]) -> d
             display_map.setdefault(cid, contour.get("display", ""))
 
     contours: list[dict[str, Any]] = []
+    warnings: list[str] = []
     totals: dict[str, int] = {
         "modules_base": 0,
         "modules_target": 0,
@@ -115,6 +116,17 @@ def compute_delta(base_index: dict[str, Any], target_index: dict[str, Any]) -> d
             {"name": name, "module": min(bf[name])}
             for name in sorted(set(bf) - set(tf))
         ]
+
+        # Desync warnings: a module/function exists on one side of a contour
+        # and is entirely absent on the other. Informational, never fatal.
+        if bm and not tm:
+            warnings.append(f"контур '{cid}': {len(bm)} модулей в base, 0 в target")
+        if tm and not bm:
+            warnings.append(f"контур '{cid}': {len(tm)} модулей в target, 0 в base")
+        if bf and not tf:
+            warnings.append(f"контур '{cid}': {len(bf)} функций в base, 0 в target")
+        if tf and not bf:
+            warnings.append(f"контур '{cid}': {len(tf)} функций в target, 0 в base")
 
         row = {
             "id": cid,
@@ -139,6 +151,7 @@ def compute_delta(base_index: dict[str, Any], target_index: dict[str, Any]) -> d
         "target": {"label": (target_index.get("meta") or {}).get("label", "target")},
         "contours": contours,
         "totals": totals,
+        "warnings": warnings,
     }
 
 
@@ -191,6 +204,11 @@ def render_delta(delta: dict[str, Any]) -> str:
             lines.append(f"- `{fn['name']}` — модуль `{fn['module']}`")
     if not any_functions:
         lines += ["", "Нет."]
+
+    warnings = delta.get("warnings") or []
+    if warnings:
+        lines += ["", "## Предупреждения", ""]
+        lines += [f"- {w}" for w in warnings]
 
     lines += [""]
     return "\n".join(lines)

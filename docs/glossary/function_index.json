@@ -2,132 +2,16 @@
   "meta": {
     "label": "portable",
     "root": "E:\\opencode_harness_portable",
-    "generated_at": "2026-09-18T08:16:19Z",
+    "generated_at": "2026-09-18T09:22:27Z",
     "python": "3.11",
     "counts": {
-      "modules": 154,
-      "functions": 629,
+      "modules": 157,
+      "functions": 637,
       "classes": 364,
       "methods": 174
     }
   },
   "contours": [
-    {
-      "id": "add_skill.py",
-      "display": "Add Skill.py",
-      "modules": [
-        {
-          "path": "scripts/add_skill.py",
-          "functions": [
-            {
-              "name": "repo_root",
-              "kind": "function",
-              "signature": "def repo_root() -> Path",
-              "doc": "",
-              "decorators": [],
-              "line": 31
-            },
-            {
-              "name": "read_json",
-              "kind": "function",
-              "signature": "def read_json(p: Path) -> dict",
-              "doc": "",
-              "decorators": [],
-              "line": 35
-            },
-            {
-              "name": "write_json",
-              "kind": "function",
-              "signature": "def write_json(p: Path, data: dict) -> None",
-              "doc": "",
-              "decorators": [],
-              "line": 39
-            },
-            {
-              "name": "normalize_name",
-              "kind": "function",
-              "signature": "def normalize_name(raw: str) -> str",
-              "doc": "",
-              "decorators": [],
-              "line": 43
-            },
-            {
-              "name": "find_skill_dir",
-              "kind": "function",
-              "signature": "def find_skill_dir(root: Path, name: str) -> Path | None",
-              "doc": "",
-              "decorators": [],
-              "line": 47
-            },
-            {
-              "name": "validate_skill",
-              "kind": "function",
-              "signature": "def validate_skill(skill_dir: Path, name: str) -> list[str]",
-              "doc": "",
-              "decorators": [],
-              "line": 55
-            },
-            {
-              "name": "add_to_registry",
-              "kind": "function",
-              "signature": "def add_to_registry(reg: dict, name: str, cls: str) -> bool",
-              "doc": "",
-              "decorators": [],
-              "line": 71
-            },
-            {
-              "name": "add_to_capsule",
-              "kind": "function",
-              "signature": "def add_to_capsule(caps: dict, name: str, capsule: str) -> bool",
-              "doc": "",
-              "decorators": [],
-              "line": 86
-            },
-            {
-              "name": "add_to_route_map",
-              "kind": "function",
-              "signature": "def add_to_route_map(route_map: dict, route: str, name: str) -> bool",
-              "doc": "",
-              "decorators": [],
-              "line": 99
-            },
-            {
-              "name": "run_graph_build",
-              "kind": "function",
-              "signature": "def run_graph_build(root: Path) -> bool",
-              "doc": "",
-              "decorators": [],
-              "line": 112
-            },
-            {
-              "name": "run_route_check",
-              "kind": "function",
-              "signature": "def run_route_check(root: Path, route: str | None) -> bool",
-              "doc": "",
-              "decorators": [],
-              "line": 122
-            },
-            {
-              "name": "sync_live",
-              "kind": "function",
-              "signature": "def sync_live(root: Path, name: str) -> None",
-              "doc": "",
-              "decorators": [],
-              "line": 138
-            },
-            {
-              "name": "main",
-              "kind": "function",
-              "signature": "def main() -> int",
-              "doc": "",
-              "decorators": [],
-              "line": 150
-            }
-          ],
-          "classes": []
-        }
-      ]
-    },
     {
       "id": "code-factory",
       "display": "Code Factory",
@@ -579,51 +463,87 @@
       ]
     },
     {
-      "id": "fix_paths.py",
-      "display": "Fix Paths.py",
+      "id": "glossary",
+      "display": "Glossary",
       "modules": [
         {
-          "path": "scripts/fix_paths.py",
+          "path": "scripts/glossary/compare_trees.py",
           "functions": [
             {
-              "name": "load_json",
+              "name": "load_index",
               "kind": "function",
-              "signature": "def load_json(path: Path) -> dict",
-              "doc": "",
+              "signature": "def load_index(path: str | Path) -> dict[str, Any]",
+              "doc": "Read a function_index.json registry (utf-8).",
               "decorators": [],
-              "line": 13
+              "line": 29
             },
             {
-              "name": "resolve_env",
+              "name": "compute_delta",
               "kind": "function",
-              "signature": "def resolve_env(value: str) -> str",
-              "doc": "Resolve ${VAR} patterns.",
+              "signature": "def compute_delta(base_index: dict[str, Any], target_index: dict[str, Any]) -> dict[str, Any]",
+              "doc": "Compute per-contour module/function deltas between two registries.",
               "decorators": [],
-              "line": 17
+              "line": 78
             },
             {
-              "name": "scan_files",
+              "name": "render_delta",
               "kind": "function",
-              "signature": "def scan_files(root: Path, extensions: list, exclude_dirs: list) -> list[Path]",
-              "doc": "",
+              "signature": "def render_delta(delta: dict[str, Any]) -> str",
+              "doc": "Render the delta dict as the PORTABLE_DELTA.md markdown document.",
               "decorators": [],
-              "line": 25
-            },
-            {
-              "name": "fix_file",
-              "kind": "function",
-              "signature": "def fix_file(filepath: Path, mappings: list, dry_run: bool = True, backup: bool = True) -> tuple[bool, int]",
-              "doc": "",
-              "decorators": [],
-              "line": 35
+              "line": 148
             },
             {
               "name": "main",
               "kind": "function",
-              "signature": "def main() -> int",
+              "signature": "def main(argv: list[str] | None = None) -> int",
               "doc": "",
               "decorators": [],
-              "line": 61
+              "line": 202
+            }
+          ],
+          "classes": []
+        },
+        {
+          "path": "scripts/glossary/gen_api_index.py",
+          "functions": [
+            {
+              "name": "scan_tree",
+              "kind": "function",
+              "signature": "def scan_tree(root: str | Path, label: str = 'workspace', include_tests: bool = False) -> dict",
+              "doc": "Scan the tree and return the registry dict (see module docstring for the schema).",
+              "decorators": [],
+              "line": 275
+            },
+            {
+              "name": "main",
+              "kind": "function",
+              "signature": "def main(argv: list[str] | None = None) -> int",
+              "doc": "",
+              "decorators": [],
+              "line": 344
+            }
+          ],
+          "classes": []
+        },
+        {
+          "path": "scripts/glossary/render_glossary.py",
+          "functions": [
+            {
+              "name": "render_glossary",
+              "kind": "function",
+              "signature": "def render_glossary(index: dict[str, Any], label: str) -> str",
+              "doc": "Render the full GLOSSARY.md document for a registry and label.",
+              "decorators": [],
+              "line": 75
+            },
+            {
+              "name": "main",
+              "kind": "function",
+              "signature": "def main(argv: list[str] | None = None) -> int",
+              "doc": "",
+              "decorators": [],
+              "line": 130
             }
           ],
           "classes": []
@@ -912,66 +832,6 @@
               "methods": []
             }
           ]
-        }
-      ]
-    },
-    {
-      "id": "health_check.py",
-      "display": "Health Check.py",
-      "modules": [
-        {
-          "path": "scripts/health_check.py",
-          "functions": [
-            {
-              "name": "harness_root",
-              "kind": "function",
-              "signature": "def harness_root() -> Path",
-              "doc": "",
-              "decorators": [],
-              "line": 13
-            },
-            {
-              "name": "check_plugin_loaded",
-              "kind": "function",
-              "signature": "def check_plugin_loaded() -> tuple[bool, str]",
-              "doc": "",
-              "decorators": [],
-              "line": 34
-            },
-            {
-              "name": "check_mcp_definitions",
-              "kind": "function",
-              "signature": "def check_mcp_definitions() -> tuple[bool, str]",
-              "doc": "",
-              "decorators": [],
-              "line": 62
-            },
-            {
-              "name": "check_guard_running",
-              "kind": "function",
-              "signature": "def check_guard_running() -> tuple[bool, str]",
-              "doc": "",
-              "decorators": [],
-              "line": 72
-            },
-            {
-              "name": "check_db_accessible",
-              "kind": "function",
-              "signature": "def check_db_accessible() -> tuple[bool, str]",
-              "doc": "",
-              "decorators": [],
-              "line": 83
-            },
-            {
-              "name": "main",
-              "kind": "function",
-              "signature": "def main() -> int",
-              "doc": "",
-              "decorators": [],
-              "line": 98
-            }
-          ],
-          "classes": []
         }
       ]
     },
@@ -1699,50 +1559,6 @@
               "doc": "",
               "decorators": [],
               "line": 48
-            }
-          ],
-          "classes": []
-        }
-      ]
-    },
-    {
-      "id": "register_plugin.py",
-      "display": "Register Plugin.py",
-      "modules": [
-        {
-          "path": "scripts/register_plugin.py",
-          "functions": [
-            {
-              "name": "harness_root",
-              "kind": "function",
-              "signature": "def harness_root() -> Path",
-              "doc": "",
-              "decorators": [],
-              "line": 14
-            },
-            {
-              "name": "register",
-              "kind": "function",
-              "signature": "def register() -> int",
-              "doc": "",
-              "decorators": [],
-              "line": 44
-            },
-            {
-              "name": "unregister",
-              "kind": "function",
-              "signature": "def unregister() -> int",
-              "doc": "",
-              "decorators": [],
-              "line": 57
-            },
-            {
-              "name": "main",
-              "kind": "function",
-              "signature": "def main() -> int",
-              "doc": "",
-              "decorators": [],
-              "line": 67
             }
           ],
           "classes": []
@@ -8640,9 +8456,257 @@
       ]
     },
     {
-      "id": "run_researcher_acceptance.py",
-      "display": "Run Researcher Acceptance.py",
+      "id": "scripts",
+      "display": "Scripts",
       "modules": [
+        {
+          "path": "scripts/add_skill.py",
+          "functions": [
+            {
+              "name": "repo_root",
+              "kind": "function",
+              "signature": "def repo_root() -> Path",
+              "doc": "",
+              "decorators": [],
+              "line": 31
+            },
+            {
+              "name": "read_json",
+              "kind": "function",
+              "signature": "def read_json(p: Path) -> dict",
+              "doc": "",
+              "decorators": [],
+              "line": 35
+            },
+            {
+              "name": "write_json",
+              "kind": "function",
+              "signature": "def write_json(p: Path, data: dict) -> None",
+              "doc": "",
+              "decorators": [],
+              "line": 39
+            },
+            {
+              "name": "normalize_name",
+              "kind": "function",
+              "signature": "def normalize_name(raw: str) -> str",
+              "doc": "",
+              "decorators": [],
+              "line": 43
+            },
+            {
+              "name": "find_skill_dir",
+              "kind": "function",
+              "signature": "def find_skill_dir(root: Path, name: str) -> Path | None",
+              "doc": "",
+              "decorators": [],
+              "line": 47
+            },
+            {
+              "name": "validate_skill",
+              "kind": "function",
+              "signature": "def validate_skill(skill_dir: Path, name: str) -> list[str]",
+              "doc": "",
+              "decorators": [],
+              "line": 55
+            },
+            {
+              "name": "add_to_registry",
+              "kind": "function",
+              "signature": "def add_to_registry(reg: dict, name: str, cls: str) -> bool",
+              "doc": "",
+              "decorators": [],
+              "line": 71
+            },
+            {
+              "name": "add_to_capsule",
+              "kind": "function",
+              "signature": "def add_to_capsule(caps: dict, name: str, capsule: str) -> bool",
+              "doc": "",
+              "decorators": [],
+              "line": 86
+            },
+            {
+              "name": "add_to_route_map",
+              "kind": "function",
+              "signature": "def add_to_route_map(route_map: dict, route: str, name: str) -> bool",
+              "doc": "",
+              "decorators": [],
+              "line": 99
+            },
+            {
+              "name": "run_graph_build",
+              "kind": "function",
+              "signature": "def run_graph_build(root: Path) -> bool",
+              "doc": "",
+              "decorators": [],
+              "line": 112
+            },
+            {
+              "name": "run_route_check",
+              "kind": "function",
+              "signature": "def run_route_check(root: Path, route: str | None) -> bool",
+              "doc": "",
+              "decorators": [],
+              "line": 122
+            },
+            {
+              "name": "sync_live",
+              "kind": "function",
+              "signature": "def sync_live(root: Path, name: str) -> None",
+              "doc": "",
+              "decorators": [],
+              "line": 138
+            },
+            {
+              "name": "main",
+              "kind": "function",
+              "signature": "def main() -> int",
+              "doc": "",
+              "decorators": [],
+              "line": 150
+            }
+          ],
+          "classes": []
+        },
+        {
+          "path": "scripts/fix_paths.py",
+          "functions": [
+            {
+              "name": "load_json",
+              "kind": "function",
+              "signature": "def load_json(path: Path) -> dict",
+              "doc": "",
+              "decorators": [],
+              "line": 13
+            },
+            {
+              "name": "resolve_env",
+              "kind": "function",
+              "signature": "def resolve_env(value: str) -> str",
+              "doc": "Resolve ${VAR} patterns.",
+              "decorators": [],
+              "line": 17
+            },
+            {
+              "name": "scan_files",
+              "kind": "function",
+              "signature": "def scan_files(root: Path, extensions: list, exclude_dirs: list) -> list[Path]",
+              "doc": "",
+              "decorators": [],
+              "line": 25
+            },
+            {
+              "name": "fix_file",
+              "kind": "function",
+              "signature": "def fix_file(filepath: Path, mappings: list, dry_run: bool = True, backup: bool = True) -> tuple[bool, int]",
+              "doc": "",
+              "decorators": [],
+              "line": 35
+            },
+            {
+              "name": "main",
+              "kind": "function",
+              "signature": "def main() -> int",
+              "doc": "",
+              "decorators": [],
+              "line": 61
+            }
+          ],
+          "classes": []
+        },
+        {
+          "path": "scripts/health_check.py",
+          "functions": [
+            {
+              "name": "harness_root",
+              "kind": "function",
+              "signature": "def harness_root() -> Path",
+              "doc": "",
+              "decorators": [],
+              "line": 13
+            },
+            {
+              "name": "check_plugin_loaded",
+              "kind": "function",
+              "signature": "def check_plugin_loaded() -> tuple[bool, str]",
+              "doc": "",
+              "decorators": [],
+              "line": 34
+            },
+            {
+              "name": "check_mcp_definitions",
+              "kind": "function",
+              "signature": "def check_mcp_definitions() -> tuple[bool, str]",
+              "doc": "",
+              "decorators": [],
+              "line": 62
+            },
+            {
+              "name": "check_guard_running",
+              "kind": "function",
+              "signature": "def check_guard_running() -> tuple[bool, str]",
+              "doc": "",
+              "decorators": [],
+              "line": 72
+            },
+            {
+              "name": "check_db_accessible",
+              "kind": "function",
+              "signature": "def check_db_accessible() -> tuple[bool, str]",
+              "doc": "",
+              "decorators": [],
+              "line": 83
+            },
+            {
+              "name": "main",
+              "kind": "function",
+              "signature": "def main() -> int",
+              "doc": "",
+              "decorators": [],
+              "line": 98
+            }
+          ],
+          "classes": []
+        },
+        {
+          "path": "scripts/register_plugin.py",
+          "functions": [
+            {
+              "name": "harness_root",
+              "kind": "function",
+              "signature": "def harness_root() -> Path",
+              "doc": "",
+              "decorators": [],
+              "line": 14
+            },
+            {
+              "name": "register",
+              "kind": "function",
+              "signature": "def register() -> int",
+              "doc": "",
+              "decorators": [],
+              "line": 44
+            },
+            {
+              "name": "unregister",
+              "kind": "function",
+              "signature": "def unregister() -> int",
+              "doc": "",
+              "decorators": [],
+              "line": 57
+            },
+            {
+              "name": "main",
+              "kind": "function",
+              "signature": "def main() -> int",
+              "doc": "",
+              "decorators": [],
+              "line": 67
+            }
+          ],
+          "classes": []
+        },
         {
           "path": "scripts/run_researcher_acceptance.py",
           "functions": [
@@ -8672,13 +8736,7 @@
             }
           ],
           "classes": []
-        }
-      ]
-    },
-    {
-      "id": "start_mcp_servers.py",
-      "display": "Start Mcp Servers.py",
-      "modules": [
+        },
         {
           "path": "scripts/start_mcp_servers.py",
           "functions": [
@@ -8716,13 +8774,7 @@
             }
           ],
           "classes": []
-        }
-      ]
-    },
-    {
-      "id": "sync_to_live.py",
-      "display": "Sync To Live.py",
-      "modules": [
+        },
         {
           "path": "scripts/sync_to_live.py",
           "functions": [
@@ -8760,13 +8812,7 @@
             }
           ],
           "classes": []
-        }
-      ]
-    },
-    {
-      "id": "validate_env.py",
-      "display": "Validate Env.py",
-      "modules": [
+        },
         {
           "path": "scripts/validate_env.py",
           "functions": [
@@ -13638,7 +13684,7 @@
     "add_to_capsule": [
       {
         "module": "scripts/add_skill.py",
-        "contour": "add_skill.py",
+        "contour": "scripts",
         "signature": "def add_to_capsule(caps: dict, name: str, capsule: str) -> bool",
         "doc": ""
       }
@@ -13646,7 +13692,7 @@
     "add_to_registry": [
       {
         "module": "scripts/add_skill.py",
-        "contour": "add_skill.py",
+        "contour": "scripts",
         "signature": "def add_to_registry(reg: dict, name: str, cls: str) -> bool",
         "doc": ""
       }
@@ -13654,7 +13700,7 @@
     "add_to_route_map": [
       {
         "module": "scripts/add_skill.py",
-        "contour": "add_skill.py",
+        "contour": "scripts",
         "signature": "def add_to_route_map(route_map: dict, route: str, name: str) -> bool",
         "doc": ""
       }
@@ -14474,7 +14520,7 @@
     "check_db_accessible": [
       {
         "module": "scripts/health_check.py",
-        "contour": "health_check.py",
+        "contour": "scripts",
         "signature": "def check_db_accessible() -> tuple[bool, str]",
         "doc": ""
       }
@@ -14482,7 +14528,7 @@
     "check_guard_running": [
       {
         "module": "scripts/health_check.py",
-        "contour": "health_check.py",
+        "contour": "scripts",
         "signature": "def check_guard_running() -> tuple[bool, str]",
         "doc": ""
       }
@@ -14506,7 +14552,7 @@
     "check_mcp_definitions": [
       {
         "module": "scripts/health_check.py",
-        "contour": "health_check.py",
+        "contour": "scripts",
         "signature": "def check_mcp_definitions() -> tuple[bool, str]",
         "doc": ""
       }
@@ -14522,7 +14568,7 @@
     "check_plugin_loaded": [
       {
         "module": "scripts/health_check.py",
-        "contour": "health_check.py",
+        "contour": "scripts",
         "signature": "def check_plugin_loaded() -> tuple[bool, str]",
         "doc": ""
       }
@@ -15199,6 +15245,14 @@
         "doc": "Project typed uncertainty axes from one canonical relation assessment."
       }
     ],
+    "compute_delta": [
+      {
+        "module": "scripts/glossary/compare_trees.py",
+        "contour": "glossary",
+        "signature": "def compute_delta(base_index: dict[str, Any], target_index: dict[str, Any]) -> dict[str, Any]",
+        "doc": "Compute per-contour module/function deltas between two registries."
+      }
+    ],
     "compute_etalon_profiles": [
       {
         "module": "scripts/writer-core/graph_vector.py",
@@ -15582,7 +15636,7 @@
     "env": [
       {
         "module": "scripts/run_researcher_acceptance.py",
-        "contour": "run_researcher_acceptance.py",
+        "contour": "scripts",
         "signature": "def env() -> dict[str, str]",
         "doc": ""
       }
@@ -15988,7 +16042,7 @@
     "find_skill_dir": [
       {
         "module": "scripts/add_skill.py",
-        "contour": "add_skill.py",
+        "contour": "scripts",
         "signature": "def find_skill_dir(root: Path, name: str) -> Path | None",
         "doc": ""
       }
@@ -16012,7 +16066,7 @@
     "fix_file": [
       {
         "module": "scripts/fix_paths.py",
-        "contour": "fix_paths.py",
+        "contour": "scripts",
         "signature": "def fix_file(filepath: Path, mappings: list, dry_run: bool = True, backup: bool = True) -> tuple[bool, int]",
         "doc": ""
       }
@@ -16180,13 +16234,13 @@
       },
       {
         "module": "scripts/health_check.py",
-        "contour": "health_check.py",
+        "contour": "scripts",
         "signature": "def harness_root() -> Path",
         "doc": ""
       },
       {
         "module": "scripts/register_plugin.py",
-        "contour": "register_plugin.py",
+        "contour": "scripts",
         "signature": "def harness_root() -> Path",
         "doc": ""
       }
@@ -16536,7 +16590,7 @@
     "live_root": [
       {
         "module": "scripts/sync_to_live.py",
-        "contour": "sync_to_live.py",
+        "contour": "scripts",
         "signature": "def live_root() -> Path",
         "doc": ""
       }
@@ -16639,10 +16693,18 @@
         "doc": "Загрузить graph_registry.yaml v0.3 -> {graph_id: {topology,"
       }
     ],
+    "load_index": [
+      {
+        "module": "scripts/glossary/compare_trees.py",
+        "contour": "glossary",
+        "signature": "def load_index(path: str | Path) -> dict[str, Any]",
+        "doc": "Read a function_index.json registry (utf-8)."
+      }
+    ],
     "load_json": [
       {
         "module": "scripts/fix_paths.py",
-        "contour": "fix_paths.py",
+        "contour": "scripts",
         "signature": "def load_json(path: Path) -> dict",
         "doc": ""
       },
@@ -16660,13 +16722,13 @@
       },
       {
         "module": "scripts/start_mcp_servers.py",
-        "contour": "start_mcp_servers.py",
+        "contour": "scripts",
         "signature": "def load_json(path: Path) -> dict",
         "doc": ""
       },
       {
         "module": "scripts/validate_env.py",
-        "contour": "validate_env.py",
+        "contour": "scripts",
         "signature": "def load_json(path: Path) -> dict",
         "doc": ""
       }
@@ -16902,7 +16964,7 @@
       },
       {
         "module": "scripts/add_skill.py",
-        "contour": "add_skill.py",
+        "contour": "scripts",
         "signature": "def main() -> int",
         "doc": ""
       },
@@ -16920,13 +16982,31 @@
       },
       {
         "module": "scripts/fix_paths.py",
-        "contour": "fix_paths.py",
+        "contour": "scripts",
         "signature": "def main() -> int",
         "doc": ""
       },
       {
+        "module": "scripts/glossary/compare_trees.py",
+        "contour": "glossary",
+        "signature": "def main(argv: list[str] | None = None) -> int",
+        "doc": ""
+      },
+      {
+        "module": "scripts/glossary/gen_api_index.py",
+        "contour": "glossary",
+        "signature": "def main(argv: list[str] | None = None) -> int",
+        "doc": ""
+      },
+      {
+        "module": "scripts/glossary/render_glossary.py",
+        "contour": "glossary",
+        "signature": "def main(argv: list[str] | None = None) -> int",
+        "doc": ""
+      },
+      {
         "module": "scripts/health_check.py",
-        "contour": "health_check.py",
+        "contour": "scripts",
         "signature": "def main() -> int",
         "doc": ""
       },
@@ -16962,7 +17042,7 @@
       },
       {
         "module": "scripts/register_plugin.py",
-        "contour": "register_plugin.py",
+        "contour": "scripts",
         "signature": "def main() -> int",
         "doc": ""
       },
@@ -17058,25 +17138,25 @@
       },
       {
         "module": "scripts/run_researcher_acceptance.py",
-        "contour": "run_researcher_acceptance.py",
+        "contour": "scripts",
         "signature": "def main() -> int",
         "doc": ""
       },
       {
         "module": "scripts/start_mcp_servers.py",
-        "contour": "start_mcp_servers.py",
+        "contour": "scripts",
         "signature": "def main() -> int",
         "doc": ""
       },
       {
         "module": "scripts/sync_to_live.py",
-        "contour": "sync_to_live.py",
+        "contour": "scripts",
         "signature": "def main() -> int",
         "doc": ""
       },
       {
         "module": "scripts/validate_env.py",
-        "contour": "validate_env.py",
+        "contour": "scripts",
         "signature": "def main() -> int",
         "doc": ""
       },
@@ -17236,7 +17316,7 @@
     "normalize_name": [
       {
         "module": "scripts/add_skill.py",
-        "contour": "add_skill.py",
+        "contour": "scripts",
         "signature": "def normalize_name(raw: str) -> str",
         "doc": ""
       }
@@ -17390,7 +17470,7 @@
     "plan_copy": [
       {
         "module": "scripts/sync_to_live.py",
-        "contour": "sync_to_live.py",
+        "contour": "scripts",
         "signature": "def plan_copy(src_root: Path, dst_root: Path, rel: str, pattern: str, dst_rel: str | None = None) -> list[tuple[Path, Path]]",
         "doc": ""
       }
@@ -17638,7 +17718,7 @@
     "read_json": [
       {
         "module": "scripts/add_skill.py",
-        "contour": "add_skill.py",
+        "contour": "scripts",
         "signature": "def read_json(p: Path) -> dict",
         "doc": ""
       },
@@ -17750,7 +17830,7 @@
     "register": [
       {
         "module": "scripts/register_plugin.py",
-        "contour": "register_plugin.py",
+        "contour": "scripts",
         "signature": "def register() -> int",
         "doc": ""
       },
@@ -17891,6 +17971,22 @@
         "doc": "Prod YAML renderer via ``yaml.safe_dump`` — handles all escaping and unicode."
       }
     ],
+    "render_delta": [
+      {
+        "module": "scripts/glossary/compare_trees.py",
+        "contour": "glossary",
+        "signature": "def render_delta(delta: dict[str, Any]) -> str",
+        "doc": "Render the delta dict as the PORTABLE_DELTA.md markdown document."
+      }
+    ],
+    "render_glossary": [
+      {
+        "module": "scripts/glossary/render_glossary.py",
+        "contour": "glossary",
+        "signature": "def render_glossary(index: dict[str, Any], label: str) -> str",
+        "doc": "Render the full GLOSSARY.md document for a registry and label."
+      }
+    ],
     "render_minimal_yaml": [
       {
         "module": "scripts/researcher/researcher_core/artifact_builder.py",
@@ -17956,7 +18052,7 @@
     "repo_root": [
       {
         "module": "scripts/add_skill.py",
-        "contour": "add_skill.py",
+        "contour": "scripts",
         "signature": "def repo_root() -> Path",
         "doc": ""
       },
@@ -17992,7 +18088,7 @@
       },
       {
         "module": "scripts/sync_to_live.py",
-        "contour": "sync_to_live.py",
+        "contour": "scripts",
         "signature": "def repo_root() -> Path",
         "doc": ""
       }
@@ -18144,13 +18240,13 @@
     "resolve_env": [
       {
         "module": "scripts/fix_paths.py",
-        "contour": "fix_paths.py",
+        "contour": "scripts",
         "signature": "def resolve_env(value: str) -> str",
         "doc": "Resolve ${VAR} patterns."
       },
       {
         "module": "scripts/start_mcp_servers.py",
-        "contour": "start_mcp_servers.py",
+        "contour": "scripts",
         "signature": "def resolve_env(value: str) -> str",
         "doc": ""
       }
@@ -18324,7 +18420,7 @@
       },
       {
         "module": "scripts/run_researcher_acceptance.py",
-        "contour": "run_researcher_acceptance.py",
+        "contour": "scripts",
         "signature": "def run(argv: list[str]) -> int",
         "doc": ""
       },
@@ -18354,7 +18450,7 @@
     "run_graph_build": [
       {
         "module": "scripts/add_skill.py",
-        "contour": "add_skill.py",
+        "contour": "scripts",
         "signature": "def run_graph_build(root: Path) -> bool",
         "doc": ""
       }
@@ -18402,7 +18498,7 @@
     "run_route_check": [
       {
         "module": "scripts/add_skill.py",
-        "contour": "add_skill.py",
+        "contour": "scripts",
         "signature": "def run_route_check(root: Path, route: str | None) -> bool",
         "doc": ""
       }
@@ -18584,7 +18680,7 @@
     "scan_files": [
       {
         "module": "scripts/fix_paths.py",
-        "contour": "fix_paths.py",
+        "contour": "scripts",
         "signature": "def scan_files(root: Path, extensions: list, exclude_dirs: list) -> list[Path]",
         "doc": ""
       }
@@ -18649,6 +18745,14 @@
         "contour": "researcher",
         "signature": "def scan_text_with_p2(text: str, field: str = 'text', provenance: str = 'untrusted', tool: str = 'webfetch', use_p2: bool = False, config_path: str | Path | None = None, budget_rub: float | None = None) -> GuardReport",
         "doc": "P0 + optional P2 (polza) — P2 is tie-breaker for untrusted low/no-match."
+      }
+    ],
+    "scan_tree": [
+      {
+        "module": "scripts/glossary/gen_api_index.py",
+        "contour": "glossary",
+        "signature": "def scan_tree(root: str | Path, label: str = 'workspace', include_tests: bool = False) -> dict",
+        "doc": "Scan the tree and return the registry dict (see module docstring for the schema)."
       }
     ],
     "search": [
@@ -18912,7 +19016,7 @@
     "sync_live": [
       {
         "module": "scripts/add_skill.py",
-        "contour": "add_skill.py",
+        "contour": "scripts",
         "signature": "def sync_live(root: Path, name: str) -> None",
         "doc": ""
       }
@@ -19132,7 +19236,7 @@
     "unregister": [
       {
         "module": "scripts/register_plugin.py",
-        "contour": "register_plugin.py",
+        "contour": "scripts",
         "signature": "def unregister() -> int",
         "doc": ""
       }
@@ -19306,7 +19410,7 @@
     "validate_env": [
       {
         "module": "scripts/validate_env.py",
-        "contour": "validate_env.py",
+        "contour": "scripts",
         "signature": "def validate_env() -> int",
         "doc": ""
       }
@@ -19434,7 +19538,7 @@
     "validate_server": [
       {
         "module": "scripts/start_mcp_servers.py",
-        "contour": "start_mcp_servers.py",
+        "contour": "scripts",
         "signature": "def validate_server(name: str, cfg: dict) -> tuple[bool, str]",
         "doc": ""
       }
@@ -19442,7 +19546,7 @@
     "validate_skill": [
       {
         "module": "scripts/add_skill.py",
-        "contour": "add_skill.py",
+        "contour": "scripts",
         "signature": "def validate_skill(skill_dir: Path, name: str) -> list[str]",
         "doc": ""
       }
@@ -19482,7 +19586,7 @@
     "validate_writer_core": [
       {
         "module": "scripts/validate_env.py",
-        "contour": "validate_env.py",
+        "contour": "scripts",
         "signature": "def validate_writer_core(repo_root: Path) -> list[str]",
         "doc": "Validate native Writer Core locations without importing optional packages."
       }
@@ -19546,7 +19650,7 @@
     "write_json": [
       {
         "module": "scripts/add_skill.py",
-        "contour": "add_skill.py",
+        "contour": "scripts",
         "signature": "def write_json(p: Path, data: dict) -> None",
         "doc": ""
       }

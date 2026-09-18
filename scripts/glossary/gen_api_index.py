@@ -27,10 +27,12 @@ from typing import Any, Iterator
 #: Decorator names that promote a private (``_*``) name to public.
 PUBLIC_DECORATORS = frozenset({"api", "export", "public"})
 
-#: Path markers that always disqualify a file.  A trailing ``/`` in the marker
-#: means "path component" (directory) match; every other marker is a plain
-#: substring match.  Matching is case-insensitive.
-EXCLUDE_MARKERS = (
+#: Path components that always disqualify a file. A file is excluded only when
+#: one of its path components (a directory name, or the file stem without the
+#: ``.py`` suffix) *equals* one of these markers - never by substring. Matching
+#: is case-insensitive. This keeps legitimate modules whose names merely contain
+#: a marker-like substring (``sync_to_live.py``, ``dom_builder.py``, ...).
+EXCLUDE_COMPONENTS = frozenset({
     ".venv", "__pycache__", "node_modules", "site-packages",
     "\u043f\u0430\u0442\u0447\u0438",           # патчи
     "\u0430\u0440\u0445\u0438\u0432",           # архив
@@ -38,10 +40,10 @@ EXCLUDE_MARKERS = (
     "backup", "copy", "\u043a\u043e\u043f\u0438\u044f",  # копия
     "server2-corpus", "opencode-current", "doc_Opencode_agern",
     "HARNESS-WRITER", "researcher_r4", "opencode_harness.7z",
-    ".slim", "audit_graph", "run/", "artifacts/",
-)
-# Normalize Windows separators inside markers ("run\\" -> "run/").
-EXCLUDE_MARKERS = tuple(m.replace("\\", "/") for m in EXCLUDE_MARKERS)
+    "slim", "audit_graph", "run", "artifacts",
+})
+# Case-insensitive matching: keep markers in lowercase.
+EXCLUDE_COMPONENTS = frozenset(m.lower() for m in EXCLUDE_COMPONENTS)
 
 #: Contour id -> display name.
 CONTOUR_DISPLAY = {
@@ -61,10 +63,17 @@ CONTOUR_DISPLAY = {
 # --------------------------------------------------------------------------
 # Path / scope helpers
 # --------------------------------------------------------------------------
-def _excluded(rel_path: str) -> None | bool:
-    """Return True when ``rel_path`` (posix, relative to root) is junk."""
-    low = rel_path.lower()
-    return any(marker in low for marker in EXCLUDE_MARKERS)
+def _excluded(rel_path: str) -> bool:
+    """Return True when any path component equals an exclusion marker.
+
+    Components are the directory names and the file stem (name without the
+    ``.py`` suffix), split on ``/``. Pure component comparison, not substring.
+    """
+    low = rel_path.replace("\\", "/").lower()
+    parts = low.split("/")
+    if parts and parts[-1].endswith(".py"):
+        parts[-1] = parts[-1][:-3]
+    return any(part in EXCLUDE_COMPONENTS for part in parts)
 
 
 def _is_test_file(name: str) -> bool:
@@ -106,10 +115,18 @@ def _iter_py_files(root: Path, include_tests: bool) -> Iterator[tuple[Path, str]
 
 
 def _contour_for(rel: str) -> str:
-    """Map a relative path to its contour id."""
+    """Map a relative path to its contour id.
+
+    The contour is the *first directory* after the scope prefix. Top-level
+    ``scripts/*.py`` files (no sub-directory) share the single ``scripts``
+    contour - never the file name.
+    """
     parts = rel.split("/")
     if parts[0] == "scripts":
-        return parts[1] if len(parts) >= 2 else "scripts"
+        # Only a sub-directory names a contour; flat scripts/*.py -> "scripts".
+        if len(parts) >= 3:
+            return parts[1]
+        return "scripts"
     if parts[0] == "packages":
         if len(parts) >= 2 and parts[1] == "opencode-harness-plugin":
             return "plugin"
@@ -168,7 +185,7 @@ def _first_line(doc: str | None) -> str:
     if not doc:
         return ""
     stripped = doc.strip().splitlines()
-    return stripped[0][:120] if stripped else ""
+    return stripped[0][:140] if stripped else ""
 
 
 def _arg_str(arg: ast.arg) -> str:
@@ -181,17 +198,23 @@ def _arg_str(arg: ast.arg) -> str:
 def _signature(name: str, fn: ast.FunctionDef | ast.AsyncFunctionDef) -> str:
     args = fn.args
     prefix = "async def " if isinstance(fn, ast.AsyncFunctionDef) else "def "
-    pos = list(args.posonlyargs) + list(args.args)
+    # Defaults are bound to the *tail* of (posonlyargs + args) as a single
+    # sequence (Python 3.8+). Computing the offset from the combined length is
+    # what keeps ``def f(a=1, /, b: int = 2)`` from IndexError.
+    pos_only = list(args.posonlyargs)
+    pos_or_kw = list(args.args)
+    total = pos_only + pos_or_kw
     defaults = list(args.defaults)
-    offset = len(pos) - len(defaults)
+    offset = len(total) - len(defaults)
     toks: list[str] = []
-    for i, a in enumerate(pos):
+    for i, a in enumerate(total):
         s = _arg_str(a)
-        if offset >= 0 and i >= offset:
+        if i >= offset:
             s += " = " + ast.unparse(defaults[i - offset])
         toks.append(s)
-    if args.posonlyargs:
-        toks.append("/")
+        # ``/`` must immediately follow the last positional-only argument.
+        if args.posonlyargs and i == len(pos_only) - 1:
+            toks.append("/")
     if args.vararg:
         toks.append("*" + _arg_str(args.vararg))
     elif args.kwonlyargs:
