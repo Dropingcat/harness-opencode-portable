@@ -23,7 +23,7 @@
 - [x] B1. Схема `coder_dom.yaml` (product+structure+graphs+uncertainty, зеркалит Writer DOM) + `coder_dom_schema.json` (JSON Schema coder-dom/1.0, валиден).
 - [~] B2. Графы: G-call (CALLS), G-import (IMPORTS), G-stub (STUB/INTERFACE), G-ownership (OWNED_BY). [G-call/G-import/G-stub в build; G-ownership — ручной слой, TODO]
 - [x] B3. Поля функции: id, name, signature, io, contour, routing, status, calls, called_by. (в build)
-- [ ] B4. verify-гейт (pre-commit): перегенерация coder_dom → diff=0 (schema drift fail). (TODO)
+- [x] B4. verify-гейт: erify_coder_dom.py (перегенерация → diff=0; MISSING/STALE → rc1; --fix для генератора). (done)
 
 ## Блок C. Интеграция и мульти-разработка
 
