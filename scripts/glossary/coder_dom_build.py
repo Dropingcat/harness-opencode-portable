@@ -63,6 +63,27 @@ def build_coder_dom(root: str | Path, include_tests: bool = False) -> dict[str, 
     graph = cg.scan_call_graph(root_path, include_tests=include_tests)
     stubs = sd.scan_stubs(root_path, include_tests=include_tests)
 
+    # Ownership: внешний файл coder_dom_ownership.yaml (если есть) + DEFAULT по контуру.
+    # Ключ ownership = module:function (posix relative). Значение = owner (агент/разработчик).
+    ownership: dict[str, str] = {}
+    ownership_path = root_path / "scripts" / "glossary" / "coder_dom_ownership.yaml"
+    if ownership_path.is_file():
+        try:
+            import yaml as _yaml
+            raw = _yaml.safe_load(ownership_path.read_text(encoding="utf-8"))
+            for item in (raw or {}).get("assignments", []):
+                key = f"{item['module']}:{item['name']}"
+                ownership[key] = item["owner"]
+        except Exception:
+            ownership = {}
+    DEFAULT_OWNER_BY_CONTOUR = {
+        "router": "coder-worker:router",
+        "researcher": "coder-worker:research",
+        "writer-core": "coder-worker:writer",
+        "code-factory": "coder-worker:factory",
+        "plugin": "coder-worker:plugin",
+    }
+
     # node status lookup: qname -> stub/interface/normal
     status_by_qname: dict[str, str] = {}
     for s in stubs["stubs"]:
@@ -73,20 +94,27 @@ def build_coder_dom(root: str | Path, include_tests: bool = False) -> dict[str, 
         status_by_qname[key] = "interface"
 
     structure: list[dict[str, Any]] = []
+    ownership_assignments: list[dict[str, str]] = []
     for contour in registry["contours"]:
+        default_owner = DEFAULT_OWNER_BY_CONTOUR.get(contour["id"], "coder-worker:unassigned")
         modules = []
         for mod in contour["modules"]:
             funcs = []
             for fn in mod["functions"]:
                 qname = f"{mod['path']}:{fn['name']}"
+                # Deterministic F-ID (stable across processes; Python hash() is randomized).
+                fid = "F-" + hashlib.sha256(qname.encode("utf-8")).hexdigest()[:5].upper()
+                owner = ownership.get(qname, default_owner)
                 funcs.append({
-                    "id": f"F-{abs(hash(qname)) % 100000:05d}",
+                    "id": fid,
                     "name": fn["name"],
                     "signature": fn["signature"],
                     "contour": contour["id"],
+                    "routing": owner,
                     "status": status_by_qname.get(qname, "done"),
                     "doc": fn["doc"],
                 })
+                ownership_assignments.append({"function": fid, "owner": owner})
             modules.append({"path": mod["path"], "functions": funcs})
         structure.append({"id": contour["id"], "modules": modules})
 
@@ -100,6 +128,7 @@ def build_coder_dom(root: str | Path, include_tests: bool = False) -> dict[str, 
         "structure": structure,
         "g_call": g_call,
         "stubs": stubs["counts"],
+        "ownership": sorted(ownership_assignments, key=lambda x: x["function"]),
     }
     fingerprint = hashlib.sha256(
         json.dumps(fp_source, ensure_ascii=False, sort_keys=True).encode("utf-8")
@@ -115,7 +144,8 @@ def build_coder_dom(root: str | Path, include_tests: bool = False) -> dict[str, 
             "G-import": {"node_types": ["module"], "edge_types": ["IMPORTS"], "edges": []},
             "G-stub": {"node_types": ["function"], "edge_types": ["STUB", "INTERFACE"],
                        "counts": stubs["counts"]},
-            "G-ownership": {"node_types": ["function"], "edge_types": ["OWNED_BY"]},
+            "G-ownership": {"node_types": ["function"], "edge_types": ["OWNED_BY"],
+                            "assignments": sorted(ownership_assignments, key=lambda x: x["function"])},
         },
         "counts": {
             "functions": registry["meta"]["counts"]["functions"],
@@ -123,6 +153,7 @@ def build_coder_dom(root: str | Path, include_tests: bool = False) -> dict[str, 
             "call_edges": len(g_call),
             "stubs": stubs["counts"]["stubs"],
             "interfaces": stubs["counts"]["interfaces"],
+            "ownership": len(ownership_assignments),
         },
         "generated_at": None,  # excluded from fingerprint (FASTEN pattern)
         "fingerprint": f"sha256:{fingerprint}",
