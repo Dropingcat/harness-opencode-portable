@@ -64,3 +64,10 @@ Freeze-пакет (`патчи/writer_v1_freeze_package/`) фиксирует ц
 - Патч `WRITER-V1-FREEZE-001.patch` **не применим** к текущему дереву (`git apply --check` → конфликты
   в IMPLEMENTATION_TRACKER/agents/config); при внедрении нужен перенос контрактов, а не `git am`.
 - Уровни утверждений (гипотеза/верифицируемое/диалектические) — машиной пока не классифицируются.
+
+## Сверка всех патчей (см. PATCH_IMPLEMENTATION_VERIFICATION.md)
+
+- Весь R4-контур Researcher (r4.1 → r4.4 L3B) — **внедрён** (подтверждено маркерами).
+- stage2/stage3 (state reducer / artifact provenance) — в Coder (code-factory).
+- **writer v1 freeze — единственный НЕ внедрённый** (контракт-спецификация).
+- Связанные TD: TD-070/071/072.
