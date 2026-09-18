@@ -28,8 +28,8 @@
 ## Блок C. Интеграция и мульти-разработка
 
 - [x] C1. G-ownership: в build (assignments, DEFAULT по контуру, внешний файл).
-- [ ] C2. Адаптеры: Writer/Researcher/Coder/dialogue (порты из спеки semantic_field).
-- [ ] C3. Кэш/провенанс: source_hash+config_hash+module_versions.
+- [x] C2. Адаптер coder_dom_adapter.py (lookup/context/verify) + router_context (CD-002 финал).
+- [x] C3. Кэш: файловый (.runs/coder_dom_cache_<hash>.json, source_hash; 2.84s->0.10s).
 - [ ] C4. E2E: взять функцию-узел → изменить → перегенерировать DOM → коммит (код+DOM).
 
 ## Блок D. Долги и качество
