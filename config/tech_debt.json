@@ -2043,12 +2043,12 @@
       "status_detail": "OPEN_CURRENT",
       "kind": "quality",
       "status": "open",
-      "severity": "medium",
+      "severity": "high",
       "acceptance": "Латинские сигналы (policy/route/risk/guard/block) не матчатся внутри fenced code-блоков (```...```) и/или требуется русский маркер-сосед ('политика','правило'); прогон на документе с 'action = policy(percept)' без русского политического контекста → G8 skipped",
       "area": "scripts/writer-core/graph_builder_hybrid.py (_build_g8)",
       "source_status": "open",
       "notes": "Ревью writer-citations-g7-g8-g9 R1 (major): word-boundary \\b не защищает от латинских идентификаторов/кода. Г8 шумит.",
-      "progress": "2026-09-18: зафиксировано из reviewer R1."
+      "progress": "2026-09-18: 1-й фикс (fence+ru-контекст) убрал ложный policy(percept), НО остался критический остаток: 'guard' — одновременно латинский сигнал И русский маркер-сосед в _RU_POLICY_MARKERS -> самоподтверждение; 'action = guard(percept)' в коде -> G8 BUILT с ложной GlobalPolicy. Требуется: исключить пересечение латинских сигналов с русскими маркерами (лат-сигнал НЕ должен сам быть ru-маркером) + покрыть тестом guard(percept)."
     },
     {
       "id": "TD-095",
