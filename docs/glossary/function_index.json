@@ -2,7 +2,7 @@
   "meta": {
     "label": "portable",
     "root": "E:\\opencode_harness_portable",
-    "generated_at": "2026-09-18T09:22:27Z",
+    "generated_at": "2026-09-18T11:50:22Z",
     "python": "3.11",
     "counts": {
       "modules": 157,
@@ -491,7 +491,7 @@
               "signature": "def render_delta(delta: dict[str, Any]) -> str",
               "doc": "Render the delta dict as the PORTABLE_DELTA.md markdown document.",
               "decorators": [],
-              "line": 148
+              "line": 161
             },
             {
               "name": "main",
@@ -499,7 +499,7 @@
               "signature": "def main(argv: list[str] | None = None) -> int",
               "doc": "",
               "decorators": [],
-              "line": 202
+              "line": 220
             }
           ],
           "classes": []
@@ -513,7 +513,7 @@
               "signature": "def scan_tree(root: str | Path, label: str = 'workspace', include_tests: bool = False) -> dict",
               "doc": "Scan the tree and return the registry dict (see module docstring for the schema).",
               "decorators": [],
-              "line": 275
+              "line": 298
             },
             {
               "name": "main",
@@ -521,7 +521,7 @@
               "signature": "def main(argv: list[str] | None = None) -> int",
               "doc": "",
               "decorators": [],
-              "line": 344
+              "line": 367
             }
           ],
           "classes": []
@@ -8348,7 +8348,7 @@
               "signature": "def main() -> int",
               "doc": "",
               "decorators": [],
-              "line": 141
+              "line": 143
             }
           ],
           "classes": []

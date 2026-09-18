@@ -93,13 +93,13 @@
 
 - `load_index(path: str | Path) -> dict[str, Any]` — Read a function_index.json registry (utf-8). [строка 29]
 - `compute_delta(base_index: dict[str, Any], target_index: dict[str, Any]) -> dict[str, Any]` — Compute per-contour module/function deltas between two registries. [строка 78]
-- `render_delta(delta: dict[str, Any]) -> str` — Render the delta dict as the PORTABLE_DELTA.md markdown document. [строка 148]
-- `main(argv: list[str] | None = None) -> int` — — [строка 202]
+- `render_delta(delta: dict[str, Any]) -> str` — Render the delta dict as the PORTABLE_DELTA.md markdown document. [строка 161]
+- `main(argv: list[str] | None = None) -> int` — — [строка 220]
 
 ### `scripts/glossary/gen_api_index.py`
 
-- `scan_tree(root: str | Path, label: str = 'workspace', include_tests: bool = False) -> dict` — Scan the tree and return the registry dict (see module docstring for the schema). [строка 275]
-- `main(argv: list[str] | None = None) -> int` — — [строка 344]
+- `scan_tree(root: str | Path, label: str = 'workspace', include_tests: bool = False) -> dict` — Scan the tree and return the registry dict (see module docstring for the schema). [строка 298]
+- `main(argv: list[str] | None = None) -> int` — — [строка 367]
 
 ### `scripts/glossary/render_glossary.py`
 
@@ -1278,7 +1278,7 @@
 - `load_snapshot() -> dict` — — [строка 13]
 - `match_routes(task_text: str, routes: dict) -> list[tuple[str, dict, int]]` — — [строка 23]
 - `resolve(task_text: str, hints: dict | None = None) -> dict` — — [строка 53]
-- `main() -> int` — — [строка 141]
+- `main() -> int` — — [строка 143]
 
 ### `scripts/router/resolve_tool_capsule.py`
 
