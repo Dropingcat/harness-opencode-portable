@@ -1823,7 +1823,7 @@
       "area": "writing-orchestration-process.md, wc_cli.py plan",
       "source_status": "open",
       "notes": "Связано с TD-080.",
-      "progress": "2026-09-18: бриф живёт только в тексте task-промта; plan --topic не знает аудиторию/тон/тезис; связь «бриф -> структура» держится на дисциплине субагента, а не на контракте."
+      "progress": "2026-09-18 (code-orchestrator): подтверждено кодом — в writer_core/cli.py нет упоминаний brief/audience/vibe/thesis/out_of_scope (grep 0 совпадений кроме source-kind); plan --topic не принимает бриф."
     },
     {
       "id": "TD-082",
@@ -1839,7 +1839,7 @@
       "area": "scripts/writer-core/writer_core/session_memory.py, WRITER_RUNS_DIR",
       "source_status": "open",
       "notes": "Связано с TD-080/081.",
-      "progress": "2026-09-18: проверено — session_memory.json отсутствует и в OPENCODE_RUNS_DIR, и в WRITER_RUNS_DIR (E:\\...\\.runs\\writer-core\\). Skill на неё ссылается, но файл не создан. Уроки не переживают сессии."
+      "progress": "2026-09-18 (code-orchestrator): подтверждено — WRITER_RUNS_DIR=E:\\...\\.runs\\writer-core, файл session_memory.json отсутствует (Test-Path False); session_memory.py default MEMORY_PATH корректен, но не инициализирован."
     },
     {
       "id": "TD-083",
@@ -1902,7 +1902,7 @@
       "area": "scripts/writer-core/writer_core/review.py (L1)",
       "source_status": "open",
       "notes": "Связано с TD-080: жанр статьи с Mermaid/таблицами.",
-      "progress": "2026-09-18: review article_agent_control_loop.md -> L1 LONG_SENTENCE 86 слов на stateDiagram-v2 (Mermaid), 129 слов на decision table, 125 слов на псевдокод. Это ложные срабатывания: метрика применяется к не-прозаическим блокам."
+      "progress": "2026-09-18 (code-orchestrator): подтверждено кодом — review.py L1: _LONG_SENTENCE_WORDS=30, срабатывает при n_words>30 без исключения fence-блоков (```mermaid/code), таблиц, списков; нет фильтрации не-прозы."
     },
     {
       "id": "TD-087",
