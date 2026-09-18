@@ -3,8 +3,8 @@
   "updated": "2026-09-18",
   "authority_note": "Canonical registry migrated from патчи/миграция в плагин/tech_debt_current.json (65 records). project_context.py counts status=open. CLOSED_REPORTED maps to closed; RECONCILE_REQUIRED stays open until exact-tree verification.",
   "counts": {
-    "total": 99,
-    "open": 79,
+    "total": 100,
+    "open": 80,
     "closed": 20
   },
   "debts": [
@@ -2112,6 +2112,22 @@
       "source_status": "open",
       "progress": "2026-09-18: DOM C-SEM-001..008, RESULTS_SECTION_BRIEF.md и NUMBER_LEDGER готовы; проза подразделов не написана. XRD-канон не выбран (TD-093); SEM↔XRD немонотонность — только гипотеза по решению пользователя.",
       "notes": "Связано с TD-092 (пакер) и TD-093 (XRD-канон)."
+    },
+    {
+      "id": "TD-098",
+      "owner": "research-orchestrator",
+      "presentation_category": "ACTIVE",
+      "sunset_at": "2026-10-30",
+      "title": "Двойственность research-orchestrator: блок верификации текста не адаптирован к поисково-исследовательским задачам (literature/lookup: 'найди требования ВАК с источниками'); отдельного субагента researcher в этом окружении нет (отключён)",
+      "status_detail": "OPEN_CURRENT",
+      "kind": "workflow",
+      "status": "open",
+      "severity": "high",
+      "acceptance": "research-orchestrator различает две ветки: (а) верификация текста (клаймы -> runner/source-fetcher/fact-checker) и (б) поисковое исследование (query -> source-fetcher/research-lookup/perplexity/openalex -> синтез требований с источниками). Для ветки (б) есть детерминированный пайплайн 'поиск с источниками' (не превращение в клаймы для верификации); отсутствие субагента researcher явно документировано и компенсируется source-fetcher + skills (research-lookup/perplexity-search)",
+      "area": "research-orchestrator system prompt, research-orchestration-process.md, scripts/researcher/",
+      "source_status": "open",
+      "notes": "Симптом: пользователь просит 'осуществи поиск требований по ВАК-требованиям — с источниками, несколько целевых запросов'. Это литературный поиск, а system prompt research-orchestrator ведёт цикл верификации текста. Runner верифицирует текст, но текста для верификации нет — нужен поиск. Правильный инструментарий есть (source-fetcher, research-lookup skill, perplexity-search, openalex), но оркестратор не имеет явной ветки 'поисковое исследование'. Дополнительно: отдельного субагента researcher в окружении нет (отключён) — роли research-orchestrator приходится выполнять функции researcher самостоятельно.",
+      "progress": "2026-09-18: зафиксировано по обращению пользователя. Связано с отсутствием ветки 'поисковое исследование' в research-orchestration-process.md."
     }
   ]
 }
