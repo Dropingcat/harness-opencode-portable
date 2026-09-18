@@ -3,8 +3,8 @@
  "updated": "2026-09-15",
  "authority_note": "Canonical registry migrated from патчи/миграция в плагин/tech_debt_current.json (65 records). project_context.py counts status=open. CLOSED_REPORTED maps to closed; RECONCILE_REQUIRED stays open until exact-tree verification.",
  "counts": {
-  "total": 78,
-  "open": 62,
+  "total": 79,
+  "open": 63,
   "closed": 16
  },
  "debts": [
@@ -1776,6 +1776,22 @@
    "source_status": "open",
    "progress": "2026-09-18: инвентаризация — 23 пустые функции в scripts/researcher. Большинство (ports.py 18) — Protocol-интерфейсы (намеренные, тела ... — корректно). НО: tribunal_role_runtime.py:46 execute(...) -> RoleWorkerDraft в @dataclass — реальная заглушка (не Protocol). capsules.py:run, r0/ids.py:randrange/now_ms, tribunal_live_dialogue.py:invoke — требуют классификации. Проблема: не аннотировано, не в долге, нет реестра. Связано с TD-076 (Coder DOM) и TD-077.",
    "notes": "Фальсификация: python stub-detector на scripts/researcher -> список; затем вручную проверить каждый на Protocol/ABC."
+  },
+  {
+   "id": "TD-079",
+   "title": "Вложенная спека HARNESS_SEMANTIC_RESEARCH_METHOD (87 секций) — оформить как научный слой 'на вырост' (InformationUnit, RTT, QuestionGraph, Hypothesis, Evidence independence, ClaimReviewCase, Coder integration, fingerprints)",
+   "area": "docs/plugin-dialectic/HARNESS_SEMANTIC_RESEARCH_METHOD_IMPLEMENTATION_SPEC_V1 (1).md + будущий research_semantics пакет",
+   "kind": "architecture",
+   "severity": "high",
+   "owner": "research-orchestrator",
+   "sunset_at": "2026-11-15",
+   "acceptance": "спека оформлена в реестр; приоритет P0 (SourceSpan, InformationUnit, PropositionUnit, ClaimLink, RTT) спроектирован с контрактами; virtual E2E (парафраз/модальность/причинность/числа) — baseline",
+   "status": "open",
+   "status_detail": "OPEN_CURRENT",
+   "presentation_category": "DEVELOPMENT",
+   "source_status": "open",
+   "progress": "2026-09-18: вложена пользователем как справочник для глубокой разработки. 87 секций: историческая модель, мультиграф G=(V,E), scalar confidence недостаточен (вектор A(H)), evidence independence (N_eff), coverage matrix, Hypothesis lifecycle, QuestionGraph novelty (Jaccard J), RTT, языковые профили RU/EN, Coder integration (ComputationNeed/CodeWork), fingerprint SHA256, event log, storage (JSON+SQLite), порядок реализации P0-P6.",
+   "notes": "Связано с TD-076 (Coder DOM), TD-048/049/050 (научный слой), TD-044 (novelty), TD-046/047. Не внедрять в капсулу Coder DOM сейчас — только контракты-мосты."
   }
  ]
 }
