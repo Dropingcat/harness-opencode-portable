@@ -2,7 +2,7 @@
   "meta": {
     "label": "workspace",
     "root": "E:\\Documents\\Документы\\doc_Opencode_agern-new",
-    "generated_at": "2026-09-18T09:22:26Z",
+    "generated_at": "2026-09-18T11:50:21Z",
     "python": "3.11",
     "counts": {
       "modules": 197,
@@ -9251,7 +9251,7 @@
               "signature": "def main() -> int",
               "doc": "",
               "decorators": [],
-              "line": 141
+              "line": 143
             }
           ],
           "classes": []

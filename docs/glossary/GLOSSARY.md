@@ -1457,7 +1457,7 @@
 - `load_snapshot() -> dict` — — [строка 13]
 - `match_routes(task_text: str, routes: dict) -> list[tuple[str, dict, int]]` — — [строка 23]
 - `resolve(task_text: str, hints: dict | None = None) -> dict` — — [строка 53]
-- `main() -> int` — — [строка 141]
+- `main() -> int` — — [строка 143]
 
 ### `scripts/router/resolve_tool_capsule.py`
 
