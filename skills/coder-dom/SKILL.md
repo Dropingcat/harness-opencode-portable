@@ -26,6 +26,27 @@ description: "Coder DOM capsule — DOM YAML-дерево функций код�
 | `stub_detect.py` | Классификация: interface (Protocol/ABC) vs stub (pass/NotImpl+маркер) |
 | `coder_dom_build.py` | Сборка `coder_dom.yaml` из трёх выше + G-import |
 | `coder_dom_schema.json` | JSON Schema контракта `coder-dom/1.0` |
+| `coder_dom_adapter.py` | Порт капсулы для воркера: lookup/context/verify |
+| `verify_coder_dom.py` | Verify-гейт: перегенерация → diff=0 (STALE/MISSING → rc1) |
+| `coder_dom_stub_gate.py` | Stub-gate: fail на не-осознанные заглушки (без `# stub:` маркера) |
+
+## Pre-commit hook (CD-004)
+
+Включи verify-гейт на каждый коммит (файл `hooks/coder-dom-verify.sh`):
+
+```yaml
+# .pre-commit-config.yaml
+repos:
+  - repo: local
+    hooks:
+      - id: coder-dom-verify
+        name: coder-dom in sync
+        entry: bash hooks/coder-dom-verify.sh
+        language: system
+        files: \.py$
+```
+
+Логика hook: (1) `verify_coder_dom.py` — если coder_dom.yaml STALE (код изменён, DOM нет) → fail с подсказкой; (2) `coder_dom_stub_gate.py` — если есть не-осознанные заглушки (без `# stub:` маркера) → fail.
 
 ## Рабочий цикл разработки функции
 
