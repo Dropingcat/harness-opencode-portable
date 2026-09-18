@@ -102,6 +102,32 @@ def verify_after_edit(root: str | Path, out: str | Path | None = None) -> dict[s
     return {"schema": SCHEMA, "ok": rc == 0, "fingerprint": data["fingerprint"], "stale": rc == 1}
 
 
+def router_context(root: str | Path, coder_dom_hint: dict[str, Any] | None) -> dict[str, Any]:
+    """CD-002 final: expand a router's coder_dom_hint into a worker capsule prompt.
+
+    Called when harness_run (code-implementation route) returned coder_dom_hint.
+    Produces the exact paths/rules a worker needs, plus current stub gate status.
+    """
+    root_path = Path(root if isinstance(root, str) else root)
+    if not coder_dom_hint:
+        return {"schema": SCHEMA, "enabled": False, "reason": "no coder_dom_hint from router"}
+
+    import coder_dom_stub_gate
+
+    gate_rc = coder_dom_stub_gate.main(["--root", str(root_path)])
+    return {
+        "schema": SCHEMA,
+        "enabled": True,
+        "dom_path": str(root_path / coder_dom_hint.get("dom_path", "docs/glossary/coder_dom.yaml")),
+        "builder": coder_dom_hint.get("builder", "scripts/glossary/coder_dom_build.py"),
+        "verify_gate": coder_dom_hint.get("verify_gate", "scripts/glossary/verify_coder_dom.py"),
+        "rule": coder_dom_hint.get("rule", "work through the capsule; regen + commit DOM with code"),
+        "stub_gate_ok": gate_rc == 0,
+        "adapter": "scripts/glossary/coder_dom_adapter.py (lookup/context/verify)",
+        "skill": "skills/coder-dom/SKILL.md",
+    }
+
+
 if __name__ == "__main__":
     import argparse
 

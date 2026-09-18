@@ -27,6 +27,52 @@ import gen_api_index as gai
 import stub_detect as sd
 
 SCHEMA = "coder-dom/1.0"
+CACHE_VERSION = "1"
+
+
+def _iter_scope_py(root: Path) -> list[Path]:
+    """Return in-scope .py files (mirrors the three scanners' scope)."""
+    spec_dirs = [
+        root / "scripts",
+        root / "packages",
+        root / "references" / "global-kanban",
+        root / "guard" / "src",
+        root / "mcp",
+    ]
+    out: list[Path] = []
+    seen: set[str] = set()
+    for base in spec_dirs:
+        if not base.is_dir():
+            continue
+        for py in sorted(base.rglob("*.py")):
+            rel = str(py.relative_to(root)).replace("\\", "/")
+            if any(m in rel.lower() for m in (
+                ".venv", "__pycache__", "node_modules", "site-packages",
+                "патчи", "архив", "бэкап", "backup", "copy", "копия",
+                "server2-corpus", "opencode-current", "doc_Opencode_agern",
+                "HARNESS-WRITER", "researcher_r4", ".slim", "audit_graph",
+                "run/", "artifacts/",
+            )):
+                continue
+            key = rel.lower()
+            if key in seen:
+                continue
+            seen.add(key)
+            out.append(py)
+    return out
+
+
+def _source_hash(root: Path) -> str:
+    """Stable hash over all in-scope .py files (content + relative path)."""
+    h = hashlib.sha256()
+    h.update(CACHE_VERSION.encode("utf-8"))
+    for py in _iter_scope_py(root):
+        h.update(py.relative_to(root).as_posix().encode("utf-8"))
+        try:
+            h.update(py.read_bytes())
+        except OSError:
+            continue
+    return h.hexdigest()
 
 
 def _fallback_yaml(data: Any, indent: int = 0) -> str:
@@ -59,9 +105,33 @@ def _fallback_yaml(data: Any, indent: int = 0) -> str:
 
 def build_coder_dom(root: str | Path, include_tests: bool = False) -> dict[str, Any]:
     root_path = Path(root if isinstance(root, str) else root)
-    registry = gai.scan_tree(root_path, label="coder", include_tests=include_tests)
-    graph = cg.scan_call_graph(root_path, include_tests=include_tests)
-    stubs = sd.scan_stubs(root_path, include_tests=include_tests)
+
+    # Cache: skip re-scanning when the code did not change (C3).
+    cache_dir = root_path / ".runs"
+    cache_key = _source_hash(root_path)
+    cache_file = cache_dir / f"coder_dom_cache_{cache_key}.json"
+
+    loaded_from_cache = False
+    if cache_file.is_file():
+        try:
+            cached = json.loads(cache_file.read_text(encoding="utf-8"))
+            registry = cached["registry"]
+            graph = cached["graph"]
+            stubs = cached["stubs"]
+            loaded_from_cache = True
+        except Exception:
+            pass
+
+    if not loaded_from_cache:
+        registry = gai.scan_tree(root_path, label="coder", include_tests=include_tests)
+        graph = cg.scan_call_graph(root_path, include_tests=include_tests)
+        stubs = sd.scan_stubs(root_path, include_tests=include_tests)
+        cache_dir.mkdir(parents=True, exist_ok=True)
+        cache_file.write_text(
+            json.dumps({"registry": registry, "graph": graph, "stubs": stubs},
+                       ensure_ascii=False),
+            encoding="utf-8",
+        )
 
     # Ownership: внешний файл coder_dom_ownership.yaml (если есть) + DEFAULT по контуру.
     # Ключ ownership = module:function (posix relative). Значение = owner (агент/разработчик).
