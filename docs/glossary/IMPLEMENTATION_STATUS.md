@@ -35,12 +35,26 @@ freeze-пакет, авто-проверка маркеров по `scripts/`.
 
 | ID | Статус | Суть |
 |---|---|---|
+| TD-066 | open/critical | harness_run live vs bridge_peer маршрут (peer mismatch) |
 | TD-068 | open/high | числовые claims не извлекаются extractor'ом |
 | TD-069 | open/high | uncertainty 'assumed' → research_requests пуст (не передаётся ресерчеру) |
 | TD-070 | open/high | claim_type не типизирован (нет enum, CAUSAL_HYPOTHESIS) |
 | TD-071 | open/high | Q1A1..Q3A3 контур deferred |
 | TD-072 | open/medium | DOM-блок не связан со специалистами трибунала |
-| TD-066 | open/critical | harness_run live vs bridge_peer маршрут (peer mismatch) |
+| TD-073 | open/major | project_context.py cp1251 UnicodeEncodeError |
+| TD-074 | open/medium | glossary registry: M1-M4 done, M5-M6 (синк/smoke) pending |
+| TD-075 | open/medium | синк docs workspace↔portable не автоматизирован |
+| TD-076 | open/high | Coder DOM-аналог (план готов) |
+| TD-077 | open/critical | контракты reviewer/tester с evidence исполнения |
+| TD-078 | open/high | 23 stub/interface-функции в researcher (Protocol vs заглушки) |
+| TD-079 | open/high | спека semantic research method (87 секций) «на вырост» |
+
+## Coder DOM Capsule (2026-09-18)
+
+- **Реестр функций** (A): gen_api_index.py + compare_trees.py + render_glossary.py — есть.
+- **Coder DOM YAML** (B): схема спроектирована (в ARCHITECTURE_PLAN_CODER_DOM.md), реализация TODO.
+- **Интеграция** (C): порты/адаптеры + G-ownership — TODO.
+- Долги/риски: см. `scripts/glossary/TECH_DEBT_CODER_DOM.md`, `CODER_DOM_TRACKER.md`.
 
 ## Не путать в названиях
 

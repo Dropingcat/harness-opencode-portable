@@ -7,8 +7,10 @@
 
 1. **Что есть и как называется** → `GLOSSARY.md` (контур → функция → сигнатура → назначение).
 2. **Что реализовано/внедрено/отложено** → `IMPLEMENTATION_STATUS.md`.
-3. **Что чинить дальше** → `config/tech_debt.json` (открытые TD, priority: TD-066, TD-068..072).
+3. **Что чинить дальше** → `config/tech_debt.json` (открытые TD, priority: TD-066, TD-068..079).
 4. **Техдолги трибунала** → `../plugin-dialectic/TRIBUNAL_TECH_DEBT_STATUS.md`.
+5. **Coder DOM Capsule** (DOM YAML для функций кода) → `scripts/glossary/CODER_DOM_TRACKER.md`
+   (трекер), `TECH_DEBT_CODER_DOM.md` (долги), `ARCHITECTURE_PLAN_CODER_DOM.md` (план/ветки/риски).
 
 ## Контуры и как взаимодействовать
 
