@@ -3,8 +3,8 @@
   "updated": "2026-09-18",
   "authority_note": "Canonical registry migrated from патчи/миграция в плагин/tech_debt_current.json (65 records). project_context.py counts status=open. CLOSED_REPORTED maps to closed; RECONCILE_REQUIRED stays open until exact-tree verification.",
   "counts": {
-    "total": 100,
-    "open": 80,
+    "total": 102,
+    "open": 82,
     "closed": 20
   },
   "debts": [
@@ -2128,6 +2128,38 @@
       "source_status": "open",
       "notes": "Симптом: пользователь просит 'осуществи поиск требований по ВАК-требованиям — с источниками, несколько целевых запросов'. Это литературный поиск, а system prompt research-orchestrator ведёт цикл верификации текста. Runner верифицирует текст, но текста для верификации нет — нужен поиск. Правильный инструментарий есть (source-fetcher, research-lookup skill, perplexity-search, openalex), но оркестратор не имеет явной ветки 'поисковое исследование'. Дополнительно: отдельного субагента researcher в окружении нет (отключён) — роли research-orchestrator приходится выполнять функции researcher самостоятельно.",
       "progress": "2026-09-18: зафиксировано по обращению пользователя. Связано с отсутствием ветки 'поисковое исследование' в research-orchestration-process.md."
+    },
+    {
+      "id": "TD-099",
+      "owner": "code-orchestrator",
+      "presentation_category": "ACTIVE",
+      "sunset_at": "2026-11-15",
+      "title": "Мост между оркестраторами (cross-orchestrator dispatch): code-orchestrator / writing-orchestrator / research-orchestrator должны уметь вызывать ДРУГ ДРУГА целиком (со своими субагентами), а не чужих субагентов напрямую",
+      "status_detail": "OPEN_CURRENT",
+      "kind": "architecture",
+      "status": "open",
+      "severity": "high",
+      "acceptance": "Существует детерминированный канал/контракт, через который любой primary-оркестратор может передать задачу другому оркестратору (handoff с контрактом входа/выхода), и тот оркестрирует своих субагентов; задокументирован протокол (какие задачи можно делегировать, формат контракта, ожидаемый результат, guard-граница); маршруты роутера покрывают 'передать задачу писателю/ресерчеру/кодеру'",
+      "area": "роутер (resolve_bundle), orchestration-процессы (code-factory/research/writing-orchestration-process.md), agents/*.md",
+      "source_status": "open",
+      "notes": "Сейчас оркестраторы вызывают только своих субагентов (code-orchestrator -> coder-worker/reviewer/tester; research-orchestrator -> claim-parser/fact-checker/...; writing-orchestrator -> article-writer). Нет канала, чтобы code-orchestrator попросил writing-orchestrator собрать статью (с его субагентами) или research-orchestrator провести глубокое исследование. Нужен мост-контракт (аналог bridge_peer для агентов).",
+      "progress": "2026-09-18: зафиксировано по обращению пользователя. Связано с TD-098 (двойственность research-orchestrator)."
+    },
+    {
+      "id": "TD-100",
+      "owner": "research-orchestrator",
+      "presentation_category": "ACTIVE",
+      "sunset_at": "2026-10-25",
+      "title": "RESEARCH_RUNNER_SH — старый легаси-переменная в окружении research-orchestrator; убрать и заменить на актуальный раннер",
+      "status_detail": "OPEN_CURRENT",
+      "kind": "workflow",
+      "status": "open",
+      "severity": "medium",
+      "acceptance": "RESEARCH_RUNNER_SH удалена из окружения/конфига research-orchestrator; актуальный путь раннера (scripts/researcher/... или research runner) зафиксирован в research-orchestration-process.md; прогон исследовательского цикла работает без обращения к легаси-переменной",
+      "area": "research-orchestrator окружение (env/конфиг), research-orchestration-process.md, scripts/researcher/",
+      "source_status": "open",
+      "notes": "RESEARCH_RUNNER_SH — легаси (болтается в окружении ресерчера). Требуется аудит: где объявлена, кто читает, чем заменить (актуальный детерминированный раннер исследовательского цикла).",
+      "progress": "2026-09-18: зафиксировано по обращению пользователя."
     }
   ]
 }
