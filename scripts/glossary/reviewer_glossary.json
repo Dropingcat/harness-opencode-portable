@@ -1,0 +1,77 @@
+{
+  "module": "glossary-generators",
+  "verdict": "REQUEST_CHANGES",
+  "comments": [
+    {
+      "id": "R1",
+      "severity": "major",
+      "file": "scripts/glossary/gen_api_index.py",
+      "line": "_contour_for / строки 108-125",
+      "problem": "Для верхнеуровневых scripts/*.py функция возвращает имя файла как контур: rel='scripts/add_skill.py' -> parts=['scripts','add_skill.py'] -> return parts[1] = 'add_skill.py'. Это нарушает контракт воркера (note 8: контур = первая папка после scripts/; для верхнеуровневых файлов подразумевается контур 'scripts') и ломает схему: контур id превращается в имя файла. Дефект реальный: docs/glossary/function_index.json содержит контуры 'add_skill.py', 'fix_paths.py', 'health_check.py', 'register_plugin.py', 'run_researcher_acceptance.py', 'start_mcp_servers.py', 'sync_to_live.py', 'validate_env.py' (GLOSSARY.md строки 7,10,13,20,25-28).",
+      "suggestion": "Для parts[0]=='scripts': если len(parts)==1 -> 'scripts'; если len(parts)>=2 и parts[1] оканчивается на '.py' (верхнеуровневый файл) -> 'scripts'; иначе -> parts[1]. Аналогично для packages/*.py.",
+      "falsification": "Файл function_index.json уже содержит контуры с именами файлов ('add_skill.py' и др.) — если прогнать gen_api_index.py --root . и в новом JSON все верхнеуровневые scripts/*.py по-прежнему дают контур-имя-файла, замечание подтверждено. Оно опровергается, только если в выходном JSON верхнеуровневые модули сгруппированы в один контур 'scripts'."
+    },
+    {
+      "id": "R2",
+      "severity": "major",
+      "file": "scripts/glossary/gen_api_index.py",
+      "line": "_signature / строки 181-209 (особенно 186-191)",
+      "problem": "offset = len(pos) - len(defaults) корректен только когда defaults соответствуют последним len(defaults) аргументам. Для валидного кода `def f(a=1, /, b): ...` (defaults=[1], pos=[a,b], offset=-1) цикл i=1: i>=offset истинно, defaults[i-offset]=defaults[2] -> IndexError. Валидность конструкции проверена на Python 3.11: `def f(a, /, b=1)` парсится, defaults применяются к b. Индексный сдвиг должен идти от конца, а не от начала.",
+      "suggestion": "Дефолт к pos-аргументу применять от конца: default_idx = len(defaults) - (len(pos) - i) - 1; если default_idx в [0, len(defaults)) и i >= len(pos)-len(defaults) -> использовать defaults[default_idx]. Либо эквивалентно: не выводить дефолт, если offset < 0.",
+      "falsification": "Модуль-фикстура с `def f(a=1, /, b): return a` не порождает entry (модуль тихо пропадает из JSON). Если после исправления entry появляется и сигнатура корректна, замечание опровергнуто."
+    },
+    {
+      "id": "R3",
+      "severity": "major",
+      "file": "scripts/glossary/gen_api_index.py",
+      "line": "EXCLUDE_MARKERS, строка 38 (\"copy\")",
+      "problem": "Маркер 'copy' — substring-фильтр без границ пути: исключается любой путь, содержащий 'copy' как подстроку, включая легитимные файлы (scripts/sync_to_live.py — там 'copy' в имени файла и функциях plan_copy/shutil.copy2; scripts/writer-core/dom_builder.py — import copy). Такой фильтр не «исключает мусор», а молча роняет реальный код из реестра.",
+      "suggestion": "Сравнивать 'copy' как компонент пути (posix-сегмент), а не как substring: например, проверять сегменты rel.split('/') на точное равенство 'copy', либо требовать границу (marker с '/' спереди).",
+      "falsification": "Полный прогон на текущем дереве не должен показывать контура 'add_skill.py' с модулем sync_to_live.py и не должен давать counts.modules без таких модулей; если scripts/sync_to_live.py отсутствует в выходном JSON при наличии файла на диске — замечание подтверждено. Опровергается, если sync_to_live.py присутствует в реестре."
+    },
+    {
+      "id": "R4",
+      "severity": "minor",
+      "file": "scripts/glossary/gen_api_index.py",
+      "line": "_is_test_file / строка 71",
+      "problem": "name.startswith('test_') ловит любой файл с префиксом 'test_' независимо от наличия '.py' — а name уже .py-файл, значит фильтр сработает и на пакетных файлах вне контура tests (например, packages/.../test_util.py) — но по контракту тестовый фильтр предназначен только для контура tests. Названия 'test_*' в packages/ игнорируются молча.",
+      "suggestion": "Сужение: name.endswith('_test.py') или (name.startswith('test_') and name.endswith('.py')), что фактически идентично текущему для .py; а если цель — исключать только tests/, перенести фильтр в _iter_py_files по контуру.",
+      "falsification": "Прогнать --include-tests: если в packages/ есть файл test_*.py и он не попал в реестр — подтверждено; если все test_*.py в packages/ попали — опровергнуто."
+    },
+    {
+      "id": "R5",
+      "severity": "minor",
+      "file": "scripts/glossary/compare_trees.py",
+      "line": "_contour_functions, строки 62-66 (continue при name='')",
+      "problem": "Битый JSON (функция без name) молча пропускается через continue и не попадает ни в base, ни в missing — «тихий мусор» вместо fail-closed. load_index тоже падает только на невалидном JSON без осмысленного сообщения об ошибке (для пайплайна следовало бы явно указать, какой файл битый).",
+      "suggestion": "Валидировать схему при загрузке (наличие 'contours' и ключа 'name' в каждой функции), бросать ValueError с именем файла и именем контура; в compute_delta не пропускать молча аномалии, а собирать их в поле delta['errors'].",
+      "falsification": "Подать compute_delta с registry, где у функции отсутствует name: сейчас функция просто исчезает из сравнения (обнаружить можно, сравнив counts). Опровергается, если появится ошибка/диагностика."
+    },
+    {
+      "id": "R6",
+      "severity": "minor",
+      "file": "scripts/glossary/gen_api_index.py (строка 171) и render_glossary.py (строка 30, DOC_MAX=140)",
+      "problem": "M1 режет docstring на 120 символов (_first_line [:120]), M4 режет на 140 (DOC_MAX). Контракт воркера фиксирует «docstring до 120», а рендер показывает до 140 — рассинхрон констант приводит к разной обрезке и к тому, что в M4 текст длиной 121-140 выводится из M1-обрезанного значения (всегда <=120), т.е. DOC_MAX фактически мёртв.",
+      "suggestion": "Привести DOC_MAX в render_glossary.py к 120 (или вынести общую константу), и синхронизировать описание в контракте.",
+      "falsification": "render_glossary.py строка 30 (DOC_MAX = 140) не равна 120 — замечание подтверждается чтением файла; опровергается, если константы совпадут или расхождение задокументировано как намеренное."
+    }
+  ],
+  "scope_declared": {
+    "scope_in": [
+      "scripts/glossary/gen_api_index.py",
+      "scripts/glossary/compare_trees.py",
+      "scripts/glossary/render_glossary.py"
+    ],
+    "scope_out": [
+      "docs/glossary/*.md",
+      "docs/glossary/function_index.json",
+      "содержимое harness (scripts/**) кроме трёх скриптов",
+      "бизнес-логика остальных модулей harness"
+    ]
+  },
+  "out_of_scope_gaps": [
+    "Файлы docs/glossary/*.md и function_index.json использованы только как evidence для проверки схемы (R1), но их корректность целиком — зона тестера.",
+    "Генерация .pyc в scripts/glossary/__pycache__ не влияет на детерминизм (маркер '__pycache__' исключён).",
+    "Параметр --python (версия для парсинга) в скриптах отсутствует; захардкожен '3.11' в meta — для текущего окружения (CPython 3.11 подтверждён) не проблема."
+  ]
+}

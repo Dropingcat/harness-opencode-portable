@@ -1,0 +1,23 @@
+{
+  "module": "M1-M3-M4-fix-review",
+  "code": "scripts/glossary/*.py",
+  "description": "Исправлены R1-R6: контуры-файлы -> единый scripts, posonly-default IndexError, substring-copy -> компонентные исключения, границы test_ фильтра проверены, warnings в compare_trees, единый лимит 140 в обрезке docstring.",
+  "notes": [
+    "R1 (major): _contour_for теперь возвращает 'scripts' для верхнеуровневых scripts/*.py (parts[1] только при len(parts)>=3). В индексе живёт единый контур 'scripts' с 8 модулями: add_skill, fix_paths, health_check, register_plugin, run_researcher_acceptance, start_mcp_servers, sync_to_live, validate_env. Контуры-файлы (add_skill.py и т.п.) исчезли.",
+    "R2 (major): _signature распределяет defaults по хвосту объединённого списка (posonlyargs + args): offset = len(total) - len(defaults). def f(a=1, /, b: int=2) -> None даёт 'def f(a = 1, /, b: int = 2) -> None' без IndexError. Заодно '/' теперь рендерится сразу после последнего posonly-аргумента (а не в конце списка).",
+    "R3 (major): EXCLUDE_MARKERS (substring) заменён на EXCLUDE_COMPONENTS (frozenset, lowercase) + _excluded сравнивает компоненты пути (директории и stem файла без .py) на РАВЕНСТВО. sync_to_live.py, dom_builder.py, digest_builder.py, copycat.py больше НЕ исключаются; scripts/copy.py, foo/backup.py, .venv, run/, artifacts/, audit_graph, slim и т.д. по-прежнему исключаются (проверено юнит-тестом).",
+    "R4 (minor): _is_test_file оставлен (startswith test_ / endswith _test.py / == tests.py безопасен, contest.py не режется). Проверено: scripts/writer-core/tests/test_runtime_boundary.py НЕ попал в индекс (исключён как test_*, несмотря на расположение в scripts/).",
+    "R5 (minor): compute_delta возвращает 'warnings': [...] при рассинхроне контура (модули/функции есть в base но 0 в target и наоборот). render_delta добавляет секцию '## Предупреждения' когда warnings непусты. Ключ 'warnings' присутствует всегда (пустой список при отсутствии рассинхрона).",
+    "R6 (minor): _first_line в gen_api_index.py обрезает doc до 140 символов (было 120) — синхронизировано с DOC_MAX=140 в render_glossary.py.",
+    "Проверки: python -m py_compile всех трёх — OK.",
+    "Прогон на полном дереве: python scripts/glossary/gen_api_index.py --root \"E:\\Documents\\Документы\\doc_Opencode_agern-new\" --out \"C:\\Temp\\opencode\\function_index_workspace_v3.json\" --label workspace -> counts = {modules: 197, functions: 748, classes: 397, methods: 184}; контуры: capsules, code-factory, glossary, guard, jobs, kanban, mcp, memory, orchestration, plugin, remote_acceptance, research, researcher, router, scripts, writer, writer-core, writer_core_handoff.",
+    "Итоги проверки: sync_to_live.py и dom_builder.py в индексе; test_runtime_boundary.py отсутствует; memory содержит 3 модуля (memory_bridge, collect_l2, promote_l2_to_l3).",
+    "render_glossary.py отработал на новом JSON (18 контуров, секция Scripts присутствует). compare_trees.py: warnings формируются и рендерятся корректно.",
+    "docs/glossary/*.md и function_index.json не трогались (перегенерит оркестратор); схема JSON не менялась (только добавлен ключ warnings в delta-словарь compute_delta)."
+  ],
+  "files": [
+    "scripts/glossary/gen_api_index.py",
+    "scripts/glossary/compare_trees.py",
+    "scripts/glossary/render_glossary.py"
+  ]
+}
