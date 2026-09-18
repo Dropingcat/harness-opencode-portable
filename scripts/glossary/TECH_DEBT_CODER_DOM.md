@@ -10,12 +10,14 @@
 | TD-076 | high | Coder DOM-аналог (этот план) | global |
 | TD-077 | critical | Контракты reviewer/tester с evidence исполнения (галлюцинации; numeric_validator случай) | global |
 | TD-078 | high | 23 пустые функции в researcher: Protocol vs заглушки; зафиксировать в реестре | global |
-| L-TD-1 | high | Рёбра CALLS (граф вызовов) не генерируются (PyCG/pyan3 не подключены) | local |
-| L-TD-2 | high | Stub-детекция не различает Protocol/ABC (interface) от конкретных пустышек (stub) | local |
+| L-TD-1 | high | Рёбра CALLS: **pyan3 основной** (функциональный, `--direction up` для callers) + PyCG cross-check + tree-sitter (декораторы/async, `syntax-only`) + поле confidence у ребра | local |
+| L-TD-2 | high | Stub-детекция: свой детектор — interface (ABC/Protocol/abstractmethod в MRO) vs stub (`raise NotImplementedError`/docstring+pass+return None + `# dead: disable`); radon/vulture как сырьё | local |
 | L-TD-3 | medium | `coder_dom.yaml` не строится (нет coder_dom_build.py) | local |
-| L-TD-4 | medium | verify-гейт (schema drift) не реализован (нет pre-commit перегенерации) | local |
-| L-TD-5 | medium | G-ownership контракт не определён (кто развивает функцию) | local |
+| L-TD-4 | medium | verify-гейт: pre-commit «перегенерация → git diff --exit-code → fail» (образец хуки vulture/dead); стабильность diff через RFC 8785 JCS | local |
+| L-TD-5 | medium | G-ownership: CODEOWNERS как проекция из DOM «файл→владелец» + dependency-aware слой (transposed call-graph, тегировать callers при смене сигнатуры) | local |
 | L-TD-6 | low | `coder_dom.yaml` не коммитится в git рядом с кодом (единица разработки) | local |
+| L-TD-7 | medium | Версионирование контракта: обязательное schema-поле + semver (additive=minor, breaking=major) + JCS fingerprint + миграционные карты 1.0→1.1 | local |
+| L-TD-8 | high | Спека 87 секций: кирпичи papermage (слои сущностей) + natasha/stanza (RU/EN modality/negation); RTT-валидатор — своя разработка (готовых нет) | local |
 
 ## Вложенная спека «на вырост» (из HARNESS_SEMANTIC_RESEARCH_METHOD_IMPLEMENTATION_SPEC_V1)
 
