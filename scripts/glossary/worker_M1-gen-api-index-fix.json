@@ -1,0 +1,16 @@
+{
+  "module": "M1-gen-api-index-fix",
+  "code": "scripts/glossary/gen_api_index.py",
+  "description": "Фикс BOM: чтение .py файлов с encoding='utf-8-sig' вместо 'utf-8'; memory-модули с BOM (collect_l2.py, promote_l2_to_l3.py) теперь попадают в индекс.",
+  "notes": [
+    "Изменено ровно одно место: в scan_tree() строка 'text = py_file.read_text(encoding=\"utf-8\")' заменена на 'text = py_file.read_text(encoding=\"utf-8-sig\")'. Без BOM поведение идентично utf-8.",
+    "python -m py_compile scripts/glossary/gen_api_index.py — OK.",
+    "Реальный прогон на полном дереве: python scripts/glossary/gen_api_index.py --root \"E:\\Documents\\Документы\\doc_Opencode_agern-new\" --out \"C:\\Temp\\opencode\\function_index_workspace_v2.json\" --label workspace",
+    "Результат: counts = {modules: 195, functions: 742, classes: 397, methods: 184}; index: 1047 ключей.",
+    "Контур memory содержит ровно 3 модуля: scripts/memory/collect_l2.py (функции: collect_l2, main), scripts/memory/memory_bridge.py, scripts/memory/promote_l2_to_l3.py (функции: promote, main) — оба BOM-файла в индексе.",
+    "Схема JSON, исключения и остальное поведение не менялись; docs/ не трогались."
+  ],
+  "files": [
+    "scripts/glossary/gen_api_index.py"
+  ]
+}

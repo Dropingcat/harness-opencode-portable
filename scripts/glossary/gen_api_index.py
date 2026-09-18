@@ -287,7 +287,7 @@ def scan_tree(root: str | Path, label: str = "workspace", include_tests: bool = 
 
     for py_file, rel in _iter_py_files(root_path, include_tests):
         try:
-            text = py_file.read_text(encoding="utf-8")
+            text = py_file.read_text(encoding="utf-8-sig")
         except (OSError, UnicodeDecodeError):
             continue
         module_entry = _module_entry(rel, text)
