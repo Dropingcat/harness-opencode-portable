@@ -47,7 +47,7 @@ def resolve_bundle(task:str,route_id=None,stage=None,profile=None,preflight_path
     if not snap_path.exists(): return {'ok':False,'error':'capability_runtime_snapshot missing; run compile_capability_runtime.py'}
     snap=read('config/capability_runtime_snapshot.json'); route=base['route_id']; route_cfg=snap.get('routes',{}).get(route)
     if not route_cfg:
-        return {**base,'bundle_mode':'legacy','bundle_state':'LEGACY'}
+        return {**base,'bundle_mode':'legacy','bundle_state':'LEGACY','agent':base.get('agent'),'agent_hint':base.get('agent_hint','')}
     sid=choose_stage(route_cfg,task,stage); scfg=route_cfg['stages'][sid]; pf=_load_preflight(preflight_path)
     req=list(scfg.get('required_capabilities',[])); opt=list(scfg.get('optional_capabilities',[])); forb=set(scfg.get('forbidden_capabilities',[]))
     domains=[]; overlay_caps=[]; overlay_tools=[]; overlay_skills=[]
@@ -72,7 +72,7 @@ def resolve_bundle(task:str,route_id=None,stage=None,profile=None,preflight_path
     skills=[]
     for s in scfg.get('skills',[])+overlay_skills:
         if s not in skills: skills.append(s)
-    return {'ok':state=='READY','bundle_state':state,'route_id':route,'stage':sid,'domains':domains,'profile':base.get('profile'),'execution_mode':base.get('execution_mode'),'skills':skills,'logical_tools':logical,'required_capabilities':req,'required_any_of':scfg.get('required_any_of',[]),'optional_capabilities':list(dict.fromkeys(opt)),'forbidden_capabilities':sorted(forb),'providers':providers,'missing_required':missing,'failed_requirement_groups':failed_groups,'next_stages':scfg.get('next',[]),'escalation':scfg.get('escalation',{}),'base_policy_hash':base.get('policy_hash'),'capability_policy_hash':snap.get('policy_hash'),'bundle_mode':'capability','guard_required':base.get('guard_required',False)}
+    return {'ok':state=='READY','bundle_state':state,'route_id':route,'stage':sid,'domains':domains,'profile':base.get('profile'),'execution_mode':base.get('execution_mode'),'skills':skills,'logical_tools':logical,'required_capabilities':req,'required_any_of':scfg.get('required_any_of',[]),'optional_capabilities':list(dict.fromkeys(opt)),'forbidden_capabilities':sorted(forb),'providers':providers,'missing_required':missing,'failed_requirement_groups':failed_groups,'next_stages':scfg.get('next',[]),'escalation':scfg.get('escalation',{}),'base_policy_hash':base.get('policy_hash'),'capability_policy_hash':snap.get('policy_hash'),'bundle_mode':'capability','guard_required':base.get('guard_required',False),'agent':base.get('agent'),'agent_hint':base.get('agent_hint','')}
 
 def main()->int:
     ap=argparse.ArgumentParser(); ap.add_argument('task'); ap.add_argument('--route-id'); ap.add_argument('--stage'); ap.add_argument('--profile'); ap.add_argument('--preflight')
