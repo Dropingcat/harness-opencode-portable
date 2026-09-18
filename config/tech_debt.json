@@ -3,8 +3,8 @@
  "updated": "2026-09-15",
  "authority_note": "Canonical registry migrated from патчи/миграция в плагин/tech_debt_current.json (65 records). project_context.py counts status=open. CLOSED_REPORTED maps to closed; RECONCILE_REQUIRED stays open until exact-tree verification.",
  "counts": {
-  "total": 68,
-  "open": 52,
+  "total": 72,
+  "open": 56,
   "closed": 16
  },
  "debts": [
@@ -1617,6 +1617,72 @@
    "source_status": "open",
    "progress": "2026-09-17 проверено: extract_all ловит только глагольные формы (\"Мы показали, что X\", \"X вызывает Y\"). Числовые предикаты (равен a, x=0.5 даёт, IC50=8.2) -> 0 claims. Это блокирует верификацию количественных утверждений через claims-цикл.",
    "notes": "Фальсификация: extract_all('Параметр решётки CeO2 равен 5.41 А.') -> len(claims)==0 (ожидается >0)."
+  },
+  {
+   "id": "TD-069",
+   "title": "uncertainty_bridge не распознаёт уровень 'assumed' из DOM -> research_requests не создаются",
+   "area": "scripts/writer-core/writer_core/uncertainty_bridge.py + dom builder",
+   "kind": "workflow",
+   "severity": "high",
+   "owner": "research-orchestrator",
+   "sunset_at": "2026-09-24",
+   "acceptance": "uncertainty: level=\"assumed\" маппится в research_request (как high/medium); end-to-end dom->uncertainty->research_requests непуст; тест на assumed/средний уровень",
+   "status": "open",
+   "status_detail": "OPEN_CURRENT",
+   "presentation_category": "ACTIVE",
+   "source_status": "open",
+   "progress": "2026-09-17: dom строит claims с verification.verdict=SUPPORTED, confidence=0.8 и uncertainty.level=\"assumed\". uncertainty_bridge._claim_level возвращает \"assumed\" (не в low/medium/high) -> ветка else -> PROVISIONAL без research_request. Итог: research_requests=[] - передача долга ресерчеру не происходит. Это блокирует workflow \"долг неопределённости -> ресерчер\".",
+   "notes": "Фальсификация: запустить wc_cli dom+uncertainty на writer_sample; n_readiness=PROVISIONAL 2, но research_requests=[] (ожидалось 2 при level assumed->high/medium)."
+  },
+  {
+   "id": "TD-070",
+   "title": "claim_type не типизирован: нет enum ClaimType, CAUSAL_HYPOTHESIS/EXTERNAL_FACT/SYNTHESIS/INTERPRETATION/COMPARISON не внедрены",
+   "area": "researcher_core/r0/entities.py + artifact.py (freeze: writer_v1_contracts claim_type)",
+   "kind": "contract",
+   "severity": "high",
+   "owner": "research-orchestrator",
+   "sunset_at": "2026-09-30",
+   "acceptance": "enum ClaimType = {SYNTHESIS, INTERPRETATION, COMPARISON, CAUSAL_HYPOTHESIS, EXTERNAL_FACT, UNKNOWN}; claim_type типизирован; тест классификации гипотеза/верифицируемое",
+   "status": "open",
+   "status_detail": "OPEN_CURRENT",
+   "presentation_category": "ACTIVE",
+   "source_status": "open",
+   "progress": "2026-09-17: freeze-пакет (writer_v1_contracts.json) описывает claim_type: SYNTHESIS|INTERPRETATION|COMPARISON|CAUSAL_HYPOTHESIS|EXTERNAL_FACT. В коде claim_type - свободная строка (r0/entities.py: \"claim_type: str\"), enum отсутствует, CAUSAL_HYPOTHESIS - 0 упоминаний. Уровни утверждений (гипотеза/верифицируемое со ссылкой/диалектические конструкции) не классифицируются машиной.",
+   "notes": "Фальсификация: grep CAUSAL_HYPOTHESIS в scripts/ -> 0 результатов; claim_type в r0/entities.py тип str.",
+   "verification": "VERIFIED 2026-09-17: freeze-пакет (writer_v1_contracts.json) описывает claim_type (SYNTHESIS/INTERPRETATION/COMPARISON/CAUSAL_HYPOTHESIS/EXTERNAL_FACT) и verification_dimensions (VERIFIED/UNCHECKED/FAILED; SUPPORTED/CONTRADICTED/UNSUPPORTED/AMBIGUOUS/OPEN; ESTABLISHED/QUALIFIED/AMBIGUOUS/DISPUTED/UNKNOWN). В коде: claim_type='str' (r0/entities.py), enum нет, CAUSAL_HYPOTHESIS - 0 упоминаний. Freeze = контракт, НЕ внедрён."
+  },
+  {
+   "id": "TD-071",
+   "title": "Evidence-quality tribunal (Q1A1..Q3A3 поиск и классификация неопределённости) deferred/не реализован",
+   "area": "freeze patch: 'Deferred to Researcher refactor: ... evidence-quality tribunal'",
+   "kind": "architecture",
+   "severity": "high",
+   "owner": "research-orchestrator",
+   "sunset_at": "2026-09-30",
+   "acceptance": "Q1A1->Q2A2->Q3A3 контур для claims с неопределённостью; классификация по уровням утверждений; вердикты по verification_dimensions (freeze)",
+   "status": "open",
+   "status_detail": "OPEN_CURRENT",
+   "presentation_category": "ACTIVE",
+   "source_status": "open",
+   "progress": "2026-09-17: freeze-пакет явно помечает evidence-quality tribunal как Deferred to Researcher refactor. В текущем коде нет Q1A1..Q3A3 контура как единого механизма для поиска/классификации неопределённости утверждений. Есть разрозненные части: AssessmentAssignment (назначение специалистов), need.level, verify_claims.",
+   "notes": "Трибунал по уровням утверждений (физика-физик, методология-методолог) требует связки claim_type -> AssessmentAssignment.",
+   "verification": "VERIFIED 2026-09-17: патч WRITER-V1-FREEZE-001.patch (2311 строк) явно помечает evidence-quality tribunal как 'Deferred to Researcher refactor'. Q1A1..Q3A3 контура в коде нет. Существующие части: AssessmentAssignment (назначение специалистов), need.level, verify_claims - разрознены, единый контур не реализован."
+  },
+  {
+   "id": "TD-072",
+   "title": "DOM-блок утверждения не связывает claim_type с ветвями тематик трибунала (специалисты)",
+   "area": "dom_builder.py + tribunal_composition AssessmentAssignment",
+   "kind": "integration",
+   "severity": "medium",
+   "owner": "research-orchestrator",
+   "sunset_at": "2026-10-05",
+   "acceptance": "в DOM каждое утверждение несёт: claim_type, thematic_branches (из трибунала), назначенных специалистов; E2E dom->tribunal assignment",
+   "status": "open",
+   "status_detail": "OPEN_CURRENT",
+   "presentation_category": "ACTIVE",
+   "source_status": "open",
+   "progress": "2026-09-17: AssessmentAssignment (need_ref->role_ids) есть в tribunal_composition; но DOM (writer-core dom_builder) не связывает claim_type/уровни утверждения с тематическими ветвями и назначением специалистов. Контур физика->физик, методология->методолог не автоматизирован для Writer-claims.",
+   "verification": "VERIFIED 2026-09-17: DOM-блок утверждения (writer-core dom_builder) не связывает claim_type/уровни с тематическими ветвями трибунала и назначением специалистов. AssessmentAssignment (tribunal_composition.py:143) есть, но Writer-claims с ним не связаны. Контур физика->физик, методология->методолог не автоматизирован."
   }
  ]
 }
