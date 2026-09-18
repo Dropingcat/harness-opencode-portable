@@ -18,6 +18,15 @@
 | L-TD-6 | low | `coder_dom.yaml` не коммитится в git рядом с кодом (единица разработки) | local |
 | L-TD-7 | medium | Версионирование контракта: обязательное schema-поле + semver (additive=minor, breaking=major) + JCS fingerprint + миграционные карты 1.0→1.1 | local |
 | L-TD-8 | high | Спека 87 секций: кирпичи papermage (слои сущностей) + natasha/stanza (RU/EN modality/negation); RTT-валидатор — своя разработка (готовых нет) | local |
+| L-TD-9 | medium | Coder DOM: шаблоны (аналог writer-dom-dissertation.yaml), контракт (schema+JSON Schema), скилл (напр. coder-dom.skill), привязка к роутеру (harness_run coder-route). Сейчас шаблон только для диссертации | local |
+
+## Уточнение TD-078 (2026-09-18, подтверждено детектором)
+
+Инвентаризация 23 «пустых» функций в researcher показала: **все 23 — интерфейсы** (Protocol/ABC,
+тела `...`/pass — корректно). `tribunal_role_runtime.TribunalRoleWorker.execute` наследует Protocol.
+**Реальных заглушек (pass/NotImplementedError вне интерфейсов) — 0.** TD-078 переформулирован:
+не «23 заглушки = долг», а «детектор готов (interface vs stub), реальных stubs нет (0),
+G-stub граф пуст; будущие заглушки должны помечаться `# stub:` маркером».
 
 ## Вложенная спека «на вырост» (из HARNESS_SEMANTIC_RESEARCH_METHOD_IMPLEMENTATION_SPEC_V1)
 
