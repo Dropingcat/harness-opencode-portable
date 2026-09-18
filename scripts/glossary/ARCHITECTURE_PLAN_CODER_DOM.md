@@ -115,3 +115,44 @@ E (semantic_field, спека) — отдельный трек «на вырос
 
 - **TD-079 (proposal)**: вложенная спека HARNESS_SEMANTIC_RESEARCH_METHOD (87 секций) — оформить как глобальный TD для будущего научного слоя (InformationUnit, RTT, QuestionGraph, Hypothesis lifecycle, Evidence independence, ClaimReviewCase, Coder integration, fingerprints/event log).
 - Признак: спека в архиве `docs/plugin-dialectic/HARNESS_SEMANTIC_RESEARCH_METHOD_IMPLEMENTATION_SPEC_V1 (1).md`; требует оформления в реестр и виртуальных E2E (как TD-048/049/050 направление).
+
+## 7. Research findings по слабым местам (2026-09-18, 27 источников)
+
+### S1. Рёбра CALLS
+- **pyan3 — основной генератор** (функциональный уровень, `--text`/DOT, `--direction up` для callers; перерождён Feb 2026, Py3.10-3.14). PyCG — кросс-чек (JSON adjacency). tree-sitter — доп. проход для декораторов/async с меткой `syntax-only`.
+- Формат: поле `confidence` у ребра (pyan3 TODO 1.0/0.0) — обязательное.
+- FASTEN RCG — канонический формат call-graph (modules/namespaces/graph, версии 1-3), если понадобится пром-стандарт.
+- Лимиты pyan3: lambdas, async-as-sync, результаты вызовов не разрешаются → рёбра для этих случаев — `syntax-only`.
+
+### S2. Stub-детекция
+- **Ни один инструмент не отличает interface от stub** (vulture/dead прямо помечают interface-функции как unused).
+- Детектор самим: interface = `@abstractmethod`/ABC/Protocol в MRO (исключать); stub = `raise NotImplementedError` | docstring+pass+return None + маркер `# dead: disable` (стандарт dead).
+- radon (cc/SLOC/MI) — сырьё; vulture `--min-confidence 100` — фильтр, НЕ решение.
+
+### S3. Версионирование контракта
+- Паттерн OpenAPI/AsyncAPI: обязательное поле `schema`-версии в документе; semver (additive=minor, breaking=major).
+- **RFC 8785 JCS** (canonical JSON: сортировка ключей, IEEE754, UTF-8) — единый fingerprint для diff и миграционных карт 1.0→1.1.
+- `generated_at` — в отдельное поле, исключаемое из хэша (паттерн FASTEN).
+
+### S4. Verify-гейт
+- pre-commit hook «перегенерировать → `git diff --exit-code` → fail при diff» (образец — официальные хуки vulture/dead).
+- Стабильность diff: JCS-сортировка; CI-гейт `git status --porcelain`.
+
+### S5. Ownership
+- CODEOWNERS — только файлы (паттерны путей); генерировать из DOM как проекцию «файл → владелец».
+- Dependency-aware: транспонированный call-graph (pyan3 `--direction up`) → при изменении сигнатуры тегировать владельцев callers-файлов.
+
+### S6. Спека 87 секций
+- Готового пакета нет. Кирпичи: **papermage** (слои OBSERVATION/MEASUREMENT/METHOD/ASSUMPTION как Entity + relations), **natasha/stanza** (RU/EN dependency для modality/negation, `advmod:Neg`), spaCy.
+- RTT-валидатор и сама спека — собственная разработка.
+
+## 8. Обновлённые решения (по ресёрчу)
+
+| Слабое место | Решение (обновлено) |
+|---|---|
+| S1 CALLS | pyan3 основной + PyCG cross-check + tree-sitter (syntax-only) + поле confidence |
+| S2 Stub | свой детектор: interface vs stub (маркеры), radon/vulture как сырьё |
+| S3 Версии | schema-поле + semver + JCS fingerprint + миграционные карты |
+| S4 Гейт | pre-commit «перегенерация → git diff --exit-code» + CI porcelain |
+| S5 Ownership | CODEOWNERS из DOM (проекция) + transposed call-graph для dependency-aware |
+| S6 Спека | papermage + natasha/stanza кирпичи; RTT — своё |
