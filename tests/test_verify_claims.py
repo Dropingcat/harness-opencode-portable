@@ -56,6 +56,20 @@ class TestVerifyClaims(unittest.TestCase):
         # K=1 для Шеррера — конфликт с каноническим 0.9
         self.assertEqual(v["verdict"], "CONTRADICTED")
 
+    def test_verify_claim_non_dict_input_returns_verdict_dict(self):
+        """Не-dict вход (None / строка) должен вернуть валидный dict схемы вердикта, НЕ бросать исключение.
+
+        Капсульный контракт verify_claim (F-5B2C5): claim: dict → dict (схема verification).
+        На момент добавления теста функция бросает AttributeError на claim.get('text')
+        — тест фиксирует дефект (красный), логика НЕ правилась (scope: только тест).
+        """
+        for bad in (None, "not a dict", 42, ["text"]):
+            with self.subTest(bad=bad):
+                v = vc.verify_claim(bad, None)
+                self.assertIsInstance(v, dict)
+                self.assertIn("verdict", v)
+                self.assertIn("confidence", v)
+
     def test_apply_writes_verification(self):
         with tempfile.TemporaryDirectory() as td:
             import yaml
