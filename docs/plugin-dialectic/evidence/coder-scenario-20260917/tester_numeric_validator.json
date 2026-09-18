@@ -1,0 +1,20 @@
+{
+  "module": "numeric_validator",
+  "result": "FAIL",
+  "passed": 2,
+  "failed": 3,
+  "coverage": 78,
+  "coverage_notes": "Воркер: validate_numeric_claim — числовой экстрактор для claims (TD-068 направление). 5 тестов на edge-кейсы: IC50=8.2 мкМ (OK), параметр a=5.27 А (FAIL), 2θ≈44.3°, t=25°C (FAIL), текст без чисел (OK), x=0.5 даёт a≈5.32 (FAIL).",
+  "tests": [
+    {"name": "test_ic50_extract", "status": "pass", "output": "IC50=8.2 мкМ -> value=8.2 unit=мкМ (после фикса regex)"},
+    {"name": "test_no_number", "status": "pass", "output": "текст без чисел -> count=0"},
+    {"name": "test_lattice_param", "status": "fail", "output": "a=5.27 А -> после вырезания переменной count=0 (потеряна единица А)"},
+    {"name": "test_2theta_temp", "status": "fail", "output": "2θ≈44.3°, t=25°C -> t=25 вырезан как переменная, θ-индекс не обработан"},
+    {"name": "test_x05_gives_a532", "status": "fail", "output": "x=0.5 даёт a≈5.32 Å -> оба числа вырезаны как переменные (a≈5.32 тоже)"}
+  ],
+  "problems": [
+    {"id": "T1", "severity": "major", "finding": "Вырезание переменных [a-zA-Z][=≈]\\d+ слишком агрессивно: удаляет и валидные значения с единицами (a=5.27 А -> теряется 27 А).", "falsification": "validate('параметр a=5.27 А') -> count=0, ожидается 1."},
+    {"id": "T2", "severity": "minor", "finding": "Греческий θ и связка ≈ не обрабатываются (2θ≈44.3 -> θ-индекс не вырезан, а число 44.3 ловится).", "falsification": "validate('2θ≈44.3°, t=25°C') -> count=1 вместо 2 (t=25 потерян)."},
+    {"id": "T3", "severity": "info", "finding": "Это подтверждает TD-068: числовая экстракция требует аккуратных границ (переменные vs значения с единицами) — нужен токенизатор, а не цепочка regex.", "falsification": "5 edge-кейсов -> 2/5 OK на простом regex."}
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "module": "numeric_validator",
+  "verdict": "REQUEST_CHANGES",
+  "comments": [
+    {"id": "R1", "severity": "major", "file": "worker_numeric_validator.json", "line": "code", "problem": "Регулярные выражения для вырезания переменных разрушают валидные числовые значения с единицами (a=5.27 А -> теряется 27 А) и не обрабатывают греческие индексы (2θ) и связку ≈.", "suggestion": "Заменить цепочку regex на токенизатор: сначала извлекать числа с единицами, затем классифицировать контекст (переменная/индекс/значение).", "falsification": "validate('параметр a=5.27 А') должно вернуть count=1 (5.27 А), сейчас 0."},
+    {"id": "R2", "severity": "minor", "file": "worker_numeric_validator.json", "line": "code", "problem": "Единица Å (U+00C5) не в списке, но regex-класс покрывает только А (кириллица); разные юникод-символы А/Å/A смешиваются.", "suggestion": "Нормализовать единицы до извлечения (свести А/Å/a к канону).", "falsification": "validate('a≈5.32 Å') с Å (латиница+диакритика) даёт count=0 из-за вырезания переменной."}
+  ],
+  "scope_declared": {"scope_in": ["worker_numeric_validator.json (numeric extractor)", "edge-case tests"], "scope_out": ["TD-068 полный фикс", "writer extractor"]},
+  "out_of_scope_gaps": [
+    {"module": "numeric_validator", "finding": "Полное решение TD-068 (числовые claims в Writer extractor) вне скоупа; здесь только Coder-утилита-прототип."}
+  ]
+}
