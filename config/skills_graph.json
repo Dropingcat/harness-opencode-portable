@@ -1,6 +1,6 @@
 {
   "version": 3,
-  "generated_from_policy_hash": "8f07bf28316d26b22056f8d4c2ad1b58fe23b59313cacc285adee023a131ddf5",
+  "generated_from_policy_hash": "877983967d84b1f2e5c73c77782a60554b7740968cdbbe6fcb25b3c05105e848",
   "generated": true,
   "nodes": [
     {
@@ -931,11 +931,6 @@
       "src": "capsule:core-orchestration",
       "rel": "PROVIDES_SKILL",
       "dst": "skill:export"
-    },
-    {
-      "src": "capsule:core-orchestration",
-      "rel": "PROVIDES_SKILL",
-      "dst": "skill:glossary-registry"
     },
     {
       "src": "capsule:core-orchestration",

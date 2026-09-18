@@ -3,8 +3,8 @@
     "updated":  "2026-09-18",
     "authority_note":  "Canonical registry migrated from патчи/миграция в плагин/tech_debt_current.json (65 records). project_context.py counts status=open. CLOSED_REPORTED maps to closed; RECONCILE_REQUIRED stays open until exact-tree verification.",
     "counts":  {
-                   "total":  86,
-                   "open":  70,
+                   "total":  87,
+                   "open":  71,
                    "closed":  16
                },
     "debts":  [
@@ -1903,6 +1903,22 @@
                       "source_status":  "open",
                       "notes":  "Связано с TD-080: жанр статьи с Mermaid/таблицами.",
                       "progress":  "2026-09-18: review article_agent_control_loop.md -\u003e L1 LONG_SENTENCE 86 слов на stateDiagram-v2 (Mermaid), 129 слов на decision table, 125 слов на псевдокод. Это ложные срабатывания: метрика применяется к не-прозаическим блокам."
+                  },
+                  {
+                      "id":  "TD-087",
+                      "owner":  "writing-orchestrator",
+                      "presentation_category":  "ACTIVE",
+                      "sunset_at":  "2026-10-15",
+                      "title":  "dom --qwen-dir даёт duplicate source id / claim id при слиянии plan-claims и qwen-claims (C-001 vs C-001b, S-001 x2) -\u003e dom_valid=false",
+                      "status_detail":  "OPEN_CURRENT",
+                      "kind":  "integration",
+                      "status":  "open",
+                      "severity":  "high",
+                      "acceptance":  "ID-пространства plan-claims, plan-sources и qwen-claims/sources согласованы (единый генератор); dom_valid=true на слиянии plan+qwen",
+                      "area":  "scripts/writer-core/writer_core/dom_builder.py (build_dom + qwen_to_dom)",
+                      "source_status":  "open",
+                      "notes":  "Фальсификация: dom --qwen-dir на 1 карточку + plan -\u003e sources S-001 x2, claims C-001 x2, dom_valid=false. Механизм qwen_to_dom сам работает (5 claims, uncertainty 4, kind factual/assumed/derived), ломается слияние ID.",
+                      "progress":  "2026-09-18: прогон dom --template writer-dom-dissertation.yaml --plan agent_control_loop_structure_plan.json --qwen-dir .runs\\probe_cards --source-kind published: validation.errors=[\"duplicate source id\"], dom_valid=false. Причина: plan даёт источник S-001 \"источник: published\", qwen_to_dom генерирует свой S-001 (индекс с нуля), claims: plan C-001/C-002 + qwen C-001/C-001b/C-001c -\u003e коллизия C-001."
                   }
               ]
 }

@@ -10,8 +10,7 @@
         "verification-planning",
         "incremental-implementation",
         "compare",
-        "export",
-        "glossary-registry"
+        "export"
       ],
       "supported_routes": [
         "academic-research",

@@ -1,0 +1,89 @@
+{
+  "module": "glossary-maintenance-router",
+  "verdict": "APPROVE",
+  "comments": [
+    {
+      "id": "R1",
+      "severity": "minor",
+      "file": "config/skill_capsule_policy.json",
+      "line": "core-orchestration.provided_skills (строка 14)",
+      "problem": "Добавление glossary-registry в provided_skills капсулы core-orchestration разливает скилл во ВСЕ 12 маршрутов (подтверждено: resolve_route 'напиши код с тестами' → code-implementation содержит glossary-registry, 'ревью кода' → code-review тоже, 'найди статью на arxiv' → academic-research тоже). Для кода/ревью/ресёрча это лишний шум в bundles. Скилл уже есть в integration-config.provided_skills — маршрут glossary-maintenance и так его получает.",
+      "suggestion": "Убрать glossary-registry из core-orchestration.provided_skills (оставить только в integration-config), затем пересобрать compile_runtime.py и проверить, что glossary-maintenance по-прежнему получает скилл, а code-implementation/code-review больше нет.",
+      "falsification": "Замечание опровергается, если найдётся документация/дизайн-решение, явно предписывающее делать registry-скилл доступным всем маршрутам (тогда это фича, а не баг), либо если в целевом сервисе словарь skills не используется для выбора скиллов вообще."
+    },
+    {
+      "id": "R2",
+      "severity": "minor",
+      "file": "agents/glossary-maintainer.md",
+      "line": "Пример JSON-отчёта (строки 53-56)",
+      "problem": "Числа-примеры в шаблоне отчёта не соответствуют текущему состоянию реестра: шаблон показывает portable {modules: 64, functions: 218, classes: 120} и delta {modules_missing: 31, functions_missing: 89}, тогда как реальные meta.counts: portable 157/637/364, дельта 40 модулей + 90 функций (проверено чтением function_index.json обоих деревьев). Субагент, следующий шаблону буквально, может скопировать примерные числа в отчёт вместо чтения из meta.counts, и валидатор (проверяющий только ok/counts/delta) это пропустит.",
+      "suggestion": "Обновить примерные числа в шаблоне на актуальные (157/637/364; delta 40/90) или заменить на плейсхолдеры-переменные (modules: N), явно указав «брать из meta.counts, не копировать пример».",
+      "falsification": "Замечание опровергается, если субагент в реальном прогоне читает counts из function_index.json (а не из шаблона) — но сам факт расхождения шаблона с реальностью остаётся наблюдаемым (сравнение шаблона с function_index.json любого дерева)."
+    },
+    {
+      "id": "R3",
+      "severity": "info",
+      "file": "scripts/router/resolve_route.py",
+      "line": "resolve(): ключи agent/agent_hint (строки 132-133)",
+      "problem": "Новые ключи agent (null для 11 старых маршрутов) и agent_hint добавлены в контракт resolve(). Обратная совместимость сохранена (добавление ключей не ломает чтение), но потребители, валидирующие точный набор ключей ответа (строгий schema-check), могут упасть. Проверить всех потребителей resolve_route за пределами этого скоупа не удалось.",
+      "suggestion": "Убедиться, что ни один консьюмер (mcp/coder_router_server.py, resolve_capsules, harness) не делает строгую сверку ключей ответа; при наличии — обновить схему.",
+      "falsification": "Замечание опровергается, если ни один потребитель resolve_route() не использует строгую валидацию ключей ответа (т.е. все используют .get() / открытый словарь) — это проверяется grep по consumer-коду."
+    },
+    {
+      "id": "R4",
+      "severity": "info",
+      "file": ".opencode/skills/glossary-registry/SKILL.md",
+      "line": "Команды 2/4/5 (строки 37, 45, 59)",
+      "problem": "Команды пересборки portable-дерева хардкодят абсолютный путь E:\\opencode_harness_portable. Скилл не содержит явной проверки существования этого дерева (агентская инструкция проверяет только генераторы в workspace). На другой машине/раскладке команды упадут с неинформативной ошибкой.",
+      "suggestion": "Добавить в SKILL.md шаг-префлайт: Test-Path 'E:\\opencode_harness_portable' с инструкцией «если дерева нет — доложить и остановиться», либо параметризовать путь (переменная окружения OPENCODE_HARNESS_PORTABLE).",
+      "falsification": "Замечание опровергается, если portable-дерево гарантированно существует в любом окружении развёртывания этого harness (политика деплоя), или если уже есть внешний префлайт, проверяющий его наличие до вызова скилла."
+    },
+    {
+      "id": "R5",
+      "severity": "info",
+      "file": "scripts/router/resolve_bundle.py",
+      "line": "capability-ветка resolve_bundle (строка 51)",
+      "problem": "Legacy fallback сейчас корректно срабатывает (проверено: exit 0, bundle_mode=legacy, agent=glossary-maintainer), потому что glossary-maintenance отсутствует в capability_runtime_snapshot.json. Но capability-ветка (route_cfg['stages'][sid]) упадёт с KeyError, если маршрут позже появится в capability-снапшоте без определения stages — у glossary-maintenance нет stage-модели. Хрупкость: legacy-режим зависит от «маршрута нет в снапшоте».",
+      "suggestion": "Задокументировать в комментарии/README, что glossary-maintenance намеренно остаётся вне capability_runtime_snapshot (legacy-контур), либо добавить в capability-ветку защиту: if not route_cfg.get('stages'): вернуть legacy fallback вместо KeyError.",
+      "falsification": "Замечание опровергается, если есть контракт, запрещающий появление glossary-maintenance в capability_runtime_snapshot.json без stages (например, сборка capability-снапшота валидирует stage-модель для каждого маршрута)."
+    }
+  ],
+  "scope_declared": {
+    "scope_in": [
+      "config/routes_authority.json",
+      "config/skills_registry.json",
+      "config/skill_capsule_policy.json",
+      "scripts/router/resolve_route.py",
+      "scripts/router/resolve_bundle.py",
+      ".opencode/skills/glossary-registry/SKILL.md",
+      "agents/glossary-maintainer.md"
+    ],
+    "scope_out": [
+      "scripts/glossary/*.py (генераторы — приняты ранее)",
+      "остальные контуры harness",
+      "generated-артефакты (runtime_snapshot.json — только через compile_runtime --check)",
+      "config/tech_debt.json и probe_*.json (грязные в рабочем дереве, но вне scope этого ревью)"
+    ]
+  },
+  "out_of_scope_gaps": [
+    {
+      "module": "config/tech_debt.json",
+      "finding": "Рабочее дерево грязное после ревью-сессии: config/tech_debt.json изменён (TD-087 добавлен), 6 probe_*.json удалены. Это не связано с W1-сшивкой (diff по scope_in файлам чистый и содержит только целевые изменения), но оркестратору стоит подтвердить, что эти изменения принадлежат другой задаче."
+    },
+    {
+      "module": "resolve_route.py consumers",
+      "finding": "Полная аудитория потребителей нового ключа agent в ответе resolve() не проверена (вне scope). Рекомендую отдельную проверку coder_router_server.py и harness-маршрутизации."
+    }
+  ],
+  "verification_evidence": {
+    "compile_runtime_check": "exit 0, routes: 12, policy_hash 8f07bf28...",
+    "resolve_route_glossary": "route_id=glossary-maintenance, agent=glossary-maintainer, skills содержит glossary-registry",
+    "resolve_route_code_impl": "route_id=code-implementation (не сломан)",
+    "resolve_route_review": "route_id=code-review (не сломан)",
+    "resolve_route_arxiv": "route_id=academic-research (не сломан)",
+    "resolve_bundle_legacy": "exit 0, bundle_mode=legacy, agent=glossary-maintainer проброшен",
+    "git_diff_routes": "только добавление glossary-maintenance; старые 11 маршрутов regex/priority идентичны",
+    "skill_commands": "CLI генераторов совпадает с командами SKILL.md; генераторы идентичны в обоих деревьях (SHA256); smoke-критерии достижимы (resolve/verify_claim в GLOSSARY.md, modules_missing>0 в дельте)",
+    "agent_frontmatter": "mode=subagent, hidden=true, steps=40, permission — соответствует code-tester"
+  }
+}
