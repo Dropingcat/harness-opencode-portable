@@ -232,7 +232,16 @@ def cmd_extract(args: argparse.Namespace) -> int:
 
 
 def cmd_graphs(args: argparse.Namespace) -> int:
-    """graphs: artifact -> graphs.json (+ sqlite)."""
+    """graphs: artifact -> graphs.json (+ sqlite).
+
+    СЕМАНТИКА skipped (осознанное решение, R6): итоговый graphs.json содержит
+    ключ "skipped" — список записей ПО КАЖДОМУ ПАРАГРАФУ (build_paragraph_graphs
+    возвращает per-paragraph skipped: графы реестра, не построенные из данного
+    параграфа). При N параграфах один и тот же skipped-граф (G1, G10, ...)
+    повторяется N раз — это НЕ баг, а следствие per-paragraph семантики:
+    граф мог построиться в одном параграфе и быть skipped в другом. Агрегация
+    по графу (count/paragraphs) — отдельная задача (вне scope).
+    """
     from graph_builder_hybrid import (build_paragraph_graphs,  # noqa: F401
                                       graph_stats, to_sqlite, load_graph_registry)
 

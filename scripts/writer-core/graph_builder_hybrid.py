@@ -5,7 +5,7 @@
 + v0.3 LinguisticDigest + links) строит узлы и рёбра графов реестра v0.3
 (graph_registry.yaml), честно — только из тех данных, что есть в артефакте.
 
-Строятся на уровне параграфа (7 графов):
+Строятся на уровне параграфа (10 графов):
   G3_discourse            — discourse-роли v2 (result/method/conclusion/...) +
                             connectors (Transition) + digest.discourse_role
   G4_argument             — хрия (Toulmin): thesis→ConclusionRef, cause→WarrantRef,
@@ -15,6 +15,13 @@
                             SUPPORTS по links.object_to_claim, ScopeRef по digest
   G6_artifact_symbol      — числа→Quantity→HAS_UNIT→Unit, химия/стали→Formula,
                             термины/аббревиатуры→Term/DEFINES
+  G7_citation_provenance  — TD-083: citations→CitationMarker, artifact_refs→
+                            ArtifactRef, claims→ClaimRef; CITES/EXTRACTED_FROM/
+                            SUPPORTED_BY по span-перекрытию
+  G8_policy_constraint    — policy-сигнал в тексте + реальный policy-файл в
+                            config/ → Policy-нода + APPLIES_TO→ClaimRef
+  G9_revision_dependency  — revisions/draft_log/editions → RevisionRef,
+                            SUPERSEDES (последовательные), GENERATED_FROM→ClaimRef
   G13_linguistic_structure— DocumentSpan→Sentence→Clause→Token (HEAD_OF)
   G14_cohesion_information_flow — links.claim_to_digest (Theme/Rheme,
                             THEME_TO_RHEME) + повторяющиеся объекты между claims
@@ -23,8 +30,9 @@
   G15_pragmatic_rhetorical— digest.discourse_role + хрия (CommunicativeAct/
                             DiscourseRelation/RhetoricalMove/Presupposition)
 
-Skipped на уровне параграфа (причины в "skipped"): G1, G2, G7, G8, G9, G10,
-G11, G12, G16. G10_vocabulary отсутствует в реестре v0.3 (есть G10_execution).
+Skipped на уровне параграфа (причины в "skipped"): G1, G2, G10, G11, G12, G16
+(+ G7/G8/G9, когда builder вернул None — нет данных в артефакте параграфа).
+G10_vocabulary отсутствует в реестре v0.3 (есть G10_execution).
 
 Принцип grounded: связи строятся ТОЛЬКО по links артефакта либо по явным
 span-совпадениям (вхождение raw объекта в span claim / позиции в тексте).
@@ -755,6 +763,420 @@ def _build_g6(art: dict, reg: dict) -> _GraphAcc | None:
     return acc
 
 
+def _span_list(start: Any, end: Any) -> list[int] | None:
+    """[start, end] из координат | None (если не int-пары)."""
+    if isinstance(start, int) and isinstance(end, int):
+        return [start, end]
+    return None
+
+
+def _spans_overlap(a: list | None, b: list | None) -> bool:
+    """Перекрытие двух span [s,e] (строгое: общая точка с положительной длиной)."""
+    if not a or not b or len(a) < 2 or len(b) < 2:
+        return False
+    if not all(isinstance(x, int) for x in (*a[:2], *b[:2])):
+        return False
+    return a[0] < b[1] and b[0] < a[1]
+
+
+def _build_g7(art: dict, reg: dict) -> _GraphAcc | None:
+    """G7_citation_provenance: CitationMarker/ArtifactRef/ClaimRef/EvidenceRef.
+
+    Источники данных (TD-083 в hybrid_extract):
+      art["citations"]     — [{"text", "url", "span": [start, end]}] — каждая
+                             markdown-ссылка [Text](url) параграфа;
+      art["artifact_refs"] — [{"path", "span": [start, end]}] — только ссылки
+                             на пути репозитория (docs/..., *.py, *.md, config/...);
+      art["claims"]        — v2 claims (text/start/end/qa_status/evidence/source_id).
+
+    Построение (grounded, только по span-перекрытию):
+      ClaimRef CITES → CitationMarker          (span citation ∩ span claim)
+      ClaimRef EXTRACTED_FROM → ArtifactRef    (span artifact_ref ∩ span claim)
+      ClaimRef SUPPORTED_BY → EvidenceRef      (claim.evidence / claim.source_id)
+
+    ГРАФ СТРОИТСЯ ТОЛЬКО при наличии citation-маркеров ИЛИ ссылок на артефакты
+    (citations/artifact_refs). Если есть ТОЛЬКО claims — возвращает None (граф
+    skipped): ClaimRef-ноды добавляются как дополнение к citation-следу, но не
+    сами по себе (T8). Если claims пуст, но есть citations/artifact_refs — ноды
+    CitationMarker/ArtifactRef строятся (граф НЕ пуст, не skipped).
+    """
+    citations = art.get("citations") or []
+    artifact_refs = art.get("artifact_refs") or []
+    if not citations and not artifact_refs:
+        return None  # T8: без citation-следа G7 не строится (даже с claims)
+    claims = art.get("claims") or []
+    acc = _GraphAcc("G7_citation_provenance", reg)
+    para_id = art.get("paragraph_id", "")
+    acc.set_para(para_id)
+    page = art.get("page")
+
+    # CitationMarker/ArtifactRef — всегда, если есть (даже без claims)
+    citation_ids: list[tuple[list | None, str]] = []  # (span, node_id)
+    for c in citations:
+        span = c.get("span")
+        cid = acc.add_node(
+            "CitationMarker",
+            {"text": c.get("text", "")[:200], "url": c.get("url", ""),
+             "span": span}, para_id)
+        citation_ids.append((span, cid))
+
+    artifact_ids: list[tuple[list | None, str]] = []
+    for a in artifact_refs:
+        span = a.get("span")
+        aid = acc.add_node(
+            "ArtifactRef",
+            {"path": a.get("path", "")[:200], "span": span}, para_id)
+        artifact_ids.append((span, aid))
+
+    # ClaimRef + рёбра
+    for ci, c in enumerate(claims):
+        cspan = _span_list(c.get("start"), c.get("end"))
+        cid = acc.add_node(
+            "ClaimRef",
+            {"text": c.get("text", "")[:200], "claim": ci,
+             "span": cspan, "qa_status": c.get("qa_status", "PROPOSED")},
+            para_id)
+        for span, mark_id in citation_ids:
+            if _spans_overlap(span, cspan):
+                acc.add_edge(cid, mark_id, "CITES", para=para_id)
+        for span, ref_id in artifact_ids:
+            if _spans_overlap(span, cspan):
+                acc.add_edge(cid, ref_id, "EXTRACTED_FROM", para=para_id)
+        # evidence/source_id -> EvidenceRef + SUPPORTED_BY
+        ev = c.get("evidence")
+        src = c.get("source_id")
+        if ev or src:
+            raw = ""
+            if isinstance(ev, dict):
+                raw = str(ev.get("raw") or ev.get("text")
+                          or ev.get("source") or "")[:200]
+            elif ev:
+                raw = str(ev)[:200]
+            epid = acc.add_node(
+                "EvidenceRef",
+                {"raw": raw, "source_id": str(src) if src else None,
+                 "claim": ci,
+                 **_span_props(c.get("start"), c.get("end"), page)}, para_id)
+            acc.add_edge(cid, epid, "SUPPORTED_BY", para=para_id)
+    return acc
+
+
+# Политика параграфа -> policy-файл репозитория -> тип узла реестра G8.
+# Детерминированная таблица (документируется в docstring _build_g8):
+#   сигналы  -> (policy-файл в config/, тип узла реестра G8)
+# Каждый сигнал помечен типом контекста: "ru" (русский маркер — достаточно
+# word-boundary), "lat" (латинский — требуется русский маркер-сосед ИЛИ
+# не-code-контекст, см. R1).
+_POLICY_SIGNALS: list[tuple[tuple[str, str], tuple[str, str]]] = [
+    (("guard", "lat"), ("guard_policy.json", "GlobalPolicy")),
+    (("блокиров", "ru"), ("guard_policy.json", "GlobalPolicy")),
+    (("policy", "lat"), ("route_resolution_policy.json", "DomainPolicy")),
+    (("route", "lat"), ("route_resolution_policy.json", "DomainPolicy")),
+    (("rout", "lat"), ("route_resolution_policy.json", "DomainPolicy")),
+    (("не должен", "ru"), ("factory_gate_policy.json", "ReviewPolicy")),
+    (("нельзя", "ru"), ("factory_gate_policy.json", "ReviewPolicy")),
+    (("запрещ", "ru"), ("factory_gate_policy.json", "ReviewPolicy")),
+    (("запрет", "ru"), ("factory_gate_policy.json", "ReviewPolicy")),
+    (("must not", "lat"), ("factory_gate_policy.json", "ReviewPolicy")),
+    (("риск", "ru"), ("job_runtime_policy.json", "RiskPolicy")),
+    (("risk", "lat"), ("job_runtime_policy.json", "RiskPolicy")),
+]
+
+# Русские маркеры-соседи: их наличие рядом с латинским сигналом (в пределах
+# окна) разрешает срабатывание латинского сигнала вне code-блоков (R1).
+# ВАЖНО (R1-критический): маркеры — ТОЛЬКО русские слова/фразы. Латинские
+# сигналы (guard/policy/route/risk/must not/block) НЕ входят в этот список —
+# лат-сигнал не может быть своим же русским подтверждением
+# ('action = guard(percept)' не должен самоподтверждаться через 'guard').
+_RU_POLICY_MARKERS = ("политик", "правил", "запрещ", "запрет", "не должен",
+                      "нельзя", "риск", "блокиров", "безопасн", "огранич",
+                      "требовани", "обязан", "контрол", "норматив", "стандарт")
+
+# Латинские сигналы (из _POLICY_SIGNALS) — для детерминированного исключения
+# пересечения с _RU_POLICY_MARKERS: лат-сигнал никогда не считается своим
+# русским подтверждением.
+_LATIN_POLICY_SIGNALS = frozenset(
+    sig for (sig, kind), _ in _POLICY_SIGNALS if kind == "lat")
+
+_FENCE_RE = re.compile(r"```")
+# Окно контекста вокруг латинского сигнала (символов) для русского маркера.
+_RU_CONTEXT_WINDOW = 80
+
+# Полный реестр policy-файлов -> типы G8 (для docstring и проверки существования).
+_POLICY_FILES_TO_TYPES: dict[str, str] = {
+    "guard_policy.json": "GlobalPolicy",
+    "route_resolution_policy.json": "DomainPolicy",
+    "factory_gate_policy.json": "ReviewPolicy",
+    "job_runtime_policy.json": "RiskPolicy",
+    "memory_l1_policy.json": "GlobalPolicy",
+    "memory_l2_policy.json": "GlobalPolicy",
+    "memory_l3_policy.json": "GlobalPolicy",
+    "skill_capsule_policy.json": "GlobalPolicy",
+    "tool_capsule_policy.json": "GlobalPolicy",
+    "mcp_capsule_policy.json": "GlobalPolicy",
+    "runtime_integration_policy.json": "GlobalPolicy",
+    "artifact_provenance_policy.json": "GlobalPolicy",
+    "host_integration_policy.json": "GlobalPolicy",
+}
+
+
+def _repo_config_dir() -> str | None:
+    """Каталог config/ репозитория (реальные policy-файлы) | None.
+
+    Порядок: env OPENCODE_HARNESS_ROOT -> корень пакета writer-core
+    (scripts/writer-core/../../config). Возвращает путь ТОЛЬКО если каталог
+    существует и содержит хотя бы один policy-файл из _POLICY_FILES_TO_TYPES.
+    """
+    here = os.path.dirname(os.path.abspath(__file__))
+    candidates = []
+    env_root = os.environ.get("OPENCODE_HARNESS_ROOT")
+    if env_root:
+        candidates.append(os.path.join(env_root, "config"))
+    candidates.append(os.path.normpath(os.path.join(here, "..", "..", "config")))
+    for cfg in candidates:
+        if os.path.isdir(cfg) and any(
+                os.path.isfile(os.path.join(cfg, fn)) for fn in _POLICY_FILES_TO_TYPES):
+            return cfg
+    return None
+
+
+def _in_fence_block(text: str, pos: int) -> bool:
+    """Сигнал на позиции pos внутри fenced code-блока ```...``` (R1).
+
+    Детерминированный скан: чётные открывающие ``` -> блок, нечётные ->
+    закрывающие. Позиция внутри [open, close) считается code-контекстом.
+    """
+    fences = [m.start() for m in _FENCE_RE.finditer(text)]
+    for i in range(0, len(fences) - 1, 2):
+        if fences[i] <= pos < fences[i + 1]:
+            return True
+    return False
+
+
+def _ru_context_ok(text: str, pos: int, window: int = _RU_CONTEXT_WINDOW) -> bool:
+    """Русский маркер-сосед политики в окне вокруг позиции (R1).
+
+    Для латинских сигналов (policy/route/risk/guard/block) требуем русский
+    контекст ('политик', 'правил', 'запрещ', 'не должен', 'блокиров', 'риск',
+    'безопасн' и т.п.) в пределах window символов до/после — иначе сигнал
+    считается кодом/именем идентификатора и отбрасывается.
+
+    АНТИ-САМОПОДТВЕРЖДЕНИЕ (R1-критический): латинские сигналы из
+    _LATIN_POLICY_SIGNALS явно исключаются из проверки — 'guard' в окне НЕ
+    подтверждает сигнал 'guard' (это тот же латинский идентификатор, не русский
+    маркер). Только НАСТОЯЩИЕ русские слова/фразы из _RU_POLICY_MARKERS дают
+    подтверждение.
+    """
+    lo = max(0, pos - window)
+    hi = min(len(text), pos + window)
+    ctx = text[lo:hi].lower()
+    for marker in _RU_POLICY_MARKERS:
+        if marker in ctx:
+            return True
+    return False
+
+
+def _build_g8(art: dict, reg: dict) -> _GraphAcc | None:
+    """G8_policy_constraint: Policy-ноды + APPLIES_TO между ними.
+
+    КОНСТРУКТИВНОЕ ОГРАНИЧЕНИЕ реестра v0.3: G8_policy_constraint НЕ содержит
+    ClaimRef в node_types (только GlobalPolicy/GenrePolicy/DomainPolicy/RiskPolicy/
+    AudiencePolicy/InstitutionPolicy/JournalPolicy/LanguagePolicy/StylePolicy/
+    NumericPolicy/CitationPolicy/ReviewPolicy/LocalOverride), а edge_types —
+    EXTENDS/OVERRIDES/CONFLICTS_WITH/APPLIES_TO. Поэтому правило «Policy APPLIES_TO
+    ClaimRef» из первоначального контракта НЕ реализуемо без нарушения реестра —
+    реализовано как «Policy APPLIES_TO Policy» (rule_resolution между активными
+    политиками параграфа). Это решение задокументировано: типы строго из реестра.
+
+    АНТИ-ЛОЖНЫЙ-ПОЗИТИВ (R1): латинские сигналы (policy/route/risk/guard/block)
+    НЕ матчатся внутри fenced code-блоков (```...```) и требуют русский
+    маркер-сосед в окне (_RU_POLICY_MARKERS, _RU_CONTEXT_WINDOW=80 символов).
+    Пример: 'action = policy(percept)' без русского контекста -> G8 skipped.
+    АНТИ-САМОПОДТВЕРЖДЕНИЕ (R1-критический): латинский сигнал НЕ может быть
+    своим же русским подтверждением — 'guard' исключён из _RU_POLICY_MARKERS,
+    и _ru_context_ok проверяет только настоящие русские слова. Пример:
+    'action = guard(percept)' без русского контекста -> G8 skipped;
+    'запрещено вызывать guard()' (русский маркер 'запрещено') -> G8 built.
+
+    Консервативно и детерминированно:
+      УСЛОВИЯ построения (оба):
+        1) в config/ репозитория есть РЕАЛЬНЫЙ policy-файл из реестра
+           _POLICY_FILES_TO_TYPES;
+        2) в тексте параграфа найден валидный сигнал политики (русский маркер
+           ИЛИ латинский с русским соседом вне code-блока).
+
+      Маппинг сигнал -> policy-файл -> тип узла (таблица _POLICY_SIGNALS):
+        guard/блокиров            -> guard_policy.json            -> GlobalPolicy
+        policy/route/rout         -> route_resolution_policy.json -> DomainPolicy
+        не должен/нельзя/запрещ/запрет/must not -> factory_gate_policy.json
+                                                              -> ReviewPolicy
+        риск/risk                 -> job_runtime_policy.json      -> RiskPolicy
+
+      Построение: для КАЖДОГО совпавшего сигнала — одна Policy-нода
+      (policy_file/policy_id/signal/span). Если совпало >= 2 сигналов — между
+      соответствующими Policy-нодами ребро APPLIES_TO (rule_resolution). Одна
+      Policy-нода без рёбер — граф всё равно НЕ пуст (не skipped).
+
+      Если сигнал не найден ИЛИ ни один policy-файл из таблицы не существует в
+      config/ -> return None (граф честно skipped). Типы НЕ выдумываются —
+      используются строго из реестра G8_policy_constraint.
+    """
+    text = art.get("text") or ""
+    cfg = _repo_config_dir()
+    if not cfg:
+        return None  # нет реального policy-файла в config/ — не фабрикуем
+    # собрать ВСЕ совпавшие сигналы (порядок таблицы детерминирован)
+    hits: list[tuple[str, str, str, list[int]]] = []  # (signal, file, type, span)
+    for (sig, ctx_kind), (fname, ntype) in _POLICY_SIGNALS:
+        if not os.path.isfile(os.path.join(cfg, fname)):
+            continue  # файла нет — правило не применимо
+        sp = _find_span(sig, text)
+        if not sp:
+            continue
+        pos = sp[0]
+        # R1: латинский сигнал в code-блоке ИЛИ без русского соседа — пропуск
+        if ctx_kind == "lat":
+            if _in_fence_block(text, pos):
+                continue
+            if not _ru_context_ok(text, pos):
+                continue
+        hits.append((sig, fname, ntype, sp))
+    if not hits:
+        return None  # сигнала нет в тексте — честно skipped
+    acc = _GraphAcc("G8_policy_constraint", reg)
+    para_id = art.get("paragraph_id", "")
+    acc.set_para(para_id)
+
+    # policy_id из реального файла (если есть), иначе имя файла
+    def _policy_id(fname: str) -> str:
+        try:
+            with open(os.path.join(cfg, fname), encoding="utf-8") as fh:
+                data = json.load(fh)
+            if isinstance(data, dict):
+                return str(data.get("policy_id") or data.get("id") or fname)
+        except Exception:  # pragma: no cover — JSON не читается: имя файла
+            pass
+        return fname
+
+    node_by_type: dict[str, str] = {}
+    for sig, fname, ntype, span in hits:
+        if ntype not in node_by_type:
+            pid = acc.add_node(
+                ntype,
+                {"policy_file": fname, "policy_id": _policy_id(fname),
+                 "signal": sig, "span": span}, para_id)
+            node_by_type[ntype] = pid
+        else:
+            # второй сигнал той же политики: уточняем signal (детерминированно)
+            acc.nodes[-1]["props"]["signal"] = sig
+
+    # rule_resolution: APPLIES_TO между разными активными политиками (по span)
+    types = list(node_by_type)
+    for i in range(len(types)):
+        for j in range(len(types)):
+            if i == j:
+                continue
+            acc.add_edge(node_by_type[types[i]], node_by_type[types[j]],
+                         "APPLIES_TO", para=para_id)
+    return acc
+
+
+def _collect_revisions(art: dict) -> list[dict]:
+    """Revision-записи из артефакта: revisions | draft_log | edictions.
+
+    Поддерживает:
+      art["revisions"] — list[dict {id, date, status, ...}] | dict{"revisions": [...]}
+      art["draft_log"] — list[dict {id, source_path, added_claims, date}]
+      art["editions"]  — list[dict {id, date, status, ...}]
+    """
+    raw = art.get("revisions")
+    if isinstance(raw, dict) and isinstance(raw.get("revisions"), list):
+        raw = raw["revisions"]
+    if not isinstance(raw, list):
+        raw = art.get("draft_log")
+    if not isinstance(raw, list):
+        raw = art.get("editions")
+    if not isinstance(raw, list):
+        return []
+    return [r for r in raw if isinstance(r, dict)]
+
+
+def _build_g9(art: dict, reg: dict) -> _GraphAcc | None:
+    """G9_revision_dependency: RevisionRef + SUPERSEDES/GENERATED_FROM.
+
+    Источник: art["revisions"] | art["draft_log"] | art["editions"]
+    (см. _collect_revisions; в DOM-шаблоне это draft_log — добавленные черновики).
+
+    Построение:
+      RevisionRef {id, date, status} — по каждой revision-записи;
+      SUPERSEDES — между последовательными записями списка (v1 -> v2 -> ...);
+      GENERATED_FROM — от RevisionRef к ClaimRef, если запись ссылается на claims
+      (added_claims / claims / claim_refs: по id claim или индексу в art["claims"]).
+
+    Если revision-данных в артефакте НЕТ -> return None (граф честно skipped).
+    """
+    revisions = _collect_revisions(art)
+    if not revisions:
+        return None
+    acc = _GraphAcc("G9_revision_dependency", reg)
+    para_id = art.get("paragraph_id", "")
+    acc.set_para(para_id)
+    page = art.get("page")
+    claims = art.get("claims") or []
+
+    claim_by_id: dict[Any, int] = {}
+    for ci, c in enumerate(claims):
+        cid_ = c.get("claim_id") or c.get("id")
+        if cid_ is not None:
+            claim_by_id[cid_] = ci
+
+    rev_ids: list[str] = []
+    # R2: кэш ClaimRef по (claim index) -> node_id — одна нода на claim,
+    # GENERATED_FROM от всех revisions идёт к общей ноде.
+    claimref_by_idx: dict[int, str] = {}
+    for r in revisions:
+        rid = str(r.get("id") or r.get("revision_id") or
+                  f"rev_{len(rev_ids):03d}")
+        rid = acc.add_node(
+            "RevisionRef",
+            {"id": rid, "date": r.get("date"), "status": r.get("status"),
+             "kind": r.get("kind") or r.get("revision_kind"),
+             **_span_props(r.get("start"), r.get("end"), page)}, para_id)
+        rev_ids.append(rid)
+        # GENERATED_FROM: revision породила claims
+        refs = r.get("added_claims")
+        if not isinstance(refs, list):
+            refs = r.get("claims")
+        if not isinstance(refs, list):
+            refs = r.get("claim_refs")
+        if isinstance(refs, list):
+            for ref in refs:
+                ci = None
+                if isinstance(ref, dict):
+                    ref = ref.get("id") or ref.get("claim_id") or ref.get("claim")
+                if isinstance(ref, int) and 0 <= ref < len(claims):
+                    ci = ref
+                elif ref in claim_by_id:
+                    ci = claim_by_id[ref]
+                if ci is not None:
+                    if ci not in claimref_by_idx:
+                        cid = acc.add_node(
+                            "ClaimRef",
+                            {"text": claims[ci].get("text", "")[:200],
+                             "claim": ci,
+                             "span": _span_list(claims[ci].get("start"),
+                                                claims[ci].get("end"))},
+                            para_id)
+                        claimref_by_idx[ci] = cid
+                    acc.add_edge(rid, claimref_by_idx[ci], "GENERATED_FROM",
+                                 para=para_id)
+
+    # SUPERSEDES: последовательные версии
+    for a, b in zip(rev_ids, rev_ids[1:]):
+        acc.add_edge(a, b, "SUPERSEDES", para=para_id)
+    return acc
+
+
 # --------------------------------------------------------------------------
 # сборка
 # --------------------------------------------------------------------------
@@ -764,18 +1186,24 @@ _BUILDERS = {
     "G4_argument": _build_g4,
     "G5_epistemic_projection": _build_g5,
     "G6_artifact_symbol": _build_g6,
+    "G7_citation_provenance": _build_g7,
+    "G8_policy_constraint": _build_g8,
+    "G9_revision_dependency": _build_g9,
     "G13_linguistic_structure": _build_g13,
     "G14_cohesion_information_flow": _build_g14,
     "G15_pragmatic_rhetorical": _build_g15,
 }
 
-# Графы реестра, не строящиеся из параграфного артефакта (причины).
+# Графы реестра, не построенные из параграфного артефакта (причины).
+# Записи G7/G8/G9 оставлены намеренно: build_paragraph_graphs собирает skipped
+# из _SKIPPED_REASONS для графов, которых НЕТ в graphs — когда builder вернул
+# None (нет данных), запись срабатывает как честная fallback-причина.
 _SKIPPED_REASONS = {
     "G1_document_structure": "doc-level: paragraph artifact не содержит дерева документа",
     "G2_writing_decomposition": "planning-level: нет WritingObjective/Goal в артефакте параграфа",
-    "G7_citation_provenance": "нет citation-маркеров (CitationMarker/ArtifactRef) в гибридном артефакте",
-    "G8_policy_constraint": "static policy registry: нет политик в артефакте параграфа",
-    "G9_revision_dependency": "нет revision/review данных на уровне параграфа",
+    "G7_citation_provenance": "нет citation-маркеров/ссылок (citations/artifact_refs) и claims в параграфе",
+    "G8_policy_constraint": "нет policy-сигнала в тексте параграфа либо нет policy-файла в config/",
+    "G9_revision_dependency": "нет revision-данных (revisions/draft_log/editions) в артефакте",
     "G10_execution": "event log: нет Run/Operation данных в артефакте",
     "G10_vocabulary": "отсутствует в реестре v0.3 (реестр определяет G10_execution); Term/Definition строятся в G6_artifact_symbol",
     "G11_forensics_fingerprint": "корпус/автор-уровень: нет AuthorProfile/verdict в артефакте параграфа",

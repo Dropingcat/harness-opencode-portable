@@ -280,6 +280,108 @@ def _claims_in_sentence(claims: list[dict], sent_idx: int) -> list[dict]:
     return out
 
 
+# -------------------------------------------------------------------------
+# TD-083: citation-маркеры и ссылки на артефакты репозитория
+# -------------------------------------------------------------------------
+
+_MD_LINK_RE = re.compile(r"\[([^\]]+)\]\(([^)\s]*)\)")
+# Путь репозитория: относительный docs/..., скрипт/исходник *.py, документ *.md,
+# либо config/... — всё, что НЕ является внешним http(s) URL или якорем (#...).
+_REPO_ARTIFACT_RE = re.compile(
+    r"^(?:\./|\.\./)?"
+    r"(?:(?:docs|scripts?|config|templates?|sources?|references?|artifacts?|guard|skills?|tests?|mcp|plugins?|compatibility)/|"
+    r"[A-Za-zА-Яа-яЁё0-9_\-]+/)*"
+    r"[A-Za-zА-Яа-яЁё0-9_\-\. ()]+"
+    r"\.(?:py|md|json|yaml|yml|txt|csv|docx?|pdf|xlsx?|ts|js|ps1|sh|bat|sql|db|yaml\.example)$"
+)
+_EXTERNAL_URL_RE = re.compile(r"^(?:https?|ftp|file|mailto):", re.IGNORECASE)
+
+
+def _extract_md_links(text: str) -> list[dict]:
+    """Markdown-ссылки `[Text](url)` -> [{"text", "url", "span": [start, end]}].
+
+    span — координаты ВСЕЙ ссылки `[Text](url)` в исходном тексте параграфа
+    (start от '[' до закрывающей ')').
+
+    URL-часть поддерживает вложенные скобки (R4): `[x](https://a/(b))` даёт
+    url='https://a/(b)'. Первичный regex `[^)\s]*` останавливается на первой
+    ')'; затем балансируем скобки depth-сканированием от открывающей '(' ссылки
+    (depth=1): url заканчивается на ')' при depth==0. Это CommonMark-поведение.
+
+    ОБРЕЗКА ПО ГРАНИЦЕ (R1-minor): если скобки НЕ сбалансированы до конца
+    текста ('[x](https://a/(b)' без закрывающей ')'), span НЕ выходит за
+    len(text): end = min(i+1, len(text)); url обрезается до конца текста.
+    """
+    out: list[dict] = []
+    for m in _MD_LINK_RE.finditer(text):
+        url = m.group(2)
+        end = m.end()
+        if url.count("(") > url.count(")"):
+            # вложенные скобки: досканировать до баланса depth (CommonMark)
+            depth = 1  # открывающая '(' ссылки уже потреблена
+            i = m.start(2)
+            while i < len(text):
+                ch = text[i]
+                if ch == "(":
+                    depth += 1
+                elif ch == ")":
+                    depth -= 1
+                    if depth == 0:
+                        break
+                i += 1
+            if depth == 0:
+                end = i + 1  # после закрывающей ')' ссылки
+                url = text[m.start(2):i]
+            else:
+                # несбалансировано: закрывающая ')' ссылки не найдена.
+                # url — до конца (без финальной ')' — она не часть url),
+                # span не выходит за len(text).
+                end = len(text)
+                url = text[m.start(2):i]
+                if url.endswith(")"):
+                    url = url[:-1]
+        out.append({"text": m.group(1), "url": url,
+                    "span": [m.start(), end]})
+    return out
+
+
+def _is_repo_path(url: str) -> bool:
+    """Путь репозитория vs внешний URL/якорь.
+
+    Внешние http(s)/file/ftp/mailto и внутридокументные якоря (#...) НЕ
+    считаются путями репозитория. Остальное — кандидат: относительный путь
+    в репозитории, заканчивающийся расширением файла (*.py/*.md/...).
+    """
+    u = (url or "").strip()
+    if not u:
+        return False
+    if _EXTERNAL_URL_RE.match(u):
+        return False
+    if u.startswith("#"):
+        return False
+    return bool(_REPO_ARTIFACT_RE.match(u))
+
+
+def _extract_citation_markers(text: str) -> tuple[list[dict], list[dict]]:
+    """TD-083: citation-маркеры из markdown-ссылок параграфа.
+
+    Returns (citations, artifact_refs):
+      citations   — [{"text", "url", "span": [start, end]}] — КАЖДАЯ ссылка
+      artifact_refs — [{"path", "span": [start, end]}] — только для ссылок на
+                      пути репозитория (docs/..., *.py, *.md, config/...).
+    """
+    citations: list[dict] = []
+    artifact_refs: list[dict] = []
+    for link in _extract_md_links(text):
+        span = link["span"]
+        citations.append({"text": link["text"], "url": link["url"],
+                          "span": [span[0], span[1]]})
+        if _is_repo_path(link["url"]):
+            artifact_refs.append({"path": link["url"],
+                                  "span": [span[0], span[1]]})
+    return citations, artifact_refs
+
+
 def _link_objects_to_claims(objects: list[dict], claims: list[dict]) -> list[dict]:
     """Объект связан с claim, если:
       - его raw-строка содержится в ПОЛНОМ тексте claim (raw_span, не 120 симв.),
@@ -322,6 +424,12 @@ def hybrid_extract_paragraph(text: str, para_id: str, page: int | None = None) -
       sentences — razdel-предложения с индексами, координатами и токенами
       links     — claim_to_digest ([{claim,sentence,overlap}]) /
                    object_to_claim ([{object,claim}]) — формат graph-моста
+      citations — TD-083: markdown-ссылки [Text](url) ->
+                   [{"text", "url", "span": [start, end]}]
+      artifact_refs — TD-083: только ссылки на пути репозитория (docs/...,
+                   *.py, *.md, config/...) -> [{"path", "span": [start, end]}]
+      source_links — TD-083: полный список markdown-ссылок (НЕЗАВИСИМАЯ КОПИЯ
+                   citations — list(citations), не алиас; R5)
     """
     text = (text or "").strip()
     artifact: dict = {
@@ -335,6 +443,9 @@ def hybrid_extract_paragraph(text: str, para_id: str, page: int | None = None) -
         "digest": {},
         "sentences": [],
         "links": {"claim_to_digest": [], "object_to_claim": []},
+        "citations": [],
+        "artifact_refs": [],
+        "source_links": [],
     }
     if not text:
         return artifact
@@ -369,6 +480,9 @@ def hybrid_extract_paragraph(text: str, para_id: str, page: int | None = None) -
         "object_to_claim": _link_objects_to_claims(objects, claims),
     }
 
+    # ---- TD-083: citation-маркеры из markdown-ссылок ----
+    citations, artifact_refs = _extract_citation_markers(text)
+
     artifact.update({
         "claims": claims,
         "objects": objects,
@@ -377,6 +491,9 @@ def hybrid_extract_paragraph(text: str, para_id: str, page: int | None = None) -
         "digest": digest,
         "sentences": sentences,
         "links": links,
+        "citations": citations,
+        "artifact_refs": artifact_refs,
+        "source_links": list(citations),
     })
     return artifact
 
