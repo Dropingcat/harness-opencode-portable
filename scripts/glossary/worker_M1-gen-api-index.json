@@ -1,0 +1,19 @@
+{
+  "module": "M1-gen-api-index",
+  "code": "E:\\Documents\\Документы\\doc_Opencode_agern-new\\scripts\\glossary\\gen_api_index.py",
+  "description": "AST-генератор реестра функций harness; stdlib-only (ast, argparse, json, pathlib); детерминированный парсинг без импорта/исполнения модулей; JSON-индекс по контурам + плоский index по имени функции/класса/метода.",
+  "notes": [
+    "Сканирует только scope: scripts/**, packages/**, references/global-kanban/**, guard/src/** (если есть), mcp/** (если есть), tests/** (только при --include-tests).",
+    "Всегда исключает: .venv, __pycache__, node_modules, site-packages, патчи, архив, бэкап/backup, copy, копия, server2-corpus, opencode-current, doc_Opencode_agern, HARNESS-WRITER, researcher_r4, opencode_harness.7z, .slim, audit_graph, run/, artifacts/; файлы test_*, *_test.py, tests.py.",
+    "Контуры: первая папка после scripts/ (code-factory, researcher, writer-core, router, memory, orchestration, capsules, research, jobs, remote_acceptance, writer, writer_core_handoff и т.д.); packages/opencode-harness-plugin/* -> plugin; references/global-kanban/* -> kanban; guard/src/* -> guard; mcp/* -> mcp; tests/* -> tests.",
+    "Публичность: не '_' ИЛИ декоратор @api/@export/@public ИЛИ имя в __all__ модуля. Методы классов: все публичные; _private только при декораторе/@all__.",
+    "Сигнатуры аннотированы текстом через ast.unparse (без импорта типов); docstring обрезан до первой строки / 120 символов.",
+    "Запуск: python scripts/glossary/gen_api_index.py --root <дерево> --out <out.json> --label workspace [--include-tests]. По умолчанию out=<root>/docs/glossary/function_index.json.",
+    "Импортируемая точка входа: scan_tree(root, label='workspace', include_tests=False) -> dict.",
+    "Проверено: python -m py_compile OK; smoke-тест на временном дереве в C:\\Temp\\opencode\\m1_smoke: JSON валиден, counts (modules=6, functions=7, classes=2, methods=3), index содержит функции и классы, контуры все корректны, исключения работают. На большом дереве не запускался (по контракту).",
+    "Нераспарсиваемые модули (SyntaxError) пропускаются детерминированно; читаются только utf-8 файлы."
+  ],
+  "files": [
+    "scripts/glossary/gen_api_index.py"
+  ]
+}
