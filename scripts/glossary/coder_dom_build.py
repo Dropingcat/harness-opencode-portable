@@ -102,7 +102,8 @@ def build_coder_dom(root: str | Path, include_tests: bool = False) -> dict[str, 
             funcs = []
             for fn in mod["functions"]:
                 qname = f"{mod['path']}:{fn['name']}"
-                fid = f"F-{abs(hash(qname)) % 100000:05d}"
+                # Deterministic F-ID (stable across processes; Python hash() is randomized).
+                fid = "F-" + hashlib.sha256(qname.encode("utf-8")).hexdigest()[:5].upper()
                 owner = ownership.get(qname, default_owner)
                 funcs.append({
                     "id": fid,
@@ -127,6 +128,7 @@ def build_coder_dom(root: str | Path, include_tests: bool = False) -> dict[str, 
         "structure": structure,
         "g_call": g_call,
         "stubs": stubs["counts"],
+        "ownership": sorted(ownership_assignments, key=lambda x: x["function"]),
     }
     fingerprint = hashlib.sha256(
         json.dumps(fp_source, ensure_ascii=False, sort_keys=True).encode("utf-8")
@@ -142,7 +144,8 @@ def build_coder_dom(root: str | Path, include_tests: bool = False) -> dict[str, 
             "G-import": {"node_types": ["module"], "edge_types": ["IMPORTS"], "edges": []},
             "G-stub": {"node_types": ["function"], "edge_types": ["STUB", "INTERFACE"],
                        "counts": stubs["counts"]},
-            "G-ownership": {"node_types": ["function"], "edge_types": ["OWNED_BY"]},
+            "G-ownership": {"node_types": ["function"], "edge_types": ["OWNED_BY"],
+                            "assignments": sorted(ownership_assignments, key=lambda x: x["function"])},
         },
         "counts": {
             "functions": registry["meta"]["counts"]["functions"],
@@ -150,6 +153,7 @@ def build_coder_dom(root: str | Path, include_tests: bool = False) -> dict[str, 
             "call_edges": len(g_call),
             "stubs": stubs["counts"]["stubs"],
             "interfaces": stubs["counts"]["interfaces"],
+            "ownership": len(ownership_assignments),
         },
         "generated_at": None,  # excluded from fingerprint (FASTEN pattern)
         "fingerprint": f"sha256:{fingerprint}",
