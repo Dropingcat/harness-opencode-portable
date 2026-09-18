@@ -2,11 +2,11 @@
   "meta": {
     "label": "portable",
     "root": "E:\\opencode_harness_portable",
-    "generated_at": "2026-09-18T11:50:22Z",
+    "generated_at": "2026-09-18T12:48:25Z",
     "python": "3.11",
     "counts": {
-      "modules": 157,
-      "functions": 637,
+      "modules": 159,
+      "functions": 639,
       "classes": 364,
       "methods": 174
     }
@@ -467,6 +467,20 @@
       "display": "Glossary",
       "modules": [
         {
+          "path": "scripts/glossary/call_graph.py",
+          "functions": [
+            {
+              "name": "scan_call_graph",
+              "kind": "function",
+              "signature": "def scan_call_graph(root: str | Path, include_tests: bool = False) -> dict[str, Any]",
+              "doc": "Return {nodes: {qname: {...}}, edges: [{src, dst, confidence}]}.",
+              "decorators": [],
+              "line": 92
+            }
+          ],
+          "classes": []
+        },
+        {
           "path": "scripts/glossary/compare_trees.py",
           "functions": [
             {
@@ -544,6 +558,20 @@
               "doc": "",
               "decorators": [],
               "line": 130
+            }
+          ],
+          "classes": []
+        },
+        {
+          "path": "scripts/glossary/stub_detect.py",
+          "functions": [
+            {
+              "name": "scan_stubs",
+              "kind": "function",
+              "signature": "def scan_stubs(root: str | Path, include_tests: bool = False) -> dict[str, Any]",
+              "doc": "",
+              "decorators": [],
+              "line": 127
             }
           ],
           "classes": []
@@ -18677,6 +18705,14 @@
         "doc": ""
       }
     ],
+    "scan_call_graph": [
+      {
+        "module": "scripts/glossary/call_graph.py",
+        "contour": "glossary",
+        "signature": "def scan_call_graph(root: str | Path, include_tests: bool = False) -> dict[str, Any]",
+        "doc": "Return {nodes: {qname: {...}}, edges: [{src, dst, confidence}]}."
+      }
+    ],
     "scan_files": [
       {
         "module": "scripts/fix_paths.py",
@@ -18723,6 +18759,14 @@
         "contour": "researcher",
         "signature": "def scan_state(state: Mapping[str, Any], provenance: str = 'untrusted', tool: str = 'webfetch') -> GuardReport",
         "doc": "Scan all string values in a state dict (e.g., EvidenceSpan exact_text)."
+      }
+    ],
+    "scan_stubs": [
+      {
+        "module": "scripts/glossary/stub_detect.py",
+        "contour": "glossary",
+        "signature": "def scan_stubs(root: str | Path, include_tests: bool = False) -> dict[str, Any]",
+        "doc": ""
       }
     ],
     "scan_text": [
