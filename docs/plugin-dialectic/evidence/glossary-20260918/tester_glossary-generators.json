@@ -1,0 +1,32 @@
+{
+  "module": "glossary-generators",
+  "result": "PASS",
+  "passed": 18,
+  "failed": 0,
+  "coverage": 93,
+  "coverage_notes": "coverage 93% (423 stmts / 29 miss) измерен coverage.py поверх in-process API+CLI вызовов всех трёх модулей (scan_tree x2, compute_delta, render_glossary, render_delta, main() x3). Детерминизм (T5) и py_compile (T6) выполняются в подпроцессах и в coverage-замер не входят. Некрытые ветки: include_tests=True, обработка OSError/UnicodeDecodeError/SyntaxError при скане, empty-docstring рендер.",
+  "tests": [
+    {"name": "t1_json_schema_workspace", "status": "pass", "output": "JSON валиден; schema OK; counts={modules:197, functions:748, classes:397, methods:184}"},
+    {"name": "t1_json_schema_portable", "status": "pass", "output": "JSON валиден; schema OK; counts={modules:157, functions:637, classes:364, methods:174}"},
+    {"name": "t2_no_file_contours", "status": "pass", "output": "Контуров-файлов (id с '.py'/'/') нет: []"},
+    {"name": "t2_add_skill_not_a_contour", "status": "pass", "output": "'add_skill.py' отсутствует среди 18 contour id; это модуль внутри контура scripts"},
+    {"name": "t2_scripts_8_top_modules", "status": "pass", "output": "Контур scripts = ровно 8 верхнеуровневых модулей: add_skill, fix_paths, health_check, register_plugin, run_researcher_acceptance, start_mcp_servers, sync_to_live, validate_env"},
+    {"name": "t2_memory_3_modules", "status": "pass", "output": "Контур memory = 3 модуля: collect_l2, memory_bridge, promote_l2_to_l3"},
+    {"name": "t2_researcher_67_modules", "status": "pass", "output": "Контур researcher = 67 модулей, включая 15 модулей r0/* (commands, entities, events, graph, sqlite_store и др.)"},
+    {"name": "t2_contour_mapping_consistent", "status": "pass", "output": "Для всех 197 модулей workspace-индекса _contour_for(path) == фактический contour id (0 расхождений)"},
+    {"name": "t3_present_sync_to_live.py", "status": "pass", "output": "scripts/sync_to_live.py присутствует в индексе"},
+    {"name": "t3_present_dom_builder.py", "status": "pass", "output": "scripts/writer-core/writer_core/dom_builder.py присутствует (не отфильтрован по 'builder')"},
+    {"name": "t3_present_digest_builder.py", "status": "pass", "output": "scripts/writer-core/digest_builder.py присутствует"},
+    {"name": "t3_absent_test_runtime_boundary", "status": "pass", "output": "test_runtime_boundary.py отсутствует в индексе (тесты исключены)"},
+    {"name": "t4_modules_missing_40", "status": "pass", "output": "compute_delta(workspace, portable): modules_missing=40"},
+    {"name": "t4_functions_missing_90", "status": "pass", "output": "functions_missing=90"},
+    {"name": "t4_delta_warnings_section", "status": "pass", "output": "PORTABLE_DELTA.md содержит секцию '## Предупреждения' (13 warnings от compute_delta)"},
+    {"name": "t5_determinism", "status": "pass", "output": "2x прогон gen_api_index --root portable: counts идентичны (157/637/364/174) и структурно равны (без учёта generated_at)"},
+    {"name": "t7_glossary_resolve_router", "status": "pass", "output": "GLOSSARY.md: resolve(...) присутствует в секции Router (resolve_route.resolve, resolve_bundle, resolve_capsules и др.)"},
+    {"name": "t7_glossary_verify_claim_researcher", "status": "pass", "output": "GLOSSARY.md: verify_claim(claim, source_text, policy) в секции researcher (verify_claims.py, строка 167)"}
+  ],
+  "problems": [
+    {"id": "T6", "severity": "info", "finding": "py_compile всех трёх скриптов (gen_api_index.py, compare_trees.py, render_glossary.py) завершился OK — отдельная проверка, прошла без ошибок", "falsification": "py_compile.compile(doraise=True) вернул исключение хотя бы для одного модуля"},
+    {"id": "COV", "severity": "info", "finding": "Покрытие 93%: не покрыты ветки include_tests=True, обработка OSError/UnicodeDecodeError/SyntaxError при чтении/парсинге и пустые docstring-кейсы рендера; детерминизм проверен подпроцессами, не coverage-трейсом", "falsification": "coverage.report() показал процент ниже 93 при тех же прогонах"}
+  ]
+}

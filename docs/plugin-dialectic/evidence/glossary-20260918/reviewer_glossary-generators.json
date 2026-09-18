@@ -1,0 +1,98 @@
+{
+  "module": "glossary-generators",
+  "verdict": "APPROVE",
+  "comments": [
+    {
+      "id": "R1",
+      "severity": "info",
+      "file": "scripts/glossary/gen_api_index.py",
+      "line": "117-142",
+      "problem": "Проверено: _contour_for для плоских scripts/*.py возвращает 'scripts' (len(parts)<3), для подпапок — parts[1]. В свежем function_index.json контуры — папки (capsules, code-factory, glossary, guard, jobs, kanban, mcp, memory, orchestration, plugin, remote_acceptance, research, researcher, router, scripts, writer, writer-core, writer_core_handoff); контура 'add_skill.py' нет. Исправление корректно.",
+      "suggestion": "Без действий.",
+      "falsification": "Замечание опровергалось бы наличием в contours id вида 'add_skill.py' или любого имени файла — не найдено."
+    },
+    {
+      "id": "R2",
+      "severity": "info",
+      "file": "scripts/glossary/gen_api_index.py",
+      "line": "198-232",
+      "problem": "Проверено импортом scan_tree на мини-файле 'def f(a=1, /, b: int = 2)': сигнатура 'def f(a = 1, /, b: int = 2)' без IndexError; offset вычисляется от len(posonlyargs+args)-len(defaults). Воспроизведено.",
+      "suggestion": "Без действий.",
+      "falsification": "Опровергалось бы IndexError/исключением при scan_tree мини-файла с posonly-аргументами — не произошло."
+    },
+    {
+      "id": "R3",
+      "severity": "info",
+      "file": "scripts/glossary/gen_api_index.py",
+      "line": "66-76",
+      "problem": "Проверено: _excluded сравнивает компоненты пути целиком (не substring). sync_to_live.py, dom_builder.py (оба уровня), digest_builder.py, copycat.py (гипотетический) не исключаются; .venv, backup, copy, run, artifacts — исключаются как точные компоненты. В индексе присутствуют scripts/sync_to_live.py (стр. 9690), scripts/writer-core/digest_builder.py, scripts/writer-core/writer_core/dom_builder.py. Исключённых путей в индексе нет.",
+      "suggestion": "Без действий.",
+      "falsification": "Опровергалось бы отсутствием sync_to_live.py/dom_builder.py/digest_builder.py в индексе или наличием путей с .venv/backup/copy/run/artifacts как компонента — не подтвердилось."
+    },
+    {
+      "id": "R4",
+      "severity": "info",
+      "file": "scripts/glossary/gen_api_index.py",
+      "line": "79-80",
+      "problem": "Проверено: _is_test_file('test_runtime_boundary.py')=True → файл пропускается в _iter_py_files; _is_test_file('contest.py')=False, _excluded('scripts/writer-core/tests/contest.py')=False → contest.py не режется. В индексе нет путей tests/ и 'test_runtime_boundary' (grep по JSON: 0 совпадений).",
+      "suggestion": "Без действий.",
+      "falsification": "Опровергалось бы появлением scripts/writer-core/tests/test_runtime_boundary.py в function_index.json — не найдено."
+    },
+    {
+      "id": "R5",
+      "severity": "info",
+      "file": "scripts/glossary/compare_trees.py",
+      "line": "149-155, 208-211",
+      "problem": "Проверено: compute_delta возвращает 'warnings' в корне словаря; render_delta выводит секцию '## Предупреждения'. В PORTABLE_DELTA.md (стр. 193) секция присутствует с 12 предупреждениями.",
+      "suggestion": "Без действий.",
+      "falsification": "Опровергалось бы отсутствием ключа 'warnings' в compute_delta или секции 'Предупреждения' в PORTABLE_DELTA.md — не подтвердилось."
+    },
+    {
+      "id": "R6",
+      "severity": "info",
+      "file": "scripts/glossary/gen_api_index.py",
+      "line": "184-188",
+      "problem": "Проверено: _first_line обрезает до [:140]; render_glossary._doc_excerpt тоже (DOC_MAX=140). В function_index.json max длина doc = 86 символов, ни одного doc>140 (0 из 748).",
+      "suggestion": "Без действий.",
+      "falsification": "Опровергалось бы наличием doc-поля длиннее 140 символов в function_index.json — не найдено."
+    },
+    {
+      "id": "INFO-1",
+      "severity": "minor",
+      "file": "scripts/glossary/compare_trees.py",
+      "line": "163",
+      "problem": "render_delta использует datetime.now() (локальное время) тогда как gen_api_index пишет generated_at в UTC (datetime.now(timezone.utc)). Разнобой часовых поясов в метках дат артефактов.",
+      "suggestion": "Не блокирует. Для консистентности использовать datetime.now(timezone.utc) или фиксированный локальный таймзон в обоих модулях.",
+      "falsification": "Замечание опровергалось бы, если бы в обоих модулях использовался один и тот же таймзон-источник времени."
+    },
+    {
+      "id": "INFO-2",
+      "severity": "minor",
+      "file": "scripts/glossary/gen_api_index.py",
+      "line": "43",
+      "problem": "Маркер 'run' исключает и легитимный верхнеуровневый scripts/run.py (проверено: _excluded('scripts/run.py')=True). Это соответствует заявленным требованиям контракта ('run' — исключаемый компонент), но при добавлении в будущем реального скрипта с именем run.py он молча выпадет из индекса.",
+      "suggestion": "Не блокирует. Если планируются скрипты с именем run*.py на верхнем уровне — заменить компонентный маркер 'run' на более узкий ('run_scripts', 'run_cache') или задокументировать ограничение в комментарии EXCLUDE_COMPONENTS.",
+      "falsification": "Опровергалось бы, если бы в дереве существовал требующий индексации scripts/run.py, который контракт не предполагал исключать."
+    }
+  ],
+  "scope_declared": {
+    "in_scope": [
+      "scripts/glossary/gen_api_index.py",
+      "scripts/glossary/compare_trees.py",
+      "scripts/glossary/render_glossary.py",
+      "docs/glossary/function_index.json",
+      "docs/glossary/PORTABLE_DELTA.md",
+      "docs/glossary/GLOSSARY.md"
+    ],
+    "out_of_scope": [
+      "harness и остальные scripts/*",
+      "второе дерево (portable) function_index.json — не присутствует в этом workspace, дельта проверена по артефактам"
+    ]
+  },
+  "out_of_scope_gaps": [
+    {
+      "module": "glossary-generators",
+      "finding": "portable-дерево function_index.json не находится в этом workspace; корректность side-by-side дельты (workspace vs portable) подтверждена только по уже сгенерированному PORTABLE_DELTA.md, а не пересчётом с обоих индексов."
+    }
+  ]
+}

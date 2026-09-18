@@ -5,28 +5,21 @@
 ## Сводка
 | Контур | Модули base | Модули target | Функции base | Функции target | Модулей нет в target | Функций нет в target |
 |---|---|---|---|---|---|---|
-| add_skill.py | 1 | 1 | 13 | 13 | 0 | 0 |
 | capsules | 8 | 0 | 25 | 0 | 8 | 25 |
 | code-factory | 6 | 6 | 47 | 47 | 0 | 0 |
-| fix_paths.py | 1 | 1 | 5 | 5 | 0 | 0 |
-| glossary | 1 | 0 | 2 | 0 | 1 | 2 |
+| glossary | 3 | 3 | 6 | 6 | 0 | 0 |
 | guard | 4 | 4 | 13 | 13 | 0 | 0 |
-| health_check.py | 1 | 1 | 6 | 6 | 0 | 0 |
 | jobs | 1 | 1 | 12 | 12 | 0 | 0 |
 | kanban | 1 | 0 | 0 | 0 | 1 | 0 |
 | mcp | 11 | 11 | 5 | 5 | 0 | 0 |
 | memory | 3 | 0 | 7 | 0 | 3 | 7 |
 | orchestration | 5 | 5 | 16 | 16 | 0 | 0 |
 | plugin | 3 | 3 | 2 | 2 | 0 | 0 |
-| register_plugin.py | 1 | 1 | 5 | 4 | 0 | 4 |
 | remote_acceptance | 3 | 0 | 5 | 0 | 3 | 5 |
 | research | 6 | 0 | 19 | 0 | 6 | 19 |
 | researcher | 67 | 64 | 220 | 218 | 3 | 2 |
 | router | 12 | 12 | 31 | 31 | 0 | 0 |
-| run_researcher_acceptance.py | 1 | 1 | 3 | 3 | 0 | 0 |
-| start_mcp_servers.py | 1 | 1 | 4 | 4 | 0 | 0 |
-| sync_to_live.py | 1 | 1 | 4 | 4 | 0 | 0 |
-| validate_env.py | 1 | 1 | 4 | 4 | 0 | 0 |
+| scripts | 8 | 8 | 32 | 31 | 0 | 3 |
 | writer | 10 | 0 | 28 | 0 | 10 | 28 |
 | writer-core | 40 | 40 | 161 | 161 | 0 | 0 |
 | writer_core_handoff | 6 | 0 | 1 | 0 | 6 | 1 |
@@ -42,9 +35,6 @@
 - `scripts/capsules/scientific_image_inspect.py`
 - `scripts/capsules/search_gateway.py`
 - `scripts/capsules/source_resolve.py`
-
-### Glossary
-- `scripts/glossary/gen_api_index.py`
 
 ### Kanban
 - `references/global-kanban/global_kanban.py`
@@ -121,10 +111,6 @@
 - `uncertainty` — модуль `scripts/capsules/science_compute.py`
 - `unpaywall` — модуль `scripts/capsules/source_resolve.py`
 
-### Glossary
-- `main` — модуль `scripts/glossary/gen_api_index.py`
-- `scan_tree` — модуль `scripts/glossary/gen_api_index.py`
-
 ### Memory
 - `cmd_add` — модуль `scripts/memory/memory_bridge.py`
 - `cmd_add_file` — модуль `scripts/memory/memory_bridge.py`
@@ -133,12 +119,6 @@
 - `collect_l2` — модуль `scripts/memory/collect_l2.py`
 - `main` — модуль `scripts/memory/collect_l2.py`
 - `promote` — модуль `scripts/memory/promote_l2_to_l3.py`
-
-### Register Plugin.py
-- `load_json` — модуль `scripts/register_plugin.py`
-- `register_plugin` — модуль `scripts/register_plugin.py`
-- `save_json` — модуль `scripts/register_plugin.py`
-- `unregister_plugin` — модуль `scripts/register_plugin.py`
 
 ### Remote Acceptance
 - `main` — модуль `scripts/remote_acceptance/collect_environment.py`
@@ -172,6 +152,11 @@
 - `build_demo` — модуль `scripts/researcher/demo_r4_2_evidence_slicing.py`
 - `verify_claim` — модуль `scripts/researcher/verify_claims.py`
 
+### Scripts
+- `register_plugin` — модуль `scripts/register_plugin.py`
+- `save_json` — модуль `scripts/register_plugin.py`
+- `unregister_plugin` — модуль `scripts/register_plugin.py`
+
 ### Writer
 - `build_graphs` — модуль `scripts/writer/extractor/graph_builder.py`
 - `by_path_or_sha` — модуль `scripts/writer/sources/source_catalog.py`
@@ -204,3 +189,19 @@
 
 ### Writer Core Handoff
 - `build_semantic_mismatch_environment` — модуль `scripts/writer_core_handoff/src_skeleton/writer_core_ir/adaptive_control.py`
+
+## Предупреждения
+
+- контур 'capsules': 8 модулей в base, 0 в target
+- контур 'capsules': 25 функций в base, 0 в target
+- контур 'kanban': 1 модулей в base, 0 в target
+- контур 'memory': 3 модулей в base, 0 в target
+- контур 'memory': 7 функций в base, 0 в target
+- контур 'remote_acceptance': 3 модулей в base, 0 в target
+- контур 'remote_acceptance': 5 функций в base, 0 в target
+- контур 'research': 6 модулей в base, 0 в target
+- контур 'research': 19 функций в base, 0 в target
+- контур 'writer': 10 модулей в base, 0 в target
+- контур 'writer': 28 функций в base, 0 в target
+- контур 'writer_core_handoff': 6 модулей в base, 0 в target
+- контур 'writer_core_handoff': 1 функций в base, 0 в target
