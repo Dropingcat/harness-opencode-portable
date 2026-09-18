@@ -3,8 +3,8 @@
   "updated": "2026-09-18",
   "authority_note": "Canonical registry migrated from патчи/миграция в плагин/tech_debt_current.json (65 records). project_context.py counts status=open. CLOSED_REPORTED maps to closed; RECONCILE_REQUIRED stays open until exact-tree verification.",
   "counts": {
-    "total": 102,
-    "open": 80,
+    "total": 103,
+    "open": 81,
     "closed": 22
   },
   "debts": [
@@ -2160,6 +2160,22 @@
       "source_status": "open",
       "notes": "RESEARCH_RUNNER_SH — легаси (болтается в окружении ресерчера). Требуется аудит: где объявлена, кто читает, чем заменить (актуальный детерминированный раннер исследовательского цикла).",
       "progress": "2026-09-18: зафиксировано по обращению пользователя."
+    },
+    {
+      "id": "TD-101",
+      "owner": "claim-parser",
+      "presentation_category": "ACTIVE",
+      "sunset_at": "2026-10-30",
+      "title": "claim-parser: контракт требует записать файл claims_parsed.json, но у субагента нет инструментов записи (write/edit/bash запрещены) — единственный выход JSON-сообщение; схема вывода разошлась (claim_id 'p', section, citations)",
+      "status_detail": "OPEN_CURRENT",
+      "kind": "contract",
+      "status": "open",
+      "severity": "high",
+      "acceptance": "Контракт claim-parser согласован со средой: либо субагенту даётся право записи файла (write/edit/bash) для вывода claims_parsed.json, ЛИБО контракт явно фиксирует JSON-сообщение как единственный канал вывода и оркестратор сам пишет файл; схема вывода детерминирована и не зависит от воли субагента (claim_id по единому генератору, section, citations); нет ситуации 'задача требует файл, а инструмента нет'",
+      "area": "research-orchestration-process.md (контракт claim-parser), агент claim-parser (frontmatter permission), research_orchestrator dispatch",
+      "source_status": "open",
+      "notes": "Симптом: задача 'запиши файл F:\\1_STRUCTURED\\research_verification\\claims_parsed.json', а у claim-parser нет write/edit/bash (permission deny) — только read/glob/grep/webfetch/skill/envsitter. Субагент вынужден вернуть JSON в сообщении и адаптировать схему (claim_id 'p', section, citations вместо стандартной). Это контрактное противоречие: либо дать субагенту запись, либо сделать JSON-сообщение единственным официальным каналом.",
+      "progress": "2026-09-18: зафиксировано по обращению пользователя. Связано с TD-098 (двойственность research-orchestrator) и TD-099 (мост оркестраторов)."
     }
   ]
 }
