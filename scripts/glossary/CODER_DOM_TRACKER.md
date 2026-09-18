@@ -27,7 +27,7 @@
 
 ## Блок C. Интеграция и мульти-разработка
 
-- [ ] C1. G-ownership контракт: routing «кто/какой агент развивает функцию».
+- [x] C1. G-ownership: в build (assignments, DEFAULT по контуру, внешний файл).
 - [ ] C2. Адаптеры: Writer/Researcher/Coder/dialogue (порты из спеки semantic_field).
 - [ ] C3. Кэш/провенанс: source_hash+config_hash+module_versions.
 - [ ] C4. E2E: взять функцию-узел → изменить → перегенерировать DOM → коммит (код+DOM).
