@@ -6,7 +6,7 @@
 ## Полный список функций по контурам
 - `capsules`: 34 публичных функций (файлы: scripts/capsules/corpus_fts.py, scripts/capsules/document_inspect.py, scripts/capsules/plot_render.py и др.)
 - `code-factory`: 51 публичных функций (файлы: scripts/code-factory/code_factory_runner.py, scripts/code-factory/contract_validator.py, scripts/code-factory/factory_ctl.py и др.)
-- `glossary`: 8 публичных функций (файлы: scripts/glossary/compare_trees.py, scripts/glossary/gen_api_index.py, scripts/glossary/render_glossary.py и др.)
+- `glossary`: 10 публичных функций (файлы: scripts/glossary/call_graph.py, scripts/glossary/compare_trees.py, scripts/glossary/gen_api_index.py и др.)
 - `guard`: 17 публичных функций (файлы: guard/src/adversarial_build.py, guard/src/guard_runner.py, guard/src/semantic_layer.py и др.)
 - `jobs`: 12 публичных функций (файлы: scripts/jobs/job_ctl.py)
 - `kanban`: 0 публичных функций (файлы: references/global-kanban/global_kanban.py)
@@ -156,6 +156,10 @@
 
 ## Glossary
 
+### `scripts/glossary/call_graph.py`
+
+- `scan_call_graph(root: str | Path, include_tests: bool = False) -> dict[str, Any]` — Return {nodes: {qname: {...}}, edges: [{src, dst, confidence}]}. [строка 92]
+
 ### `scripts/glossary/compare_trees.py`
 
 - `load_index(path: str | Path) -> dict[str, Any]` — Read a function_index.json registry (utf-8). [строка 29]
@@ -172,6 +176,10 @@
 
 - `render_glossary(index: dict[str, Any], label: str) -> str` — Render the full GLOSSARY.md document for a registry and label. [строка 75]
 - `main(argv: list[str] | None = None) -> int` — — [строка 130]
+
+### `scripts/glossary/stub_detect.py`
+
+- `scan_stubs(root: str | Path, include_tests: bool = False) -> dict[str, Any]` — — [строка 127]
 
 ## Guard
 

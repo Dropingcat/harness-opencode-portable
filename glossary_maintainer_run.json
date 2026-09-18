@@ -1,0 +1,16 @@
+{
+  "module": "glossary-maintainer",
+  "ok": true,
+  "counts": {
+    "workspace": {"modules": 197, "functions": 748, "classes": 397, "methods": 184},
+    "portable": {"modules": 157, "functions": 637, "classes": 364, "methods": 174}
+  },
+  "delta": {"modules_missing": 40, "functions_missing": 90},
+  "smoke": {
+    "json_valid": true,
+    "glossary_has_resolve": true,
+    "glossary_has_verify_claim": true,
+    "delta_positive": true
+  },
+  "problems": []
+}
