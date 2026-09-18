@@ -131,6 +131,17 @@ def scan_stubs(root: str | Path, include_tests: bool = False) -> dict[str, Any]:
     normal_count = 0
     module_imports: set[str] = set()
 
+    def classify(fn, cls, rel, lines) -> None:
+        nonlocal normal_count
+        marker = _has_stub_marker(fn, lines)
+        if _body_is_empty(fn) or _raises_not_implemented(fn):
+            stubs.append({
+                "module": rel, "class": cls, "name": fn.name, "line": fn.lineno,
+                "kind": "stub", "conscious": marker, "cc": _cc(fn), "sloc": (fn.end_lineno or fn.lineno) - fn.lineno + 1,
+            })
+        else:
+            normal_count += 1
+
     for py in _iter_py_files(root_path, include_tests):
         try:
             text = py.read_text(encoding="utf-8-sig")
@@ -149,8 +160,7 @@ def scan_stubs(root: str | Path, include_tests: bool = False) -> dict[str, Any]:
 
         for node in tree.body:
             if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
-                cls = None
-                _classify(node, cls, rel, lines, stubs, interfaces, module_imports)
+                classify(node, None, rel, lines)
             elif isinstance(node, ast.ClassDef):
                 is_iface = _class_is_interface(node, module_imports)
                 for member in node.body:
@@ -164,7 +174,7 @@ def scan_stubs(root: str | Path, include_tests: bool = False) -> dict[str, Any]:
                                 "line": member.lineno, "kind": "interface",
                             })
                         else:
-                            _classify(member, node.name, rel, lines, stubs, interfaces, module_imports)
+                            classify(member, node.name, rel, lines)
 
     total = len(stubs) + len(interfaces) + normal_count
     return {
@@ -174,18 +184,6 @@ def scan_stubs(root: str | Path, include_tests: bool = False) -> dict[str, Any]:
         "stubs": stubs,
         "interfaces": interfaces,
     }
-
-
-def _classify(fn, cls, rel, lines, stubs, interfaces, module_imports) -> None:
-    global normal_count  # noqa: PLW0603
-    marker = _has_stub_marker(fn, lines)
-    if _body_is_empty(fn) or _raises_not_implemented(fn):
-        stubs.append({
-            "module": rel, "class": cls, "name": fn.name, "line": fn.lineno,
-            "kind": "stub", "conscious": marker, "cc": _cc(fn), "sloc": (fn.end_lineno or fn.lineno) - fn.lineno + 1,
-        })
-    else:
-        normal_count += 1
 
 
 if __name__ == "__main__":
