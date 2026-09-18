@@ -3,8 +3,8 @@
  "updated": "2026-09-15",
  "authority_note": "Canonical registry migrated from патчи/миграция в плагин/tech_debt_current.json (65 records). project_context.py counts status=open. CLOSED_REPORTED maps to closed; RECONCILE_REQUIRED stays open until exact-tree verification.",
  "counts": {
-  "total": 72,
-  "open": 56,
+  "total": 76,
+  "open": 60,
   "closed": 16
  },
  "debts": [
@@ -1683,6 +1683,67 @@
    "source_status": "open",
    "progress": "2026-09-17: AssessmentAssignment (need_ref->role_ids) есть в tribunal_composition; но DOM (writer-core dom_builder) не связывает claim_type/уровни утверждения с тематическими ветвями и назначением специалистов. Контур физика->физик, методология->методолог не автоматизирован для Writer-claims.",
    "verification": "VERIFIED 2026-09-17: DOM-блок утверждения (writer-core dom_builder) не связывает claim_type/уровни с тематическими ветвями трибунала и назначением специалистов. AssessmentAssignment (tribunal_composition.py:143) есть, но Writer-claims с ним не связаны. Контур физика->физик, методология->методолог не автоматизирован."
+  },
+  {
+   "id": "TD-076",
+   "title": "Кодеру нужен DOM-аналог для функций кода (как Writer DOM YAML): манифест функций + связей, дополняемый в блок каждого клайма/функции",
+   "area": "Coder / code-factory / DOM-подобный манифест функций (аналог Writer DOM YAML)",
+   "kind": "architecture",
+   "severity": "high",
+   "owner": "coder-orchestrator",
+   "sunset_at": "2026-10-15",
+   "acceptance": "кодовый DOM (например code_dom.yaml) содержит: блок на каждую функцию/клайм (id, signature, контур, модуль, зависимости/связи, вызовы, кто использует); манифест машинно-генерируется из AST (gen_api_index) и дополняется вручную/кодом при изменениях; прослеживаемость функция→контур→модуль→зависимости",
+   "status": "open",
+   "status_detail": "OPEN_CURRENT",
+   "presentation_category": "ACTIVE",
+   "source_status": "open",
+   "progress": "2026-09-18: идея из ревью параллельной сессии — у Writer есть DOM YAML (структура документа с блоками claims), у Coder нет аналога для функций кода. Полезно: (а) перекрёстная навигация (как GLOSSARY, но машино-читаемый DOM), (б) блок на функцию = клайм (функция+сигнатура+связи), (в) база для ревью/тестов/трибунала. Связано с TD-074 (registry generator) и DEV-07 (research contract hardening).",
+   "notes": "Не путать с function_index.json (TD-074 — плоский индекс). TD-076 — структурированный DOM с блоками-клаймами на функцию и связями (вызывает/вызывается/использует), дополняемый при разработке."
+  },
+  {
+   "id": "TD-073",
+   "title": "project_context.py падает с UnicodeEncodeError на Windows cp1251 (кириллический путь, символ →)",
+   "area": "scripts/orchestration/project_context.py",
+   "kind": "portability",
+   "severity": "major",
+   "owner": "code-orchestrator",
+   "sunset_at": "2026-09-30",
+   "acceptance": "project_context.py работает без PYTHONIOENCODING (sys.stdout.reconfigure utf-8); smoke на кириллическом пути",
+   "status": "open",
+   "status_detail": "OPEN_CURRENT",
+   "presentation_category": "ACTIVE",
+   "source_status": "open",
+   "progress": "2026-09-18: подтверждено в параллельной сессии (traceback UnicodeEncodeError '\\u2192' на cp1251). Обход только PYTHONIOENCODING=utf-8. Блокирует ритуал старта для новых агентов без env."
+  },
+  {
+   "id": "TD-074",
+   "title": "Glossary registry: M1-генератор и M2-M4 сделаны, M5-M6 (синк docs в оба дерева, smoke, канбан, память) не завершены",
+   "area": "scripts/glossary/gen_api_index.py + docs/glossary",
+   "kind": "documentation",
+   "severity": "medium",
+   "owner": "code-orchestrator",
+   "sunset_at": "2026-09-30",
+   "acceptance": "function_index.json + PORTABLE_DELTA.md + GLOSSARY.md в обоих деревьях (workspace и portable); smoke; канбан",
+   "status": "open",
+   "status_detail": "OPEN_CURRENT (partial: M1-M4 done, M5-M6 pending)",
+   "presentation_category": "ACTIVE",
+   "source_status": "open",
+   "progress": "2026-09-18: M1 (gen_api_index.py) + M2 (function_index.json 805KB) + M3 (PORTABLE_DELTA.md) + M4 (GLOSSARY.md 157KB) выполнены параллельной сессией (commit 9b7d202). Дельта подтверждена: capsules 25f, memory 7f, research 19f, writer 28f, remote_acceptance 5f, kanban отсутствуют в portable (карта переноса v1.1). Осталось M5 (синк в portable) + M6 (smoke)."
+  },
+  {
+   "id": "TD-075",
+   "title": "Синхронизация docs между workspace и portable не автоматизирована (ручной Copy-Item; sync_to_live.py не используется)",
+   "area": "docs/ + sync_to_live.py",
+   "kind": "operations",
+   "severity": "medium",
+   "owner": "code-orchestrator",
+   "sunset_at": "2026-10-05",
+   "acceptance": "документирован/автоматизирован канонический путь синка docs (workspace↔portable) без ручных копий",
+   "status": "open",
+   "status_detail": "OPEN_CURRENT",
+   "presentation_category": "ACTIVE",
+   "source_status": "open",
+   "progress": "2026-09-18: sync_to_live.py существует, но для docs/glossary применялся ручной Copy-Item; рассинхронизация возможна (подтверждено: TD-073/075 потерялись при параллельной перезаписи tech_debt.json)."
   }
  ]
 }

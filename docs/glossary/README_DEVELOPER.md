@@ -63,10 +63,31 @@
 5. **TD-072** (DOM↔специалисты) → **TD-071** (Q1A1..Q3A3 контур) — финальный трибунал.
 6. Writer v1 freeze контракты — внедрить после TD-070/071 (или переопределить схему).
 
+## Реестр функций (автосбор, «по принципу Python-библиотек»)
+
+Реестр генерируется детерминированно и пересобирается при добавлении функций:
+
+```
+# 1. Собрать JSON-индекс публичного API (контуры → модули → функции/классы + сигнатуры + docstring)
+python scripts/glossary/gen_api_index.py --root <дерево> --out docs/glossary/function_index.json --label <label>
+
+# 2. Рендер GLOSSARY.md из индекса
+python scripts/glossary/render_glossary.py --index docs/glossary/function_index.json --out docs/glossary/GLOSSARY.md --label "<label>"
+
+# 3. Дельта деревьев (что есть в полном, но НЕТ в portable → карта переноса v1.1)
+python scripts/glossary/compare_trees.py --base <полный>/docs/glossary/function_index.json \
+    --target <portable>/docs/glossary/function_index.json --out docs/glossary/PORTABLE_DELTA.md
+```
+
+- `function_index.json` — machine-readable индекс (для поиска/автодополнения).
+- `GLOSSARY.md` — человекочитаемый рендер по контурам.
+- `PORTABLE_DELTA.md` — дельта «полное дерево vs portable» (41 модуль + 93 функции отсутствуют в v1 → TD-D1).
+- Правило: только публичные функции/классы (не `_private`) + задокументированные хелперы; тесты и мусорные директории исключаются автоматически.
+
 ## Как не потерять состояние
 
 - `git log --oneline` — история коммитов (каждый шаг закоммичен).
-- `docs/glossary/*` — этот комплект (обновлять при новых функциях).
+- `docs/glossary/*` — этот комплект (обновлять при новых функциях; реестр пересобирать через `gen_api_index.py`).
 - `config/tech_debt.json` + `config/development_tracker.json` — реестры.
 - `docs/plugin-dialectic/evidence/*` — артефакты прогонов.
 - Канбан: `scripts/orchestration/kanban_report.py report <agent> <task> <status> <phase> <n/N> <msg>`.
