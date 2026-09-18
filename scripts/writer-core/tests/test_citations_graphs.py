@@ -82,6 +82,17 @@ class ExtractMdLinksTests(unittest.TestCase):
         self.assertEqual(links[0]["url"], "https://a/(b)")
         self.assertEqual(links[0]["span"], [0, 18])
 
+    def test_unbalanced_parens_span_within_bounds(self) -> None:
+        """R1-minor: несбалансированная скобка — span не выходит за len(text)."""
+        text = "[x](https://a/(b)"
+        self.assertEqual(len(text), 17)
+        links = _extract_md_links(text)
+        self.assertEqual(len(links), 1)
+        start, end = links[0]["span"]
+        self.assertGreaterEqual(start, 0)
+        self.assertLessEqual(end, len(text))
+        self.assertEqual(links[0]["url"], "https://a/(b")
+
     def test_no_links(self) -> None:
         self.assertEqual(_extract_md_links("просто текст"), [])
 
@@ -213,6 +224,32 @@ class GraphBuildG8Tests(unittest.TestCase):
         self.assertNotIn("G8_policy_constraint", g.get("graphs", {}))
         self.assertIn("G8_policy_constraint",
                       [s["graph"] for s in g.get("skipped", [])])
+
+    def test_guard_ident_skipped_no_ru_context(self) -> None:
+        """R1-критический: 'action = guard(percept)' в коде БЕЗ русского
+        контекста -> G8 SKIPPED (лат-сигнал guard не самоподтверждается
+        через _RU_POLICY_MARKERS)."""
+        art = _min_artifact(
+            text="for step in steps:\n    percept = sense(state)\n    "
+                 "action = guard(percept)\n    state = act(action)")
+        g = build_paragraph_graphs(art, _REGISTRY)
+        self.assertNotIn("G8_policy_constraint", g.get("graphs", {}))
+        self.assertIn("G8_policy_constraint",
+                      [s["graph"] for s in g.get("skipped", [])])
+
+    def test_guard_built_with_ru_marker(self) -> None:
+        """R1-критический: 'запрещено вызывать guard()' (русский маркер
+        'запрещено') -> G8 BUILT."""
+        art = _min_artifact(
+            text="Запрещено вызывать guard() на недоверенном вводе "
+                 "до проверки.",
+            claims=[{"text": "Запрещено вызывать guard() на недоверенном вводе",
+                     "start": 0, "end": 48, "qa_status": "GROUNDED"}])
+        g = build_paragraph_graphs(art, _REGISTRY)
+        g8 = g.get("graphs", {}).get("G8_policy_constraint")
+        self.assertIsNotNone(g8)
+        self.assertTrue(any(n["type"] == "GlobalPolicy" for n in g8["nodes"]))
+        self.assertEqual(validate_against_registry(g, _REGISTRY), [])
 
     def test_no_signal_skipped(self) -> None:
         art = _min_artifact(text="Полученные значения сведены в таблицу.")

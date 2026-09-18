@@ -307,6 +307,10 @@ def _extract_md_links(text: str) -> list[dict]:
     url='https://a/(b)'. Первичный regex `[^)\s]*` останавливается на первой
     ')'; затем балансируем скобки depth-сканированием от открывающей '(' ссылки
     (depth=1): url заканчивается на ')' при depth==0. Это CommonMark-поведение.
+
+    ОБРЕЗКА ПО ГРАНИЦЕ (R1-minor): если скобки НЕ сбалансированы до конца
+    текста ('[x](https://a/(b)' без закрывающей ')'), span НЕ выходит за
+    len(text): end = min(i+1, len(text)); url обрезается до конца текста.
     """
     out: list[dict] = []
     for m in _MD_LINK_RE.finditer(text):
@@ -325,8 +329,17 @@ def _extract_md_links(text: str) -> list[dict]:
                     if depth == 0:
                         break
                 i += 1
-            end = i + 1  # после закрывающей ')' ссылки
-            url = text[m.start(2):i]
+            if depth == 0:
+                end = i + 1  # после закрывающей ')' ссылки
+                url = text[m.start(2):i]
+            else:
+                # несбалансировано: закрывающая ')' ссылки не найдена.
+                # url — до конца (без финальной ')' — она не часть url),
+                # span не выходит за len(text).
+                end = len(text)
+                url = text[m.start(2):i]
+                if url.endswith(")"):
+                    url = url[:-1]
         out.append({"text": m.group(1), "url": url,
                     "span": [m.start(), end]})
     return out

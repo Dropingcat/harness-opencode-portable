@@ -4,8 +4,8 @@
   "authority_note": "Canonical registry migrated from патчи/миграция в плагин/tech_debt_current.json (65 records). project_context.py counts status=open. CLOSED_REPORTED maps to closed; RECONCILE_REQUIRED stays open until exact-tree verification.",
   "counts": {
     "total": 102,
-    "open": 82,
-    "closed": 20
+    "open": 80,
+    "closed": 22
   },
   "debts": [
     {
@@ -1844,34 +1844,34 @@
     {
       "id": "TD-083",
       "owner": "writing-orchestrator",
-      "presentation_category": "ACTIVE",
+      "presentation_category": "CLOSED",
       "sunset_at": "2026-10-15",
       "title": "extract не извлекает citation/reference маркеры из markdown (только paragraphs; sources/refs/claims пусты) — G7_citation_provenance всегда skipped",
-      "status_detail": "OPEN_CURRENT",
+      "status_detail": "CLOSED_FIXED",
       "kind": "extraction",
-      "status": "open",
+      "status": "closed",
       "severity": "high",
       "acceptance": "extract на markdown-документе со ссылками [Text](url) и путями репозитория извлекает CitationMarker/ArtifactRef в sources/refs; graphs строит G7_citation_provenance с рёбрами claim->source",
       "area": "scripts/writer-core/writer_core/... (extract), extractor/",
       "source_status": "open",
       "notes": "Фальсификация: в probe_artifact.json paragraphs[].claims пуст; probe_graphs.json -> G7_citation_provenance skipped 23/23.",
-      "progress": "2026-09-18 (code-orchestrator): независимо воспроизведено — extract на md с 3 ссылками [Text](url) и путём repo вернул paragraphs без sources/refs/citation_markers (схема параграфа: claims/digest/discourse/links/objects/page/philology/sentences/text); links = только claim_to_digest/object_to_claim. Ссылки не извлечены."
+      "progress": "2026-09-18 (code-orchestrator): независимо воспроизведено — extract на md с 3 ссылками [Text](url) и путём repo вернул paragraphs без sources/refs/citation_markers (схема параграфа: claims/digest/discourse/links/objects/page/philology/sentences/text); links = только claim_to_digest/object_to_claim. Ссылки не извлечены. | 2026-09-18 FIXED: extract извлекает citations/artifact_refs/source_links; builders G7/G8/G9 добавлены (10 из 16 графов); 26 unit-тестов PASS; validate_against_registry=0; writer-citations-g7-g8-g9 APPROVE"
     },
     {
       "id": "TD-084",
       "owner": "writing-orchestrator",
-      "presentation_category": "ACTIVE",
+      "presentation_category": "CLOSED",
       "sunset_at": "2026-10-20",
       "title": "graphs строит только 7 из 13 графов на paragraph-artifact; G1/G2/G7/G8/G9/G10/G11/G12/G16 skipped",
-      "status_detail": "OPEN_CURRENT",
+      "status_detail": "CLOSED_FIXED",
       "kind": "extraction",
-      "status": "open",
+      "status": "closed",
       "severity": "medium",
       "acceptance": "каждый skipped граф имеет явную причину и (где применимо) данные для построения; G10_vocabulary задокументирован как переименованный в G10_execution; 13 графов каталогизированы",
       "area": "scripts/writer-core/graph_builder_hybrid.py, registry v0.3",
       "source_status": "open",
       "notes": "G4_argument работает: Toulmin ArgumentInstance/RebuttalRef/ConclusionRef на параграфе P0004 — образец.",
-      "progress": "2026-09-18 (code-orchestrator): независимо воспроизведено — graphs на 12 параграфах: BUILT 7 графов (G13 x12, G3 x12, G14 x4, G4 x4, G15 x5, G6 x2, G5 x2); SKIPPED G1/G2/G7/G8/G9/G10_execution/G11/G12/G16 (+G10_vocabulary вне реестра) с честными причинами. '13 графов' фактически = 7."
+      "progress": "2026-09-18 (code-orchestrator): независимо воспроизведено — graphs на 12 параграфах: BUILT 7 графов (G13 x12, G3 x12, G14 x4, G4 x4, G15 x5, G6 x2, G5 x2); SKIPPED G1/G2/G7/G8/G9/G10_execution/G11/G12/G16 (+G10_vocabulary вне реестра) с честными причинами. '13 графов' фактически = 7. | 2026-09-18 FIXED: extract извлекает citations/artifact_refs/source_links; builders G7/G8/G9 добавлены (10 из 16 графов); 26 unit-тестов PASS; validate_against_registry=0; writer-citations-g7-g8-g9 APPROVE"
     },
     {
       "id": "TD-085",
@@ -2032,7 +2032,7 @@
       "area": "scripts/writer-core/graph_builder_hybrid.py (все builders), hybrid_extract.py",
       "source_status": "open",
       "notes": "Триггер: ревью TD-083/084 (writer-citations-g7-g8-g9) — ревьюер R1 (ложный DomainPolicy на 'policy(percept)' в псевдокоде), R2 (G9 дублирует ClaimRef при revisions с одинаковым claim), тестер T8 (G7 строится на параграфах без ссылок если есть claims — ClaimRef-only граф). Нужно проверить КАЖДЫЙ граф отдельно: что он реально собирает, оправдано ли, не шумит ли.",
-      "progress": "2026-09-18: зафиксировано по итогам ревью writer-citations-g7-g8-g9. См. reviewer_writer-citations-g7-g8-g9.json R1/R2, tester_writer_citations_g7_g8_g9.json T8."
+      "progress": "2026-09-18: зафиксировано по итогам ревью writer-citations-g7-g8-g9. См. reviewer_writer-citations-g7-g8-g9.json R1/R2, tester_writer_citations_g7_g8_g9.json T8. | 2026-09-18: пер-графовый аудит инициирован — TD-094/095/096 выявлены; 3 из 10 построенных графов (G7/G8/G9) отшумелены; требуется полная проверка информативности каждого графа (открыт)"
     },
     {
       "id": "TD-094",
@@ -2048,7 +2048,7 @@
       "area": "scripts/writer-core/graph_builder_hybrid.py (_build_g8)",
       "source_status": "open",
       "notes": "Ревью writer-citations-g7-g8-g9 R1 (major): word-boundary \\b не защищает от латинских идентификаторов/кода. Г8 шумит.",
-      "progress": "2026-09-18: 1-й фикс (fence+ru-контекст) убрал ложный policy(percept), НО остался критический остаток: 'guard' — одновременно латинский сигнал И русский маркер-сосед в _RU_POLICY_MARKERS -> самоподтверждение; 'action = guard(percept)' в коде -> G8 BUILT с ложной GlobalPolicy. Требуется: исключить пересечение латинских сигналов с русскими маркерами (лат-сигнал НЕ должен сам быть ru-маркером) + покрыть тестом guard(percept)."
+      "progress": "2026-09-18: 1-й фикс (fence+ru-контекст) убрал ложный policy(percept), НО остался критический остаток: 'guard' — одновременно латинский сигнал И русский маркер-сосед в _RU_POLICY_MARKERS -> самоподтверждение; 'action = guard(percept)' в коде -> G8 BUILT с ложной GlobalPolicy. Требуется: исключить пересечение латинских сигналов с русскими маркерами (лат-сигнал НЕ должен сам быть ru-маркером) + покрыть тестом guard(percept). | 2026-09-18: фикс выполнен и принят (writer-citations-g7-g8-g9 APPROVE); остаётся открытым как часть TD-093 (полный пер-графовый аудит)"
     },
     {
       "id": "TD-095",
@@ -2064,7 +2064,7 @@
       "area": "scripts/writer-core/graph_builder_hybrid.py (_build_g9)",
       "source_status": "open",
       "notes": "Ревью writer-citations-g7-g8-g9 R2 (major): при 2 revisions с одинаковым added_claims создаются 2 идентичные ClaimRef-ноды.",
-      "progress": "2026-09-18: зафиксировано из reviewer R2."
+      "progress": "2026-09-18: зафиксировано из reviewer R2. | 2026-09-18: фикс выполнен и принят (writer-citations-g7-g8-g9 APPROVE); остаётся открытым как часть TD-093 (полный пер-графовый аудит)"
     },
     {
       "id": "TD-096",
@@ -2080,7 +2080,7 @@
       "area": "scripts/writer-core/graph_builder_hybrid.py (_build_g7)",
       "source_status": "open",
       "notes": "Тестер writer-citations-g7-g8-g9 T8 (major): P0005/P0010 (0 citations, 1 claim) дают G7 с 1 нодой ClaimRef вместо skipped. Теперь claims-only не должны строить citation-граф.",
-      "progress": "2026-09-18: зафиксировано из tester T8."
+      "progress": "2026-09-18: зафиксировано из tester T8. | 2026-09-18: фикс выполнен и принят (writer-citations-g7-g8-g9 APPROVE); остаётся открытым как часть TD-093 (полный пер-графовый аудит)"
     },
     {
       "id": "CD-004",
