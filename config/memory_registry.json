@@ -1,129 +1,172 @@
 {
-  "kind": "memory_registry",
-  "levels": {
-    "L3": {
-      "lessons": {
-        "163eb32181ca63f952aca05f0b21eead35b6989313d245905d4d00a0625b141d": {
-          "admissions": 1,
-          "evidence_refs": [
-            "REPORT_reconciliation.md",
-            "REPORT_uncertainty.md",
-            "nkr_ch1_dom.yaml"
-          ],
-          "lesson_text": "Writer-контур обкатан на диссертации: литературный DOM (nkr_ch1_dom.yaml, 58 claims) — конкорданс НКР↔автореферат v20; verify_claims --apply (guard PASS, 44 SUPPORTED/14 AMBIGUOUS) + citation_trace PASS при хеджах из словаря гейта (предположи/по-видимому/возможно/может); PowerShell 5.1 НЕ поддерживает heredoc <<'PY' — пиши python-скрипт в файл; извлечение .doc/.docx — Word COM через Content.Text + WriteAllText UTF8 (SaveAs кодом 7 падает).",
-          "reason_codes": [
-            "powershell_heredoc_no",
-            "word_com_extract",
-            "writer_dom_ok"
-          ],
-          "sources": [
-            {
-              "added_via": "memory_bridge.add",
-              "snapshot_id": null,
-              "task_id": null
-            }
-          ]
-        },
-        "28cf522a6a28e26b4476402f118d27f1a886dfd499c10f32f61d31987158a2e1": {
-          "admissions": 1,
-          "evidence_refs": [
-            "factory_smoke-2026-09-01"
-          ],
-          "lesson_text": "PowerShell 5.1 Set-Content -Encoding UTF8 writes UTF-8 BOM; factory_ctl and contract_validator reject BOM as invalid JSON. Write JSON via UTF8Encoding(false).",
-          "reason_codes": [
-            "CONTRACT",
-            "PORTABILITY"
-          ],
-          "sources": [
-            {
-              "added_via": "memory_bridge.add",
-              "snapshot_id": "snap-2026-09-01",
-              "task_id": "post-audit-2026-09-01"
-            }
-          ]
-        },
-        "5da5189a09ad603861aef4791bcbe16af6a8881b91e908b3b2f1d4097475b601": {
-          "admissions": 1,
-          "evidence_refs": [
-            "docs/glossary/PORTABLE_DELTA.md",
-            "docs/glossary/function_index.json",
-            "scripts/glossary/gen_api_index.py"
-          ],
-          "lesson_text": "Реестр функций harness генерируется детерминированно: gen_api_index.py (AST, без импорта) -> function_index.json; render_glossary.py -> GLOSSARY.md; compare_trees.py -> PORTABLE_DELTA. Полное дерево = workspace (197 mod/748 fn), portable v1 = 157/637; дельта 40 модулей + 90 функций = карта переноса v1.1 (TD-D1). Ключевые уроки: (1) читать .py как utf-8-sig (файлы с BOM иначе молча теряются), (2) исключения путей - точными компонентами, не substring ('copy' режет легитимные модули), (3) контуры = первая папка после scripts/, плоские scripts/*.py -> контур 'scripts', (4) _signature ломалась на posonly-defaults - считать offset от posonlyargs+args, (5) пересборка: python scripts/glossary/gen_api_index.py --root <дерево>.",
-          "reason_codes": [
-            "BOM_UTF8_SIG",
-            "EXACT_PATH_COMPONENTS",
-            "INFRA_GLOSSARY_AST",
-            "PORTABLE_DELTA_V11"
-          ],
-          "sources": [
-            {
-              "added_via": "memory_bridge.add",
-              "snapshot_id": null,
-              "task_id": null
-            }
-          ]
-        },
-        "646ca8420e0026a13e58ff22a632ce6486254b7cda2b1cfc4e899a1b537af6ce": {
-          "admissions": 1,
-          "evidence_refs": [
-            "runbook-junction",
-            "setup_env.ps1"
-          ],
-          "lesson_text": "Memory bridge: API paths must use ASCII junction E:\\opencode_harness on Windows, not cyrillic E:\\Documents\\Документы",
-          "reason_codes": [
-            "PORTABILITY",
-            "RUNTIME"
-          ],
-          "sources": [
-            {
-              "added_via": "memory_bridge.add",
-              "snapshot_id": "snap-2026-09-01",
-              "task_id": "post-audit-2026-09-01"
-            }
-          ]
-        },
-        "a3134ce09f0354b0702c63528964d016e5e04ba97d535fa5f5efbe4e302e20bb": {
-          "admissions": 1,
-          "evidence_refs": [
-            "C:/Temp/opencode/harness-deploy/remote_acceptance_runs/production_001/LOCAL_DEPLOYMENT_STATUS.md"
-          ],
-          "lesson_text": "При acceptance code-only deployment на Windows нужно явно переопределять OPENCODE_HARNESS_ROOT на deployment root и ставить GIT_CEILING_DIRECTORIES в parent deployment; иначе compiler/preflight может проверить основной репозиторий, а git — ошибочно обнаружить родительский temp repository.",
-          "reason_codes": [
-            "DEPLOYMENT_ROOT_LEAK",
-            "PARENT_GIT_DISCOVERY"
-          ],
-          "sources": [
-            {
-              "added_via": "memory_bridge.add",
-              "snapshot_id": null,
-              "task_id": "DEPLOY-FINAL-20260914"
-            }
-          ]
-        },
-        "ce5cf6cc6fc115a3fcd0e872e5768bf549b31e42e65c7badb655c3624e1a4c2b": {
-          "admissions": 1,
-          "evidence_refs": [
-            "NKR-CH1-001",
-            "bf87518",
-            "scripts/researcher/verify_claims.py",
-            "tests/test_verify_claims.py"
-          ],
-          "lesson_text": "Writer DOM verification must be append-only: automated verify_claims --apply may fill OPEN or missing fields, but must never downgrade curated verdicts or erase an existing numeric_comparison. Run draft_loop in dry-run before final --apply to catch unlinked factual sentences without polluting the claim registry.",
-          "reason_codes": [
-            "DRAFT_LOOP_DRY_RUN",
-            "WRITER_DOM_APPEND_ONLY"
-          ],
-          "sources": [
-            {
-              "added_via": "writing-orchestrator",
-              "snapshot_id": null,
-              "task_id": "NKR-CH1-001"
-            }
-          ]
-        }
+ "kind": "memory_registry",
+ "levels": {
+  "L3": {
+   "lessons": {
+    "163eb32181ca63f952aca05f0b21eead35b6989313d245905d4d00a0625b141d": {
+     "admissions": 1,
+     "evidence_refs": [
+      "REPORT_reconciliation.md",
+      "REPORT_uncertainty.md",
+      "nkr_ch1_dom.yaml"
+     ],
+     "lesson_text": "Writer-контур обкатан на диссертации: литературный DOM (nkr_ch1_dom.yaml, 58 claims) — конкорданс НКР↔автореферат v20; verify_claims --apply (guard PASS, 44 SUPPORTED/14 AMBIGUOUS) + citation_trace PASS при хеджах из словаря гейта (предположи/по-видимому/возможно/может); PowerShell 5.1 НЕ поддерживает heredoc <<'PY' — пиши python-скрипт в файл; извлечение .doc/.docx — Word COM через Content.Text + WriteAllText UTF8 (SaveAs кодом 7 падает).",
+     "reason_codes": [
+      "powershell_heredoc_no",
+      "word_com_extract",
+      "writer_dom_ok"
+     ],
+     "sources": [
+      {
+       "added_via": "memory_bridge.add",
+       "snapshot_id": null,
+       "task_id": null
       }
+     ]
+    },
+    "28cf522a6a28e26b4476402f118d27f1a886dfd499c10f32f61d31987158a2e1": {
+     "admissions": 1,
+     "evidence_refs": [
+      "factory_smoke-2026-09-01"
+     ],
+     "lesson_text": "PowerShell 5.1 Set-Content -Encoding UTF8 writes UTF-8 BOM; factory_ctl and contract_validator reject BOM as invalid JSON. Write JSON via UTF8Encoding(false).",
+     "reason_codes": [
+      "CONTRACT",
+      "PORTABILITY"
+     ],
+     "sources": [
+      {
+       "added_via": "memory_bridge.add",
+       "snapshot_id": "snap-2026-09-01",
+       "task_id": "post-audit-2026-09-01"
+      }
+     ]
+    },
+    "5da5189a09ad603861aef4791bcbe16af6a8881b91e908b3b2f1d4097475b601": {
+     "admissions": 1,
+     "evidence_refs": [
+      "docs/glossary/PORTABLE_DELTA.md",
+      "docs/glossary/function_index.json",
+      "scripts/glossary/gen_api_index.py"
+     ],
+     "lesson_text": "Реестр функций harness генерируется детерминированно: gen_api_index.py (AST, без импорта) -> function_index.json; render_glossary.py -> GLOSSARY.md; compare_trees.py -> PORTABLE_DELTA. Полное дерево = workspace (197 mod/748 fn), portable v1 = 157/637; дельта 40 модулей + 90 функций = карта переноса v1.1 (TD-D1). Ключевые уроки: (1) читать .py как utf-8-sig (файлы с BOM иначе молча теряются), (2) исключения путей - точными компонентами, не substring ('copy' режет легитимные модули), (3) контуры = первая папка после scripts/, плоские scripts/*.py -> контур 'scripts', (4) _signature ломалась на posonly-defaults - считать offset от posonlyargs+args, (5) пересборка: python scripts/glossary/gen_api_index.py --root <дерево>.",
+     "reason_codes": [
+      "BOM_UTF8_SIG",
+      "EXACT_PATH_COMPONENTS",
+      "INFRA_GLOSSARY_AST",
+      "PORTABLE_DELTA_V11"
+     ],
+     "sources": [
+      {
+       "added_via": "memory_bridge.add",
+       "snapshot_id": null,
+       "task_id": null
+      }
+     ]
+    },
+    "646ca8420e0026a13e58ff22a632ce6486254b7cda2b1cfc4e899a1b537af6ce": {
+     "admissions": 1,
+     "evidence_refs": [
+      "runbook-junction",
+      "setup_env.ps1"
+     ],
+     "lesson_text": "Memory bridge: API paths must use ASCII junction E:\\opencode_harness on Windows, not cyrillic E:\\Documents\\Документы",
+     "reason_codes": [
+      "PORTABILITY",
+      "RUNTIME"
+     ],
+     "sources": [
+      {
+       "added_via": "memory_bridge.add",
+       "snapshot_id": "snap-2026-09-01",
+       "task_id": "post-audit-2026-09-01"
+      }
+     ]
+    },
+    "a3134ce09f0354b0702c63528964d016e5e04ba97d535fa5f5efbe4e302e20bb": {
+     "admissions": 1,
+     "evidence_refs": [
+      "C:/Temp/opencode/harness-deploy/remote_acceptance_runs/production_001/LOCAL_DEPLOYMENT_STATUS.md"
+     ],
+     "lesson_text": "При acceptance code-only deployment на Windows нужно явно переопределять OPENCODE_HARNESS_ROOT на deployment root и ставить GIT_CEILING_DIRECTORIES в parent deployment; иначе compiler/preflight может проверить основной репозиторий, а git — ошибочно обнаружить родительский temp repository.",
+     "reason_codes": [
+      "DEPLOYMENT_ROOT_LEAK",
+      "PARENT_GIT_DISCOVERY"
+     ],
+     "sources": [
+      {
+       "added_via": "memory_bridge.add",
+       "snapshot_id": null,
+       "task_id": "DEPLOY-FINAL-20260914"
+      }
+     ]
+    },
+    "ce5cf6cc6fc115a3fcd0e872e5768bf549b31e42e65c7badb655c3624e1a4c2b": {
+     "admissions": 1,
+     "evidence_refs": [
+      "NKR-CH1-001",
+      "bf87518",
+      "scripts/researcher/verify_claims.py",
+      "tests/test_verify_claims.py"
+     ],
+     "lesson_text": "Writer DOM verification must be append-only: automated verify_claims --apply may fill OPEN or missing fields, but must never downgrade curated verdicts or erase an existing numeric_comparison. Run draft_loop in dry-run before final --apply to catch unlinked factual sentences without polluting the claim registry.",
+     "reason_codes": [
+      "DRAFT_LOOP_DRY_RUN",
+      "WRITER_DOM_APPEND_ONLY"
+     ],
+     "sources": [
+      {
+       "added_via": "writing-orchestrator",
+       "snapshot_id": null,
+       "task_id": "NKR-CH1-001"
+      }
+     ]
+    },
+    "d25835eeb126fa2cd2205fdb6409fb191d6e38da1c1a3204d7b5017813fc999a": {
+     "admissions": 1,
+     "evidence_refs": [
+      "citations_map.json",
+      "scibot_requests_ch1.md",
+      "pmc8307547.html"
+     ],
+     "lesson_text": "Ресурсы поиска для цитат главы 1 НКР (материаловедение/азотирование), 2026-09-18: (1) Лахтин/Леонтьева 'Материаловедение' 1990 — djvu.online/file/OtddrQw4yX3Zf (доступна); (2) архив тех.книг sheba.spb.ru/za/teh-1950.htm (до 1950, исторические источники); (3) PMC8307547 — Wetzel/Friák/Šob/Leineweber 'Phase Stability of Fe4N at High Pressure' Materials 2021 DOI 10.3390/ma14143963 (открытый доступ; DNS блокируется локально — обход через dns.google DoH + прямой socket SNI, IP 34.107.134.59; копия pmc8307547.html); (4) каталог TU Chemnitz 'Nitriding' (katalog.bibliothek.tu-chemnitz.de) — вручную в браузере. Монографии/книги ищем ТОЛЬКО в сети (PDF/DJVU), sci-bot — только статьи.",
+     "resources": [
+      {
+       "name": "DJVU-онлайн: Лахтин Ю.М., Леонтьева В.П. Материаловедение (1990)",
+       "url": "https://djvu.online/file/OtddrQw4yX3Zf",
+       "type": "книга (DJVU)",
+       "relevance": "Лахтин — базовый источник по азотированию (литобзор 1.3); Материаловедение 1990 — общее металловедение, легирующие элементы, фазы",
+       "verified": true,
+       "note": "HTTP 200, доступна. В корпусе есть др. работа Лахтина 'Теория и технология азотирования' 1991."
+      },
+      {
+       "name": "sheba.spb.ru — архив технических книг до 1950 г.",
+       "url": "https://sheba.spb.ru/za/teh-1950.htm",
+       "type": "архив книг (PDF/HTML)",
+       "relevance": "Исторические работы по металлургии/технологии до 1950 (Чернов Д.К., старые издания)",
+       "verified": true,
+       "note": "HTTP 200. Каталог: выделка, золочение, монеты и т.п. — тех. творчество до 1950. Для исторических ссылок."
+      },
+      {
+       "name": "PMC8307547: Wetzel, Friák, Všianská, Šob, Leineweber — Phase Stability of Fe4N at High Pressure (Materials 2021, DOI 10.3390/ma14143963)",
+       "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8307547/",
+       "type": "статья (открытый доступ)",
+       "relevance": "КРИТИЧНО для главы 1: фазовые равновесия Fe-N, γ′-Fe4N, эвтектоид γ′→α+ε′, ε′⇌γ+γ′ между 550-500°C, квадрупольная точка 5 ГПа/375°C. Связано с c274/c280 (белый слой Fe4N, ε-/γ'-фазы). Авторы Friák/Šob — DFT-расчёты, цитируемые в литобзоре",
+       "verified": true,
+       "note": "DNS блокируется локально (getaddrinfo failed); получено через DoH (dns.google) + прямой socket с SNI. IP: 34.107.134.59. Локальная копия: C:\\Temp\\opencode\\pmc8307547.html"
+      },
+      {
+       "name": "Каталог TU Chemnitz (библиотека) — поиск по 'Nitriding'",
+       "url": "https://katalog.bibliothek.tu-chemnitz.de/Search/Results?lookfor=+Nitriding&type=AllFields&testvu_fw=1",
+       "type": "библиотечный каталог",
+       "relevance": "Поиск статей/книг по азотированию (немецкие/международные источники)",
+       "verified": false,
+       "note": "HTTP 401/капча 'Verifying your access' при автоматическом доступе. Вручную в браузере — рабочий."
+      }
+     ]
     }
-  },
-  "version": 1
+   }
+  }
+ },
+ "version": 1
 }
