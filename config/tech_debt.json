@@ -3,8 +3,8 @@
  "updated": "2026-09-19",
  "authority_note": "Canonical registry migrated from патчи/миграция в плагин/tech_debt_current.json (65 records). project_context.py counts status=open. CLOSED_REPORTED maps to closed; RECONCILE_REQUIRED stays open until exact-tree verification.",
  "counts": {
-  "total": 125,
-  "open": 103,
+  "total": 126,
+  "open": 104,
   "closed": 22
  },
  "debts": [
@@ -2560,7 +2560,7 @@
    "presentation_category": "ACTIVE",
    "source_status": "open",
    "notes": "Hekker 1985: excess N + discontinuous precipitation в Fe-Cr (прямое подтверждение c22). Jung 2011: Fe-Ti-Cr нитриды. НЕ скачаны: Somers-Lankreijer 1989 (10.1080/01418618908205064, капча), Jung-Schacherl 2010 (10.3139/105.110072, нет PDF).",
-   "progress": "2026-09-19: скачано 2, осталось 2.",
+   "progress": "2026-09-19: Hekker 1985 + Jung&Meka 2011 скачаны; Somers-Lankreijer 1989 + Jung-Schacherl 2010 — капча, НО аннотации получены через sci-bot (blocked_articles_abstracts.json).",
    "related": [
     "TD-117"
    ]
@@ -2578,9 +2578,28 @@
    "status_detail": "OPEN_CURRENT",
    "presentation_category": "ACTIVE",
    "source_status": "open",
-   "notes": "OpenAlex: 'thermomechanical nitriding' — в основном полимеры/BN. Нужен точный запрос: 'thermomechanical processing nitriding kinetics low alloy steel Fernandes' или 'cold work nitrogen diffusion ferrite'. Частично покрыто: Demchenko&Sidorenko 2011 (в корпусе), Макаров 2017 (в корпусе).",
-   "progress": "2026-09-19: начат поиск, нужно углубить.",
+   "notes": "Закрыто частично: 3 статьи скачаны/аннотированы, привязки сделаны. Осталось: полный текст Bottoli.",
+   "progress": "2026-09-19: найдены Debnath 2019 (10.1007/s11661-019-05351-5, скачана 2МБ), Yurkova 2006 (SPD+N диффузия, скачана), Demchenko 2011 (в корпусе+скачана 16.6МБ), Bottoli 2015 (10.3139/105.110269, аннотация через sci-bot: 20-80% деформация → слой 8→30 мкм). Привязаны к c37-c42.",
    "related": []
+  },
+  {
+   "id": "TD-124",
+   "title": "Рекурсивное раскручивание дерева: собраны 39 DOI из списков литературы 18 скачанных статей; ключевые классики для докачки",
+   "area": "research_verification/scibot_answers/references_collected.json",
+   "kind": "research-expansion",
+   "severity": "medium",
+   "owner": "research-orchestrator",
+   "sunset_at": "2026-10-15",
+   "acceptance": "Ключевые классические источники (Wriedt 1987 Fe-N, Jack 1952, Mittemeijer&Somers 2015 книга, Kikkawa Fe16N2, Lehrer 1930) добавлены в корпус и список литературы НКР",
+   "status": "open",
+   "status_detail": "OPEN_CURRENT",
+   "presentation_category": "ACTIVE",
+   "source_status": "open",
+   "notes": "39 DOI собраны. В корпусе только 1 (actamat 2017). Ключевые фундаментальные (цитируются многократно): 10.1007/BF02869273 (Wriedt Fe-N диаграмма 1987), 10.1107/S0365110X52001258 (Jack 1952 epsilon структура), 10.1016/C2013-0-16318-0 (Mittemeijer&Somers 2015 книга), 10.1002/bbpc.19300360606 (Lehrer 1930 аммиак равновесие), 10.1016/j.progsolidstchem.2017.06.001 (Kikkawa Fe16N2).",
+   "progress": "2026-09-19: 39 DOI собраны, 0 скачано.",
+   "related": [
+    "TD-117"
+   ]
   }
  ]
 }
