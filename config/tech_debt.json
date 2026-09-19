@@ -3,8 +3,8 @@
  "updated": "2026-09-18",
  "authority_note": "Canonical registry migrated from патчи/миграция в плагин/tech_debt_current.json (65 records). project_context.py counts status=open. CLOSED_REPORTED maps to closed; RECONCILE_REQUIRED stays open until exact-tree verification.",
  "counts": {
-  "total": 118,
-  "open": 96,
+  "total": 120,
+  "open": 98,
   "closed": 22
  },
  "debts": [
@@ -2453,6 +2453,42 @@
    "source_status": "open",
    "notes": "УСТАНОВКА ПОЛЬЗОВАТЕЛЯ: sci-bot (Sci-Hub) отдаёт ТОЛЬКО статьи. Монографии (Гуляев 'Металловедение', Курдюмов/Утевский/Энтин 'Превращения в железе и сталях', Тихонов 'Численные методы решения некорректных задач', Groetsch 1984, Bhadeshia & Honeycombe) — искать в открытом доступе: elibrary, z-library, старые сайты книг, djvu-архивы. Список готовых запросов в scibot_requests_ch1.md (обновить: убрать монографии из sci-bot-блока).",
    "progress": "2026-09-18: уточнено пользователем (sci-bot = только статьи).",
+   "related": []
+  },
+  {
+   "id": "TD-117",
+   "title": "Sci-bot: баланс аккаунта = 0 (ниже floor 300000) — требуется пополнение для запросов статей Fe-N группы",
+   "area": "sci-bot.ru (аккаунт CherenkovYaVl), feN_group_works.json (6 работ ждут), scibot_requests_ch1.md",
+   "kind": "resource-gap",
+   "severity": "high",
+   "owner": "research-orchestrator",
+   "sunset_at": "2026-10-15",
+   "acceptance": "Баланс sci-bot > 300 000 токенов; отправлены запросы: Wetzel 2019 (10.1016/j.jallcom.2019.06.078), Leineweber 2024 (10.1021/acs.chemmater.4c02077), Liapina 2003/2006, Leineweber 2012/2006; ответы сохранены в research_verification/scibot_answers/",
+   "status": "open",
+   "status_detail": "OPEN_CURRENT",
+   "presentation_category": "ACTIVE",
+   "source_status": "open",
+   "notes": "2026-09-18: клиент sci_bot_client.py вернул 'НЕ ОТПРАВЛЕНО: баланс 0 ниже floor 300000'. Аккаунт платный, токены общие. Пока баланс не пополнен — запросы невозможны. Бесплатные пути исчерпаны (ACS 403, Elsevier закрыт, Qucosa без PDF).",
+   "progress": "2026-09-18: баланс проверен, = 0.",
+   "related": [
+    "TD-116"
+   ]
+  },
+  {
+   "id": "TD-118",
+   "title": "Найти sci-bot skill на Linux-машине orangepi (клиент лежал в /home/orangepi/.hermes/profiles/resercher/skills/sci-bot-search/)",
+   "area": "Linux orangepi, /home/orangepi/.hermes/profiles/resercher/skills/sci-bot-search/",
+   "kind": "sync-gap",
+   "severity": "medium",
+   "owner": "research-orchestrator",
+   "sunset_at": "2026-10-01",
+   "acceptance": "Полный скилл sci-bot (с историей, cookie, примерами запросов) синхронизирован в harness; на Windows-клиенте только базовый sci_bot_client.py",
+   "status": "open",
+   "status_detail": "OPEN_CURRENT",
+   "presentation_category": "ACTIVE",
+   "source_status": "open",
+   "notes": "2026-09-18: на Windows найден только скрипт sci_bot_client.py (5147 б) без cookie-истории. Согласно SKILL.md, оригинальный клиент — /home/orangepi/.hermes/profiles/resercher/skills/sci-bot-search/sci_bot_client.py с интерпретатором hermes venv. Проверить на orangepi и синхронизировать.",
+   "progress": "2026-09-18: базовый клиент зарегистрирован, полный не найден.",
    "related": []
   }
  ]
