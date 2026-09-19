@@ -3,8 +3,8 @@
   "updated": "2026-09-18",
   "authority_note": "Canonical registry migrated from патчи/миграция в плагин/tech_debt_current.json (65 records). project_context.py counts status=open. CLOSED_REPORTED maps to closed; RECONCILE_REQUIRED stays open until exact-tree verification.",
   "counts": {
-    "total": 103,
-    "open": 81,
+    "total": 104,
+    "open": 82,
     "closed": 22
   },
   "debts": [
@@ -2176,6 +2176,22 @@
       "source_status": "open",
       "notes": "Симптом: задача 'запиши файл F:\\1_STRUCTURED\\research_verification\\claims_parsed.json', а у claim-parser нет write/edit/bash (permission deny) — только read/glob/grep/webfetch/skill/envsitter. Субагент вынужден вернуть JSON в сообщении и адаптировать схему (claim_id 'p', section, citations вместо стандартной). Это контрактное противоречие: либо дать субагенту запись, либо сделать JSON-сообщение единственным официальным каналом.",
       "progress": "2026-09-18: зафиксировано по обращению пользователя. Связано с TD-098 (двойственность research-orchestrator) и TD-099 (мост оркестраторов)."
+    },
+    {
+      "id": "TD-102",
+      "owner": "research-orchestrator",
+      "presentation_category": "ACTIVE",
+      "sunset_at": "2026-10-30",
+      "title": "Детерминированная генерация claims_parsed.json даёт воду и плохо режет предложения (фрагменты типа «Гуляевым [4], который показал...» — остатки после удаления формул); split по предложениям ломает абзацы с формулами в середине; полный разбор субагента claim-parser (p0..p168) не материализован (обрыв на c274)",
+      "status_detail": "OPEN_CURRENT",
+      "kind": "extraction",
+      "status": "open",
+      "severity": "high",
+      "acceptance": "Детерминированная сегментация claims: предложения не режутся внутри формул/математических выражений (формулы выделены как неделимые токены до split); water/fragment-клаймы (остатки после удаления формул, типа «Автор [4], который показал...») отфильтровываются; либо claims_parsed.json строится из полного разбора субагента claim-parser (материализация p0..p168 без обрыва контекста), а не из грубого split",
+      "area": "детерминированный пайплайн ресерчера (run_pipeline/offline_pipeline), research-orchestrator dispatch claim-parser, scripts/researcher/",
+      "source_status": "open",
+      "notes": "Симптом: детерминированный claims_parsed.json содержит фрагменты-остатки формул («Гуляевым [4], который показал...») и воду; split по предложениям ломает абзацы с формулами в середине. Субагент claim-parser в своём reasoning составил полный список атомарных клаймов p0..p168 с классификацией, но не записал файл (см. TD-101 — нет инструмента записи) и полный текст разбора не передан оркестратору (обрыв на c274). Прагматичный финиш: claims_parsed.json остаётся честным производным артефактом, но сегментация требует улучшения.",
+      "progress": "2026-09-18: зафиксировано по обращению пользователя. Связано с TD-101 (claim-parser нет записи) и TD-098 (двойственность research-orchestrator)."
     }
   ]
 }
