@@ -3,8 +3,8 @@
  "updated": "2026-09-18",
  "authority_note": "Canonical registry migrated from патчи/миграция в плагин/tech_debt_current.json (65 records). project_context.py counts status=open. CLOSED_REPORTED maps to closed; RECONCILE_REQUIRED stays open until exact-tree verification.",
  "counts": {
-  "total": 108,
-  "open": 86,
+  "total": 118,
+  "open": 96,
   "closed": 22
  },
  "debts": [
@@ -2261,6 +2261,198 @@
    "source_status": "open",
    "notes": "РЕШЕНИЕ ПОЛЬЗОВАТЕЛЯ (2026-09-18): 'по глубине проникновения = решено что все числа будут отдельно в методике. для каждой стали своя глубина'. В v20 ещё остаются '2–6 мкм'/'6–18 мкм' — убрать или переадресовать в методику. depth_calc.py даёт t63%: Cu-Kα 0.8–1.9 мкм (Fe), Co-Kα 4.9–11 мкм (Fe), для сплавов свои значения.",
    "progress": "2026-09-18: решение пользователя зафиксировано.",
+   "related": []
+  },
+  {
+   "id": "TD-107",
+   "title": "Список литературы НКР: УБРАТЬ ссылку [3] Березина (сульфат-ионы Co₃O₄) — не по теме главы 1",
+   "area": "НКР_Черенков 20-06-25.docx (список литературы), claims: c15 (если ссылался), глава 1",
+   "kind": "citation-fix",
+   "severity": "high",
+   "owner": "research-orchestrator",
+   "sunset_at": "2026-10-01",
+   "acceptance": "Ссылка [3] удалена из списка литературы и из текста; на её месте — релевантный источник (Геллер 'Инструментальные стали' для M6C-карбидов, см. TD-109) или перенумерация",
+   "status": "open",
+   "status_detail": "OPEN_CURRENT",
+   "presentation_category": "ACTIVE",
+   "source_status": "open",
+   "notes": "Березина С.Л. 'Влияние сульфат-ионов на кинетику растворения оксида кобальта (Co3O4)' — химия растворов, НЕ металловедение. НЕ имеет отношения к теме диссертации (сплавы Fe, азотирование). Мусорная ссылка.",
+   "progress": "2026-09-18: выявлено в citation map.",
+   "related": [
+    "TD-108",
+    "TD-109"
+   ]
+  },
+  {
+   "id": "TD-108",
+   "title": "Список литературы НКР: УБРАТЬ ссылку [6] Гусакова (Al-Si сплавы) — не по теме главы 1",
+   "area": "НКР_Черенков 20-06-25.docx (список литературы), claims: c8 (нитроцементация)",
+   "kind": "citation-fix",
+   "severity": "high",
+   "owner": "research-orchestrator",
+   "sunset_at": "2026-10-01",
+   "acceptance": "Ссылка [6] удалена или заменена на релевантную (Лахтин/Коган или Bhadeshia для нитроцементации)",
+   "status": "open",
+   "status_detail": "OPEN_CURRENT",
+   "presentation_category": "ACTIVE",
+   "source_status": "open",
+   "notes": "Гусакова 'Влияние скорости охлаждения расплава на микроструктуру сплава Al-Si, легированного Mg, Mn, Fe, Ni, Cu' — алюминиевые сплавы, НЕ железные. Не релевантно.",
+   "progress": "2026-09-18: выявлено в citation map.",
+   "related": [
+    "TD-107"
+   ]
+  },
+  {
+   "id": "TD-109",
+   "title": "Список литературы НКР: УБРАТЬ ссылку [13] Bacca (спектральное слияние изображений) — не по теме главы 1",
+   "area": "НКР_Черенков 20-06-25.docx (список литературы), claims: c65-c71 (методы РД анализа)",
+   "kind": "citation-fix",
+   "severity": "high",
+   "owner": "research-orchestrator",
+   "sunset_at": "2026-10-01",
+   "acceptance": "Ссылка [13] удалена; в местах, где она стояла (методы разделения Kα-дублета), поставлена релевантная — Trubin & Szasz 1991 или Тихонов 1990",
+   "status": "open",
+   "status_detail": "OPEN_CURRENT",
+   "presentation_category": "ACTIVE",
+   "source_status": "open",
+   "notes": "Bacca J. 'Spectral image fusion from compressive measurements' — обработка изображений (IEEE Trans. Image Processing). Абсолютно не по теме.",
+   "progress": "2026-09-18: выявлено в citation map.",
+   "related": [
+    "TD-114",
+    "TD-115"
+   ]
+  },
+  {
+   "id": "TD-110",
+   "title": "Список литературы НКР: ИСПРАВИТЬ [4] — в тексте 'Гуляев [4]', в списке [4]=Григорьев (покрытия). Нумерация сдвинута",
+   "area": "НКР_Черенков 20-06-25.docx, claim c13: 'Сталь Р18 сохраняет режущие свойства до 600-620°C благодаря вторичному твердению'",
+   "kind": "citation-fix",
+   "severity": "critical",
+   "owner": "research-orchestrator",
+   "sunset_at": "2026-10-01",
+   "acceptance": "В списке литературы [4] = Гуляев А.П. Металловедение (вторичное твердение Р18, закалка 1260-1280°C, тройной отпуск 560°C); все последующие номера перенумерованы; c13 ссылается корректно",
+   "status": "open",
+   "status_detail": "OPEN_CURRENT",
+   "presentation_category": "ACTIVE",
+   "source_status": "open",
+   "notes": "Подтверждение из источника: Гуляев А.П. Металловедение, гл. 'Термическая обработка стали' (том/стр. по изданию 1986): 'для стали Р18 применяют закалку от 1260-1280°C и трёхкратный отпуск при 560°C'; красностойкость ~600°C. Доступно: termist.com/bibliot/stud/gul_met/gul_met.htm; chipmaker.ru/files/file/13144/. Монография — сеть (PDF/DJVU), НЕ sci-bot.",
+   "progress": "2026-09-18: выявлено в citation map (текст говорит Гуляев [4], список даёт Григорьева).",
+   "related": [
+    "TD-111"
+   ]
+  },
+  {
+   "id": "TD-111",
+   "title": "Список литературы НКР: ИСПРАВИТЬ [7] — в тексте 'Энтин [7]', в списке [7]=Геллер. Сдвиг нумерации",
+   "area": "НКР_Черенков 20-06-25.docx, claim c14: 'Распад аустенита в Р18 — высокоуглеродистый мартенсит с игольчатой структурой'",
+   "kind": "citation-fix",
+   "severity": "critical",
+   "owner": "research-orchestrator",
+   "sunset_at": "2026-10-01",
+   "acceptance": "В списке [7] = Энтин Р.И. Превращения аустенита (в кн. Курдюмов Г.В., Утевский Л.М., Энтин Р.И. 'Превращения в железе и сталях', М.: Наука, 1977, или 'Физическое металловедение' под ред. Кана); [8] = Геллер; все номера после [7] сдвинуты на +1",
+   "status": "open",
+   "status_detail": "OPEN_CURRENT",
+   "presentation_category": "ACTIVE",
+   "source_status": "open",
+   "notes": "Подтверждение из источника: Курдюмов/Утевский/Энтин, гл. 'Превращения в железе и сталях' (стр. о распаде переохлаждённого аустенита и мартенситном превращении в высокоуглеродистых сталях). Монография — сеть (PDF/DJVU), НЕ sci-bot.",
+   "progress": "2026-09-18: выявлено в citation map.",
+   "related": [
+    "TD-110"
+   ]
+  },
+  {
+   "id": "TD-112",
+   "title": "Список литературы НКР: ИСПРАВИТЬ [9] — используется для Лахтина, но привязан к 08Х18Н10Т и нитроцементации; проверить соответствие",
+   "area": "НКР_Черенков 20-06-25.docx, claims: c8, c26, c27 (08Х18Н10Т аустенит, TiC)",
+   "kind": "citation-fix",
+   "severity": "medium",
+   "owner": "research-orchestrator",
+   "sunset_at": "2026-10-01",
+   "acceptance": "[9] = Лахтин Ю.М., Коган Я.Д. Научные основы технологии азотирования (Вестник машиностроения, 1985, №7, с.45-50) — соответствует; для c26/c27 (аустенит 08Х18Н10Т) подобраны отдельные источники (Sedriks 'Corrosion of stainless steels' [23] уже есть)",
+   "status": "open",
+   "status_detail": "OPEN_CURRENT",
+   "presentation_category": "ACTIVE",
+   "source_status": "open",
+   "notes": "Лахтин/Коган в корпусе нет как отдельной статьи, но монография Лахтин 1991 'Теория и технология азотирования' есть (pdfs/Лахтин Ю.М. 1991....pdf). c26/c27 про аустенит 08Х18Н10Т — лучше [23] Sedriks (есть ISBN 0-471-00792-7).",
+   "progress": "2026-09-18: выявлено в citation map.",
+   "related": [
+    "TD-113"
+   ]
+  },
+  {
+   "id": "TD-113",
+   "title": "Список литературы НКР: ДОБАВИТЬ реальные статьи, цитируемые в тексте, но отсутствующие в списке (Vives-Díaz 2008, Hosmani 2006, Demchenko 2011, Герасимов 2013, Горюшкин 1973, Макаров 2017)",
+   "area": "НКР_Черенков 20-06-25.docx (список литературы), claims: c22, c34, c37-c42, c271-c276",
+   "kind": "citation-add",
+   "severity": "critical",
+   "owner": "research-orchestrator",
+   "sunset_at": "2026-10-01",
+   "acceptance": "В список литературы добавлены с правильными DOI: Vives-Díaz & Hosmani 2008 (10.1016/j.actamat.2008.04.041), Hosmani 2006 (10.1016/j.actamat.2006.02.017), Demchenko & Sidorenko 2011 (10.4028/www.scientific.net/ddf.309-310.155), Герасимов/Куксенова/Лаптева 2013 (10.7463/0613.0579264), Горюшкин 1973, Макаров 2017 (10.18323/2073-5073-2017-4); соответствующие клаймы получили верные [n]",
+   "status": "open",
+   "status_detail": "OPEN_CURRENT",
+   "presentation_category": "ACTIVE",
+   "source_status": "open",
+   "notes": "Все 6 статей ЕСТЬ в корпусе pdfs/ (подтверждение из источников): 10.1016@j.actamat.2008.04.041.pdf (Vives-Díaz — 'excess dissolved nitrogen due to misfit-stress field'), hosmani2006.pdf, demchenko2011.pdf, vliyanie-ionno-plazmennogo-...pdf (Герасимов, DOI 10.7463/0613.0579264), Горюшкин_Увеличение.pdf, ВЛИЯНИЕ ПРЕДВАРИТЕЛЬНОЙ ДЕФОРМАЦИОННОЙ ОБРАБОТКИ.pdf (Макаров, DOI 10.18323/2073-5073-2017-4).",
+   "progress": "2026-09-18: выявлено в citation map.",
+   "related": [
+    "TD-103",
+    "TD-104"
+   ]
+  },
+  {
+   "id": "TD-114",
+   "title": "Дерево клаймов: ИСПРАВИТЬ привязку c20-c24 (ВКС-10) — ошибочно привязаны к Горюшкину (Р18); заменить на Герасимов/Куксенова 2013 + ВИАМ",
+   "area": "research_verification/ch1_dom.json, claims c20-c24 (секция 1.1.1 ВКС-10)",
+   "kind": "citation-fix",
+   "severity": "high",
+   "owner": "research-orchestrator",
+   "sunset_at": "2026-10-01",
+   "acceptance": "c20-c24 (ВКС-10) имеют verified_sources = Герасимов/Куксенова/Лаптева 2013 (ВКС-7/ВКС-10) + ВИАМ/каталог; Горюшкин (Р18) убран из этих клаймов",
+   "status": "open",
+   "status_detail": "OPEN_CURRENT",
+   "presentation_category": "ACTIVE",
+   "source_status": "open",
+   "notes": "Эвристика привязала Горюшкина по слову 'азотирование', но Горюшкин — про Р18 (деревообрабатывающий инструмент). ВКС-10 подтверждается: Герасимов/Куксенова/Лаптева 'Влияние ионно-плазменного азотирования и вакуумной цементации на износостойкость сталей ВКС-7 и ВКС-10' (2013, DOI 10.7463/0613.0579264, стр. в pdf) + ВИАМ каталог (evek).",
+   "progress": "2026-09-18: выявлено при ручной проверке mapping.",
+   "related": [
+    "TD-113",
+    "TD-104"
+   ]
+  },
+  {
+   "id": "TD-115",
+   "title": "Список литературы НКР: ДОБАВИТЬ Trubin & Szasz 1991 (регуляризация XRD профилей) — цитируется в c65, отсутствует в списке",
+   "area": "НКР_Черенков 20-06-25.docx, claims c65, c233-c240 (разделение Kα-дублета, регуляризация)",
+   "kind": "citation-add",
+   "severity": "high",
+   "owner": "research-orchestrator",
+   "sunset_at": "2026-10-01",
+   "acceptance": "В список добавлены: Trubin V.A., Szasz A. 'Analysis of the Broadening of X-Ray Diffraction Line Profiles of Polycrystalline Tungsten' (phys. stat. sol. (a) 125, 1991, DOI 10.1002/pssa.2211250206) и 'On the Evaluation of X-Ray Diffraction Experiments' (DOI 10.1002/pssa.2211240202); c65/c233-c240 получили верные [n]",
+   "status": "open",
+   "status_detail": "OPEN_CURRENT",
+   "presentation_category": "ACTIVE",
+   "source_status": "open",
+   "notes": "Подтверждение из источника (корпус): trubin1991_analysis of the broadening of x-ray diffraction line profiles.pdf (phys. stat. sol. (a) 125, 459 (1991)), trubina1991_on the evaluation...pdf (phys. stat. sol. (a) 125, 91 (1991)). Статьи — доступны, sci-bot не нужен.",
+   "progress": "2026-09-18: выявлено в citation map.",
+   "related": [
+    "TD-109"
+   ]
+  },
+  {
+   "id": "TD-116",
+   "title": "Получить недостающие работы: статьи — sci-bot; монографии/книги — только сеть (PDF/DJVU)",
+   "area": "scibot_requests_ch1.md, исследования главы 1",
+   "kind": "research-gap",
+   "severity": "medium",
+   "owner": "research-orchestrator",
+   "sunset_at": "2026-10-15",
+   "acceptance": "Получены: статьи Fernandes (ТМО+азотирование), Scardi & Leoni (WPPM 2002/2004), Fedorova 2023 через sci-bot; монографии Гуляев, Энтин/Курдюмов, Тихонов, Groetsch, Bhadeshia найдены в сети как PDF/DJVU и добавлены в корпус pdfs/",
+   "status": "open",
+   "status_detail": "OPEN_CURRENT",
+   "presentation_category": "ACTIVE",
+   "source_status": "open",
+   "notes": "УСТАНОВКА ПОЛЬЗОВАТЕЛЯ: sci-bot (Sci-Hub) отдаёт ТОЛЬКО статьи. Монографии (Гуляев 'Металловедение', Курдюмов/Утевский/Энтин 'Превращения в железе и сталях', Тихонов 'Численные методы решения некорректных задач', Groetsch 1984, Bhadeshia & Honeycombe) — искать в открытом доступе: elibrary, z-library, старые сайты книг, djvu-архивы. Список готовых запросов в scibot_requests_ch1.md (обновить: убрать монографии из sci-bot-блока).",
+   "progress": "2026-09-18: уточнено пользователем (sci-bot = только статьи).",
    "related": []
   }
  ]
