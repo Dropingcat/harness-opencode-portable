@@ -61,7 +61,8 @@
         "citation-management",
         "hypothesis-generation",
         "scientific-critical-thinking",
-        "physics-verification"
+        "physics-verification",
+        "sci-bot"
       ],
       "supported_routes": [
         "academic-research",

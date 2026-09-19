@@ -76,7 +76,8 @@
         "literature-review",
         "citation-management",
         "conducting-scientific-research",
-        "scientific-critical-thinking"
+        "scientific-critical-thinking",
+        "sci-bot"
       ],
       "preferred_tools": [
         "arxiv_search",

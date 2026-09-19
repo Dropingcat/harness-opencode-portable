@@ -2468,8 +2468,8 @@
    "status_detail": "OPEN_CURRENT",
    "presentation_category": "ACTIVE",
    "source_status": "open",
-   "notes": "2026-09-18: клиент sci_bot_client.py вернул 'НЕ ОТПРАВЛЕНО: баланс 0 ниже floor 300000'. Аккаунт платный, токены общие. Пока баланс не пополнен — запросы невозможны. Бесплатные пути исчерпаны (ACS 403, Elsevier закрыт, Qucosa без PDF).",
-   "progress": "2026-09-18: баланс проверен, = 0.",
+   "notes": "8 статей Fe-N скачаны через sci-hub.ru (формат DOI в URL). Liapina 2006: D_N,eps=118 кДж/моль, D_N,gamma=116 кДж/моль. Статьи пользователя: wetzel2019.pdf + Hexagonal-2024.pdf в F:\\\\1\\\\_STRUCTURED.",
+   "progress": "2026-09-19: статьи Fe-N получены через sci-hub.ru (Liapina 2003/2005/2006x2, Leineweber 1999/2007, Gressmann 2008, Nikolussi 2010 = 8 PDF); баланс sci-bot 374K после запросов. Осталось: Fernandes (ТМО) и др. не-Fe-N статьи.",
    "related": [
     "TD-116"
    ]
