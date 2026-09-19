@@ -1,10 +1,10 @@
 {
  "version": 2,
- "updated": "2026-09-18",
+ "updated": "2026-09-19",
  "authority_note": "Canonical registry migrated from патчи/миграция в плагин/tech_debt_current.json (65 records). project_context.py counts status=open. CLOSED_REPORTED maps to closed; RECONCILE_REQUIRED stays open until exact-tree verification.",
  "counts": {
-  "total": 120,
-  "open": 98,
+  "total": 125,
+  "open": 103,
   "closed": 22
  },
  "debts": [
@@ -2489,6 +2489,97 @@
    "source_status": "open",
    "notes": "2026-09-18: на Windows найден только скрипт sci_bot_client.py (5147 б) без cookie-истории. Согласно SKILL.md, оригинальный клиент — /home/orangepi/.hermes/profiles/resercher/skills/sci-bot-search/sci_bot_client.py с интерпретатором hermes venv. Проверить на orangepi и синхронизировать.",
    "progress": "2026-09-18: базовый клиент зарегистрирован, полный не найден.",
+   "related": []
+  },
+  {
+   "id": "TD-119",
+   "title": "Направление «лазер-индуцированные деформации»: добавлены статьи в клаймы главы 1 (Schaaf 2002, Panfil 2017)",
+   "area": "research_verification/ch1_dom.json, claims c2/c17/c20-c24; direction_articles.json",
+   "kind": "research-expansion",
+   "severity": "medium",
+   "owner": "research-orchestrator",
+   "sunset_at": "2026-10-15",
+   "acceptance": "Статьи по лазерному азотированию привязаны к клаймам ВКС-10 и Р18; в списке литературы НКР добавлены Schaaf 2002 (10.1016/s0079-6425(00)00003-7) и Panfil 2017 (10.1016/j.jallcom.2017.02.220)",
+   "status": "open",
+   "status_detail": "OPEN_CURRENT",
+   "presentation_category": "ACTIVE",
+   "source_status": "open",
+   "notes": "Скачано: Schaaf 2002 (3.3 МБ, обзор лазерного азотирования). В корпусе: Laser_Surface_Engineering_for_Tribology.pdf, лазерное упрочнение.pdf (Харанжевский). Привязки: c17 (азотирование Р18), c20-c24 (ВКС-10).",
+   "progress": "2026-09-19: поиск+скачивание+привязка.",
+   "related": [
+    "TD-117"
+   ]
+  },
+  {
+   "id": "TD-120",
+   "title": "Направление «легирование»: Zhang 2014 (alloyed ε-(Fe1-xMx)3N) + Yang&Sisson 2014 привязаны к клаймам 1.1.2",
+   "area": "research_verification/ch1_dom.json, claims c31-c36; zhang2014/yang2014 (корпус)",
+   "kind": "research-expansion",
+   "severity": "medium",
+   "owner": "research-orchestrator",
+   "sunset_at": "2026-10-15",
+   "acceptance": "Zhang 2014 и Yang&Sisson 2014 добавлены в список литературы НКР и привязаны к клаймам про легирующие (c31-c36); найдено DOI Zhang 2014 (уточнить по корпусному PDF)",
+   "status": "open",
+   "status_detail": "OPEN_CURRENT",
+   "presentation_category": "ACTIVE",
+   "source_status": "open",
+   "notes": "Zhang 2014: first-principles ε-(Fe1-xMx)3N для Cr,Ni,Mo,V,Co,Nb,Mn,Ti,Cu — прямое подтверждение c32 (Cr), c34 (Mo/V), c27 (TiC). Yang&Sisson 2014: Al/Cr/V/Mo в азотировании.",
+   "progress": "2026-09-19: корпусные PDF верифицированы, привязки сделаны.",
+   "related": [
+    "TD-119"
+   ]
+  },
+  {
+   "id": "TD-121",
+   "title": "Направление «напряжения/микродеформации в γ′-Fe4N»: Somers&Mittemeijer 1990 (3 статьи) скачаны и привязаны",
+   "area": "research_verification/ch1_dom.json, claims c18/c31-c36; downloads_directions/Somers-Mittemeijer_1990_*.pdf",
+   "kind": "research-expansion",
+   "severity": "medium",
+   "owner": "research-orchestrator",
+   "sunset_at": "2026-10-15",
+   "acceptance": "3 статьи Somers&Mittemeijer 1990 (10.1007/bf02656436, 10.1007/bf02656574, 10.1007/bf02834064) добавлены в список литературы и привязаны к клаймам про напряжения",
+   "status": "open",
+   "status_detail": "OPEN_CURRENT",
+   "presentation_category": "ACTIVE",
+   "source_status": "open",
+   "notes": "Скачаны: 1.8МБ+2.8МБ+800К. Ключевое: 'Development and Relaxation of Stress in γ′-Fe4N1-x layers', 'Rise and Fall of Stress in Thin Layers'. Прямое подтверждение c18/c31/c32 (микродеформации, ОЦК).",
+   "progress": "2026-09-19: скачано, привязано.",
+   "related": []
+  },
+  {
+   "id": "TD-122",
+   "title": "Направление «избыточный азот»: Hekker 1985 (Fe-Cr) + Jung&Meka 2011 (Fe-Ti-Cr) скачаны и привязаны",
+   "area": "research_verification/ch1_dom.json, claims c22/c27; downloads_directions/Hekker*, Jung-Meka*",
+   "kind": "research-expansion",
+   "severity": "medium",
+   "owner": "research-orchestrator",
+   "sunset_at": "2026-10-15",
+   "acceptance": "Hekker 1985 (10.1007/bf01026547) и Jung&Meka 2011 (10.1007/s11661-011-0939-x) добавлены в список литературы и привязаны к клаймам про избыточный азот",
+   "status": "open",
+   "status_detail": "OPEN_CURRENT",
+   "presentation_category": "ACTIVE",
+   "source_status": "open",
+   "notes": "Hekker 1985: excess N + discontinuous precipitation в Fe-Cr (прямое подтверждение c22). Jung 2011: Fe-Ti-Cr нитриды. НЕ скачаны: Somers-Lankreijer 1989 (10.1080/01418618908205064, капча), Jung-Schacherl 2010 (10.3139/105.110072, нет PDF).",
+   "progress": "2026-09-19: скачано 2, осталось 2.",
+   "related": [
+    "TD-117"
+   ]
+  },
+  {
+   "id": "TD-123",
+   "title": "Направление «термомеханическая обработка»: поиск по ТМО+азотирование дал мало (нужен уточняющий запрос)",
+   "area": "OpenAlex/CrossRef, клаймы c37-c42 (ТМО)",
+   "kind": "research-gap",
+   "severity": "medium",
+   "owner": "research-orchestrator",
+   "sunset_at": "2026-10-15",
+   "acceptance": "Найдены и добавлены статьи по ТМО+кинетика азотирования (Fernandes, Bhadeshia-главы); c37-c42 получили verified_sources",
+   "status": "open",
+   "status_detail": "OPEN_CURRENT",
+   "presentation_category": "ACTIVE",
+   "source_status": "open",
+   "notes": "OpenAlex: 'thermomechanical nitriding' — в основном полимеры/BN. Нужен точный запрос: 'thermomechanical processing nitriding kinetics low alloy steel Fernandes' или 'cold work nitrogen diffusion ferrite'. Частично покрыто: Demchenko&Sidorenko 2011 (в корпусе), Макаров 2017 (в корпусе).",
+   "progress": "2026-09-19: начат поиск, нужно углубить.",
    "related": []
   }
  ]
