@@ -3,8 +3,8 @@
  "updated": "2026-09-19",
  "authority_note": "Canonical registry migrated from патчи/миграция в плагин/tech_debt_current.json (65 records). project_context.py counts status=open. CLOSED_REPORTED maps to closed; RECONCILE_REQUIRED stays open until exact-tree verification.",
  "counts": {
-  "total": 126,
-  "open": 104,
+  "total": 127,
+  "open": 105,
   "closed": 22
  },
  "debts": [
@@ -2599,6 +2599,25 @@
    "progress": "2026-09-19: скачаны Wriedt 1987, Jack 1952, Kikkawa 2018, Lehrer 1930 (4/5). Leineweber 2017 - капча.",
    "related": [
     "TD-117"
+   ]
+  },
+  {
+   "id": "TD-125",
+   "title": "Глубокий рекурсивный шаг: найдены классики диффузии N из списка Leineweber 2007 (Grieveson&Turkdogan 1964, Jack 1973, Pfeiler 2004) — добавить в список литературы главы 1",
+   "area": "recommended_ch1_references.json (deep-ref), клаймы c277-c280 (диффузия N)",
+   "kind": "research-expansion",
+   "severity": "medium",
+   "owner": "research-orchestrator",
+   "sunset_at": "2026-10-15",
+   "acceptance": "Grieveson&Turkdogan 1964, Jack DH&KH 1973, Leineweber 2007 Phil.Mag., Pfeiler 2004 добавлены в список литературы с полными библиоданными",
+   "status": "open",
+   "status_detail": "OPEN_CURRENT",
+   "presentation_category": "ACTIVE",
+   "source_status": "open",
+   "notes": "Источник: references_deep.json (Leineweber_2007). Эти работы 1960-2004 без DOI в открытом доступе — библиография из реф-списка.",
+   "progress": "2026-09-19: 5 deep-ref добавлены в recommended_ch1_references.json.",
+   "related": [
+    "TD-124"
    ]
   }
  ]
