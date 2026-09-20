@@ -2336,7 +2336,7 @@
    "presentation_category": "ACTIVE",
    "source_status": "open",
    "notes": "Подтверждение из источника: Гуляев А.П. Металловедение, гл. 'Термическая обработка стали' (том/стр. по изданию 1986): 'для стали Р18 применяют закалку от 1260-1280°C и трёхкратный отпуск при 560°C'; красностойкость ~600°C. Доступно: termist.com/bibliot/stud/gul_met/gul_met.htm; chipmaker.ru/files/file/13144/. Монография — сеть (PDF/DJVU), НЕ sci-bot.",
-   "progress": "2026-09-18: выявлено в citation map (текст говорит Гуляев [4], список даёт Григорьева).",
+   "progress": "2026-09-19: полный список из 38 источников собран в recommended_ch1_references.json; нумерация исправлена (Гуляев, Энтин)",
    "related": [
     "TD-111"
    ]
@@ -2355,7 +2355,7 @@
    "presentation_category": "ACTIVE",
    "source_status": "open",
    "notes": "Подтверждение из источника: Курдюмов/Утевский/Энтин, гл. 'Превращения в железе и сталях' (стр. о распаде переохлаждённого аустенита и мартенситном превращении в высокоуглеродистых сталях). Монография — сеть (PDF/DJVU), НЕ sci-bot.",
-   "progress": "2026-09-18: выявлено в citation map.",
+   "progress": "2026-09-19: полный список из 38 источников собран в recommended_ch1_references.json; нумерация исправлена (Гуляев, Энтин)",
    "related": [
     "TD-110"
    ]
@@ -2393,7 +2393,7 @@
    "presentation_category": "ACTIVE",
    "source_status": "open",
    "notes": "Все 6 статей ЕСТЬ в корпусе pdfs/ (подтверждение из источников): 10.1016@j.actamat.2008.04.041.pdf (Vives-Díaz — 'excess dissolved nitrogen due to misfit-stress field'), hosmani2006.pdf, demchenko2011.pdf, vliyanie-ionno-plazmennogo-...pdf (Герасимов, DOI 10.7463/0613.0579264), Горюшкин_Увеличение.pdf, ВЛИЯНИЕ ПРЕДВАРИТЕЛЬНОЙ ДЕФОРМАЦИОННОЙ ОБРАБОТКИ.pdf (Макаров, DOI 10.18323/2073-5073-2017-4).",
-   "progress": "2026-09-18: выявлено в citation map.",
+   "progress": "2026-09-19: полный список из 38 источников собран в recommended_ch1_references.json; нумерация исправлена (Гуляев, Энтин)",
    "related": [
     "TD-103",
     "TD-104"
