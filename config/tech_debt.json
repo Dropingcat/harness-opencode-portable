@@ -2595,8 +2595,8 @@
    "status_detail": "OPEN_CURRENT",
    "presentation_category": "ACTIVE",
    "source_status": "open",
-   "notes": "39 DOI собраны. В корпусе только 1 (actamat 2017). Ключевые фундаментальные (цитируются многократно): 10.1007/BF02869273 (Wriedt Fe-N диаграмма 1987), 10.1107/S0365110X52001258 (Jack 1952 epsilon структура), 10.1016/C2013-0-16318-0 (Mittemeijer&Somers 2015 книга), 10.1002/bbpc.19300360606 (Lehrer 1930 аммиак равновесие), 10.1016/j.progsolidstchem.2017.06.001 (Kikkawa Fe16N2).",
-   "progress": "2026-09-19: скачаны Wriedt 1987, Jack 1952, Kikkawa 2018, Lehrer 1930 (4/5). Leineweber 2017 - капча.",
+   "notes": "Все темы автореферата покрыты. Осталось: привязать 5 deep-ref классиков (Grieveson 1964 и др.) и докачать 4 ручные статьи.",
+   "progress": "2026-09-19: покрытие автореферата v20 - 14/14 тем (499 привязок, 27 источников). Добавлены: Karamis 1991 (корпус), Nishimoto 2010, Carpene-Schaaf 2002, Zhigalina 2020, Popa 1998, Williamson-Hall 1953, Тихонов 1990.",
    "related": [
     "TD-117"
    ]
