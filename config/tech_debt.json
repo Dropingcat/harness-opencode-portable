@@ -3,9 +3,9 @@
  "updated": "2026-09-19",
  "authority_note": "Canonical registry migrated from патчи/миграция в плагин/tech_debt_current.json (65 records). project_context.py counts status=open. CLOSED_REPORTED maps to closed; RECONCILE_REQUIRED stays open until exact-tree verification.",
  "counts": {
-  "total": 127,
-  "open": 105,
-  "closed": 22
+  "total": 129,
+  "open": 106,
+  "closed": 23
  },
  "debts": [
   {
@@ -2615,6 +2615,45 @@
    "progress": "2026-09-19: 5 deep-ref добавлены в recommended_ch1_references.json.",
    "related": [
     "TD-124"
+   ]
+  },
+  {
+   "id": "TD-126",
+   "title": "ГЛОБАЛЬНЫЙ ДОЛГ RESEARCHER: формализация отделения мусора от ценных статей + перепроверка всех прошлых трактовок",
+   "area": "SEARCH_PROTOCOL.md (док-контракт v1.0), все research_verification/*.json",
+   "kind": "process",
+   "severity": "critical",
+   "owner": "research-orchestrator",
+   "sunset_at": "2026-10-15",
+   "acceptance": "Все 36 скачанных статей перепроверены: (1) первая страница fitz + CrossRef → корректная идентификация; (2) ни одна не принята за другую (как Арзамасов→Пастух, Березина Co3O4→Co-стали); (3) фейковые DOI (sci-bot) отфильтрованы; (4) в recommended_ch1_references.json нет оффтопика",
+   "status": "open",
+   "status_detail": "OPEN_CURRENT",
+   "presentation_category": "ACTIVE",
+   "source_status": "open",
+   "notes": "ПРОЦЕСС (SEARCH_PROTOCOL.md раздел 2.3): идентификация → CrossRef-верификация → классификация направления → привязка к клаймам → регистрация. Ошибки прошлого: Березина [3], Арзамасов=Пастух, sci-bot DOI 404, Дисертация.md принята за эталон (НЕ эталон — черновик!). Каждая трактовка — перепроверить.",
+   "progress": "2026-09-19: протокол создан (SEARCH_PROTOCOL.md); БД доиндексирована (14070 чанков); начата перепроверка.",
+   "related": [
+    "TD-124",
+    "TD-125"
+   ]
+  },
+  {
+   "id": "TD-127",
+   "title": "Поисковый контракт: ОБЯЗАТЕЛЬНО сначала шерстить локальную БД (ChromaDB 14k) перед внешними источниками",
+   "area": "SEARCH_PROTOCOL.md раздел 1, C:\\Temp\\opencode\\semsearch.py",
+   "kind": "process",
+   "severity": "high",
+   "owner": "research-orchestrator",
+   "sunset_at": "2026-10-01",
+   "acceptance": "Каждый поиск начинается с semsearch.py; внешние источники (sci-hub, sci-bot, CrossRef) — только если БД/корпус пусты по теме",
+   "status": "open",
+   "status_detail": "OPEN_CURRENT",
+   "presentation_category": "ACTIVE",
+   "source_status": "open",
+   "notes": "Принцип: сначала БАЗА, потом сеть. Дубликаты не качать. Внешние — после проверки корпуса.",
+   "progress": "2026-09-19: контракт в SEARCH_PROTOCOL.md.",
+   "related": [
+    "TD-126"
    ]
   }
  ]
