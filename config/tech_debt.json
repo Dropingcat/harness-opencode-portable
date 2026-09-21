@@ -3,8 +3,8 @@
     "updated":  "2026-09-18",
     "authority_note":  "Canonical registry migrated from патчи/миграция в плагин/tech_debt_current.json (65 records). project_context.py counts status=open. CLOSED_REPORTED maps to closed; RECONCILE_REQUIRED stays open until exact-tree verification.",
     "counts":  {
-                   "total":  133,
-                   "open":  110,
+                   "total":  134,
+                   "open":  111,
                    "closed":  23
                },
     "debts":  [
@@ -2748,6 +2748,22 @@
                       "source_status":  "open",
                       "notes":  "Связано с TD-098 (расширение поиска по связанным работам в научном контуре), TD-128 (цепочка cluster-\u003eQ\u0026A-\u003esearch-\u003eattach), WS-22 (research tooling capsules search-\u003esource-\u003edocument-\u003eevidence). ВАЖНО: не путать с TD-005 (source-fetcher fallback) - сыщик это многошаговый цикл pivot/expand, а не fallback. Пример цепочки для smoke: (1) статья -\u003e её референс -\u003e первоисточник данных; (2) библиотека X -\u003e PyPI -\u003e GitHub -\u003e лицензия/статус; (3) автор -\u003e ORCID -\u003e affiliation -\u003e связанные публикации.",
                       "progress":  "2026-09-18: предложение пользователя. Идея: агент-«сыщик» раскручивает клубок зависимостей, когда для утверждения/вопроса нужен не один источник, а цепочка (цитата -\u003e первоисточник -\u003e данные; инструмент -\u003e документация -\u003e API -\u003e репозиторий; автор -\u003e affiliation -\u003e публикации -\u003e конференции). В науке это citation chain + snowballing (backward/forward); в прикладных задачах - dependency crawl (requirements -\u003e package -\u003e source -\u003e license). На GitHub есть якорь sherlock-project/sherlock (92k stars, поиск аккаунтов по username: https://github.com/sherlock-project/sherlock) - но это OSINT по username, не научные цепочки. Агентные OSINT-проекты молодые и мало звёзд: osint-research-agent (self-hosted, WHOIS/VirusTotal/AbuseIPDB/XposedOrNot, citation-disciplined), ravenastar-js/ravagents (investigative prompts), greysquirr3l/redshank (recursive investigation), Pranith-Jain/dfir-threat-intel-agent (plan-act-observe, 30+ tools), Forkei/worldgraph (sourced facts + reversible edits), TOSINT (TUI-обвязка). Их нельзя считать benchmarks - только идеи/архитектура."
+                  },
+                  {
+                      "id":  "TD-131",
+                      "owner":  "researcher-orchestrator",
+                      "presentation_category":  "ACTIVE",
+                      "sunset_at":  "2026-12-15",
+                      "title":  "Аналитика склонированных OSINT/детективных репозиториев: СНАЧАЛА тестирование на диаметрально разных задачах (границы способностей), ПОТОМ заимствование кода (с учётом лицензий) для режима «сыщика» (TD-130)",
+                      "status_detail":  "OPEN_CURRENT",
+                      "kind":  "feature",
+                      "status":  "open",
+                      "severity":  "high",
+                      "acceptance":  "ФАЗА 1 (обязательна, до любого заимствования): каждый из 7 репо прогнан на 4-6 диаметрально разных задачах (например: (а) научная citation-цепочка статья-\u003eреференс-\u003eпервоисточник, (б) поиск username/аккаунтов, (в) домен/WHOIS/инфраструктурная разведка, (г) анализ зависимостей библиотеки/пакета, (д) факт-чек связки автор/ORCID/публикации, (е) синтез отчёта из 10+ источников); по каждой задаче зафиксированы: что сработало, что сломалось, где граница способностей, время/стоимость, галлюцинации/ложные срабатывания; итог ФАЗЫ 1 - аналитический отчёт «что реально умеет каждый репо, что нельзя ожидать»; ФАЗА 2 (только после отчёта): план заимствования кода (файлы/функции/алгоритмы) с явным указанием лицензионной совместимости; ФАЗА 3: интеграция выбранных частей в режим сыщика с attribution",
+                      "area":  "references/osint-research/ (7 репо: sherlock, osint-research-agent, ravagents, redshank, dfir-threat-intel-agent, worldgraph, TOSINT) -\u003e researcher runtime",
+                      "source_status":  "open",
+                      "notes":  "Порядок обязателен: ФАЗА 1 (тесты) -\u003e ФАЗА 2 (план заимствования с лицензиями) -\u003e ФАЗА 3 (интеграция с attribution). Запрещено копировать код до тестов: без понимания границ способностей заимствование даст ложное чувство готовности. Приоритеты кандидатов (после тестов): sherlock (сетевое сканирование sites), dfir-threat-intel-agent (plan-act-observe loop), worldgraph (sourced facts + reversible edits), osint-research-agent (citation-disciplined reporting - только идеи, нет лицензии). Для научных citation-цепочек готовых решений нет - проектировать самим. Связано: TD-130 (режим сыщика), TD-098 (связанные работы), TD-128 (cluster-\u003eQ\u0026A-\u003esearch-\u003eattach).",
+                      "progress":  "2026-09-18: 7 репо склонированы (--depth 1) в references/osint-research/. НЕ приступать к заимствованию кода до ФАЗЫ 1 (тестирование). Логика: сначала понять процесс работы и границы способностей каждого инструмента на диаметрально разных задачах, потом решать, что и как брать. Диаметрально разные задачи (предлагаемый набор): (1) научная citation-цепочка статья-\u003eреференс-\u003eпервоисточник; (2) поиск username/аккаунтов по никнейму (sherlock-класс); (3) домен/WHOIS/инфраструктурная разведка; (4) анализ зависимостей библиотеки/пакета (requirements-\u003ePyPI-\u003eGitHub-\u003eлицензия); (5) факт-чек связки автор/ORCID/affiliation/публикации; (6) синтез отчёта из 10+ разнородных источников. Критерии оценки каждой задачи: успех/частично/провал, граница способностей, ложные срабатывания/галлюцинации, время и стоимость, читаемость вывода. Лицензии: MIT x4 (sherlock/ravagents/dfir/worldgraph), AGPL-3.0 (redshank - только идеи), нет лицензии (osint-research-agent), NOASSERTION (TOSINT) - последние два только изучение."
                   }
               ]
 }
