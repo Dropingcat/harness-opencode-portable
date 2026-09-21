@@ -3,8 +3,8 @@
  "updated": "2026-09-19",
  "authority_note": "Canonical registry migrated from патчи/миграция в плагин/tech_debt_current.json (65 records). project_context.py counts status=open. CLOSED_REPORTED maps to closed; RECONCILE_REQUIRED stays open until exact-tree verification.",
  "counts": {
-  "total": 135,
-  "open": 112,
+  "total": 138,
+  "open": 115,
   "closed": 23
  },
  "debts": [
@@ -2768,6 +2768,63 @@
     "TD-126",
     "TD-128",
     "TD-131"
+   ]
+  },
+  {
+   "id": "TD-133",
+   "title": "c18: исследовать возможности line profile analysis для корректного определения плотности дислокаций по XRD (mWH/WPPM/Warren-Averbach) + альтернативные методы (EBSD KAM, TEM)",
+   "area": "ch1_dom.json c18, D13; literature: Ungár 1996/2000, Scardi-Leoni WPPM 2004, Warren-Averbach 1952",
+   "kind": "methodology",
+   "severity": "high",
+   "owner": "research-orchestrator",
+   "sunset_at": "2026-10-15",
+   "acceptance": "Сравнение mWH / Popa / WPPM / Warren-Averbach на одном наборе данных + валидация EBSD KAM / TEM / Bailey-Hirsch. Определён корректный протокол для ρ в градиентных азотированных слоях.",
+   "status": "open",
+   "status_detail": "OPEN_CURRENT",
+   "presentation_category": "ACTIVE",
+   "source_status": "open",
+   "notes": "Изотропный WH завышает ρ на 1-2 порядка для Fe (A≈2.4). Нужен протокол: mWH с C̄hkl (Ungár&Borbély 1996) → WPPM (Scardi&Leoni 2004) → Warren-Averbach (1952) → EBSD KAM/TEM. Расхождение = мера неопределённости.",
+   "progress": "2026-09-19: тексты c18/D13 переписаны (10^10-10^12 эффективная оценка). Исследование методов — следующий шаг.",
+   "related": [
+    "TD-132"
+   ]
+  },
+  {
+   "id": "TD-134",
+   "title": "c22: проработать ОБОСНОВАНИЕ выбора температуры и времени азотирования для КАЖДОЙ стали (Fe тех 740°C, Р18 540°C 8-24ч, ВКС-10 540°C 24ч)",
+   "area": "ch1_dom.json c271-c280, bridge_dom D9/D10; литература: Wriedt 1987 (диаграмма), Mittemeijer 2013, Liapina 2005",
+   "kind": "methodology",
+   "severity": "high",
+   "owner": "research-orchestrator",
+   "sunset_at": "2026-10-15",
+   "acceptance": "Для каждой стали обоснованы T и t: термодинамика (какие фазы стабильны при T) + кинетика (глубина слоя от t) + практика (аналог). Fe тех 740°C — почему выше; Р18/ВКС-10 540°C — почему ниже.",
+   "status": "open",
+   "status_detail": "OPEN_CURRENT",
+   "presentation_category": "ACTIVE",
+   "source_status": "open",
+   "notes": "740°C для чистого Fe — чтобы нитриды росли быстрее (Fe не имеет легирующих-замедлителей). 540°C для Р18/ВКС-10 — компромисс: ниже отпуска (Р18: тройной отпуск 560°C), сохраняет карбиды; выше — перестаривание. Время 8-24ч — по глубине слоя (D_N).",
+   "progress": "2026-09-19: начато, нужен сбор данных диффузии.",
+   "related": [
+    "TD-130"
+   ]
+  },
+  {
+   "id": "TD-135",
+   "title": "Лазер: подобрать из литературы ОБОСНОВАНИЕ типов обработки, мощности лазера и его вида (импульсный/непрерывный, λ, длительность) для ЛО-0/1/2/3",
+   "area": "ch1_dom.json c17/c20-c24, bridge_dom A7/A8/D18; литература: Schaaf 2002, Carpene-Schaaf 2002, Steen&Mazumder 2010, Ready 1978, Abboud&West 1990",
+   "kind": "methodology",
+   "severity": "high",
+   "owner": "research-orchestrator",
+   "sunset_at": "2026-10-15",
+   "acceptance": "Обоснованы: тип лазера (Nd:YAG/CO2/диодный), мощность (1200/2000 Вт), режим (импульсный/непрерывный), длительность импульса, скорость сканирования, диаметр пятна — и как это влияет на скорость охлаждения 10^4-10^6 К/с, ячеистую субструктуру, пересыщение.",
+   "status": "open",
+   "status_detail": "OPEN_CURRENT",
+   "presentation_category": "ACTIVE",
+   "source_status": "open",
+   "notes": "ЛО-0 (холостой), ЛО-1 (1200Вт 1 проход), ЛО-2 (оплавление 2000Вт), ЛО-3 (2×1200Вт перекрестное). Нужно связать с: плотностью энергии (Дж/мм²), глубиной переплава, скоростью охлаждения. Источники: Steen&Mazumder (промышленный стандарт), Ready (HP laser).",
+   "progress": "2026-09-19: начато, источники есть.",
+   "related": [
+    "TD-129"
    ]
   }
  ]
