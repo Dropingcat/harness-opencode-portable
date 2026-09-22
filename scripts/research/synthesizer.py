@@ -75,10 +75,14 @@ def compute_stats(verdicts, stats=None):
 def generate_recommendations(stats, verdicts):
     """LLM-генерация рекомендаций и вопросов (опционально)."""
     from openai import OpenAI
-    api_key = os.environ.get("AITUNNEL_KEY") or os.environ.get("OPENAI_API_KEY", "")
+    # TD-114: провайдер из env (можно задать из config.yaml: BASE_URL=polza, MODEL=deepseek-v4-flash-0731)
+    base_url = os.environ.get("SYNTHESIZER_BASE_URL", "https://api.aitunnel.ru/v1")
+    model = os.environ.get("SYNTHESIZER_MODEL", "deepseek-v4-flash")
+    api_key = (os.environ.get("POLZA_API_KEY") or os.environ.get("AITUNNEL_KEY")
+               or os.environ.get("OPENAI_API_KEY", ""))
     if not api_key:
-        raise RuntimeError("AITUNNEL_KEY/OPENAI_API_KEY не задан")
-    client = OpenAI(api_key=api_key, base_url="https://api.aitunnel.ru/v1")
+        raise RuntimeError("POLZA_API_KEY/AITUNNEL_KEY/OPENAI_API_KEY не задан")
+    client = OpenAI(api_key=api_key, base_url=base_url)
     prompt = (
         "Ты — физик-эксперт (ФКС: азотирование, РФА, дифракция). "
         "На основе вердиктов верификации сформируй:\n"
@@ -89,7 +93,7 @@ def generate_recommendations(stats, verdicts):
         "Ответ в Markdown. Кратко, по делу."
     )
     resp = client.chat.completions.create(
-        model="deepseek-v4-flash",
+        model=model,
         messages=[{"role": "user", "content": prompt}],
         temperature=0.1,
         max_tokens=2000,

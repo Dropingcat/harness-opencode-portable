@@ -29,8 +29,11 @@ def load_claims(claims_path: str) -> list[dict]:
 
 def verify_claim_llm(claim_text: str, claim_idx: int) -> dict:
     from openai import OpenAI
-    api_key = os.environ.get("AITUNNEL_KEY") or os.environ.get("OPENAI_API_KEY", "")
-    client = OpenAI(api_key=api_key, base_url="https://api.aitunnel.ru/v1")
+    # TD-114: провайдер из env (config.yaml: POLZA_API_KEY / SYNTHESIZER_BASE_URL)
+    api_key = (os.environ.get("POLZA_API_KEY") or os.environ.get("AITUNNEL_KEY")
+               or os.environ.get("OPENAI_API_KEY", ""))
+    base_url = os.environ.get("SYNTHESIZER_BASE_URL", "https://api.aitunnel.ru/v1")
+    client = OpenAI(api_key=api_key, base_url=base_url)
     prompt = (
         "Ты — физик-эксперт в области физики конденсированного состояния "
         "(азотирование, РФА, дифракция, нитридные фазы). "
@@ -49,7 +52,7 @@ def verify_claim_llm(claim_text: str, claim_idx: int) -> dict:
     )
     try:
         resp = client.chat.completions.create(
-            model="deepseek-v4-flash",
+            model=os.environ.get("SYNTHESIZER_MODEL", "deepseek-v4-flash"),
             messages=[{"role": "user", "content": prompt}],
             temperature=0.0,
             max_tokens=1000,
