@@ -3,8 +3,8 @@
   "updated": "2026-09-22",
   "authority_note": "Canonical registry migrated from патчи/миграция в плагин/tech_debt_current.json (65 records). project_context.py counts status=open. CLOSED_REPORTED maps to closed; RECONCILE_REQUIRED stays open until exact-tree verification.",
   "counts": {
-    "total": 180,
-    "open": 129,
+    "total": 181,
+    "open": 130,
     "closed": 51
   },
   "debts": [
@@ -2981,6 +2981,22 @@
       "source_status": "open",
       "notes": "Из сессий: getaddrinfo ENOTFOUND polza.ai (при работающем TcpTestSucceeded), DNS-флапы SINTEF/doi.org. urllib использует системный DNS — если он блокирует/не резолвит, скачивание падает. Решение: (1) dns_preflight (проверка резолва, при ENOTFOUND — попробовать альтернативный резолвер), (2) resolve_to_ip + запрос на IP с Host-заголовком (обход DNS), (3) fallback зеркала для известных хостов.",
       "progress": "2026-09-22: РЕШЕНО. downloader.py: resolve_alt_dns (DoH через cloudflare-dns.com/dns.google/1.1.1.1), dns_preflight, http_get fallback (ENOTFOUND → DoH-IP + Host-заголовок). dns --host команда. Проверено: polza.ai резолвится и системным DNS, и DoH (158.160.170.34). Обход блокировок работает."
+    },
+    {
+      "id": "TD-154",
+      "owner": "research-orchestrator",
+      "presentation_category": "ACTIVE",
+      "sunset_at": "2027-09-22",
+      "title": "MCP-инструменты не проброшены в сессию субагентов + RESEARCH_WORKSPACE не задан: source-fetcher не видит arxiv_search/openalex_search (зарегистрированы в mcp_registry, но tools отсутствуют в runtime), пришлось fallback на прямой вызов mcp/academic_search_server.py через .venv; файлы пишутся в .runs/verification/ вместо рабочей папки",
+      "status_detail": "OPEN_CURRENT",
+      "kind": "infrastructure",
+      "status": "open",
+      "severity": "high",
+      "acceptance": "Субагент видит arxiv_search/openalex_search как tools (проброс MCP в runtime); RESEARCH_WORKSPACE задан (агент пишет sources_<id>.json в рабочую папку, не .runs); контракт source-fetcher актуализирован (убраны research_papers/browser-MCP или помечены optional с fallback); повторный тест: status=full или явные причины недоступности",
+      "area": "",
+      "source_status": "open",
+      "notes": "Из теста source-fetcher (2026-09-22): (1) research_papers НЕ зарегистрирован, а контракт source-fetcher на него ссылается — контракт надо актуализировать; (2) arxiv_search/openalex_search есть в config/mcp_registry.json, но НЕ проброшены в сессию субагента (агент не видит tools) — fallback: прямой вызов кода mcp/academic_search_server.py через .venv (тот же API, работает); (3) RESEARCH_WORKSPACE не задан → файлы пишутся в .runs/verification/ по умолчанию; (4) browser-MCP нет в mcp_registry (контракт ссылается — устарел); (5) SearXNG мёртв (TD-128). Итог: 7 primary/textbook источников с DOI найдено, status=partial (часть каналов недоступна).",
+      "progress": "2026-09-22: создано через tech_debt_cli.py"
     },
     {
       "id": "RS-001",
