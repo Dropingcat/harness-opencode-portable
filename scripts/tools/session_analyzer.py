@@ -34,7 +34,11 @@ if hasattr(sys.stderr, "reconfigure"):
 
 
 def _load(p) -> dict:
-    return json.loads(Path(p).read_text(encoding="utf-8"))
+    data = json.loads(Path(p).read_text(encoding="utf-8"))
+    # Сессии бывают dict {info, messages} или чистый list of messages (session_diff)
+    if isinstance(data, list):
+        return {"messages": data}
+    return data
 
 
 def _tool(part: dict) -> tuple[str, dict]:
