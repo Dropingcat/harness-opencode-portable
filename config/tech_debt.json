@@ -3,8 +3,8 @@
   "updated": "2026-09-22",
   "authority_note": "Canonical registry migrated from патчи/миграция в плагин/tech_debt_current.json (65 records). project_context.py counts status=open. CLOSED_REPORTED maps to closed; RECONCILE_REQUIRED stays open until exact-tree verification.",
   "counts": {
-    "total": 170,
-    "open": 138,
+    "total": 171,
+    "open": 139,
     "closed": 32
   },
   "debts": [
@@ -2821,6 +2821,22 @@
       "source_status": "open",
       "notes": "Системный: C:\\Users\\Arhys\\AppData\\Local\\hermes\\hermes-agent\\venv\\Scripts\\python.exe (chromadb 1.5.9). Harness venv: E:\\Documents\\Документы\\doc_Opencode_agern-new\\.venv (нет chromadb). Старый semsearch.py (C:\\Temp\\opencode) — та же логика, что chroma_indexer.py search. Решение: (а) установить chromadb в harness venv (тяжёлые зависимости), ИЛИ (б) chroma_indexer определяет рабочий python (с chromadb) автоматически, ИЛИ (в) venv-обёртка.",
       "progress": "2026-09-22: РЕШЕНО. chroma_indexer.py: _ensure_chromadb() — если chromadb нет в текущем python, перевызывает себя через системный hermes python (FALLBACK_PYTHONS). Проверено: запуск через harness venv → авто-перезапуск → 14070 чанков. Единая команда, агент не гадает."
+    },
+    {
+      "id": "TD-143",
+      "owner": "research-orchestrator",
+      "presentation_category": "ACTIVE",
+      "sunset_at": "2027-09-22",
+      "title": "Аудит: почему агент НЕ использует инструменты harness — нужна прослойка-объяснение. Агент блуждает вручную (пишет ad-hoc скрипты, гадает какой python/инструмент, путает контуры) вместо вызова канонических tools/ и роутера",
+      "status_detail": "OPEN_CURRENT",
+      "kind": "process",
+      "status": "open",
+      "severity": "high",
+      "acceptance": "Проведён аудит реальной сессии (session_analyzer.py) → выявлены конкретные точки, где агент не дошёл до инструмента; dispatch-map внедрена в промпты оркестраторов и проверена (агент выбирает tools/ в типовых задачах); есть фидбек-механизм 'агент застрял → подсказка какой инструмент'",
+      "area": "",
+      "source_status": "open",
+      "notes": "Наблюдения сессии: (1) агент пишет python -c и падает на кавычках PowerShell (TD-139); (2) не знает про tools/ стек (TD-127); (3) не знает какой python с chromadb (TD-142); (4) блуждает между верификацией/сбором ГОСТов/поиском (TD-122); (5) не вызывает resolve()/роутер для диспатча (TD-107/141); (6) SearXNG не поднят (TD-128). Признак: отсутствует прослойка, которая агентУ ОБЪЯСНЯЕТ 'какую задачу каким инструментом' — harness-dispatch-map.md создана (TD-140), но не внедрена в промпты/не тестирована на реальном агенте.",
+      "progress": "2026-09-22: создано через tech_debt_cli.py"
     },
     {
       "id": "RS-001",
