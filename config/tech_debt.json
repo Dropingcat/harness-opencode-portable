@@ -3,8 +3,8 @@
   "updated": "2026-09-22",
   "authority_note": "Canonical registry migrated from патчи/миграция в плагин/tech_debt_current.json (65 records). project_context.py counts status=open. CLOSED_REPORTED maps to closed; RECONCILE_REQUIRED stays open until exact-tree verification.",
   "counts": {
-    "total": 174,
-    "open": 138,
+    "total": 175,
+    "open": 139,
     "closed": 36
   },
   "debts": [
@@ -2836,7 +2836,7 @@
       "area": "",
       "source_status": "open",
       "notes": "Наблюдения сессии: (1) агент пишет python -c и падает на кавычках PowerShell (TD-139); (2) не знает про tools/ стек (TD-127); (3) не знает какой python с chromadb (TD-142); (4) блуждает между верификацией/сбором ГОСТов/поиском (TD-122); (5) не вызывает resolve()/роутер для диспатча (TD-107/141); (6) SearXNG не поднят (TD-128). НОВОЕ 2026-09-22: МНОГО РУЧНОГО ТРУДА ПО ЗАПОЛНЕНИЮ DOM и документов — агент вручную формирует/правит DOM-артефакты (ch1_dom.json, claims_parsed.json, citations_map, протоколы), тратя итерации на ручные правки вместо детерминированных билдеров/патчеров; нет инструмента 'заполнить DOM из фактов' (аналог wc_cli для research). Признак: отсутствует прослойка, которая агентУ ОБЪЯСНЯЕТ 'какую задачу каким инструментом' — harness-dispatch-map.md создана (TD-140), но не внедрена в промпты/не тестирована на реальном агенте.",
-      "progress": "2026-09-22: создано через tech_debt_cli.py"
+      "progress": "2026-09-22 АУДИТ (session_analyzer по ses_f4a410048ffe): (1) 226 ad-hoc .py скриптов в C:\\Temp\\opencode за сессию (build_dom, gen_claims, gen_claims2, update_dom_local, build_citations_map, update_dom_citations, fix_dom_p0p3, write_depth_to_dom, dom_nist_update, build_cluster_report...) — все для DOM/цитат/вердиктов; (2) 6 ручных EDIT на research_verification (verdicts_numeric x4, ch1_dom_report x2); (3) ошибки: webfetch docs.cntd.ru (ГОСТ, TD-128/125), build_chroma краш (TD-104). ВЫВОД: агенту НУЖЕН детерминированный билдер DOM/артефактов (аналог wc_cli для research): 'дом — из фактов', 'обновить цитаты — из citations', вместо ручных скриптов. dispatch-map (TD-140) внедрить + протестировать на реальном агенте."
     },
     {
       "id": "TD-144",
@@ -2885,6 +2885,22 @@
       "source_status": "open",
       "notes": "agent повторно пишет ad-hoc скрипты для скачивания PDF вместо использования downloader.py — нужен паттерн-аудитор",
       "progress": "ДУБЛИКАТ TD-127 (канонический: стек tools/): конкретный случай ad-hoc скриптов скачивания. Поглощён TD-127/TD-103. 2026-09-22 дедупликация."
+    },
+    {
+      "id": "TD-147",
+      "owner": "code-orchestrator",
+      "presentation_category": "ACTIVE",
+      "sunset_at": "2027-09-22",
+      "title": "Проверить авто-добавление техдолгов (tech_debt_cli auto) на дупликаты и ложные срабатывания: не создаёт ли механизм N записей про одно и то же; эвристика/LLM-диспатч не должны плодить дубли или нерелевантные долги",
+      "status_detail": "OPEN_CURRENT",
+      "kind": "process",
+      "status": "open",
+      "severity": "medium",
+      "acceptance": "auto --desc при повторном вызове с той же сутью НЕ создаёт новый долг, а находит существующий (по similarity) и предлагает update; эвристика покрыта тестами (нет ложных kind/severity); лог 'создано/найдено/пропущено' понятен",
+      "area": "",
+      "source_status": "open",
+      "notes": "Риск: auto --desc 'X сломалось' вызывается многократно → N долгов про X. Нужен дедуп-гейт: (1) при auto проверка существующих похожих (по title/owner/severity), (2) предложение 'уже есть TD-XXX, обновить вместо добавления', (3) порог ложных срабатываний (эвристика может неверно определить kind/severity). Тест: прогон серии описаний → проверка отсутствия дублей.",
+      "progress": "2026-09-22: создано через tech_debt_cli.py"
     },
     {
       "id": "RS-001",
