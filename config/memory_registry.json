@@ -187,6 +187,17 @@
        "path": "D:\\1_Литература_данные"
       }
      ]
+    },
+    "23c88b290012eb8cba8ba51636611e4f37a6617ebecca142811586289a0fb04d": {
+     "admissions": 1,
+     "evidence_refs": [],
+     "lesson_text": "ИТОГОВАЯ КОНФИГУРАЦИЯ 2026-09-19: рабочая директория исследования = F:\\1\\_STRUCTURED; литературные данные = F:\\1\\_STRUCTURED\\09_LITERATURE\\1_Литература_данные (папка ПЕРЕНЕСЕНА туда из D:). Подпапки: XCOM_tables, Фазовые_составы, ГОСТы_ТУ. Артефакты оркестратора: F:\\1\\_STRUCTURED\\research_verification. Корпус: F:\\AnalisysDataSet.",
+     "resources": [
+      {
+       "name": "Литературные данные (финал)",
+       "path": "F:\\1\\_STRUCTURED\\09_LITERATURE\\1_Литература_данные"
+      }
+     ]
     }
    }
   }

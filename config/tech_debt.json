@@ -3,8 +3,8 @@
  "updated": "2026-09-19",
  "authority_note": "Canonical registry migrated from патчи/миграция в плагин/tech_debt_current.json (65 records). project_context.py counts status=open. CLOSED_REPORTED maps to closed; RECONCILE_REQUIRED stays open until exact-tree verification.",
  "counts": {
-  "total": 138,
-  "open": 115,
+  "total": 139,
+  "open": 116,
   "closed": 23
  },
  "debts": [
@@ -2825,6 +2825,25 @@
    "progress": "2026-09-19: лазерные параметры созданы (td135_laser_parameters.json): CW-лазер, ЛО-0/1/2/3, 1200/2000Вт, физика 10^4-10^6 К/с → ячейки → pipe diffusion. Требует уточнения типа лазера у автора.",
    "related": [
     "TD-129"
+   ]
+  },
+  {
+   "id": "TD-136",
+   "title": "Папка литературных данных: F:\\1\\_STRUCTURED\\09_LITERATURE\\1_Литература_данные (XCOM_tables, Фазовые_составы, ГОСТы_ТУ)",
+   "area": "09_LITERATURE\\1_Литература_данные",
+   "kind": "infrastructure",
+   "severity": "low",
+   "owner": "research-orchestrator",
+   "sunset_at": "2026-10-15",
+   "acceptance": "Все литературные данные (XCOM, ГОСТы, фазовые составы) сохранены в 09_LITERATURE\\1_Литература_данные; доступны для расчётов",
+   "status": "open",
+   "status_detail": "OPEN_CURRENT",
+   "presentation_category": "ACTIVE",
+   "source_status": "open",
+   "notes": "Содержимое: XCOM_mass_attenuation_Cu_Co.json, nist_xcom_corrected.json, depth_tables_full.json, absorption_corrected.json. Требуется: полные ГОСТ-составы и фазовые составы в Фазовые_составы.",
+   "progress": "2026-09-19: XCOM-таблицы сохранены; ГОСТы_ТУ и Фазовые_составы — заполнить.",
+   "related": [
+    "TD-134"
    ]
   }
  ]
