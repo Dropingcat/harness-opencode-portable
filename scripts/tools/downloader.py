@@ -371,7 +371,13 @@ def cmd_resolve(args) -> int:
                 if not pdf_url:
                     print(f"  [scihub] {err}")
                     continue
+                # Нормализация относительных URL (как в cmd_doi) — TD-157
+                if pdf_url.startswith("//"):
+                    pdf_url = "https:" + pdf_url
+                elif pdf_url.startswith("/"):
+                    pdf_url = "https://sci-hub.ru" + pdf_url
                 status, data = http_get(pdf_url, timeout=args.timeout, verify=False, retries=2)
+                url = pdf_url
             else:
                 status, data = http_get(url, timeout=args.timeout, retries=2)
             if status == 200 and isinstance(data, bytes) and data and is_pdf(data):

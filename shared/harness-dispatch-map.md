@@ -41,6 +41,21 @@
 >
 > **MCP-серверы** (arxiv_search/openalex_search/extract_document/searxng_search) подключены в `.opencode/.mcp.json` (генератор `scripts/router/gen_mcp_config.py`), но видны субагентам только ПОСЛЕ РЕСТАРТА opencode (MCP инжектятся при старте сессии). TD-155. Резервный канал (работает всегда): `webfetch` → `https://export.arxiv.org/api/query?search_query=...` / `https://api.openalex.org/works?search=...`.
 
+## Sci-Bot — это API, не GUI (TD-156)
+
+Sci-Bot (sci-bot.ru) — **программный API** (WebSocket `wss://sci-bot.ru/`), НЕ приложение с Linux/X11. Вызывается напрямую:
+```
+python C:\Users\Arhys\.config\opencode\skills\sci-bot\scripts\sci_bot_client.py --help
+```
+- Баланс: `python ...\sci_bot_client.py balance`
+- Запрос статей (conversation, ~20K токенов): `python ...\sci_bot_client.py ask "<тема>" --conv`
+- Скилл: `skill` → `sci-bot` (стоимость, ограничения: не open-ended, не полные тексты)
+НЕ пиши «требует Linux/ручной запуск» — вызывай клиент через bash.
+
+## Капча sci-hub (TD-158)
+
+Если sci-hub вернул «проверка на робота» (Cloudflare/captcha): НЕ сдавайся. Маршрут: (1) повтори с cookie/UA, (2) sci-bot API (conversation-режим — он обходит капчу), (3) `downloader.py doi` повторно, (4) честно пометь «требует ручного скачивания» с DOI. Зафиксируй блок через `tech_debt_cli.py auto` если повторяется.
+
 ## Шаг 3: Блоки/долги — где смотреть
 
 - Канонический реестр: `E:\opencode_harness_portable\config\tech_debt.json` (portable = источник правды, work = зеркало)

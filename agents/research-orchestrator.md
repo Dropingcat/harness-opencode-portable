@@ -36,6 +36,12 @@ python scripts/tools/tech_debt_cli.py auto --desc "<что случилось, �
 
 Субагент упал? НЕ гадай «ничего не сделал». Открой его сессию через renderer-ссылку: `oc://renderer/server/<server-id>/session/<session-id>` (например `oc://renderer/server/c2lkZWNhcg/session/ses_f35d789d1ffeerjnBq3Mzs4vmg`) — там видна вся ветка: вызовы, ошибки, артефакты. Либо `session_analyzer.py dump <session.json>`.
 
+## Sci-Bot — API (TD-156)
+
+Sci-Bot (sci-bot.ru) — программный WebSocket-API, НЕ GUI. Вызывай клиент напрямую:
+`python C:\Users\Arhys\.config\opencode\skills\sci-bot\scripts\sci_bot_client.py ask "<тема>" --conv` (и `balance` для баланса). Не пиши «требует Linux/ручной запуск».
+Капча sci-hub (TD-158): не сдавайся — попробуй sci-bot API (обходит капчу), повтори downloader doi, иначе честно пометь «ручное скачивание» с DOI.
+
 ## Кросс-оркестрация (TD-099)
 
 Ты можешь делегировать задачи ДРУГИМ оркестраторам целиком (со своими субагентами). Для этого вызови их **primary-обёртку** через `bash` (не напрямую субагента чужого контура):

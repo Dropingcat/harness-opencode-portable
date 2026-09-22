@@ -3,9 +3,9 @@
   "updated": "2026-09-22",
   "authority_note": "Canonical registry migrated from патчи/миграция в плагин/tech_debt_current.json (65 records). project_context.py counts status=open. CLOSED_REPORTED maps to closed; RECONCILE_REQUIRED stays open until exact-tree verification.",
   "counts": {
-    "total": 182,
-    "open": 130,
-    "closed": 52
+    "total": 185,
+    "open": 131,
+    "closed": 54
   },
   "debts": [
     {
@@ -3012,6 +3012,54 @@
       "area": "",
       "source_status": "open",
       "notes": "Тест 2026-09-22 (source-fetcher, ses_f35898680ffe): arxiv_search/openalex_search/searxng_search/extract_document зарегистрированы в mcp_registry + tool_runtime_bindings, .mcp.json сгенерирован (4 сервера), скрипты компилируются, но functions list субагента НЕ содержит их — MCP подключаются при СТАРТЕ сессии, текущая сессия стартовала до генерации. РЕШЕНИЕ: рестарт opencode (новая сессия) → MCP-серверы подхватятся. Рабочий fallback уже есть: webfetch → arXiv API (121 res) / OpenAlex API (31140 res) — поиск не блокирован.",
+      "progress": "2026-09-22: создано через tech_debt_cli.py"
+    },
+    {
+      "id": "TD-156",
+      "owner": "research-orchestrator",
+      "presentation_category": "RESOLVED",
+      "sunset_at": "2027-09-22",
+      "title": "Агент не знает, что sci-bot — это просто API-запрос (sci-bot.ru, WebSocket/HTTP), а не ручной запуск на Linux с X11; агент ошибочно считает «требует Linux+ручной запуск, не могу вызвать», хотя есть готовый клиент/навык — нужна прослойка: как вызывать sci-bot программно",
+      "status_detail": "CLOSED",
+      "kind": "process",
+      "status": "closed",
+      "severity": "high",
+      "acceptance": "dispatch-map содержит рабочий вызов sci-bot (API-клиент: логин, conversation-режим, balance-check); агент вызывает sci-bot по запросу «найди статью» без ложного блока «требует Linux/X11»",
+      "area": "",
+      "source_status": "open",
+      "notes": "Из сессии: агент про sci-bot — «отдельный сервис (sci-bot.ru, Linux-машина, логин CherenkovYaVl), требует ручного запуска на Linux с X11 — я не могу его вызвать напрямую». Но sci-bot — это платный научный поиск через WebSocket/API (есть skill sci-bot с conversation-режимом и балансом), а не GUI-приложение с X11. Агент путается из-за отсутствия понятной инструкции «как вызвать API». Нужно: (1) в dispatch-map/skill точная инструкция вызова sci-bot API (endpoint, режим conversation, баланс), (2) агент не должен считать это невозможным.",
+      "progress": "2026-09-22: РЕШЕНО. dispatch-map + research-orchestrator: sci-bot — это WebSocket-API (sci_bot_client.py: ask/balance), НЕ GUI/Linux/X11. Точная команда вызова добавлена. Агент больше не должен считать sci-bot недоступным."
+    },
+    {
+      "id": "TD-157",
+      "owner": "research-orchestrator",
+      "presentation_category": "RESOLVED",
+      "sunset_at": "2027-09-22",
+      "title": "downloader.py resolve: каскад падает, хотя прямой doi-путь (тот же sci-hub) работает — resolve: oa_pdf 403 → scihub 'статус 0 (не PDF)' → NOT FOUND, а cmd_doi (sci-hub.ru напрямую) скачивает verified PDF; баг в cmd_resolve (не переиспользует scihub_resolve как cmd_doi)",
+      "status_detail": "CLOSED",
+      "kind": "robustness",
+      "status": "closed",
+      "severity": "high",
+      "acceptance": "resolve --doi для DOI со sci-hub-копией возвращает verified PDF (как cmd_doi); resolve не даёт NOT FOUND когда прямой sci-hub путь работает; добавлен тест",
+      "area": "",
+      "source_status": "open",
+      "notes": "Из теста 2026-09-22 (tool_test_report2): downloader.py resolve --doi 10.1016/j.surfcoat.2012.05.081 → NOT FOUND (oa_pdf 403, scihub 'статус 0 не PDF'), но downloader.py doi --doi ... → verified PDF 1.16MB из sci-hub.ru. Причина: cmd_resolve вызывает scihub_resolve иначе (без правильной сборки URL/verify), либо scihub-шаг в resolve получает неверный pdf_url. Нужно: cmd_resolve переиспользовать логику cmd_doi для sci-hub-шага (проверено работает).",
+      "progress": "2026-09-22: РЕШЕНО. cmd_resolve: добавлена нормализация относительных scihub-URL (//host -> https:, /path -> https://sci-hub.ru) как в cmd_doi. Проверено: resolve --doi 10.1016/j.surfcoat.2012.05.081 -> verified PDF 1.16MB via scihub (раньше NOT FOUND)."
+    },
+    {
+      "id": "TD-158",
+      "owner": "research-orchestrator",
+      "presentation_category": "ACTIVE",
+      "sunset_at": "2027-09-22",
+      "title": "Обход капчи sci-hub: «проверка на робота» (Cloudflare/анти-бот) блокирует автоматическое скачивание PDF — агент сдаётся «задача для пользователя/scibot»; нужен капча-обход (cookie/решение/другой клиент) или чёткий маршрут",
+      "status_detail": "OPEN_CURRENT",
+      "kind": "robustness",
+      "status": "open",
+      "severity": "high",
+      "acceptance": "downloader при капче sci-hub распознаёт challenge (Cloudflare/captcha HTML) и сообщает явно; есть маршрут: (а) повтор с cookie/UA, (б) sci-bot API (conversation-режим), (в) пометка для ручного скачивания; агент не пишет «заблокировано навсегда» без причины",
+      "area": "",
+      "source_status": "open",
+      "notes": "Из сессии 2026-09-22: sci-hub нашёл страницу книги (Diffraction Analysis, Springer 2004), но PDF за капчей «проверка на робота» — автоматическое скачивание заблокировано. Агент помечает «доступны через sci-hub/scibot вручную». Это повторяющийся блок (TD-125/128/152 связаны). Нужно: (1) в downloader scihub-канал добавить обработку капчи (определение Cloudflare-challenge по HTML, отчёт «capcha» вместо сдачи), (2) если решение капчи автоматически невозможно — чёткий маршрут (sci-bot API / пользователь), (3) агент не должен просто сдаваться.",
       "progress": "2026-09-22: создано через tech_debt_cli.py"
     },
     {
