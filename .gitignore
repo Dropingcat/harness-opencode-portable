@@ -1,63 +1,41 @@
-# Изоляция Python-окружения фабрики
-# ==================================
-# Ядро фабрики (scripts/code-factory, orchestration, memory, kanban, router, guard)
-# использует ТОЛЬКО стандартную библиотеку Python 3.11. Внешних пакетов НЕТ.
+# --- Harness portable module: ignore machine-specific / build artifacts ---
 
+# Python
 .venv/
-venv/
 __pycache__/
 *.pyc
-.env
-.runs/
-*.db
-*.db-shm
-*.db-wal
-.tmp_*.json
-служебные/рабочие артефакты не коммитим
-# archives / packed harness snapshots
-*.zip
-*.7z
-*.tar.gz
-*.gz
-
-# stray unpacked copies / duplicate trees
-/\320\235\320\276\320\262\320\260\321\217 \320\277\320\260\320\277\320\272\320\260/
-/resercher-core/
-/writer-core/
-
-# generated runtime artifacts
-/run/
-/worker_*.json
-/capability-install-check.json
-
-# native plugin package: deps/build/installed copy are generated
-packages/opencode-harness-plugin/node_modules/
-packages/opencode-harness-plugin/dist/
-/opencode-harness-plugin-*.tgz
-/.opencode/plugins/
-/.opencode/.mcp.json
 .pytest_cache/
 
-/Новая папка/
-/Новая сжатая ZIP-папка.zip
+# Node
+node_modules/
+dist/
+*.tgz
 
-# Local deepwork scheduler state
-.slim/deepwork/
+# Build / runtime state
+.runs/
+run/
+artifacts/
+audit_graph/
 
-# User workspace artifacts (not part of the Harness module)
-.ignore
-agent_control_loop_*.json
-agent_control_loop_*.md
-agent_principles_research.md
-article_agent_control_loop.md
-article_ai_agent_principles.md
-claims.json
-review_report.json
-rtt_report.json
-structure_plan.json
-writing_contract.json
-/легаси/
-/патчи/
-.kanban.db
-.tmp_l2.json
-.coverage
+# Environment
+.env
+.env.local
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# OpenCode session data (machine-specific)
+opencode.db*
+
+# Nested .opencode inside scripts/research (machine-local, node_modules etc.)
+scripts/research/.opencode/
+
+# Server copy-duplicates "[1]" and lock files (machine-local artifacts)
+*[1].json
+*[1].md
+*[1].txt
+*[1].jsonl
+*.lock.mcp.mcp.json.bak

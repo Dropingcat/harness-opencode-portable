@@ -1,0 +1,140 @@
+{
+  "schema": "writer.release_decision/1.0",
+  "verdict": "PASS",
+  "release_allowed": true,
+  "blockers": [],
+  "gates": {
+    "evidence": {
+      "verdict": "PASS",
+      "detail": {
+        "verdict": "PASS",
+        "policy": "strict",
+        "allowed_verdicts": [
+          "SUPPORTED"
+        ],
+        "failures": [],
+        "claims_checked": 7
+      }
+    },
+    "traceability": {
+      "verdict": "PASS",
+      "detail": {
+        "text_len": 1681,
+        "dom": {
+          "sources": 5,
+          "claims": 7,
+          "sections": 0
+        },
+        "checks": {
+          "dangling_reference": [],
+          "orphan_claims": [],
+          "masked_uncertainty": [],
+          "numeric_unverified": [],
+          "missing_crossref": []
+        },
+        "summary": {
+          "sentences_checked": 9,
+          "claims_traced": 7,
+          "references_ok": true,
+          "references_dangling": 0,
+          "uncertainty_masked": 0,
+          "orphan_claims": 0,
+          "numeric_unverified": 0,
+          "missing_crossref": 0
+        },
+        "verdict": "PASS",
+        "fail_reasons": []
+      }
+    },
+    "semantic_roundtrip": {
+      "verdict": "PASS",
+      "detail": {
+        "schema": "writer_core.rtt_report.v1",
+        "generated_by": "writer.release.marker_rtt",
+        "verdict": "PASS",
+        "defects": [],
+        "checked": [
+          {
+            "claim_id": "C-001",
+            "matched": true,
+            "overlap": 1.0,
+            "reasons": [
+              "PARAPHRASE_SAFE"
+            ],
+            "notes": []
+          },
+          {
+            "claim_id": "C-002",
+            "matched": true,
+            "overlap": 1.0,
+            "reasons": [
+              "PARAPHRASE_SAFE"
+            ],
+            "notes": []
+          },
+          {
+            "claim_id": "C-003",
+            "matched": true,
+            "overlap": 1.0,
+            "reasons": [
+              "PARAPHRASE_SAFE"
+            ],
+            "notes": []
+          },
+          {
+            "claim_id": "C-004",
+            "matched": true,
+            "overlap": 1.0,
+            "reasons": [
+              "PARAPHRASE_SAFE"
+            ],
+            "notes": []
+          },
+          {
+            "claim_id": "C-005",
+            "matched": true,
+            "overlap": 1.0,
+            "reasons": [
+              "PARAPHRASE_SAFE"
+            ],
+            "notes": []
+          },
+          {
+            "claim_id": "C-006",
+            "matched": true,
+            "overlap": 1.0,
+            "reasons": [
+              "PARAPHRASE_SAFE"
+            ],
+            "notes": []
+          },
+          {
+            "claim_id": "C-007",
+            "matched": true,
+            "overlap": 1.0,
+            "reasons": [
+              "PARAPHRASE_SAFE"
+            ],
+            "notes": []
+          }
+        ],
+        "re_extraction": {
+          "claims": [],
+          "digests": [],
+          "errors": []
+        }
+      }
+    }
+  },
+  "authority": {
+    "research_verdicts": "scripts/researcher/verify_claims.py",
+    "traceability": "scripts/writer/review/citation_trace.py",
+    "semantic_roundtrip": "scripts/writer/core/factory_process.py"
+  },
+  "artifacts": {
+    "dom": "/mnt/data/writer_e2e_chapter_repo/e2e_runs/chapter_iterative_001/v6_dom.yaml",
+    "dom_sha256": "412442767958976f719025f47179b1ccaefa9dab423f406b984e80b6310b2df2",
+    "text": "/mnt/data/writer_e2e_chapter_repo/e2e_runs/chapter_iterative_001/v6_text.md",
+    "text_sha256": "bf4f188bbd3a02b8f01971a40dcd2143380cb7196c193c152deb64de611adbf3"
+  }
+}

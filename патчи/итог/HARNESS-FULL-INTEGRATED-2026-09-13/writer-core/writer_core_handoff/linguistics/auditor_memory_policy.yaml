@@ -1,0 +1,28 @@
+schema_version: linguistic-auditor-memory/0.3
+admit_positive:
+- HUMAN_ACCEPTED
+- EXPERT_ACCEPTED
+- RELEASED_APPROVED
+admit_negative:
+- REJECTED
+- RTT_FAILED
+- HUMAN_REWRITTEN
+ignore_for_learning:
+- RAW_MODEL_OUTPUT_UNREVIEWED
+lifecycle:
+- OBSERVED
+- CANDIDATE
+- SHADOW
+- EVALUATED
+- PROMOTED
+- REJECTED
+may_update:
+- LEARNED_PREFERENCE
+- strategy_prior
+- style_profile
+must_not_update:
+- epistemic_truth
+- evidence_strength
+- claim_admission
+track_provenance: true
+supports_rollback: true

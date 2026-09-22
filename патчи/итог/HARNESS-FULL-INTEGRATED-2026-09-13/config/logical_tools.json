@@ -1,0 +1,140 @@
+{
+  "version": 2,
+  "tools": {
+    "search.discovery": {
+      "capability": "web.discovery"
+    },
+    "source.resolve": {
+      "capability": "academic.metadata"
+    },
+    "document.inspect": {
+      "capability": "document.text.extract"
+    },
+    "document.ocr": {
+      "capability": "document.ocr"
+    },
+    "scientific_image.inspect": {
+      "capability": "image.tiff.inspect"
+    },
+    "corpus.search": {
+      "capability": "corpus.fts"
+    },
+    "evidence.verify": {
+      "capability": "evidence.verify"
+    },
+    "science.compute": {
+      "capability": "science.numeric"
+    },
+    "plot.render": {
+      "capability": "plot.render"
+    },
+    "report.compose": {
+      "capability": "report.compose"
+    },
+    "job.checkpoint": {
+      "capability": "job.checkpoint"
+    },
+    "code.change": {
+      "capability": "code.edit"
+    },
+    "code.test": {
+      "capability": "code.test"
+    },
+    "code.review": {
+      "capability": "code.review"
+    },
+    "code.acceptance": {
+      "capability": "code.acceptance"
+    },
+    "capability.request": {
+      "capability": "capability.escalation"
+    },
+    "writing.object.select": {
+      "capability": "writer.object.select"
+    },
+    "reference.prepare": {
+      "capability": "writer.reference.prepare"
+    },
+    "validation.plan": {
+      "capability": "evidence.validation.plan"
+    },
+    "provenance.diff": {
+      "capability": "writer.provenance.diff"
+    },
+    "reference.fragments": {
+      "capability": "writer.reference.fragments"
+    },
+    "reference.select": {
+      "capability": "writer.reference.select"
+    },
+    "evidence.locate": {
+      "capability": "evidence.span"
+    },
+    "source.catalog": {
+      "capability": "source.catalog"
+    },
+    "search.memory": {
+      "capability": "search.memory"
+    },
+    "draft.request": {
+      "capability": "writer.draft.request"
+    },
+    "provenance.graph": {
+      "capability": "writer.provenance.graph"
+    },
+    "provenance.event": {
+      "capability": "writer.provenance.event"
+    },
+    "library.search": {
+      "capability": "library.search"
+    },
+    "library.ingest": {
+      "capability": "library.ingest"
+    },
+    "source.update": {
+      "capability": "source.update.trace"
+    },
+    "validation.dispatch": {
+      "capability": "evidence.validation.dispatch"
+    },
+    "reference.fragment_graph": {
+      "capability": "writer.reference.fragment_graph"
+    },
+    "reference.select.iterative": {
+      "capability": "writer.reference.iterative_select"
+    },
+    "library.document_card": {
+      "capability": "writer.document.card"
+    },
+    "writing.policy": {
+      "capability": "writer.writing.policy"
+    },
+    "writing.style_instruction": {
+      "capability": "writer.style.instruction"
+    },
+    "draft.artifact": {
+      "capability": "writer.draft.artifact"
+    },
+    "writer.dispatch": {
+      "capability": "writer.agent.dispatch"
+    },
+    "dom.patch": {
+      "capability": "writer.dom.patch"
+    },
+    "repair.request": {
+      "capability": "writer.repair.request"
+    },
+    "claim.state": {
+      "capability": "writer.claim.state"
+    },
+    "provenance.invalidation_event": {
+      "capability": "writer.invalidation.event"
+    },
+    "reference.evidence.select": {
+      "capability": "writer.reference.evidence_select"
+    },
+    "tribunal_role": {
+      "capability": "tribunal.role.execute"
+    }
+  }
+}

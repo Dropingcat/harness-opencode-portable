@@ -1,0 +1,48 @@
+{
+  "schema": "writer_contract_freeze/1.0",
+  "version": "1.0",
+  "status": "FROZEN_FOR_RESEARCHER_INTEGRATION",
+  "compatibility_policy": "backward-compatible additions only unless an E2E defect justifies a versioned contract change",
+  "authority_chain": [
+    "claim_registry",
+    "draft_request.authorization",
+    "draft_artifact.realizes_claims",
+    "dom.paragraph.claims",
+    "rendered_claim_markers_projection"
+  ],
+  "contracts": {
+    "writing_object": "writing_object_decision/1.0",
+    "reference_fragment_set": "reference_fragment_set/1.0",
+    "reference_profile": "reference_profile/1.1",
+    "reference_selection": "reference_selection/1.1",
+    "iterative_reference_selection": "iterative_reference_selection/1.0",
+    "claim_evidence_selection": "claim_evidence_selection/1.0",
+    "writing_policy": "writing_policy/1.0",
+    "style_instruction": "style_instruction_artifact/1.1",
+    "draft_request": "draft_request/1.0",
+    "proposed_claim": "proposed_claim/1.0",
+    "writer_agent_dispatch": "writer_agent_dispatch_contract/1.0",
+    "draft_artifact": "draft_artifact/1.1",
+    "dom_patch": "writer_dom_patch/1.0",
+    "change_ledger": "writer_change_ledger/1.1",
+    "dependency_graph": "writer_dependency_graph/1.1",
+    "evidence_span": "evidence_span/1.1",
+    "source_catalog": "source_catalog/1.1",
+    "validation_plan": "validation_plan/1.0",
+    "research_dispatch": "research_dispatch_contract/1.0",
+    "claim_state_transition": "claim_state_transition/1.1",
+    "repair_request": "repair_request/1.0",
+    "realization_authority": "writer_realization_authority/1.0",
+    "release_decision": "writer.release_decision/1.0"
+  },
+  "verification_dimensions": {
+    "verification_state": ["VERIFIED", "UNCHECKED", "FAILED"],
+    "evidence_verdict": ["SUPPORTED", "CONTRADICTED", "UNSUPPORTED", "AMBIGUOUS", "OPEN"],
+    "epistemic_state": ["ESTABLISHED", "QUALIFIED", "AMBIGUOUS", "DISPUTED", "UNKNOWN"]
+  },
+  "style_authority": {
+    "same_language": "FULL",
+    "cross_language": "STRUCTURE_ONLY"
+  },
+  "writer_forbidden_capabilities": ["web.discovery", "source.provider.direct", "dom.direct_mutation"]
+}

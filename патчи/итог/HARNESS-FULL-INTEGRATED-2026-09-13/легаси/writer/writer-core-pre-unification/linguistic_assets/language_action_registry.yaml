@@ -1,0 +1,82 @@
+schema_version: language-actions/0.3
+actions:
+- id: SELECT_FRAME
+  may_mutate:
+  - sentence_plan.frame
+  must_preserve:
+  - semantic_contract
+  post_checks:
+  - frame_preconditions
+- id: SPLIT_CLAUSE
+  may_mutate:
+  - clause_partition
+  must_preserve:
+  - claims
+  - scope
+  - modality
+  - quantities
+  post_checks:
+  - linguistic_rtt
+- id: MOVE_QUALIFIER
+  may_mutate:
+  - qualifier_attachment
+  must_preserve:
+  - qualifier_content
+  - claim_identity
+  post_checks:
+  - scope_check
+  - linguistic_rtt
+- id: RESTORE_SCOPE
+  may_mutate:
+  - scope_realization
+  must_preserve:
+  - semantic_scope
+  post_checks:
+  - linguistic_rtt
+- id: WEAKEN_MODALITY
+  may_mutate:
+  - surface_modality
+  must_preserve:
+  - claim_identity
+  - scope
+  post_checks:
+  - modality_not_stronger_than_contract
+  - linguistic_rtt
+- id: REMOVE_CAUSALITY
+  may_mutate:
+  - surface_causal_force
+  must_preserve:
+  - participants
+  - scope
+  post_checks:
+  - semantic_type_check
+  - linguistic_rtt
+- id: RESOLVE_REFERENCE
+  may_mutate:
+  - reference_binding
+  must_preserve:
+  - candidate_entities
+  post_checks:
+  - reference_integrity
+- id: RERANK_LEXICAL_CHOICES
+  may_mutate:
+  - lexical_selection
+  must_preserve:
+  - concept_binding
+  post_checks:
+  - valency
+  - collocation
+  - style_signal
+- id: PROPOSE_THEME_RHEME
+  may_mutate:
+  - information_structure
+  must_preserve:
+  - semantic_contract
+  post_checks:
+  - cohesion_signal
+- id: REQUEST_EXPERT
+  may_mutate: []
+  must_preserve:
+  - state
+  post_checks:
+  - escalation_budget

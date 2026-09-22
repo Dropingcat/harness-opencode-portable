@@ -1,0 +1,136 @@
+{
+  "version": 1,
+  "buckets": {
+    "code": {
+      "claim_kinds": [
+        "requirement",
+        "code_change",
+        "interface",
+        "test",
+        "performance"
+      ],
+      "skills": [
+        "verification-planning",
+        "test-driven-development",
+        "incremental-implementation"
+      ],
+      "tools": [
+        "code_work",
+        "coder_run"
+      ],
+      "validators": [
+        "contract_validator",
+        "tests",
+        "py_compile"
+      ],
+      "guard_required": false,
+      "default_profile": "standard",
+      "default_execution_mode": "worker_reviewer_tester",
+      "done_when": [
+        "reviewer_approve",
+        "tester_pass"
+      ]
+    },
+    "research": {
+      "claim_kinds": [
+        "factual",
+        "evidence"
+      ],
+      "skills": [
+        "literature-review",
+        "source-driven-development",
+        "citation-management"
+      ],
+      "tools": [
+        "arxiv_search",
+        "openalex_search",
+        "research_academic",
+        "extract_document"
+      ],
+      "validators": [
+        "evidence_contract",
+        "scope",
+        "provenance"
+      ],
+      "guard_required": true,
+      "default_profile": "strict",
+      "default_execution_mode": "research_pipeline",
+      "done_when": [
+        "evidence_admitted",
+        "audit_recorded"
+      ]
+    },
+    "integration": {
+      "claim_kinds": [
+        "config",
+        "unresolved_question"
+      ],
+      "skills": [
+        "customize-opencode",
+        "context-engineering"
+      ],
+      "tools": [
+        "profile_config"
+      ],
+      "validators": [
+        "config_schema",
+        "smoke_tests"
+      ],
+      "guard_required": true,
+      "default_profile": "standard",
+      "default_execution_mode": "worker_reviewer_tester",
+      "done_when": [
+        "config_valid",
+        "smoke_pass"
+      ]
+    },
+    "writing": {
+      "claim_kinds": [
+        "docs"
+      ],
+      "skills": [
+        "export",
+        "scientific-writing",
+        "article-writer"
+      ],
+      "tools": [
+        "extract_document"
+      ],
+      "validators": [
+        "writer_eligibility",
+        "citation_check"
+      ],
+      "guard_required": true,
+      "default_profile": "strict",
+      "default_execution_mode": "research_pipeline",
+      "done_when": [
+        "forbidden_claims_absent",
+        "sources_cited"
+      ]
+    },
+    "security": {
+      "claim_kinds": [
+        "security"
+      ],
+      "skills": [
+        "adversarial-critic-checklist",
+        "constitutional-ai"
+      ],
+      "tools": [
+        "coder_run",
+        "code_work"
+      ],
+      "validators": [
+        "doc_guard",
+        "policy_gate"
+      ],
+      "guard_required": true,
+      "default_profile": "strict",
+      "default_execution_mode": "worker_reviewer_tester_auditor",
+      "done_when": [
+        "guard_pass",
+        "policy_pass"
+      ]
+    }
+  }
+}

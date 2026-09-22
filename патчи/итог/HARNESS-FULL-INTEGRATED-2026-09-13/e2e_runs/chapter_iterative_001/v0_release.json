@@ -1,0 +1,268 @@
+{
+  "schema": "writer.release_decision/1.0",
+  "verdict": "FAIL",
+  "release_allowed": false,
+  "blockers": [
+    "evidence",
+    "semantic_roundtrip"
+  ],
+  "gates": {
+    "evidence": {
+      "verdict": "FAIL",
+      "detail": {
+        "verdict": "FAIL",
+        "policy": "strict",
+        "allowed_verdicts": [
+          "SUPPORTED"
+        ],
+        "failures": [
+          {
+            "claim_id": "C-001",
+            "verdict": "OPEN"
+          },
+          {
+            "claim_id": "C-002",
+            "verdict": "OPEN"
+          },
+          {
+            "claim_id": "C-004",
+            "verdict": "OPEN"
+          }
+        ],
+        "claims_checked": 6
+      }
+    },
+    "traceability": {
+      "verdict": "PASS",
+      "detail": {
+        "text_len": 143,
+        "dom": {
+          "sources": 0,
+          "claims": 0,
+          "sections": 0
+        },
+        "checks": {
+          "dangling_reference": [],
+          "orphan_claims": [],
+          "masked_uncertainty": [],
+          "numeric_unverified": [],
+          "missing_crossref": []
+        },
+        "summary": {
+          "sentences_checked": 3,
+          "claims_traced": 0,
+          "references_ok": true,
+          "references_dangling": 0,
+          "uncertainty_masked": 0,
+          "orphan_claims": 0,
+          "numeric_unverified": 0,
+          "missing_crossref": 0
+        },
+        "verdict": "PASS",
+        "fail_reasons": []
+      }
+    },
+    "semantic_roundtrip": {
+      "verdict": "FAIL",
+      "detail": {
+        "schema": "writer_core.rtt_report.v1",
+        "generated_by": "writer_core.factory_process.draftcheck",
+        "verdict": "FAIL",
+        "defects": [
+          {
+            "defect_type": "numeric_drift",
+            "claim_id": "C-001",
+            "span": {
+              "start": 39,
+              "end": 80,
+              "text": "На дифрактограммах появляются новые фазы."
+            },
+            "suggestion": "переформулировать в пределах span",
+            "reason_code": "NUMERIC_DRIFT"
+          },
+          {
+            "defect_type": "claim_omission",
+            "claim_id": "C-002",
+            "span": null,
+            "suggestion": "добавить отсутствующее утверждение целиком (вне текущих span-ов)",
+            "reason_code": "CLAIM_OMISSION"
+          },
+          {
+            "defect_type": "claim_omission",
+            "claim_id": "C-003",
+            "span": null,
+            "suggestion": "добавить отсутствующее утверждение целиком (вне текущих span-ов)",
+            "reason_code": "CLAIM_OMISSION"
+          },
+          {
+            "defect_type": "claim_omission",
+            "claim_id": "C-004",
+            "span": null,
+            "suggestion": "добавить отсутствующее утверждение целиком (вне текущих span-ов)",
+            "reason_code": "CLAIM_OMISSION"
+          },
+          {
+            "defect_type": "claim_omission",
+            "claim_id": "C-005",
+            "span": null,
+            "suggestion": "добавить отсутствующее утверждение целиком (вне текущих span-ов)",
+            "reason_code": "CLAIM_OMISSION"
+          },
+          {
+            "defect_type": "negation_flip",
+            "claim_id": "C-006",
+            "span": {
+              "start": 39,
+              "end": 80,
+              "text": "На дифрактограммах появляются новые фазы."
+            },
+            "suggestion": "переформулировать в пределах span",
+            "reason_code": "NEGATION_FLIP"
+          },
+          {
+            "defect_type": "numeric_drift",
+            "claim_id": "C-006",
+            "span": {
+              "start": 39,
+              "end": 80,
+              "text": "На дифрактограммах появляются новые фазы."
+            },
+            "suggestion": "переформулировать в пределах span",
+            "reason_code": "NUMERIC_DRIFT"
+          },
+          {
+            "defect_type": "claim_omission",
+            "claim_id": "C-006",
+            "span": {
+              "start": 39,
+              "end": 80,
+              "text": "На дифрактограммах появляются новые фазы."
+            },
+            "suggestion": "добавить отсутствующее утверждение целиком (вне текущих span-ов)",
+            "reason_code": "CLAIM_OMISSION"
+          }
+        ],
+        "checked": [
+          {
+            "claim_id": "C-001",
+            "matched": true,
+            "overlap": 1,
+            "reasons": [
+              "NUMERIC_DRIFT"
+            ],
+            "notes": [
+              "numbers ['110'] -> []"
+            ]
+          },
+          {
+            "claim_id": "C-002",
+            "matched": false,
+            "overlap": 0,
+            "reasons": [
+              "CLAIM_OMISSION"
+            ],
+            "notes": []
+          },
+          {
+            "claim_id": "C-003",
+            "matched": false,
+            "overlap": 0,
+            "reasons": [
+              "CLAIM_OMISSION"
+            ],
+            "notes": []
+          },
+          {
+            "claim_id": "C-004",
+            "matched": false,
+            "overlap": 0,
+            "reasons": [
+              "CLAIM_OMISSION"
+            ],
+            "notes": []
+          },
+          {
+            "claim_id": "C-005",
+            "matched": false,
+            "overlap": 0,
+            "reasons": [
+              "CLAIM_OMISSION"
+            ],
+            "notes": []
+          },
+          {
+            "claim_id": "C-006",
+            "matched": true,
+            "overlap": 1,
+            "reasons": [
+              "MODALITY_DOWNGRADE",
+              "NEGATION_FLIP",
+              "NUMERIC_DRIFT",
+              "CLAIM_OMISSION"
+            ],
+            "notes": [
+              "numbers ['700 °c', '450', '580 °c'] -> []"
+            ]
+          }
+        ],
+        "re_extraction": {
+          "claims": [
+            {
+              "claim_id": "DRAFT_P0000_C0",
+              "text": "На дифрактограммах появляются новые фазы.",
+              "raw_span": "На дифрактограммах появляются новые фазы.",
+              "start": 39,
+              "end": 80,
+              "sentence_idx": 1,
+              "qa_status": "GROUNDED",
+              "paragraph_id": "DRAFT_P0000"
+            }
+          ],
+          "digests": [
+            {
+              "main_statement": {
+                "predicate": "assertion",
+                "text": "На дифрактограммах появляются новые фазы."
+              },
+              "scope": {
+                "restricted": false
+              },
+              "modality": "assertive",
+              "causal_force": "NONE",
+              "discourse_role": null,
+              "ambiguities": [
+                {
+                  "type": "SCOPE_EXPANSION",
+                  "impact": "MEDIUM",
+                  "target": "sentence",
+                  "details": {
+                    "head": "дифрактограммах",
+                    "heuristic": "scope_np_without_research_attr"
+                  }
+                }
+              ],
+              "affordances": [
+                "inspect_contract",
+                "restore_scope",
+                "rewrite_span"
+              ],
+              "scope_text": "На дифрактограммах появляются новые фазы."
+            }
+          ],
+          "errors": []
+        }
+      }
+    }
+  },
+  "authority": {
+    "research_verdicts": "scripts/researcher/verify_claims.py",
+    "traceability": "scripts/writer/review/citation_trace.py",
+    "semantic_roundtrip": "scripts/writer/core/factory_process.py"
+  },
+  "artifacts": {
+    "dom": "/mnt/data/writer_e2e_chapter_repo/e2e_runs/chapter_iterative_001/v0_dom.yaml",
+    "dom_sha256": "f0912ccdba3b8995f115710f2d9e59894bdd26bda0c0a02e8b03c1b4b883da31",
+    "text": "/mnt/data/writer_e2e_chapter_repo/e2e_runs/chapter_iterative_001/v0_text.md",
+    "text_sha256": "c67cdbc667833f8ae37a36184b44bd4f58e35ff1a9694e4c4532970ed655a6f0"
+  }
+}

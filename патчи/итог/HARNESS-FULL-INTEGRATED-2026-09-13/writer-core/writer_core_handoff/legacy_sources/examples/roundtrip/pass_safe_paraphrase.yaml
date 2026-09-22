@@ -1,0 +1,12 @@
+case_id: RTT_PASS_001
+contract_claim:
+  id: C1
+  proposition: "В исследованной серии параметр X возрастал с увеличением Y."
+  required_qualifiers: ["в исследованной серии"]
+  causal_level: none
+realization: "Для исследованной серии обнаружено увеличение X при росте Y."
+expected:
+  verdict: PASS
+  reason_codes: [PARAPHRASE_SAFE]
+  scope_match: MATCH
+  causal_match: MATCH

@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "servers": {
+    "coder_router": {
+      "type": "mcp",
+      "entrypoint": "mcp/coder_router_server.py",
+      "family": "code-mcp",
+      "tools": [
+        "coder_run"
+      ],
+      "allowed_routes": [
+        "code-implementation"
+      ],
+      "guard_required": true
+    },
+    "academic_search": {
+      "type": "mcp",
+      "entrypoint": "mcp/academic_search_server.py",
+      "family": "research-mcp",
+      "tools": [
+        "arxiv_search",
+        "openalex_search"
+      ],
+      "allowed_routes": [
+        "academic-research"
+      ],
+      "guard_required": true
+    },
+    "doc_extract": {
+      "type": "mcp",
+      "entrypoint": "mcp/doc_extract_server.py",
+      "family": "document-mcp",
+      "tools": [
+        "extract_document"
+      ],
+      "allowed_routes": [
+        "document-extraction",
+        "academic-research",
+        "web-research"
+      ],
+      "guard_required": true
+    },
+    "searxng_search": {
+      "type": "mcp",
+      "entrypoint": "mcp/searxng_search_server.py",
+      "family": "search-mcp",
+      "tools": [
+        "searxng_search"
+      ],
+      "allowed_routes": [
+        "web-research",
+        "academic-research"
+      ],
+      "guard_required": true
+    }
+  }
+}

@@ -1,0 +1,78 @@
+{
+  "version": 1,
+  "servers": {
+    "coder_router": {
+      "command": [
+        "${PYTHON_BIN}",
+        "${OPENCODE_HARNESS_ROOT}/mcp/coder_router_server.py"
+      ],
+      "cwd": "${OPENCODE_HARNESS_ROOT}/mcp",
+      "env": {},
+      "auto_start": true,
+      "restart_on_failure": true,
+      "max_restarts": 3,
+      "startup_timeout_sec": 10,
+      "health_check": {
+        "enabled": false,
+        "mode": "host_managed_stdio"
+      },
+      "transport": "stdio"
+    },
+    "academic_search": {
+      "command": [
+        "${PYTHON_BIN}",
+        "${OPENCODE_HARNESS_ROOT}/mcp/academic_search_server.py"
+      ],
+      "cwd": "${OPENCODE_HARNESS_ROOT}/mcp",
+      "env": {},
+      "auto_start": true,
+      "restart_on_failure": true,
+      "max_restarts": 3,
+      "startup_timeout_sec": 10,
+      "health_check": {
+        "enabled": false,
+        "mode": "host_managed_stdio"
+      },
+      "transport": "stdio"
+    },
+    "doc_extract": {
+      "command": [
+        "${PYTHON_BIN}",
+        "${OPENCODE_HARNESS_ROOT}/mcp/doc_extract_server.py"
+      ],
+      "cwd": "${OPENCODE_HARNESS_ROOT}/mcp",
+      "env": {},
+      "auto_start": false,
+      "restart_on_failure": false,
+      "max_restarts": 0,
+      "startup_timeout_sec": 10,
+      "health_check": {
+        "enabled": false,
+        "mode": "host_managed_stdio"
+      },
+      "transport": "stdio",
+      "note": "ДЕАКТИВИРОВАН: пакеты (pypdfium2/docx/markdownify/openpyxl) не установлены. Включить после `pip install -r requirements-mcp-doc.txt` в .venv. Ядро фабрики от него не зависит."
+    },
+    "searxng_search": {
+      "command": [
+        "${PYTHON_BIN}",
+        "${OPENCODE_HARNESS_ROOT}/mcp/searxng_search_server.py"
+      ],
+      "cwd": "${OPENCODE_HARNESS_ROOT}/mcp",
+      "env": {},
+      "auto_start": true,
+      "restart_on_failure": true,
+      "max_restarts": 3,
+      "startup_timeout_sec": 10,
+      "health_check": {
+        "enabled": false,
+        "mode": "host_managed_stdio"
+      },
+      "transport": "stdio"
+    }
+  },
+  "global": {
+    "max_concurrent_starts": 2,
+    "shutdown_timeout_sec": 5
+  }
+}

@@ -1,0 +1,843 @@
+{
+  "gaps": [
+    {
+      "expected": "PROBLEM_STATEMENT",
+      "kind": "claim",
+      "note": "требуется PROBLEM_STATEMENT — слот каркаса plan --topic, research ещё не заполнил (секция RELEVANCE)",
+      "research_request": true,
+      "section": "RELEVANCE",
+      "severity": "WORK_BLOCKING",
+      "slot_id": "CS_RELEVANCE_PROBLEM_STATEMENT",
+      "status": "GAP"
+    },
+    {
+      "expected": "SCOPE_STATEMENT",
+      "kind": "claim",
+      "note": "требуется SCOPE_STATEMENT — слот каркаса plan --topic, research ещё не заполнил (секция OBJECT_SUBJECT)",
+      "research_request": true,
+      "section": "OBJECT_SUBJECT",
+      "severity": "WORK_BLOCKING",
+      "slot_id": "CS_OBJECT_SUBJECT_SCOPE_STATEMENT",
+      "status": "GAP"
+    },
+    {
+      "expected": "PRIOR_ART_SUMMARY",
+      "kind": "claim",
+      "note": "требуется PRIOR_ART_SUMMARY — слот каркаса plan --topic, research ещё не заполнил (секция TOPIC_STATE)",
+      "research_request": true,
+      "section": "TOPIC_STATE",
+      "severity": "WORK_BLOCKING",
+      "slot_id": "CS_TOPIC_STATE_PRIOR_ART_SUMMARY",
+      "status": "GAP"
+    },
+    {
+      "expected": "GOAL_STATEMENT",
+      "kind": "claim",
+      "note": "требуется GOAL_STATEMENT — слот каркаса plan --topic, research ещё не заполнил (секция GOAL)",
+      "research_request": true,
+      "section": "GOAL",
+      "severity": "WORK_BLOCKING",
+      "slot_id": "CS_GOAL_GOAL_STATEMENT",
+      "status": "GAP"
+    },
+    {
+      "expected": "TASK_STATEMENT",
+      "kind": "claim",
+      "note": "требуется TASK_STATEMENT — слот каркаса plan --topic, research ещё не заполнил (секция TASKS)",
+      "research_request": true,
+      "section": "TASKS",
+      "severity": "WORK_BLOCKING",
+      "slot_id": "CS_TASKS_TASK_STATEMENT",
+      "status": "GAP"
+    },
+    {
+      "expected": "NOVELTY_CLAIM",
+      "kind": "claim",
+      "note": "требуется NOVELTY_CLAIM — слот каркаса plan --topic, research ещё не заполнил (секция NOVELTY)",
+      "research_request": true,
+      "section": "NOVELTY",
+      "severity": "WORK_BLOCKING",
+      "slot_id": "CS_NOVELTY_NOVELTY_CLAIM",
+      "status": "GAP"
+    },
+    {
+      "expected": "METHOD_STATEMENT",
+      "kind": "claim",
+      "note": "требуется METHOD_STATEMENT — слот каркаса plan --topic, research ещё не заполнил (секция METHODS)",
+      "research_request": true,
+      "section": "METHODS",
+      "severity": "WORK_BLOCKING",
+      "slot_id": "CS_METHODS_METHOD_STATEMENT",
+      "status": "GAP"
+    },
+    {
+      "expected": "METHOD_DESC",
+      "kind": "artifact",
+      "note": "требуется METHOD_DESC — слот каркаса plan --topic, research ещё не заполнил (секция METHODS)",
+      "research_request": true,
+      "section": "METHODS",
+      "severity": "WORK_BLOCKING",
+      "slot_id": "AS_METHODS_METHOD_DESC",
+      "status": "GAP"
+    },
+    {
+      "expected": "RESULT_CLAIM",
+      "kind": "claim",
+      "note": "требуется RESULT_CLAIM — слот каркаса plan --topic, research ещё не заполнил (секция RESULTS)",
+      "research_request": true,
+      "section": "RESULTS",
+      "severity": "WORK_BLOCKING",
+      "slot_id": "CS_RESULTS_RESULT_CLAIM",
+      "status": "GAP"
+    },
+    {
+      "expected": "QUANTITY",
+      "kind": "artifact",
+      "note": "требуется QUANTITY — слот каркаса plan --topic, research ещё не заполнил (секция RESULTS)",
+      "research_request": true,
+      "section": "RESULTS",
+      "severity": "WORK_BLOCKING",
+      "slot_id": "AS_RESULTS_QUANTITY",
+      "status": "GAP"
+    },
+    {
+      "expected": "TABLE",
+      "kind": "artifact",
+      "note": "требуется TABLE — слот каркаса plan --topic, research ещё не заполнил (секция RESULTS)",
+      "research_request": true,
+      "section": "RESULTS",
+      "severity": "WORK_BLOCKING",
+      "slot_id": "AS_RESULTS_TABLE",
+      "status": "GAP"
+    },
+    {
+      "expected": "FIGURE",
+      "kind": "artifact",
+      "note": "требуется FIGURE — слот каркаса plan --topic, research ещё не заполнил (секция RESULTS)",
+      "research_request": true,
+      "section": "RESULTS",
+      "severity": "WORK_BLOCKING",
+      "slot_id": "AS_RESULTS_FIGURE",
+      "status": "GAP"
+    },
+    {
+      "expected": "CONCLUSION_CLAIM",
+      "kind": "claim",
+      "note": "требуется CONCLUSION_CLAIM — слот каркаса plan --topic, research ещё не заполнил (секция CONCLUSION)",
+      "research_request": true,
+      "section": "CONCLUSION",
+      "severity": "WORK_BLOCKING",
+      "slot_id": "CS_CONCLUSION_CONCLUSION_CLAIM",
+      "status": "GAP"
+    },
+    {
+      "expected": "CITATION",
+      "kind": "artifact",
+      "note": "требуется CITATION — слот каркаса plan --topic, research ещё не заполнил (секция LITERATURE)",
+      "research_request": true,
+      "section": "LITERATURE",
+      "severity": "WORK_BLOCKING",
+      "slot_id": "AS_LITERATURE_CITATION",
+      "status": "GAP"
+    }
+  ],
+  "generated_by": "writer_core.cli.plan.topic",
+  "meta": {
+    "errors": [],
+    "n_gaps": 14,
+    "n_sections": 11,
+    "n_slots": 14,
+    "registry": "autoreferat",
+    "topic": "Общие принципы разработки ИИ-агентов: практическая архитектура, основные паттерны, надёжность, безопасность и выбор между single-agent, workflow и multi-agent системами"
+  },
+  "plan": {
+    "document_goal": {
+      "children": [
+        "SG_TITLE",
+        "SG_RELEVANCE",
+        "SG_OBJECT_SUBJECT",
+        "SG_TOPIC_STATE",
+        "SG_GOAL",
+        "SG_TASKS",
+        "SG_NOVELTY",
+        "SG_METHODS",
+        "SG_RESULTS",
+        "SG_CONCLUSION",
+        "SG_LITERATURE"
+      ],
+      "id": "DG_DOC",
+      "order": 0,
+      "parent": "WO_DOC",
+      "type": "DocumentGoal"
+    },
+    "edges": [
+      {
+        "source": "WO_DOC",
+        "target": "DG_DOC",
+        "type": "DECOMPOSES_TO"
+      },
+      {
+        "source": "SG_RELEVANCE",
+        "target": "CS_RELEVANCE_PROBLEM_STATEMENT",
+        "type": "REQUIRES"
+      },
+      {
+        "source": "SG_OBJECT_SUBJECT",
+        "target": "CS_OBJECT_SUBJECT_SCOPE_STATEMENT",
+        "type": "REQUIRES"
+      },
+      {
+        "source": "SG_TOPIC_STATE",
+        "target": "CS_TOPIC_STATE_PRIOR_ART_SUMMARY",
+        "type": "REQUIRES"
+      },
+      {
+        "source": "SG_GOAL",
+        "target": "CS_GOAL_GOAL_STATEMENT",
+        "type": "REQUIRES"
+      },
+      {
+        "source": "SG_TASKS",
+        "target": "CS_TASKS_TASK_STATEMENT",
+        "type": "REQUIRES"
+      },
+      {
+        "source": "SG_NOVELTY",
+        "target": "CS_NOVELTY_NOVELTY_CLAIM",
+        "type": "REQUIRES"
+      },
+      {
+        "source": "SG_METHODS",
+        "target": "CS_METHODS_METHOD_STATEMENT",
+        "type": "REQUIRES"
+      },
+      {
+        "source": "SG_METHODS",
+        "target": "AS_METHODS_METHOD_DESC",
+        "type": "REQUIRES"
+      },
+      {
+        "source": "SG_RESULTS",
+        "target": "CS_RESULTS_RESULT_CLAIM",
+        "type": "REQUIRES"
+      },
+      {
+        "source": "SG_RESULTS",
+        "target": "AS_RESULTS_QUANTITY",
+        "type": "REQUIRES"
+      },
+      {
+        "source": "SG_RESULTS",
+        "target": "AS_RESULTS_TABLE",
+        "type": "REQUIRES"
+      },
+      {
+        "source": "SG_RESULTS",
+        "target": "AS_RESULTS_FIGURE",
+        "type": "REQUIRES"
+      },
+      {
+        "source": "SG_CONCLUSION",
+        "target": "CS_CONCLUSION_CONCLUSION_CLAIM",
+        "type": "REQUIRES"
+      },
+      {
+        "source": "SG_LITERATURE",
+        "target": "AS_LITERATURE_CITATION",
+        "type": "REQUIRES"
+      }
+    ],
+    "goals": [
+      {
+        "children": [],
+        "discourse_role": "title",
+        "id": "SG_TITLE",
+        "order": 0,
+        "parent": "DG_DOC",
+        "required_artifacts": [],
+        "required_claims": [],
+        "section_type": "TITLE",
+        "type": "SectionGoal"
+      },
+      {
+        "children": [
+          "CS_RELEVANCE_PROBLEM_STATEMENT"
+        ],
+        "discourse_role": "motivation",
+        "id": "SG_RELEVANCE",
+        "order": 1,
+        "parent": "DG_DOC",
+        "required_artifacts": [],
+        "required_claims": [
+          "PROBLEM_STATEMENT"
+        ],
+        "section_type": "RELEVANCE",
+        "type": "SectionGoal"
+      },
+      {
+        "children": [
+          "CS_OBJECT_SUBJECT_SCOPE_STATEMENT"
+        ],
+        "discourse_role": "scope",
+        "id": "SG_OBJECT_SUBJECT",
+        "order": 2,
+        "parent": "DG_DOC",
+        "required_artifacts": [],
+        "required_claims": [
+          "SCOPE_STATEMENT"
+        ],
+        "section_type": "OBJECT_SUBJECT",
+        "type": "SectionGoal"
+      },
+      {
+        "children": [
+          "CS_TOPIC_STATE_PRIOR_ART_SUMMARY"
+        ],
+        "discourse_role": "prior_art",
+        "id": "SG_TOPIC_STATE",
+        "order": 3,
+        "parent": "DG_DOC",
+        "required_artifacts": [],
+        "required_claims": [
+          "PRIOR_ART_SUMMARY"
+        ],
+        "section_type": "TOPIC_STATE",
+        "type": "SectionGoal"
+      },
+      {
+        "children": [
+          "CS_GOAL_GOAL_STATEMENT"
+        ],
+        "discourse_role": "goal",
+        "id": "SG_GOAL",
+        "order": 4,
+        "parent": "DG_DOC",
+        "required_artifacts": [],
+        "required_claims": [
+          "GOAL_STATEMENT"
+        ],
+        "section_type": "GOAL",
+        "type": "SectionGoal"
+      },
+      {
+        "children": [
+          "CS_TASKS_TASK_STATEMENT"
+        ],
+        "discourse_role": "plan",
+        "id": "SG_TASKS",
+        "order": 5,
+        "parent": "DG_DOC",
+        "required_artifacts": [],
+        "required_claims": [
+          "TASK_STATEMENT"
+        ],
+        "section_type": "TASKS",
+        "type": "SectionGoal"
+      },
+      {
+        "children": [
+          "CS_NOVELTY_NOVELTY_CLAIM"
+        ],
+        "discourse_role": "novelty",
+        "id": "SG_NOVELTY",
+        "order": 6,
+        "parent": "DG_DOC",
+        "required_artifacts": [],
+        "required_claims": [
+          "NOVELTY_CLAIM"
+        ],
+        "section_type": "NOVELTY",
+        "type": "SectionGoal"
+      },
+      {
+        "children": [
+          "CS_METHODS_METHOD_STATEMENT",
+          "AS_METHODS_METHOD_DESC"
+        ],
+        "discourse_role": "methods",
+        "id": "SG_METHODS",
+        "order": 7,
+        "parent": "DG_DOC",
+        "required_artifacts": [
+          "METHOD_DESC"
+        ],
+        "required_claims": [
+          "METHOD_STATEMENT"
+        ],
+        "section_type": "METHODS",
+        "type": "SectionGoal"
+      },
+      {
+        "children": [
+          "CS_RESULTS_RESULT_CLAIM",
+          "AS_RESULTS_QUANTITY",
+          "AS_RESULTS_TABLE",
+          "AS_RESULTS_FIGURE"
+        ],
+        "discourse_role": "results",
+        "id": "SG_RESULTS",
+        "order": 8,
+        "parent": "DG_DOC",
+        "required_artifacts": [
+          "QUANTITY",
+          "TABLE",
+          "FIGURE"
+        ],
+        "required_claims": [
+          "RESULT_CLAIM"
+        ],
+        "section_type": "RESULTS",
+        "type": "SectionGoal"
+      },
+      {
+        "children": [
+          "CS_CONCLUSION_CONCLUSION_CLAIM"
+        ],
+        "discourse_role": "conclusion",
+        "id": "SG_CONCLUSION",
+        "order": 9,
+        "parent": "DG_DOC",
+        "required_artifacts": [],
+        "required_claims": [
+          "CONCLUSION_CLAIM"
+        ],
+        "section_type": "CONCLUSION",
+        "type": "SectionGoal"
+      },
+      {
+        "children": [
+          "AS_LITERATURE_CITATION"
+        ],
+        "discourse_role": "references",
+        "id": "SG_LITERATURE",
+        "order": 10,
+        "parent": "DG_DOC",
+        "required_artifacts": [
+          "CITATION"
+        ],
+        "required_claims": [],
+        "section_type": "LITERATURE",
+        "type": "SectionGoal"
+      }
+    ],
+    "slots": [
+      {
+        "expected": "PROBLEM_STATEMENT",
+        "id": "CS_RELEVANCE_PROBLEM_STATEMENT",
+        "kind": "claim",
+        "order": 0,
+        "parent": "SG_RELEVANCE",
+        "section": "RELEVANCE",
+        "type": "ClaimSlot"
+      },
+      {
+        "expected": "SCOPE_STATEMENT",
+        "id": "CS_OBJECT_SUBJECT_SCOPE_STATEMENT",
+        "kind": "claim",
+        "order": 0,
+        "parent": "SG_OBJECT_SUBJECT",
+        "section": "OBJECT_SUBJECT",
+        "type": "ClaimSlot"
+      },
+      {
+        "expected": "PRIOR_ART_SUMMARY",
+        "id": "CS_TOPIC_STATE_PRIOR_ART_SUMMARY",
+        "kind": "claim",
+        "order": 0,
+        "parent": "SG_TOPIC_STATE",
+        "section": "TOPIC_STATE",
+        "type": "ClaimSlot"
+      },
+      {
+        "expected": "GOAL_STATEMENT",
+        "id": "CS_GOAL_GOAL_STATEMENT",
+        "kind": "claim",
+        "order": 0,
+        "parent": "SG_GOAL",
+        "section": "GOAL",
+        "type": "ClaimSlot"
+      },
+      {
+        "expected": "TASK_STATEMENT",
+        "id": "CS_TASKS_TASK_STATEMENT",
+        "kind": "claim",
+        "order": 0,
+        "parent": "SG_TASKS",
+        "section": "TASKS",
+        "type": "ClaimSlot"
+      },
+      {
+        "expected": "NOVELTY_CLAIM",
+        "id": "CS_NOVELTY_NOVELTY_CLAIM",
+        "kind": "claim",
+        "order": 0,
+        "parent": "SG_NOVELTY",
+        "section": "NOVELTY",
+        "type": "ClaimSlot"
+      },
+      {
+        "expected": "METHOD_STATEMENT",
+        "id": "CS_METHODS_METHOD_STATEMENT",
+        "kind": "claim",
+        "order": 0,
+        "parent": "SG_METHODS",
+        "section": "METHODS",
+        "type": "ClaimSlot"
+      },
+      {
+        "expected": "METHOD_DESC",
+        "id": "AS_METHODS_METHOD_DESC",
+        "kind": "artifact",
+        "order": 1,
+        "parent": "SG_METHODS",
+        "section": "METHODS",
+        "type": "ArtifactSlot"
+      },
+      {
+        "expected": "RESULT_CLAIM",
+        "id": "CS_RESULTS_RESULT_CLAIM",
+        "kind": "claim",
+        "order": 0,
+        "parent": "SG_RESULTS",
+        "section": "RESULTS",
+        "type": "ClaimSlot"
+      },
+      {
+        "expected": "QUANTITY",
+        "id": "AS_RESULTS_QUANTITY",
+        "kind": "artifact",
+        "order": 1,
+        "parent": "SG_RESULTS",
+        "section": "RESULTS",
+        "type": "ArtifactSlot"
+      },
+      {
+        "expected": "TABLE",
+        "id": "AS_RESULTS_TABLE",
+        "kind": "artifact",
+        "order": 2,
+        "parent": "SG_RESULTS",
+        "section": "RESULTS",
+        "type": "ArtifactSlot"
+      },
+      {
+        "expected": "FIGURE",
+        "id": "AS_RESULTS_FIGURE",
+        "kind": "artifact",
+        "order": 3,
+        "parent": "SG_RESULTS",
+        "section": "RESULTS",
+        "type": "ArtifactSlot"
+      },
+      {
+        "expected": "CONCLUSION_CLAIM",
+        "id": "CS_CONCLUSION_CONCLUSION_CLAIM",
+        "kind": "claim",
+        "order": 0,
+        "parent": "SG_CONCLUSION",
+        "section": "CONCLUSION",
+        "type": "ClaimSlot"
+      },
+      {
+        "expected": "CITATION",
+        "id": "AS_LITERATURE_CITATION",
+        "kind": "artifact",
+        "order": 0,
+        "parent": "SG_LITERATURE",
+        "section": "LITERATURE",
+        "type": "ArtifactSlot"
+      }
+    ],
+    "writing_objective": {
+      "children": [
+        "DG_DOC"
+      ],
+      "id": "WO_DOC",
+      "order": 0,
+      "parent": null,
+      "type": "WritingObjective"
+    }
+  },
+  "satisfies": [],
+  "schema": "writer_core.structure_plan.v1",
+  "section_status": {
+    "CONCLUSION": "GAP",
+    "GOAL": "GAP",
+    "LITERATURE": "GAP",
+    "METHODS": "GAP",
+    "NOVELTY": "GAP",
+    "OBJECT_SUBJECT": "GAP",
+    "RELEVANCE": "GAP",
+    "RESULTS": "GAP",
+    "TASKS": "GAP",
+    "TITLE": "N/A",
+    "TOPIC_STATE": "GAP"
+  },
+  "sections": [
+    {
+      "children": [],
+      "head": null,
+      "head_paragraph_id": null,
+      "id": "SEC_TITLE",
+      "order": 0,
+      "paragraph_ids": [],
+      "parent": "DOC",
+      "section_type": "TITLE",
+      "source": "topic_plan",
+      "type": "section"
+    },
+    {
+      "children": [],
+      "head": null,
+      "head_paragraph_id": null,
+      "id": "SEC_RELEVANCE",
+      "order": 1,
+      "paragraph_ids": [],
+      "parent": "DOC",
+      "section_type": "RELEVANCE",
+      "source": "topic_plan",
+      "type": "section"
+    },
+    {
+      "children": [],
+      "head": null,
+      "head_paragraph_id": null,
+      "id": "SEC_OBJECT_SUBJECT",
+      "order": 2,
+      "paragraph_ids": [],
+      "parent": "DOC",
+      "section_type": "OBJECT_SUBJECT",
+      "source": "topic_plan",
+      "type": "section"
+    },
+    {
+      "children": [],
+      "head": null,
+      "head_paragraph_id": null,
+      "id": "SEC_TOPIC_STATE",
+      "order": 3,
+      "paragraph_ids": [],
+      "parent": "DOC",
+      "section_type": "TOPIC_STATE",
+      "source": "topic_plan",
+      "type": "section"
+    },
+    {
+      "children": [],
+      "head": null,
+      "head_paragraph_id": null,
+      "id": "SEC_GOAL",
+      "order": 4,
+      "paragraph_ids": [],
+      "parent": "DOC",
+      "section_type": "GOAL",
+      "source": "topic_plan",
+      "type": "section"
+    },
+    {
+      "children": [],
+      "head": null,
+      "head_paragraph_id": null,
+      "id": "SEC_TASKS",
+      "order": 5,
+      "paragraph_ids": [],
+      "parent": "DOC",
+      "section_type": "TASKS",
+      "source": "topic_plan",
+      "type": "section"
+    },
+    {
+      "children": [],
+      "head": null,
+      "head_paragraph_id": null,
+      "id": "SEC_NOVELTY",
+      "order": 6,
+      "paragraph_ids": [],
+      "parent": "DOC",
+      "section_type": "NOVELTY",
+      "source": "topic_plan",
+      "type": "section"
+    },
+    {
+      "children": [],
+      "head": null,
+      "head_paragraph_id": null,
+      "id": "SEC_METHODS",
+      "order": 7,
+      "paragraph_ids": [],
+      "parent": "DOC",
+      "section_type": "METHODS",
+      "source": "topic_plan",
+      "type": "section"
+    },
+    {
+      "children": [],
+      "head": null,
+      "head_paragraph_id": null,
+      "id": "SEC_RESULTS",
+      "order": 8,
+      "paragraph_ids": [],
+      "parent": "DOC",
+      "section_type": "RESULTS",
+      "source": "topic_plan",
+      "type": "section"
+    },
+    {
+      "children": [],
+      "head": null,
+      "head_paragraph_id": null,
+      "id": "SEC_CONCLUSION",
+      "order": 9,
+      "paragraph_ids": [],
+      "parent": "DOC",
+      "section_type": "CONCLUSION",
+      "source": "topic_plan",
+      "type": "section"
+    },
+    {
+      "children": [],
+      "head": null,
+      "head_paragraph_id": null,
+      "id": "SEC_LITERATURE",
+      "order": 10,
+      "paragraph_ids": [],
+      "parent": "DOC",
+      "section_type": "LITERATURE",
+      "source": "topic_plan",
+      "type": "section"
+    }
+  ],
+  "slots": [
+    {
+      "expected": "PROBLEM_STATEMENT",
+      "id": "CS_RELEVANCE_PROBLEM_STATEMENT",
+      "kind": "claim",
+      "order": 0,
+      "parent": "SG_RELEVANCE",
+      "section": "RELEVANCE",
+      "type": "ClaimSlot"
+    },
+    {
+      "expected": "SCOPE_STATEMENT",
+      "id": "CS_OBJECT_SUBJECT_SCOPE_STATEMENT",
+      "kind": "claim",
+      "order": 0,
+      "parent": "SG_OBJECT_SUBJECT",
+      "section": "OBJECT_SUBJECT",
+      "type": "ClaimSlot"
+    },
+    {
+      "expected": "PRIOR_ART_SUMMARY",
+      "id": "CS_TOPIC_STATE_PRIOR_ART_SUMMARY",
+      "kind": "claim",
+      "order": 0,
+      "parent": "SG_TOPIC_STATE",
+      "section": "TOPIC_STATE",
+      "type": "ClaimSlot"
+    },
+    {
+      "expected": "GOAL_STATEMENT",
+      "id": "CS_GOAL_GOAL_STATEMENT",
+      "kind": "claim",
+      "order": 0,
+      "parent": "SG_GOAL",
+      "section": "GOAL",
+      "type": "ClaimSlot"
+    },
+    {
+      "expected": "TASK_STATEMENT",
+      "id": "CS_TASKS_TASK_STATEMENT",
+      "kind": "claim",
+      "order": 0,
+      "parent": "SG_TASKS",
+      "section": "TASKS",
+      "type": "ClaimSlot"
+    },
+    {
+      "expected": "NOVELTY_CLAIM",
+      "id": "CS_NOVELTY_NOVELTY_CLAIM",
+      "kind": "claim",
+      "order": 0,
+      "parent": "SG_NOVELTY",
+      "section": "NOVELTY",
+      "type": "ClaimSlot"
+    },
+    {
+      "expected": "METHOD_STATEMENT",
+      "id": "CS_METHODS_METHOD_STATEMENT",
+      "kind": "claim",
+      "order": 0,
+      "parent": "SG_METHODS",
+      "section": "METHODS",
+      "type": "ClaimSlot"
+    },
+    {
+      "expected": "METHOD_DESC",
+      "id": "AS_METHODS_METHOD_DESC",
+      "kind": "artifact",
+      "order": 1,
+      "parent": "SG_METHODS",
+      "section": "METHODS",
+      "type": "ArtifactSlot"
+    },
+    {
+      "expected": "RESULT_CLAIM",
+      "id": "CS_RESULTS_RESULT_CLAIM",
+      "kind": "claim",
+      "order": 0,
+      "parent": "SG_RESULTS",
+      "section": "RESULTS",
+      "type": "ClaimSlot"
+    },
+    {
+      "expected": "QUANTITY",
+      "id": "AS_RESULTS_QUANTITY",
+      "kind": "artifact",
+      "order": 1,
+      "parent": "SG_RESULTS",
+      "section": "RESULTS",
+      "type": "ArtifactSlot"
+    },
+    {
+      "expected": "TABLE",
+      "id": "AS_RESULTS_TABLE",
+      "kind": "artifact",
+      "order": 2,
+      "parent": "SG_RESULTS",
+      "section": "RESULTS",
+      "type": "ArtifactSlot"
+    },
+    {
+      "expected": "FIGURE",
+      "id": "AS_RESULTS_FIGURE",
+      "kind": "artifact",
+      "order": 3,
+      "parent": "SG_RESULTS",
+      "section": "RESULTS",
+      "type": "ArtifactSlot"
+    },
+    {
+      "expected": "CONCLUSION_CLAIM",
+      "id": "CS_CONCLUSION_CONCLUSION_CLAIM",
+      "kind": "claim",
+      "order": 0,
+      "parent": "SG_CONCLUSION",
+      "section": "CONCLUSION",
+      "type": "ClaimSlot"
+    },
+    {
+      "expected": "CITATION",
+      "id": "AS_LITERATURE_CITATION",
+      "kind": "artifact",
+      "order": 0,
+      "parent": "SG_LITERATURE",
+      "section": "LITERATURE",
+      "type": "ArtifactSlot"
+    }
+  ],
+  "source": {
+    "kind": "topic",
+    "registry": "autoreferat",
+    "topic": "Общие принципы разработки ИИ-агентов: практическая архитектура, основные паттерны, надёжность, безопасность и выбор между single-agent, workflow и multi-agent системами"
+  }
+}

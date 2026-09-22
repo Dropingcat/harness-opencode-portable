@@ -1,0 +1,13 @@
+{
+  "sources": [
+    {
+      "claim_id": 200,
+      "sources": [
+        {
+          "title": "Handbook Steel 45",
+          "descriptor": "Steel hardness is 200 HV"
+        }
+      ]
+    }
+  ]
+}

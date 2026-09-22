@@ -1,0 +1,1147 @@
+{
+  "checked": [
+    {
+      "claim_id": "C-001",
+      "matched": true,
+      "notes": [
+        "universal quantifiers: ['каждый']"
+      ],
+      "overlap": 6,
+      "reasons": [
+        "SCOPE_EXPANSION",
+        "NEGATION_FLIP"
+      ]
+    },
+    {
+      "claim_id": "C-002",
+      "matched": true,
+      "notes": [],
+      "overlap": 2,
+      "reasons": [
+        "PARAPHRASE_SAFE"
+      ]
+    },
+    {
+      "claim_id": "C-003",
+      "matched": true,
+      "notes": [],
+      "overlap": 3,
+      "reasons": [
+        "PARAPHRASE_SAFE"
+      ]
+    },
+    {
+      "claim_id": "C-004",
+      "matched": true,
+      "notes": [
+        "universal quantifiers: ['каждый']"
+      ],
+      "overlap": 4,
+      "reasons": [
+        "SCOPE_EXPANSION",
+        "NEGATION_FLIP"
+      ]
+    },
+    {
+      "claim_id": "C-005",
+      "matched": true,
+      "notes": [
+        "universal quantifiers: ['каждый']"
+      ],
+      "overlap": 6,
+      "reasons": [
+        "SCOPE_EXPANSION"
+      ]
+    },
+    {
+      "claim_id": "C-006",
+      "matched": true,
+      "notes": [],
+      "overlap": 4,
+      "reasons": [
+        "PARAPHRASE_SAFE"
+      ]
+    },
+    {
+      "claim_id": "C-007",
+      "matched": true,
+      "notes": [],
+      "overlap": 6,
+      "reasons": [
+        "PARAPHRASE_SAFE"
+      ]
+    },
+    {
+      "claim_id": "C-008",
+      "matched": true,
+      "notes": [
+        "universal quantifiers: ['каждый']"
+      ],
+      "overlap": 3,
+      "reasons": [
+        "SCOPE_EXPANSION",
+        "NEGATION_FLIP"
+      ]
+    },
+    {
+      "claim_id": "C-009",
+      "matched": true,
+      "notes": [
+        "universal quantifiers: ['каждый']"
+      ],
+      "overlap": 7,
+      "reasons": [
+        "SCOPE_EXPANSION",
+        "NEGATION_FLIP"
+      ]
+    },
+    {
+      "claim_id": "C-010",
+      "matched": true,
+      "notes": [],
+      "overlap": 6,
+      "reasons": [
+        "PARAPHRASE_SAFE"
+      ]
+    },
+    {
+      "claim_id": "C-011",
+      "matched": true,
+      "notes": [
+        "universal quantifiers: ['каждый']"
+      ],
+      "overlap": 6,
+      "reasons": [
+        "SCOPE_EXPANSION"
+      ]
+    },
+    {
+      "claim_id": "C-012",
+      "matched": true,
+      "notes": [
+        "universal quantifiers: ['каждый']"
+      ],
+      "overlap": 4,
+      "reasons": [
+        "SCOPE_EXPANSION",
+        "NEGATION_FLIP"
+      ]
+    },
+    {
+      "claim_id": "C-013",
+      "matched": true,
+      "notes": [
+        "universal quantifiers: ['каждый']"
+      ],
+      "overlap": 2,
+      "reasons": [
+        "SCOPE_EXPANSION",
+        "NEGATION_FLIP"
+      ]
+    },
+    {
+      "claim_id": "C-014",
+      "matched": true,
+      "notes": [],
+      "overlap": 3,
+      "reasons": [
+        "NEGATION_FLIP"
+      ]
+    }
+  ],
+  "contract_path": "writing_contract.json",
+  "defects": [],
+  "draft_path": "article_ai_agent_principles.md",
+  "generated_by": "writer_core.factory_process.draftcheck",
+  "re_extraction": {
+    "claims": [
+      {
+        "claim_id": "DRAFT_P0003_C0",
+        "end": 1090,
+        "paragraph_id": "DRAFT_P0003",
+        "qa_status": "GROUNDED",
+        "raw_span": "## Сначала определите, кто выбирает следующий шаг",
+        "sentence_idx": 0,
+        "start": 1041,
+        "text": "## Сначала определите, кто выбирает следующий шаг"
+      },
+      {
+        "claim_id": "DRAFT_P0004_C0",
+        "end": 1273,
+        "paragraph_id": "DRAFT_P0004",
+        "qa_status": "GROUNDED",
+        "raw_span": "В **workflow** следующий шаг задаёт код: после A выполняется B, при ошибке C — ветка D.",
+        "sentence_idx": 1,
+        "start": 1186,
+        "text": "В **workflow** следующий шаг задаёт код: после A выполняется B, при ошибке C — ветка D."
+      },
+      {
+        "claim_id": "DRAFT_P0005_C0",
+        "end": 1833,
+        "paragraph_id": "DRAFT_P0005",
+        "qa_status": "GROUNDED",
+        "raw_span": "Отсюда следует порядок выбора архитектуры.",
+        "sentence_idx": 0,
+        "start": 1791,
+        "text": "Отсюда следует порядок выбора архитектуры."
+      },
+      {
+        "claim_id": "DRAFT_P0006_C0",
+        "end": 2264,
+        "paragraph_id": "DRAFT_P0006",
+        "qa_status": "GROUNDED",
+        "raw_span": "3. **Несколько агентов** оправданы, когда evals показывают пользу от независимого параллелизма, изоляции контекста или реальной специализации.",
+        "sentence_idx": 2,
+        "start": 2122,
+        "text": "3. **Несколько агентов** оправданы, когда evals показывают пользу от независимого параллелизма, изоляции контекста или р"
+      },
+      {
+        "claim_id": "DRAFT_P0006_C1",
+        "end": 2381,
+        "paragraph_id": "DRAFT_P0006",
+        "qa_status": "GROUNDED",
+        "raw_span": "Большее число ролей само по себе качество не повышает: оно добавляет handoffs, задержки, новые ошибки и координацию.",
+        "sentence_idx": 3,
+        "start": 2265,
+        "text": "Большее число ролей само по себе качество не повышает: оно добавляет handoffs, задержки, новые ошибки и координацию."
+      },
+      {
+        "claim_id": "DRAFT_P0007_C0",
+        "end": 2859,
+        "paragraph_id": "DRAFT_P0007",
+        "qa_status": "GROUNDED",
+        "raw_span": "**Пример: возврат заказа.** Получение заказа, проверка срока, вычисление доступного способа возврата и форматирование ответа могут быть обычным workflow.",
+        "sentence_idx": 0,
+        "start": 2706,
+        "text": "**Пример: возврат заказа.** Получение заказа, проверка срока, вычисление доступного способа возврата и форматирование от"
+      },
+      {
+        "claim_id": "DRAFT_P0013_C0",
+        "end": 4833,
+        "paragraph_id": "DRAFT_P0013",
+        "qa_status": "GROUNDED",
+        "raw_span": "Каждый отвечает на отдельное свойство задачи ([Anthropic](https://www.anthropic.com/research/building-effective-agents)).",
+        "sentence_idx": 1,
+        "start": 4712,
+        "text": "Каждый отвечает на отдельное свойство задачи ([Anthropic](https://www.anthropic.com/research/building-effective-agents))"
+      },
+      {
+        "claim_id": "DRAFT_P0014_C0",
+        "end": 5429,
+        "paragraph_id": "DRAFT_P0014",
+        "qa_status": "GROUNDED",
+        "raw_span": "Она вредна при частых зависимостях и общем изменяемом состоянии: появляются гонки, дублирование работы и сложное слияние. - **Evaluator–optimizer** уместен, когда результат можно проверить по ясной рубрике и улучшить за ограниченное число итераций.",
+        "sentence_idx": 4,
+        "start": 5181,
+        "text": "Она вредна при частых зависимостях и общем изменяемом состоянии: появляются гонки, дублирование работы и сложное слияние"
+      },
+      {
+        "claim_id": "DRAFT_P0018_C0",
+        "end": 7395,
+        "paragraph_id": "DRAFT_P0018",
+        "qa_status": "GROUNDED",
+        "raw_span": "Ошибки следует различать: `INVALID_ARGUMENT`, `DENIED`, `RETRYABLE`, `UNKNOWN_OUTCOME` — это разные переходы состояния, а не один текст «что-то пошло не так».",
+        "sentence_idx": 1,
+        "start": 7237,
+        "text": "Ошибки следует различать: `INVALID_ARGUMENT`, `DENIED`, `RETRYABLE`, `UNKNOWN_OUTCOME` — это разные переходы состояния, "
+      },
+      {
+        "claim_id": "DRAFT_P0022_C0",
+        "end": 8629,
+        "paragraph_id": "DRAFT_P0022",
+        "qa_status": "GROUNDED",
+        "raw_span": "У долговременной записи должны быть provenance, политика отбора и право на запись; текущий статус заказа или платежа следует читать из authoritative system, а не вспоминать из прошлой беседы.",
+        "sentence_idx": 2,
+        "start": 8438,
+        "text": "У долговременной записи должны быть provenance, политика отбора и право на запись; текущий статус заказа или платежа сле"
+      },
+      {
+        "claim_id": "DRAFT_P0023_C0",
+        "end": 8824,
+        "paragraph_id": "DRAFT_P0023",
+        "qa_status": "GROUNDED",
+        "raw_span": "Context engineering — это сбор минимального высокосигнального набора данных для следующего решения: актуальные инструкции, доступные tools, нужный фрагмент state и извлечённые по запросу знания.",
+        "sentence_idx": 0,
+        "start": 8630,
+        "text": "Context engineering — это сбор минимального высокосигнального набора данных для следующего решения: актуальные инструкци"
+      },
+      {
+        "claim_id": "DRAFT_P0026_C0",
+        "end": 9890,
+        "paragraph_id": "DRAFT_P0026",
+        "qa_status": "GROUNDED",
+        "raw_span": "Полезно различать как минимум `SUCCESS`, `PARTIAL`, `BLOCKED` и `UNRESOLVABLE`: timeout, исчерпание бюджета или отсутствие разрешения не являются успехом.",
+        "sentence_idx": 1,
+        "start": 9736,
+        "text": "Полезно различать как минимум `SUCCESS`, `PARTIAL`, `BLOCKED` и `UNRESOLVABLE`: timeout, исчерпание бюджета или отсутств"
+      },
+      {
+        "claim_id": "DRAFT_P0027_C0",
+        "end": 10602,
+        "paragraph_id": "DRAFT_P0027",
+        "qa_status": "GROUNDED",
+        "raw_span": "В другой системе состав ролей и гейтов может быть иным при сохранении тех же свойств контроля.",
+        "sentence_idx": 2,
+        "start": 10508,
+        "text": "В другой системе состав ролей и гейтов может быть иным при сохранении тех же свойств контроля."
+      },
+      {
+        "claim_id": "DRAFT_P0029_C0",
+        "end": 11114,
+        "paragraph_id": "DRAFT_P0029",
+        "qa_status": "GROUNDED",
+        "raw_span": "Для открытой задачи не всегда существует единственная правильная траектория: следует оценивать конечное состояние и отдельно проверять инварианты — запрещённые действия, обязательные approvals и корректность аргументов.",
+        "sentence_idx": 2,
+        "start": 10895,
+        "text": "Для открытой задачи не всегда существует единственная правильная траектория: следует оценивать конечное состояние и отде"
+      },
+      {
+        "claim_id": "DRAFT_P0035_C0",
+        "end": 13959,
+        "paragraph_id": "DRAFT_P0035",
+        "qa_status": "GROUNDED",
+        "raw_span": "- [ ] Для каждого динамического решения объяснено, почему его нельзя надёжно задать кодом. - [ ] Выбор workflow, single-agent или multi-agent подтверждён сценарными evals. - [ ] Цикл явно разделяет observation, decision, action, state update и validation. - [ ] План, если он нужен, хранится как наблюдаемый артефакт; execution не выдаёт предположение за выполненный шаг. - [ ] Для каждого orchestration pattern указаны fit condition, failure mode и владелец результата. - [ ] Каждый tool имеет узкую ответственность, typed input/output и structured errors. - [ ] Авторизация выполняется downstream-кодом; side effects используют least privilege, audit и approval policy. - [ ] Timeout и retries учитывают идемпотентность и состояние `UNKNOWN_OUTCOME`. - [ ] Run state отделён от long-term memory; у памяти есть provenance и write policy. - [ ] Контекст собирается под следующий шаг, а критические ограничения не теряются при compaction. - [ ] Код контролирует stop criteria, бюджеты и состояния `PARTIAL`, `BLOCKED`, `UNRESOLVABLE`. - [ ] Evals проверяют outcome, контракты, инварианты, регрессии и adversarial cases. - [ ] Трассы связывают результат, действия и ресурсы без утечки чувствительных данных. - [ ] Недоверенный контент отделён от инструкций и не может напрямую инициировать привилегированное действие.",
+        "sentence_idx": 3,
+        "start": 12644,
+        "text": "- [ ] Для каждого динамического решения объяснено, почему его нельзя надёжно задать кодом. - [ ] Выбор workflow, single-"
+      },
+      {
+        "claim_id": "DRAFT_P0036_C0",
+        "end": 14095,
+        "paragraph_id": "DRAFT_P0036",
+        "qa_status": "GROUNDED",
+        "raw_span": "Надёжный агент определяется не способностью долго действовать без человека, а способностью действовать в пределах проверяемого контура.",
+        "sentence_idx": 0,
+        "start": 13960,
+        "text": "Надёжный агент определяется не способностью долго действовать без человека, а способностью действовать в пределах провер"
+      },
+      {
+        "claim_id": "DRAFT_P0036_C1",
+        "end": 14151,
+        "paragraph_id": "DRAFT_P0036",
+        "qa_status": "GROUNDED",
+        "raw_span": "Если следующий шаг известен — закрепите его в workflow.",
+        "sentence_idx": 1,
+        "start": 14096,
+        "text": "Если следующий шаг известен — закрепите его в workflow."
+      }
+    ],
+    "digests": [
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "# ИИ-агент — это система, а не промпт: практические принципы архитектуры"
+        },
+        "modality": "assertive",
+        "scope": {
+          "negation": true,
+          "restricted": false
+        },
+        "scope_text": "# ИИ-агент — это система, а не промпт: практические принципы архитектуры"
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "Базовая архитектурная ошибка возникает до выбора модели и SDK: разработчик принимает динамичность за цель."
+        },
+        "modality": "assertive",
+        "scope": {
+          "restricted": false
+        },
+        "scope_text": "Базовая архитектурная ошибка возникает до выбора модели и SDK: разработчик принимает динамичность за цель."
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "Разумная отправная точка обратная: выбрать **минимально достаточную автономность**, а затем добавлять её только там, где фиксированный код не справляется с неопределённостью."
+        },
+        "modality": "assertive",
+        "scope": {
+          "negation": true,
+          "restricted": false
+        },
+        "scope_text": "Разумная отправная точка обратная: выбрать **минимально достаточную автономность**, а затем добавлять её только там, где фиксированный код не справляется с неопределённостью."
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "## Сначала определите, кто выбирает следующий шаг"
+        },
+        "modality": "assertive",
+        "scope": {
+          "restricted": false
+        },
+        "scope_text": "## Сначала определите, кто выбирает следующий шаг"
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "В **workflow** следующий шаг задаёт код: после A выполняется B, при ошибке C — ветка D. В **агенте** модель во время исполнения выбирает действие, инструмент или момент завершения."
+        },
+        "modality": "assertive",
+        "scope": {
+          "restricted": false
+        },
+        "scope_text": "В **workflow** следующий шаг задаёт код: после A выполняется B, при ошибке C — ветка D. В **агенте** модель во время исполнения выбирает действие, инструмент или момент завершения."
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "Отсюда следует порядок выбора архитектуры."
+        },
+        "modality": "assertive",
+        "scope": {
+          "restricted": false
+        },
+        "scope_text": "Отсюда следует порядок выбора архитектуры."
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "3. **Несколько агентов** оправданы, когда evals показывают пользу от независимого параллелизма, изоляции контекста или реальной специализации."
+        },
+        "modality": "assertive",
+        "scope": {
+          "numeric_mentions": [
+            "3"
+          ],
+          "restricted": false
+        },
+        "scope_text": "3. **Несколько агентов** оправданы, когда evals показывают пользу от независимого параллелизма, изоляции контекста или реальной специализации."
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "**Пример: возврат заказа.** Получение заказа, проверка срока, вычисление доступного способа возврата и форматирование ответа могут быть обычным workflow."
+        },
+        "modality": "assertive",
+        "scope": {
+          "restricted": false
+        },
+        "scope_text": "**Пример: возврат заказа.** Получение заказа, проверка срока, вычисление доступного способа возврата и форматирование ответа могут быть обычным workflow."
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "## Ядро агента — замкнутый цикл, а не один вызов модели"
+        },
+        "modality": "assertive",
+        "scope": {
+          "negation": true,
+          "restricted": false
+        },
+        "scope_text": "## Ядро агента — замкнутый цикл, а не один вызов модели"
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "Полезная модель исполнения выглядит так: **observe → decide/plan → act → observe → update state → validate/stop**."
+        },
+        "modality": "assertive",
+        "scope": {
+          "restricted": false
+        },
+        "scope_text": "Полезная модель исполнения выглядит так: **observe → decide/plan → act → observe → update state → validate/stop**."
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "Tool result при этом — не истина, а входное наблюдение."
+        },
+        "modality": "assertive",
+        "scope": {
+          "negation": true,
+          "restricted": false
+        },
+        "scope_text": "Tool result при этом — не истина, а входное наблюдение."
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "Planning и execution стоит разделять как ответственности, но не обязательно как два процесса или две модели."
+        },
+        "modality": "assertive",
+        "scope": {
+          "negation": true,
+          "restricted": false
+        },
+        "scope_text": "Planning и execution стоит разделять как ответственности, но не обязательно как два процесса или две модели."
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "## Выбирайте orchestration pattern по структуре задачи"
+        },
+        "modality": "assertive",
+        "scope": {
+          "restricted": false
+        },
+        "scope_text": "## Выбирайте orchestration pattern по структуре задачи"
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "restore_scope",
+          "rewrite_span"
+        ],
+        "ambiguities": [
+          {
+            "details": {
+              "head": "отдельное",
+              "heuristic": "scope_np_without_research_attr"
+            },
+            "impact": "MEDIUM",
+            "target": "sentence",
+            "type": "SCOPE_EXPANSION"
+          },
+          {
+            "details": {
+              "heuristic": "universal_without_scope_restriction",
+              "universals": [
+                "каждый"
+              ]
+            },
+            "impact": "MEDIUM",
+            "target": "sentence",
+            "type": "SCOPE_EXPANSION"
+          }
+        ],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "Каждый отвечает на отдельное свойство задачи ([Anthropic](https://www.anthropic.com/research/building-effective-agents))."
+        },
+        "modality": "assertive",
+        "scope": {
+          "restricted": false,
+          "risk": "SCOPE_EXPANSION",
+          "type": "universal"
+        },
+        "scope_text": "Каждый отвечает на отдельное свойство задачи ([Anthropic](https://www.anthropic.com/research/building-effective-agents))."
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "- **Evaluator–optimizer** уместен, когда результат можно проверить по ясной рубрике и улучшить за ограниченное число итераций."
+        },
+        "modality": "assertive",
+        "scope": {
+          "restricted": false
+        },
+        "scope_text": "- **Evaluator–optimizer** уместен, когда результат можно проверить по ясной рубрике и улучшить за ограниченное число итераций."
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "**Пример: параллельное исследование.** Сбор сведений по независимым региональным рынкам можно раздать отдельным workers, зафиксировав единую схему результата и затем выполнив дедупликацию и проверку источников."
+        },
+        "modality": "assertive",
+        "scope": {
+          "restricted": false
+        },
+        "scope_text": "**Пример: параллельное исследование.** Сбор сведений по независимым региональным рынкам можно раздать отдельным workers, зафиксировав единую схему результата и затем выполнив дедупликацию и проверку источников."
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "## Инструменты — это API, а не набор естественно-языковых пожеланий"
+        },
+        "modality": "assertive",
+        "scope": {
+          "negation": true,
+          "restricted": false
+        },
+        "scope_text": "## Инструменты — это API, а не набор естественно-языковых пожеланий"
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "Инструменту нужны узкая ответственность, typed schema входа и выхода, понятные enum-значения и структурированные ошибки."
+        },
+        "modality": "assertive",
+        "scope": {
+          "restricted": false
+        },
+        "scope_text": "Инструменту нужны узкая ответственность, typed schema входа и выхода, понятные enum-значения и структурированные ошибки."
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "Ошибки следует различать: `INVALID_ARGUMENT`, `DENIED`, `RETRYABLE`, `UNKNOWN_OUTCOME` — это разные переходы состояния, а не один текст «что-то пошло не так»."
+        },
+        "modality": "assertive",
+        "scope": {
+          "negation": true,
+          "restricted": false
+        },
+        "scope_text": "Ошибки следует различать: `INVALID_ARGUMENT`, `DENIED`, `RETRYABLE`, `UNKNOWN_OUTCOME` — это разные переходы состояния, а не один текст «что-то пошло не так»."
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "**Пример: timeout при платеже.** Если запрос завершился по timeout, агент не знает, была ли операция проведена."
+        },
+        "modality": "assertive",
+        "scope": {
+          "negation": true,
+          "restricted": false
+        },
+        "scope_text": "**Пример: timeout при платеже.** Если запрос завершился по timeout, агент не знает, была ли операция проведена."
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "## Состояние, память и контекст — разные сущности"
+        },
+        "modality": "assertive",
+        "scope": {
+          "restricted": false
+        },
+        "scope_text": "## Состояние, память и контекст — разные сущности"
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "**Run state** хранит авторитетное состояние текущего исполнения: цель, выполненные шаги, tool results, активные ограничения, бюджет и статус."
+        },
+        "modality": "assertive",
+        "scope": {
+          "restricted": false
+        },
+        "scope_text": "**Run state** хранит авторитетное состояние текущего исполнения: цель, выполненные шаги, tool results, активные ограничения, бюджет и статус."
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "restore_scope",
+          "rewrite_span"
+        ],
+        "ambiguities": [
+          {
+            "details": {
+              "head": "запись",
+              "heuristic": "scope_np_without_research_attr"
+            },
+            "impact": "MEDIUM",
+            "target": "sentence",
+            "type": "SCOPE_EXPANSION"
+          }
+        ],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "У долговременной записи должны быть provenance, политика отбора и право на запись; текущий статус заказа или платежа следует читать из authoritative system, а не вспоминать из прошлой беседы."
+        },
+        "modality": "assertive",
+        "scope": {
+          "negation": true,
+          "restricted": false
+        },
+        "scope_text": "У долговременной записи должны быть provenance, политика отбора и право на запись; текущий статус заказа или платежа следует читать из authoritative system, а не вспоминать из прошлой беседы."
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "restore_scope",
+          "rewrite_span"
+        ],
+        "ambiguities": [
+          {
+            "details": {
+              "head": "следующего",
+              "heuristic": "scope_np_without_research_attr"
+            },
+            "impact": "MEDIUM",
+            "target": "sentence",
+            "type": "SCOPE_EXPANSION"
+          }
+        ],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "Context engineering — это сбор минимального высокосигнального набора данных для следующего решения: актуальные инструкции, доступные tools, нужный фрагмент state и извлечённые по запросу знания."
+        },
+        "modality": "assertive",
+        "scope": {
+          "restricted": false
+        },
+        "scope_text": "Context engineering — это сбор минимального высокосигнального набора данных для следующего решения: актуальные инструкции, доступные tools, нужный фрагмент state и извлечённые по запросу знания."
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "## Production control plane ограничивает автономность"
+        },
+        "modality": "assertive",
+        "scope": {
+          "restricted": false
+        },
+        "scope_text": "## Production control plane ограничивает автономность"
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "Функциональное ядро часто описывают как model, tools и instructions."
+        },
+        "modality": "assertive",
+        "scope": {
+          "restricted": false
+        },
+        "scope_text": "Функциональное ядро часто описывают как model, tools и instructions."
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "Полезно различать как минимум `SUCCESS`, `PARTIAL`, `BLOCKED` и `UNRESOLVABLE`: timeout, исчерпание бюджета или отсутствие разрешения не являются успехом."
+        },
+        "modality": "assertive",
+        "scope": {
+          "negation": true,
+          "restricted": false
+        },
+        "scope_text": "Полезно различать как минимум `SUCCESS`, `PARTIAL`, `BLOCKED` и `UNRESOLVABLE`: timeout, исчерпание бюджета или отсутствие разрешения не являются успехом."
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "В другой системе состав ролей и гейтов может быть иным при сохранении тех же свойств контроля."
+        },
+        "modality": "assertive",
+        "scope": {
+          "restricted": false
+        },
+        "scope_text": "В другой системе состав ролей и гейтов может быть иным при сохранении тех же свойств контроля."
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "## Evals и наблюдаемость должны объяснять не только финальный ответ"
+        },
+        "modality": "assertive",
+        "scope": {
+          "negation": true,
+          "restricted": false
+        },
+        "scope_text": "## Evals и наблюдаемость должны объяснять не только финальный ответ"
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "restore_scope",
+          "rewrite_span"
+        ],
+        "ambiguities": [
+          {
+            "details": {
+              "head": "открытой",
+              "heuristic": "scope_np_without_research_attr"
+            },
+            "impact": "MEDIUM",
+            "target": "sentence",
+            "type": "SCOPE_EXPANSION"
+          },
+          {
+            "details": {
+              "heuristic": "universal_without_scope_restriction",
+              "universals": [
+                "всегда"
+              ]
+            },
+            "impact": "MEDIUM",
+            "target": "sentence",
+            "type": "SCOPE_EXPANSION"
+          }
+        ],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "Для открытой задачи не всегда существует единственная правильная траектория: следует оценивать конечное состояние и отдельно проверять инварианты — запрещённые действия, обязательные approvals и корректность аргументов."
+        },
+        "modality": "assertive",
+        "scope": {
+          "negation": true,
+          "restricted": false,
+          "risk": "SCOPE_EXPANSION",
+          "type": "universal"
+        },
+        "scope_text": "Для открытой задачи не всегда существует единственная правильная траектория: следует оценивать конечное состояние и отдельно проверять инварианты — запрещённые действия, обязательные approvals и корректность аргументов."
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "Observability связывает три слоя: outcome, trajectory и ресурсы."
+        },
+        "modality": "assertive",
+        "scope": {
+          "restricted": false
+        },
+        "scope_text": "Observability связывает три слоя: outcome, trajectory и ресурсы."
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "## Граница доверия проходит перед привилегированным действием"
+        },
+        "modality": "assertive",
+        "scope": {
+          "restricted": false
+        },
+        "scope_text": "## Граница доверия проходит перед привилегированным действием"
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "Веб-страница, документ, письмо и tool output — данные, даже если внутри написано «игнорируй предыдущие инструкции»."
+        },
+        "modality": "assertive",
+        "scope": {
+          "restricted": false
+        },
+        "scope_text": "Веб-страница, документ, письмо и tool output — данные, даже если внутри написано «игнорируй предыдущие инструкции»."
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "Ни structured output, ни один guardrail не решают проблему полностью."
+        },
+        "modality": "assertive",
+        "scope": {
+          "negation": true,
+          "restricted": false
+        },
+        "scope_text": "Ни structured output, ни один guardrail не решают проблему полностью."
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "## Практический чек-лист перед запуском"
+        },
+        "modality": "assertive",
+        "scope": {
+          "restricted": false
+        },
+        "scope_text": "## Практический чек-лист перед запуском"
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "- [ ] План, если он нужен, хранится как наблюдаемый артефакт; execution не выдаёт предположение за выполненный шаг."
+        },
+        "modality": "assertive",
+        "scope": {
+          "negation": true,
+          "restricted": false
+        },
+        "scope_text": "- [ ] План, если он нужен, хранится как наблюдаемый артефакт; execution не выдаёт предположение за выполненный шаг."
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "Надёжный агент определяется не способностью долго действовать без человека, а способностью действовать в пределах проверяемого контура."
+        },
+        "modality": "assertive",
+        "scope": {
+          "negation": true,
+          "restricted": true,
+          "type": "observed_set"
+        },
+        "scope_text": "Надёжный агент определяется не способностью долго действовать без человека, а способностью действовать в пределах проверяемого контура."
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "## Источники"
+        },
+        "modality": "assertive",
+        "scope": {
+          "restricted": false
+        },
+        "scope_text": "## Источники"
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "1. [Anthropic — Building effective agents](https://www.anthropic.com/research/building-effective-agents) — различие workflows и agents, условия применения orchestration patterns."
+        },
+        "modality": "assertive",
+        "scope": {
+          "numeric_mentions": [
+            "1"
+          ],
+          "restricted": false
+        },
+        "scope_text": "1. [Anthropic — Building effective agents](https://www.anthropic.com/research/building-effective-agents) — различие workflows и agents, условия применения orchestration patterns."
+      },
+      {
+        "affordances": [
+          "inspect_contract",
+          "rewrite_span"
+        ],
+        "ambiguities": [],
+        "causal_force": "NONE",
+        "discourse_role": null,
+        "main_statement": {
+          "predicate": "assertion",
+          "text": "Также использована локальная архитектурная документация проекта как практический кейс строгого harness: её правила отделены в тексте от общих отраслевых рекомендаций."
+        },
+        "modality": "assertive",
+        "scope": {
+          "restricted": false
+        },
+        "scope_text": "Также использована локальная архитектурная документация проекта как практический кейс строгого harness: её правила отделены в тексте от общих отраслевых рекомендаций."
+      }
+    ],
+    "errors": []
+  },
+  "schema": "writer_core.rtt_report.v1",
+  "verdict": "PASS"
+}

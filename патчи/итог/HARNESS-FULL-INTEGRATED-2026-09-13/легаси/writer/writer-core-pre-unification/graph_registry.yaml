@@ -1,0 +1,331 @@
+schema_version: writer-graph-registry/0.3
+graphs:
+- id: G1_document_structure
+  topology: tree
+  authority: writer_core
+  purpose: containment_order
+  node_types:
+  - Document
+  - Section
+  - Paragraph
+  - Sentence
+  - InlineNode
+  - FigureBlock
+  - TableBlock
+  - EquationBlock
+  - ListBlock
+  edge_types:
+  - PARENT_OF
+  - CONTAINS
+  - NEXT
+  - PREVIOUS
+- id: G2_writing_decomposition
+  topology: dag
+  authority: writer_core
+  purpose: communication_planning
+  node_types:
+  - WritingObjective
+  - DocumentGoal
+  - SectionGoal
+  - ArgumentNeed
+  - DiscourseNeed
+  - ClaimSlot
+  - ArtifactSlot
+  - RealizationTask
+  edge_types:
+  - DECOMPOSES_TO
+  - REQUIRES
+  - SATISFIES
+  - BLOCKED_BY
+- id: G3_discourse
+  topology: directed_graph
+  authority: writer_core
+  purpose: rhetorical_composition
+  node_types:
+  - DiscourseMove
+  - ParagraphIntent
+  - Transition
+  - TopicFocus
+  edge_types:
+  - PREPARES
+  - MOTIVATES
+  - ELABORATES
+  - CONTRASTS
+  - QUALIFIES_MOVE
+  - LEADS_TO
+  - SUMMARIZES
+- id: G4_argument
+  topology: directed_multigraph
+  authority: writer_core
+  purpose: contextual_argument_use
+  node_types:
+  - ArgumentInstance
+  - PremiseRef
+  - WarrantRef
+  - BackingRef
+  - QualifierRef
+  - RebuttalRef
+  - ConclusionRef
+  edge_types:
+  - USES_AS_PREMISE
+  - USES_AS_WARRANT
+  - USES_AS_BACKING
+  - USES_AS_REBUTTAL
+  - CONCLUDES
+  - QUALIFIES_ARGUMENT
+- id: G5_epistemic_projection
+  topology: directed_multigraph
+  authority: researcher_core
+  access: read_only
+  purpose: truth_evidence_scope
+  node_types:
+  - ClaimRef
+  - EvidenceRef
+  - SourceVersionRef
+  - ScopeRef
+  - DerivationRef
+  - AssumptionRef
+  - GapRef
+  - ConflictRef
+  edge_types:
+  - SUPPORTS
+  - PARTIALLY_SUPPORTS
+  - CONTRADICTS
+  - DERIVED_FROM
+  - QUALIFIES
+  - APPLIES_WITHIN
+- id: G6_artifact_symbol
+  topology: directed_graph
+  authority: writer_core_and_computation_adapters
+  purpose: quantitative_and_document_objects
+  node_types:
+  - Quantity
+  - Uncertainty
+  - Variable
+  - Constant
+  - Unit
+  - Formula
+  - Dataset
+  - ComputationRun
+  - Table
+  - Figure
+  - FigureSeries
+  - Citation
+  - Term
+  - Definition
+  - CodeListing
+  - ExternalArtifact
+  edge_types:
+  - USES
+  - DERIVED_FROM
+  - COMPUTED_FROM
+  - PLOTS
+  - DISPLAYS
+  - DEFINES
+  - HAS_UNIT
+  - HAS_UNCERTAINTY
+  - GENERATED_BY
+- id: G7_citation_provenance
+  topology: directed_graph
+  authority: shared_projection
+  purpose: span_to_evidence_trace
+  node_types:
+  - SentenceSpan
+  - ClaimRef
+  - EvidenceRef
+  - SourceVersionRef
+  - CitationMarker
+  - ArtifactRef
+  edge_types:
+  - EXPRESSES
+  - SUPPORTED_BY
+  - EXTRACTED_FROM
+  - CITES
+  - DERIVED_FROM
+- id: G8_policy_constraint
+  topology: directed_graph
+  authority: static_registry
+  purpose: rule_resolution
+  node_types:
+  - GlobalPolicy
+  - GenrePolicy
+  - DomainPolicy
+  - RiskPolicy
+  - AudiencePolicy
+  - InstitutionPolicy
+  - JournalPolicy
+  - LanguagePolicy
+  - StylePolicy
+  - NumericPolicy
+  - CitationPolicy
+  - ReviewPolicy
+  - LocalOverride
+  edge_types:
+  - EXTENDS
+  - OVERRIDES
+  - CONFLICTS_WITH
+  - APPLIES_TO
+- id: G9_revision_dependency
+  topology: directed_graph
+  authority: writer_core
+  purpose: freshness_impact_incremental_build
+  node_types:
+  - RevisionRef
+  - ClaimRef
+  - EvidenceRef
+  - ArtifactRef
+  - PolicyRef
+  - TemplateRef
+  - RealizationRef
+  - ReviewRef
+  - SourceVersionRef
+  edge_types:
+  - DEPENDS_ON
+  - INVALIDATES
+  - REQUIRES_REVERIFY
+  - SUPERSEDES
+  - GENERATED_FROM
+- id: G10_execution
+  topology: directed_graph
+  authority: event_log
+  purpose: reproducibility
+  node_types:
+  - Run
+  - Operation
+  - ModelCall
+  - ParserRun
+  - ValidatorRun
+  - RepairRun
+  - ReviewRun
+  - Decision
+  - Snapshot
+  - ExportRun
+  edge_types:
+  - CONSUMED
+  - PRODUCED
+  - VALIDATED
+  - REPAIRED
+  - COMMITTED
+  - EXPORTED
+- id: G11_forensics_fingerprint
+  topology: analytical_graph
+  authority: forensics_projection
+  purpose: artifact_author_fingerprint_analysis
+  node_types:
+  - ArtifactRef
+  - FeatureProfile
+  - AuthorProfile
+  - StylisticRegime
+  - Confounder
+  - AttributionVerdict
+  edge_types:
+  - HAS_PROFILE
+  - CANDIDATE_AUTHOR
+  - POSSIBLY_EXPLAINED_BY
+  - MATCHES_REGIME
+  - SUPPORTED_BY_FEATURE
+- id: G12_work_lineage
+  topology: directed_graph
+  authority: forensics_projection
+  purpose: artifact_genealogy
+  node_types:
+  - Work
+  - Dataset
+  - Figure
+  - Code
+  - Template
+  - Edition
+  edge_types:
+  - CITES
+  - TRANSLATION_OF
+  - EXTENDS
+  - REUSES_DATA
+  - REUSES_FIGURE
+  - REUSES_FORMULA
+  - STRUCTURAL_REUSE
+  - ARGUMENT_PATTERN_REUSE
+  - DERIVED_VERSION_OF
+- id: G13_linguistic_structure
+  topology: directed_multigraph
+  authority: linguistic_projection
+  purpose: morphology_syntax_clause_structure
+  node_types:
+  - DocumentSpan
+  - Sentence
+  - Clause
+  - Token
+  - Lexeme
+  - Phrase
+  - PredicativeCenter
+  - Modifier
+  - Parenthetical
+  - CoordinationGroup
+  edge_types:
+  - HEAD_OF
+  - DEPENDS_ON
+  - PREDICATES
+  - MODIFIES
+  - COORDINATES
+  - SUBORDINATES
+  - APPOSITION
+- id: G14_cohesion_information_flow
+  topology: directed_multigraph
+  authority: linguistic_projection
+  purpose: reference_cohesion_theme_rheme
+  node_types:
+  - Mention
+  - EntityRef
+  - EventRef
+  - LexicalChain
+  - Theme
+  - Rheme
+  - Given
+  - New
+  - CoreferenceHypothesis
+  edge_types:
+  - REFERS_TO
+  - COREFERS_WITH
+  - LEXICALLY_CONTINUES
+  - THEME_TO_RHEME
+  - INTRODUCES
+  - RESUMES
+- id: G15_pragmatic_rhetorical
+  topology: directed_multigraph
+  authority: linguistic_projection
+  purpose: speech_act_discourse_presupposition_rhetoric
+  node_types:
+  - CommunicativeAct
+  - DiscourseRelation
+  - Presupposition
+  - Implicature
+  - RhetoricalMove
+  - ArgumentWarrantCandidate
+  edge_types:
+  - ELABORATES
+  - CONTRASTS
+  - CONCEDES
+  - INTERPRETS
+  - LIMITS
+  - PRESUPPOSES
+  - IMPLICATES
+  - USES_AS_WARRANT
+  - REFORMULATES
+- id: G16_linguistic_memory
+  topology: temporal_multigraph
+  authority: auditor_projection
+  purpose: session_corpus_language_learning
+  node_types:
+  - ConstructionCandidate
+  - Collocation
+  - ValencyPattern
+  - AuthorPreference
+  - RejectedPattern
+  - RepairEpisode
+  - StyleProfileRevision
+  edge_types:
+  - OBSERVED_IN
+  - ACCEPTED_IN
+  - REJECTED_IN
+  - PROMOTED_FROM
+  - SUPERSEDES
+  - POSSIBLY_CONFOUNDED_BY

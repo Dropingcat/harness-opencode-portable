@@ -1,0 +1,91 @@
+{
+  "run_id": "chapter_iterative_001",
+  "style_selection": {
+    "status": "READY",
+    "selected": [
+      {
+        "fragment_id": "RF-RAK-87",
+        "reference_id": "REF-RAK",
+        "score": 0.524014
+      }
+    ]
+  },
+  "evidence_selected": [
+    "S-DEM-1",
+    "S-RAK-87",
+    "S-RAK-85",
+    "S-RAK-83",
+    "S-DEM-2",
+    "S-SCH-34"
+  ],
+  "iterations": [
+    {
+      "version": "v0",
+      "release": "FAIL",
+      "blockers": [
+        "evidence",
+        "semantic_roundtrip"
+      ],
+      "evidence": "FAIL",
+      "trace": "PASS",
+      "rtt": "FAIL"
+    },
+    {
+      "version": "v1",
+      "release": "FAIL",
+      "blockers": [
+        "evidence",
+        "traceability"
+      ],
+      "evidence": "FAIL",
+      "trace": "FAIL",
+      "rtt": "PASS"
+    },
+    {
+      "version": "v2",
+      "release": "FAIL",
+      "blockers": [
+        "evidence",
+        "traceability"
+      ],
+      "evidence": "FAIL",
+      "trace": "FAIL",
+      "rtt": "PASS"
+    },
+    {
+      "version": "v3",
+      "release": "FAIL",
+      "blockers": [
+        "evidence",
+        "traceability"
+      ],
+      "evidence": "FAIL",
+      "trace": "FAIL",
+      "rtt": "PASS"
+    },
+    {
+      "version": "v4",
+      "release": "FAIL",
+      "blockers": [
+        "evidence",
+        "traceability",
+        "semantic_roundtrip"
+      ],
+      "evidence": "FAIL",
+      "trace": "FAIL",
+      "rtt": "FAIL"
+    },
+    {
+      "version": "v5",
+      "release": "FAIL",
+      "blockers": [
+        "evidence",
+        "traceability",
+        "semantic_roundtrip"
+      ],
+      "evidence": "FAIL",
+      "trace": "FAIL",
+      "rtt": "FAIL"
+    }
+  ]
+}

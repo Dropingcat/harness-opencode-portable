@@ -1,0 +1,26 @@
+id: ABSTRACT_SAFE_COMPRESSION
+version: 1
+kind: TransformationPattern
+state: CANDIDATE_PATTERN
+accepts:
+  source_claims: 1..*
+preconditions:
+- all claims DOCUMENT visibility or higher
+slots:
+- core_result
+- scope
+- qualifier
+- uncertainty_optional
+construct:
+- select core result
+- preserve mandatory scope/qualifiers
+- compress wording
+invariants:
+- no new claims
+- no causal upgrade
+- no uncertainty loss when material
+validators:
+- MacroRTT
+- CompressionSafetyValidator
+provenance:
+  origin: architecture_v0.2

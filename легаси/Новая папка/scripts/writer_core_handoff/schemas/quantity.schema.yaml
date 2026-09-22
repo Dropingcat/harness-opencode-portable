@@ -1,0 +1,14 @@
+schema_version: quantity/0.1
+required:
+- id
+- dimension
+- unit
+- raw_or_derived
+- provenance
+optional:
+- raw_value
+- computed_value
+- reported_value
+- precision
+- rounding_policy
+- uncertainty_ref

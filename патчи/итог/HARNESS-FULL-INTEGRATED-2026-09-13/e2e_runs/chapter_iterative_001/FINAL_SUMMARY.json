@@ -1,0 +1,102 @@
+{
+  "schema": "writer_iterative_chapter_e2e/1.0",
+  "run_id": "chapter_iterative_001",
+  "versions": [
+    {
+      "version": "v0",
+      "release": "FAIL",
+      "blockers": [
+        "evidence",
+        "semantic_roundtrip"
+      ],
+      "evidence": "FAIL",
+      "traceability": "PASS",
+      "semantic_roundtrip": "FAIL"
+    },
+    {
+      "version": "v1",
+      "release": "FAIL",
+      "blockers": [
+        "evidence",
+        "traceability"
+      ],
+      "evidence": "FAIL",
+      "traceability": "FAIL",
+      "semantic_roundtrip": "PASS"
+    },
+    {
+      "version": "v2",
+      "release": "FAIL",
+      "blockers": [
+        "evidence",
+        "traceability"
+      ],
+      "evidence": "FAIL",
+      "traceability": "FAIL",
+      "semantic_roundtrip": "PASS"
+    },
+    {
+      "version": "v3",
+      "release": "FAIL",
+      "blockers": [
+        "evidence",
+        "traceability"
+      ],
+      "evidence": "FAIL",
+      "traceability": "FAIL",
+      "semantic_roundtrip": "PASS"
+    },
+    {
+      "version": "v4",
+      "release": "FAIL",
+      "blockers": [
+        "evidence",
+        "traceability",
+        "semantic_roundtrip"
+      ],
+      "evidence": "FAIL",
+      "traceability": "FAIL",
+      "semantic_roundtrip": "FAIL"
+    },
+    {
+      "version": "v5b",
+      "release": "FAIL",
+      "blockers": [
+        "evidence",
+        "traceability"
+      ],
+      "evidence": "FAIL",
+      "traceability": "FAIL",
+      "semantic_roundtrip": "PASS"
+    },
+    {
+      "version": "v6",
+      "release": "PASS",
+      "blockers": [],
+      "evidence": "PASS",
+      "traceability": "PASS",
+      "semantic_roundtrip": "PASS"
+    }
+  ],
+  "source_update": {
+    "changed_sources": [
+      "S-RAK-87"
+    ],
+    "claims_to_revalidate": [
+      "C-004",
+      "C-007"
+    ],
+    "paragraphs_to_repair": [
+      "PAR-1"
+    ]
+  },
+  "repair_request": {
+    "affected_claims": [
+      "C-004",
+      "C-007"
+    ],
+    "paragraph_ids": [
+      "PAR-1"
+    ]
+  }
+}

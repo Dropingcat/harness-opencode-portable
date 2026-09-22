@@ -1,0 +1,10 @@
+{
+  "agent": "article-writer",
+  "categories": [
+    "CAT_DRAFT",
+    "CAT_REVISION",
+    "CAT_CITATION"
+  ],
+  "default_bucket": "writing",
+  "capsule": "writing"
+}

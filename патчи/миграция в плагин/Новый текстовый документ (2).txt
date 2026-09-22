@@ -1,0 +1,2183 @@
+Продолжил и зафиксировал эту точку как R4.4 L3B PREPROD, а не как якобы завершённый production Tribunal. Последнее различие важно: opencode в текущем окружении действительно отсутствует, поэтому выдавать subprocess-fixture за живого научного оппонента было бы очень в духе плохой метрологии.
+
+Каноническая граница:
+
+11ec08550e81874fbd991449663849fd8f604315
+researcher: checkpoint r4.4 l3b preproduction boundary
+
+Feature checkpoint:
+
+8204ce6bcbca56c42d6e4fb5ec458c2e1d71e99e
+researcher: ground live tribunal dialogue and advocate
+
+Самое важное концептуально теперь закреплено машинно:
+
+КТО ответил
+        ≠
+ПОЧЕМУ этот ответ должен иметь научный вес
+
+Ответ специалиста теперь может быть основан на разных типах grounding:
+
+DISCLOSED_EVIDENCE
+DISCLOSED_TARGET
+PRIOR_ARGUMENT
+PRIOR_TURN
+DERIVATION_FROM_VISIBLE
+EXPLICIT_ASSUMPTION
+MODEL_PRIOR
+
+И MODEL_PRIOR имеет вполне конкретный смысл: модель «знает/помнит/предсказывает что-то похожее» из своего обучения, но мы не знаем, откуда именно это пришло.
+
+Поэтому:
+
+MODEL_PRIOR
+≠ Source
+≠ Evidence
+≠ Measurement
+
+Он может породить полезную научную гипотезу:
+
+"возможно, смещение связано
+с остаточными напряжениями"
+
+но если ответ пытается на одном таком основании выдать:
+
+SUPPORT
+QUALIFY
+CHALLENGE
+
+код автоматически создаёт:
+
+blocking MISSING_EVIDENCE
++
+AdditionalEvidenceRequest
+
+То есть наша цепочка становится очень похожей на нормальную исследовательскую процедуру:
+
+модель предложила объяснение
+        ↓
+откуда это?
+        │
+        ├─ есть EVD/SRC
+        │      ↓
+        │   проверяем provenance
+        │
+        ├─ воспроизводимый вывод
+        │      ↓
+        │   проверяем derivation
+        │
+        ├─ явное допущение
+        │      ↓
+        │   сохраняем как assumption
+        │
+        └─ только model prior
+               ↓
+           hypothesis
+               ↓
+           research debt
+
+Вот здесь прослеживаемость действительно начинает становиться научной, а не только программной.
+Advocate тоже теперь подчиняется этому правилу
+
+Он проходит тот же:
+
+ADC
+→ RPB
+→ TEX
+→ Job
+→ Attempt
+→ PER
+→ IQT/ARG
+→ ArgumentGraph
+
+Никакого специального «адвокатского рантайма».
+
+Если Advocate говорит:
+
+DEFEND
+
+и действительно опирается на раскрытое evidence, возможен:
+
+REPLIES_TO challenge
++
+DEFENDS original argument
+
+Но если его защита фактически:
+
+    «насколько мне известно из обучения модели...»
+
+то результат автоматически ужесточается до:
+
+REQUEST_EVIDENCE
+
+и DEFENDS не создаётся.
+
+Это довольно важное свойство. Иначе Advocate очень быстро превращается в специализированный генератор красивых постфактум-объяснений, а человеческая цивилизация уже и без LLM неплохо освоила этот жанр.
+Defender действительно лучше оставить функцией ответа
+
+После этого слоя идея стала ещё убедительнее.
+
+Не:
+
+Critic Agent
+Defender Agent
+Advocate Agent
+Methodologist Agent
+...
+
+а:
+
+Scientific role
+    +
+facet/position ownership
+    +
+response function
+
+Например:
+
+XRD specialist
+response_function = EXPLAIN
+
+или:
+
+XRD specialist
+response_function = DEFEND
+
+или:
+
+XRD specialist
+response_function = CONCEDE
+
+А уже отдельный conditional Advocate может позже проверить качество защиты:
+
+specialist defense
+        ↓
+Advocate tests defense
+        ↓
+DEFEND / QUALIFY / CONCEDE / REQUEST_EVIDENCE
+
+Это сохранено как TD-046, потому что answer_role_id решает только адресацию одного конкретного вопроса. Он не определяет глобальное «право собственности» на научную позицию.
+
+Будущий объект видится примерно так:
+
+ResponseAssignment
+    claim_id
+    facet_id
+    argument_position_id
+
+    scientific_owner_role
+    addressed_role
+
+    response_function:
+        EXPLAIN
+        DEFEND
+        QUALIFY
+        CONCEDE
+        REFER
+        REQUEST_EVIDENCE
+
+    advocate_required?
+    reason_codes
+    policy_version/hash
+
+И только после этого:
+
+ResponseAssignment
+→ RoleProviderBinding
+
+Так provider никогда не решает сам, кто научно обязан отвечать.
+Про один Claim и несколько дисциплин
+
+Здесь вашу модель я тоже считаю более правильной.
+
+Не:
+
+CLM-1
+→ CLM-1a physics
+→ CLM-1b chemistry
+→ CLM-1c statistics
+
+с последующей попыткой вспомнить, что они когда-то были одним утверждением.
+
+А:
+
+CLM-1
+│
+└── ClaimReviewCase
+    │
+    ├── ReviewFacet: crystallography
+    │      └── independent Q/A/ARG branch
+    │
+    ├── ReviewFacet: kinetics / causality
+    │      └── independent Q/A/ARG branch
+    │
+    └── ReviewFacet: measurement / statistics
+           └── independent Q/A/ARG branch
+
+То есть Claim остаётся один.
+
+Все ветви знают:
+
+root_claim_id = CLM-1
+review_case_id
+facet_id
+branch_id
+
+и внутри каждой уже хранится собственная прослеживаемость:
+
+AssessmentNeed
+→ role
+→ evidence slice
+→ question
+→ answer
+→ grounding
+→ provider
+→ ARG
+→ challenge
+→ research
+
+Это сохранено как TD-047.
+И собирать их потом надо не в одно мнение
+
+Будущий:
+
+ClaimReviewJoinProjection
+
+должен хранить состояние композиции.
+
+Например:
+
+CLM-1
+
+F1 crystallography
+    QUALIFIED
+
+F2 chemistry/kinetics
+    SUPPORTED
+
+F3 statistics
+    BLOCKING
+
+Join:
+
+coverage:
+    3 / 3 facets examined
+
+blocking:
+    F3
+
+dependencies:
+    F2 depends_on F1
+
+conflicts:
+    none
+
+synergy:
+    F1 supplies prerequisite
+    for interpretation in F2
+
+readiness:
+    BLOCKED
+
+И это особенно интересно именно в части синергии.
+
+Ветка не обязательно только противоречит другой. Она может закрыть её предпосылку:
+
+XRD branch
+    establishes phase distinction
+        ↓
+kinetics branch
+    may now use that phase assignment
+
+Или наоборот:
+
+measurement branch
+    uncertainty too large
+        ↓
+causal branch
+    loses its premise
+
+Таким образом будущее дерево становится не просто:
+
+три параллельных мнения
+
+а графом:
+
+facets
++ dependencies
++ conflicts
++ prerequisite closure
++ shared evidence
++ synergy
+
+при сохранении единственного исходного CLM-*.
+
+Это уже довольно близко по духу к тому, чего обычно мучительно не хватает научным отчётам: возможности пройти от вывода назад не только до статьи, но и до вопроса, методического возражения, измерения, допущения и того, какая дисциплинарная ветка вообще разрешила использовать этот вывод.
+Что реально прошло E2E в PREPROD
+
+Targeted R4:
+
+109 / 109 PASS
+
+Full Researcher:
+
+586 total
+582 PASS
+4 FAIL
+
+Все четыре старые TD-015:
+
+2 Guard
+2 LocalCorpus
+
+Нового regression-класса нет.
+
+Runtime compiler:
+
+PASS
+8910fd61122b450212d5bc459cdb52acdc02aa3cf6d87a37c5eaa3778e3cdfef
+
+Capability compiler:
+
+PASS
+60105d715f8df50917156216b085f85ee25a2b1deb62947e041bd8537a1a9076
+
+Также:
+
+compileall PASS
+git diff --check PASS
+git status clean
+
+Реальный shared provider preflight:
+
+existing.opencode_tribunal_role
+
+implemented = true
+available = false
+status = degraded
+detail = missing:opencode
+
+То есть production gate действительно остаётся открытым.
+PREPROD milestone
+
+RESEARCHER-R4.4-L3B-PREPROD-GROUNDED-DIALOGUE-001.zip
+
+SHA256:
+
+1ba3840813ccec2709288470c10852b4e9837a6b025ac157b0f2a9c35cf7bcf1
+
+Complete recovery checkpoint
+
+HARNESS-R4.4-L3B-PREPROD-2026-09-13.bundle
+
+SHA256:
+
+27dc06fc68900fedbe02402124e8d3e86b95f724648e9942ab548430d2e00365
+
+git bundle verify:
+
+PASS
+complete history
+
+Полный handoff
+
+Скачать Harness R4.4 L3B PREPROD → L3B Production
+
+SHA256 handoff
+
+SHA256:
+
+2ae802cb407a59b5eb36d0399f92f099ec36932df3301236a7b239e86cdd0a15
+
+Финальный архив проверен уже после отдельной распаковки:
+
+HEAD
+11ec08550e81874fbd991449663849fd8f604315
+
+git status
+clean
+
+git fsck
+PASS
+
+recovery bundle
+PASS / complete history
+
+milestone SHA
+MATCH
+
+recovery SHA
+MATCH
+
+MANIFEST
+3562 entries / PASS
+
+ZIP integrity
+PASS
+
+Основные документы также лежат внутри handoff:
+
+Grounded Dialogue + Live Advocate Architecture
+
+Implementation Review
+
+Pipeline Audit
+
+Response Ownership + Multidisciplinary Review
+
+Decision Log
+
+Tech Debt
+
+Next Phase Plan
+
+Session Handoff
+
+Следующая настоящая граница теперь уже не требует очередного изобретения контрактов. Она требует реального semantic provider trace через неизменный DQC/ADC → RPB → TEX → PER, после которого можно начать измерять то, что сейчас особенно интересно: насколько модель честно различает source-grounded знание и собственный prior, где ложным образом заявляет derivation, когда Q2 действительно добавляет новую поверхность и когда Advocate начинает рационализировать вместо научной защиты.
+
+Вот после таких трасс TD-046 про Defender/Advocate уже можно будет решать не философски, а по наблюдаемому поведению. И это сильно предпочтительнее.
+RESEARCHER_R4_4_L3B_GROUNDED_DIALOGUE_ADVOCATE_ARCHITECTURE.mdДокумент
+RESEARCHER_R4_4_L3B_IMPLEMENTATION_REVIEW.mdДокумент
+RESEARCHER_R4_4_L3B_PIPELINE_AUDIT.mdДокумент
+Еще 5
+
+воскресенье 20:45
+
+отлично, мы приходим к нормальному исследованию гипотиза - проверка гипотизы, итерации поиска и анализа присвоение гипотизе статуса подтверждения, ссылок и краткая выжимка из источников или корекция гипотизы и новый цикл. или как то так? да хороший концепт- критически прогонять на виртуальных е2е для поиска что может быть упущено и что дополнить - и реального semantic provider trace . так же тебе нужен opencode?
+
+Именно туда и приходит архитектура. Причём уже не к «агенты спорят о клайме», а к нормальному исследовательскому циклу, где спор является лишь одним из механизмов проверки гипотезы.
+
+Я бы только чуть уточнил модель. Не стоит делать Hypothesis.status = CONFIRMED единственным итогом. Мы уже один раз сбежали от scalar confidence, незачем добровольно возвращаться в ту же яму в другом пальто.
+
+Нормальный цикл выглядит примерно так:
+
+Observation / Problem / Conflict
+        ↓
+Hypothesis H0
+        ↓
+Scope + assumptions + predicted consequences
+        ↓
+VerificationPlan
+    ├── что должно наблюдаться, если H верна
+    ├── что опровергнет H
+    ├── какие альтернативные объяснения есть
+    ├── какие данные нужны
+    └── какие методы способны различить альтернативы
+        ↓
+Research iterations
+    search
+    → source
+    → evidence extraction
+    → measurement / calculation
+    → analysis
+        ↓
+Argument / counterargument branches
+        ↓
+HypothesisAssessment
+        │
+        ├── evidence support
+        ├── counterevidence
+        ├── method sufficiency
+        ├── unresolved assumptions
+        ├── competing hypotheses
+        ├── scope limits
+        └── remaining uncertainty
+        ↓
+decision
+    ├── retain
+    ├── qualify
+    ├── revise
+    ├── split
+    ├── reject
+    └── keep OPEN
+        ↓
+H1 / revised hypothesis
+        ↓
+new verification cycle
+
+То есть гипотеза становится полноценным историческим объектом.
+
+Я бы в перспективе дал ей примерно такой контракт:
+
+Hypothesis
+    id
+    parent_hypothesis_id?
+    root_problem_id
+
+    statement
+    scope
+    assumptions[]
+
+    predicted_observations[]
+    discriminating_tests[]
+    competing_hypothesis_refs[]
+
+    supporting_evidence_refs[]
+    counterevidence_refs[]
+
+    argument_branch_refs[]
+    research_challenge_refs[]
+
+    assessment
+    revision
+
+А assessment делал бы многомерным:
+
+HypothesisAssessment
+    evidential_support
+    contradictory_evidence
+    method_adequacy
+    scope_validity
+    assumption_status
+    alternative_explanations
+    replication_status
+    uncertainty_profile
+
+И уже поверх этого можно иметь удобную operational projection:
+
+PROPOSED
+UNDER_TEST
+PARTIALLY_SUPPORTED
+SUPPORTED_WITH_LIMITS
+CONTESTED
+REVISED
+REJECTED
+OPEN
+
+Но это именно проекция состояния исследования, а не магический ярлык истины.
+
+Особенно мне нравится ваша мысль про короткую выжимку из источников. Только она должна быть не свободным пересказом, а производным объектом:
+
+EvidenceSpan
+    exact locator
+    exact/source-bounded text
+        ↓
+EvidenceDigest
+    1–3 предложения:
+    что именно источник поддерживает
+    что не поддерживает
+    scope/conditions
+        ↓
+HypothesisEvidenceLink
+
+Тогда у гипотезы можно открыть карточку и увидеть:
+
+HYP-17
+
+Гипотеза:
+изменение параметра решётки связано преимущественно
+с изменением состава твёрдого раствора.
+
+Поддерживает:
+EVD-31 — XRD...
+    digest: ...
+    locator: ...
+    SRC-8
+
+Ограничивает:
+EVD-44 — residual stress not excluded...
+    digest: ...
+
+Противоречит:
+EVD-51 ...
+
+Открытые вопросы:
+- разделить stress/composition contribution
+- проверить series dependence
+
+Текущий статус:
+QUALIFIED / METHOD-BLOCKING
+
+Вот это уже очень похоже на научную рабочую среду, а не на систему, которая пишет убедительный абзац и затем сама им впечатляется.
+
+И самое важное: коррекция гипотезы должна создавать новую revision/версию:
+
+HYP-17.r1
+    ↓ challenged by EVD-44
+HYP-17.r2
+    statement qualified
+    ↓ new experiment
+HYP-17.r3
+
+а не переписывать исходную формулировку.
+
+Тогда можно восстановить:
+
+    почему мы первоначально считали X, что заставило изменить формулировку, какой источник/измерение это вызвал и какие альтернативы были отвергнуты.
+
+Это уже серьёзная прослеживаемость.
+
+Критический virtual-E2E здесь действительно нужен до реализации. Я бы специально прогнал минимум такие неприятные сценарии:
+
+1. Гипотеза полностью подтверждается текущими источниками.
+
+2. Один источник поддерживает,
+   другой противоречит.
+
+3. Источники согласны,
+   но оба используют один и тот же первичный dataset.
+
+4. Три статьи повторяют одну и ту же ошибку.
+   → число источников не равно независимости evidence.
+
+5. Модель предложила правдоподобную гипотезу,
+   но источник найти невозможно.
+   → MODEL_PRIOR / OPEN / research debt.
+
+6. Гипотеза верна только в узком scope.
+   → QUALIFY, а не SUPPORT globally.
+
+7. Новый эксперимент отвергает только одну предпосылку,
+   а не всю гипотезу.
+
+8. Междисциплинарный Claim:
+   physics branch SUPPORT,
+   chemistry branch SUPPORT,
+   statistics branch BLOCKING.
+   → whole review case BLOCKED.
+
+9. Две дисциплинарные ветки используют
+   один и тот же evidence как разные основания.
+   → dependency/correlation should be visible.
+
+10. Ответ специалиста звучит убедительно,
+    но основан только на MODEL_PRIOR.
+    → hypothesis proposal, не evidence.
+
+11. Исследование породило новую альтернативную гипотезу.
+    → sibling hypothesis, а не случайный новый Claim.
+
+12. Новые данные делают старую гипотезу
+    не ложной, а слишком широкой.
+    → revision, not rejection.
+
+Вот такие тесты намного ценнее ещё двадцати unit-тестов конструктора dataclass.
+
+Про OpenCode: для следующего настоящего шага он мне нужен, если мы хотим именно production semantic provider trace через уже построенную цепь.
+
+Сейчас архитектура уже умеет:
+
+DQC / ADC
+→ provider binding
+→ TEX
+→ Job / Attempt
+→ PER
+→ IQT / ARG
+→ grounding
+→ graph admission
+
+Но production provider честно даёт:
+
+implemented = true
+available = false
+missing: opencode
+
+Поэтому есть два пути.
+
+Если вы можете дать мне/среде рабочий OpenCode executable/runtime, мы сможем прогнать первый настоящий semantic trace:
+
+Skeptic Q1
+→ XRD specialist A1
+→ grounding audit
+→ new issue
+→ Q2
+→ A2
+→ conditional Advocate
+→ ResearchChallenge / stop
+
+и потом уже смотреть не синтетические, а реальные дефекты поведения модели.
+
+Если OpenCode пока неудобно подключать, разработку останавливать не надо. Можно ещё очень содержательно провести virtual E2E именно нового Hypothesis → test → revision слоя и спроектировать ClaimReviewCase / HypothesisCase до подключения живого provider. А затем OpenCode станет не архитектурным экспериментом, а нагрузочным испытанием уже определённого контура.
+
+Для production semantic trace OpenCode будет полезен именно сейчас. Не потому что архитектура без него не строится, а потому что мы наконец дошли до места, где симуляции уже перестают ловить самые интересные ошибки поведения модели.
+
+OpenCode Desktop Installer.exe
+Файл
+пользуюсь этой версией если нужно  дистрибутив... моэно попробовать его  собрать  по всем уголкам винды... проверить я могу  через агента. развернув на. сервере. но нужна будет инструкция по тесту .  чт отестируем и форма отчёта. значит имеет сысл  сейчас  собрать полную итоговую верию harness  модуля- я его  разворачиваю- подключаю-  ты пишешь мне  инструкции по тестирвовнию прям  задаёшь  какие тесты какие е2е  прогоны-  я их передаю агенту  в сам опен коде и присылаю тебе результаты - работаем по цепочке
+
+opencode-desktop-linux-amd64.deb
+Файл
+вот чтобы у тебя была версия для люникс
+
+вчера 07:18
+capability_preflight.json
+Файл
+environment.json
+Файл
+LOCAL_DEPLOYMENT_STATUS.md
+Файл
+
+Отдельного OpenCode CLI на компьютере нет.
+
+Проверено:
+
+    PATH / Get-Command opencode* — не найдено.
+    Глобальные npm-пакеты — OpenCode CLI отсутствует.
+    ~/.bun, AppData\Roaming\npm, .config\opencode, .cache\opencode — CLI-бинарника нет.
+    Каталоги Desktop и resources\app.asar проверены — отдельного opencode.exe, sidecar или CLI entrypoint нет.
+    Найденный hiai-opencode.mjs — вспомогательный CLI плагина, не OpenCode CLI.
+    OpenCode.exe запускает Electron GUI и дочерние renderer/GPU-процессы; CLI-ответов на --version/--help не выдаёт.
+
+Вывод
+
+Вариант 3 отпадает: Desktop не содержит доступного отдельного CLI. Для T06–T12 потребуется отдельно установить OpenCode CLI либо разработать адаптер к Desktop — существующий acceptance runner напрямую с OpenCode.exe работать не сможет. такая проблема- как можно решить?
+
+Имеет смысл проектировать это как отдельный продуктовый слой, а не как очередной bridge.ts, который через месяц никто не захочет трогать. После просмотра официальной документации, исходников OpenCode именно на теге v1.18.30, текущего dev и нашего существующего Harness картина стала довольно чёткой.
+
+Главный вывод такой:
+
+OpenCode owns:
+    model runtime
+    sessions
+    provider authentication
+    user-facing UI
+    permissions of OpenCode runtime
+
+Harness owns:
+    routing
+    Job / Attempt
+    Writer / Researcher / Coder
+    Tribunal
+    Claim / Evidence / Hypothesis state
+    validation
+    admission
+    provenance
+
+Plugin owns:
+    integration
+    transport
+    lifecycle
+    host compatibility
+    semantic execution adapter
+
+Вот это я бы считал базовой архитектурной конституцией будущего модуля.
+
+Я зафиксировал подробную версию отдельно:
+
+Архитектура Native OpenCode Plugin
+
+Risk & Compatibility Audit
+
+Implementation Plan
+
+Tracker + Tech Debt delta
+
+И единым пакетом:
+
+OPENCODE-HARNESS-NATIVE-PLUGIN-DESIGN-001.zip
+
+SHA256:
+
+aa8599d80d5471749e027a44326f08b9db3a3c22e181f61d752872d74c4ca335
+
+Что официально даёт нам OpenCode
+
+В точной версии 1.18.30 plugin получает не какой-то ущербный callback, а полноценный PluginInput: SDK client, project, directory, worktree, serverUrl и shell API. То есть plugin уже находится внутри правильного server context и имеет официальный SDK-клиент текущего OpenCode instance.
+
+Это принципиально. Нам не надо:
+
+искать Desktop sidecar
+→ угадывать порт
+→ воровать credentials
+→ reverse-engineer Electron IPC
+
+Plugin уже находится «по ту сторону стены».
+
+У custom tool в 1.18.30 также есть нормальный session context:
+
+sessionID
+messageID
+agent
+directory
+worktree
+AbortSignal
+metadata()
+ask()
+
+То есть вызов Harness можно надёжно связать:
+
+OpenCode session
+→ OpenCode message
+→ Harness Job
+→ Harness Attempt
+
+без гадания по process cwd, что особенно приятно после нашего предыдущего приключения с Coder, который однажды решил, что любой текущий каталог является подходящим Git-репозиторием.
+
+OpenCode официально поддерживает project plugins через .opencode/plugins/, global plugins и npm plugins из opencode.json. npm-зависимости устанавливаются самим OpenCode через Bun и кэшируются.
+
+То есть нормальная production-поставка может выглядеть просто:
+
+{
+  "plugin": [
+    "@harness/opencode-plugin"
+  ]
+}
+
+а не «скопируйте этот загадочный TypeScript файл на диск E: пользователя Ярослава».
+Старый plugin надо не развивать, а заменить
+
+Это оказался важный результат аудита.
+
+В нашем Harness уже есть:
+
+plugins/tool-skill-contract-router.ts
+
+и старый TD-002:
+
+Plugin hook не зарегистрирован в runtime
+
+Но после сверки с API 1.18.30 проблема глубже.
+
+Например официальный hook:
+
+tool.execute.after
+
+получает:
+
+input: {
+    tool: string
+    sessionID: string
+    callID: string
+    args: any
+}
+
+А старый Harness plugin ищет:
+
+input.tool.name
+
+То есть даже если hook вызван, имя инструмента, скорее всего, не определяется.
+
+Аналогично tool.definition в 1.18.30 получает:
+
+toolID
+
+а старый код ищет nested tool.name.
+
+С experimental.chat.system.transform ещё веселее: OpenCode 1.18.30 отдаёт:
+
+output.system: string[]
+
+а наш legacy plugin ожидает строку или output.messages.
+
+То есть его нельзя сделать основой production bridge небольшой косметической правкой.
+
+Я предлагаю официально объявить:
+
+tool-skill-contract-router.ts
+        ↓
+LEGACY / DEPRECATED
+
+При этом его policy не выбрасываем. Routing, guard rules и compiled runtime snapshot остаются в Harness. Мы выбрасываем именно хрупкую OpenCode-hook оболочку.
+
+Это существенно здоровее.
+Новый plugin должен быть очень тонким
+
+Не переносим Researcher в TypeScript.
+
+Не переносим Coder.
+
+Не переносим ClaimGraph.
+
+Не начинаем писать второй Router.
+
+Получается:
+
+OpenCode
+   │
+   ▼
+@harness/opencode-plugin
+   │
+   │ RPC
+   ▼
+Harness Python Core
+   │
+   ├── Router
+   ├── Writer
+   ├── Researcher
+   ├── Coder
+   ├── Job / Attempt
+   ├── RPB / TEX / PER
+   ├── Claim / Evidence
+   └── Validators / Reducers
+
+Plugin является host adapter.
+
+Это позволяет менять OpenCode API, не переписывая научную систему.
+Но мост обязательно должен быть двунаправленным
+
+Это, пожалуй, самая важная архитектурная деталь.
+
+Наивный plugin выглядел бы:
+
+OpenCode
+→ harness_run()
+→ python
+→ result
+
+И через неделю мы снова обнаружили бы проблему.
+
+Потому что реальный Researcher работает так:
+
+OpenCode
+→ harness_run
+→ Researcher
+→ Tribunal decides:
+     нужен XRD specialist
+→ ???
+
+И здесь поток должен развернуться:
+
+Harness
+→ Plugin
+→ OpenCode semantic session
+→ specialist
+→ Plugin
+→ Harness
+
+Поэтому правильная схема:
+
+         OpenCode
+            │
+            ▼
+      Harness Plugin
+            ⇅
+    bidirectional RPC
+            ⇅
+       Harness Core
+
+Не обычный stdin-command-runner.
+Для v1 я предлагаю JSON-RPC поверх stdio
+
+Не localhost API.
+
+Не второй webserver.
+
+Не WebSocket пока.
+
+Plugin запускает:
+
+python -m harness_bridge.daemon
+
+и держит:
+
+stdin  <-> stdout
+
+с NDJSON framing.
+
+То есть каждый пакет является одной JSON-строкой.
+
+Семантически это JSON-RPC 2.0.
+
+Это даёт сразу хорошие свойства:
+
+нет портов
+нет firewall
+нет discovery
+нет дополнительного пароля
+нет отдельного background service
+cross-platform
+процесс умирает вместе с plugin
+легко тестировать fake peer
+
+Но обязательно full duplex.
+
+Например plugin отправил:
+
+rpc P-12
+harness.run
+
+Python занимается Researcher и, не завершив P-12, отправляет обратно:
+
+rpc H-41
+semantic.execute
+
+Plugin выполняет его через OpenCode SDK, отвечает:
+
+H-41 result
+
+Researcher продолжает работу и только потом завершает:
+
+P-12 result
+
+То есть обычный «прочитал request, заблокировался, написал response» daemon здесь не годится.
+
+Нужен multiplexed peer.
+OpenCode SDK становится semantic provider transport
+
+Это должно заменить старое:
+
+Harness
+→ subprocess
+→ opencode run
+
+на:
+
+Harness
+→ semantic.execute RPC
+→ plugin
+→ OpenCode client
+→ child session
+→ model
+
+Причём серверная архитектура OpenCode сама построена вокруг sessions. API поддерживает parent/child sessions, status, abort, message execution и другие операции.
+
+В итоге:
+
+Main OpenCode session
+SES-001
+│
+├─ Harness Job J-41
+│
+├─ XRD specialist
+│   └─ OpenCode child session SES-017
+│
+├─ Methodologist
+│   └─ SES-018
+│
+└─ Advocate
+    └─ SES-019
+
+А Harness хранит соответствия:
+
+TEX-...
+→ execution_id
+→ SES-017
+→ provider/model
+→ PER-...
+→ ARG-...
+
+Это значительно лучше subprocess CLI.
+Role всё равно не становится OpenCode agent
+
+Здесь нельзя случайно разрушить одно из хороших решений R4.
+
+Не:
+
+XRD specialist = OpenCode agent
+
+а:
+
+HarnessRole
+    xrd_specialist
+        ↓
+ExecutionProfile
+        ↓
+OpenCode session/model/agent
+
+То есть:
+
+Role ≠ provider ≠ OpenCode agent ≠ model ≠ transport
+
+OpenCode agent всего лишь runtime profile.
+
+Сегодня:
+
+xrd_specialist
+→ harness-internal-worker
+→ GPT/Claude/etc.
+
+Завтра:
+
+xrd_specialist
+→ another profile/model
+
+Tribunal этого даже не замечает.
+Нужен специальный внутренний worker profile
+
+И тут есть неприятная рекурсивная мина.
+
+Если semantic worker видит harness_run, он вполне может решить:
+
+    Чтобы ответить на вопрос, воспользуюсь Harness.
+
+Получаем:
+
+Harness
+→ specialist
+→ harness_run
+→ Harness
+→ specialist
+→ harness_run
+...
+
+и наш новый интеллектуальный исследовательский институт превращается в рекурсивную матрёшку.
+
+Поэтому внутренний semantic worker должен быть:
+
+default deny
+no harness_* tools
+no write
+no bash
+no task
+
+если Harness специально не разрешил что-то другое.
+
+OpenCode permissions поддерживают deny/ask/allow, wildcard patterns и agent-specific rules.
+
+Это надо сделать acceptance invariant, не просто prompt:
+
+internal semantic worker
+MUST NOT call harness_*
+
+Какие tools должен показывать plugin
+
+Я бы не делал:
+
+harness_xrd_specialist
+harness_methodologist
+harness_advocate
+harness_writer
+harness_researcher
+harness_coder
+...
+
+Иначе LLM начинает сама выбирать внутреннюю архитектуру.
+
+Нужны максимум:
+
+harness_run
+harness_status
+
+Возможно позже:
+
+harness_resume
+
+harness_run получает человеческую задачу:
+
+request
+mode = auto | research | write | code
+resume_token?
+
+А дальше:
+
+LLM
+→ Harness
+
+Harness
+→ кого вызвать
+→ что искать
+→ какие tools
+→ какой Tribunal
+
+Именно это соответствует нашей идее «код ведёт LLM за руку».
+Structured output надо считать оптимизацией, а не фундаментом
+
+В 1.18.30 типы уже содержат:
+
+OutputFormatJsonSchema
+type = json_schema
+schema
+retryCount
+
+Текущая документация SDK также прямо показывает session.prompt() с JSON Schema и structured_output.
+
+Но upstream имеет реальные баги этого механизма. Например, есть открытый issue, где retryCount декларируется, но фактически не выполняет retry. Есть и модель-специфические сбои structured output.
+
+Поэтому архитектура должна быть:
+
+OpenCode structured validation
+        ↓
+optional first gate
+
+Harness schema validation
+        ↓
+mandatory
+
+Harness semantic / grounding validation
+        ↓
+mandatory
+
+Admission
+
+То есть:
+
+JSON valid
+≠ scientifically valid
+
+К счастью, это мы уже усвоили на другом уровне.
+
+Я предлагаю режимы:
+
+auto
+strict
+off
+
+auto использует OpenCode structured output только для сертифицированных host/model combinations.
+
+strict падает, если формат недоступен.
+
+off возвращает JSON-like text, который валидирует Harness.
+
+Но fallback никогда не должен происходить молча.
+Очень важный слой: Host Compatibility
+
+Я бы вообще не писал:
+
+if version >= 1.18:
+    works = True
+
+OpenCode довольно быстро развивается, и типы уже несколько раз опережали или расходились с runtime behavior.
+
+Есть реальный upstream issue про external plugin tools, которые были объявлены через Plugin API, но не попадали в ToolRegistry.
+
+Есть issue, где tool.execute.after существовал в interface, но не вызывался runtime.
+
+Есть issue по версии 1.18.23, где ошибка одного plugin hook могла нарушать выполнение следующих plugins.
+
+Поэтому:
+
+supported version
+=
+documented feature
++ source compatibility
++ runtime probe
++ packaged E2E
+
+Нужен объект:
+
+HostCapabilitySnapshot
+
+например:
+
+{
+  "opencode": "1.18.30",
+  "plugin_tool": true,
+  "dispose": true,
+  "session_create": true,
+  "parent_session": true,
+  "session_prompt": true,
+  "session_abort": true,
+  "structured_output": "conditional",
+  "tool_registration_tested": true
+}
+
+И compatibility registry:
+
+compatibility/opencode/
+    1.18.30.json
+    1.18.31.json
+    1.19.x.json
+
+Поддерживаем не «>=1.18».
+
+Поддерживаем то, что реально прогнали.
+Plugin lifecycle
+
+Startup я вижу так:
+
+OpenCode loads plugin
+↓
+read .opencode/harness.json
+↓
+determine OpenCode host version
+↓
+HostCapabilitySnapshot
+↓
+spawn Harness daemon
+↓
+RPC handshake
+↓
+compare:
+  plugin version
+  protocol
+  core version
+  policy hashes
+↓
+READY
+
+Если Harness missing:
+
+DEGRADED
+harness_status works
+harness_run BLOCK
+
+Если protocol major mismatch:
+
+BLOCK
+
+Если OpenCode uncertified:
+
+DEGRADED_UNCERTIFIED
+
+а не «наверное работает».
+
+Shutdown через официальный dispose, который присутствует в Plugin Hooks 1.18.30.
+
+stop new requests
+cancel/wait according to policy
+bridge.shutdown
+flush trace
+terminate child
+
+Cancellation
+
+Очень удачная деталь API: ToolContext содержит AbortSignal.
+
+Значит можно нормально провести:
+
+User stops OpenCode generation
+↓
+AbortSignal
+↓
+plugin
+↓
+harness.cancel(job)
+↓
+Job/Attempt
+↓
+semantic child session abort
+
+И сохранить:
+
+runtime CANCELLED
+
+а не:
+
+scientific OPEN
+
+Это хорошо совпадает с нашей уже существующей типизацией runtime vs epistemic outcomes.
+Plugin state не должен быть authoritative
+
+Plugin хранит временно только:
+
+sessionID → Job ID
+executionID → child sessionID
+rpcID → Promise
+
+Всё настоящее состояние остаётся:
+
+Harness Job
+Attempt
+Graph
+Claim
+Evidence
+RWF
+Hypothesis
+PER
+
+Если plugin перезапустился, не пытаемся восстановить истину из памяти Node process.
+
+Harness читает свою историю и делает resume.
+Credentials не должны попадать в Harness
+
+Ещё одна сильная сторона Plugin SDK.
+
+OpenCode уже авторизован у своих providers.
+
+Plugin вызывает:
+
+client.session.prompt()
+
+а Harness получает только:
+
+provider id
+model id
+session id
+status
+result
+usage/metadata
+
+API key Python Harness вообще видеть не должен.
+
+Это сразу уменьшает класс проблем.
+Конфигурацию plugin тоже надо сделать нормальной
+
+Не environment-variable festival.
+
+Я предлагаю:
+
+HARNESS_CONFIG
+↓
+.opencode/harness.json
+↓
+~/.config/opencode/harness.json
+↓
+safe defaults
+
+Пример уже есть в архитектурном документе.
+
+Секретов там нет.
+Deployment должен иметь два режима
+
+Для нормального распространения нужен npm plugin:
+
+@harness/opencode-plugin@0.1.0
+
+OpenCode умеет сам ставить npm plugins через Bun.
+
+Но для вашего server/offline сценария надо одновременно поддерживать:
+
+offline bundle
+
+с:
+
+compiled plugin
+Python core
+wheelhouse
+installer.ps1
+installer.sh
+doctor
+compatibility matrix
+schemas
+checksums
+SBOM
+
+То есть один и тот же код, две формы доставки.
+Runtime plugin не должен ставить Python зависимости
+
+Это ещё одно решение, которое я бы жёстко зафиксировал.
+
+Не:
+
+OpenCode запускается
+→ plugin понял, что нет pydantic
+→ pip install
+→ интернет...
+
+Это великолепный способ превратить startup в лотерею.
+
+Установка является отдельным действием:
+
+install
+update
+rollback
+doctor
+
+Plugin runtime только проверяет готовность.
+Нужен полноценный doctor
+
+Например:
+
+harness doctor --opencode
+
+Он должен ответить примерно:
+
+OpenCode             1.18.30        PASS
+Plugin               0.1.0          PASS
+Plugin loaded                        PASS
+harness_run visible                  PASS
+Harness Core         badb5e2...     PASS
+Bridge protocol      1.0            PASS
+RPB policy hash                      PASS
+Runtime policy hash                  PASS
+Provider auth                        PASS
+Structured output                    CONDITIONAL
+Legacy plugin conflict               NONE
+Semantic E2E                         NOT_RUN
+
+С JSON-выводом тоже.
+
+Это будет нашим нормальным preflight вместо археологии по каталогам Windows.
+Versioning я бы сделал четырёхуровневым
+
+Plugin:
+0.1.0
+
+Harness Core:
+release / commit
+
+Bridge Protocol:
+1.0
+
+Contracts:
+DQC 1.1
+TEX 1.0
+PER 1.0
+...
+
+Нельзя заставлять plugin SemVer означать одновременно версию научного ClaimGraph.
+
+При handshake:
+
+plugin protocol 1.1
+core supports 1.0–1.1
+→ negotiated 1.1
+
+Но:
+
+plugin protocol 2.x
+core protocol 1.x
+→ BLOCK
+
+Никаких «ну JSON вроде похож».
+Я бы ввёл три release channels
+
+alpha
+beta
+stable
+
+Alpha может менять bridge protocol.
+
+Beta протокол уже заморожен, расширяется host matrix.
+
+Stable значит:
+
+installation tested
+upgrade tested
+rollback tested
+OpenCode versions certified
+production semantic E2E passed
+packaged artifact tested
+
+Не только npm publish не упал.
+Новые долги, которые я бы добавил
+
+Я уже сформировал delta:
+
+Tracker + Tech Debt delta
+
+Там предлагаются:
+
+TD-053 Provider readiness semantics
+TD-054 OpenCode transport matrix
+TD-055 Versioned bidirectional bridge protocol
+TD-056 Legacy plugin retirement
+TD-057 Plugin API/runtime compatibility lab
+TD-058 Semantic worker recursion isolation
+TD-059 Structured-output portability
+
+И workstreams:
+
+WS-55 Plugin architecture
+WS-56 Bridge RPC
+WS-57 OpenCode host adapter
+WS-58 Production semantic trace
+WS-59 Packaging / compatibility
+
+Порядок реализации я бы теперь немного изменил
+
+Не начинать сразу с harness_run.
+
+Сначала сделать вообще скучную вещь:
+
+OpenCode
+→ plugin
+→ harness_status
+→ Python daemon
+→ health
+→ reply
+
+Если это работает стабильно:
+
+P2 PASS
+
+Потом:
+
+harness_run
+→ deterministic Router only
+
+без модели.
+
+Потом только:
+
+Harness
+→ reverse semantic.execute
+→ OpenCode child session
+
+И лишь после этого наш Tribunal:
+
+Q1
+→ A1
+→ grounding
+→ Q2
+→ A2
+→ Advocate
+
+Так каждая граница наблюдаема.
+
+Если прыгнуть сразу в Tribunal через plugin, при первой ошибке мы опять будем выбирать между 15 причинами, включая фазы Луны и Bun.
+Целевая архитектура в результате
+
+                    OpenCode
+                       │
+                       │ supported Plugin API
+                       ▼
+            @harness/opencode-plugin
+                       │
+             ┌─────────┼─────────┐
+             │         │         │
+          tools      host     semantic
+                    adapter     executor
+             │         │         │
+             └─────────┼─────────┘
+                       │
+                  RPC bridge
+                       ⇅
+                 Harness Core
+                       │
+      ┌────────────────┼────────────────┐
+      ▼                ▼                ▼
+    Writer         Researcher          Coder
+                       │
+                    Tribunal
+                       │
+                 RPB / TEX / PER
+                       │
+             semantic.execute RPC
+                       │
+             OpenCode child session
+                       │
+                    Model
+
+И вот это уже действительно можно сделать модулем, который:
+
+устанавливается
+обновляется
+тестируется
+откатывается
+версионируется
+диагностируется
+сертифицируется под OpenCode versions
+
+а не папкой скриптов, которую знает только человек, помнящий историю проекта с начала августа.
+
+С учётом проведённого аудита я бы следующую реализационную границу уже официально назвал:
+
+R4.4 L3C
+OpenCode Native Plugin Bridge
+
+и первым кодовым этапом сделал P1: harness-bridge-rpc/1.0 + fake TS/Python duplex E2E, вообще без OpenCode. Это правильное место начать реализацию, потому что именно bidirectional protocol является новым фундаментальным швом всей конструкции.
+OPENCODE_HARNESS_NATIVE_PLUGIN_ARCHITECTURE_V1.mdДокумент
+OPENCODE_HARNESS_PLUGIN_RISK_AND_COMPATIBILITY_AUDIT.mdДокумент
+OPENCODE_HARNESS_PLUGIN_IMPLEMENTATION_PLAN.mdДокумент
+Еще 1
+
+Хорошо,  старый плагин Легаси.  Теперь нам нужно сверится что у нас торчит из ядра harness по всем подблокам.  И что ждет от плагина opencode при его подключении и как нам это подружить чтобы не развалилось после завтра когда сделаем обновление
+
+Проверил именно полный FINAL Harness, а не только наши свежие plugin-документы. Картина оказалась довольно хорошей: ядро уже значительно лучше отделено от OpenCode, чем выглядит по старой периферии. Основной риск сидит не в Writer/Researcher/Coder, а в историческом host-shell вокруг них.
+
+Официальный API OpenCode 1.18.30 для нового слоя подходит: plugin получает готовый SDK client, project, directory, worktree, serverUrl, а custom tool получает sessionID, messageID, agent, directory, worktree и AbortSignal. Причём сам OpenCode создаёт для plugin SDK client к текущему server instance с нужной авторизацией. Это очень хорошая естественная граница для нашего HostAdapter.
+
+Собрал полный аудит:
+
+Harness ↔ OpenCode Boundary Audit
+
+Машиночитаемая boundary matrix
+
+Migration Plan v2
+
+Tracker / Tech Debt delta v2
+
+Весь пакет
+
+SHA256:
+
+10a8e4f698cbd2d38e42c7b9ee6c89a9f1ec2ee9c6a97e2d65cdb438c85d3611
+
+Главная матрица после ревизии выглядит так:
+Блок Harness	Что остаётся властью Core	Что требуется от plugin
+Router	route, stage, capability requirements, provider policy	только факты о возможностях host
+Job/Attempt	Job, Attempt, children, gates, artifacts, completion	session/message/execution IDs как внешние refs, cancel
+Writer	DOM, RTT, provenance, repair, claims/evidence	generic semantic execution
+Researcher	ResearchDOM, Claim/Evidence, RWF, Gap, admission	generic semantic execution
+Tribunal	RPB, DQC/ADC, TEX, PER, grounding, ARG, graph	исполнить уже готовый bounded semantic request
+Coder	factory state, artifact provenance, budget, gates	workspace context + generic semantic execution
+Guard	валидация/admission	нормализованные host metadata/events
+MCP/Capsules	Harness capability runtime	ничего специального
+Memory/Kanban	Core infrastructure	ничего специального
+
+То есть целевая зависимость совсем небольшая:
+
+OpenCode
+   │
+   ▼
+HostAdapter
+   │
+   ├── HostContext
+   ├── WorkspaceRef
+   ├── cancellation
+   └── semantic execution
+   │
+   ▼
+Bridge RPC
+   │
+   ▼
+Harness Core
+
+А не:
+
+OpenCode
+→ Router internals
+→ Writer internals
+→ Tribunal internals
+→ code-factory internals
+→ ещё 17 hooks
+
+Последний вариант был бы чрезвычайно удобен для написания посмертной документации проекта.
+Что уже хорошо отделено
+
+Самая приятная находка касается Tribunal.
+
+У нас уже есть:
+
+TribunalProviderTransport
+
+с интерфейсом концептуально:
+
+invoke(
+    RoleProviderBinding,
+    TribunalExecutionEnvelope,
+    timeout
+)
+
+И есть:
+
+LogicalToolProviderTransport
+
+который не выбирает роль, provider, evidence или branch. Он получает уже готовые:
+
+RPB
++
+TEX
+
+и вызывает выбранный runtime tool.
+
+Поэтому новый plugin вообще не требует переделывать:
+
+DQC
+ADC
+TEX
+PER
+IQT
+ARG
+Dialectic
+ArgumentGraph
+
+Меняется только:
+
+runtime transport
+
+Было:
+
+tribunal_role
+→ Python MCP launcher
+→ opencode run
+
+Станет:
+
+tribunal_role_plugin
+→ bridge
+→ semantic.execute
+→ OpenCode SDK
+
+Это очень хороший шов.
+Где сейчас действительно торчит OpenCode внутрь Harness
+
+Вот здесь уже накопилась археология.
+
+config/runtime_integration_policy.json всё ещё считает обязательными:
+
+legacy tool-skill-contract-router
+OPENCODE_BIN
+OPENCODE_SESSION_DB
+старый plugin registration
+
+scripts/health_check.py проверяет наличие именно старого plugin и доступность OpenCode SQLite DB.
+
+scripts/setup_env.ps1 записывает:
+
+OPENCODE_BIN=opencode
+
+и предполагает конкретный путь к OpenCode session DB.
+
+scripts/register_plugin.py вообще содержит старый абсолютный Windows path пользователя.
+
+А несколько семантических путей делают:
+
+opencode run
+
+напрямую:
+
+mcp/launchers/_runner.py
+mcp/launchers/opencode_code_worker.py
+mcp/launchers/opencode_research_*.py
+mcp/launchers/opencode_tribunal_role.py
+mcp/coder_router_server.py
+
+Это не Core. Я классифицировал весь этот слой как:
+
+LEGACY HOST SHELL
+
+Его надо постепенно вывести из authority path, а не пытаться сделать совместимым со всеми будущими OpenCode.
+Особенно важен Coder
+
+Там пока OpenCode-зависимость сильнее Tribunal.
+
+Старый:
+
+coder_router_server
+
+сам выбирает model class и непосредственно вызывает:
+
+opencode run --pure --model ... --dir ...
+
+Это надо заменить на:
+
+Coder Core
+→ SemanticExecutionRequest
+→ plugin
+
+Но сама фабрика:
+
+worker
+reviewer
+tester
+auditor
+artifact provenance
+guards
+budget
+finalization
+
+остаётся нетронутой.
+
+То же самое с Writer. Его настоящий core CLI уже вполне приличный:
+
+plan
+draftcheck
+live-cycle
+dom
+review
+uncertainty
+register
+...
+
+OpenCode нужен только там, где требуется настоящий semantic worker. Поэтому Writer тоже не должен иметь специальный «Writer OpenCode bridge».
+
+Нужен один:
+
+SemanticExecutionRequest
+
+для всех трёх подсистем.
+
+Например:
+
+purpose = TRIBUNAL_ROLE
+purpose = WRITER_DRAFT
+purpose = WRITER_REPAIR
+purpose = CODE_WORK
+purpose = CODE_REVIEW
+
+Вот это я предлагаю сделать главным стабильным API
+
+Четыре DTO-контракта:
+
+HostContext/1.0
+WorkspaceRef/1.0
+SemanticExecutionRequest/1.0
+SemanticExecutionResult/1.0
+
+Например HostContext:
+
+{
+  "schema": "host-context/1.0",
+  "host": "opencode",
+  "host_version": "1.18.30",
+
+  "session_id": "ses...",
+  "message_id": "msg...",
+  "agent_id": "build",
+
+  "directory": "C:/project",
+  "worktree": "C:/project",
+
+  "features_fingerprint": "sha256:..."
+}
+
+И очень важное правило:
+
+никаких OpenCode SDK objects
+через эту границу не проходит
+
+Plugin получил:
+
+ToolContext
+PluginInput
+Session
+Model
+Provider
+
+и тут же нормализовал их.
+
+Harness видит только свои DTO.
+
+Вот это и есть защита от обновлений.
+Если завтра OpenCode поменяет API
+
+Предположим, они переименовали:
+
+worktree → workspaceRoot
+
+или:
+
+client.session.prompt()
+
+стал принимать другие параметры.
+
+Меняется:
+
+packages/opencode-plugin/
+    src/host/
+        adapter_1_18.ts
+        adapter_1_19.ts
+
+Не меняются:
+
+Router
+Job
+Writer
+Researcher
+Coder
+Tribunal
+TEX
+Claim
+Evidence
+Hypothesis
+
+Это и есть нормальный anti-corruption layer.
+
+Я бы физически сделал:
+
+packages/opencode-plugin/src/host/
+    types.ts
+    adapter.ts
+    adapter_1_18.ts
+    probes.ts
+    normalize.ts
+
+Только этот каталог знает про конкретный OpenCode.
+И версия OpenCode сама по себе не должна означать «совместимо»
+
+Это особенно важно, потому что upstream plugin API живой и временами слегка творческий.
+
+В официальном v1.18.30 hooks действительно объявляют custom tools, tool.execute.before/after, transforms и т.д.
+
+Но в upstream уже были реальные случаи, когда объявленный hook не вызывался или external-plugin tools не доходили до реального ToolRegistry.
+
+Поэтому наша политика должна быть:
+
+supported
+≠ version >= X
+
+а:
+
+supported =
+exact host version
++
+feature probes
++
+package E2E
++
+compatibility record
+
+Например:
+
+compatibility/opencode/
+    1.18.30.json
+    1.18.31.json
+    1.19.0.json
+
+Внутри:
+
+plugin loaded
+tool visible
+SDK client
+session.create
+session.prompt
+session.abort
+ToolContext.directory
+ToolContext.worktree
+structured output
+semantic smoke
+Tribunal smoke
+
+Тогда обновление OpenCode выглядит нормально
+
+Не:
+
+обновили Desktop
+→ молимся
+→ запускаем диссертацию
+
+а:
+
+OpenCode 1.18.31
+        ↓
+HostAdapter probe
+        ↓
+compatibility result
+        │
+        ├─ CERTIFIED
+        │      → production
+        │
+        ├─ COMPATIBLE_UNCERTIFIED
+        │      → canary/tests
+        │
+        └─ INCOMPATIBLE
+               → plugin provider unavailable
+
+Harness продолжает работать детерминированными частями даже при несовместимом OpenCode.
+Ещё одна вещь, которую надо убрать из основного контракта
+
+OPENCODE_SESSION_DB.
+
+Сейчас часть Guard/health слоя знает:
+
+~/.local/share/opencode/opencode.db
+
+Это host-private storage.
+
+Его нельзя использовать как обязательный runtime API.
+
+Новый принцип:
+
+typed result
+→ Harness guard
+→ admission
+
+А session DB scanning можно сохранить как:
+
+optional forensic/diagnostic provider
+
+Если завтра OpenCode заменит SQLite на что-нибудь другое, Harness вообще не должен заметить.
+MCP я бы тоже не затаскивал внутрь plugin
+
+У нас уже есть довольно приличный capability/provider runtime.
+
+Поэтому:
+
+OpenCode plugin
+≠ реестр всех Harness tools
+
+Plugin показывает пользователю условно:
+
+harness_run
+harness_status
+
+А внутри Harness уже решает:
+
+capsule
+MCP
+local script
+semantic worker
+Researcher
+Coder
+Writer
+
+Иначе получим второй capability router внутри TypeScript.
+Итоговая граница получается очень компактной
+
+                    OpenCode
+                       │
+                 Plugin API/SDK
+                       │
+                       ▼
+              ┌──────────────────┐
+              │ HostAdapter      │
+              │ compatibility    │
+              │ normalization    │
+              └────────┬─────────┘
+                       │
+                Host DTOs / RPC
+                       │
+                       ▼
+              ┌──────────────────┐
+              │ Harness Core     │
+              │                  │
+              │ Router           │
+              │ Job/Attempt      │
+              │ Writer           │
+              │ Researcher       │
+              │ Coder            │
+              │ Tribunal         │
+              └────────┬─────────┘
+                       │
+           SemanticExecutionRequest
+                       │
+                       ▲
+                       │
+              ┌────────┴─────────┐
+              │ Plugin Semantic  │
+              │ Executor         │
+              └────────┬─────────┘
+                       │
+                 OpenCode SDK
+                       │
+                   Model
+
+Я бы зафиксировал ещё пять долгов
+
+Они уже записаны в новом delta:
+
+TD-060
+старый host-integration shell
+
+TD-061
+зависимость от OpenCode session DB
+
+TD-062
+дублированные semantic transports
+Tribunal / Coder / Research
+
+TD-063
+нормализация workspace identity
+
+TD-064
+ложное "provider available",
+когда существует только launcher
+
+TD-065
+зависимость от autodiscovery agents/skills
+
+И ещё одно архитектурное решение считаю почти обязательным:
+
+OpenCode agent files
+≠ Harness semantic roles
+
+agents/*.md можно оставить удобным UX-pack.
+
+Но внутренний:
+
+xrd_specialist
+methodologist
+advocate
+writer
+code_reviewer
+
+должен определяться Harness-контрактом, а OpenCode agent/profile является только его execution profile.
+Поэтому следующий кодовый этап теперь довольно очевиден
+
+Не писать сразу plugin.
+
+Сначала зафиксировать стабильную сторону Harness:
+
+P1A
+
+HostContext/1.0
+WorkspaceRef/1.0
+SemanticExecutionRequest/1.0
+SemanticExecutionResult/1.0
+
+плюс сериализация, fingerprints и round-trip tests.
+
+После этого:
+
+P1B
+harness-bridge-rpc/1.0
+
+И только затем:
+
+P2
+OpenCode 1.18.30 HostAdapter
+
+Таким образом, когда мы послезавтра обновим OpenCode, у нас будет очень простой критерий: если четыре Harness DTO и bridge protocol не изменились, ни Writer, ни Researcher, ни Coder, ни Tribunal трогать запрещено. Чиним HostAdapter и compatibility record.
+
+Вот это уже похоже на модуль, который можно действительно поддерживать версиями, а не на тонкий культурный слой поверх конкретной сборки Desktop.
+HARNESS_OPENCODE_BOUNDARY_AUDIT_V1.mdДокумент
+HARNESS_PLUGIN_BOUNDARY_MATRIX.jsonКод
+HARNESS_NATIVE_PLUGIN_MIGRATION_PLAN_V2.mdДокумент
+Еще 1
+
+вчера 13:55
+Хорошо давай сверимся с рекомендациями opencode по плагинам и модулям  и сделпем обновление harness которое позволит  работать через opencode(как палгин/модуль) 
+
+

@@ -1,0 +1,12 @@
+schema_version: uncertainty/0.1
+required:
+- id
+- kind
+- value
+- distribution
+- provenance
+optional:
+- coverage_factor
+- confidence_level
+- correlations
+- propagation_method

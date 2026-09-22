@@ -1,0 +1,31 @@
+{
+  "ok": true,
+  "schema": "writing_policy/1.0",
+  "policy_id": "WP-b7f549cccc2140bd",
+  "document_kind": "chapter",
+  "section_role": "discussion",
+  "language": "ru",
+  "allowed_claim_classes": [
+    "RESULT_INTERPRETATION",
+    "LITERATURE_COMPARISON",
+    "QUALIFIED_CAUSAL_HYPOTHESIS"
+  ],
+  "forbidden_claim_classes": [
+    "NEW_EXPERIMENTAL_FACT",
+    "UNQUALIFIED_CAUSALITY"
+  ],
+  "style_reference_fragment_ids": [
+    "RF-RAK-87"
+  ],
+  "constraints": {
+    "style_refs_are_not_evidence": true,
+    "new_facts_require_research_debt": true,
+    "causality_must_preserve_authorized_strength": true,
+    "citation_required_for_external_fact": true
+  },
+  "style_targets": {
+    "reference_count": 1,
+    "style_similarity_mean": 0.5533
+  },
+  "content_hash": "b7f549cccc2140bd1316b26cd680d0e56cf093713db01e0c3592f090fb1d5a76"
+}

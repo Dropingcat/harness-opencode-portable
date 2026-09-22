@@ -1,0 +1,187 @@
+{
+  "schema": "writer_core.review_report.v1",
+  "generated_by": "writer_core.review.REVIEW_CYCLE",
+  "created_at": "2026-09-12T20:28:36+00:00",
+  "inputs": {
+    "draft": "article_ai_agent_principles.md",
+    "contract": "writing_contract.json",
+    "plan": null,
+    "dom": null,
+    "max_iterations": 3,
+    "max_contract_claims": null,
+    "draft_chars": 15973
+  },
+  "iterations": 1,
+  "final_verdict": "PASS",
+  "stopped_reason": "approved",
+  "escalation": false,
+  "escalation_reasons": [],
+  "issues_by_level": {
+    "L1": [
+      {
+        "level": "L1",
+        "type": "REPETITION",
+        "span": [
+          635,
+          913
+        ],
+        "text": "OpenAI также связывает выбор агентной архитектуры с задачами, где обычная автоматизация недостаточна ([Anthropic](https://www.anthropic.com/research/building-effective-agents), [OpenAI](https://openai",
+        "suggestion": "слово «openai» повторяется 3 раз(а) в одном предложении — заменить часть повторов (синоним/местоимение/опущение)",
+        "severity": "MINOR",
+        "word": "openai",
+        "count": 3
+      },
+      {
+        "level": "L1",
+        "type": "REPETITION",
+        "span": [
+          1492,
+          1794
+        ],
+        "text": "Такое различие использует Anthropic в разборе workflows и agents; близкое определение даёт и практическое руководство OpenAI ([Anthropic](https://www.anthropic.com/research/building-effective-agents),",
+        "suggestion": "слово «agents» повторяется 3 раз(а) в одном предложении — заменить часть повторов (синоним/местоимение/опущение)",
+        "severity": "MINOR",
+        "word": "agents",
+        "count": 3
+      },
+      {
+        "level": "L1",
+        "type": "REPETITION",
+        "span": [
+          3627,
+          3824
+        ],
+        "text": "API tool calling реализуют тот же обмен на уровне приложения ([ReAct](https://arxiv.org/html/2210.03629), [OpenAI Function Calling](https://developers.openai.com/api/docs/guides/function-calling)).",
+        "suggestion": "слово «calling» повторяется 3 раз(а) в одном предложении — заменить часть повторов (синоним/местоимение/опущение)",
+        "severity": "MINOR",
+        "word": "calling",
+        "count": 3
+      },
+      {
+        "level": "L1",
+        "type": "REPETITION",
+        "span": [
+          6871,
+          7142
+        ],
+        "text": "OWASP для excessive agency требует минимизировать функции, разрешения и автономность, сохраняя downstream authorization ([OpenAI](https://developers.openai.com/api/docs/guides/function-calling), [OWAS",
+        "suggestion": "слово «owasp» повторяется 3 раз(а) в одном предложении — заменить часть повторов (синоним/местоимение/опущение)",
+        "severity": "MINOR",
+        "word": "owasp",
+        "count": 3
+      },
+      {
+        "level": "L1",
+        "type": "REPETITION",
+        "span": [
+          8118,
+          8302
+        ],
+        "text": "Документация LangGraph также разделяет thread-scoped short-term memory и долговременные данные между сессиями ([LangGraph](https://docs.langchain.com/oss/python/langgraph/add-memory)).",
+        "suggestion": "слово «langgraph» повторяется 3 раз(а) в одном предложении — заменить часть повторов (синоним/местоимение/опущение)",
+        "severity": "MINOR",
+        "word": "langgraph",
+        "count": 3
+      },
+      {
+        "level": "L1",
+        "type": "REPETITION",
+        "span": [
+          10057,
+          10310
+        ],
+        "text": "Действия с существенными последствиями должны останавливаться перед side effect и ждать approval, что согласуется с рекомендациями OWASP по ограничению чрезмерной автономности ([OWASP LLM06](https://g",
+        "suggestion": "слово «owasp» повторяется 3 раз(а) в одном предложении — заменить часть повторов (синоним/местоимение/опущение)",
+        "severity": "MINOR",
+        "word": "owasp",
+        "count": 3
+      },
+      {
+        "level": "L1",
+        "type": "REPETITION",
+        "span": [
+          11986,
+          12229
+        ],
+        "text": "OWASP рекомендует сочетать сегрегацию недоверенного контента, least privilege, валидацию, downstream authorization, подтверждение значимых действий и adversarial testing ([OWASP LLM01](https://genai.o",
+        "suggestion": "слово «owasp» повторяется 3 раз(а) в одном предложении — заменить часть повторов (синоним/местоимение/опущение)",
+        "severity": "MINOR",
+        "word": "owasp",
+        "count": 3
+      },
+      {
+        "level": "L1",
+        "type": "REPETITION",
+        "span": [
+          14452,
+          14627
+        ],
+        "text": "[Anthropic — Building effective agents](https://www.anthropic.com/research/building-effective-agents) — различие workflows и agents, условия применения orchestration patterns.",
+        "suggestion": "слово «agents» повторяется 3 раз(а) в одном предложении — заменить часть повторов (синоним/местоимение/опущение)",
+        "severity": "MINOR",
+        "word": "agents",
+        "count": 3
+      },
+      {
+        "level": "L1",
+        "type": "REPETITION",
+        "span": [
+          15118,
+          15289
+        ],
+        "text": "5. [Anthropic — Effective context engineering for AI agents](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents) — отбор и сжатие контекста.",
+        "suggestion": "слово «engineering» повторяется 3 раз(а) в одном предложении — заменить часть повторов (синоним/местоимение/опущение)",
+        "severity": "MINOR",
+        "word": "engineering",
+        "count": 3
+      },
+      {
+        "level": "L1",
+        "type": "REPETITION",
+        "span": [
+          15290,
+          15406
+        ],
+        "text": "6. [LangGraph — Memory](https://docs.langchain.com/oss/python/langgraph/add-memory) — short-term и long-term memory.",
+        "suggestion": "слово «memory» повторяется 3 раз(а) в одном предложении — заменить часть повторов (синоним/местоимение/опущение)",
+        "severity": "MINOR",
+        "word": "memory",
+        "count": 3
+      },
+      {
+        "level": "L1",
+        "type": "REPETITION",
+        "span": [
+          15512,
+          15658
+        ],
+        "text": "8. [OWASP — LLM01:2025 Prompt Injection](https://genai.owasp.org/llmrisk/llm01-prompt-injection/) — indirect injection и многослойные меры защиты.",
+        "suggestion": "слово «injection» повторяется 3 раз(а) в одном предложении — заменить часть повторов (синоним/местоимение/опущение)",
+        "severity": "MINOR",
+        "word": "injection",
+        "count": 3
+      }
+    ],
+    "L2": {
+      "skipped": true,
+      "note": "plan не передан — L2 не запущен",
+      "issues": []
+    },
+    "L3": []
+  },
+  "rtt_defects_final": [],
+  "trace_checks_final": null,
+  "repaired_spans": [],
+  "rounds": [
+    {
+      "iteration": 0,
+      "verdict": "PASS",
+      "reasons": [],
+      "n_l1": 11,
+      "n_l2": 0,
+      "n_l3_defects": 0,
+      "trace_verdict": null,
+      "changed": null
+    }
+  ]
+}

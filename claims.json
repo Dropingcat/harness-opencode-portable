@@ -1,0 +1,118 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-09-12",
+  "claims": [
+    {
+      "id": "C-001",
+      "proposition": "Практическая граница между workflow и агентом проходит по тому, кто во время исполнения выбирает следующий шаг: предопределённый код или модель.",
+      "source_ids": ["W1", "W2", "W6"],
+      "evidence": [{"source_id": "W1", "span": "What are agents?: workflows are orchestrated through predefined code paths; agents dynamically direct their processes and tool usage."}, {"source_id": "W2", "span": "What is an agent?: the LLM manages workflow execution, recognizes completion and dynamically selects tools."}],
+      "confidence": "high",
+      "uncertainty": "Терминология в отрасли не полностью унифицирована; определение следует представлять как операционное."
+    },
+    {
+      "id": "C-002",
+      "proposition": "Автономность следует добавлять только тогда, когда более простая детерминированная схема не достигает нужного качества.",
+      "source_ids": ["W1", "W2", "L5", "L11"],
+      "evidence": [{"source_id": "W1", "span": "When (and when not) to use agents: find the simplest solution possible and increase complexity only when needed."}, {"source_id": "L11", "span": "Lines 1-15: deterministic NoAgents path is used for reproducibility, safety, speed and budget control."}],
+      "confidence": "high",
+      "uncertainty": "Относительная стоимость и качество зависят от задачи, модели и инфраструктуры."
+    },
+    {
+      "id": "C-003",
+      "proposition": "Функциональное ядро агента и минимально управляемая production-архитектура не являются одним и тем же.",
+      "source_ids": ["W2", "W1", "L1", "L2", "L6"],
+      "evidence": [{"source_id": "W2", "span": "Agent design foundations: model, tools and instructions."}, {"source_id": "L1", "span": "Lines 5-31: classifier, context builder, contracts, specialist layer, verification and safety gate, report and memory."}],
+      "confidence": "high",
+      "uncertainty": "Production-минимум зависит от риска; не каждый прототип требует всех перечисленных механизмов."
+    },
+    {
+      "id": "C-004",
+      "proposition": "Базовый агентный цикл должен чередовать решение и действие с наблюдением фактического результата среды.",
+      "source_ids": ["W10", "W1", "W4", "L7"],
+      "evidence": [{"source_id": "W10", "span": "Abstract and section 2: reasoning traces and task-specific actions are interleaved with observations from the environment."}, {"source_id": "W4", "span": "The tool calling flow: receive a tool call, execute application code, return tool output, receive the next response or call."}],
+      "confidence": "high",
+      "uncertainty": "Reasoning trace не обязательно должна раскрываться или сохраняться."
+    },
+    {
+      "id": "C-005",
+      "proposition": "Planning и execution полезно разделять как ответственности, но отдельный planner-agent нужен не всегда.",
+      "source_ids": ["W10", "W9", "L2", "L13"],
+      "evidence": [{"source_id": "W10", "span": "Sections 1-2: reasoning creates, tracks and adjusts plans using observations."}, {"source_id": "L2", "span": "Lines 47-59: Planner, Scheduler, BudgetManager, StopController and ContextBuilder are explicit runtime roles."}],
+      "confidence": "high",
+      "uncertainty": "Разделение является логическим; конкретное число процессов или моделей из него не следует."
+    },
+    {
+      "id": "C-006",
+      "proposition": "Routing, parallelization, evaluator-optimizer, manager-worker и handoff полезны при разных структурных свойствах задачи.",
+      "source_ids": ["W1", "W2", "L5"],
+      "evidence": [{"source_id": "W1", "span": "Sections Routing, Parallelization, Orchestrator-workers and Evaluator-optimizer specify distinct fit conditions."}, {"source_id": "L5", "span": "Lines 48-93 and 282-339: independent fan-out and user-driven pipelines are endorsed; router personas, persona chains and deep trees are anti-patterns."}],
+      "confidence": "high",
+      "uncertainty": "Локальный запрет persona-to-persona относится к конкретному harness и не является универсальным."
+    },
+    {
+      "id": "C-007",
+      "proposition": "Multi-agent следует вводить только при доказанной пользе от параллелизма, изоляции контекста или специализации.",
+      "source_ids": ["W2", "W6", "W9", "L5"],
+      "evidence": [{"source_id": "W2", "span": "When to consider creating multiple agents: maximize a single agent first; split when complex instructions or tool overlap cause failures."}, {"source_id": "W6", "span": "Multi-agent architectures: the decision should be driven by evals; starting multi-agent adds unnecessary complexity."}],
+      "confidence": "high",
+      "uncertainty": "Количественные результаты Anthropic относятся к внутреннему research eval и не обобщаются."
+    },
+    {
+      "id": "C-008",
+      "proposition": "Инструменты агента должны проектироваться как узкие typed API-контракты.",
+      "source_ids": ["W4", "W1", "L2", "L6", "L8", "L14", "W12"],
+      "evidence": [{"source_id": "W4", "span": "Defining functions and best practices: JSON Schema, strict mode, enums, clear descriptions and predictable functions."}, {"source_id": "W12", "span": "Mitigations 1-7: minimize extensions, functionality, permissions and autonomy; enforce downstream authorization."}],
+      "confidence": "high",
+      "uncertainty": "Schema compliance не доказывает смысловую корректность."
+    },
+    {
+      "id": "C-009",
+      "proposition": "Short-term state относится к текущему run, а long-term memory переживает сессии и должна записываться избирательно.",
+      "source_ids": ["W7", "L4", "L3"],
+      "evidence": [{"source_id": "W7", "span": "Add short-term memory: thread-level state; Add long-term memory: user-specific or application-specific data across conversations."}, {"source_id": "L4", "span": "Lines 3-25: memory stores patterns and caveats but not current authoritative status, secrets or raw untrusted instructions."}],
+      "confidence": "high",
+      "uncertainty": "Retention, TTL и promotion policy зависят от домена и privacy requirements."
+    },
+    {
+      "id": "C-010",
+      "proposition": "Context engineering означает отбор минимального высокосигнального контекста для каждого следующего шага.",
+      "source_ids": ["W8", "L5", "L7"],
+      "evidence": [{"source_id": "W8", "span": "Context engineering vs. prompt engineering: context includes prompts, tools, external data and message history and must be cyclically curated."}, {"source_id": "W8", "span": "The anatomy of effective context: smallest high-signal token set, just-in-time retrieval, compaction and structured note-taking."}],
+      "confidence": "high",
+      "uncertainty": "Слишком агрессивное сокращение может потерять важные детали."
+    },
+    {
+      "id": "C-011",
+      "proposition": "Stop criteria, budgets, retries и escalation должны контролироваться программно, а не ощущением модели.",
+      "source_ids": ["L1", "L2", "L7", "W1", "W2", "W12"],
+      "evidence": [{"source_id": "L1", "span": "Lines 55-63: stop criteria are code-owned and include PASS, requires_user, auditor block, iteration limit and guard failure."}, {"source_id": "W12", "span": "Excessive autonomy mitigations require approval for high-impact actions and downstream authorization."}],
+      "confidence": "high",
+      "uncertainty": "Конкретные лимиты должны определяться task-specific policy и SLO."
+    },
+    {
+      "id": "C-012",
+      "proposition": "Тестовая стратегия агента должна охватывать детерминированные компоненты, сценарии, траектории, регрессии и adversarial cases.",
+      "source_ids": ["W6", "W5", "W9", "L9", "L13"],
+      "evidence": [{"source_id": "W6", "span": "Design your eval process: define objective, collect representative data, define metrics, compare and continuously evaluate."}, {"source_id": "L9", "span": "Lines 3-55: unit, integration, security, E2E, performance, golden traces and malicious fixtures."}],
+      "confidence": "high",
+      "uncertainty": "Не для всех задач доступен однозначный ground truth; automated graders требуют калибровки с людьми."
+    },
+    {
+      "id": "C-013",
+      "proposition": "Observability должна связывать task outcome, траекторию исполнения и потребление ресурсов.",
+      "source_ids": ["L6", "L8", "W6", "W9", "L10"],
+      "evidence": [{"source_id": "L6", "span": "Lines 23-25 and 44-48: each step leaves a trace and metrics include time, error rate, coverage, false positives and budget."}, {"source_id": "W6", "span": "Evals tips: log everything, mine logs for eval cases and continuously evaluate."}],
+      "confidence": "high",
+      "uncertainty": "Полные traces могут конфликтовать с privacy."
+    },
+    {
+      "id": "C-014",
+      "proposition": "Недоверенные документы и tool outputs должны пересекать отдельную границу доверия до влияния на привилегированные действия.",
+      "source_ids": ["W11", "W12", "W5", "L6", "L10", "L13"],
+      "evidence": [{"source_id": "W11", "span": "Indirect Prompt Injections and Prevention: external files and sites can alter behavior; use validated formats, least privilege, approval, segregation and adversarial testing."}, {"source_id": "W5", "span": "Prompt injections, structured outputs and combined techniques: untrusted data must not directly drive agent behavior."}],
+      "confidence": "high",
+      "uncertainty": "Structured outputs and filters reduce attack surface but do not provide complete prevention."
+    }
+  ]
+}

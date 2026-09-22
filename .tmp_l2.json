@@ -1,0 +1,15 @@
+{
+  "candidate_lessons": [],
+  "claim_refs": [
+    "claim.example.1"
+  ],
+  "issue_counts": {},
+  "kind": "task_memory",
+  "level": "L2",
+  "provenance": {
+    "source": "claim_graph_audit_snapshot"
+  },
+  "snapshot_id": null,
+  "task_id": "task.example",
+  "task_title": null
+}

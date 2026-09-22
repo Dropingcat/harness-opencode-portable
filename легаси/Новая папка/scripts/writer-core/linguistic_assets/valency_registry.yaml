@@ -1,0 +1,18 @@
+schema_version: ru-valency/0.3
+entries:
+- lemma: свидетельствовать
+  argument: topic
+  preposition: о
+  case: Loc
+- lemma: приводить
+  argument: result
+  preposition: к
+  case: Dat
+- lemma: зависеть
+  argument: source
+  preposition: от
+  case: Gen
+- lemma: характеризоваться
+  argument: property
+  preposition: null
+  case: Ins

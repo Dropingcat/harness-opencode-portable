@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "authority": {
+    "routes": "config/routes_authority.json",
+    "tool_contracts": "config/tool_contracts_authority.json",
+    "buckets": "config/bucket_contracts.json",
+    "capsules": "config/skill_capsule_policy.json",
+    "profiles": "config/strictness_profiles.json",
+    "execution_modes": "config/execution_modes.json",
+    "runtime_bindings": "config/tool_runtime_bindings.json",
+    "skills_registry": "config/skills_registry.json",
+    "route_resolution": "config/route_resolution_policy.json",
+    "guard_policy": "config/guard_policy.json",
+    "tool_capsule_policy": "config/tool_capsule_policy.json"
+  },
+  "generated": {
+    "runtime_snapshot": "config/runtime_snapshot.json",
+    "skills_graph": "config/skills_graph.json",
+    "profile_routes_compat": "config/profile_routes.json",
+    "tool_skill_routes_compat": "config/tool_skill_routes.json",
+    "skill_to_route_map_compat": "config/skill_to_route_map.json"
+  }
+}

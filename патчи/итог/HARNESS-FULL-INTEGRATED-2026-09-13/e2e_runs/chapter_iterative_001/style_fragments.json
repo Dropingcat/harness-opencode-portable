@@ -1,0 +1,660 @@
+{
+  "fragments": [
+    {
+      "fragment_id": "RF-MEKA-50",
+      "reference_id": "REF-MEKA",
+      "source_id": "S-MEKA",
+      "source_sha256": "4f4d8d1ef5d6cc75842a6ac0bf541ae98f9d58a6757b41f6c7ab88262b191afa",
+      "locator": "pdf_page:50",
+      "span": {
+        "coordinate_space": "page_text",
+        "start": 0,
+        "end": 1100
+      },
+      "normalized_text_hash": "6083335ea9e15fbabe46c76465645018b58fb5dc3b58c9dbb8aba029fd957202",
+      "section_role": "discussion",
+      "document_kind": "dissertation",
+      "language": "en",
+      "permissions": {
+        "style": true,
+        "evidence": false
+      },
+      "style_features": {
+        "words": 205,
+        "citation_density_per_1000": 0.0,
+        "hedge_density_per_1000": 0.0,
+        "causal_density_per_1000": 0.0
+      },
+      "excerpt": "48 Chapter 3 Fig. 3.11: Bright field (BF) TEM image and corresponding SADP (b) (zone axis: [-110]γ′) from a deeper region (~30 µm below the surface) of nitrided (550oC, 20 h, rN = 0.82 atm-1/2) Fe-4.75at%Al alloy specimen. The high density of 111 stacking faults in γ′ leads to extensive streaking through 111 reflections of γ′ (the direction perpendicular to the (111) lattice planes has been indicated in the BF). 3.4.5 Diffraction-line broadening Both the γ′ and α-Fe X-ray diffraction peaks recorded from nitrided Fe-4.75at.%Al alloy are much more broadened than the corresponding diffraction peaks recorded from nitrided pure iron (Fig. 3.8). The FWHM and β values for the γ′ and α-Fe reflections have been gathered in Table 3.3. For the nitrided Fe-4.75at.%Al alloy, (i) the very strong γ′ peak broadening can be attributed to the high density of stacking faults in γ′, the nano-sized nature of the γ′ precipitates in the ferrite matrix and the large volume misfit (16 %) between the γ′ nitride and the ferrite matrix and (ii) the very strong broadening of the ferrite peaks is due to the micro",
+      "graph_digest": {
+        "schema": "reference_graph_digest/1.0",
+        "available": true,
+        "graph_count": 6,
+        "node_count": 219,
+        "edge_count": 210,
+        "graph_ids": [
+          "G13_linguistic_structure",
+          "G14_cohesion_information_flow",
+          "G15_pragmatic_rhetorical",
+          "G3_discourse",
+          "G4_argument",
+          "G6_artifact_symbol"
+        ],
+        "graph_instances": {
+          "G13_linguistic_structure": 1,
+          "G14_cohesion_information_flow": 1,
+          "G15_pragmatic_rhetorical": 1,
+          "G3_discourse": 1,
+          "G4_argument": 1,
+          "G6_artifact_symbol": 1
+        },
+        "node_types": {
+          "Token": 184,
+          "Sentence": 7,
+          "Clause": 7,
+          "BackingRef": 5,
+          "RhetoricalMove": 5,
+          "Quantity": 2,
+          "Unit": 2,
+          "Formula": 2,
+          "ParagraphIntent": 1,
+          "TopicFocus": 1,
+          "ArgumentInstance": 1,
+          "DocumentSpan": 1,
+          "Theme": 1
+        },
+        "edge_relations": {
+          "HEAD_OF": 198,
+          "USES_AS_BACKING": 5,
+          "INTERPRETS": 5,
+          "HAS_UNIT": 2
+        },
+        "node_type_share": {
+          "Token": 0.840183,
+          "Sentence": 0.031963,
+          "Clause": 0.031963,
+          "BackingRef": 0.022831,
+          "RhetoricalMove": 0.022831,
+          "Quantity": 0.009132,
+          "Unit": 0.009132,
+          "Formula": 0.009132,
+          "ParagraphIntent": 0.004566,
+          "TopicFocus": 0.004566,
+          "ArgumentInstance": 0.004566,
+          "DocumentSpan": 0.004566,
+          "Theme": 0.004566
+        },
+        "edge_relation_share": {
+          "HEAD_OF": 0.942857,
+          "USES_AS_BACKING": 0.02381,
+          "INTERPRETS": 0.02381,
+          "HAS_UNIT": 0.009524
+        },
+        "motifs": [
+          {
+            "kind": "edge_relation",
+            "value": "HEAD_OF",
+            "count": 198
+          },
+          {
+            "kind": "edge_relation",
+            "value": "USES_AS_BACKING",
+            "count": 5
+          },
+          {
+            "kind": "edge_relation",
+            "value": "INTERPRETS",
+            "count": 5
+          },
+          {
+            "kind": "edge_relation",
+            "value": "HAS_UNIT",
+            "count": 2
+          },
+          {
+            "kind": "node_type",
+            "value": "Token",
+            "count": 184
+          },
+          {
+            "kind": "node_type",
+            "value": "Sentence",
+            "count": 7
+          },
+          {
+            "kind": "node_type",
+            "value": "Clause",
+            "count": 7
+          },
+          {
+            "kind": "node_type",
+            "value": "BackingRef",
+            "count": 5
+          },
+          {
+            "kind": "node_type",
+            "value": "RhetoricalMove",
+            "count": 5
+          },
+          {
+            "kind": "node_type",
+            "value": "Quantity",
+            "count": 2
+          },
+          {
+            "kind": "node_type",
+            "value": "Unit",
+            "count": 2
+          },
+          {
+            "kind": "node_type",
+            "value": "Formula",
+            "count": 2
+          }
+        ]
+      }
+    },
+    {
+      "fragment_id": "RF-SCH-33",
+      "reference_id": "REF-SCH",
+      "source_id": "S-SCH",
+      "source_sha256": "4d419b93bbdd814fd10242f27c76bc25341de263ac8c45ded2e953aedfe88a15",
+      "locator": "pdf_page:33",
+      "span": {
+        "coordinate_space": "page_text",
+        "start": 0,
+        "end": 1100
+      },
+      "normalized_text_hash": "6236d7150591bdf59d37b7142c037ad08383e17a729c397a9e98886591ffa83c",
+      "section_role": "discussion",
+      "document_kind": "dissertation",
+      "language": "en",
+      "permissions": {
+        "style": true,
+        "evidence": false
+      },
+      "style_features": {
+        "words": 165,
+        "citation_density_per_1000": 0.0,
+        "hedge_density_per_1000": 6.0606060606060606,
+        "causal_density_per_1000": 6.0606060606060606
+      },
+      "excerpt": "Gasseous nitriding of iron-chromium alloys 32 discontinuous precipitation reactions perhaps because of the presence of a relatively high amount of segregated Cr (and possibly N, upon nitriding). Suitable nucleation sites are not always available at grain boundaries. Indeed, single grains at the specimen surface have been observed which exhibited no discontinuous precipitation although CrN precipitates had formed in a relatively early stage of nitriding, as also confirmed by high hardness values measured for such not transformed grains. Contrary to the specimens nitrided at 450 °C, in the specimens nitrided at 580 °C discontinuously transformed grains could be observed only occasionally and these are not preferentially near the surface, but randomly distributed over the whole sample. In principle the discontinuous transformation of the finely dispersed CrN precipitates (β’) in to CrN lamellae (β) can occur only at locations where the CrN precipitates (β’) have been formed first. Indeed, for the Fe-4Cr alloys nitrided at 450 °C, discontinuously transformed grains occur in the surface r",
+      "graph_digest": {
+        "schema": "reference_graph_digest/1.0",
+        "available": true,
+        "graph_count": 4,
+        "node_count": 183,
+        "edge_count": 175,
+        "graph_ids": [
+          "G13_linguistic_structure",
+          "G14_cohesion_information_flow",
+          "G3_discourse",
+          "G6_artifact_symbol"
+        ],
+        "graph_instances": {
+          "G13_linguistic_structure": 1,
+          "G14_cohesion_information_flow": 1,
+          "G3_discourse": 1,
+          "G6_artifact_symbol": 1
+        },
+        "node_types": {
+          "Token": 163,
+          "Sentence": 6,
+          "Clause": 6,
+          "Formula": 4,
+          "ParagraphIntent": 1,
+          "TopicFocus": 1,
+          "DocumentSpan": 1,
+          "Theme": 1
+        },
+        "edge_relations": {
+          "HEAD_OF": 175
+        },
+        "node_type_share": {
+          "Token": 0.89071,
+          "Sentence": 0.032787,
+          "Clause": 0.032787,
+          "Formula": 0.021858,
+          "ParagraphIntent": 0.005464,
+          "TopicFocus": 0.005464,
+          "DocumentSpan": 0.005464,
+          "Theme": 0.005464
+        },
+        "edge_relation_share": {
+          "HEAD_OF": 1.0
+        },
+        "motifs": [
+          {
+            "kind": "edge_relation",
+            "value": "HEAD_OF",
+            "count": 175
+          },
+          {
+            "kind": "node_type",
+            "value": "Token",
+            "count": 163
+          },
+          {
+            "kind": "node_type",
+            "value": "Sentence",
+            "count": 6
+          },
+          {
+            "kind": "node_type",
+            "value": "Clause",
+            "count": 6
+          },
+          {
+            "kind": "node_type",
+            "value": "Formula",
+            "count": 4
+          },
+          {
+            "kind": "node_type",
+            "value": "ParagraphIntent",
+            "count": 1
+          },
+          {
+            "kind": "node_type",
+            "value": "TopicFocus",
+            "count": 1
+          },
+          {
+            "kind": "node_type",
+            "value": "DocumentSpan",
+            "count": 1
+          },
+          {
+            "kind": "node_type",
+            "value": "Theme",
+            "count": 1
+          }
+        ]
+      }
+    },
+    {
+      "fragment_id": "RF-SCH-34",
+      "reference_id": "REF-SCH",
+      "source_id": "S-SCH",
+      "source_sha256": "4d419b93bbdd814fd10242f27c76bc25341de263ac8c45ded2e953aedfe88a15",
+      "locator": "pdf_page:34",
+      "span": {
+        "coordinate_space": "page_text",
+        "start": 0,
+        "end": 1100
+      },
+      "normalized_text_hash": "4ef71e229c1c5dfdb800317856c5b956d6866adc4ccaee23545ae7cb1f519692",
+      "section_role": "discussion",
+      "document_kind": "dissertation",
+      "language": "en",
+      "permissions": {
+        "style": true,
+        "evidence": false
+      },
+      "style_features": {
+        "words": 168,
+        "citation_density_per_1000": 0.0,
+        "hedge_density_per_1000": 5.9523809523809526,
+        "causal_density_per_1000": 5.9523809523809526
+      },
+      "excerpt": "Gasseous nitriding of iron-chromium alloys 33 interpretation is also supported by the presence of clear CrN reflections in the X-ray diffractograms (Fig. 2.12) recorded from the specimens nitrided at 700 °C, which have not been observed for the samples nitrided at 450 and 580 °C. The origin of the morphology that develops during nitriding at 700 °C may be explained as follows. Initially, the morphology develops similarly as described above for the lower temperatures, i.e., the formation of homogeneously distributed, finely dispersed, relatively small CrN precipitates. However, before the onset of discontinuous transformation at the grain boundaries, at 700 °C a (competitive) coarsening occurs of the initial CrN precipitates. At this relatively high temperature the distances to be covered by Cr diffusion for the continuous growth of the precipitates are not a large limitation. Thus globular, incoherent precipitates can develop. Thereby the driving force for the discontinuous precipitation reaction has become negligible. With reference to the above discussion the regions at/near the gr",
+      "graph_digest": {
+        "schema": "reference_graph_digest/1.0",
+        "available": true,
+        "graph_count": 6,
+        "node_count": 191,
+        "edge_count": 183,
+        "graph_ids": [
+          "G13_linguistic_structure",
+          "G14_cohesion_information_flow",
+          "G15_pragmatic_rhetorical",
+          "G3_discourse",
+          "G4_argument",
+          "G6_artifact_symbol"
+        ],
+        "graph_instances": {
+          "G13_linguistic_structure": 1,
+          "G14_cohesion_information_flow": 1,
+          "G15_pragmatic_rhetorical": 1,
+          "G3_discourse": 1,
+          "G4_argument": 1,
+          "G6_artifact_symbol": 1
+        },
+        "node_types": {
+          "Token": 163,
+          "Sentence": 9,
+          "Clause": 9,
+          "Formula": 3,
+          "ParagraphIntent": 1,
+          "TopicFocus": 1,
+          "ArgumentInstance": 1,
+          "BackingRef": 1,
+          "DocumentSpan": 1,
+          "Theme": 1,
+          "RhetoricalMove": 1
+        },
+        "edge_relations": {
+          "HEAD_OF": 181,
+          "USES_AS_BACKING": 1,
+          "INTERPRETS": 1
+        },
+        "node_type_share": {
+          "Token": 0.853403,
+          "Sentence": 0.04712,
+          "Clause": 0.04712,
+          "Formula": 0.015707,
+          "ParagraphIntent": 0.005236,
+          "TopicFocus": 0.005236,
+          "ArgumentInstance": 0.005236,
+          "BackingRef": 0.005236,
+          "DocumentSpan": 0.005236,
+          "Theme": 0.005236,
+          "RhetoricalMove": 0.005236
+        },
+        "edge_relation_share": {
+          "HEAD_OF": 0.989071,
+          "USES_AS_BACKING": 0.005464,
+          "INTERPRETS": 0.005464
+        },
+        "motifs": [
+          {
+            "kind": "edge_relation",
+            "value": "HEAD_OF",
+            "count": 181
+          },
+          {
+            "kind": "edge_relation",
+            "value": "USES_AS_BACKING",
+            "count": 1
+          },
+          {
+            "kind": "edge_relation",
+            "value": "INTERPRETS",
+            "count": 1
+          },
+          {
+            "kind": "node_type",
+            "value": "Token",
+            "count": 163
+          },
+          {
+            "kind": "node_type",
+            "value": "Sentence",
+            "count": 9
+          },
+          {
+            "kind": "node_type",
+            "value": "Clause",
+            "count": 9
+          },
+          {
+            "kind": "node_type",
+            "value": "Formula",
+            "count": 3
+          },
+          {
+            "kind": "node_type",
+            "value": "ParagraphIntent",
+            "count": 1
+          },
+          {
+            "kind": "node_type",
+            "value": "TopicFocus",
+            "count": 1
+          },
+          {
+            "kind": "node_type",
+            "value": "ArgumentInstance",
+            "count": 1
+          },
+          {
+            "kind": "node_type",
+            "value": "BackingRef",
+            "count": 1
+          }
+        ]
+      }
+    },
+    {
+      "fragment_id": "RF-RAK-87",
+      "reference_id": "REF-RAK",
+      "source_id": "S-RAK-87",
+      "source_sha256": "7d66930c00b8478d737e7f316353e813c2de997085768fa85bb99b39e32b8d81",
+      "locator": "pdf_page:87",
+      "span": {
+        "coordinate_space": "page_text",
+        "start": 0,
+        "end": 1100
+      },
+      "normalized_text_hash": "8cbd582452aecf8aaa98e0e2c5b7e586eab38fdcf389f850fa015c4ddfeb7ef6",
+      "section_role": "discussion",
+      "document_kind": "dissertation",
+      "language": "ru",
+      "permissions": {
+        "style": true,
+        "evidence": true
+      },
+      "style_features": {
+        "words": 135,
+        "citation_density_per_1000": 0.0,
+        "hedge_density_per_1000": 14.814814814814815,
+        "causal_density_per_1000": 0.0
+      },
+      "excerpt": "87 В разделе 4.2 методом сканирующей электронной микроскопии обнаружено, что в поверхностном слое сталей после азотирования образуются мелкодисперсные нитриды легирующих элементов. Однако, рентгеноструктурные исследования не выявили нитридных фаз легирующих элементов, возможно, ввиду их низкой концентрации и малого размера. Возможно, это также связано с образованием мелкодисперсных нитридов, распределение которых по слою не обеспечивает их выявление при имеющейся чувствительности рентгеноструктурного фазового анализа. В таком случае для исследования этих частиц необходимо применить метод просвечивающей электронной микроскопии. Таким образом, главным достоинством азотирования электролитно- плазменным воздействием является возможность получения диффузионного упрочненного слоя из α-фазы с избыточными нитридами Fe4N (’-фаза), в отличие от газового азотирования в аммиаке, где образуется нитридный слой, состоящий из двух γ’- и ε-фаз, что является источником внутренних напряжений на границе раздела фаз и вызывает хрупкость и отслаивание упрочнённого слоя режущих инструментов при эксплуат н",
+      "graph_digest": {
+        "schema": "reference_graph_digest/1.0",
+        "available": true,
+        "graph_count": 7,
+        "node_count": 173,
+        "edge_count": 167,
+        "graph_ids": [
+          "G13_linguistic_structure",
+          "G14_cohesion_information_flow",
+          "G15_pragmatic_rhetorical",
+          "G3_discourse",
+          "G4_argument",
+          "G5_epistemic_projection",
+          "G6_artifact_symbol"
+        ],
+        "graph_instances": {
+          "G13_linguistic_structure": 1,
+          "G14_cohesion_information_flow": 1,
+          "G15_pragmatic_rhetorical": 1,
+          "G3_discourse": 1,
+          "G4_argument": 1,
+          "G5_epistemic_projection": 1,
+          "G6_artifact_symbol": 1
+        },
+        "node_types": {
+          "Token": 132,
+          "DiscourseMove": 5,
+          "Sentence": 5,
+          "Clause": 5,
+          "RhetoricalMove": 4,
+          "Transition": 2,
+          "BackingRef": 2,
+          "ClaimRef": 2,
+          "CommunicativeAct": 2,
+          "ParagraphIntent": 1,
+          "TopicFocus": 1,
+          "ArgumentInstance": 1,
+          "RebuttalRef": 1,
+          "ConclusionRef": 1,
+          "QualifierRef": 1,
+          "EvidenceRef": 1,
+          "ScopeRef": 1,
+          "Formula": 1,
+          "DocumentSpan": 1,
+          "Theme": 1,
+          "Rheme": 1,
+          "EntityRef": 1,
+          "Mention": 1
+        },
+        "edge_relations": {
+          "HEAD_OF": 142,
+          "CONTRASTS": 5,
+          "PREPARES": 4,
+          "LEADS_TO": 2,
+          "USES_AS_BACKING": 2,
+          "INTERPRETS": 2,
+          "MOTIVATES": 1,
+          "ELABORATES": 1,
+          "SUMMARIZES": 1,
+          "USES_AS_REBUTTAL": 1,
+          "CONCLUDES": 1,
+          "QUALIFIES_ARGUMENT": 1,
+          "SUPPORTS": 1,
+          "APPLIES_WITHIN": 1,
+          "THEME_TO_RHEME": 1,
+          "REFERS_TO": 1
+        },
+        "node_type_share": {
+          "Token": 0.763006,
+          "DiscourseMove": 0.028902,
+          "Sentence": 0.028902,
+          "Clause": 0.028902,
+          "RhetoricalMove": 0.023121,
+          "Transition": 0.011561,
+          "BackingRef": 0.011561,
+          "ClaimRef": 0.011561,
+          "CommunicativeAct": 0.011561,
+          "ParagraphIntent": 0.00578,
+          "TopicFocus": 0.00578,
+          "ArgumentInstance": 0.00578,
+          "RebuttalRef": 0.00578,
+          "ConclusionRef": 0.00578,
+          "QualifierRef": 0.00578,
+          "EvidenceRef": 0.00578,
+          "ScopeRef": 0.00578,
+          "Formula": 0.00578,
+          "DocumentSpan": 0.00578,
+          "Theme": 0.00578,
+          "Rheme": 0.00578,
+          "EntityRef": 0.00578,
+          "Mention": 0.00578
+        },
+        "edge_relation_share": {
+          "HEAD_OF": 0.850299,
+          "CONTRASTS": 0.02994,
+          "PREPARES": 0.023952,
+          "LEADS_TO": 0.011976,
+          "USES_AS_BACKING": 0.011976,
+          "INTERPRETS": 0.011976,
+          "MOTIVATES": 0.005988,
+          "ELABORATES": 0.005988,
+          "SUMMARIZES": 0.005988,
+          "USES_AS_REBUTTAL": 0.005988,
+          "CONCLUDES": 0.005988,
+          "QUALIFIES_ARGUMENT": 0.005988,
+          "SUPPORTS": 0.005988,
+          "APPLIES_WITHIN": 0.005988,
+          "THEME_TO_RHEME": 0.005988,
+          "REFERS_TO": 0.005988
+        },
+        "motifs": [
+          {
+            "kind": "edge_relation",
+            "value": "HEAD_OF",
+            "count": 142
+          },
+          {
+            "kind": "edge_relation",
+            "value": "CONTRASTS",
+            "count": 5
+          },
+          {
+            "kind": "edge_relation",
+            "value": "PREPARES",
+            "count": 4
+          },
+          {
+            "kind": "edge_relation",
+            "value": "LEADS_TO",
+            "count": 2
+          },
+          {
+            "kind": "edge_relation",
+            "value": "USES_AS_BACKING",
+            "count": 2
+          },
+          {
+            "kind": "edge_relation",
+            "value": "INTERPRETS",
+            "count": 2
+          },
+          {
+            "kind": "edge_relation",
+            "value": "MOTIVATES",
+            "count": 1
+          },
+          {
+            "kind": "edge_relation",
+            "value": "ELABORATES",
+            "count": 1
+          },
+          {
+            "kind": "edge_relation",
+            "value": "SUMMARIZES",
+            "count": 1
+          },
+          {
+            "kind": "edge_relation",
+            "value": "USES_AS_REBUTTAL",
+            "count": 1
+          },
+          {
+            "kind": "edge_relation",
+            "value": "CONCLUDES",
+            "count": 1
+          },
+          {
+            "kind": "edge_relation",
+            "value": "QUALIFIES_ARGUMENT",
+            "count": 1
+          },
+          {
+            "kind": "node_type",
+            "value": "Token",
+            "count": 132
+          },
+          {
+            "kind": "node_type",
+            "value": "DiscourseMove",
+            "count": 5
+          },
+          {
+            "kind": "node_type",
+            "value": "Sentence",
+            "count": 5
+          },
+          {
+            "kind": "node_type",
+            "value": "Clause",
+            "count": 5
+          },
+          {
+            "kind": "node_type",
+            "value": "RhetoricalMove",
+            "count": 4
+          },
+          {
+            "kind": "node_type",
+            "value": "Transition",
+            "count": 2
+          },
+          {
+            "kind": "node_type",
+            "value": "BackingRef",
+            "count": 2
+          },
+          {
+            "kind": "node_type",
+            "value": "ClaimRef",
+            "count": 2
+          }
+        ]
+      }
+    }
+  ]
+}

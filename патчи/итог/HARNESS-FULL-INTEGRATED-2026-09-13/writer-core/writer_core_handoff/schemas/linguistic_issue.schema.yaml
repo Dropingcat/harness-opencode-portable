@@ -1,0 +1,26 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+title: LinguisticIssue
+type: object
+required:
+- id
+- type
+- target
+- impact
+properties:
+  id:
+    type: string
+  type:
+    type: string
+  target:
+    type: string
+  impact:
+    type: string
+    enum:
+    - LOW
+    - MEDIUM
+    - HIGH
+    - CRITICAL
+  candidates:
+    type: array
+  escalation:
+    type: object

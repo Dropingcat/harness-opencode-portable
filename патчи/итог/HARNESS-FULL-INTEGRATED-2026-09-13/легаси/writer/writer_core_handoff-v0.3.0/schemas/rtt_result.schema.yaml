@@ -1,0 +1,52 @@
+$id: writer-core-2/rtt-result/0.2
+$type: object
+required:
+- contract_id
+- realization_id
+- level
+- verdict
+- reason_codes
+properties:
+  contract_id:
+    type: string
+  realization_id:
+    type: string
+  level:
+    enum:
+    - MICRO
+    - MESO
+    - MACRO
+  verdict:
+    enum:
+    - PASS
+    - WARN
+    - FAIL
+  reason_codes:
+    type: array
+    items:
+      enum:
+      - EXACT
+      - PARAPHRASE_SAFE
+      - CLAIM_OMISSION
+      - UNAUTHORIZED_CLAIM
+      - SCOPE_EXPANSION
+      - SCOPE_NARROWING
+      - MODALITY_UPGRADE
+      - MODALITY_DOWNGRADE
+      - CAUSALITY_UPGRADE
+      - CAUSALITY_LOSS
+      - QUALIFIER_LOSS
+      - NEGATION_FLIP
+      - ENTITY_SUBSTITUTION
+      - TEMPORAL_SHIFT
+      - NUMERIC_DRIFT
+      - UNIT_DRIFT
+      - PRECISION_INFLATION
+      - UNCERTAINTY_LOSS
+      - EVIDENCE_MISATTRIBUTION
+  unauthorized_claims:
+    type: array
+  omitted_claims:
+    type: array
+  alignments:
+    type: array

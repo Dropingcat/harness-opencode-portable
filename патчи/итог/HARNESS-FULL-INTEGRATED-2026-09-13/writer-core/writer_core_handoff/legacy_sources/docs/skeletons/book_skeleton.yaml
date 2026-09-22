@@ -1,0 +1,115 @@
+# Скелет книги / учебного пособия
+document:
+  id: "DOC_SKELETON"
+  genre: "book"
+  gost: "Р 7.0.5"
+  skeleton_version: "1.0"
+
+skeleton:
+  - id: "SEC_PREFACE"
+    type: "section"
+    title: "Предисловие"
+    role: "preface"
+    children:
+      - id: "PAR_PREFACE"
+        type: "paragraph"
+        role: "preface"
+        required: true
+
+  - id: "PART_1"
+    type: "part"
+    title: "Часть I. Основы"
+    role: "foundations"
+    children:
+      - id: "CH_1"
+        type: "section"
+        title: "Глава 1. Введение в предмет"
+        role: "introduction"
+        children:
+          - id: "PAR_1_1"
+            type: "paragraph"
+            role: "overview"
+            required: true
+          - id: "PAR_1_2"
+            type: "paragraph"
+            role: "basic_concepts"
+            required: true
+
+      - id: "CH_2"
+        type: "section"
+        title: "Глава 2. Основные понятия"
+        role: "basic_concepts"
+        children:
+          - id: "PAR_2_1"
+            type: "paragraph"
+            role: "definitions"
+            required: true
+          - id: "PAR_2_2"
+            type: "paragraph"
+            role: "examples"
+            required: true
+
+  - id: "PART_2"
+    type: "part"
+    title: "Часть II. Продвинутые темы"
+    role: "advanced_topics"
+    children:
+      - id: "CH_3"
+        type: "section"
+        title: "Глава 3. Продвинутые методы"
+        role: "advanced_methods"
+        children:
+          - id: "PAR_3_1"
+            type: "paragraph"
+            role: "advanced_theory"
+            required: true
+          - id: "PAR_3_2"
+            type: "paragraph"
+            role: "applications"
+            required: true
+
+      - id: "CH_4"
+        type: "section"
+        title: "Глава 4. Практическое применение"
+        role: "applications"
+        children:
+          - id: "PAR_4_1"
+            type: "paragraph"
+            role: "case_study"
+            required: true
+          - id: "PAR_4_2"
+            type: "paragraph"
+            role: "exercises"
+            required: true
+
+  - id: "SEC_CONCL"
+    type: "section"
+    title: "Заключение"
+    role: "conclusion"
+    children:
+      - id: "PAR_CONCL"
+        type: "paragraph"
+        role: "summary"
+        required: true
+
+  - id: "SEC_LIT"
+    type: "section"
+    title: "Библиография"
+    role: "literature"
+    children:
+      - id: "PAR_BIB"
+        type: "paragraph"
+        role: "bibliography"
+        required: true
+
+  - id: "SEC_APP"
+    type: "section"
+    title: "Приложения"
+    role: "appendix"
+    required: false
+
+  - id: "SEC_INDEX"
+    type: "section"
+    title: "Предметный указатель"
+    role: "index"
+    required: true

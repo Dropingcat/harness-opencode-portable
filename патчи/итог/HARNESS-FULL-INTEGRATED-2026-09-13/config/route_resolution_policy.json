@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "resolution": {
+    "prefer_explicit_hints": true,
+    "allow_multi_match": true,
+    "multi_match_strategy": "explicit_hint_then_bucket_then_priority_then_strictness_then_match_length",
+    "on_no_match": "ESCALATE",
+    "on_ambiguous_multi_route": "ESCALATE",
+    "require_reason_codes": true,
+    "max_routes_returned": 3
+  }
+}

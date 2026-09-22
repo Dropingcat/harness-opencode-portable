@@ -1,0 +1,10 @@
+schema_version: decision/0.1
+required:
+- id
+- question
+- alternatives
+- decision
+- reason
+- authority
+- affected_entities
+- date

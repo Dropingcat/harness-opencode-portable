@@ -1,0 +1,11 @@
+{
+  "module": "numeric_validator",
+  "code": "import re\n\ndef validate_numeric_claim(text: str) -> dict:\n    \"\"\"Извлекает числовые утверждения из текста и валидирует формат.\n\n    Исключает: числа внутри слов (IC50), переменные (x=0.5), индексы (2θ), проценты-маркеры.\n    Returns: {claims: [{value, unit, raw}], count: int}\n    \"\"\"\n    # Сначала вырезаем ложные паттерны: IC50, x=0.5, 2θ, 1-й, №2\n    protected = text\n    protected = re.sub(r'[A-Za-z]{1,4}50', ' ', protected)          # IC50\n    protected = re.sub(r'[a-zA-Z][=≈]\\d+(?:\\.\\d+)?', ' ', protected)  # a=5.27, x=0.5\n    protected = re.sub(r'\\d[а-яА-Яa-zA-Z]?θ', ' ', protected)        # 2θ\n    protected = re.sub(r'№\\d+', ' ', protected)\n    # Валидное число: граница слова, число, опц. единица\n    pat = re.compile(r'(?<![A-Za-zА-Яа-я0-9])(\\d+(?:\\.\\d+)?)\\s*(мкМ|мкмоль|нМ|мМ|мкА|%|°C|°|А|Å)?(?![0-9])')\n    claims = []\n    for m in pat.finditer(protected):\n        value = float(m.group(1))\n        unit = (m.group(2) or '').strip()\n        raw = m.group(0).strip()\n        claims.append({'value': value, 'unit': unit, 'raw': raw})\n    return {'claims': claims, 'count': len(claims)}\n",
+  "description": "Coder E2E: детерминированный числовой валидатор (извлечение чисел+единиц)",
+  "notes": "Детерминированно, без LLM. Покрывает TD-068-направление (числовые claims) на уровне Coder-утилиты.",
+  "tests": [
+    {"name": "test_ic50_extract", "command": "unittest", "description": "IC50=8.2 мкМ -> value=8.2, unit=мкМ"},
+    {"name": "test_lattice_extract", "command": "unittest", "description": "a=5.27 А -> value=5.27, unit=А"},
+    {"name": "test_no_number", "command": "unittest", "description": "текст без чисел -> count=0"}
+  ]
+}

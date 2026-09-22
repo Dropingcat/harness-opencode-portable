@@ -1,0 +1,191 @@
+{
+  "schema": "writer.release_decision/1.0",
+  "verdict": "FAIL",
+  "release_allowed": false,
+  "blockers": [
+    "evidence",
+    "traceability",
+    "semantic_roundtrip"
+  ],
+  "gates": {
+    "evidence": {
+      "verdict": "FAIL",
+      "detail": {
+        "verdict": "FAIL",
+        "policy": "strict",
+        "allowed_verdicts": [
+          "SUPPORTED"
+        ],
+        "failures": [
+          {
+            "claim_id": "C-001",
+            "verdict": "OPEN"
+          },
+          {
+            "claim_id": "C-002",
+            "verdict": "OPEN"
+          },
+          {
+            "claim_id": "C-004",
+            "verdict": "OPEN"
+          }
+        ],
+        "claims_checked": 6
+      }
+    },
+    "traceability": {
+      "verdict": "FAIL",
+      "detail": {
+        "text_len": 1628,
+        "dom": {
+          "sources": 5,
+          "claims": 6,
+          "sections": 0
+        },
+        "checks": {
+          "dangling_reference": [],
+          "orphan_claims": [
+            {
+              "sentence": "Следовательно, отрицательный результат фазового XRD в данном случае следует рассматривать с учетом предела обнаружения и дополнять локальными методами анализа.",
+              "start": 621,
+              "end": 781
+            }
+          ],
+          "masked_uncertainty": [
+            {
+              "claim_id": "C-001",
+              "verdict": "OPEN",
+              "level": null,
+              "sentence": "В исходной работе совокупность этих признаков интерпретируется как образование твердого раствора азота в железе [C-001] [S-RAK-83]"
+            },
+            {
+              "claim_id": "C-002",
+              "verdict": "OPEN",
+              "level": null,
+              "sentence": "На том же уровне анализа в исследованных быстрорежущих сталях фиксируется γ′-Fe4N [C-002] [S-RAK-85]"
+            },
+            {
+              "claim_id": "C-004",
+              "verdict": "OPEN",
+              "level": null,
+              "sentence": "При этом SEM выявляет мелкодисперсные нитриды легирующих элементов, которые не обнаруживаются методом XRD; это расхождение однозначно вызвано с их малой концентрацией и размером [C-004] [S-RAK-87]"
+            }
+          ],
+          "numeric_unverified": [],
+          "missing_crossref": []
+        },
+        "summary": {
+          "sentences_checked": 9,
+          "claims_traced": 6,
+          "references_ok": true,
+          "references_dangling": 0,
+          "uncertainty_masked": 3,
+          "orphan_claims": 1,
+          "numeric_unverified": 0,
+          "missing_crossref": 0
+        },
+        "verdict": "FAIL",
+        "fail_reasons": [
+          "MASKED_UNCERTAINTY: C-001, C-002, C-004",
+          "ORPHAN_CLAIM: pos:621"
+        ]
+      }
+    },
+    "semantic_roundtrip": {
+      "verdict": "FAIL",
+      "detail": {
+        "schema": "writer_core.rtt_report.v1",
+        "generated_by": "writer.release.marker_rtt",
+        "verdict": "FAIL",
+        "defects": [
+          {
+            "defect_type": "causality_upgrade",
+            "claim_id": "C-004",
+            "span": {
+              "start": 423,
+              "end": 621,
+              "text": "При этом SEM выявляет мелкодисперсные нитриды легирующих элементов, которые не обнаруживаются методом XRD; это расхождение однозначно вызвано с их малой концентрацией и размером [C-004] [S-RAK-87]."
+            },
+            "suggestion": "переформулировать в пределах привязанного [C-*] предложения",
+            "reason_code": "CAUSALITY_UPGRADE"
+          }
+        ],
+        "checked": [
+          {
+            "claim_id": "C-001",
+            "matched": true,
+            "overlap": 1.0,
+            "reasons": [
+              "PARAPHRASE_SAFE"
+            ],
+            "notes": []
+          },
+          {
+            "claim_id": "C-002",
+            "matched": true,
+            "overlap": 1.0,
+            "reasons": [
+              "PARAPHRASE_SAFE"
+            ],
+            "notes": []
+          },
+          {
+            "claim_id": "C-003",
+            "matched": true,
+            "overlap": 1.0,
+            "reasons": [
+              "PARAPHRASE_SAFE"
+            ],
+            "notes": []
+          },
+          {
+            "claim_id": "C-004",
+            "matched": true,
+            "overlap": 1.0,
+            "reasons": [
+              "CAUSALITY_UPGRADE",
+              "QUALIFIER_DROPPED"
+            ],
+            "notes": [
+              "required qualifiers dropped: ['допускает']"
+            ]
+          },
+          {
+            "claim_id": "C-005",
+            "matched": true,
+            "overlap": 1.0,
+            "reasons": [
+              "PARAPHRASE_SAFE"
+            ],
+            "notes": []
+          },
+          {
+            "claim_id": "C-006",
+            "matched": true,
+            "overlap": 1.0,
+            "reasons": [
+              "PARAPHRASE_SAFE"
+            ],
+            "notes": []
+          }
+        ],
+        "re_extraction": {
+          "claims": [],
+          "digests": [],
+          "errors": []
+        }
+      }
+    }
+  },
+  "authority": {
+    "research_verdicts": "scripts/researcher/verify_claims.py",
+    "traceability": "scripts/writer/review/citation_trace.py",
+    "semantic_roundtrip": "scripts/writer/core/factory_process.py"
+  },
+  "artifacts": {
+    "dom": "/mnt/data/writer_e2e_chapter_repo/e2e_runs/chapter_iterative_001/v5_dom.yaml",
+    "dom_sha256": "cc08757dbc27422b96d5c6c4e162c4169a53f44e56527f2bccd4b9fa5cd32829",
+    "text": "/mnt/data/writer_e2e_chapter_repo/e2e_runs/chapter_iterative_001/v5_text.md",
+    "text_sha256": "f8a7301b85ccc32e61e4d005509ccab046b092d5651cf090996ce8faf263a4e2"
+  }
+}

@@ -1,0 +1,14 @@
+schema_version: build-manifest/0.1
+required:
+- build_id
+- document_revision
+- claim_snapshot
+- policy_snapshot
+- template_versions
+- data_versions
+- validator_versions
+- outputs
+optional:
+- model_calls
+- scripts
+- source_versions

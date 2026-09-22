@@ -1,0 +1,82 @@
+{
+  "schema": "writer-handoff-integration/1.0",
+  "migration_id": "WRITER-UNIFY-001",
+  "handoff_version": "0.3.0",
+  "policy": "selected runtime-relevant contracts and fixtures only; historical handoff remains provenance",
+  "items": [
+    {
+      "source": "scripts/writer_core_handoff/schemas/writing_contract.schema.yaml",
+      "target": "scripts/writer/contracts/specs/writing_contract.schema.yaml",
+      "source_sha256": "26123809a9c8639a332e292db62392494c272ae39e15e1a0501fc2250a876dae",
+      "target_sha256": "26123809a9c8639a332e292db62392494c272ae39e15e1a0501fc2250a876dae",
+      "byte_identical": true
+    },
+    {
+      "source": "scripts/writer_core_handoff/schemas/rtt_result.schema.yaml",
+      "target": "scripts/writer/contracts/specs/rtt_result.schema.yaml",
+      "source_sha256": "8501b3d0d90887332f4e4c24af7a69ab843521bb84d6cfd7b93e66dc44811a3f",
+      "target_sha256": "8501b3d0d90887332f4e4c24af7a69ab843521bb84d6cfd7b93e66dc44811a3f",
+      "byte_identical": true
+    },
+    {
+      "source": "scripts/writer_core_handoff/schemas/build_manifest.schema.yaml",
+      "target": "scripts/writer/contracts/specs/build_manifest.schema.yaml",
+      "source_sha256": "b401fd5d77e1a8d2ac8e9a50db5b8e9e0d1541a39d143eea16367b925d15de49",
+      "target_sha256": "b401fd5d77e1a8d2ac8e9a50db5b8e9e0d1541a39d143eea16367b925d15de49",
+      "byte_identical": true
+    },
+    {
+      "source": "scripts/writer_core_handoff/schemas/blocker.schema.yaml",
+      "target": "scripts/writer/contracts/specs/blocker.schema.yaml",
+      "source_sha256": "8c653a1badbf46e69952b391f03a8361a090d71e4c3e6a554ea86dede7eff431",
+      "target_sha256": "8c653a1badbf46e69952b391f03a8361a090d71e4c3e6a554ea86dede7eff431",
+      "byte_identical": true
+    },
+    {
+      "source": "scripts/writer_core_handoff/schemas/uncertainty.schema.yaml",
+      "target": "scripts/writer/contracts/specs/uncertainty.schema.yaml",
+      "source_sha256": "22cc01cbf02f023e6f968daeda500c8f5a3e1f9a9dec9ad98dd4a2bbdd1f030f",
+      "target_sha256": "22cc01cbf02f023e6f968daeda500c8f5a3e1f9a9dec9ad98dd4a2bbdd1f030f",
+      "byte_identical": true
+    },
+    {
+      "source": "scripts/writer_core_handoff/schemas/review_issue.schema.yaml",
+      "target": "scripts/writer/contracts/specs/review_issue.schema.yaml",
+      "source_sha256": "9cedf67f71e5085f193c9c1e6341d38c2664733676490b4985e8d7035eea79df",
+      "target_sha256": "9cedf67f71e5085f193c9c1e6341d38c2664733676490b4985e8d7035eea79df",
+      "byte_identical": true
+    },
+    {
+      "source": "scripts/writer_core_handoff/examples/writing_contract/paragraph_contract.yaml",
+      "target": "scripts/writer/fixtures/handoff/paragraph_contract.yaml",
+      "source_sha256": "3c34b8e792d183c579e1c16d5a5ae816c5b1a96b08286a725eb60f5ea1be1c48",
+      "target_sha256": "3c34b8e792d183c579e1c16d5a5ae816c5b1a96b08286a725eb60f5ea1be1c48",
+      "byte_identical": true
+    },
+    {
+      "source": "scripts/writer_core_handoff/examples/build/build_manifest.yaml",
+      "target": "scripts/writer/fixtures/handoff/build_manifest.yaml",
+      "source_sha256": "cb272c7f81e929405a5b6cea633033ddf791546a5eb11d0bf674a31b0659fe8d",
+      "target_sha256": "cb272c7f81e929405a5b6cea633033ddf791546a5eb11d0bf674a31b0659fe8d",
+      "byte_identical": true
+    },
+    {
+      "source": "scripts/writer_core_handoff/examples/blockers/missing_evidence.yaml",
+      "target": "scripts/writer/fixtures/handoff/missing_evidence.yaml",
+      "source_sha256": "b5c2c3e79c58b9051696a87c19923672a6902a57c8f7a2d59569970659c48fb4",
+      "target_sha256": "b5c2c3e79c58b9051696a87c19923672a6902a57c8f7a2d59569970659c48fb4",
+      "byte_identical": true
+    },
+    {
+      "source": "scripts/writer_core_handoff/examples/review/reviewer_conflict.yaml",
+      "target": "scripts/writer/fixtures/handoff/reviewer_conflict.yaml",
+      "source_sha256": "9ab946d3abf2e92cfe9f8de04c15cfbd4175f4d6e4bed65033705b5360a065a3",
+      "target_sha256": "9ab946d3abf2e92cfe9f8de04c15cfbd4175f4d6e4bed65033705b5360a065a3",
+      "byte_identical": true
+    }
+  ],
+  "runtime_authority": "scripts/writer",
+  "research_authority": "scripts/researcher",
+  "complete_unit_archive_required": true,
+  "archive_target": "легаси/writer/writer_core_handoff-v0.3.0"
+}

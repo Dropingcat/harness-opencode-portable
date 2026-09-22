@@ -1,0 +1,11 @@
+schema_version: section-contract/0.1
+required:
+- id
+- requires
+- provides
+- exports
+- completion_criteria
+optional:
+- assumptions
+- critical_artifacts
+- claim_visibility

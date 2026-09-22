@@ -1,0 +1,35 @@
+schema_version: 2
+id: nc-isolated-03
+mode: deterministic
+skill_under_test: rivulet-numeric
+runner: opencode
+skills_loaded: [rivulet-numeric]
+description: "Режим (а): numeric_comparator изолированно, квалификатор standard_mode в claim отсутствует в source → qualifier_mismatch"
+tags: [rivulet, numeric_comparator, isolated, qualifier]
+
+setup:
+  fixtures:
+    "verdicts.json": fixtures/v103.json
+    "sources.json": fixtures/s103.json
+
+prompt: |
+  Run the numeric comparison block in isolation. Execute:
+    python3 /home/orangepi/projects/claimeai-service/scripts/numeric_comparator.py verdicts.json sources.json output.json
+  Then read output.json and report the top-level "status" field in one line.
+  Do not modify any source files under /home/orangepi/projects/claimeai-service/scripts/.
+
+budget:
+  max_tokens: 1000
+  max_seconds: 180
+
+checks:
+  - kind: file_exists
+    path: output.json
+  - kind: jq_path_contains
+    file: output.json
+    path: "[.groups[0].group_status]"
+    contains: ["qualifier_mismatch"]
+  - kind: jq_path_contains
+    file: output.json
+    path: "[.groups[0].claims[0].claim_qualifiers[]]"
+    contains: ["standard_mode"]

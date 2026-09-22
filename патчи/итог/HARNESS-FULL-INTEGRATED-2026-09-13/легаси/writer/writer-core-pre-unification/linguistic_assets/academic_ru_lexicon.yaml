@@ -1,0 +1,50 @@
+schema_version: academic-ru-lexicon/0.3
+entries:
+- expression: наблюдается
+  class: observational
+  epistemic_force: OBSERVED
+  risk: LOW
+- expression: установлено
+  class: assertive_result
+  epistemic_force: ESTABLISHED_WITHIN_SCOPE
+  risk: MEDIUM
+- expression: может свидетельствовать о
+  class: interpretive
+  epistemic_force: POSSIBLE_INTERPRETATION
+  risk: MEDIUM
+- expression: согласуется с
+  class: compatibility
+  epistemic_force: CONSISTENT_WITH
+  risk: LOW
+- expression: позволяет предположить
+  class: inferential
+  epistemic_force: WEAK_INFERENCE
+  risk: LOW
+- expression: обусловлено
+  class: causal
+  epistemic_force: CAUSAL_ASSERTED
+  risk: HIGH
+- expression: приводит к
+  class: causal
+  epistemic_force: CAUSAL_ASSERTED
+  risk: HIGH
+- expression: очевидно
+  class: booster
+  epistemic_force: BOOSTED
+  risk: HIGH
+- expression: несомненно
+  class: booster
+  epistemic_force: BOOSTED
+  risk: HIGH
+- expression: следовательно
+  class: connective
+  expected_relation: INFERENCE
+  risk: MEDIUM
+- expression: однако
+  class: connective
+  expected_relation: CONTRAST
+  risk: LOW
+- expression: несмотря на
+  class: connective
+  expected_relation: CONCESSION
+  risk: MEDIUM

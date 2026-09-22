@@ -1,0 +1,274 @@
+{
+  "artifact_id": "agent-control-loop-claims",
+  "version": 1,
+  "language": "ru",
+  "claims": [
+    {
+      "claim_id": "ACL-001",
+      "proposition": "В локальной архитектуре модель производит предложения и свидетельства, а детерминированный слой принимает решения о контрактах, переходах, gates и остановке.",
+      "text": "Паттерн «LLM предлагает — код решает» является общим инвариантом harness, но это локальная архитектурная позиция, а не доказанный универсальный стандарт.",
+      "source_ids": ["S02", "S09"],
+      "evidence": [
+        {"source_id": "S02", "span": "UNIFIED_ORCHESTRATION_PRINCIPLES.md:5-20, sections 1-2: «LLM производит предложения и свидетельства; код принимает решения»; pipeline ends in audited state and selective rework/finalize."},
+        {"source_id": "S09", "span": "CODER_DESIGN_PRINCIPLES.md:5-12, section «Жёсткое ядро»: contract acceptance, stop criteria, schema validation, guard verdict and test PASS are code-owned."}
+      ],
+      "confidence": 0.99,
+      "uncertainty": "Сильное подтверждение как policy; универсальная эффективность не измерялась.",
+      "maturity_status": "DOCUMENTED POLICY"
+    },
+    {
+      "claim_id": "ACL-002",
+      "proposition": "В code-factory authoritative task state вычисляет reducer из append-only hash-chained event history и frozen policy snapshot; агентские outputs являются evidence, а не командами перехода.",
+      "text": "Паттерн «Два контура» отделяет вероятностный work plane от детерминированного control plane: agents создают данные, reducer один мутирует проекцию состояния.",
+      "source_ids": ["S21", "S22", "S23", "S25"],
+      "evidence": [
+        {"source_id": "S21", "span": "STATE_REDUCER_ARCHITECTURE.md:3-26: agents do not own task state; reducer derives transitions from immutable event history; replay and hash-chain invariants."},
+        {"source_id": "S22", "span": "STAGE2_ATTEMPT_GATESET_STATE_REDUCER_2026-09-06.md:5-12,35-68: validated agent output becomes AGENT_EVIDENCE; events have seq, prev_hash and SHA-256; gate policy is frozen in TASK_CREATED."},
+        {"source_id": "S23", "span": "scripts/code-factory/state_reducer.py:159-255, reduce_events: TASK_CREATED loads frozen policy, AGENT_EVIDENCE updates attempt gates, budget/manual/finalize events derive global state."},
+        {"source_id": "S25", "span": "tests/test_runtime_core.py:94-105, test_replay_and_hash_chain_detect_tampering; current local run 2026-09-12: 19 tests passed."}
+      ],
+      "confidence": 0.99,
+      "uncertainty": "Подтверждено локальными тестами; live production behavior за пределами checkout не проверялось.",
+      "maturity_status": "IMPLEMENTED/EXERCISED"
+    },
+    {
+      "claim_id": "ACL-003",
+      "proposition": "Успех code-factory требует PASS всех required gates одного текущего attempt; отдельный APPROVE reviewer или PASS tester не означает PASSED, а DONE допустим только после PASSED.",
+      "text": "Паттерн «GateSet before success» устраняет reviewer silence и premature success: missing gate остаётся PENDING, старое evidence не закрывает новую попытку.",
+      "source_ids": ["S21", "S23", "S25", "S26"],
+      "evidence": [
+        {"source_id": "S21", "span": "STATE_REDUCER_ARCHITECTURE.md:17-25: PASS only when all current-attempt gates pass; previous-attempt evidence excluded; DONE only from PASSED."},
+        {"source_id": "S23", "span": "scripts/code-factory/state_reducer.py:94-125: BLOCK/FAIL/RETRY precedence; PASSED only when all required gates equal PASS; otherwise RUNNING with awaiting reason."},
+        {"source_id": "S25", "span": "tests/test_runtime_core.py:53-71: reviewer+tester leave auditor PENDING and state RUNNING; all three gates allow PASSED then DONE."},
+        {"source_id": "S26", "span": "config/factory_gate_policy.json:3-22,29-34: required_gates reviewer/tester/auditor and typed gate semantics."}
+      ],
+      "confidence": 0.99,
+      "uncertainty": "Default GateSet is local policy and should not be prescribed unchanged for every product.",
+      "maturity_status": "IMPLEMENTED/EXERCISED"
+    },
+    {
+      "claim_id": "ACL-004",
+      "proposition": "Worker, reviewer, tester и process auditor имеют разные контракты: worker produces artifact, reviewer judges result, tester executes checks, auditor judges process and should not inspect code.",
+      "text": "Разделение worker–reviewer–tester–auditor уменьшает self-approval, но запрет auditor access to code в текущих источниках сильнее формализован политикой, чем end-to-end enforcement.",
+      "source_ids": ["S09", "S14", "S16", "S17"],
+      "evidence": [
+        {"source_id": "S09", "span": "CODER_DESIGN_PRINCIPLES.md:7-12: role separation and deterministic control plane; auditor does not read code and reviewer does not fix it."},
+        {"source_id": "S14", "span": "shared/code-factory-process.md:20-60: role table and separate delegation contracts; auditor input is process metadata, not code."},
+        {"source_id": "S16", "span": "references/agent-kirpichik/CONTRACTS.md:29-60: CriticReport forbids process fields; AuditReport forbids findings/verdict/code-quality fields; ProcessMetrics are deterministic."},
+        {"source_id": "S17", "span": "references/agent-kirpichik/TEST_STRATEGY.md:39-42: mandatory auditor separation scenarios are specified."}
+      ],
+      "confidence": 0.9,
+      "uncertainty": "Gate outputs are tested, but complete capability-level proof that auditor can never access code is not shown in the inspected runtime tests.",
+      "maturity_status": "DOCUMENTED POLICY"
+    },
+    {
+      "claim_id": "ACL-005",
+      "proposition": "Run state и long-term memory разделены: memory stores audited retrospective lessons, but cannot own current status, stop decisions, secrets or unsupported claim truth.",
+      "text": "Паттерн «Два вида памяти» не позволяет summary или remembered lesson заменить authoritative state; L3 promotion requires evidence refs and reason codes.",
+      "source_ids": ["S06", "S19", "S24"],
+      "evidence": [
+        {"source_id": "S06", "span": "MEMORY_POLICY.md:1-25: memory is retrospective/routing memory, not hidden state machine; authoritative status and stop decisions are forbidden; write only after run/phase plus audit/guard verdict."},
+        {"source_id": "S06", "span": "MEMORY_POLICY.md:51-67: live deterministic memory_bridge, evidence/reason-code rejection gates and forbidden prompt/instruction fields."},
+        {"source_id": "S19", "span": "IMPLEMENTATION_TRACKER.md:61-66: WS-07 memory capsule, L1/L2/L3, policy gates and live memory_bridge marked complete."},
+        {"source_id": "S24", "span": "scripts/code-factory/code_factory_runner.py:66-72, load_state verifies event chain and rematerializes state rather than reading memory."}
+      ],
+      "confidence": 0.96,
+      "uncertainty": "Memory bridge is implemented; quality of individual promoted lessons was not audited exhaustively.",
+      "maturity_status": "IMPLEMENTED/EXERCISED"
+    },
+    {
+      "claim_id": "ACL-006",
+      "proposition": "Task routing is claim-first in the current router: deterministic splitting/classification assigns claims to buckets, then each claim receives a route plan and grouped execution plan.",
+      "text": "Claim-level routing creates the structural precondition for selective rework and avoids one giant mixed code/research/security prompt; actual selective claim repair across every domain is not fully wired.",
+      "source_ids": ["S05", "S29", "S30", "S25"],
+      "evidence": [
+        {"source_id": "S05", "span": "CLAIM_ROUTING_ARCHITECTURE.md:5-16,18-44,70-77: task_text is split, kinds and buckets assigned; stated benefits include failed-claim rework and avoiding giant mixed prompts."},
+        {"source_id": "S30", "span": "scripts/router/split_claims.py:18-64: deterministic boundaries, config-ranked kind classification, stable CLM IDs, buckets and reason codes."},
+        {"source_id": "S29", "span": "scripts/router/build_task_plan.py:25-62: per-claim resolve, grouped buckets, conflicts/unresolved claims and READY/ESCALATED state."},
+        {"source_id": "S25", "span": "tests/test_runtime_core.py:15-34: security-kind priority, code-review routing, strict mode and task-plan conflict structure are tested."}
+      ],
+      "confidence": 0.95,
+      "uncertainty": "Router is exercised; end-to-end rework remains attempt/module-oriented in code-factory and full Claim→Audit→Snapshot integration is still open in tracker.",
+      "maturity_status": "IMPLEMENTED/EXERCISED"
+    },
+    {
+      "claim_id": "ACL-007",
+      "proposition": "The current coarse router resolves matching routes deterministically from a compiled policy snapshot, ranks overlaps, enforces profile/mode compatibility and escalates no-match or invalid choices.",
+      "text": "Паттерн «Compiled routing policy» делает выбор маршрута наблюдаемым через candidates, strategy, reason codes и policy hash.",
+      "source_ids": ["S10", "S28", "S25"],
+      "evidence": [
+        {"source_id": "S10", "span": "DEEP_REVIEW_2026-09-06.md:18-48: order-dependent route/claim/mode and overbroad capability failures were found and fixed."},
+        {"source_id": "S28", "span": "scripts/router/resolve_route.py:53-83,100-138: loads compiled snapshot, resolves no-match/ambiguity, checks compatible execution mode, emits candidates, policy hash and guard requirement."},
+        {"source_id": "S25", "span": "tests/test_runtime_core.py:239-257: compiled snapshot freshness, resolver policy hash and generated-view hash consistency; current local compile_runtime --check passed with policy hash 6676...880a."}
+      ],
+      "confidence": 0.99,
+      "uncertainty": "Plugin/runtime duplication is reported as reduced by snapshot compilation, but full live route coverage and all capability providers are not verified.",
+      "maturity_status": "IMPLEMENTED/EXERCISED"
+    },
+    {
+      "claim_id": "ACL-008",
+      "proposition": "Routing should select the least complex adequate form: direct invocation for one perspective/artifact, deterministic or NoAgents workflow for known rules, single-agent loop for bounded uncertainty, fan-out for independent branches, adversarial team only for competing hypotheses requiring interaction.",
+      "text": "This is a decision heuristic assembled from local policy and industry terminology, not a measured universal ordering.",
+      "source_ids": ["S11", "S27", "EXT1", "EXT2"],
+      "evidence": [
+        {"source_id": "S11", "span": "shared/orchestration-patterns.md:9-74,78-113,174-201,271-278: direct, single-persona, fan-out, user-driven sequence, research isolation and adversarial-team fit conditions."},
+        {"source_id": "S27", "span": "config/execution_modes.json:3-23: noagents_or_single, worker_reviewer_tester, strict auditor mode and research pipeline are profile-scoped modes."},
+        {"source_id": "EXT1", "span": "Anthropic, Building effective agents, sections «When (and when not) to use agents» and «Building blocks, workflows, and agents»: start simple; routing, parallelization, orchestrator-workers and evaluator-optimizer have distinct fit conditions."},
+        {"source_id": "EXT2", "span": "OpenAI, A practical guide to building agents, section «Orchestration»: maximize single-agent capabilities first; multi-agent adds complexity and is useful for complex logic or tool overload."}
+      ],
+      "confidence": 0.91,
+      "uncertainty": "Adversarial teams are platform-dependent and documented as experimental; local evals comparing all choices were not found.",
+      "maturity_status": "DOCUMENTED POLICY"
+    },
+    {
+      "claim_id": "ACL-009",
+      "proposition": "Parallel fan-out is safe only for genuinely independent tasks without shared mutable state or ordering dependencies; merge must retain distinct reports and perform an explicit evidence-aware decision.",
+      "text": "Паттерн «Independent fan-out + explicit merge» is endorsed, but no current non-legacy /ship artifact or dedicated merge validator was found in the inspected checkout.",
+      "source_ids": ["S11", "S19"],
+      "evidence": [
+        {"source_id": "S11", "span": "shared/orchestration-patterns.md:48-74: independent concurrent reports, main-context merge, no shared mutable state/order dependency, and merge-context checklist."},
+        {"source_id": "S11", "span": "shared/orchestration-patterns.md:282-339: persona chaining and deep trees lose context, hide cost and should be replaced by user/slash-command control with depth at most one."},
+        {"source_id": "S19", "span": "IMPLEMENTATION_TRACKER.md:141-150: security-auditor and test-engineer referenced by orchestration-patterns are absent and awaiting repatriation; link audit remains open."}
+      ],
+      "confidence": 0.88,
+      "uncertainty": "Catalog claims an example /ship, but its current command artifact was not located; therefore this is not counted as exercised here.",
+      "maturity_status": "DOCUMENTED POLICY"
+    },
+    {
+      "claim_id": "ACL-010",
+      "proposition": "Untrusted artifacts cannot support agent evidence until registered by hash and admitted by guard PASS, or replaced by a separately hashed sanitized derivative linked to the source.",
+      "text": "Паттерн «Evidence before verdict» binds evidence to provenance and blocks fake success based on unadmitted web/subagent/user content.",
+      "source_ids": ["S23", "S24", "S25", "S32"],
+      "evidence": [
+        {"source_id": "S32", "span": "config/artifact_provenance_policy.json:4-19: web/external_tool/subagent/user_supplied require guard; only PASS accepted; evidence requires output artifact and admissible references."},
+        {"source_id": "S24", "span": "scripts/code-factory/code_factory_runner.py:95-130,144-170: artifact registration, guard verdict, sanitized derivative and evidence admission checks."},
+        {"source_id": "S23", "span": "scripts/code-factory/state_reducer.py:184-243: unknown or inadmissible artifact refs create provenance errors and evidence is not applied to gates."},
+        {"source_id": "S25", "span": "tests/test_runtime_core.py:189-235: guard-before-evidence, separate sanitized hash lineage and hash-bound agent output are tested."}
+      ],
+      "confidence": 0.99,
+      "uncertainty": "Admission mechanism is tested; guard detection quality itself has documented residual bypasses.",
+      "maturity_status": "IMPLEMENTED/EXERCISED"
+    },
+    {
+      "claim_id": "ACL-011",
+      "proposition": "Transient dispatch failure and empty response use a bounded same-prompt retry ladder, then notify the user rather than silently continuing.",
+      "text": "Паттерн «Bounded retry ladder» distinguishes transport/provider failure from task evidence, but local waits 2/4/8 seconds and three retries are project heuristics, not universal constants.",
+      "source_ids": ["S13", "S02"],
+      "evidence": [
+        {"source_id": "S13", "span": "shared/dispatch-retry.md:5-18: timeout/error/empty/rate-limit are retryable; waits about 2,4,8 seconds; after three failures notify user."},
+        {"source_id": "S13", "span": "shared/dispatch-retry.md:22-30: empty final message is unusable because subagents cannot write files; retry and log pattern."},
+        {"source_id": "S02", "span": "UNIFIED_ORCHESTRATION_PRINCIPLES.md:105-119: provider failure differs from evidence absence; reviewer silence and timeout are not approval/merge-ready."}
+      ],
+      "confidence": 0.92,
+      "uncertainty": "No executable retry controller or run log exercising this exact ladder was identified.",
+      "maturity_status": "DOCUMENTED POLICY"
+    },
+    {
+      "claim_id": "ACL-012",
+      "proposition": "A deterministic cycle can stop on no progress before exhausting its nominal iteration budget when repair produces no change.",
+      "text": "Паттерн «No-progress cut-off» is concretely implemented and tested in writer-core; generalization to the code-factory control loop remains a design transfer, not current cross-runtime fact.",
+      "source_ids": ["S33", "S34", "S19"],
+      "evidence": [
+        {"source_id": "S33", "span": "scripts/writer-core/writer_core/factory_process.py:389-431: approve, iteration_limit and no_progress stops; unchanged constrained repair returns REJECTED/no_progress."},
+        {"source_id": "S34", "span": "scripts/writer-core/tests/test_runtime_boundary.py:78-97: no-progress stops after one draftcheck and iteration limit is bounded; current local run 2026-09-12: 7 tests passed."},
+        {"source_id": "S19", "span": "IMPLEMENTATION_TRACKER.md:264-275: bounded/no-progress repair and runtime-owned writer core marked complete."}
+      ],
+      "confidence": 0.98,
+      "uncertainty": "Code-factory reducer has attempt and budget limits but no equivalent semantic no-progress detector in inspected code.",
+      "maturity_status": "IMPLEMENTED/EXERCISED"
+    },
+    {
+      "claim_id": "ACL-013",
+      "proposition": "Retry, selective rework, replan and escalation are distinct transitions: retry repeats a transiently failed operation, selective rework changes only failed scope, replan changes decomposition/strategy after process signals, escalation transfers an unresolved decision to auditor or human.",
+      "text": "The distinction is well documented, but only attempt-local selective rework and tribunal flags are directly exercised in code-factory; adaptive replan is mostly policy.",
+      "source_ids": ["S07", "S13", "S15", "S23", "S25"],
+      "evidence": [
+        {"source_id": "S13", "span": "shared/dispatch-retry.md:5-18: transient dispatch retry repeats the same prompt with bounded attempts."},
+        {"source_id": "S07", "span": "DYNAMIC_HEURISTICS.md:13-24: progressive decomposition changes granularity after repeated fixes; strategy choice uses process signals and budget."},
+        {"source_id": "S15", "span": "agents/code-orchestrator.md:179-220: tribunal after repeated disagreement, manual escalation after continued non-convergence, reducer-emitted tribunal_required."},
+        {"source_id": "S23", "span": "scripts/code-factory/state_reducer.py:109-125,132-156: RETRY produces targeted_rework; convergence view emits tribunal_required after configured repeated review failures."},
+        {"source_id": "S25", "span": "tests/test_runtime_core.py:76-92,138-187: new attempt clears gates; tribunal flag appears after repeated review failures, clears after PASS, and parallel review retries do not burn attempts."}
+      ],
+      "confidence": 0.94,
+      "uncertainty": "No unified executable replan transition was found in code-factory; do not imply one exists.",
+      "maturity_status": "DOCUMENTED POLICY"
+    },
+    {
+      "claim_id": "ACL-014",
+      "proposition": "Typed stop semantics should distinguish successful completion from PARTIAL, BLOCKED and UNRESOLVABLE, but the current code-factory reducer does not implement the full documented vocabulary.",
+      "text": "Паттерн «Typed stop semantics» is a target invariant with partial implementation: BLOCKED/FAILED/AMBIGUOUS/DONE exist, while PARTIAL and UNRESOLVABLE remain absent from the reducer state list.",
+      "source_ids": ["S02", "S03", "S23", "S19"],
+      "evidence": [
+        {"source_id": "S02", "span": "UNIFIED_ORCHESTRATION_PRINCIPLES.md:75-81,105-119: explicit PARTIAL/BLOCKED/UNRESOLVABLE semantics; budget exhaustion must not become fake success."},
+        {"source_id": "S03", "span": "UNIFIED_MODULE_SCOPE.md:36-46: memory is advisory; limits and stop conditions belong in versioned config; guard is required for untrusted context."},
+        {"source_id": "S23", "span": "scripts/code-factory/state_reducer.py:17,61-76,244-254: terminal set and projection contain DONE/FAILED/BLOCKED/AMBIGUOUS; budget maps to BLOCKED; PARTIAL and UNRESOLVABLE are absent."},
+        {"source_id": "S19", "span": "IMPLEMENTATION_TRACKER.md:195-200: policy/runtime guard calibration and wiring remain incomplete."}
+      ],
+      "confidence": 0.99,
+      "uncertainty": "Other subsystems may use PARTIAL, but the claim is specifically about inspected code-factory reducer.",
+      "maturity_status": "PROPOSED/BACKLOG"
+    },
+    {
+      "claim_id": "ACL-015",
+      "proposition": "The thread ritual reconstructs task context from kanban, tracker, debt, L3 memory, factory state and portal docs before decomposition and again before closure.",
+      "text": "Паттерн «Thread ritual / anti-capsulation» addresses context loss and microtask tunnel vision; the snapshot script works under UTF-8 but failed in this study under default Windows cp1251 output.",
+      "source_ids": ["S12", "S15", "S19"],
+      "evidence": [
+        {"source_id": "S12", "span": "shared/orchestration-thread-process.md:1-19: named problem is forgetting architecture, open work and scope; project_context plus start/close rituals make thread explicit."},
+        {"source_id": "S12", "span": "shared/orchestration-thread-process.md:23-50,54-80: snapshot fields, mandatory start/close ritual, >3-review anti-capsulation stop and thread remainder."},
+        {"source_id": "S15", "span": "agents/code-orchestrator.md:21-43: orchestrator requires start ritual, context snapshot, portal docs and closure ritual."},
+        {"source_id": "S19", "span": "IMPLEMENTATION_TRACKER.md:61-66 and 207-220: live memory bridge and concrete writer run records support that thread/report infrastructure has been used."}
+      ],
+      "confidence": 0.95,
+      "uncertainty": "The ritual's causal effect on quality is not measured. Local execution on 2026-09-12 required python -X utf8 after a UnicodeEncodeError under default encoding.",
+      "maturity_status": "IMPLEMENTED/EXERCISED"
+    },
+    {
+      "claim_id": "ACL-016",
+      "proposition": "Guard admission reduces trust risk but cannot be presented as complete prompt-injection protection; local threat evidence records semantic, multi-hop, taint-loss and compaction blind spots.",
+      "text": "Паттерн «Trust gate, not truth oracle» treats guard PASS as admission evidence under a policy, not proof that content is safe or true.",
+      "source_ids": ["S31", "S37", "S38", "EXT3"],
+      "evidence": [
+        {"source_id": "S31", "span": "config/guard_policy.json:40-68: guard points before reuse/handoff/side effect and fail-closed behavior for missing guard, timeout, classifier error and unknown origin."},
+        {"source_id": "S37", "span": "guard/docs/THREAT_MODEL.md:7-36: forensic kill chain records 281 URLs, 53 subagent messages, compaction persistence and three detected external injection hits."},
+        {"source_id": "S37", "span": "guard/docs/THREAT_MODEL.md:64-75,168-197: seven current insurmountable threats and measured residual bypass rates; production assessment is insufficient."},
+        {"source_id": "S38", "span": "guard/docs/ARCHITECTURE.md:7-38,92-132: provenance, P0/P2 stages, unknown-tool fail-closed and timeout-to-FAIL semantics."},
+        {"source_id": "EXT3", "span": "OWASP LLM06:2025 Excessive Agency, sections «Root cause» and «Prevention and Mitigation»: minimize functionality/permissions/autonomy, require approval and downstream mediation."}
+      ],
+      "confidence": 0.98,
+      "uncertainty": "Threat report is local and partly synthetic; percentages must not be generalized to other systems or datasets.",
+      "maturity_status": "IMPLEMENTED/EXERCISED"
+    },
+    {
+      "claim_id": "ACL-017",
+      "proposition": "The meaning of attempt_limit is internally inconsistent: Stage-2 documentation and gate-policy metadata say it includes the initial attempt, while current test and reducer behavior allow N worker reworks after the initial attempt.",
+      "text": "This contradiction blocks publication of any exact attempt-count rule without a qualifier or contract fix.",
+      "source_ids": ["S22", "S23", "S25", "S26"],
+      "evidence": [
+        {"source_id": "S22", "span": "STAGE2_ATTEMPT_GATESET_STATE_REDUCER_2026-09-06.md:15-20: --limit N is described as maximum attempts including initial."},
+        {"source_id": "S26", "span": "config/factory_gate_policy.json:24-27: attempt_limit_includes_initial is true, while note says attempts open only on real worker fixes."},
+        {"source_id": "S23", "span": "scripts/code-factory/state_reducer.py:109-116 and scripts/code-factory/code_factory_runner.py:133-141: failure checks rework_rounds >= attempt_limit before a new worker-started attempt, allowing initial plus N reworks."},
+        {"source_id": "S25", "span": "tests/test_runtime_core.py:107-119: with --limit 2, two worker fixes are allowed and failure occurs on the next tester FAIL."}
+      ],
+      "confidence": 0.99,
+      "uncertainty": "Observed behavior is clear; intended contract requires owner decision.",
+      "maturity_status": "IMPLEMENTED/EXERCISED"
+    },
+    {
+      "claim_id": "ACL-018",
+      "proposition": "The repository intentionally contains unresolved architectural tensions: user-driven orchestration versus autonomous orchestrator, fail-closed gates versus optimistic guard execution, fixed pipelines versus adaptive replanning, and end-state evaluation versus trajectory invariants.",
+      "text": "These are context-dependent design choices, not inconsistencies that should be silently harmonized into one universal prescription.",
+      "source_ids": ["S11", "S15", "S07", "S31", "EXT2"],
+      "evidence": [
+        {"source_id": "S11", "span": "shared/orchestration-patterns.md:3-6,78-93,316-339: user/slash command is orchestrator; sequential lifecycle orchestrator and deep persona trees are rejected."},
+        {"source_id": "S15", "span": "agents/code-orchestrator.md:1-10,21-36: primary autonomous code orchestrator decomposes and dispatches workers/reviewers/testers/auditor."},
+        {"source_id": "S07", "span": "DYNAMIC_HEURISTICS.md:5-24,26-38: strategy adapts to signals, budget and history, but the document contains proposed thresholds and implementation notes."},
+        {"source_id": "S31", "span": "config/guard_policy.json:62-68: local policy is fail-closed."},
+        {"source_id": "EXT2", "span": "OpenAI, A practical guide to building agents, section «Building guardrails»: Agents SDK guardrails use optimistic execution by default and can run concurrently with primary output generation."}
+      ],
+      "confidence": 0.96,
+      "uncertainty": "The end-state versus trajectory tension is synthesized from local test-policy separation and external eval terminology; no single local ADR resolves all four axes.",
+      "maturity_status": "DOCUMENTED POLICY"
+    }
+  ]
+}

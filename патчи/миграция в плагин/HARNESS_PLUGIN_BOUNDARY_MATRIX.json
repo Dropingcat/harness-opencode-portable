@@ -1,0 +1,211 @@
+{
+  "schema": "harness-opencode-boundary-matrix/1.0",
+  "core_modules": {
+    "router": {
+      "authority": [
+        "route",
+        "stage",
+        "capability requirements",
+        "provider policy"
+      ],
+      "plugin_inputs": [
+        "HostCapabilitySnapshot"
+      ],
+      "plugin_must_not": [
+        "select route",
+        "select provider",
+        "mutate runtime snapshot"
+      ],
+      "current_files": [
+        "scripts/router/resolve_bundle.py",
+        "config/capability_runtime_snapshot.json"
+      ],
+      "disposition": "KEEP_CORE"
+    },
+    "jobs": {
+      "authority": [
+        "Job",
+        "Attempt",
+        "Child",
+        "Gate",
+        "Artifact",
+        "reconciliation"
+      ],
+      "plugin_inputs": [
+        "host session/message/execution refs",
+        "cancellation"
+      ],
+      "plugin_must_not": [
+        "invent Job IDs",
+        "mark completion without core reconciliation"
+      ],
+      "current_files": [
+        "scripts/jobs/job_ctl.py"
+      ],
+      "disposition": "KEEP_CORE"
+    },
+    "writer": {
+      "authority": [
+        "Writer DOM",
+        "RTT",
+        "provenance",
+        "repair",
+        "release validation"
+      ],
+      "plugin_inputs": [
+        "generic semantic execution only when requested"
+      ],
+      "plugin_must_not": [
+        "edit DOM directly",
+        "choose claims/evidence"
+      ],
+      "current_files": [
+        "scripts/writer/cli.py",
+        "scripts/writer/core/cli.py"
+      ],
+      "disposition": "KEEP_CORE_MIGRATE_SEMANTIC_TRANSPORT"
+    },
+    "researcher": {
+      "authority": [
+        "ResearchDOM",
+        "Claim/Evidence",
+        "uncertainty",
+        "ReviewWorkField",
+        "admission"
+      ],
+      "plugin_inputs": [
+        "generic semantic execution"
+      ],
+      "plugin_must_not": [
+        "compose Tribunal",
+        "widen evidence slice",
+        "resolve issue"
+      ],
+      "current_files": [
+        "scripts/researcher/researcher_core"
+      ],
+      "disposition": "KEEP_CORE"
+    },
+    "tribunal": {
+      "authority": [
+        "RPB",
+        "DQC/ADC",
+        "TEX",
+        "PER",
+        "IQT/ARG",
+        "grounding",
+        "graph admission"
+      ],
+      "plugin_inputs": [
+        "SemanticExecutionResult"
+      ],
+      "plugin_must_not": [
+        "modify TEX",
+        "change role/provider binding"
+      ],
+      "current_files": [
+        "scripts/researcher/researcher_core/tribunal_provider_binding.py",
+        "scripts/researcher/researcher_core/tribunal_live_dialogue.py"
+      ],
+      "disposition": "KEEP_CONTRACTS_REPLACE_TRANSPORT"
+    },
+    "coder": {
+      "authority": [
+        "factory state",
+        "artifact provenance",
+        "gates",
+        "budget",
+        "finalization"
+      ],
+      "plugin_inputs": [
+        "HostContext",
+        "WorkspaceRef",
+        "generic semantic execution"
+      ],
+      "plugin_must_not": [
+        "authorize cwd implicitly",
+        "commit Harness",
+        "bypass artifact guard"
+      ],
+      "current_files": [
+        "scripts/code-factory/factory_ctl.py"
+      ],
+      "disposition": "KEEP_CORE_MIGRATE_SEMANTIC_TRANSPORT"
+    },
+    "guard": {
+      "authority": [
+        "Harness content/admission guard"
+      ],
+      "plugin_inputs": [
+        "normalized result/event metadata"
+      ],
+      "plugin_must_not": [
+        "make OpenCode SQLite DB a correctness dependency"
+      ],
+      "current_files": [
+        "guard/",
+        "resercher-core/guard.py"
+      ],
+      "disposition": "KEEP_CORE_DECOUPLE_SESSION_DB"
+    },
+    "mcp_capsules": {
+      "authority": [
+        "capability execution under Harness policy"
+      ],
+      "plugin_inputs": [],
+      "plugin_must_not": [
+        "re-export every internal capability as host tool"
+      ],
+      "current_files": [
+        "mcp/",
+        "scripts/capsules/"
+      ],
+      "disposition": "KEEP_INTERNAL"
+    }
+  },
+  "legacy_host_shell": [
+    {
+      "path": "plugins/tool-skill-contract-router.ts",
+      "action": "DEPRECATE"
+    },
+    {
+      "path": "config/opencode_plugin_config.json",
+      "action": "REPLACE"
+    },
+    {
+      "path": "scripts/register_plugin.py",
+      "action": "REPLACE"
+    },
+    {
+      "path": "config/runtime_integration_policy.json",
+      "action": "MIGRATE_V2"
+    },
+    {
+      "path": "scripts/health_check.py",
+      "action": "MIGRATE_DOCTOR"
+    },
+    {
+      "path": "mcp/launchers/_runner.py",
+      "action": "KEEP_LEGACY_CLI_FALLBACK"
+    },
+    {
+      "path": "mcp/coder_router_server.py",
+      "action": "MIGRATE_SEMANTIC_EXECUTION"
+    },
+    {
+      "path": "OPENCODE_SESSION_DB",
+      "action": "OPTIONAL_FORENSICS_ONLY"
+    },
+    {
+      "path": "OPENCODE_BIN",
+      "action": "OPTIONAL_CLI_FALLBACK_ONLY"
+    }
+  ],
+  "stable_bridge_contracts": [
+    "HostContext/1.0",
+    "WorkspaceRef/1.0",
+    "SemanticExecutionRequest/1.0",
+    "SemanticExecutionResult/1.0",
+    "harness-bridge-rpc/1.0"
+  ]
+}

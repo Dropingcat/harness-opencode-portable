@@ -1,0 +1,9 @@
+review_conflict:
+  id: RC_01
+  target: C_91_realization
+  issues:
+  - REV_A_strengthen_causal_language
+  - REV_B_weaken_to_association
+  state: OPEN
+  required_operation: RequestDecision
+  rule: epistemic_contract_has_precedence_over_reviewer_style_request

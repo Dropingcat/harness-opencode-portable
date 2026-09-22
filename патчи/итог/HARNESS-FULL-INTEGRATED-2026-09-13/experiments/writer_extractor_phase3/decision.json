@@ -1,0 +1,21 @@
+{
+  "schema": "writer-extractor-decision/1.0",
+  "phase": "P3_EXTRACTOR_EXPERIMENT",
+  "status": "ACCEPTED",
+  "canonical": "scripts/writer/extractor",
+  "retain_until_p4": "scripts/writer-core/v2_extractor",
+  "merged_behavior": [
+    "normalize newline/NBSP/thin/narrow spaces for span grounding",
+    "reject exact matches that start or end inside alphanumeric tokens",
+    "accept punctuation as a valid token boundary"
+  ],
+  "behavioral_parity": {
+    "shared_fixture_cases": 8,
+    "extraction_payload_equal": 8,
+    "post_merge_qa_differences": 1,
+    "remaining_difference": "v2 punctuation-boundary false rejection"
+  },
+  "stop_rule": "PASS: no accepted fixture lost span grounding and the only remaining difference is explained and favors the selected canonical implementation.",
+  "rollback": "Revert the P3 Git commit to restore both extractor trees exactly as at the P2 boundary.",
+  "reviewer_added_case": "second_valid_occurrence: guards against accepting only the first substring occurrence logic."
+}

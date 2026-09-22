@@ -1,0 +1,1 @@
+"""Writer unification package boundary."""

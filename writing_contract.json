@@ -1,0 +1,144 @@
+{
+  "claims": [
+    {
+      "claim_id": "C-001",
+      "proposition": "Практическая граница между workflow и агентом проходит по тому, кто во время исполнения выбирает следующий шаг: предопределённый код или модель.",
+      "scope": "Операционное архитектурное определение.",
+      "modality": "should",
+      "causal_level": "definitional",
+      "forbidden_transformations": ["Не утверждать, что терминология полностью стандартизирована."],
+      "required_qualifiers": ["Возможны гибридные системы."],
+      "citation_policy": "Цитировать W1; при необходимости сопоставить с W2."
+    },
+    {
+      "claim_id": "C-002",
+      "proposition": "Автономность следует добавлять только тогда, когда более простая детерминированная схема не достигает нужного качества.",
+      "scope": "Выбор архитектуры для прикладных систем.",
+      "modality": "should",
+      "causal_level": "engineering_recommendation",
+      "forbidden_transformations": ["Не утверждать, что агенты всегда хуже workflows."],
+      "required_qualifiers": ["Решение должно подтверждаться task-specific evals."],
+      "citation_policy": "Цитировать W1 и W2."
+    },
+    {
+      "claim_id": "C-003",
+      "proposition": "Функциональное ядро агента и минимально управляемая production-архитектура не являются одним и тем же.",
+      "scope": "Компоненты архитектуры.",
+      "modality": "must",
+      "causal_level": "architectural",
+      "forbidden_transformations": ["Не выдавать локальный набор компонентов за универсальный стандарт."],
+      "required_qualifiers": ["Строгость дополнительных механизмов зависит от риска."],
+      "citation_policy": "Сопоставить W2 с L1, L2 и L6."
+    },
+    {
+      "claim_id": "C-004",
+      "proposition": "Базовый агентный цикл должен чередовать решение и действие с наблюдением фактического результата среды.",
+      "scope": "Core agent loop.",
+      "modality": "must",
+      "causal_level": "mechanistic",
+      "forbidden_transformations": ["Не называть tool output гарантированной истиной.", "Не требовать публикации скрытой chain-of-thought."],
+      "required_qualifiers": ["Наблюдаемыми могут быть план, действия и state transitions."],
+      "citation_policy": "Цитировать W10, W1 и W4."
+    },
+    {
+      "claim_id": "C-005",
+      "proposition": "Planning и execution полезно разделять как ответственности, но отдельный planner-agent нужен не всегда.",
+      "scope": "Planning architecture.",
+      "modality": "should",
+      "causal_level": "engineering_recommendation",
+      "forbidden_transformations": ["Не требовать отдельную модель для каждого плана."],
+      "required_qualifiers": ["Для коротких задач planning hop может быть избыточным."],
+      "citation_policy": "Цитировать W10 и W9."
+    },
+    {
+      "claim_id": "C-006",
+      "proposition": "Routing, parallelization, evaluator-optimizer, manager-worker и handoff полезны при разных структурных свойствах задачи.",
+      "scope": "Оркестрационные паттерны.",
+      "modality": "conditional",
+      "causal_level": "design_pattern",
+      "forbidden_transformations": ["Не представлять паттерны как обязательные стадии одной системы."],
+      "required_qualifiers": ["Для каждого паттерна назвать fit condition и failure mode."],
+      "citation_policy": "Основная ссылка W1; manager и handoff дополнить W2."
+    },
+    {
+      "claim_id": "C-007",
+      "proposition": "Multi-agent следует вводить только при доказанной пользе от параллелизма, изоляции контекста или специализации.",
+      "scope": "Single-agent versus multi-agent.",
+      "modality": "should",
+      "causal_level": "engineering_recommendation",
+      "forbidden_transformations": ["Не обобщать внутренние проценты Anthropic.", "Не утверждать, что больше агентов автоматически повышает качество."],
+      "required_qualifiers": ["Решение должно быть eval-driven."],
+      "citation_policy": "Цитировать W2, W6 и W9 без переноса численных результатов."
+    },
+    {
+      "claim_id": "C-008",
+      "proposition": "Инструменты агента должны проектироваться как узкие typed API-контракты.",
+      "scope": "Tool design и side effects.",
+      "modality": "must",
+      "causal_level": "security_and_reliability",
+      "forbidden_transformations": ["Не утверждать, что JSON Schema гарантирует семантическую корректность.", "Не рекомендовать retry side effect без идемпотентности."],
+      "required_qualifiers": ["Authorization обеспечивается downstream-кодом."],
+      "citation_policy": "Цитировать W4 и W12."
+    },
+    {
+      "claim_id": "C-009",
+      "proposition": "Short-term state относится к текущему run, а long-term memory переживает сессии и должна записываться избирательно.",
+      "scope": "State и memory.",
+      "modality": "must",
+      "causal_level": "data_lifecycle",
+      "forbidden_transformations": ["Не отождествлять полный conversation log с полезной memory."],
+      "required_qualifiers": ["У long-term memory нужны provenance, selection и write policy."],
+      "citation_policy": "Цитировать W7 и L4/L3."
+    },
+    {
+      "claim_id": "C-010",
+      "proposition": "Context engineering означает отбор минимального высокосигнального контекста для каждого следующего шага.",
+      "scope": "Context construction.",
+      "modality": "should",
+      "causal_level": "engineering_recommendation",
+      "forbidden_transformations": ["Не представлять compaction как безрисковую операцию."],
+      "required_qualifiers": ["Слишком агрессивное сокращение может потерять критические детали."],
+      "citation_policy": "Основная ссылка W8."
+    },
+    {
+      "claim_id": "C-011",
+      "proposition": "Stop criteria, budgets, retries и escalation должны контролироваться программно, а не ощущением модели.",
+      "scope": "Reliability control plane.",
+      "modality": "must",
+      "causal_level": "control",
+      "forbidden_transformations": ["Не считать timeout или исчерпание бюджета успехом.", "Не превращать локальные лимиты в универсальные."],
+      "required_qualifiers": ["Предусмотреть PARTIAL и BLOCKED состояния."],
+      "citation_policy": "Цитировать L1, L2 и W12."
+    },
+    {
+      "claim_id": "C-012",
+      "proposition": "Тестовая стратегия агента должна охватывать детерминированные компоненты, сценарии, траектории, регрессии и adversarial cases.",
+      "scope": "Agent testing and evals.",
+      "modality": "must",
+      "causal_level": "verification",
+      "forbidden_transformations": ["Не требовать единственной правильной траектории для открытых задач."],
+      "required_qualifiers": ["Automated graders требуют калибровки с людьми."],
+      "citation_policy": "Цитировать W6, W5, W9 и L9."
+    },
+    {
+      "claim_id": "C-013",
+      "proposition": "Observability должна связывать task outcome, траекторию исполнения и потребление ресурсов.",
+      "scope": "Production observability.",
+      "modality": "must",
+      "causal_level": "measurement",
+      "forbidden_transformations": ["Не рекомендовать безусловное хранение секретов и чувствительного контента."],
+      "required_qualifiers": ["Набор SLO и thresholds зависит от продукта."],
+      "citation_policy": "Цитировать W6, W9 и локальные L6/L8."
+    },
+    {
+      "claim_id": "C-014",
+      "proposition": "Недоверенные документы и tool outputs должны пересекать отдельную границу доверия до влияния на привилегированные действия.",
+      "scope": "Prompt injection и excessive agency.",
+      "modality": "must",
+      "causal_level": "security",
+      "forbidden_transformations": ["Не объявлять prompt injection полностью решённой одним guardrail или structured output."],
+      "required_qualifiers": ["Защита является многослойным снижением риска, а не гарантией."],
+      "citation_policy": "Цитировать W11, W12 и W5."
+    }
+  ]
+}

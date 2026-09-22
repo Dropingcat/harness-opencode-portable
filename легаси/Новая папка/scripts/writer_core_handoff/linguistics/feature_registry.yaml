@@ -1,0 +1,95 @@
+schema_version: linguistic-feature-registry/0.3
+features:
+- id: predicate_argument
+  tier0: parser_rules
+  tier1: local_semantic_model
+  tier2: semantic_arbiter
+  affects:
+  - RTT
+  - claim_binding
+  criticality: HIGH
+- id: coreference
+  tier0: candidate_generation
+  tier1: local_resolution
+  tier2: ambiguity_arbiter
+  affects:
+  - RTT
+  - cohesion
+  criticality: HIGH
+- id: negation_scope
+  tier0: syntax_rules
+  tier1: structured_classifier
+  tier2: semantic_arbiter
+  affects:
+  - RTT
+  criticality: CRITICAL
+- id: quantifier_scope
+  tier0: lexical_syntax_rules
+  tier1: structured_classifier
+  tier2: semantic_arbiter
+  affects:
+  - RTT
+  criticality: HIGH
+- id: modality
+  tier0: lexicon_signal
+  tier1: context_classifier
+  tier2: semantic_arbiter
+  affects:
+  - RTT
+  - epistemic_fidelity
+  criticality: CRITICAL
+- id: causal_force
+  tier0: expression_lexicon
+  tier1: context_classifier
+  tier2: semantic_arbiter
+  affects:
+  - RTT
+  - semantic_type
+  criticality: CRITICAL
+- id: scope
+  tier0: pattern_candidates
+  tier1: scope_binding
+  tier2: semantic_arbiter
+  affects:
+  - RTT
+  criticality: CRITICAL
+- id: comparison
+  tier0: numeric_parser
+  tier1: relation_classifier
+  tier2: semantic_arbiter
+  affects:
+  - RTT
+  - quantitative_integrity
+  criticality: HIGH
+- id: theme_rheme
+  tier0: heuristic_signal
+  tier1: planning
+  tier2: discourse_arbiter
+  affects:
+  - cohesion
+  - realization
+  criticality: MEDIUM
+- id: discourse_relation
+  tier0: connective_signal
+  tier1: relation_classifier
+  tier2: discourse_arbiter
+  affects:
+  - coherence
+  - argument
+  criticality: HIGH
+- id: presupposition
+  tier0: trigger_candidates
+  tier1: local_analysis
+  tier2: semantic_arbiter
+  affects:
+  - RTT
+  - unauthorized_claim_detection
+  criticality: HIGH
+- id: collocation
+  tier0: registry_score
+  tier1: rerank
+  tier2: style_arbiter
+  affects:
+  - realization
+  - style
+  criticality: LOW

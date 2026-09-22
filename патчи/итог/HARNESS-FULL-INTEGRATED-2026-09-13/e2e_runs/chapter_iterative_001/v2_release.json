@@ -1,0 +1,159 @@
+{
+  "schema": "writer.release_decision/1.0",
+  "verdict": "FAIL",
+  "release_allowed": false,
+  "blockers": [
+    "evidence",
+    "traceability"
+  ],
+  "gates": {
+    "evidence": {
+      "verdict": "FAIL",
+      "detail": {
+        "verdict": "FAIL",
+        "policy": "strict",
+        "allowed_verdicts": [
+          "SUPPORTED"
+        ],
+        "failures": [
+          {
+            "claim_id": "C-001",
+            "verdict": "OPEN"
+          },
+          {
+            "claim_id": "C-002",
+            "verdict": "OPEN"
+          },
+          {
+            "claim_id": "C-004",
+            "verdict": "OPEN"
+          }
+        ],
+        "claims_checked": 5
+      }
+    },
+    "traceability": {
+      "verdict": "FAIL",
+      "detail": {
+        "text_len": 1109,
+        "dom": {
+          "sources": 4,
+          "claims": 5,
+          "sections": 0
+        },
+        "checks": {
+          "dangling_reference": [],
+          "orphan_claims": [],
+          "masked_uncertainty": [
+            {
+              "claim_id": "C-001",
+              "verdict": "OPEN",
+              "level": null,
+              "sentence": "В исходной работе это интерпретируется как признак образования твердого раствора азота в железе [C-001] [S-RAK-83]"
+            },
+            {
+              "claim_id": "C-002",
+              "verdict": "OPEN",
+              "level": null,
+              "sentence": "Одновременно после азотирования для исследованных быстрорежущих сталей фиксируется γ′-Fe4N [C-002] [S-RAK-85]"
+            },
+            {
+              "claim_id": "C-004",
+              "verdict": "OPEN",
+              "level": null,
+              "sentence": "Нитриды легирующих элементов, наблюдаемые методом SEM, при этом не выявлены XRD; автор допускает, что причиной могут быть их малая концентрация и размер [C-004] [S-RAK-87]"
+            }
+          ],
+          "numeric_unverified": [],
+          "missing_crossref": []
+        },
+        "summary": {
+          "sentences_checked": 7,
+          "claims_traced": 5,
+          "references_ok": true,
+          "references_dangling": 0,
+          "uncertainty_masked": 3,
+          "orphan_claims": 0,
+          "numeric_unverified": 0,
+          "missing_crossref": 0
+        },
+        "verdict": "FAIL",
+        "fail_reasons": [
+          "MASKED_UNCERTAINTY: C-001, C-002, C-004"
+        ]
+      }
+    },
+    "semantic_roundtrip": {
+      "verdict": "PASS",
+      "detail": {
+        "schema": "writer_core.rtt_report.v1",
+        "generated_by": "writer.release.marker_rtt",
+        "verdict": "PASS",
+        "defects": [],
+        "checked": [
+          {
+            "claim_id": "C-001",
+            "matched": true,
+            "overlap": 1.0,
+            "reasons": [
+              "PARAPHRASE_SAFE"
+            ],
+            "notes": []
+          },
+          {
+            "claim_id": "C-002",
+            "matched": true,
+            "overlap": 1.0,
+            "reasons": [
+              "PARAPHRASE_SAFE"
+            ],
+            "notes": []
+          },
+          {
+            "claim_id": "C-003",
+            "matched": true,
+            "overlap": 1.0,
+            "reasons": [
+              "PARAPHRASE_SAFE"
+            ],
+            "notes": []
+          },
+          {
+            "claim_id": "C-004",
+            "matched": true,
+            "overlap": 1.0,
+            "reasons": [
+              "PARAPHRASE_SAFE"
+            ],
+            "notes": []
+          },
+          {
+            "claim_id": "C-005",
+            "matched": true,
+            "overlap": 1.0,
+            "reasons": [
+              "PARAPHRASE_SAFE"
+            ],
+            "notes": []
+          }
+        ],
+        "re_extraction": {
+          "claims": [],
+          "digests": [],
+          "errors": []
+        }
+      }
+    }
+  },
+  "authority": {
+    "research_verdicts": "scripts/researcher/verify_claims.py",
+    "traceability": "scripts/writer/review/citation_trace.py",
+    "semantic_roundtrip": "scripts/writer/core/factory_process.py"
+  },
+  "artifacts": {
+    "dom": "/mnt/data/writer_e2e_chapter_repo/e2e_runs/chapter_iterative_001/v2_dom.yaml",
+    "dom_sha256": "7d5d410007dd71de8631bcdbb37d95f7497e6e9281c18e5dc908427b97e0296c",
+    "text": "/mnt/data/writer_e2e_chapter_repo/e2e_runs/chapter_iterative_001/v2_text.md",
+    "text_sha256": "e557ddb2d342c45421f36e70985aea9e178cddad5f1111804149d0477b7879e6"
+  }
+}

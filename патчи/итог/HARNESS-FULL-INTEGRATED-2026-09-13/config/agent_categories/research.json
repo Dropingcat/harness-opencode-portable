@@ -1,0 +1,6 @@
+{
+  "agent": "researcher",
+  "categories": ["CAT_BIO", "CAT_EVIDENCE", "CAT_SOURCE", "CAT_GAP", "CAT_CONFLICT"],
+  "default_bucket": "research",
+  "capsule": "research-core"
+}

@@ -1,0 +1,7 @@
+scenario: MANUAL_DOCX_EDIT
+built_hash: sha256:AAA
+external_hash: sha256:BBB
+expected:
+  - EXTERNAL_ARTIFACT_DIVERGENCE
+  - IMPORT_OR_RECONCILE_REQUIRED
+  - DOCX_NOT_AUTHORITATIVE

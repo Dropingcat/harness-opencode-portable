@@ -1,0 +1,133 @@
+{
+  "version": 1,
+  "capsules": {
+    "core-orchestration": {
+      "runtime_class": "core",
+      "advertise_by_default": true,
+      "provided_skills": [
+        "context-engineering",
+        "doubt-driven-development",
+        "verification-planning",
+        "incremental-implementation",
+        "compare",
+        "export"
+      ],
+      "supported_routes": [
+        "academic-research",
+        "code-implementation",
+        "code-review",
+        "document-extraction",
+        "opencode-config",
+        "optimization",
+        "service-automation",
+        "tech-debt",
+        "triz-architecture",
+        "web-research",
+        "writing-prose"
+      ],
+      "related_tools": [],
+      "guard_profile": "standard",
+      "fallback_capsule": null
+    },
+    "code": {
+      "runtime_class": "core",
+      "advertise_by_default": true,
+      "provided_skills": [
+        "code-factory",
+        "code-review-and-quality",
+        "clonedeps",
+        "deepwork"
+      ],
+      "supported_routes": [
+        "code-implementation",
+        "code-review",
+        "optimization",
+        "triz-architecture"
+      ],
+      "related_tools": [
+        "code_work",
+        "coder_run"
+      ],
+      "guard_profile": "standard",
+      "fallback_capsule": "core-orchestration"
+    },
+    "research-core": {
+      "runtime_class": "core",
+      "advertise_by_default": true,
+      "provided_skills": [
+        "conducting-scientific-research",
+        "literature-review",
+        "citation-management",
+        "hypothesis-generation",
+        "scientific-critical-thinking",
+        "physics-verification"
+      ],
+      "supported_routes": [
+        "academic-research",
+        "web-research"
+      ],
+      "related_tools": [
+        "arxiv_search",
+        "openalex_search",
+        "research_academic",
+        "extract_document",
+        "searxng_search"
+      ],
+      "guard_profile": "strict",
+      "fallback_capsule": "core-orchestration"
+    },
+    "integration-config": {
+      "runtime_class": "core",
+      "advertise_by_default": true,
+      "provided_skills": [
+        "customize-opencode",
+        "context-engineering"
+      ],
+      "supported_routes": [
+        "opencode-config",
+        "tech-debt"
+      ],
+      "related_tools": [
+        "profile_config"
+      ],
+      "guard_profile": "standard",
+      "fallback_capsule": "core-orchestration"
+    },
+    "writing": {
+      "runtime_class": "optional",
+      "advertise_by_default": false,
+      "provided_skills": [
+        "export",
+        "scientific-writing",
+        "ml-paper-writing",
+        "deslop-ai-lint-skill",
+        "writer-core",
+        "writer-review"
+      ],
+      "supported_routes": [
+        "document-extraction",
+        "writing-prose"
+      ],
+      "related_tools": [
+        "extract_document"
+      ],
+      "guard_profile": "strict",
+      "fallback_capsule": "research-core"
+    },
+    "service-automation": {
+      "runtime_class": "optional",
+      "advertise_by_default": false,
+      "provided_skills": [
+        "context-engineering"
+      ],
+      "supported_routes": [
+        "service-automation"
+      ],
+      "related_tools": [
+        "service_task"
+      ],
+      "guard_profile": "strict",
+      "fallback_capsule": "core-orchestration"
+    }
+  }
+}

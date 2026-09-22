@@ -1,0 +1,65 @@
+schema_version: academic-frame-registry/0.3
+frames:
+- id: OBSERVATION
+  requires:
+  - phenomenon
+  slots:
+  - scope?
+  - condition?
+  - phenomenon
+  allowed_acts:
+  - REPORT
+- id: CAUTIOUS_INTERPRETATION
+  requires:
+  - observation
+  - interpretation
+  slots:
+  - observation
+  - interpretation
+  - qualifier?
+  constraints:
+  - interpretation_strength<=evidence_strength
+- id: COMPARISON
+  requires:
+  - lhs
+  - rhs
+  - relation
+  slots:
+  - scope?
+  - lhs
+  - relation
+  - rhs
+  - magnitude?
+- id: CONCESSION
+  requires:
+  - conceded
+  - primary
+  slots:
+  - conceded
+  - primary
+  - limitation?
+- id: DEFINITION
+  requires:
+  - term
+  - genus
+  - difference
+  slots:
+  - term
+  - genus
+  - difference
+  - scope?
+- id: RESULT_INTERPRETATION_LIMITATION
+  requires:
+  - result
+  slots:
+  - result
+  - interpretation?
+  - limitation?
+- id: REFORMULATION
+  requires:
+  - anchor
+  slots:
+  - anchor
+  - reformulation
+  constraints:
+  - no_new_claims

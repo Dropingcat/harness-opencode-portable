@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "nodes": [
+    { "id": "family:code-tools", "type": "tool_family" },
+    { "id": "family:research-tools", "type": "tool_family" },
+    { "id": "family:document-tools", "type": "tool_family" },
+    { "id": "family:integration-tools", "type": "tool_family" },
+    { "id": "family:guard-tools", "type": "tool_family" },
+    { "id": "family:controller-tools", "type": "tool_family" }
+  ],
+  "edges": []
+}

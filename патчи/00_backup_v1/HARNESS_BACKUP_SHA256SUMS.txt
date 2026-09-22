@@ -1,0 +1,2 @@
+a5d430e85c93b57ed56c9a9e8806421a6d9ab6a010eba21bdc4eb9a33fe6c2d3  /mnt/data/HARNESS-WRITER-V1-RESEARCHER-R1.1-BACKUP-2026-09-12.zip
+472563b716699a72f36b51b354f6fdd7e0e3640d7a7bf0b73352458baf1d53d2  /mnt/data/harness_writer_v1_researcher_r1_1.bundle

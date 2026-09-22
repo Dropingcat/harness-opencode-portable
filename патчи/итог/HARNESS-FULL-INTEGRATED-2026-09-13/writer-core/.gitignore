@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.eggs/
+build/
+dist/
+
+# Виртуальное окружение (torch ~1.1GB)
+.venv/
+venv/
+env/
+
+# Логи установки
+docling_install*.log
+
+# Кэши
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+
+# Рантайм/темп
+*.tmp
+.tmp*
+# Не коммитим временные данные прогонов (пересобираются)
+C:/Temp/opencode/
+
+# IDE
+.vscode/
+.idea/
+*.swp

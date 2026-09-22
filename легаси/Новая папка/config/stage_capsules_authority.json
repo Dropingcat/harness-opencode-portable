@@ -1,0 +1,77 @@
+{
+  "version": 2,
+  "routes": {
+    "academic-research": {
+      "default_stage":"discovery",
+      "stages": {
+        "discovery":{"skills":["conducting-scientific-research","literature-review"],"tools":["search.discovery","job.checkpoint"],"required_capabilities":["job.checkpoint"],"required_any_of":[["web.discovery","academic.metadata"]],"optional_capabilities":["academic.metadata"],"forbidden_capabilities":["code.edit"],"next":["source-resolution"]},
+        "source-resolution":{"skills":["citation-management","literature-review"],"tools":["source.resolve","job.checkpoint"],"required_capabilities":["academic.metadata","job.checkpoint"],"optional_capabilities":["source.oa_resolve"],"next":["document-analysis"]},
+        "document-analysis":{"skills":["scientific-critical-thinking","physics-verification"],"tools":["document.inspect","corpus.search","job.checkpoint"],"required_capabilities":["document.text.extract","job.checkpoint"],"optional_capabilities":["document.structured.inspect","document.ocr","office.docx.inspect","office.xlsx.inspect","image.tiff.inspect","science.numeric","science.symbolic","formula.validate"],"escalation":{"document.ocr":["no_text_layer","low_text_density"],"image.tiff.inspect":["scientific_image_input"]},"next":["evidence-validation"]},
+        "evidence-validation":{"skills":["scientific-critical-thinking","citation-management"],"tools":["evidence.verify","science.compute","job.checkpoint"],"required_capabilities":["evidence.verify","job.checkpoint"],"optional_capabilities":["science.numeric","science.symbolic","formula.validate"],"next":["synthesis"]},
+        "synthesis":{"skills":["conducting-scientific-research","scientific-critical-thinking"],"tools":["report.compose","plot.render","job.checkpoint"],"required_capabilities":["report.compose","job.checkpoint"],"optional_capabilities":["plot.render"],"next":[]}
+      }
+    },
+    "web-research": {
+      "default_stage":"discovery",
+      "stages": {
+        "discovery":{"skills":["conducting-scientific-research"],"tools":["search.discovery","job.checkpoint"],"required_capabilities":["web.discovery","job.checkpoint"],"optional_capabilities":["academic.metadata"],"next":["document-analysis"]},
+        "document-analysis":{"skills":["scientific-critical-thinking"],"tools":["document.inspect","job.checkpoint"],"required_capabilities":["document.text.extract","job.checkpoint"],"optional_capabilities":["document.structured.inspect","document.ocr"],"next":["evidence-validation"]},
+        "evidence-validation":{"skills":["scientific-critical-thinking"],"tools":["evidence.verify","job.checkpoint"],"required_capabilities":["evidence.verify","job.checkpoint"],"optional_capabilities":[],"next":["synthesis"]},
+        "synthesis":{"skills":["conducting-scientific-research"],"tools":["report.compose","job.checkpoint"],"required_capabilities":["report.compose","job.checkpoint"],"optional_capabilities":["plot.render"],"next":[]}
+      }
+    },
+    "writing-prose": {
+      "default_stage":"claim-load",
+      "stages": {
+        "claim-load":{"skills":["writer-core","citation-management"],"tools":["document.inspect","corpus.search","job.checkpoint"],"required_capabilities":["writer.claims.read","job.checkpoint"],"optional_capabilities":["document.text.extract","corpus.fts"],"next":["draft"]},
+        "draft":{"skills":["writer-core","deslop-ai-lint-skill"],"tools":["report.compose","science.compute","plot.render","job.checkpoint"],"required_capabilities":["writer.draft","job.checkpoint"],"optional_capabilities":["plot.render","science.numeric","science.symbolic","formula.validate"],"forbidden_capabilities":["web.discovery","code.edit"],"next":["semantic-validation"]},
+        "semantic-validation":{"skills":["writer-review","scientific-critical-thinking"],"tools":["evidence.verify","science.compute","job.checkpoint"],"required_capabilities":["writer.semantic_validate","job.checkpoint"],"optional_capabilities":["science.numeric","formula.validate"],"forbidden_capabilities":["web.discovery"],"next":["repair"]},
+        "repair":{"skills":["writer-core","writer-review"],"tools":["report.compose","job.checkpoint"],"required_capabilities":["writer.draft","job.checkpoint"],"optional_capabilities":[],"forbidden_capabilities":["web.discovery"],"next":[]}
+      }
+    },
+    "document-extraction": {
+      "default_stage":"inspect",
+      "stages": {
+        "inspect":{"skills":["markitdown"],"tools":["document.inspect","scientific_image.inspect","job.checkpoint"],"required_capabilities":["document.text.extract","job.checkpoint"],"optional_capabilities":["document.structured.inspect","document.ocr","office.docx.inspect","office.xlsx.inspect","office.legacy.inspect","image.tiff.inspect"],"escalation":{"document.ocr":["no_text_layer"],"office.legacy.inspect":["legacy_office_input"]},"next":[]}
+      }
+    },
+    "code-implementation": {
+      "default_stage":"reproduce",
+      "stages": {
+        "reproduce":{"skills":["verification-planning","doubt-driven-development"],"tools":["code.test","job.checkpoint"],"required_capabilities":["code.test","job.checkpoint"],"optional_capabilities":[],"next":["change"]},
+        "change":{"skills":["incremental-implementation","code-factory"],"tools":["code.change","job.checkpoint"],"required_capabilities":["code.edit","job.checkpoint"],"optional_capabilities":["science.numeric","science.symbolic","formula.validate"],"next":["test"]},
+        "test":{"skills":["verification-planning"],"tools":["code.test","job.checkpoint"],"required_capabilities":["code.test","job.checkpoint"],"optional_capabilities":[],"forbidden_capabilities":["code.review"],"next":["review"]},
+        "review":{"skills":["code-review-and-quality","doubt-driven-development"],"tools":["code.review","job.checkpoint"],"required_capabilities":["code.review","job.checkpoint"],"optional_capabilities":[],"forbidden_capabilities":["code.edit"],"next":["acceptance"]},
+        "acceptance":{"skills":["verification-planning"],"tools":["code.acceptance","job.checkpoint"],"required_capabilities":["code.acceptance","job.checkpoint"],"optional_capabilities":[],"forbidden_capabilities":["code.edit"],"next":[]}
+      }
+    },
+    "code-review": {
+      "default_stage":"review",
+      "stages":{"review":{"skills":["code-review-and-quality","doubt-driven-development"],"tools":["code.review","job.checkpoint"],"required_capabilities":["code.review","job.checkpoint"],"optional_capabilities":["code.test"],"forbidden_capabilities":["code.edit"],"next":[]}}
+    },
+    "optimization": {
+      "default_stage":"benchmark",
+      "stages": {
+        "benchmark":{"skills":["autoresearch","verification-planning"],"tools":["code.test","science.compute","plot.render","job.checkpoint"],"required_capabilities":["code.test","job.checkpoint"],"optional_capabilities":["science.numeric","plot.render"],"next":["experiment"]},
+        "experiment":{"skills":["autoresearch","incremental-implementation"],"tools":["code.change","code.test","science.compute","plot.render","job.checkpoint"],"required_capabilities":["code.edit","code.test","job.checkpoint"],"optional_capabilities":["science.numeric","plot.render"],"next":["review"]},
+        "review":{"skills":["code-review-and-quality"],"tools":["code.review","code.acceptance","job.checkpoint"],"required_capabilities":["code.review","code.acceptance","job.checkpoint"],"optional_capabilities":[],"forbidden_capabilities":["code.edit"],"next":[]}
+      }
+    },
+    "triz-architecture": {
+      "default_stage":"analysis",
+      "stages": {
+        "analysis":{"skills":["compare","doubt-driven-development"],"tools":["science.compute","job.checkpoint"],"required_capabilities":["job.checkpoint"],"optional_capabilities":["science.numeric","science.symbolic"],"forbidden_capabilities":["code.edit"],"next":["change"]},
+        "change":{"skills":["incremental-implementation","code-factory"],"tools":["code.change","job.checkpoint"],"required_capabilities":["code.edit","job.checkpoint"],"optional_capabilities":[],"next":["review"]},
+        "review":{"skills":["code-review-and-quality"],"tools":["code.review","code.acceptance","job.checkpoint"],"required_capabilities":["code.review","code.acceptance","job.checkpoint"],"forbidden_capabilities":["code.edit"],"next":[]}
+      }
+    }
+  },
+  "domain_overlays": {
+    "mathematics":{"match_regex":"(equation|formula|derive|integral|matrix|optimization|уравнен|формул|интеграл|матриц|математ)","skills":["verification-planning"],"capabilities":["science.numeric","science.symbolic","formula.validate"],"tools":["science.compute"]},
+    "physics":{"match_regex":"(physics|mechanics|quantum|diffraction|xrd|oscillator|физик|механик|квант|дифрак|рентген|осцилл)","skills":["physics-verification","scientific-critical-thinking"],"capabilities":["science.physics","science.numeric","science.symbolic","formula.validate","plot.render"],"tools":["science.compute","plot.render"]},
+    "chemistry":{"match_regex":"(chemistry|chemical|molar|stoichiometry|reaction|хими|моляр|стехиометр|реакц)","skills":["scientific-critical-thinking"],"capabilities":["science.chemistry","science.numeric","formula.validate"],"tools":["science.compute"]},
+    "reporting":{"match_regex":"(report|table|chart|figure|plot|отчет|отчёт|таблиц|график|рисунок)","skills":["export"],"capabilities":["report.compose","plot.render"],"tools":["report.compose","plot.render"]},
+    "office-data":{"match_regex":"(docx|doc|xlsx|xls|word|excel|ворд|эксел)","skills":["markitdown"],"capabilities":["document.structured.inspect","office.docx.inspect","office.xlsx.inspect","office.legacy.inspect"],"tools":["document.inspect"]},
+    "scientific-image":{"match_regex":"(tiff|tif|sem|eds|microscopy|микроскоп|спектр|тифф)","skills":["scientific-critical-thinking"],"capabilities":["image.tiff.inspect","plot.render"],"tools":["scientific_image.inspect","plot.render"]}
+  }
+}

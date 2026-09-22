@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "kind_to_bucket": {
+    "requirement": "code",
+    "code_change": "code",
+    "interface": "code",
+    "test": "code",
+    "factual": "research",
+    "evidence": "research",
+    "config": "integration",
+    "security": "security",
+    "performance": "code",
+    "docs": "writing",
+    "unresolved_question": "integration"
+  },
+  "priority_rules": {
+    "security": "high",
+    "performance": "high",
+    "unresolved_question": "high",
+    "default": "normal"
+  }
+}

@@ -1,0 +1,93 @@
+{
+  "schema_version": 2,
+  "case_id": "nc-interaction-01",
+  "passed": true,
+  "checks": [
+    {
+      "kind": "file_exists",
+      "passed": true,
+      "failed_check_id": "file_exists:evidence.json",
+      "expected": "file present",
+      "actual": "present",
+      "diff_hint": "",
+      "fix_proposal": null
+    },
+    {
+      "kind": "file_exists",
+      "passed": true,
+      "failed_check_id": "file_exists:comparison.json",
+      "expected": "file present",
+      "actual": "present",
+      "diff_hint": "",
+      "fix_proposal": null
+    },
+    {
+      "kind": "jq_path_contains",
+      "passed": true,
+      "failed_check_id": "jq_path_contains:evidence.json:[.[0].evidence[0].source_id]",
+      "expected": [
+        "handbook_steel_45"
+      ],
+      "actual": [
+        "handbook_steel_45"
+      ],
+      "diff_hint": "missing from [.[0].evidence[0].source_id]: []",
+      "fix_proposal": null
+    },
+    {
+      "kind": "jq_path_contains",
+      "passed": true,
+      "failed_check_id": "jq_path_contains:evidence.json:[.[0].evidence[0].trust]",
+      "expected": [
+        0.95
+      ],
+      "actual": [
+        0.95
+      ],
+      "diff_hint": "missing from [.[0].evidence[0].trust]: []",
+      "fix_proposal": null
+    },
+    {
+      "kind": "jq_path_contains",
+      "passed": true,
+      "failed_check_id": "jq_path_contains:comparison.json:[.groups[0].group_status]",
+      "expected": [
+        "match"
+      ],
+      "actual": [
+        "match"
+      ],
+      "diff_hint": "missing from [.groups[0].group_status]: []",
+      "fix_proposal": null
+    },
+    {
+      "kind": "shell",
+      "passed": true,
+      "failed_check_id": "shell:grep -c -F 'Handbook Steel 45' comparison.json",
+      "expected": "min 1",
+      "actual": "1",
+      "diff_hint": "",
+      "fix_proposal": null
+    }
+  ],
+  "env_manifest": {
+    "schema_version": 2,
+    "opencode_version": "1.18.18",
+    "model_id": "opencode/deepseek-v4-flash-free",
+    "node_version": "v22.23.1",
+    "platform": "Linux-aarch64",
+    "skill_under_test": "rivulet-numeric",
+    "skill_bundle_sha": "2a69cb1cd070092723319c43d8be38e1acaa30f9c82445bf4fb2711842315cc2",
+    "skill_sha": "f9a503a60d4902e91b76e0f0c97021103b00a9eb94393c90689f42b54cc0489d",
+    "fixture_sha": "374bc3ab5b751960d75bdf087ed4098d65f9f3241bd8212de9fc6b4772a511d4",
+    "runner": "opencode",
+    "runner_config_sha": "none",
+    "graph_fingerprint": "none",
+    "langgraph_version": "none",
+    "python_version": "3.11.0rc1",
+    "timestamp": "2026-08-18T21:06:44Z"
+  },
+  "last_seen_triggers": [
+    "baseline"
+  ]
+}

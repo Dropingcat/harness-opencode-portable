@@ -1,0 +1,19 @@
+schema_version: blocker/0.1
+required:
+- id
+- type
+- severity
+- target
+- origin
+- state
+- resolution_options
+severity:
+- INFO
+- WORK_BLOCKING
+- SECTION_BLOCKING
+- RELEASE_BLOCKING
+state:
+- OPEN
+- IN_PROGRESS
+- RESOLVED
+- WAIVED_WITH_DECISION

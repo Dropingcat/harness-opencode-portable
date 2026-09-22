@@ -1,0 +1,35 @@
+{
+  "schema": "package_manifest/1.0",
+  "files": [
+    {
+      "path": "APPLY.md",
+      "sha256": "92f505b0ec9cdaea1c95bccd1ee787b08f659bc234920908e973fe4f58a9c2e0",
+      "bytes": 919
+    },
+    {
+      "path": "IMPLEMENTATION_TRACKER.md",
+      "sha256": "7cad76c8fe29496f46869e8e75e810cb95af3adfc928543099c79ced775f1feb",
+      "bytes": 6184
+    },
+    {
+      "path": "WRITER_V1_FREEZE_001_REVIEW.md",
+      "sha256": "0860c72cbb535a52eacc03f8d19e7e5d00c6233a5d3b37f8180f0c8d8598c87d",
+      "bytes": 8259
+    },
+    {
+      "path": "WRITER_V1_FREEZE_001_SUMMARY.json",
+      "sha256": "3bb70285d7af22a8024137b4200751c5ff29fe31e5bb945cc9329a3de309fc49",
+      "bytes": 1015
+    },
+    {
+      "path": "patch/WRITER-V1-FREEZE-001.patch",
+      "sha256": "43e7f44858f7503ef30cb029c301172ea54a20623c620dc62798595eea61d559",
+      "bytes": 142384
+    },
+    {
+      "path": "writer_v1_contracts.json",
+      "sha256": "6ab1b00983dbb00cda1ccb348391c58cd897cd17f949ef3f3ea7b328362f46ac",
+      "bytes": 2141
+    }
+  ]
+}

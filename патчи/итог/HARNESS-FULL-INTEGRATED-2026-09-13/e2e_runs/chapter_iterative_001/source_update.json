@@ -1,0 +1,53 @@
+{
+  "ok": true,
+  "schema": "source_update/1.0",
+  "source_id": "S-RAK-87",
+  "catalog_update": {
+    "ok": true,
+    "schema": "source_catalog/1.1",
+    "source_id": "S-RAK-87",
+    "change": "updated",
+    "old_sha256": "71385e3ad2d214907c97c5c5ea5319ead55e7a93bc0d118c01866621ed93739a",
+    "sha256": "ab4e9d2c77f09e83e5dbdf5f16fdbd247c34b939b550ab113446671d6c389229",
+    "content_changed": true,
+    "semantic_changed": true,
+    "change_class": "SEMANTIC"
+  },
+  "invalidation": {
+    "ok": true,
+    "schema": "writer_invalidation_plan/1.1",
+    "changed_sources": [
+      "S-RAK-87"
+    ],
+    "claims_to_revalidate": [
+      "C-004",
+      "C-007"
+    ],
+    "paragraphs_to_repair": [
+      "PAR-1"
+    ],
+    "dependency_paths": [
+      {
+        "src": "S-RAK-87",
+        "dst": "C-004",
+        "relation": "SUPPORTS"
+      },
+      {
+        "src": "S-RAK-87",
+        "dst": "C-007",
+        "relation": "SUPPORTS"
+      },
+      {
+        "src": "C-004",
+        "dst": "PAR-1",
+        "relation": "REALIZED_IN"
+      },
+      {
+        "src": "C-007",
+        "dst": "PAR-1",
+        "relation": "REALIZED_IN"
+      }
+    ]
+  },
+  "requires_revalidation": true
+}

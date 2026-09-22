@@ -1,0 +1,140 @@
+{
+  "status": "success",
+  "claims": {
+    "validated": [
+      {
+        "text": "Nitriding of steels is a process of surface hardening.",
+        "original_sentence": "# Тестовый автореферат диссертации\n\n**Тема:** Физика конденсированного состояния\n**Автор:** Ярослав (@dropcats)\n\n## Основные положения\n\nАзотирование сталей является важным процессом поверхностного упрочнения.",
+        "original_index": 0
+      },
+      {
+        "text": "При азотировании происходит диффузия азота в поверхностный слой металла",
+        "original_sentence": "При азотировании происходит диффузия азота в поверхностный слой металла с образованием нитридов.",
+        "original_index": 1
+      },
+      {
+        "text": "При азотировании происходит образование нитридов",
+        "original_sentence": "При азотировании происходит диффузия азота в поверхностный слой металла с образованием нитридов.",
+        "original_index": 1
+      },
+      {
+        "text": "The process of nitriding [of steels] is conducted at temperatures 500-570°C in an ammonia atmosphere.",
+        "original_sentence": "Процесс азотирования проводится при температурах 500-570°C в атмосфере аммиака.",
+        "original_index": 2
+      },
+      {
+        "text": "The holding time during nitriding ranges from 10 to 50 hours",
+        "original_sentence": "Время выдержки составляет от 10 до 50 часов в зависимости от требуемой глубины слоя.",
+        "original_index": 3
+      },
+      {
+        "text": "The holding time during nitriding depends on the required depth of the nitrided layer",
+        "original_sentence": "Время выдержки составляет от 10 до 50 часов в зависимости от требуемой глубины слоя.",
+        "original_index": 3
+      },
+      {
+        "text": "Образование ε-фазы (Fe2-3N) происходит на поверхности [металла] при высоких концентрациях азота.",
+        "original_sentence": "Образование ε-фазы (Fe2-3N) происходит на поверхности при высоких концентрациях азота.",
+        "original_index": 4
+      },
+      {
+        "text": "Нитриды молибдена обеспечивают дисперсионное твердение [в контексте процесса азотирования]",
+        "original_sentence": "Нитриды хрома, молибдена и ванадия обеспечивают дисперсионное твердение.",
+        "original_index": 7
+      },
+      {
+        "text": "Нитриды ванадия обеспечивают дисперсионное твердение [в контексте процесса азотирования]",
+        "original_sentence": "Нитриды хрома, молибдена и ванадия обеспечивают дисперсионное твердение.",
+        "original_index": 7
+      },
+      {
+        "text": "Глубина азотированного слоя составляет 0.3-0.6 мм при стандартном режиме азотирования",
+        "original_sentence": "Глубина слоя составляет 0.3-0.6 мм при стандартном режиме азотирования.",
+        "original_index": 9
+      },
+      {
+        "text": "X-ray diffraction analysis confirms the presence of the ε phase [in the nitrided layer]",
+        "original_sentence": "Рентгеноструктурный анализ подтверждает наличие фаз ε и γ'.",
+        "original_index": 10
+      },
+      {
+        "text": "X-ray diffraction analysis confirms the presence of the γ' phase [in the nitrided layer]",
+        "original_sentence": "Рентгеноструктурный анализ подтверждает наличие фаз ε и γ'.",
+        "original_index": 10
+      },
+      {
+        "text": "Микротвёрдость измеряется по методу Виккерса с нагрузкой 0.1-0.5 Н",
+        "original_sentence": "Микротвёрдость измеряется по методу Виккерса с нагрузкой 0.1-0.5 Н. Измерения проводятся на шлифах после травления.",
+        "original_index": 12
+      },
+      {
+        "text": "Измерения проводятся на шлифах после травления",
+        "original_sentence": "Микротвёрдость измеряется по методу Виккерса с нагрузкой 0.1-0.5 Н. Измерения проводятся на шлифах после травления.",
+        "original_index": 12
+      },
+      {
+        "text": "The speed of nitrogen diffusion is described by Fick's equation",
+        "original_sentence": "Скорость диффузии азота описывается уравнением Фика.",
+        "original_index": 13
+      },
+      {
+        "text": "Коэффициент диффузии азота зависит от температуры по закону Аррениуса",
+        "original_sentence": "Коэффициент диффузии зависит от температуры по закону Аррениуса.",
+        "original_index": 14
+      },
+      {
+        "text": "Энергия активации диффузии азота в α-железе составляет 77 кДж/моль.",
+        "original_sentence": "Энергия активации диффузии азота в α-железе составляет 77 кДж/моль.",
+        "original_index": 15
+      },
+      {
+        "text": "The pre-exponential factor for diffusion of nitrogen in α-iron is 0.003 cm²/s.",
+        "original_sentence": "Предэкспоненциальный множитель равен 0.003 см²/с.",
+        "original_index": 16
+      },
+      {
+        "text": "Nitriding increases the wear resistance of parts by 2-3 times.",
+        "original_sentence": "Азотирование повышает износостойкость деталей в 2-3 раза.",
+        "original_index": 17
+      },
+      {
+        "text": "A dense oxide film forms during oxidation that follows the nitriding process",
+        "original_sentence": "Оксидная плёнка формируется при последующем оксидировании.",
+        "original_index": 20
+      }
+    ],
+    "discarded": [
+      {
+        "text": "γ'-фаза (Fe4N) располагается ниже ε-фазы (Fe2-3N) [в контексте азотирования сталей]",
+        "reason": "validation_failed"
+      },
+      {
+        "text": "Нитриды хрома обеспечивают дисперсионное твердение [в контексте процесса азотирования]",
+        "reason": "validation_failed"
+      },
+      {
+        "text": "[氮化处理]通过形成致密氧化膜来改善耐腐蚀性",
+        "reason": "validation_failed"
+      }
+    ]
+  },
+  "statistics": {
+    "input_source": "/home/orangepi/.hermes/profiles/resercher/workspace/pilot_20260804_204132/input.txt",
+    "input_length": 1624,
+    "sentences_detected": 21,
+    "claims_extracted": 23,
+    "claims_validated": 20,
+    "claims_discarded": 3,
+    "validation_rate": 0.8695652173913043
+  },
+  "raw_keys": [
+    "answer_text",
+    "contextual_sentences",
+    "selected_contents",
+    "disambiguated_contents",
+    "potential_claims",
+    "validated_claims",
+    "metadata"
+  ],
+  "processing_time_sec": 555.85
+}

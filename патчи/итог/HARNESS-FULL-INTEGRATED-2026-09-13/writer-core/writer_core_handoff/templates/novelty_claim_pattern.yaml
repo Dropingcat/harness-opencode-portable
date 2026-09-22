@@ -1,0 +1,27 @@
+id: NOVELTY_CLAIM_PATTERN
+version: 1
+kind: ArgumentPattern
+state: CANDIDATE_PATTERN
+accepts:
+  result_claims: 1..*
+  prior_art_snapshot: '1'
+  distinction: '1'
+preconditions:
+- result claims admitted
+- prior art coverage snapshot fresh
+slots:
+- result
+- prior_art
+- difference
+- scope
+construct:
+- state prior art boundary
+- state verified difference
+- state novelty within scope
+invariants:
+- no universal firstness outside coverage snapshot
+validators:
+- NoveltyValidator
+- RTTValidator
+provenance:
+  origin: architecture_v0.2

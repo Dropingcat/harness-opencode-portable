@@ -1,0 +1,894 @@
+{
+  "schema": "writer-archive-inventory/1.0",
+  "migration_id": "WRITER-UNIFY-001",
+  "units": [
+    {
+      "id": "writer-core-pre-unification",
+      "source": "scripts/writer-core",
+      "archive_target": "легаси/writer/writer-core-pre-unification",
+      "tracked_files": 54,
+      "tree_sha256": "db73a630e65cd114fe87698158e3c7ab1f8f1a40b23b22ae92ebf9c772cc13da",
+      "files": [
+        {
+          "path": "scripts/writer-core/consolidation.py",
+          "sha256": "fb62c57f0250cd41b2d92b61e03016a67635eed7e9f68003d0281d0ffc6ca326",
+          "size": 40916
+        },
+        {
+          "path": "scripts/writer-core/corpus_runner.py",
+          "sha256": "a91ac9b80500274acfdea43b53349f0c5e7762ae5d473668415672bb27491f9f",
+          "size": 12683
+        },
+        {
+          "path": "scripts/writer-core/digest_builder.py",
+          "sha256": "267fdf179ae8caa509e80c733cdffd1371d0c76cd519a1853e92ca077fa61116",
+          "size": 5944
+        },
+        {
+          "path": "scripts/writer-core/graph_builder_hybrid.py",
+          "sha256": "d072c9d9c1a182e1b619cde1d90a0dc164e3025a422971c6aebb7110ce6ece7a",
+          "size": 41158
+        },
+        {
+          "path": "scripts/writer-core/graph_registry.yaml",
+          "sha256": "42f8058909097ed6dad678328bb79091c30461301d21832a1770fe544cbb6b71",
+          "size": 6214
+        },
+        {
+          "path": "scripts/writer-core/graph_vector.py",
+          "sha256": "8ed0c76d9655cbdb315431278ab2077ce874804e7504eed9e070770e3e0b9e05",
+          "size": 41432
+        },
+        {
+          "path": "scripts/writer-core/hybrid_extract.py",
+          "sha256": "3afbd98c192c09f4c4e5e1b3505a49b2d118ecb01e702d7f756c9de607704776",
+          "size": 24209
+        },
+        {
+          "path": "scripts/writer-core/linguistic_assets/academic_frame_registry.yaml",
+          "sha256": "175dd0eef6fc1b499367bd318113b8c2c65e28cf67926f98f5ec59049d481125",
+          "size": 947
+        },
+        {
+          "path": "scripts/writer-core/linguistic_assets/academic_ru_lexicon.yaml",
+          "sha256": "71353f712a3725dd345c0dfe2152fc8d55aab26a333e19f5924220bc928a86bf",
+          "size": 1327
+        },
+        {
+          "path": "scripts/writer-core/linguistic_assets/connective_registry.yaml",
+          "sha256": "b0df166ed611c1e2120d018cb43040477972f0dab5ab5529b5e3322893e238d0",
+          "size": 595
+        },
+        {
+          "path": "scripts/writer-core/linguistic_assets/language_action_registry.yaml",
+          "sha256": "aeecc2e5800d1efc76235ef73a101b50777fe309514f169879ded904e0cf58c4",
+          "size": 1513
+        },
+        {
+          "path": "scripts/writer-core/linguistic_assets/rhetorical_pattern_registry.yaml",
+          "sha256": "2013910ec3d005ec09cadc4737048cdf0f882280cf8401736ce992bc273add1b",
+          "size": 784
+        },
+        {
+          "path": "scripts/writer-core/linguistic_assets/valency_registry.yaml",
+          "sha256": "5336ab84d85a352b9b303fe16f52b0ac7c4d628307936a6a281b344caadf1635",
+          "size": 383
+        },
+        {
+          "path": "scripts/writer-core/md_clean.py",
+          "sha256": "6589811dc21388a49124ab96ea472bd4510303285d83cfa1648d4595b34269a0",
+          "size": 11824
+        },
+        {
+          "path": "scripts/writer-core/polza_light.py",
+          "sha256": "bfebcc858515f2a6b3ec17ac8febb4cf21640f68a34bfd6f0b0857bb9e3a0736",
+          "size": 13624
+        },
+        {
+          "path": "scripts/writer-core/registry_loader.py",
+          "sha256": "f88e9ed34e72e700f10a2f4c68d280b8855af47af362837893f6984f3ed52c4d",
+          "size": 3840
+        },
+        {
+          "path": "scripts/writer-core/rtt_compare.py",
+          "sha256": "8edf6af2f422bf11874d1bdab252b7cade8574a19337959a53ca42908faf5bc2",
+          "size": 7431
+        },
+        {
+          "path": "scripts/writer-core/session_memory.py",
+          "sha256": "5ee3f358dab6c0247bebca6fae49267cfaa8290f8122eef68d9b674b9b412998",
+          "size": 7706
+        },
+        {
+          "path": "scripts/writer-core/structure_annotator.py",
+          "sha256": "bd5bad0016754412b6eb58dc8e1a59843cd4ff7500fd414c786bb57ce6dc39ea",
+          "size": 42420
+        },
+        {
+          "path": "scripts/writer-core/t0_ru.py",
+          "sha256": "5fe17a53e9c57c120cd2e4d73b437f4eecdb69e65b2fae4d0f38ea9065edbf30",
+          "size": 12194
+        },
+        {
+          "path": "scripts/writer-core/tests/fixtures/linguistics/golden_traps.yaml",
+          "sha256": "8c320cebaffdd4eaf75d4608fd9a529d21ae2e8eaf035f2634522dfd029e333c",
+          "size": 1907
+        },
+        {
+          "path": "scripts/writer-core/tests/fixtures/roundtrip/fail_causality_upgrade.yaml",
+          "sha256": "9ddf1de5cb1e9c5749e3a618773a712d88b18afdd8039b1de08c180d52fed99b",
+          "size": 421
+        },
+        {
+          "path": "scripts/writer-core/tests/fixtures/roundtrip/fail_numeric_drift.yaml",
+          "sha256": "126f9f0a3291aa4d8e71245056289a0859945878935cadb90baaf8a0f7f94b51",
+          "size": 324
+        },
+        {
+          "path": "scripts/writer-core/tests/fixtures/roundtrip/fail_scope_shift.yaml",
+          "sha256": "deb6ef26fecdbcf48abe837a784c2b6c381d8860b2a3c8dfc342954db158aac2",
+          "size": 431
+        },
+        {
+          "path": "scripts/writer-core/tests/fixtures/roundtrip/pass_safe_paraphrase.yaml",
+          "sha256": "3785a78708ee616251d56469bcd6f88a71765dd22bd1c64d50aeda6de920ae11",
+          "size": 489
+        },
+        {
+          "path": "scripts/writer-core/tests/test_runtime_boundary.py",
+          "sha256": "3bb5883dd229f700c574eff02b00d503ad719cdd390d788206d9b6ca142049aa",
+          "size": 4439
+        },
+        {
+          "path": "scripts/writer-core/v2_extractor/c1_c2_structure.py",
+          "sha256": "e0171b9b95b728e6545d52d6d55b6331f4349c4de87f4c0d94e3a14af3d1bfa6",
+          "size": 12253
+        },
+        {
+          "path": "scripts/writer-core/v2_extractor/c5_number.py",
+          "sha256": "3a7be57d6b06634c8d9a263bbd5e89b50cf7513ebe313844ffa520f0bdb2ddac",
+          "size": 5336
+        },
+        {
+          "path": "scripts/writer-core/v2_extractor/claim_qa.py",
+          "sha256": "b275bde4ab77fb8639ff700305a16148e7e3c9b38d60260bc3cae6d7f7fb26ca",
+          "size": 13272
+        },
+        {
+          "path": "scripts/writer-core/v2_extractor/context_analyzer.py",
+          "sha256": "b0b102867645a585968e57d2fd915c79657c42a73ee8ff01f7861e7d7d4ad9c8",
+          "size": 8746
+        },
+        {
+          "path": "scripts/writer-core/v2_extractor/extraction_engine.py",
+          "sha256": "ad7742bc6d03e70faa5c976a0aac7fa86994a4fd737677fbcc4bfc3935df45b8",
+          "size": 13086
+        },
+        {
+          "path": "scripts/writer-core/v2_extractor/graph_builder.py",
+          "sha256": "5ae2674e8add98ab11bc26ba5014ac4ec5910dd10087d8948611e669b98ee89d",
+          "size": 9657
+        },
+        {
+          "path": "scripts/writer-core/v2_extractor/linguo_harness.py",
+          "sha256": "0ad09b8ffd5cc7d5c7e069e23473d1ae7d585fee034852c096f09944510e7303",
+          "size": 6904
+        },
+        {
+          "path": "scripts/writer-core/v2_extractor/llm_contracts.py",
+          "sha256": "d5cafe55939ff742b407ee07821f45d4b566df149386238e3e7757d7f28dff1f",
+          "size": 9426
+        },
+        {
+          "path": "scripts/writer-core/v2_extractor/llm_extractor.py",
+          "sha256": "fa623012735aa76eb3c259fed98a74928a730953c9c72168fa71be1fa25c2987",
+          "size": 4002
+        },
+        {
+          "path": "scripts/writer-core/v2_extractor/llm_philology.py",
+          "sha256": "cce28a0c82b43839db92d5cf7a257ad58adb27f81ce24fa2701cfcacd698105e",
+          "size": 3183
+        },
+        {
+          "path": "scripts/writer-core/v2_extractor/philologcal_layer.py",
+          "sha256": "f5fe72f577905daab8b785cf4b496b6241fd3d3906240e9adef15044d2d0da95",
+          "size": 14324
+        },
+        {
+          "path": "scripts/writer-core/v2_extractor/unified.py",
+          "sha256": "7e3e2139850da12acdf50c954a1a3d9caacc663c8ef5664f4b77962de6d138cd",
+          "size": 13232
+        },
+        {
+          "path": "scripts/writer-core/wc_cli.py",
+          "sha256": "9072ae10809716f2b391304af0f2257f38386f631a3d7ada3cbc36fd15701d9a",
+          "size": 821
+        },
+        {
+          "path": "scripts/writer-core/weak_llm.py",
+          "sha256": "b10be4952bf153c93eb5078675fb0a36961c37d14d8aa5c3f8bfac1b476184f3",
+          "size": 8902
+        },
+        {
+          "path": "scripts/writer-core/writer_core/__init__.py",
+          "sha256": "39c795480602a6df5126aa1388c37bc6c00d296680f82a73a324dd45260c8026",
+          "size": 2677
+        },
+        {
+          "path": "scripts/writer-core/writer_core/canon.py",
+          "sha256": "ab9781719cb50a38197999cce0688e784e10388a2522f12a601a9600a294ce90",
+          "size": 5717
+        },
+        {
+          "path": "scripts/writer-core/writer_core/cli.py",
+          "sha256": "c4965066573a8026ae3daa0978f255730df9a7d0f48b4209cf48a6dfd8e14d9f",
+          "size": 34499
+        },
+        {
+          "path": "scripts/writer-core/writer_core/contracts.py",
+          "sha256": "01fd26b01a8e76d41fb0e3f524593f62fd10af8e0ef4a0496190230571b17756",
+          "size": 13931
+        },
+        {
+          "path": "scripts/writer-core/writer_core/doc_com.py",
+          "sha256": "1622a1874f878a25400d2faa7fae48616577a88aca2c92e285c5d9f279f09a9d",
+          "size": 2609
+        },
+        {
+          "path": "scripts/writer-core/writer_core/dom_builder.py",
+          "sha256": "57b31b5be8c1b935399e2daf14f4330b4d595026aca7673f3a20cc8264efdf58",
+          "size": 27256
+        },
+        {
+          "path": "scripts/writer-core/writer_core/factory_process.py",
+          "sha256": "80332a513a38e296667b0c93cd47f456fa09ed43600a033b4815e03d6d7e340e",
+          "size": 23395
+        },
+        {
+          "path": "scripts/writer-core/writer_core/linguistic_models.py",
+          "sha256": "e0283a2ead95569e80208bcccf7dbc50d51f6dbe0b48b17ddfaaca7775cb2985",
+          "size": 1520
+        },
+        {
+          "path": "scripts/writer-core/writer_core/live_cycle.py",
+          "sha256": "a33dbaafcf7039fbda53381e16ba4fe674d2c478073c1a9d3a2391f0b53b2769",
+          "size": 21798
+        },
+        {
+          "path": "scripts/writer-core/writer_core/register_control.py",
+          "sha256": "39eda7310b309d3554c92ff24d1a35998465ed1e57232372b4894c195bc2e616",
+          "size": 7813
+        },
+        {
+          "path": "scripts/writer-core/writer_core/requirements-writer-core.txt",
+          "sha256": "b8d81067256c13665b4a223920cde26636f875f5752b512752e775e2ea5bcb2d",
+          "size": 1108
+        },
+        {
+          "path": "scripts/writer-core/writer_core/review.py",
+          "sha256": "7e2d37fd2516d2e9e1c931a487781d730ae91ab0fe113c95c76fcf3256460553",
+          "size": 42287
+        },
+        {
+          "path": "scripts/writer-core/writer_core/rtt.py",
+          "sha256": "454612e87be8e8ab1ce7f11bd9322d57c58f8d56c7d15d57cb9f001fec7a10fd",
+          "size": 1734
+        },
+        {
+          "path": "scripts/writer-core/writer_core/uncertainty_bridge.py",
+          "sha256": "4d9a6dcad0310d9113c28b04999251afd63fa6afdf0bac0e7866e9de04da0d60",
+          "size": 4541
+        }
+      ]
+    },
+    {
+      "id": "writer_core_handoff-v0.3.0",
+      "source": "scripts/writer_core_handoff",
+      "archive_target": "легаси/writer/writer_core_handoff-v0.3.0",
+      "tracked_files": 120,
+      "tree_sha256": "e1e0b5993c087683b21b3369e4a0ecc6eaccdb6f1219ec0a3cefa7af08bb4583",
+      "files": [
+        {
+          "path": "scripts/writer_core_handoff/AGENTS.md",
+          "sha256": "6171b5e0f942ed714b661b3c5921e07cc9a017562400dbf53bb06b53a9c2d044",
+          "size": 6043
+        },
+        {
+          "path": "scripts/writer_core_handoff/CHANGELOG_v0.2.md",
+          "sha256": "d313d00eb96895526ce815a4f641da97f9d1e6e613233d43e7d4bb69e855bfd8",
+          "size": 1479
+        },
+        {
+          "path": "scripts/writer_core_handoff/CHANGELOG_v0.3.md",
+          "sha256": "55d4d0340cbd22628b90729eb5cd370a2ca9affdbe729f00c3d7f4d48fd3045a",
+          "size": 1082
+        },
+        {
+          "path": "scripts/writer_core_handoff/DECISIONS.md",
+          "sha256": "de041481fc69fe57d44a86d0988de1fa8ddfba5b5b3b00b2cf620c05e22ae43c",
+          "size": 1369
+        },
+        {
+          "path": "scripts/writer_core_handoff/MANIFEST.md",
+          "sha256": "6a12f7ddcafc45d70f24df9f2199d39a0c337133df6888eca3bc1364fff768f1",
+          "size": 136
+        },
+        {
+          "path": "scripts/writer_core_handoff/MANIFEST_v0.3.md",
+          "sha256": "036fca40ee9531433b7b551d825bc77f22df5171aa991433f121c95a45a7adb9",
+          "size": 16050
+        },
+        {
+          "path": "scripts/writer_core_handoff/README.md",
+          "sha256": "778b717a8fb325de3d5e6a6f67893a1dfe06a1dd7af655ae5c1cb15599f62614",
+          "size": 4839
+        },
+        {
+          "path": "scripts/writer_core_handoff/TASKS.md",
+          "sha256": "face0b1be10a36ad43954ab0d4eb64d967091c05d2955cea7e8622267552766c",
+          "size": 879
+        },
+        {
+          "path": "scripts/writer_core_handoff/VALIDATION_REPORT.md",
+          "sha256": "bb0ae7c0fbe787eb91c9153a94f736cc48d6fc20a1361c82f18964eef9bf5e26",
+          "size": 423
+        },
+        {
+          "path": "scripts/writer_core_handoff/VALIDATION_REPORT_v0.3.md",
+          "sha256": "57e68b678faf7bfb796214c140ce079734b8bea83e8ac577a8359bb61f28e699",
+          "size": 517
+        },
+        {
+          "path": "scripts/writer_core_handoff/VERSION",
+          "sha256": "d915cc95d6ca8f47ae297713ed46d4e5c5d99ddd29fc3c61e263bdf305f2b5b0",
+          "size": 6
+        },
+        {
+          "path": "scripts/writer_core_handoff/affordance_registry.yaml",
+          "sha256": "04d620d05cb59f78bdf1c9ebe2093f548dfe7d81cac0c578bb4db24881f1e03d",
+          "size": 1590
+        },
+        {
+          "path": "scripts/writer_core_handoff/agent_master_plan.yaml",
+          "sha256": "c21063fccf943bbbf6ccd0ef4e17cc883e1509b16f23dd64799735c57bc6c318",
+          "size": 7764
+        },
+        {
+          "path": "scripts/writer_core_handoff/docs/01_INVARIANTS.md",
+          "sha256": "3b06e1d846bbd34b1ddc1c69851aa1cc2e900a26b2f881c03917cb1f46131f49",
+          "size": 1686
+        },
+        {
+          "path": "scripts/writer_core_handoff/docs/02_ARCHITECTURE.md",
+          "sha256": "cbf9dbb657741c89f85ffc2e31849ad0bbbf468933b3b658b68211a0bd220415",
+          "size": 7197
+        },
+        {
+          "path": "scripts/writer_core_handoff/docs/03_ENTITY_AND_GRAPH_REGISTRY.md",
+          "sha256": "d1fa3b48823d2582ac26f4b6eb1c3f5ceb731a06747468187a795e94ad8fd9cb",
+          "size": 831
+        },
+        {
+          "path": "scripts/writer_core_handoff/docs/04_ROUTING.md",
+          "sha256": "30e705f37b55297aa071edfa896a23d013adb1d5f35d48254383b6ce95d2904c",
+          "size": 568
+        },
+        {
+          "path": "scripts/writer_core_handoff/docs/05_WRITING_CONTRACT.md",
+          "sha256": "f73f3469ed598c8ee3cdf4a86bedd701675d06d68f582388651d9270f12e7be2",
+          "size": 1756
+        },
+        {
+          "path": "scripts/writer_core_handoff/docs/06_ROUND_TRIP_SEMANTIC_VALIDATION.md",
+          "sha256": "fb3f19125fded4e3f66931157808b691b959c266cfeaf22a09db387340d7620c",
+          "size": 1118
+        },
+        {
+          "path": "scripts/writer_core_handoff/docs/07_TEMPLATE_SYSTEM.md",
+          "sha256": "d639bd799ad6af3c62762eed43db3e2d122eb51b029dc9877ef4f30f2a01454a",
+          "size": 1122
+        },
+        {
+          "path": "scripts/writer_core_handoff/docs/08_AGENT_ROLES.md",
+          "sha256": "6d756bd8e5e167f7e3ea54d383983a49b60198188af0aee8f396314f115885ee",
+          "size": 2825
+        },
+        {
+          "path": "scripts/writer_core_handoff/docs/09_IMPLEMENTATION_MASTER_PLAN.md",
+          "sha256": "6b72191e9063b9020a7aaf07c9b613a92db1810d9015c3068420255e6d5ef8a9",
+          "size": 4493
+        },
+        {
+          "path": "scripts/writer_core_handoff/docs/10_TEST_AND_ACCEPTANCE.md",
+          "sha256": "29816d60050d1962bf3fd32cab029cc6947196f593d01ce664a8aac4ac1f5d5e",
+          "size": 1129
+        },
+        {
+          "path": "scripts/writer_core_handoff/docs/11_MIGRATION.md",
+          "sha256": "808e026c8ca51b9436b12293345012f08e43fd81f82a1d7a44a80f14edabf206",
+          "size": 1213
+        },
+        {
+          "path": "scripts/writer_core_handoff/docs/12_SEMANTIC_TYPE_SYSTEM.md",
+          "sha256": "29bf6bc14696caa415cbe7de325051eee0f08b73e6e43bd5e373d807c71467ba",
+          "size": 1574
+        },
+        {
+          "path": "scripts/writer_core_handoff/docs/13_WRITING_COMPILER_PIPELINE.md",
+          "sha256": "2118bdaaf2f92082a3180e9e57d25fb64aba03c3e904f76dcb8208932a86fb17",
+          "size": 1826
+        },
+        {
+          "path": "scripts/writer_core_handoff/docs/14_CAPABILITY_OPERATION_REGISTRY.md",
+          "sha256": "6fa723537c4636a1e3d9cff875d513f039c143e3bbe55478cb7b81d62950dcf4",
+          "size": 1203
+        },
+        {
+          "path": "scripts/writer_core_handoff/docs/15_TEMPLATE_EXECUTION_MODEL.md",
+          "sha256": "7ac8ba772009fedea3988f5f133355c9daab23c11b70e3b3f6bca529ebafdf6b",
+          "size": 1076
+        },
+        {
+          "path": "scripts/writer_core_handoff/docs/16_DEPENDENCY_INVALIDATION_BUILD_SYSTEM.md",
+          "sha256": "50effef6178c21ac238ac8b509cba34b1c88bf5ec8b215e9b22f173be2bc7567",
+          "size": 1273
+        },
+        {
+          "path": "scripts/writer_core_handoff/docs/17_GLOBAL_CONSISTENCY_TERMINOLOGY.md",
+          "sha256": "26c26d1d082171f6f227084bb9773cf87d8836f0dd06f560c12a99e44b660014",
+          "size": 902
+        },
+        {
+          "path": "scripts/writer_core_handoff/docs/17_RTT_BENCHMARK_SPEC.md",
+          "sha256": "d389b30bdbdf1c5dc5372166302cefb6d63365d26ecfab724e4e99874d30c3d5",
+          "size": 897
+        },
+        {
+          "path": "scripts/writer_core_handoff/docs/18_QUANTITATIVE_UNCERTAINTY_ENGINE.md",
+          "sha256": "ee5d6ec3c927569e9df7c6a5a08f7388204b5a4375e849d8e02f102e67897047",
+          "size": 1113
+        },
+        {
+          "path": "scripts/writer_core_handoff/docs/19_DATA_COMPUTATION_ARTIFACT_LINEAGE.md",
+          "sha256": "486fba4dbbf49ee07f77a9f2d54762f9d0463678f0f1b2560238ae15545f3c85",
+          "size": 1085
+        },
+        {
+          "path": "scripts/writer_core_handoff/docs/20_SECTION_INTERFACE_COMPRESSION_NOVELTY.md",
+          "sha256": "934bcba5d2b393e3ba417dbd84f1d91497e81e7de5517506bd176f4b2fb9019c",
+          "size": 1421
+        },
+        {
+          "path": "scripts/writer_core_handoff/docs/21_REVIEW_DECISION_CONFLICT.md",
+          "sha256": "8f04c6de8e3027da63f2e2f5069c769787e50a250b9c272f1a0a0917b0ba8ba0",
+          "size": 1075
+        },
+        {
+          "path": "scripts/writer_core_handoff/docs/22_RELEASE_EXPORT_VISUAL_QA.md",
+          "sha256": "c7a25f042fb175b476a16427ad938dc446e4b8eefceec10be8fdc1bf6414d6cc",
+          "size": 1115
+        },
+        {
+          "path": "scripts/writer_core_handoff/docs/23_BLOCKER_PROJECT_ORCHESTRATION.md",
+          "sha256": "2a8647872b7e65103708b01799be2feba46fcf8f03ac1be35276c392683043d7",
+          "size": 1273
+        },
+        {
+          "path": "scripts/writer_core_handoff/docs/24_CATASTROPHIC_SCENARIOS.md",
+          "sha256": "7c2db3fd5771c1e2830340a2c76c39ede7d9cb5597546b53d506016c1c803f0a",
+          "size": 2128
+        },
+        {
+          "path": "scripts/writer_core_handoff/docs/25_SECURITY_AUTHORITY_MUTABILITY.md",
+          "sha256": "fb156ba19c23e1803d1455bb8c71b84213a109212a25a018da98639967e9f9c2",
+          "size": 1188
+        },
+        {
+          "path": "scripts/writer_core_handoff/docs/26_ADAPTIVE_CONTROL_LLM_ENVIRONMENT.md",
+          "sha256": "6bd0bdb7865ce3ebb2658163daba759af97ac9291157f3f21ed0b8c5a0ba3f5d",
+          "size": 2769
+        },
+        {
+          "path": "scripts/writer_core_handoff/docs/27_LINGUISTIC_INTELLIGENCE_ARCHITECTURE.md",
+          "sha256": "6e2866f40b685e35e64060d6e3c2c5e3c9834825a38faddb6a62368f91b27340",
+          "size": 2262
+        },
+        {
+          "path": "scripts/writer_core_handoff/docs/28_LINGUISTIC_IR_AND_GRAPHS.md",
+          "sha256": "720a16dc49695c8cac852e3d6b1c30eb397362347724dfe25f023cbb5f75db88",
+          "size": 2189
+        },
+        {
+          "path": "scripts/writer_core_handoff/docs/29_ACADEMIC_SENTENCE_REALIZATION_ENGINE.md",
+          "sha256": "5f6ae1bdf2adfcb64faf119ab3020d9d1c9bc1a24b25a2dd898c14945bef1317",
+          "size": 1524
+        },
+        {
+          "path": "scripts/writer_core_handoff/docs/30_LINGUISTIC_AUDITOR_AND_SESSION_LEARNING.md",
+          "sha256": "0c06f77c6b306c16444699e8c778562c586110dd8619a0165541700cdfc6605f",
+          "size": 1495
+        },
+        {
+          "path": "scripts/writer_core_handoff/docs/31_LINGUISTIC_EXPERT_AND_ESCALATION.md",
+          "sha256": "cc57d79af6a92e213c4885e4cd6d829b9d1481c782a32fcf77fcbc833b38fa48",
+          "size": 1306
+        },
+        {
+          "path": "scripts/writer_core_handoff/docs/32_CLASSICAL_LINGUISTIC_RHETORICAL_ANALYSIS.md",
+          "sha256": "59829da535ba7d7078a0659d972fd5e1183aac268ca7d7411d148b6959e9396b",
+          "size": 2507
+        },
+        {
+          "path": "scripts/writer_core_handoff/docs/33_LINGUISTIC_RTT.md",
+          "sha256": "227b065d7f5a6018195a95c5c8a048dd5710eab693447ddd9a75d4ce09651411",
+          "size": 1136
+        },
+        {
+          "path": "scripts/writer_core_handoff/docs/34_LINGUISTIC_BENCHMARK_AND_GOLDEN_FIXTURES.md",
+          "sha256": "29111a509b2e9c42919d933695a9281ffe44bca4341cb048ef159e14870971f7",
+          "size": 1132
+        },
+        {
+          "path": "scripts/writer_core_handoff/docs/35_WEAK_LLM_LINGUISTIC_TOOLKIT.md",
+          "sha256": "0f20c8c47a12d422d1f8e7add9055f042f1e823723e6aa5d167b8b06c186ab14",
+          "size": 980
+        },
+        {
+          "path": "scripts/writer_core_handoff/docs/36_STYLE_IDIOLECT_AND_LINGUISTIC_MEMORY.md",
+          "sha256": "a6eddb89f097373d8ba8b226d5dd7f63dbbc189e76c20553d803a976040b42cb",
+          "size": 798
+        },
+        {
+          "path": "scripts/writer_core_handoff/docs/37_LINGUISTIC_FORENSICS_BRIDGE.md",
+          "sha256": "399c18ff08f26a007e4f1b1b47043833cb691a93b12bef2feeb4a49594fd7b01",
+          "size": 640
+        },
+        {
+          "path": "scripts/writer_core_handoff/examples/artifacts/figure_as_code.yaml",
+          "sha256": "f6669747b1fae7ca2f499cbd6c7194604a6b031df94c80298ae6f07951d6898d",
+          "size": 421
+        },
+        {
+          "path": "scripts/writer_core_handoff/examples/artifacts/quantity_uncertainty.yaml",
+          "sha256": "af7c4c455072afb89ae3f50ff8e07c3b31d7b3b7a4114fa7772e26b977b42274",
+          "size": 382
+        },
+        {
+          "path": "scripts/writer_core_handoff/examples/blockers/missing_evidence.yaml",
+          "sha256": "b5c2c3e79c58b9051696a87c19923672a6902a57c8f7a2d59569970659c48fb4",
+          "size": 305
+        },
+        {
+          "path": "scripts/writer_core_handoff/examples/build/build_manifest.yaml",
+          "sha256": "cb272c7f81e929405a5b6cea633033ddf791546a5eb11d0bf674a31b0659fe8d",
+          "size": 291
+        },
+        {
+          "path": "scripts/writer_core_handoff/examples/catastrophic/compress_to_abstract.yaml",
+          "sha256": "aa33ac94c026ef8f181a2be99be04cf537dfd7fc8b62af5b8d5231290d02e723",
+          "size": 157
+        },
+        {
+          "path": "scripts/writer_core_handoff/examples/catastrophic/export_breaks_equations.yaml",
+          "sha256": "5a873d959c64dcf9c16f3ff67a4cf79efe6a5a3a0923407144c4fb0a680f9467",
+          "size": 215
+        },
+        {
+          "path": "scripts/writer_core_handoff/examples/catastrophic/hallucinated_factual_object.yaml",
+          "sha256": "11d383986a6a70e819399cecb18a340971302d224ea43e5a952847da9312126a",
+          "size": 216
+        },
+        {
+          "path": "scripts/writer_core_handoff/examples/catastrophic/manual_docx_edit.yaml",
+          "sha256": "78fac5eef98400a4dd0720481f1025b65038d51f42e87c560ad8c69367d918ea",
+          "size": 179
+        },
+        {
+          "path": "scripts/writer_core_handoff/examples/catastrophic/new_experiment_breaks_conclusion.yaml",
+          "sha256": "78cd9054267b4ea0df30483a426b146d6a3c4fc6401305e172cd6f1ad73b5a44",
+          "size": 196
+        },
+        {
+          "path": "scripts/writer_core_handoff/examples/catastrophic/policy_upgrade_midproject.yaml",
+          "sha256": "0ac5b56239783355e3d32ca1ed8c67580dcff23acafd66bb59d975bf707891ac",
+          "size": 221
+        },
+        {
+          "path": "scripts/writer_core_handoff/examples/catastrophic/raw_data_corrected.yaml",
+          "sha256": "8fd2e0806a0bf5506fe10359b02d29f253e207287449975b78d64034ef9e79f6",
+          "size": 179
+        },
+        {
+          "path": "scripts/writer_core_handoff/examples/catastrophic/reviewer_strength_conflict.yaml",
+          "sha256": "600b2d7d7153feffe34605a4adb4b55842e442ef89ff1c39aa77586b9c5d5432",
+          "size": 241
+        },
+        {
+          "path": "scripts/writer_core_handoff/examples/catastrophic/source_retracted.yaml",
+          "sha256": "78bdcaf5be8e8591e674ef3c83f1c5c87eeb7603d636331fc9c40bd3054b9f6a",
+          "size": 167
+        },
+        {
+          "path": "scripts/writer_core_handoff/examples/catastrophic/two_agent_merge.yaml",
+          "sha256": "787d90b9c3a87a19c0b025738ed54a244ab0e7ee3fda7a55a068107fdef8aeaf",
+          "size": 150
+        },
+        {
+          "path": "scripts/writer_core_handoff/examples/document_ir/paragraph_ir.yaml",
+          "sha256": "e2128abc48f0c98f59c210454113a3b227cf9f90038276621b4a3641bb190c97",
+          "size": 873
+        },
+        {
+          "path": "scripts/writer_core_handoff/examples/review/reviewer_conflict.yaml",
+          "sha256": "9ab946d3abf2e92cfe9f8de04c15cfbd4175f4d6e4bed65033705b5360a065a3",
+          "size": 257
+        },
+        {
+          "path": "scripts/writer_core_handoff/examples/writing_contract/paragraph_contract.yaml",
+          "sha256": "3c34b8e792d183c579e1c16d5a5ae816c5b1a96b08286a725eb60f5ea1be1c48",
+          "size": 1261
+        },
+        {
+          "path": "scripts/writer_core_handoff/legacy_sources/writer-core-current-snapshot.7z",
+          "sha256": "428d159b21cc457551a95e7fd7f742f66f9069ad006fcf386e91fc5245e5cb60",
+          "size": 537002
+        },
+        {
+          "path": "scripts/writer_core_handoff/legacy_sources/writer-core-original.7z",
+          "sha256": "d72dbf617722f04366f0da0fdf17d8cfbcc3af4f85b718217f6068a9b3b5d953",
+          "size": 56030
+        },
+        {
+          "path": "scripts/writer_core_handoff/legacy_sources/writer-core.7z",
+          "sha256": "d72dbf617722f04366f0da0fdf17d8cfbcc3af4f85b718217f6068a9b3b5d953",
+          "size": 56030
+        },
+        {
+          "path": "scripts/writer_core_handoff/linguistics/auditor_memory_policy.yaml",
+          "sha256": "b14d1e0ae79e84c4e14e0b37ac6104b1963b7bf19110a2bfc444acb503858775",
+          "size": 489
+        },
+        {
+          "path": "scripts/writer_core_handoff/linguistics/collocation_registry.yaml",
+          "sha256": "335c3640e477af29c26ece027fcc0a00ed16debb8f5eac392ace4719abded3ce",
+          "size": 567
+        },
+        {
+          "path": "scripts/writer_core_handoff/linguistics/feature_registry.yaml",
+          "sha256": "0bd7a5f6f1ca53a7f28611ff5c050f50d8d087bf86e505bad285257c20e9dd66",
+          "size": 1903
+        },
+        {
+          "path": "scripts/writer_core_handoff/linguistics/tier_policy.yaml",
+          "sha256": "9402fbb1e7b3e9e6ff9d579182d04c4c0dfdd21c1c6b55824c7b2d881af04bcd",
+          "size": 936
+        },
+        {
+          "path": "scripts/writer_core_handoff/osint/01_AUTHORSHIP_FORENSICS_ARCHITECTURE.md",
+          "sha256": "d7c64b3e7c77ac427759047856d7006e349f9d84193a8a7a39734c52d65db4ee",
+          "size": 612
+        },
+        {
+          "path": "scripts/writer_core_handoff/osint/02_FINGERPRINT_FEATURE_ONTOLOGY.md",
+          "sha256": "7f61e86f4d2e69da906f9f3d9a4510085e7763b72c8cb7405eb748143c93cbb2",
+          "size": 858
+        },
+        {
+          "path": "scripts/writer_core_handoff/osint/03_CONFOUNDER_GRAPH.md",
+          "sha256": "c9d6cc08793e36bae238c186969da54e0d19dc4d740dbc3a4ac2e3059d5029f9",
+          "size": 482
+        },
+        {
+          "path": "scripts/writer_core_handoff/osint/04_AUTHOR_PROFILE_AND_TRAJECTORY.md",
+          "sha256": "cec482b851e71d1d0ce28de15b48960af1e65a94f97cb26eb3d61751a1c26abe",
+          "size": 517
+        },
+        {
+          "path": "scripts/writer_core_handoff/osint/05_WORK_LINEAGE_GRAPH.md",
+          "sha256": "869646a42b5ef11d505e69e6a8101e50261b20efd9a39a6538e95f5656214141",
+          "size": 444
+        },
+        {
+          "path": "scripts/writer_core_handoff/osint/06_OPEN_WORLD_VERIFICATION.md",
+          "sha256": "dde5ff89a174a3e5dea4be2bc05470b4259444dd23179caf17c5e5136c72b288",
+          "size": 396
+        },
+        {
+          "path": "scripts/writer_core_handoff/osint/07_OSINT_VALIDATION_PROTOCOL.md",
+          "sha256": "a175ac6a0fa0644e3b7ce6b515f6ea823dc68092d42799ec32998df81068c1e7",
+          "size": 519
+        },
+        {
+          "path": "scripts/writer_core_handoff/policies/academic_high_rigor.yaml",
+          "sha256": "d5085eb68a79824112805cb184cf81b0e71e9b5183b64d8ba3ed9aefaa4a3b15",
+          "size": 564
+        },
+        {
+          "path": "scripts/writer_core_handoff/routing_table.yaml",
+          "sha256": "7cd848b6ef2b99091353bd024a78c2801aaba6b128e49a852474a46737d87133",
+          "size": 1530
+        },
+        {
+          "path": "scripts/writer_core_handoff/schemas/affordance_set.schema.yaml",
+          "sha256": "1ce27347cf7f2f1790084af2cf37b407ba1ddc5feb3b54d31e589522d424744b",
+          "size": 380
+        },
+        {
+          "path": "scripts/writer_core_handoff/schemas/artifact.schema.yaml",
+          "sha256": "e76eeede51705d5c81d62ed4eeafa196cabf57a4ffa2bcfba477eb14b0bb8f19",
+          "size": 260
+        },
+        {
+          "path": "scripts/writer_core_handoff/schemas/attribution_verdict.schema.yaml",
+          "sha256": "d2196ab6b0d2311c0702990047d7ae8bac0c20caa2911b9e420f360f31132234",
+          "size": 289
+        },
+        {
+          "path": "scripts/writer_core_handoff/schemas/author_fingerprint.schema.yaml",
+          "sha256": "caee4928406b946407b18d8255ee58006e60cd36a34423747849083d5598bc33",
+          "size": 291
+        },
+        {
+          "path": "scripts/writer_core_handoff/schemas/blocker.schema.yaml",
+          "sha256": "8c653a1badbf46e69952b391f03a8361a090d71e4c3e6a554ea86dede7eff431",
+          "size": 241
+        },
+        {
+          "path": "scripts/writer_core_handoff/schemas/build_manifest.schema.yaml",
+          "sha256": "b401fd5d77e1a8d2ac8e9a50db5b8e9e0d1541a39d143eea16367b925d15de49",
+          "size": 230
+        },
+        {
+          "path": "scripts/writer_core_handoff/schemas/decision.schema.yaml",
+          "sha256": "0919bb575865e63c4f2c39ce792caa25e0e269be48adb5317abafc946608add1",
+          "size": 129
+        },
+        {
+          "path": "scripts/writer_core_handoff/schemas/executable_pattern.schema.yaml",
+          "sha256": "6dec4b21f9a6618844a358f9330b1260ffdc25ceceda1cc6c1828406264c0807",
+          "size": 266
+        },
+        {
+          "path": "scripts/writer_core_handoff/schemas/linguistic_digest.schema.yaml",
+          "sha256": "cd431f26672f477c729351366c5dc84af50ea510e5223902c1ddfb42c629fae2",
+          "size": 455
+        },
+        {
+          "path": "scripts/writer_core_handoff/schemas/linguistic_episode.schema.yaml",
+          "sha256": "db07ea441346b42b028bd5ee8456202dbda517475e8acd474d023f614d7adedb",
+          "size": 319
+        },
+        {
+          "path": "scripts/writer_core_handoff/schemas/linguistic_issue.schema.yaml",
+          "sha256": "aa8892723d2ea32fe0db01530064665dae13fc0681ff0de089804f44e5fc6056",
+          "size": 364
+        },
+        {
+          "path": "scripts/writer_core_handoff/schemas/operation_contract.schema.yaml",
+          "sha256": "46fa9019e24c90a164ec6d44233df33a899d8f1b3d6065db6cd2626ec267bff5",
+          "size": 231
+        },
+        {
+          "path": "scripts/writer_core_handoff/schemas/project_state.schema.yaml",
+          "sha256": "8e51e3b6f97259240a3fac53fdc685071acd670484645acfd3e76e162374e87e",
+          "size": 188
+        },
+        {
+          "path": "scripts/writer_core_handoff/schemas/quantity.schema.yaml",
+          "sha256": "ed9d69027f1727b901d807a87030ce629c2aa85c7d45783e741252f3c5bcb681",
+          "size": 197
+        },
+        {
+          "path": "scripts/writer_core_handoff/schemas/review_issue.schema.yaml",
+          "sha256": "9cedf67f71e5085f193c9c1e6341d38c2664733676490b4985e8d7035eea79df",
+          "size": 179
+        },
+        {
+          "path": "scripts/writer_core_handoff/schemas/rtt_result.schema.yaml",
+          "sha256": "8501b3d0d90887332f4e4c24af7a69ab843521bb84d6cfd7b93e66dc44811a3f",
+          "size": 926
+        },
+        {
+          "path": "scripts/writer_core_handoff/schemas/section_contract.schema.yaml",
+          "sha256": "b905d62e360e92ceb1bb0258f672b7bd654a3132a16108f9652a1c71427c69b3",
+          "size": 170
+        },
+        {
+          "path": "scripts/writer_core_handoff/schemas/semantic_types.schema.yaml",
+          "sha256": "bd77cee81370553f2af129a1f21c80b5805c8fb5cdd33b79618f8ce225bad776",
+          "size": 401
+        },
+        {
+          "path": "scripts/writer_core_handoff/schemas/sentence_plan.schema.yaml",
+          "sha256": "1bd2fd4f311ac3b75c37e5ba891d4aa5c69dc38a13da145ce31bde83308f1f2e",
+          "size": 423
+        },
+        {
+          "path": "scripts/writer_core_handoff/schemas/template.schema.yaml",
+          "sha256": "33bcf92cb039554f9e840ded4df800e4905093c5faed5ef924375ba5e90a9e83",
+          "size": 609
+        },
+        {
+          "path": "scripts/writer_core_handoff/schemas/uncertainty.schema.yaml",
+          "sha256": "22cc01cbf02f023e6f968daeda500c8f5a3e1f9a9dec9ad98dd4a2bbdd1f030f",
+          "size": 173
+        },
+        {
+          "path": "scripts/writer_core_handoff/schemas/work_lineage.schema.yaml",
+          "sha256": "462aef0a50c35a9322aef71a1bbaf06b53d94d04de4bcc3f88f4d559909a8fc6",
+          "size": 218
+        },
+        {
+          "path": "scripts/writer_core_handoff/schemas/writing_contract.schema.yaml",
+          "sha256": "26123809a9c8639a332e292db62392494c272ae39e15e1a0501fc2250a876dae",
+          "size": 2448
+        },
+        {
+          "path": "scripts/writer_core_handoff/src_skeleton/writer_core_ir/__init__.py",
+          "sha256": "8d9f6d19c7a8e28a03c9aecf65cdc1b36f59ce8cba84a89addf8ffa7bde40a11",
+          "size": 86
+        },
+        {
+          "path": "scripts/writer_core_handoff/src_skeleton/writer_core_ir/adaptive_control.py",
+          "sha256": "f3dca98e6c712fb2559eb70d2aaa816be2a2356159d36968cabf201d72ff4b8b",
+          "size": 1375
+        },
+        {
+          "path": "scripts/writer_core_handoff/src_skeleton/writer_core_ir/linguistics.py",
+          "sha256": "56e584ac266258ef2f1f1fbddb29a50ed4268e5abbc7f6f12ea52f2a9eda1e3b",
+          "size": 2085
+        },
+        {
+          "path": "scripts/writer_core_handoff/src_skeleton/writer_core_ir/models.py",
+          "sha256": "5ccf640e0294be22ae918b9043ed2886d87b139832773042a6a67b630dd8738c",
+          "size": 2847
+        },
+        {
+          "path": "scripts/writer_core_handoff/src_skeleton/writer_core_ir/operations.py",
+          "sha256": "5d7e96de5ff901f346aabc04b3c755590a3af9c55f3516dbed8429c786b5a480",
+          "size": 1238
+        },
+        {
+          "path": "scripts/writer_core_handoff/src_skeleton/writer_core_ir/rtt.py",
+          "sha256": "abe7e43c8528b634ae4057d4f268d6419f3df611a50cc23ca3be8ff369f3584f",
+          "size": 1322
+        },
+        {
+          "path": "scripts/writer_core_handoff/template_registry.yaml",
+          "sha256": "cc3ddf01652690aced831958e4818ef3ee78bfff269a2740d67ee1b633caac59",
+          "size": 629
+        },
+        {
+          "path": "scripts/writer_core_handoff/templates/abstract_safe_compression.yaml",
+          "sha256": "f2c32767b901b39cb059bc90f59f52de407da7bf00b7f73afa558b5c5e4d8e3b",
+          "size": 512
+        },
+        {
+          "path": "scripts/writer_core_handoff/templates/discourse_result_interpretation_limitation.yaml",
+          "sha256": "71f50307de5d051f24a99b63fe4e2c728e7133bccfe5109fcd3d4e1699061b15",
+          "size": 749
+        },
+        {
+          "path": "scripts/writer_core_handoff/templates/novelty_claim_pattern.yaml",
+          "sha256": "496ee7fa6b31f69f1d83d2c2b2461142c977e59776651df2d393baea1371a2c2",
+          "size": 529
+        },
+        {
+          "path": "scripts/writer_core_handoff/templates/repair_causality_upgrade.yaml",
+          "sha256": "92c9dc8e29ae8f6c8c815117e4e54b0e8a23c075329f99fa89f7be45d904c64c",
+          "size": 426
+        },
+        {
+          "path": "scripts/writer_core_handoff/tests/linguistics/tier_escalation.yaml",
+          "sha256": "36011479deadca9d00aa7cee64439029a8864a18e979d6924fee3adf78b632c8",
+          "size": 484
+        },
+        {
+          "path": "scripts/writer_core_handoff/tests/test_fixtures_contract.md",
+          "sha256": "3c982506cce358daebdbcc9c6ba30d1a729daed71ce8359664b0a62020a83cbf",
+          "size": 483
+        }
+      ]
+    }
+  ]
+}

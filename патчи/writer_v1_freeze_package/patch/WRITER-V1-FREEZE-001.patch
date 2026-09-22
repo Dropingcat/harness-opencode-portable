@@ -1,0 +1,2311 @@
+From ec26206620ed0392ce50a9df8a8b7ffebb962dab Mon Sep 17 00:00:00 2001
+From: OpenAI <oai@example.invalid>
+Date: Fri, 11 Sep 2026 19:11:57 +0000
+Subject: [PATCH] writer: freeze v1 authority and composition contracts
+
+---
+ IMPLEMENTATION_TRACKER.md                     |  16 +
+ WRITER_V1_FREEZE_001_REVIEW.md                | 179 +++++++++++
+ WRITER_V1_FREEZE_001_SUMMARY.json             |  22 ++
+ agents/article-writer.md                      | 127 ++++----
+ agents/writing-orchestrator.md                | 286 ++++--------------
+ config/capabilities_authority.json            |   4 +
+ config/capability_runtime_snapshot.json       |  27 +-
+ config/logical_tools.json                     |   3 +
+ config/providers_authority.json               |  12 +
+ config/stage_capsules_authority.json          |   6 +-
+ config/writer_v1_contracts.json               |  48 +++
+ scripts/researcher/verify_claims.py           |  76 +++--
+ scripts/writer/authority/__init__.py          |   1 +
+ scripts/writer/authority/realization.py       |  32 ++
+ scripts/writer/cli.py                         |   1 +
+ .../writer/composition/style_instruction.py   |  29 +-
+ scripts/writer/composition/writing_policy.py  |   4 +-
+ scripts/writer/drafting/agent_dispatch.py     |   2 +-
+ scripts/writer/drafting/artifact.py           |  19 +-
+ scripts/writer/drafting/proposed_claim.py     |  18 ++
+ scripts/writer/drafting/request.py            |  15 +-
+ scripts/writer/provenance/state_policy.py     |  28 +-
+ scripts/writer/references/evidence_select.py  |  49 +++
+ scripts/writer/references/select.py           |  33 +-
+ scripts/writer/release/gate.py                |  24 +-
+ .../writer/research/verify_claims_adapter.py  |   3 +
+ scripts/writer/review/citation_trace.py       |  13 +-
+ shared/article-writing-process.md             | 109 ++++---
+ shared/writer-traceability-contract.md        | 228 +++++++-------
+ shared/writing-orchestration-process.md       | 171 ++++-------
+ tests/test_writer_v1_freeze.py                | 106 +++++++
+ 31 files changed, 1051 insertions(+), 640 deletions(-)
+ create mode 100644 WRITER_V1_FREEZE_001_REVIEW.md
+ create mode 100644 WRITER_V1_FREEZE_001_SUMMARY.json
+ create mode 100644 config/writer_v1_contracts.json
+ create mode 100644 scripts/writer/authority/__init__.py
+ create mode 100644 scripts/writer/authority/realization.py
+ create mode 100644 scripts/writer/drafting/proposed_claim.py
+ create mode 100644 scripts/writer/references/evidence_select.py
+ create mode 100644 tests/test_writer_v1_freeze.py
+
+diff --git a/IMPLEMENTATION_TRACKER.md b/IMPLEMENTATION_TRACKER.md
+index eae0186..f014ee0 100644
+--- a/IMPLEMENTATION_TRACKER.md
++++ b/IMPLEMENTATION_TRACKER.md
+@@ -59,3 +59,19 @@ Rule: an archive is a move with provenance and rollback, not a cleanup opportuni
+ - [ ] Deferred: live invocation of external OpenCode writer-agent; current boundary is a deterministic dispatch/output contract.
+ - [ ] Deferred: semantic identity reconciliation for renamed/duplicate library sources.
+ - [ ] Deferred: embeddings as secondary recall only after deterministic FTS/search-memory behavior stabilizes.
++
++## WS-27 WRITER-V1-FREEZE-001
++
++- [x] Replace language hard-reject for STYLE with tiered authority: same-language `FULL`, cross-language `STRUCTURE_ONLY`.
++- [x] Ensure cross-language references cannot drive lexical/syntactic surface style or hedging density.
++- [x] Add `claim_evidence_selection/1.0` and per-claim evidence mapping in DraftRequest.
++- [x] Add `ProposedClaim/1.0`; DraftArtifact blocks unregistered new propositions and exposes research debt.
++- [x] Split verification process state, evidence verdict and epistemic state while preserving legacy verdict compatibility.
++- [x] Make DOM paragraph claim bindings authoritative after patch; rendered `[C-*]` markers are checked projections.
++- [x] Add authority-binding failure into traceability release without changing the three top-level release gates.
++- [x] Separate source invalidation claim state from evidence verdict; preserve deterministic reducer ownership.
++- [x] Update article-writer, writing-orchestrator and shared Writer contracts to forbid direct search/provider knowledge from prose Writer.
++- [x] Add `reference.evidence.select` capability/provider/stage routing and rebuild capability snapshot.
++- [x] Regression: 117/117 tests PASS; runtime/capability compilers, compileall and diff checks PASS.
++- [ ] Deferred to Researcher refactor: semantic textual entailment, evidence-quality tribunal, source identity resolver, external provider live activation.
++- [ ] Deferred environment-dependent check: live invocation of the external OpenCode `article-writer` agent against WriterAgentDispatchContract.
+diff --git a/WRITER_V1_FREEZE_001_REVIEW.md b/WRITER_V1_FREEZE_001_REVIEW.md
+new file mode 100644
+index 0000000..a3971a3
+--- /dev/null
++++ b/WRITER_V1_FREEZE_001_REVIEW.md
+@@ -0,0 +1,179 @@
++# WRITER-V1-FREEZE-001 — implementation and authority review
++
++## 1. Goal
++
++Close the remaining Writer-side contract seams before moving primary development effort to Researcher. The target is not a feature-complete autonomous writing system. The target is a stable Writer boundary in which prose generation can be replaced, upgraded or routed to another model without changing claim authority, evidence authority, provenance or release semantics.
++
++## 2. Decisions
++
++### 2.1 Cross-language style references
++
++The former language hard-filter was too strict. It prevented an English/German dissertation from contributing useful argument structure to a Russian dissertation.
++
++New policy:
++
++- same-language STYLE reference: `FULL` authority over bounded style properties plus structural patterns;
++- cross-language STYLE reference: `STRUCTURE_ONLY`;
++- EVIDENCE selection remains independent of style language/genre filters.
++
++`STRUCTURE_ONLY` may contribute graph motifs, argument structure, paragraph architecture and citation architecture. It may not contribute lexical wording, syntax imitation, idioms, hedging density or other surface-language behavior.
++
++This is deliberately asymmetric. Structural transfer across language is useful. Surface transfer is a common source of translated-looking prose.
++
++### 2.2 Proposed claims
++
++Writer composition naturally produces synthesis. Treating every such sentence as an error loses useful reasoning; treating it as an authorized fact is worse.
++
++`ProposedClaim/1.0` is now the only normal channel for a Writer to introduce a proposition that is not in `DraftRequest.authorized_claims`.
++
++A proposed claim carries:
++
++- stable ID/hash;
++- text;
++- paragraph/span;
++- type (`SYNTHESIS`, `INTERPRETATION`, `COMPARISON`, `CAUSAL_HYPOTHESIS`, `EXTERNAL_FACT`, ...);
++- evidence references if available;
++- reason;
++- explicit `requires_registration`.
++
++DraftArtifact becomes non-releaseable until proposed claims are registered/validated, weakened, or discarded.
++
++### 2.3 Per-claim evidence selection
++
++Section-level evidence bundles were too coarse. The Writer could receive good sources for a section while an individual claim had no direct evidence.
++
++`claim_evidence_selection/1.0` now runs deterministic evidence selection for each authorized claim and preserves `claim_id -> selected evidence fragments` in `DraftRequest.evidence_by_claim`.
++
++Evidence is still only a candidate until Researcher validates it. Selection does not upgrade evidence authority.
++
++### 2.4 Verification versus epistemic uncertainty
++
++The former single `verdict` mixed three dimensions.
++
++New explicit fields:
++
++- `verification_state`: `VERIFIED | UNCHECKED | FAILED`;
++- `evidence_verdict`: `SUPPORTED | CONTRADICTED | UNSUPPORTED | AMBIGUOUS | OPEN`;
++- `epistemic_state`: `ESTABLISHED | QUALIFIED | AMBIGUOUS | DISPUTED | UNKNOWN`.
++
++The legacy `verdict` remains for compatibility but new gates prefer the explicit fields.
++
++Important behavior change: `UNCHECKED` blocks evidence release but does not automatically trigger hedged prose. Masked-uncertainty checks are driven by epistemic state (plus explicit DOM uncertainty), not by absence of verification alone.
++
++### 2.5 Claim-realization authority
++
++The final authority chain is:
++
++```
++Claim registry
++→ DraftRequest authorization
++→ DraftArtifact realizes_claims
++→ DOM paragraph.claims
++→ rendered [C-*] markers (projection only)
++```
++
++After a DOM patch, `paragraph.claims` is authoritative for what the paragraph realizes. Rendered markers must match it, but cannot change it.
++
++Release uses the DOM binding when available. Historical documents without paragraph-level bindings keep a marker compatibility path.
++
++A DOM/marker mismatch is surfaced inside the traceability gate as `authority_binding = FAIL`.
++
++This avoids adding a fourth top-level release gate and preserves the public `evidence / traceability / semantic_roundtrip` contract.
++
++### 2.6 Source invalidation authority
++
++Source updates do not directly rewrite claim truth.
++
++State reducer owns operational transitions such as:
++
++- `PENDING_REVALIDATION`;
++- `SUPPORTED_WITH_STALE_EVIDENCE`.
++
++Evidence verdict is preserved separately. A single-evidence supported claim can therefore become operationally pending while its last evidence verdict remains `SUPPORTED` and its new verification state becomes `UNCHECKED`.
++
++## 3. Agent boundary cleanup
++
++The previous `article-writer` prompt still knew `webfetch/search`, old `wc_cli.py`, and could independently decide to verify claims. This contradicted the runtime architecture.
++
++Updated Writer agent contract:
++
++- receives DraftRequest/StyleInstruction/authorized claims;
++- no direct web search or source provider access;
++- no backend/provider names;
++- no direct DOM mutation;
++- returns realization mappings and ProposedClaims;
++- research debt goes back to the orchestrator/Researcher.
++
++`writing-orchestrator`, `shared/article-writing-process.md`, `shared/writing-orchestration-process.md` and `shared/writer-traceability-contract.md` were aligned to the same authority model.
++
++Researcher internals were intentionally not refactored here. Writer talks to the stable `ValidationPlan / ResearchDispatchContract` boundary.
++
++## 4. Routing changes
++
++Added logical tool/capability/provider:
++
++```
++reference.evidence.select
++→ writer.reference.evidence_select
++→ scripts/writer/references/evidence_select.py
++```
++
++The `writing-prose / claim-load` stage now requires deterministic per-claim evidence selection.
++
++Capability snapshot was rebuilt from authority sources rather than edited by hand.
++
++## 5. Compatibility
++
++Compatibility is retained for:
++
++- `reference_selection/1.0` alongside new `1.1` output;
++- `draft_artifact/1.0` consumers via compatibility metadata;
++- legacy `verification.verdict`;
++- marker-only historical documents that lack DOM paragraph claim bindings.
++
++New production paths prefer the new explicit contracts.
++
++## 6. Test coverage added
++
++New regression cases include:
++
++- cross-language STYLE becomes `STRUCTURE_ONLY` rather than rejected;
++- cross-language reference cannot control surface hedging;
++- per-claim evidence mapping survives into DraftRequest;
++- DraftArtifact emits typed ProposedClaim and blocks release;
++- numeric supported claim becomes `VERIFIED + SUPPORTED + ESTABLISHED`;
++- nonnumeric unverified claim becomes `UNCHECKED + OPEN + UNKNOWN`;
++- `UNCHECKED` alone does not trigger masked-uncertainty prose requirements;
++- DOM claim binding outranks rendered marker;
++- marker/DOM mismatch fails traceability;
++- invalidation separates claim operational state from evidence verdict.
++
++## 7. Remaining Writer risks
++
++### 7.1 ProposedClaim extraction is contract-driven
++
++The runtime validates ProposedClaims supplied by the Writer agent. It does not yet perform a high-quality semantic extraction of every unmarked new proposition itself. Traceability/orphan-claim checks remain the secondary safety net.
++
++This is acceptable for v1 because automatic semantic proposal extraction belongs closer to the future Researcher/semantic-validator work than to deterministic composition.
++
++### 7.2 Evidence ranking is intentionally simple
++
++Per-claim evidence selection is lexical/provenance-based. Semantic entailment and evidence-quality ranking remain Researcher responsibilities.
++
++### 7.3 Live external agent invocation
++
++`WriterAgentDispatchContract` is implemented and deterministic post-processing is tested. This environment does not expose the external OpenCode task runtime needed to perform a genuine live `article-writer` invocation, so that environment-dependent check remains open.
++
++## 8. Freeze recommendation
++
++The Writer public contracts are now stable enough to freeze as v1 for Researcher work, with one rule: additions should be backward-compatible unless a concrete E2E failure justifies a Writer contract change.
++
++Primary development should now move to Researcher:
++
++1. executable semantic textual entailment;
++2. evidence quality / justification normalization;
++3. canonical SourceCatalog identity resolution;
++4. external provider activation behind logical tools;
++5. deterministic Researcher runner that consumes `ResearchDispatchContract` and returns a bounded ResearchBundle/EvidenceBundle.
++
++Do not reintroduce provider names or direct search into Writer while repairing Researcher.
+diff --git a/WRITER_V1_FREEZE_001_SUMMARY.json b/WRITER_V1_FREEZE_001_SUMMARY.json
+new file mode 100644
+index 0000000..13efd67
+--- /dev/null
++++ b/WRITER_V1_FREEZE_001_SUMMARY.json
+@@ -0,0 +1,22 @@
++{
++  "schema": "writer_v1_freeze_summary/1.0",
++  "status": "ACCEPT",
++  "tests": {"passed": 117, "failed": 0},
++  "runtime_policy_hash": "6676bcbc8732fac4f97e88f13b712758dff818db849bf588adb0a7e1a2ea880a",
++  "capability_policy_hash": "b96fcb4341080bbc4d6c2b835c704bed60ee02d047f1bbb0c747c8a59af923cd",
++  "implemented": [
++    "tiered cross-language style authority",
++    "per-claim evidence selection",
++    "ProposedClaim/1.0",
++    "verification_state/evidence_verdict/epistemic_state split",
++    "DOM paragraph claim authority with marker projection checks",
++    "claim-state/evidence-verdict separation on invalidation",
++    "Writer agent/orchestrator backend abstraction alignment",
++    "Writer v1 contract freeze manifest"
++  ],
++  "deferred": [
++    "live external OpenCode article-writer invocation in an environment that exposes the task runtime",
++    "Researcher textual semantic entailment and evidence-quality tribunal",
++    "Researcher source identity reconciliation and external provider live activation"
++  ]
++}
+diff --git a/agents/article-writer.md b/agents/article-writer.md
+index 67a46ae..d966bc1 100644
+--- a/agents/article-writer.md
++++ b/agents/article-writer.md
+@@ -1,80 +1,67 @@
+ ---
+ name: article-writer
+-description: Article drafting and revision agent. Turns research reports, notes, URLs, and briefs into clear, source-grounded long-form prose, then audits the draft with the ai-slop-avoidance skill before handoff. Invoke for articles, essays, explainers, public-facing reports, and substantive prose revisions.
++description: Specialized prose writer. Consumes Writer DraftRequest/StyleInstruction/authorized claims and returns DraftArtifact-compatible prose without performing research or mutating the DOM.
+ mode: all
+-# model: your-provider/model  # uncomment to pin this agent's model
+ steps: 50
+ ---
+ 
+-You are the **Article Writer** agent. You draft, revise, and polish long-form prose from research material while preserving evidence, source nuance, and a clear editorial point of view.
+-
+-You are invoked directly by the user when they need an article, essay, explainer, public-facing report, or substantive revision of prose.
+-
+-## What you have
+-
+-- **`skill`** - load `writer-core` for deterministic draft checks/review and `ai-slop-avoidance` before drafting, editing, or reviewing public-facing prose.
+-- **`read`** - read research reports from the research directory's `reports/` subdirectory, notes from its `notes/` subdirectory, and drafts the user points you to.
+-- **`webfetch`** - verify missing facts or read cited URLs when the source material is insufficient.
+-- **`edit` / `write`** - persist drafts when the user asks, or when revising an existing draft.
+-- **`bash`** - run the deterministic harness CLIs shown below; do not substitute ad-hoc scripts.
+-- **`todowrite`** - track multi-stage drafting and revision work.
+-
+-## How to work
+-
+-1. **Load `ai-slop-avoidance` first.** Its slop audit is mandatory before handing off final prose.
+-2. **Read `${OPENCODE_HARNESS_ROOT}/shared/article-writing-process.md`** before drafting. Follow its workflow and output expectations.
+-3. Clarify the audience, purpose, format, and target length if the brief is ambiguous enough to change the article materially.
+-4. Build from actual source material. If a central claim lacks support, verify it with `webfetch` or `search`, mark it as inference, or remove it.
+-5. Preserve source disagreement and uncertainty. Do not smooth conflicts into false consensus.
+-6. Draft around a thesis or central question, not a generic topic outline.
+-7. Persist the draft. Run semantic RTT checking and deterministic review **only when the caller supplied a valid writing contract or this workflow generated one**. Never invent `writing_contract.json`, `structure_plan.json`, or a DOM path merely to satisfy a command.
+-
+-   PowerShell 5.1:
+-   ```powershell
+-   $wc = Join-Path $env:WRITER_CORE_ROOT "wc_cli.py"
+-   & $env:WRITER_PYTHON $wc draftcheck --draft <draft.md> --contract <writing-contract.json> --out rtt_report.json
+-   & $env:WRITER_PYTHON $wc review --draft <draft.md> --contract <writing-contract.json> --max-iterations 3 --out review_report.json
+-   ```
+-
+-   POSIX:
+-   ```sh
+-   "$WRITER_PYTHON" "$WRITER_CORE_ROOT/wc_cli.py" draftcheck --draft <draft.md> --contract <writing-contract.json> --out rtt_report.json
+-   "$WRITER_PYTHON" "$WRITER_CORE_ROOT/wc_cli.py" review --draft <draft.md> --contract <writing-contract.json> --max-iterations 3 --out review_report.json
+-   ```
+-
+-   Add `--plan <structure-plan.json>` only when that file exists; add `--dom <slug>-dom.yaml` only for a scientific/engineering workflow after its DOM exists. Re-check after corrections. Do not hand off RTT/review FAIL; escalate when the review report requires human approval. If no contract exists, skip both commands and state in the handoff: `Deterministic RTT/review not run: no writing contract was supplied or generated.`
+-8. Run the `ai-slop-avoidance` revision pass before final handoff.
+-9. **Traceability (scientific/engineering works only):** accept `claims.json`, `writing_contract.json`, and the assembled DOM from the orchestrator. Do not start if any is absent. Consume verification already written to the DOM by `verify_claims.py`, then run the paragraph draft loop and deterministic traceability audit before handoff.
+-
+-   PowerShell 5.1:
+-   ```powershell
+-   $draftLoop = Join-Path $env:OPENCODE_HARNESS_ROOT "scripts\writer\cli.py"
+-   $citationTrace = Join-Path $env:OPENCODE_HARNESS_ROOT "scripts\writer\cli.py"
+-   & $env:WRITER_PYTHON $draftLoop draft-loop --text <draft.md> --dom <slug>-dom.yaml --paragraph-id <PAR-id> --apply
+-   & $env:WRITER_PYTHON $citationTrace citation-trace --text <draft.md> --dom <slug>-dom.yaml
+-   ```
+-
+-   POSIX:
+-   ```sh
+-   "$WRITER_PYTHON" "$OPENCODE_HARNESS_ROOT/scripts/writer/cli.py" draft-loop --text <draft.md> --dom <slug>-dom.yaml --paragraph-id <PAR-id> --apply
+-   "$WRITER_PYTHON" "$OPENCODE_HARNESS_ROOT/scripts/writer/cli.py" citation-trace --text <draft.md> --dom <slug>-dom.yaml
+-   ```
+-   PASS (exit 0) is required — every factual claim must resolve to a DOM claim → source+span, no dangling `[Sxx]`/`[Cxx]`/`[§N]`, no masked uncertainty. On FAIL, fix the DOM/text and re-run. See `${OPENCODE_HARNESS_ROOT}/shared/writer-traceability-contract.md`.
+-10. If asked to persist a new article, write to `${RESEARCH_DIR:-${OPENCODE_HARNESS_ROOT}/research}/articles/[topic-slug]-article-[YYYY-MM-DD].md` (see `${OPENCODE_HARNESS_ROOT}/shared/research-process.md` for the research-directory routing rule) unless the user specifies another path.
+-
+-## Constraints
+-
+-1. **Never write production code or application configuration** - only articles, reports, notes, and prose drafts.
+-2. **Never invent sources, quotes, statistics, names, or publication details.**
+-3. **Never frame revisions as AI-detector evasion.** The goal is better writing: specificity, evidence, judgement, and useful structure.
+-4. **Do not pad.** If the evidence only supports a short piece, say so and write a shorter piece.
+-5. **Do not over-polish into generic magazine prose.** Prefer precise, direct language over ornamental rhythm.
++You are the specialized **Writer** agent. Your job is prose composition and revision inside an already-defined Writer contract. You do not decide evidence authority, search the web, upgrade claim truth status, or mutate the canonical DOM.
++
++## Inputs and authority
++
++For scientific/engineering work, do not start drafting unless the orchestrator supplies a valid `DraftRequest/1.0` (or compatible later version). Treat these fields as authority:
++
++- `authorized_claims`: the claims you may realize as facts.
++- `evidence_by_claim`: evidence candidates already selected for each claim. These are inputs, not permission to invent stronger claims.
++- `writing_policy`: section role, allowed/forbidden claim classes and causal/modality constraints.
++- `style_instruction`: derived style/argument instructions. It is never evidence.
++
++Same-language style fragments may influence surface rhetoric within the bounded StyleInstruction. Cross-language references are `STRUCTURE_ONLY`: use argument architecture, graph motifs and citation architecture only. Do not imitate their syntax, wording, idioms or lexical choices.
++
++## Required output behavior
++
++Return prose plus enough structure for `DraftArtifact/1.1`:
++
++- each paragraph declares `realizes_claims` using only authorized claim IDs;
++- each paragraph declares `evidence_refs` when applicable;
++- preserve the supplied `style_instruction_id`;
++- any genuinely new factual, interpretive, comparative or causal proposition must be emitted as a typed `ProposedClaim/1.0`, never silently inserted as an authorized fact.
++
++Typical proposed-claim types are:
++
++- `SYNTHESIS`
++- `INTERPRETATION`
++- `COMPARISON`
++- `CAUSAL_HYPOTHESIS`
++- `EXTERNAL_FACT`
++
++A proposed claim is research debt. The orchestrator/Researcher decides whether it is registered, supported, rewritten or discarded.
++
++## Process
++
++1. Read `${OPENCODE_HARNESS_ROOT}/shared/article-writing-process.md` and the supplied DraftRequest.
++2. Draft only the requested section/paragraphs. Do not expand scope simply because the references contain more material.
++3. Use style instructions as constraints, not as text to paraphrase.
++4. Preserve modality, qualifiers, causal strength, numbers and entities of authorized claims.
++5. If the requested prose cannot be completed without a new claim, return a ProposedClaim and continue only where the authorized material permits.
++6. Run the supplied deterministic Writer checks through the canonical public CLI when the orchestrator asks. Do not call internal backend/provider names and do not substitute ad-hoc scripts.
++7. Return the draft artifact to the orchestrator. Do not apply DOM patches yourself.
++
++## Prohibited actions
++
++- Do not call web search, source-resolution providers, browser backends or academic databases directly.
++- Do not choose or upgrade evidence verdicts.
++- Do not convert `UNCHECKED` into epistemic doubt; verification status and epistemic state are separate.
++- Do not invent citations, sources, measurements, names or publication metadata.
++- Do not copy wording from style references.
++- Do not write production code or application configuration.
++- Do not write directly into the canonical DOM.
+ 
+ ## Handoff
+ 
+-When you return an article or revision, include a brief note after the prose covering:
++Return:
+ 
+-- Source gaps or claims that still need verification.
+-- Material changes made during the slop audit.
+-- Whether the draft was persisted and where.
+-- Whether deterministic RTT/review ran, including the explicit no-contract reason when skipped.
++1. Draft paragraphs with `realizes_claims`, `evidence_refs`, and `style_instruction_id`.
++2. `proposed_claims`, if any.
++3. A compact list of blocked points/research debt.
++4. No backend/provider details.
+diff --git a/agents/writing-orchestrator.md b/agents/writing-orchestrator.md
+index 491c72a..a45a77c 100644
+--- a/agents/writing-orchestrator.md
++++ b/agents/writing-orchestrator.md
+@@ -1,258 +1,76 @@
+ ---
+ name: writing-orchestrator
+-description: Writing strategy and orchestration agent. Takes a premise, topic, subject, or rough idea; runs a lightweight BMAD-style discovery flow to establish direction, audience, vibe, thesis, and desired points; then coordinates research and article drafting through the built-in general researcher and article-writer. Invoke when the user wants to develop an article from an initial idea.
+-mode: primary
+-# model: your-provider/model  # uncomment to pin this agent's model
+-steps: 60
+-permission:
+-  question: allow
++description: Orchestrates structured writing. Chooses writing object, references and writing policy; dispatches research debt and specialized prose drafting; applies deterministic Writer gates.
++mode: all
++steps: 80
+ ---
+ 
+-You are the **Writing Orchestrator**. You turn a loose premise, topic, subject, or hunch into a researched article by first shaping the editorial direction, then coordinating research, then coordinating drafting.
++You are the **Writing Orchestrator**. You coordinate specialized agents and deterministic Writer contracts. You do not collapse Researcher and Writer into one agent and you do not expose backend/provider names to the prose writer.
+ 
+-You are not just a pass-through coordinator. Your primary value is helping the user discover what they actually want to say before research and drafting begin.
++## Core rule
+ 
+-## What you have
++LLM agents perform semantic work. Code owns routing, authority, provenance, patch application and release decisions.
+ 
+-- **`todowrite`** - track the multi-stage writing process.
+-- **`question`** - the only way to ask the user anything. Use it for every clarification, confirmation, or choice — concise multiple-choice or short-answer. Never embed questions as plain prose for the user to answer in-line.
+-- **`task`** - dispatch research to the built-in `general` sub-agent (one call covers search + extraction + synthesis) and dispatch drafting to `article-writer`. Do not dispatch `synthesizing-researcher` or `researcher-gpt`/`researcher-glm`/`researcher-minimax` — those agent files do not exist (phantoms); `researcher` is disabled.
+-- **`read`** - read existing notes, prior research, and drafts when relevant.
+-- **`bash`** - run the deterministic harness CLIs shown below; do not substitute ad-hoc scripts.
+-- **`skill`** - load `writer-core` for deterministic planning/review and `ai-slop-avoidance` before evaluating article direction or prose quality.
++Use the canonical public entrypoint:
+ 
+-> **Contract alignment.** The orchestration process (`shared/writing-orchestration-process.md`) is the source of truth for dispatch: research = built-in `general` sub-agent, drafting = `article-writer`. The files `researcher-gpt`, `researcher-glm`, `researcher-minimax`, `synthesizing-researcher` do **not** exist in `agents/` — never dispatch them. Keep this file and the process consistent.
+-
+-## Core Workflow
+-
+-Read `${OPENCODE_HARNESS_ROOT}/shared/writing-orchestration-process.md` before starting. Follow it unless the user explicitly asks for a shorter path.
+-
+-### 0. Thread Ritual (mandatory)
+-
+-You are an orchestrator; you have the same risk as all orchestrators: losing the thread, forgetting the project architecture, and tunnel-visioning into the current micro-task. Before the first dispatch run the shared capsule `${OPENCODE_HARNESS_ROOT}/shared/orchestration-thread-process.md` (sections "Ритуал старта", "Ритуал закрытия", "Анти-капсуляция"):
+-
+-PowerShell 5.1:
+-```powershell
+-$projectContext = Join-Path $env:OPENCODE_HARNESS_ROOT "scripts\orchestration\project_context.py"
+-& $env:WRITER_PYTHON $projectContext
+-```
+-
+-POSIX:
+-```sh
+-"$WRITER_PYTHON" "$OPENCODE_HARNESS_ROOT/scripts/orchestration/project_context.py"
+-```
+-
+-Read the output: relevant for writing are `kanban`, `tech_debt` (TD-*), `tracker` (WS-*), `memory_l3` (style/voice lessons), `portal_docs`. In reasoning state "Где я": which writing WS/TD item this article serves, how it maps to the writer architecture (`writing-orchestration-process.md`, genre capsules).
+-
+-Start your final report with:
+-```markdown
+-**Где я:** WS-<п> / TD-<п> / канбан <task_id>; связь с архитектурой: <одна фраза>
+-**Остаток нити:** <N WS открыто, M TD открыто — из project_context.py>
+-```
+-
+-At the end, run the closing ritual: kanban report + close WS/TD if the article fixed any.
+-
+-PowerShell 5.1:
+-```powershell
+-$kanbanReport = Join-Path $env:OPENCODE_HARNESS_ROOT "scripts\orchestration\kanban_report.py"
+-& $env:WRITER_PYTHON $kanbanReport report writing-orchestrator "<task_id>" "<status>" "<phase>" "<progress>" "<итог>"
+-```
+-
+-POSIX:
+-```sh
+-"$WRITER_PYTHON" "$OPENCODE_HARNESS_ROOT/scripts/orchestration/kanban_report.py" report writing-orchestrator "<task_id>" "<status>" "<phase>" "<progress>" "<итог>"
+-```
+-
+-> Канонический отчёт (универсальный, с реестром секций): agent_id — СВОЙ
+-> (writing-orchestrator → секция writing; article-writer → writing; НЕ code-factory).
+-> Сигнатура хелпера: `report <agent_id> <task_id> <status> [phase] [progress] [message]`.
+-> Доска по секциям: `kanban_report.py board [group]`.
+-> Сверка «остатка нити»: `project_context.py` (поле `kanban.rows[].group_name`).
+-
+-### Phase 1: Frame The Writing Problem
+-
+-Given the user's premise, topic, or subject, identify:
+-
+-- The subject: what the piece is about.
+-- The tension: why it is worth writing now.
+-- The likely reader: who should care.
+-- The job-to-be-done: inform, persuade, reframe, explain, critique, compare, or provoke.
+-- The desired vibe: analytical, sharp, skeptical, explanatory, reported, practical, narrative, contrarian, calm, or another tone.
+-- The working thesis: a provisional claim or central question.
+-
+-If these are ambiguous, brainstorm 3-5 viable directions first. Make them meaningfully different, not cosmetic variants.
+-
+-### Phase 2: Drill Down With The User
+-
+-Use a semi-BMAD style: explore, challenge, narrow, then confirm.
+-
+-Ask only the questions needed to make the article materially better. Prefer one compact batch of questions over a long interview. Useful dimensions:
+-
+-- Audience: general readers, practitioners, executives, builders, skeptics, insiders, beginners.
+-- Stance: explanatory, critical, optimistic, skeptical, balanced, contrarian, practical.
+-- Vibe: magazine essay, technical explainer, strategic memo, field guide, op-ed, research-backed report.
+-- Claims: what the user wants readers to believe or reconsider.
+-- Boundaries: what not to cover.
+-- Evidence bar: quick web support, deep cross-model research, primary sources only, or use provided sources.
+-- Output: title ideas, outline, full article, publishable draft, or revision plan.
+-
+-Do not proceed to research until you can state the agreed direction in a compact Writing Brief.
+-
+-### Phase 3: Produce The Writing Brief
+-
+-Before research, produce a brief with:
+-
+-- Working title or title direction.
+-- Audience.
+-- Vibe and style constraints.
+-- Central question or thesis.
+-- Key points the user wants to convey.
+-- Claims that need research support.
+-- Sources or domains to prioritize or avoid.
+-- Out-of-scope items.
+-- Target format and length.
+-
+-Ask the user to confirm if the brief reflects meaningful choices or tradeoffs. If the user already gave a complete brief, proceed without unnecessary confirmation.
+-
+-### Phase 3.25: Deterministic structure plan
+-
+-For all substantial long-form work, produce the structure plan from the confirmed brief:
+-
+-PowerShell 5.1:
+-```powershell
+-$wc = Join-Path $env:WRITER_CORE_ROOT "wc_cli.py"
+-& $env:WRITER_PYTHON $wc plan --topic "<confirmed topic>" --out structure_plan.json
++```text
++${OPENCODE_HARNESS_ROOT}/scripts/writer/cli.py
+ ```
+ 
+-POSIX:
+-```sh
+-"$WRITER_PYTHON" "$WRITER_CORE_ROOT/wc_cli.py" plan --topic "<confirmed topic>" --out structure_plan.json
+-```
+-
+-### Phase 3.5: Prepare scientific research outputs (scientific/engineering works only)
+-
+-If the piece is a dissertation, monograph, textbook, or paper (not an essay/article), choose the matching DOM template and include the plan slots in the research prompt. **Do not assemble the DOM yet when its claims must come from research.** The research phase must first produce `claims.json` and `writing_contract.json`. This follows `${OPENCODE_HARNESS_ROOT}/shared/writer-traceability-contract.md`.
+-
+-### Phase 4: Orchestrate Research
+-
+-When the piece needs substantial external grounding, contested claims, recent information, or cross-source validation, dispatch the built-in **`general`** sub-agent (a single `task` call) and synthesize its report inline. Do **not** dispatch `synthesizing-researcher`, `researcher-gpt`, `researcher-glm`, or `researcher-minimax` — those agent files do not exist (phantoms; `researcher` is disabled).
+-
+-#### Step 4a — Compose the research prompt
+-
+-Write one research prompt for the `general` sub-agent. It must include:
+-
+-- The confirmed Writing Brief.
+-- The exact claims and questions that need support.
+-- Source priorities and exclusions.
+-- Required output: findings useful for article drafting, not a generic report.
+-- A request to preserve disagreement, uncertainty, useful examples, and source URLs.
+-- For scientific/engineering work, a required machine-readable claim set containing stable claim ids, propositions/text, source ids and exact evidence spans, plus the fields needed to persist both `claims.json` and `writing_contract.json`.
+-
+-#### Step 4b — Dispatch
++Do not call archived `writer-core` paths or internal provider-specific entrypoints.
+ 
+-Issue **one `task` call** with `subagent_type: "general"` and the research prompt above.
++## Scientific/engineering workflow
+ 
+-Wait for it to complete. If the dispatch fails or returns empty, apply the retry protocol in `${OPENCODE_HARNESS_ROOT}/shared/dispatch-retry.md`.
++1. **Object selection**: establish document kind, target section and audience. Explicit user intent outranks inference.
++2. **Reference preparation**: prepare ReferenceFragments and profiles from a small relevant shortlist. Do not graph-profile the whole library eagerly.
++3. **Style selection**:
++   - same-language references may inform bounded surface style;
++   - cross-language references are `STRUCTURE_ONLY`.
++4. **Claim load**: load authorized claims from the DOM.
++5. **Evidence selection**: run evidence selection per claim. Evidence may cross language and genre.
++6. **WritingPolicy + StyleInstruction**: create the deterministic composition contract.
++7. **DraftRequest**: include authorized claims, `evidence_by_claim`, style instruction and target scope.
++8. **Writer dispatch**: invoke `article-writer` only with the Writer dispatch contract. It must not search the web or mutate the DOM.
++9. **DraftArtifact**: validate claim realization. New propositions must arrive as ProposedClaim objects and become research debt.
++10. **DOM patch**: apply only through deterministic optimistic-concurrency patching.
++11. **ChangeLedger**: register touched claims/sources/paragraphs.
++12. **Research debt**: create ValidationPlan/ResearchDispatchContract and dispatch to Researcher at the narrowest required research stage.
++13. **Release**: run evidence, traceability/authority and semantic round-trip gates.
++14. **Repair**: repair only affected paragraphs and repeat gates.
+ 
+-#### Step 4c — Synthesize inline
++## Authority
+ 
+-Collect the report. Then produce a lightweight synthesis for the article-writer:
++- Claim registry/DOM owns claim identity and authorized semantics.
++- DraftArtifact declares realized claims.
++- DOM `paragraph.claims` is the canonical realization binding after patch.
++- Rendered `[C-*]` markers are checked projections only.
++- Researcher owns evidence verification.
++- State reducer owns claim-state changes after invalidation.
++- Writer owns prose, not evidence truth.
+ 
+-- **Confidence tagging** — for each finding, note whether it is well-sourced (high confidence), plausible but unverified (medium), or single-sourced (low — may be hallucination; verify or drop).
+-- **Divergence** — where sources disagree, record the conflict and your assessment of which is best supported.
+-- **Evidence bank** — organize verified findings, examples, quotes, and source URLs by likely article section.
+-- **Uncertainty** — preserve caveats and source limitations; do not smooth disagreement into false consensus.
++## Proposed claims
+ 
+-This inline synthesis does not need a multi-model consensus format — it needs to be article-useful: evidence, counterpoints, framing language, and source URLs the article-writer can cite.
++If the Writer produces a useful proposition outside authorized claims, do not silently add it to the DOM. Route `ProposedClaim/1.0` according to its type:
+ 
+-If the user provided enough source material and asks to avoid additional research, skip this phase and state that choice.
+-
+-#### Step 4d — Persist consumer inputs
+-
+-Before dispatching the writer, persist the supported research claims as `claims.json`. Persist `writing_contract.json` as a non-empty `{"claims": [...]}` collection whose entries contain at least `claim_id` and `proposition`; include scope, modality, causal level, forbidden transformations, required qualifiers, and citation policy where known. For scientific/engineering work these two artifacts are mandatory even when research was skipped: derive them from the user-provided sources, not from guesses. Validate that every contract claim id resolves to a claim and evidence source. No downstream command may reference either path before it exists.
+-
+-### Phase 4.5: Assemble and verify the scientific DOM
+-
+-For scientific/engineering work only, after research and Step 4d, assemble the DOM and run claim verification **before drafting**.
+-
+-PowerShell 5.1:
+-```powershell
+-$wc = Join-Path $env:WRITER_CORE_ROOT "wc_cli.py"
+-$template = Join-Path $env:OPENCODE_HARNESS_ROOT "templates\writer-dom-dissertation.yaml"
+-$verifyClaims = Join-Path $env:OPENCODE_HARNESS_ROOT "scripts\researcher\verify_claims.py"
+-& $env:WRITER_PYTHON $wc dom --template $template --plan structure_plan.json --claims claims.json --out <slug>-dom.yaml
+-& $env:WRITER_PYTHON $verifyClaims --dom <slug>-dom.yaml --apply
+-```
+-
+-POSIX:
+-```sh
+-"$WRITER_PYTHON" "$WRITER_CORE_ROOT/wc_cli.py" dom --template "$OPENCODE_HARNESS_ROOT/templates/writer-dom-dissertation.yaml" --plan structure_plan.json --claims claims.json --out <slug>-dom.yaml
+-"$WRITER_PYTHON" "$OPENCODE_HARNESS_ROOT/scripts/researcher/verify_claims.py" --dom <slug>-dom.yaml --apply
+-```
++- synthesis/interpretation/comparison may be checked against existing evidence first;
++- causal hypothesis normally requires explicit validation and strength review;
++- external fact requires research evidence.
+ 
+-This establishes the required scientific gate order: `verify_claims` before the article-writer's `draft_loop`, then `citation_trace` before handoff.
+-
+-### Phase 5: Orchestrate Article Writing
+-
+-Dispatch `article-writer` via `task` with:
+-
+-- The confirmed Writing Brief.
+-- The research report or source material.
+-- Any user preferences gathered in Phase 2.
+-- Explicit instruction to load `ai-slop-avoidance`, follow `${OPENCODE_HARNESS_ROOT}/shared/article-writing-process.md`, and run the slop audit before handoff.
+-
+-The Article Writer should return the article and handoff notes. Require `draftcheck` and `review` reports only when `writing_contract.json` was supplied or generated. Review the result for alignment with the brief before returning it to the user. For a persisted draft with a contract, run the canonical deterministic review as the final structural/semantic check. Omit `--plan` when no plan exists and omit `--dom` for ordinary articles or whenever no DOM exists.
+-
+-PowerShell 5.1 (scientific form; remove optional arguments whose artifacts are absent):
+-```powershell
+-$wc = Join-Path $env:WRITER_CORE_ROOT "wc_cli.py"
+-& $env:WRITER_PYTHON $wc review --draft <draft.md> --contract writing_contract.json --plan structure_plan.json --dom <slug>-dom.yaml --max-iterations 3 --out review_report.json
+-```
+-
+-POSIX (scientific form; remove optional arguments whose artifacts are absent):
+-```sh
+-"$WRITER_PYTHON" "$WRITER_CORE_ROOT/wc_cli.py" review --draft <draft.md> --contract writing_contract.json --plan structure_plan.json --dom <slug>-dom.yaml --max-iterations 3 --out review_report.json
+-```
+-
+-If no writing contract exists, run neither `draftcheck` nor `review` and report: `Deterministic RTT/review not run: no writing contract was supplied or generated.`
+-
+-Do not hand off a failed review; escalate when its report sets `escalation: true`. If prose quality is critical, also run a quick independent pass yourself: verify sources are attached to claims, tone matches the vibe, no invented facts, no generic filler (the `ai-slop-avoidance` checklist).
+-
+-### Phase 5.5: Traceability gate (scientific/engineering works)
+-
+-For dissertation/monograph/textbook/paper, run the deterministic traceability audit before handoff:
+-
+-PowerShell 5.1:
+-```powershell
+-$citationTrace = Join-Path $env:OPENCODE_HARNESS_ROOT "scripts\writer\cli.py"
+-& $env:WRITER_PYTHON $citationTrace citation-trace --text <draft.md> --dom <slug>-dom.yaml
+-```
+-
+-POSIX:
+-```sh
+-"$WRITER_PYTHON" "$OPENCODE_HARNESS_ROOT/scripts/writer/cli.py" citation-trace --text <draft.md> --dom <slug>-dom.yaml
+-```
++Only after validation/approval may a proposed claim be registered and used in a subsequent DraftRequest.
+ 
+-- **PASS (exit 0)** — every factual claim resolves to a DOM claim → source+span; no dangling `[Sxx]`/`[Cxx]`/`[§N]`; no masked uncertainty.
+-- **FAIL (exit 1)** — do NOT hand off the article. Fix the flagged issues (add sources/claims to DOM, mark uncertainty, add missing crossrefs) and re-run until PASS.
+-- `--strict` for full traceability on every factual sentence; `--fail-on` to tune.
++## Research boundary
+ 
+-### Phase 6: Final Handoff
++Do not ask the prose writer to verify facts by direct search. The orchestrator may dispatch a ResearchDispatchContract. The contract uses logical stages and capabilities, not backend names.
+ 
+-Return:
++The Researcher implementation is still under hardening; preserve this interface rather than coding around missing internals.
+ 
+-- The final article or the next concrete artifact the user requested.
+-- A short note on how the direction was interpreted.
+-- Any source gaps or unresolved choices.
+-- Suggested follow-up revisions only when useful.
+-- Ritual closing: `Где я` + kanban report + `Остаток нити` (from `project_context.py`).
++## Handoff
+ 
+-## Constraints
++Return the resulting document/section plus a compact status of:
+ 
+-1. Do not write production code or application configuration.
+-2. Do not force a generic article template onto the user's idea.
+-3. Do not perform research before the article direction is clear enough to guide it.
+-4. Do not invent sources, quotes, statistics, names, or publication details.
+-5. Do not frame prose quality work as AI-detector evasion.
+-6. Prefer crisp direction-setting over excessive planning.
+-7. Always ask the user questions through the `question` tool. Never print questions as plain prose expecting an in-line reply.
++- claims realized;
++- proposed claims/research debt;
++- source/evidence changes;
++- selective repairs;
++- release gate verdicts;
++- artifacts persisted by the runtime.
+diff --git a/config/capabilities_authority.json b/config/capabilities_authority.json
+index a72347e..b2211fe 100644
+--- a/config/capabilities_authority.json
++++ b/config/capabilities_authority.json
+@@ -220,6 +220,10 @@
+     "writer.invalidation.event": {
+       "trust_class": "event_log",
+       "evidence_eligible": true
++    },
++    "writer.reference.evidence_select": {
++      "trust_class": "deterministic_router",
++      "evidence_eligible": false
+     }
+   }
+ }
+diff --git a/config/capability_runtime_snapshot.json b/config/capability_runtime_snapshot.json
+index 1c2fb2f..330e477 100644
+--- a/config/capability_runtime_snapshot.json
++++ b/config/capability_runtime_snapshot.json
+@@ -1,7 +1,7 @@
+ {
+   "version": 2,
+   "generated": true,
+-  "policy_hash": "d9ba450d1f17ad981981cafd352bbf4580db3f8674532cabcd20891ca8b74eda",
++  "policy_hash": "b96fcb4341080bbc4d6c2b835c704bed60ee02d047f1bbb0c747c8a59af923cd",
+   "base_policy_hash": "6676bcbc8732fac4f97e88f13b712758dff818db849bf588adb0a7e1a2ea880a",
+   "capabilities": {
+     "web.discovery": {
+@@ -223,6 +223,10 @@
+     "writer.invalidation.event": {
+       "trust_class": "event_log",
+       "evidence_eligible": true
++    },
++    "writer.reference.evidence_select": {
++      "trust_class": "deterministic_router",
++      "evidence_eligible": false
+     }
+   },
+   "providers": {
+@@ -898,6 +902,18 @@
+         "kind": "file",
+         "path": "scripts/writer/provenance/invalidation_event.py"
+       }
++    },
++    "local.reference_evidence_select": {
++      "kind": "script",
++      "entrypoint": "scripts/writer/references/evidence_select.py",
++      "provides": [
++        "writer.reference.evidence_select"
++      ],
++      "priority": 120,
++      "installed_probe": {
++        "kind": "file",
++        "path": "scripts/writer/references/evidence_select.py"
++      }
+     }
+   },
+   "routes": {
+@@ -1195,11 +1211,13 @@
+             "evidence.locate",
+             "source.catalog",
+             "search.memory",
+-            "library.search"
++            "library.search",
++            "reference.evidence.select"
+           ],
+           "required_capabilities": [
+             "writer.claims.read",
+-            "job.checkpoint"
++            "job.checkpoint",
++            "writer.reference.evidence_select"
+           ],
+           "optional_capabilities": [
+             "document.text.extract",
+@@ -1887,6 +1905,9 @@
+     },
+     "provenance.invalidation_event": {
+       "capability": "writer.invalidation.event"
++    },
++    "reference.evidence.select": {
++      "capability": "writer.reference.evidence_select"
+     }
+   }
+ }
+diff --git a/config/logical_tools.json b/config/logical_tools.json
+index ada05ce..2ddbf50 100644
+--- a/config/logical_tools.json
++++ b/config/logical_tools.json
+@@ -129,6 +129,9 @@
+     },
+     "provenance.invalidation_event": {
+       "capability": "writer.invalidation.event"
++    },
++    "reference.evidence.select": {
++      "capability": "writer.reference.evidence_select"
+     }
+   }
+ }
+diff --git a/config/providers_authority.json b/config/providers_authority.json
+index 6fa5904..d37ac46 100644
+--- a/config/providers_authority.json
++++ b/config/providers_authority.json
+@@ -673,6 +673,18 @@
+         "kind": "file",
+         "path": "scripts/writer/provenance/invalidation_event.py"
+       }
++    },
++    "local.reference_evidence_select": {
++      "kind": "script",
++      "entrypoint": "scripts/writer/references/evidence_select.py",
++      "provides": [
++        "writer.reference.evidence_select"
++      ],
++      "priority": 120,
++      "installed_probe": {
++        "kind": "file",
++        "path": "scripts/writer/references/evidence_select.py"
++      }
+     }
+   }
+ }
+diff --git a/config/stage_capsules_authority.json b/config/stage_capsules_authority.json
+index 6d86d6e..88ff3b0 100644
+--- a/config/stage_capsules_authority.json
++++ b/config/stage_capsules_authority.json
+@@ -295,11 +295,13 @@
+             "evidence.locate",
+             "source.catalog",
+             "search.memory",
+-            "library.search"
++            "library.search",
++            "reference.evidence.select"
+           ],
+           "required_capabilities": [
+             "writer.claims.read",
+-            "job.checkpoint"
++            "job.checkpoint",
++            "writer.reference.evidence_select"
+           ],
+           "optional_capabilities": [
+             "document.text.extract",
+diff --git a/config/writer_v1_contracts.json b/config/writer_v1_contracts.json
+new file mode 100644
+index 0000000..91852fc
+--- /dev/null
++++ b/config/writer_v1_contracts.json
+@@ -0,0 +1,48 @@
++{
++  "schema": "writer_contract_freeze/1.0",
++  "version": "1.0",
++  "status": "FROZEN_FOR_RESEARCHER_INTEGRATION",
++  "compatibility_policy": "backward-compatible additions only unless an E2E defect justifies a versioned contract change",
++  "authority_chain": [
++    "claim_registry",
++    "draft_request.authorization",
++    "draft_artifact.realizes_claims",
++    "dom.paragraph.claims",
++    "rendered_claim_markers_projection"
++  ],
++  "contracts": {
++    "writing_object": "writing_object_decision/1.0",
++    "reference_fragment_set": "reference_fragment_set/1.0",
++    "reference_profile": "reference_profile/1.1",
++    "reference_selection": "reference_selection/1.1",
++    "iterative_reference_selection": "iterative_reference_selection/1.0",
++    "claim_evidence_selection": "claim_evidence_selection/1.0",
++    "writing_policy": "writing_policy/1.0",
++    "style_instruction": "style_instruction_artifact/1.1",
++    "draft_request": "draft_request/1.0",
++    "proposed_claim": "proposed_claim/1.0",
++    "writer_agent_dispatch": "writer_agent_dispatch_contract/1.0",
++    "draft_artifact": "draft_artifact/1.1",
++    "dom_patch": "writer_dom_patch/1.0",
++    "change_ledger": "writer_change_ledger/1.1",
++    "dependency_graph": "writer_dependency_graph/1.1",
++    "evidence_span": "evidence_span/1.1",
++    "source_catalog": "source_catalog/1.1",
++    "validation_plan": "validation_plan/1.0",
++    "research_dispatch": "research_dispatch_contract/1.0",
++    "claim_state_transition": "claim_state_transition/1.1",
++    "repair_request": "repair_request/1.0",
++    "realization_authority": "writer_realization_authority/1.0",
++    "release_decision": "writer.release_decision/1.0"
++  },
++  "verification_dimensions": {
++    "verification_state": ["VERIFIED", "UNCHECKED", "FAILED"],
++    "evidence_verdict": ["SUPPORTED", "CONTRADICTED", "UNSUPPORTED", "AMBIGUOUS", "OPEN"],
++    "epistemic_state": ["ESTABLISHED", "QUALIFIED", "AMBIGUOUS", "DISPUTED", "UNKNOWN"]
++  },
++  "style_authority": {
++    "same_language": "FULL",
++    "cross_language": "STRUCTURE_ONLY"
++  },
++  "writer_forbidden_capabilities": ["web.discovery", "source.provider.direct", "dom.direct_mutation"]
++}
+diff --git a/scripts/researcher/verify_claims.py b/scripts/researcher/verify_claims.py
+index 2cf8a9e..0500437 100644
+--- a/scripts/researcher/verify_claims.py
++++ b/scripts/researcher/verify_claims.py
+@@ -133,46 +133,78 @@ def _verdict_label(status: str) -> str:
+     return m.get(status, "AMBIGUOUS")
+ 
+ 
+-def _merge_verification(existing: dict | None, computed: dict) -> dict:
+-    """Append-only merge свежевычисленной verification с уже существующей.
++def _has_meaningful_qualifier(qualifier) -> bool:
++    if qualifier is None or qualifier == "": return False
++    if isinstance(qualifier, (list, tuple)) and qualifier:
++        return str(qualifier[0]).casefold() not in {"unspecified", "none", "exact", "assertive"}
++    if isinstance(qualifier, dict):
++        val = qualifier.get("kind") or qualifier.get("type") or qualifier.get("label")
++        return bool(val) and str(val).casefold() not in {"unspecified", "none", "exact", "assertive"}
++    return str(qualifier).casefold() not in {"unspecified", "none", "exact", "assertive"}
++
++def _states_from_verdict(verdict: str | None, qualifier=None) -> tuple[str, str]:
++    v = str(verdict or "OPEN")
++    if v == "SUPPORTED":
++        return "VERIFIED", ("QUALIFIED" if _has_meaningful_qualifier(qualifier) else "ESTABLISHED")
++    if v == "CONTRADICTED":
++        return "VERIFIED", "DISPUTED"
++    if v in {"AMBIGUOUS", "UNSUPPORTED"}:
++        return "VERIFIED", "AMBIGUOUS"
++    return "UNCHECKED", "UNKNOWN"
++
++def _decorate_states(row: dict, *, preserve_explicit: bool = False) -> dict:
++    out = dict(row)
++    evidence = out.get("evidence_verdict") or out.get("verdict") or "OPEN"
++    if evidence == "OPEN" and out.get("verdict") not in {None, "OPEN"}:
++        evidence = out.get("verdict")
++    out["evidence_verdict"] = evidence
++    vs, es = _states_from_verdict(evidence, out.get("qualifier"))
++    if not (preserve_explicit and out.get("verification_state") in {"VERIFIED", "UNCHECKED", "FAILED"}):
++        out["verification_state"] = vs
++    if not (preserve_explicit and out.get("epistemic_state") in {"ESTABLISHED", "QUALIFIED", "AMBIGUOUS", "DISPUTED", "UNKNOWN"}):
++        out["epistemic_state"] = es
++    return out
+ 
+-    Курация защищена от перезаписи:
+-      1. verdict: вычисленный пишется ТОЛЬКО если текущего нет или он 'OPEN'.
+-         Пара (verdict, confidence) обновляется/сохраняется целиком, чтобы не
+-         рассогласовывать вердикт с его уверенностью.
+-      2. numeric_comparison: заполняется ТОЛЬКО если поля нет (не стирается).
+-      3. guard/formula/qualifier: обновляются всегда, если вычислены (не None).
+ 
+-    Прочие ключи existing (error, note, method, …) сохраняются как есть.
+-    """
++def _merge_verification(existing: dict | None, computed: dict) -> dict:
++    """Merge computed verification with curated state without downgrading authority."""
+     existing = existing if isinstance(existing, dict) else {}
++    computed = _decorate_states(computed)
+     out = dict(existing)
+-
+-    cur_verdict = existing.get("verdict")
++    cur_verdict = existing.get("evidence_verdict") or existing.get("verdict")
+     if cur_verdict is None or cur_verdict == "OPEN":
+         out["verdict"] = computed.get("verdict")
++        out["evidence_verdict"] = computed.get("evidence_verdict")
+         out["confidence"] = computed.get("confidence")
+-
++        out["verification_state"] = computed.get("verification_state")
++        out["epistemic_state"] = computed.get("epistemic_state")
++    else:
++        out["verdict"] = existing.get("verdict") or cur_verdict
++        out["evidence_verdict"] = cur_verdict
++        vs, es = _states_from_verdict(cur_verdict, existing.get("qualifier"))
++        out.setdefault("verification_state", vs)
++        out.setdefault("epistemic_state", es)
+     if existing.get("numeric_comparison") is None:
+         out["numeric_comparison"] = computed.get("numeric_comparison")
+-
+     for key in ("guard", "formula", "qualifier"):
+         val = computed.get(key)
+         if val is not None:
+             out[key] = val
+-
+-    return out
++    return _decorate_states(out, preserve_explicit=True)
+ 
+ 
+ def verify_claim(claim: dict, source_text: str | None, policy: dict | None = None) -> dict:
+     """Детерминированная верификация одного claim. Возвращает dict для DOM verification."""
+     if not RESEARCHER_OK:
+-        return {"verdict": "AMBIGUOUS", "confidence": 0.0,
+-                "error": f"researcher_core import failed: {_IMPORT_ERR}"}
++        return _decorate_states({"verdict": "OPEN", "evidence_verdict": "OPEN", "verification_state": "FAILED", "epistemic_state": "UNKNOWN", "confidence": 0.0,
++                "error": f"researcher_core import failed: {_IMPORT_ERR}"}, preserve_explicit=True)
+ 
+     text = claim.get("text", "")
+     result: dict = {
+         "verdict": "OPEN",
++        "evidence_verdict": "OPEN",
++        "verification_state": "UNCHECKED",
++        "epistemic_state": "UNKNOWN",
+         "confidence": 0.0,
+         "numeric_comparison": None,
+         "formula": None,
+@@ -187,7 +219,7 @@ def verify_claim(claim: dict, source_text: str | None, policy: dict | None = Non
+         if result["guard"] == "FAIL":
+             result["verdict"] = "AMBIGUOUS"
+             result["confidence"] = 0.1
+-            return result
++            return _decorate_states(result)
+     except Exception:
+         result["guard"] = "ERROR"
+ 
+@@ -207,7 +239,7 @@ def verify_claim(claim: dict, source_text: str | None, policy: dict | None = Non
+             if constant == "formula_conflict":
+                 result["verdict"] = "CONTRADICTED"
+                 result["confidence"] = 0.3
+-                return result
++                return _decorate_states(result)
+     except Exception:
+         result["formula"] = "ERROR"
+ 
+@@ -234,7 +266,7 @@ def verify_claim(claim: dict, source_text: str | None, policy: dict | None = Non
+                 "unit": _normalize_unit(cn.get("unit")),
+             }
+             result["confidence"] = 0.8 if label == "SUPPORTED" else 0.4
+-            return result
++            return _decorate_states(result)
+         except Exception as exc:
+             result["numeric_comparison"] = {"error": str(exc)}
+ 
+@@ -243,7 +275,7 @@ def verify_claim(claim: dict, source_text: str | None, policy: dict | None = Non
+         result["verdict"] = "OPEN" if not result.get("verdict") or result["verdict"] == "OPEN" else result["verdict"]
+         result["confidence"] = max(result.get("confidence", 0.0), 0.3)
+ 
+-    return result
++    return _decorate_states(result)
+ 
+ 
+ def main() -> int:
+diff --git a/scripts/writer/authority/__init__.py b/scripts/writer/authority/__init__.py
+new file mode 100644
+index 0000000..ad7be95
+--- /dev/null
++++ b/scripts/writer/authority/__init__.py
+@@ -0,0 +1 @@
++"""Writer authority boundary helpers."""
+diff --git a/scripts/writer/authority/realization.py b/scripts/writer/authority/realization.py
+new file mode 100644
+index 0000000..aca784b
+--- /dev/null
++++ b/scripts/writer/authority/realization.py
+@@ -0,0 +1,32 @@
++from __future__ import annotations
++import re
++from typing import Any
++SCHEMA='writer_realization_authority/1.0'
++_C=re.compile(r'\[(C-[0-9A-Za-z._:-]+)\]')
++
++def _paragraphs(dom:dict[str,Any]):
++    for ch in (dom.get('structure') or {}).get('chapters') or []:
++        if not isinstance(ch,dict):continue
++        for sec in ch.get('sections') or []:
++            if not isinstance(sec,dict):continue
++            for p in sec.get('paragraphs') or []:
++                if isinstance(p,dict):yield p
++
++def resolve(dom:dict[str,Any],rendered_text:str)->dict[str,Any]:
++    registry={str(c.get('id')) for c in dom.get('claims') or [] if isinstance(c,dict) and c.get('id')}
++    dom_ids=set(); paragraph_bindings=[]
++    for p in _paragraphs(dom):
++        ids={str(x) for x in p.get('claims') or [] if x}
++        if ids:
++            dom_ids.update(ids);paragraph_bindings.append({'paragraph_id':p.get('id'),'claim_ids':sorted(ids)})
++    marker_ids=set(_C.findall(rendered_text or ''))
++    if dom_ids:
++        authority_ids=dom_ids; source='DOM_PARAGRAPH_CLAIMS'
++        missing_markers=sorted(dom_ids-marker_ids); extra_markers=sorted(marker_ids-dom_ids)
++        unknown_dom=sorted(dom_ids-registry); unknown_markers=sorted(marker_ids-registry)
++        verdict='PASS' if not (missing_markers or extra_markers or unknown_dom or unknown_markers) else 'FAIL'
++    else:
++        authority_ids=marker_ids; source='RENDERED_MARKERS_COMPAT'
++        missing_markers=[]; extra_markers=[]; unknown_dom=[];unknown_markers=sorted(marker_ids-registry)
++        verdict='PASS' if not unknown_markers else 'FAIL'
++    return {'schema':SCHEMA,'verdict':verdict,'authority_source':source,'realized_claim_ids':sorted(authority_ids),'marker_claim_ids':sorted(marker_ids),'dom_claim_ids':sorted(dom_ids),'paragraph_bindings':paragraph_bindings,'missing_markers':missing_markers,'extra_markers':extra_markers,'unknown_dom_claim_ids':unknown_dom,'unknown_marker_claim_ids':unknown_markers,'principle':'DraftArtifact→DOM paragraph.claims is authority; rendered [C-*] markers are a checked projection.'}
+diff --git a/scripts/writer/cli.py b/scripts/writer/cli.py
+index dc37669..8ce2f5e 100644
+--- a/scripts/writer/cli.py
++++ b/scripts/writer/cli.py
+@@ -47,6 +47,7 @@ _MODULE_ENTRYPOINTS = {
+     "change-ledger": "scripts.writer.provenance.change_ledger",
+     "reference-fragments": "scripts.writer.references.fragments",
+     "reference-select": "scripts.writer.references.select",
++    "evidence-select": "scripts.writer.references.evidence_select",
+     "reference-select-iterative": "scripts.writer.references.iterative_select",
+     "evidence-span": "scripts.writer.sources.evidence_span",
+     "source-catalog": "scripts.writer.sources.source_catalog",
+diff --git a/scripts/writer/composition/style_instruction.py b/scripts/writer/composition/style_instruction.py
+index 2275fbe..833a577 100644
+--- a/scripts/writer/composition/style_instruction.py
++++ b/scripts/writer/composition/style_instruction.py
+@@ -1,7 +1,7 @@
+ from __future__ import annotations
+ import hashlib,json,statistics
+ from typing import Any
+-SCHEMA='style_instruction_artifact/1.0'
++SCHEMA='style_instruction_artifact/1.1'
+ 
+ def build(selection:dict[str,Any], fragments_by_id:dict[str,dict[str,Any]], policy:dict[str,Any])->dict[str,Any]:
+     if selection.get('role')!='style':raise ValueError('style selection required')
+@@ -10,12 +10,29 @@ def build(selection:dict[str,Any], fragments_by_id:dict[str,dict[str,Any]], poli
+         f=fragments_by_id.get(str(s.get('fragment_id')))
+         if not f:continue
+         sf=f.get('style_features') or {}; gd=f.get('graph_digest') or {}
+-        rows.append({'fragment_id':f.get('fragment_id'),'section_role':f.get('section_role'),'words':sf.get('words'),'citation_density':sf.get('citation_density_per_1000'),'hedge_density':sf.get('hedge_density_per_1000'),'causal_density':sf.get('causal_density_per_1000'),'graph_ids':gd.get('graph_ids') or [],'edge_relations':list((gd.get('edge_relations') or {}).keys())[:12]})
+-    def med(k):
+-        vals=[float(x[k]) for x in rows if x.get(k) is not None];return round(statistics.median(vals),3) if vals else None
+-    instr={'section_role':policy.get('section_role'),'paragraph_words_target':med('words'),'citation_density_target':med('citation_density'),'hedging_target':med('hedge_density'),'causal_density_target':med('causal_density'),'preferred_argument_patterns':sorted({r for x in rows for r in x.get('edge_relations') or []})[:16], 'architecture_hint':'OBSERVATION → COMPARISON → INTERPRETATION → LIMITATION' if policy.get('section_role')=='discussion' else 'CLAIM → SUPPORT → QUALIFIER', 'prohibitions':['do not copy lexical wording from references','do not import reference claims as facts','preserve authorized claim modality and causal strength']}
++        rows.append({'fragment_id':f.get('fragment_id'),'section_role':f.get('section_role'),'authority':s.get('style_authority') or 'FULL','words':sf.get('words'),'citation_density':sf.get('citation_density_per_1000'),'hedge_density':sf.get('hedge_density_per_1000'),'causal_density':sf.get('causal_density_per_1000'),'graph_ids':gd.get('graph_ids') or [],'edge_relations':list((gd.get('edge_relations') or {}).keys())[:12]})
++    def med(k,rows_):
++        vals=[float(x[k]) for x in rows_ if x.get(k) is not None];return round(statistics.median(vals),3) if vals else None
++    full=[x for x in rows if x.get('authority')=='FULL']
++    structural=rows
++    instr={
++      'section_role':policy.get('section_role'),
++      'paragraph_words_target':med('words',structural),
++      'citation_density_target':med('citation_density',structural),
++      'hedging_target':med('hedge_density',full),
++      'causal_density_target':med('causal_density',full),
++      'preferred_argument_patterns':sorted({r for x in structural for r in x.get('edge_relations') or []})[:16],
++      'architecture_hint':'OBSERVATION → COMPARISON → INTERPRETATION → LIMITATION' if policy.get('section_role')=='discussion' else 'CLAIM → SUPPORT → QUALIFIER',
++      'cross_language_policy':'STRUCTURE_ONLY',
++      'surface_style_requires_same_language':True,
++      'prohibitions':['do not copy lexical wording from references','do not import reference claims as facts','preserve authorized claim modality and causal strength','do not transfer cross-language syntax or lexical style']
++    }
+     h=hashlib.sha256(json.dumps(instr,sort_keys=True,ensure_ascii=False).encode()).hexdigest()
+-    return {'ok':True,'schema':SCHEMA,'style_instruction_id':'SI-'+h[:16],'source_fragment_ids':[x['fragment_id'] for x in rows], 'instructions':instr,'content_hash':h}
++    return {'ok':True,'schema':SCHEMA,'compatible_with':['style_instruction_artifact/1.0'],'style_instruction_id':'SI-'+h[:16],
++            'source_fragment_ids':[x['fragment_id'] for x in rows],
++            'surface_style_source_fragment_ids':[x['fragment_id'] for x in full],
++            'structure_only_source_fragment_ids':[x['fragment_id'] for x in rows if x.get('authority')!='FULL'],
++            'instructions':instr,'content_hash':h}
+ 
+ if __name__=='__main__':
+  import argparse
+diff --git a/scripts/writer/composition/writing_policy.py b/scripts/writer/composition/writing_policy.py
+index 45e88a0..faf8be2 100644
+--- a/scripts/writer/composition/writing_policy.py
++++ b/scripts/writer/composition/writing_policy.py
+@@ -14,11 +14,11 @@ _DEFAULT={
+ 
+ def build(object_decision:dict[str,Any],section_role:str,style_selection:dict[str,Any],*,target_language:str|None=None)->dict[str,Any]:
+     if object_decision.get('schema')!='writing_object_decision/1.0':raise ValueError('writing_object_decision/1.0 required')
+-    if style_selection.get('schema')!='reference_selection/1.0':raise ValueError('reference_selection/1.0 required')
++    if style_selection.get('schema') not in {'reference_selection/1.0','reference_selection/1.1'}:raise ValueError('reference_selection/1.x required')
+     allow,forbid=_DEFAULT.get(section_role,_DEFAULT['body'])
+     sel=style_selection.get('selected') or []
+     cits=[(x.get('components') or {}).get('style') for x in sel if (x.get('components') or {}).get('style') is not None]
+-    payload={'document_kind':object_decision.get('kind'),'section_role':section_role,'language':target_language or object_decision.get('language'),'allowed_claim_classes':allow,'forbidden_claim_classes':forbid,'style_reference_fragment_ids':[x.get('fragment_id') for x in sel], 'constraints':{'style_refs_are_not_evidence':True,'new_facts_require_research_debt':True,'causality_must_preserve_authorized_strength':True,'citation_required_for_external_fact':True},'style_targets':{'reference_count':len(sel),'style_similarity_mean':round(sum(cits)/len(cits),4) if cits else None}}
++    payload={'document_kind':object_decision.get('kind'),'section_role':section_role,'language':target_language or object_decision.get('language'),'allowed_claim_classes':allow,'forbidden_claim_classes':forbid,'style_reference_fragment_ids':[x.get('fragment_id') for x in sel], 'style_authority':{'full':[x.get('fragment_id') for x in sel if x.get('style_authority','FULL')=='FULL'],'structure_only':[x.get('fragment_id') for x in sel if x.get('style_authority')=='STRUCTURE_ONLY']}, 'constraints':{'style_refs_are_not_evidence':True,'new_facts_require_research_debt':True,'causality_must_preserve_authorized_strength':True,'citation_required_for_external_fact':True},'style_targets':{'reference_count':len(sel),'style_similarity_mean':round(sum(cits)/len(cits),4) if cits else None}}
+     h=hashlib.sha256(json.dumps(payload,sort_keys=True,ensure_ascii=False).encode()).hexdigest()
+     return {'ok':True,'schema':SCHEMA,'policy_id':'WP-'+h[:16],**payload,'content_hash':h}
+ 
+diff --git a/scripts/writer/drafting/agent_dispatch.py b/scripts/writer/drafting/agent_dispatch.py
+index 0e4a329..316b0ff 100644
+--- a/scripts/writer/drafting/agent_dispatch.py
++++ b/scripts/writer/drafting/agent_dispatch.py
+@@ -6,7 +6,7 @@ ROLE_MAP={'dissertation':'article-writer','article':'article-writer','report':'a
+ def build(request:dict[str,Any])->dict[str,Any]:
+  if request.get('schema')!='draft_request/1.0':raise ValueError('draft_request/1.0 required')
+  kind=str((request.get('object') or {}).get('kind') or 'unknown');agent=ROLE_MAP.get(kind,'article-writer')
+- payload={'agent_role':agent,'request_id':request.get('request_id'),'section_role':request.get('section_role'),'authorized_claim_ids':[c.get('id') or c.get('claim_id') for c in request.get('authorized_claims') or [] if isinstance(c,dict)],'style_instruction_id':(request.get('style_instruction') or {}).get('style_instruction_id'),'writer_may_search_web':False,'required_output_schema':'draft_artifact/1.0'}
++ payload={'agent_role':agent,'request_id':request.get('request_id'),'section_role':request.get('section_role'),'authorized_claim_ids':[c.get('id') or c.get('claim_id') for c in request.get('authorized_claims') or [] if isinstance(c,dict)],'style_instruction_id':(request.get('style_instruction') or {}).get('style_instruction_id'),'writer_may_search_web':False,'required_output_schema':'draft_artifact/1.1','required_claim_mapping':['realizes_claims','proposed_claims'],'claim_authority':'authorized_claims only; new claims must be proposed, never silently asserted'}
+  h=hashlib.sha256(json.dumps(payload,sort_keys=True,ensure_ascii=False).encode()).hexdigest()
+  return {'ok':True,'schema':SCHEMA,'dispatch_id':'WD-'+h[:16],**payload,'backend_names_exposed':False}
+ 
+diff --git a/scripts/writer/drafting/artifact.py b/scripts/writer/drafting/artifact.py
+index d444ad6..177d266 100644
+--- a/scripts/writer/drafting/artifact.py
++++ b/scripts/writer/drafting/artifact.py
+@@ -1,21 +1,28 @@
+ from __future__ import annotations
+ import hashlib,json,time
+ from typing import Any
+-SCHEMA='draft_artifact/1.0'
++from scripts.writer.drafting.proposed_claim import normalize as normalize_proposed_claim, build as build_proposed_claim
++SCHEMA='draft_artifact/1.1'
+ 
+ def build(request:dict[str,Any],paragraphs:list[dict[str,Any]])->dict[str,Any]:
+     if request.get('schema')!='draft_request/1.0':raise ValueError('draft_request/1.0 required')
+     auth={str(c.get('id') or c.get('claim_id')) for c in request.get('authorized_claims') or [] if isinstance(c,dict)}
+-    clean=[];unauthorized=set()
++    clean=[];unauthorized=set(); proposed=[]
+     for i,p in enumerate(paragraphs,1):
+         text=str(p.get('text') or '').strip()
+         if not text:continue
++        pid=str(p.get('temp_id') or f'DP-{i:03d}')
+         claims=[str(x) for x in p.get('realizes_claims') or [] if x]
+-        unauthorized.update(set(claims)-auth)
+-        clean.append({'temp_id':p.get('temp_id') or f'DP-{i:03d}','target_paragraph_id':p.get('target_paragraph_id'),'text':text,'realizes_claims':claims,'evidence_refs':list(p.get('evidence_refs') or []),'style_instruction_id':p.get('style_instruction_id')})
+-    payload={'request_id':request.get('request_id'),'paragraphs':clean,'unauthorized_claim_ids':sorted(unauthorized)}
++        unknown=sorted(set(claims)-auth); unauthorized.update(unknown)
++        for cid in unknown:
++            proposed.append(build_proposed_claim(text=f'Unregistered claim reference {cid}',paragraph_id=pid,claim_type='UNKNOWN',reason='UNKNOWN_CLAIM_ID',derived_from=[cid]))
++        for raw in p.get('proposed_claims') or []:
++            if isinstance(raw,dict): proposed.append(normalize_proposed_claim(raw,paragraph_id=pid))
++        clean.append({'temp_id':pid,'target_paragraph_id':p.get('target_paragraph_id'),'text':text,'realizes_claims':claims,'evidence_refs':list(p.get('evidence_refs') or []),'style_instruction_id':p.get('style_instruction_id'),'proposed_claim_ids':[x['proposed_claim_id'] for x in proposed if x.get('paragraph_id')==pid]})
++    payload={'request_id':request.get('request_id'),'paragraphs':clean,'unauthorized_claim_ids':sorted(unauthorized),'proposed_claims':proposed}
+     h=hashlib.sha256(json.dumps(payload,sort_keys=True,ensure_ascii=False).encode()).hexdigest()
+-    return {'ok':not bool(unauthorized),'schema':SCHEMA,'draft_id':'DA-'+h[:16],'created_at':time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime()),**payload,'requires_research_debt':bool(unauthorized),'content_hash':h}
++    blocked=bool(unauthorized or proposed)
++    return {'ok':not blocked,'schema':SCHEMA,'compatible_with':['draft_artifact/1.0'],'draft_id':'DA-'+h[:16],'created_at':time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime()),**payload,'requires_research_debt':blocked,'requires_claim_registration':bool(proposed),'content_hash':h}
+ 
+ if __name__=='__main__':
+  import argparse
+diff --git a/scripts/writer/drafting/proposed_claim.py b/scripts/writer/drafting/proposed_claim.py
+new file mode 100644
+index 0000000..845c2cf
+--- /dev/null
++++ b/scripts/writer/drafting/proposed_claim.py
+@@ -0,0 +1,18 @@
++from __future__ import annotations
++import hashlib, json
++from typing import Any
++SCHEMA='proposed_claim/1.0'
++_ALLOWED={'SYNTHESIS','INTERPRETATION','EXTERNAL_FACT','CAUSAL_HYPOTHESIS','COMPARISON','UNKNOWN'}
++
++def build(*,text:str,paragraph_id:str|None=None,span:dict[str,Any]|None=None,claim_type:str='UNKNOWN',reason:str='UNAUTHORIZED_DRAFT_PROPOSITION',evidence_refs:list[str]|None=None,derived_from:list[str]|None=None)->dict[str,Any]:
++    text=' '.join(str(text or '').split()).strip()
++    if not text: raise ValueError('proposed claim text required')
++    typ=claim_type if claim_type in _ALLOWED else 'UNKNOWN'
++    payload={'text':text,'paragraph_id':paragraph_id,'span':span,'claim_type':typ,'reason':reason,'evidence_refs':list(evidence_refs or []),'derived_from':list(derived_from or [])}
++    h=hashlib.sha256(json.dumps(payload,sort_keys=True,ensure_ascii=False,separators=(',',':')).encode()).hexdigest()
++    return {'schema':SCHEMA,'proposed_claim_id':'PC-'+h[:16],**payload,'content_hash':h,'requires_registration':True}
++
++def normalize(raw:dict[str,Any],*,paragraph_id:str|None=None)->dict[str,Any]:
++    if raw.get('schema')==SCHEMA and raw.get('proposed_claim_id'):
++        return dict(raw)
++    return build(text=str(raw.get('text') or raw.get('proposition') or ''),paragraph_id=raw.get('paragraph_id') or paragraph_id,span=raw.get('span'),claim_type=str(raw.get('claim_type') or raw.get('type') or 'UNKNOWN'),reason=str(raw.get('reason') or 'UNAUTHORIZED_DRAFT_PROPOSITION'),evidence_refs=list(raw.get('evidence_refs') or []),derived_from=list(raw.get('derived_from') or []))
+diff --git a/scripts/writer/drafting/request.py b/scripts/writer/drafting/request.py
+index 088a0c4..9396ae2 100644
+--- a/scripts/writer/drafting/request.py
++++ b/scripts/writer/drafting/request.py
+@@ -7,13 +7,22 @@ SCHEMA='draft_request/1.0'
+ 
+ def build(object_decision:dict[str,Any], style_selection:dict[str,Any], evidence_selection:dict[str,Any], claims:list[dict[str,Any]], section_role:str, instructions:str='', writing_policy:dict[str,Any]|None=None, style_instruction:dict[str,Any]|None=None)->dict[str,Any]:
+     if object_decision.get('schema')!='writing_object_decision/1.0': raise ValueError('writing_object_decision/1.0 required')
+-    if style_selection.get('schema')!='reference_selection/1.0' or style_selection.get('role')!='style': raise ValueError('style reference_selection/1.0 required')
+-    if evidence_selection.get('schema')!='reference_selection/1.0' or evidence_selection.get('role')!='evidence': raise ValueError('evidence reference_selection/1.0 required')
++    if style_selection.get('schema') not in {'reference_selection/1.0','reference_selection/1.1'} or style_selection.get('role')!='style': raise ValueError('style reference_selection/1.x required')
++    if evidence_selection.get('schema') not in {'reference_selection/1.0','reference_selection/1.1','claim_evidence_selection/1.0'}: raise ValueError('evidence reference_selection/1.x or claim_evidence_selection/1.0 required')
++    if evidence_selection.get('schema')!='claim_evidence_selection/1.0' and evidence_selection.get('role')!='evidence': raise ValueError('evidence role required')
+     payload={'document_kind':object_decision.get('kind'),'section_role':section_role,'style_fragments':style_selection.get('selected') or [],'evidence_fragments':evidence_selection.get('selected') or [],'claims':claims,'instructions':instructions,'writing_policy_id':(writing_policy or {}).get('policy_id'),'style_instruction_id':(style_instruction or {}).get('style_instruction_id')}
++    evidence_by_claim={}
++    if evidence_selection.get('schema')=='claim_evidence_selection/1.0':
++        evidence_by_claim={str(r.get('claim_id')):list(r.get('selected') or []) for r in evidence_selection.get('claims') or [] if r.get('claim_id')}
++    else:
++        for c in claims:
++            cid=str(c.get('id') or c.get('claim_id') or '') if isinstance(c,dict) else ''
++            if cid:evidence_by_claim[cid]=list(payload['evidence_fragments'])
++    payload['evidence_by_claim']=evidence_by_claim
+     h=hashlib.sha256(json.dumps(payload,ensure_ascii=False,sort_keys=True,separators=(',',':')).encode()).hexdigest()
+     return {'ok':True,'schema':SCHEMA,'request_id':'DR-'+h[:16],'created_at':time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime()),
+             'object':object_decision,'section_role':section_role,'style_references':payload['style_fragments'],'evidence_references':payload['evidence_fragments'],
+-            'writing_policy':writing_policy,'style_instruction':style_instruction,'authorized_claims':claims,'instructions':instructions,'constraints':{'style_refs_are_not_evidence':True,'writer_may_search_web':False,'new_factual_claims_require_research_debt':True},'content_hash':h}
++            'writing_policy':writing_policy,'style_instruction':style_instruction,'authorized_claims':claims,'evidence_by_claim':evidence_by_claim,'instructions':instructions,'constraints':{'style_refs_are_not_evidence':True,'writer_may_search_web':False,'new_factual_claims_require_research_debt':True,'claim_realization_authority':'DraftArtifact→DOM paragraph.claims','rendered_claim_markers_are_projection':True},'content_hash':h}
+ 
+ def main()->int:
+     ap=argparse.ArgumentParser(); ap.add_argument('--object',required=True); ap.add_argument('--style-selection',required=True); ap.add_argument('--evidence-selection',required=True); ap.add_argument('--claims',required=True); ap.add_argument('--section-role',required=True); ap.add_argument('--instructions',default=''); ap.add_argument('--writing-policy'); ap.add_argument('--style-instruction'); a=ap.parse_args()
+diff --git a/scripts/writer/provenance/state_policy.py b/scripts/writer/provenance/state_policy.py
+index 7157f9e..758eeeb 100644
+--- a/scripts/writer/provenance/state_policy.py
++++ b/scripts/writer/provenance/state_policy.py
+@@ -1,16 +1,32 @@
+ from __future__ import annotations
+ from typing import Any
+-SCHEMA='claim_state_transition/1.0'
++SCHEMA='claim_state_transition/1.1'
+ 
+ def apply_invalidation(dom:dict[str,Any],invalidation:dict[str,Any])->dict[str,Any]:
+     affected=set(invalidation.get('claims_to_revalidate') or []); changed=[]
+     for c in dom.get('claims') or []:
+         cid=str(c.get('id') or c.get('claim_id') or '')
+         if cid not in affected:continue
+-        ver=c.setdefault('verification',{}); old=str(ver.get('verdict') or 'OPEN')
++        ver=c.setdefault('verification',{})
++        evidence_verdict=str(ver.get('evidence_verdict') or ver.get('verdict') or 'OPEN')
++        old_claim_state=str(c.get('state') or evidence_verdict)
+         evidence=c.get('evidence') or c.get('evidence_refs') or []
+-        # conservative distinction: multiple evidence refs retain support but are stale; one/zero requires revalidation.
+-        new='SUPPORTED_WITH_STALE_EVIDENCE' if old=='SUPPORTED' and len(evidence)>=2 else 'PENDING_REVALIDATION'
+-        ver['previous_verdict']=old;ver['verdict']=new;ver['invalidation_sources']=invalidation.get('changed_sources') or []
+-        changed.append({'claim_id':cid,'from':old,'to':new})
++        # Operational claim state is distinct from evidence verdict and epistemic state.
++        if evidence_verdict=='SUPPORTED' and len(evidence)>=2:
++            new_claim_state='SUPPORTED_WITH_STALE_EVIDENCE'
++            new_verification_state='VERIFIED'
++            epistemic=ver.get('epistemic_state') or 'ESTABLISHED'
++        else:
++            new_claim_state='PENDING_REVALIDATION'
++            new_verification_state='UNCHECKED'
++            epistemic='UNKNOWN'
++        c['state']=new_claim_state
++        ver['previous_claim_state']=old_claim_state
++        ver['verification_state']=new_verification_state
++        ver['epistemic_state']=epistemic
++        ver['evidence_verdict']=evidence_verdict
++        # Compatibility field for older consumers; never use it as evidence authority.
++        ver['verdict']=new_claim_state
++        ver['invalidation_sources']=invalidation.get('changed_sources') or []
++        changed.append({'claim_id':cid,'from':old_claim_state,'to':new_claim_state,'evidence_verdict':evidence_verdict,'verification_state':new_verification_state,'epistemic_state':epistemic})
+     return {'ok':True,'schema':SCHEMA,'transitions':changed,'dom':dom}
+diff --git a/scripts/writer/references/evidence_select.py b/scripts/writer/references/evidence_select.py
+new file mode 100644
+index 0000000..73234a8
+--- /dev/null
++++ b/scripts/writer/references/evidence_select.py
+@@ -0,0 +1,49 @@
++#!/usr/bin/env python3
++from __future__ import annotations
++import argparse, json
++from pathlib import Path
++from typing import Any
++from scripts.writer.references.select import select
++
++SCHEMA = 'claim_evidence_selection/1.0'
++
++def _cid(c: dict[str, Any]) -> str:
++    return str(c.get('id') or c.get('claim_id') or '').strip()
++
++def select_for_claims(fragments: list[dict[str, Any]], claims: list[dict[str, Any]], *, limit_per_claim: int = 3, max_per_reference: int = 2) -> dict[str, Any]:
++    rows=[]; aggregate=[]; seen=set(); missing=[]
++    for claim in claims:
++        if not isinstance(claim,dict):
++            continue
++        cid=_cid(claim)
++        text=str(claim.get('text') or claim.get('proposition') or '').strip()
++        if not cid or not text:
++            continue
++        r=select(fragments,role='evidence',target_text=text,limit=limit_per_claim,max_per_reference=max_per_reference)
++        picked=[]
++        for hit in r.get('selected') or []:
++            x=dict(hit); x['claim_id']=cid; picked.append(x)
++            key=(str(x.get('fragment_id')),str(x.get('reference_id')))
++            if key not in seen:
++                seen.add(key);aggregate.append(x)
++        if not picked:
++            missing.append(cid)
++        rows.append({'claim_id':cid,'claim_text':text,'status':r.get('status'),'reason_code':r.get('reason_code'),'selected':picked})
++    return {
++        'ok':not bool(missing),'schema':SCHEMA,'status':'READY' if not missing else 'DEGRADED',
++        'claims':rows,'missing_claim_ids':missing,'selected':aggregate,
++        'constraints':{'selection_is_per_claim':True,'style_filters_do_not_apply_to_evidence':True}
++    }
++
++def main()->int:
++    ap=argparse.ArgumentParser();ap.add_argument('fragment_sets',nargs='+');ap.add_argument('--claims',required=True);ap.add_argument('--limit-per-claim',type=int,default=3);a=ap.parse_args()
++    try:
++        fr=[]
++        for p in a.fragment_sets:
++            fr.extend(json.loads(Path(p).read_text(encoding='utf8')).get('fragments') or [])
++        d=json.loads(Path(a.claims).read_text(encoding='utf8'));claims=d.get('claims',d) if isinstance(d,dict) else d
++        out=select_for_claims(fr,claims,limit_per_claim=a.limit_per_claim)
++        print(json.dumps(out,ensure_ascii=False,indent=2));return 0 if out.get('ok') else 4
++    except Exception as e:
++        print(json.dumps({'ok':False,'schema':SCHEMA,'error':f'{type(e).__name__}: {e}'},ensure_ascii=False,indent=2));return 2
++if __name__=='__main__':raise SystemExit(main())
+diff --git a/scripts/writer/references/select.py b/scripts/writer/references/select.py
+index 530064d..10ad202 100644
+--- a/scripts/writer/references/select.py
++++ b/scripts/writer/references/select.py
+@@ -3,7 +3,8 @@ from __future__ import annotations
+ import argparse, json, re
+ from pathlib import Path
+ from typing import Any
+-SCHEMA='reference_selection/1.0'
++SCHEMA='reference_selection/1.1'
++_COMPAT_SCHEMA='reference_selection/1.0'
+ 
+ def _jacc(a:set[str],b:set[str])->float: return len(a&b)/max(1,len(a|b))
+ def _num_sim(a:float,b:float,scale:float)->float: return max(0.0,1.0-abs(a-b)/max(scale,abs(a),abs(b),1.0))
+@@ -15,19 +16,24 @@ def _graph_sim(a:dict[str,Any],b:dict[str,Any])->float:
+     ea=set((a.get('edge_relations') or {}).keys()); eb=set((b.get('edge_relations') or {}).keys())
+     return round(.35*_jacc(ga,gb)+.25*_jacc(na,nb)+.40*_jacc(ea,eb),6)
+ 
++def _style_authority(fragment_language:str|None,target_language:str|None)->str:
++    if not target_language or not fragment_language or fragment_language in {'unknown','mixed'}:
++        return 'FULL' if not target_language else 'STRUCTURE_ONLY'
++    return 'FULL' if fragment_language==target_language else 'STRUCTURE_ONLY'
++
+ def select(fragments:list[dict[str,Any]], *, role:str, target_kind:str|None=None, language:str|None=None, section_role:str|None=None, target_text:str='', target_style:dict[str,Any]|None=None, target_graph:dict[str,Any]|None=None, limit:int=8, max_per_reference:int=2)->dict[str,Any]:
+     if role not in {'style','evidence'}: raise ValueError('role must be style or evidence')
+     ranked=[]; rejected=[]; tt=_tokens(target_text); ts=target_style or {}; tg=target_graph or ts.get('graph_digest') or {}
+     for f in fragments:
+         perm=f.get('permissions') or {}
+         if not perm.get(role,False): rejected.append({'fragment_id':f.get('fragment_id'),'reason':'ROLE_FORBIDDEN'}); continue
++        authority=None
+         if role=='style':
+             if target_kind and f.get('document_kind') not in {target_kind,None,'unknown'}:
+                 rejected.append({'fragment_id':f.get('fragment_id'),'reason':'DOCUMENT_KIND_MISMATCH'}); continue
+-            if language and f.get('language') != language:
+-                rejected.append({'fragment_id':f.get('fragment_id'),'reason':'LANGUAGE_MISMATCH'}); continue
+             if section_role and f.get('section_role') != section_role:
+                 rejected.append({'fragment_id':f.get('fragment_id'),'reason':'SECTION_ROLE_MISMATCH'}); continue
++            authority=_style_authority(str(f.get('language') or 'unknown'),language)
+         sf=f.get('style_features') or {}; gd=f.get('graph_digest') or {}
+         score=0.; parts={}
+         if role=='evidence':
+@@ -39,10 +45,21 @@ def select(fragments:list[dict[str,Any]], *, role:str, target_kind:str|None=None
+             for k,scale in [('words',150),('citation_density_per_1000',15),('hedge_density_per_1000',10),('causal_density_per_1000',10)]:
+                 if k in ts and k in sf: sims.append(_num_sim(float(ts[k]),float(sf[k]),scale))
+             style=sum(sims)/len(sims) if sims else .5; graph=_graph_sim(tg,gd) if tg else 0.0
+-            parts={'style':round(style,6),'graph':graph}; score=.65*style+.35*graph
+-            allowed=['paragraph_shape','citation_density','hedging_density','causal_density','graph_motifs','argument_structure']
+-        ranked.append({'fragment_id':f.get('fragment_id'),'reference_id':f.get('reference_id'),'locator':f.get('locator'),'section_role':f.get('section_role'),'document_kind':f.get('document_kind'),'language':f.get('language'),'score':round(score,6),'components':parts,'allowed_take':allowed,'excerpt':f.get('excerpt')})
+-    ranked.sort(key=lambda x:(-x['score'],str(x['fragment_id'])))
++            same_language=authority=='FULL'
++            # Cross-language references are useful for argument/graph structure but
++            # must not steer lexical/syntactic surface style.
++            if same_language:
++                parts={'style':round(style,6),'graph':graph,'language_affinity':1.0}; score=.60*style+.35*graph+.05
++                allowed=['paragraph_shape','citation_density','hedging_density','causal_density','graph_motifs','argument_structure','citation_architecture','surface_rhetoric']
++            else:
++                structural_style=sum([
++                    _num_sim(float(ts[k]),float(sf[k]),scale)
++                    for k,scale in [('words',150),('citation_density_per_1000',15)] if k in ts and k in sf
++                ])/max(1,len([1 for k in ('words','citation_density_per_1000') if k in ts and k in sf])) if any(k in ts and k in sf for k in ('words','citation_density_per_1000')) else .5
++                parts={'structural_style':round(structural_style,6),'graph':graph,'language_affinity':0.0}; score=.40*structural_style+.60*graph
++                allowed=['paragraph_architecture','citation_architecture','graph_motifs','argument_structure']
++        ranked.append({'fragment_id':f.get('fragment_id'),'reference_id':f.get('reference_id'),'locator':f.get('locator'),'section_role':f.get('section_role'),'document_kind':f.get('document_kind'),'language':f.get('language'),'style_authority':authority,'score':round(score,6),'components':parts,'allowed_take':allowed,'excerpt':f.get('excerpt')})
++    ranked.sort(key=lambda x:(-x['score'],0 if x.get('style_authority')=='FULL' else 1,str(x['fragment_id'])))
+     selected=[]; counts={}
+     for x in ranked:
+         rid=str(x.get('reference_id') or '')
+@@ -50,7 +67,7 @@ def select(fragments:list[dict[str,Any]], *, role:str, target_kind:str|None=None
+         selected.append(x); counts[rid]=counts.get(rid,0)+1
+         if len(selected)>=max(1,limit): break
+     status='READY' if selected else 'DEGRADED'
+-    return {'ok':True,'schema':SCHEMA,'status':status,'reason_code':None if selected else 'NO_REFERENCE_AFTER_HARD_FILTERS','role':role,'hard_filters':{'document_kind':target_kind,'language':language,'section_role':section_role},'selected':selected,'selected_references':sorted(counts),'rejected_count':len(rejected),'rejected':rejected[:100]}
++    return {'ok':True,'schema':SCHEMA,'compatible_with':[_COMPAT_SCHEMA],'status':status,'reason_code':None if selected else 'NO_REFERENCE_AFTER_HARD_FILTERS','role':role,'hard_filters':{'document_kind':target_kind,'section_role':section_role},'language_policy':'tiered_style_authority' if role=='style' else 'not_applicable','target_language':language,'selected':selected,'selected_references':sorted(counts),'rejected_count':len(rejected),'rejected':rejected[:100]}
+ 
+ def main()->int:
+     ap=argparse.ArgumentParser(); ap.add_argument('fragment_sets',nargs='+'); ap.add_argument('--role',choices=['style','evidence'],required=True); ap.add_argument('--target-kind'); ap.add_argument('--language'); ap.add_argument('--section-role'); ap.add_argument('--target-text',default=''); ap.add_argument('--target-style-json',default='{}'); ap.add_argument('--target-graph-json',default='{}'); ap.add_argument('--limit',type=int,default=8); ap.add_argument('--max-per-reference',type=int,default=2); a=ap.parse_args()
+diff --git a/scripts/writer/release/gate.py b/scripts/writer/release/gate.py
+index 24a0dba..c42caf0 100644
+--- a/scripts/writer/release/gate.py
++++ b/scripts/writer/release/gate.py
+@@ -26,6 +26,7 @@ from scripts.writer.research.verify_claims_adapter import adapt_verification, Ve
+ from scripts.writer.review import citation_trace
+ from scripts.writer.core.factory_process import draftcheck
+ from scripts.writer.review.rtt_compare import compare_contract
++from scripts.writer.authority.realization import resolve as resolve_realization_authority
+ 
+ STRICT_PASS = frozenset({"SUPPORTED"})
+ QUALIFIED_PASS = frozenset({"SUPPORTED", "AMBIGUOUS"})
+@@ -124,13 +125,18 @@ def _evidence_gate(verification: dict[str, Any], policy: str) -> dict[str, Any]:
+     allowed = STRICT_PASS if policy == "strict" else QUALIFIED_PASS
+     failures: list[dict[str, Any]] = []
+     for row in verification.get("results", []):
+-        verdict = row.get("verdict")
+-        if verdict not in allowed:
+-            failures.append({"claim_id": row.get("claim_id"), "verdict": verdict})
++        verdict = row.get("evidence_verdict") or row.get("verdict")
++        vstate = row.get("verification_state")
++        if not vstate:
++            vstate = "UNCHECKED" if verdict in {None, "OPEN"} else "VERIFIED"
++        epistemic = row.get("epistemic_state") or ("UNKNOWN" if verdict in {None,"OPEN"} else None)
++        if vstate != "VERIFIED" or verdict not in allowed:
++            failures.append({"claim_id": row.get("claim_id"), "verdict": verdict, "verification_state": vstate, "epistemic_state": epistemic})
+     return {
+         "verdict": "PASS" if not failures else "FAIL",
+         "policy": policy,
+         "allowed_verdicts": sorted(allowed),
++        "requires_verification_state": "VERIFIED",
+         "failures": failures,
+         "claims_checked": len(verification.get("results", [])),
+     }
+@@ -148,7 +154,8 @@ def evaluate_release(dom_path: str | Path, text_path: str | Path, *,
+     dom = _load_dom(dom_p); text = _read_text(text_p)
+ 
+     verification = adapt_verification(dom_p)
+-    realized_ids = _realized_claim_ids(text)
++    authority_binding = resolve_realization_authority(dom, text)
++    realized_ids = set(authority_binding.get("realized_claim_ids") or [])
+     if realized_ids:
+         verification = dict(verification)
+         verification["results"] = [r for r in verification.get("results", []) if str(r.get("claim_id")) in realized_ids]
+@@ -171,6 +178,9 @@ def evaluate_release(dom_path: str | Path, text_path: str | Path, *,
+                 "numeric_comparison": row.get("numeric_comparison"),
+                 "guard": row.get("guard"),
+                 "formula": row.get("formula"),
++                "verification_state": row.get("verification_state"),
++                "evidence_verdict": row.get("evidence_verdict") or row.get("verdict"),
++                "epistemic_state": row.get("epistemic_state"),
+             }
+ 
+     # Traceability and RTT are still evaluated even after evidence FAIL so the
+@@ -187,9 +197,12 @@ def evaluate_release(dom_path: str | Path, text_path: str | Path, *,
+         "checked": [], "re_extraction": {"claims": [], "digests": [], "errors": []},
+     }
+ 
++    trace_verdict = "PASS" if trace.get("verdict") == "PASS" and authority_binding.get("verdict") == "PASS" else "FAIL"
++    trace_detail = dict(trace)
++    trace_detail["authority_binding"] = authority_binding
+     gates = {
+         "evidence": {"verdict": evidence["verdict"], "detail": evidence},
+-        "traceability": {"verdict": trace.get("verdict", "FAIL"), "detail": trace},
++        "traceability": {"verdict": trace_verdict, "detail": trace_detail},
+         "semantic_roundtrip": {"verdict": semantic.get("verdict", "FAIL"), "detail": semantic},
+     }
+     blockers = [name for name, gate in gates.items() if gate["verdict"] != "PASS"]
+@@ -204,6 +217,7 @@ def evaluate_release(dom_path: str | Path, text_path: str | Path, *,
+             "research_verdicts": "scripts/researcher/verify_claims.py",
+             "traceability": "scripts/writer/review/citation_trace.py",
+             "semantic_roundtrip": "scripts/writer/core/factory_process.py",
++            "claim_realization": "DraftArtifact → DOM paragraph.claims; rendered [C-*] markers are checked projection",
+         },
+         "artifacts": {
+             "dom": str(dom_p), "dom_sha256": _sha256_bytes(dom_bytes),
+diff --git a/scripts/writer/research/verify_claims_adapter.py b/scripts/writer/research/verify_claims_adapter.py
+index 098e5f0..c2a7040 100644
+--- a/scripts/writer/research/verify_claims_adapter.py
++++ b/scripts/writer/research/verify_claims_adapter.py
+@@ -85,6 +85,9 @@ def adapt_verification(dom: str | Path, timeout_seconds: float = 60.0) -> dict[s
+         normalized.append({
+             "claim_id": item.get("claim_id"),
+             "verdict": verdict,
++            "evidence_verdict": str(item.get("evidence_verdict") or verdict).upper(),
++            "verification_state": item.get("verification_state") or ("UNCHECKED" if verdict == "OPEN" else "VERIFIED"),
++            "epistemic_state": item.get("epistemic_state") or ("UNKNOWN" if verdict == "OPEN" else None),
+             "confidence": item.get("confidence"),
+             "numeric_comparison": item.get("numeric_comparison"),
+             "guard": item.get("guard"),
+diff --git a/scripts/writer/review/citation_trace.py b/scripts/writer/review/citation_trace.py
+index af6c7c3..e50c5e4 100644
+--- a/scripts/writer/review/citation_trace.py
++++ b/scripts/writer/review/citation_trace.py
+@@ -240,12 +240,19 @@ def _check_uncertainty(text: str, dom: dict) -> list[dict]:
+     masked = []
+     for cid, c in claims.items():
+         ver = c.get("verification", {}) or {}
+-        verdict = ver.get("verdict")
++        verdict = ver.get("evidence_verdict") or ver.get("verdict")
++        verification_state = ver.get("verification_state")
++        epistemic_state = ver.get("epistemic_state")
+         level = None
+         u = unc.get(str(cid))
+         if isinstance(u, dict):
+             level = u.get("level")
+-        risky = verdict in ("UNSUPPORTED", "AMBIGUOUS", "OPEN") or level in ("assumed", "disputed", "assumption", "speculative")
++        if epistemic_state:
++            risky = epistemic_state in ("QUALIFIED", "AMBIGUOUS", "DISPUTED") or level in ("assumed", "disputed", "assumption", "speculative")
++        else:
++            # Compatibility path for old DOMs. OPEN caused by an unrun verifier is
++            # no longer treated as epistemic uncertainty when state is explicit.
++            risky = verdict in ("UNSUPPORTED", "AMBIGUOUS", "OPEN") or level in ("assumed", "disputed", "assumption", "speculative")
+         if not risky:
+             continue
+         for m in _C_REF.finditer(text):
+@@ -254,7 +261,7 @@ def _check_uncertainty(text: str, dom: dict) -> list[dict]:
+             sent = _sentence_at(text, m.start())
+             if sent and not _soft(sent):
+                 masked.append({
+-                    "claim_id": cid, "verdict": verdict, "level": level,
++                    "claim_id": cid, "verdict": verdict, "verification_state": verification_state, "epistemic_state": epistemic_state, "level": level,
+                     "sentence": sent[:200],
+                 })
+                 break
+diff --git a/shared/article-writing-process.md b/shared/article-writing-process.md
+index 2d2a9b8..23b3c37 100644
+--- a/shared/article-writing-process.md
++++ b/shared/article-writing-process.md
+@@ -1,62 +1,83 @@
+-# Article Writing Process
++# Article / Scientific Writing Process
+ 
+-Use this process for articles, essays, explainers, public-facing reports, and substantive prose revisions.
++This process governs prose composition after the Writer runtime has decided **what is being written**, prepared references, and created a DraftRequest. For scientific and engineering work, the DOM and Writer contracts are the source of truth. Prose is a rendered realization, not the authority layer.
+ 
+-> **For scientific and engineering works** (dissertation, monograph, textbook, paper):
+-> the primary contract is `${OPENCODE_HARNESS_ROOT}/shared/writer-traceability-contract.md`.
+-> Traceability and uncertainty live in the DOM YAML (see `templates/writer-dom-dissertation.yaml`),
+-> NOT in the prose. This process still applies, but the DOM is the source of truth:
+-> every factual claim in the text must resolve to a claim_id → source + span + verdict.
++## Authority order
++
++For claim realization use this order:
++
++1. `DraftRequest.authorized_claims`
++2. `DraftArtifact.paragraphs[].realizes_claims`
++3. canonical DOM `paragraph.claims`
++4. rendered `[C-*]` markers as a checked projection only
++
++Rendered markers must agree with the DOM, but they never create or authorize a claim by themselves.
++
++Evidence authority belongs to Researcher verification. Writer may consume evidence and verdicts but may not upgrade them.
+ 
+ ## Inputs
+ 
+-Start by identifying what the user provided:
++The normal scientific/engineering composition input is:
++
++- WritingObjectDecision
++- WritingPolicy
++- StyleInstructionArtifact
++- authorized claims
++- per-claim evidence selection
++- target section/paragraph identifiers
++- DraftRequest
++
++A style reference and an evidence source are different roles even when they point to the same file.
++
++## Reference use
++
++### Same-language style reference
++
++May contribute bounded surface/rhetorical properties included in StyleInstruction, plus argument structure and graph motifs.
++
++### Cross-language style reference
+ 
+-- A brief or thesis.
+-- One or more research reports in the research directory's `reports/` subdirectory.
+-- Notes in its `notes/` subdirectory.
+-- URLs or source material.
+-- An existing draft to revise.
++`STRUCTURE_ONLY`. May contribute:
+ 
+-If audience, purpose, format, target length, or publication context would materially change the article, ask a short clarifying question. Otherwise, make a reasonable assumption and state it.
++- paragraph/argument architecture;
++- graph motifs;
++- citation architecture;
++- ordering such as observation → comparison → interpretation → limitation.
+ 
+-## Workflow
++It may not contribute lexical wording, syntax imitation, idioms or surface prose style.
+ 
+-1. Load the `ai-slop-avoidance` skill before drafting or revising.
+-2. Read the relevant research, notes, sources, or draft.
+-3. Define the article's central question or thesis in one sentence.
+-4. Identify the strongest evidence and any real disagreement or uncertainty.
+-5. Choose a structure that follows the argument, not a stock template.
+-6. Draft with citations or source references attached to the claims they support.
+-7. Verify unsupported central claims with `webfetch` or `search`, or remove them.
+-8. Run the `ai-slop-avoidance` slop audit before handoff.
++### Evidence reference
+ 
+-## Draft Standards
++Used claim-by-claim. Genre and language filters from style selection do not apply. Evidence still requires source identity, locator/provenance and Researcher validation.
+ 
+-- Open with the actual tension, question, or consequence. Do not use generic throat-clearing.
+-- Use concrete names, dates, examples, mechanisms, and numbers where the sources support them.
+-- Attribute analysis to named people, institutions, publications, or studies.
+-- Keep terminology consistent when precision matters.
+-- Use tables only when they make comparison easier.
+-- End by resolving the question, sharpening the implication, or naming what remains uncertain.
++## Draft workflow
+ 
+-## Source Standards
++1. Read the DraftRequest and WritingPolicy.
++2. Compose only the requested scope.
++3. Map every realized factual proposition to an authorized claim ID.
++4. If drafting naturally produces a new synthesis, interpretation, comparison or causal hypothesis, emit `ProposedClaim/1.0` instead of silently treating it as authorized.
++5. Return DraftArtifact-compatible structured output.
++6. Code validates authorization, builds the DOM patch and applies optimistic-concurrency checks.
++7. ChangeLedger records what changed.
++8. Researcher handles unresolved/new evidence debt.
++9. Traceability and semantic round-trip gates validate the rendered text.
++10. Selective repair edits only affected paragraphs.
+ 
+-- Every important factual claim needs a source, a clear inference from sources, or an explicit uncertainty caveat.
+-- Do not cite a URL unless it supports the sentence it is attached to.
+-- Keep source disagreement visible when it matters.
+-- Remove tracking parameters and generated citation artifacts unless there is a reason to preserve them.
++## Verification versus uncertainty
+ 
+-## Output
++Do not conflate these dimensions:
+ 
+-For a new article, return:
++- `verification_state`: whether the verification process has completed (`VERIFIED`, `UNCHECKED`, `FAILED`).
++- `evidence_verdict`: support result (`SUPPORTED`, `CONTRADICTED`, `AMBIGUOUS`, etc.).
++- `epistemic_state`: knowledge status (`ESTABLISHED`, `QUALIFIED`, `AMBIGUOUS`, `DISPUTED`, `UNKNOWN`).
+ 
+-1. The article title.
+-2. The article body.
+-3. A short handoff note with source gaps, slop-audit changes, and persistence status.
++`UNCHECKED` blocks evidence release but does not, by itself, require hedged prose. Hedging follows epistemic state and the authorized claim modality.
+ 
+-For a revision, return:
++## Output standards
+ 
+-1. The revised prose or the edited file path.
+-2. A short summary of the substantive changes.
+-3. Any remaining verification gaps.
++- Preserve numbers, units, qualifiers, entities, modality and causal strength.
++- Keep disagreement and uncertainty visible.
++- Do not pad beyond the authorized content.
++- Do not let style references become evidence by accident.
++- Do not let evidence sources become prose templates by accident.
++- Return research debt explicitly rather than solving it through unsanctioned search.
+diff --git a/shared/writer-traceability-contract.md b/shared/writer-traceability-contract.md
+index 29436ca..ea7061c 100644
+--- a/shared/writer-traceability-contract.md
++++ b/shared/writer-traceability-contract.md
+@@ -1,135 +1,149 @@
+-# Writer Traceability Contract — прослеживаемость и неопределённость как первичная структура
++# Writer Traceability Contract v1
+ 
+-> Shared-контракт для writer-контура (writing-orchestrator, article-writer) при создании
+-> научных и инженерных произведений: **диссертаций, монографий, учебной литературы**.
+->
+-> **Принцип:** Прослеживаемость (каждое утверждение → источник/цитата) и неопределённость
+-> (степень подтверждённости) — НЕ свойства прозы. Они первичны и живут в **DOM YAML** —
+-> структурном файле литературного объекта. Проза — только выходной формат этого DOM.
++This contract governs scientific and engineering writing. Traceability, claim authority and uncertainty are primary structured data. Prose is a rendered realization of those structures.
+ 
+-## 1. Иерархия истины
++## 1. Authority hierarchy
+ 
+-```
+-DOM YAML (источник истины: structure + claims + graphs + traceability + uncertainty)
+-   ↓
+-Готовый текст (один из многих выходов; прослеживаемость в тексте = `[Sxx]`/`[Cxx]` ссылки)
+-```
++The canonical order is:
++
++1. Claim registry in the DOM defines authorized claim identity and semantics.
++2. `DraftRequest.authorized_claims` defines the claims available to one drafting job.
++3. `DraftArtifact.paragraphs[].realizes_claims` declares what the writer actually realized.
++4. After an accepted DOM patch, `paragraph.claims` is the canonical realization binding.
++5. Rendered `[C-*]` markers are a checked projection of the DOM binding. They do not create or authorize claims.
++
++A mismatch between DOM paragraph bindings and rendered markers blocks release.
++
++Writer does not author or upgrade Researcher evidence verdicts. Researcher does not rewrite prose. State reducer owns operational claim-state transitions after source invalidation.
+ 
+-Правила:
+-1. Writer пишет текст, но НЕ выдумывает факты — каждый фактический клайм уже есть в DOM.
+-2. Если в прозе появилось утверждение, которого нет в DOM — это ошибка. Writer обязан
+-   сначала добавить claim в DOM (с источником), потом писать.
+-3. Если DOM-claim не подтверждён (UNSUPPORTED/OPEN) — в тексте это маркируется
+-   неопределённостью, а не подаётся как факт.
++## 2. Claim verification dimensions
+ 
+-## 2. Формат DOM YAML (литературный объект)
++Do not overload a single verdict with three different meanings.
+ 
++```yaml
++verification:
++  verification_state: VERIFIED | UNCHECKED | FAILED
++  evidence_verdict: SUPPORTED | CONTRADICTED | UNSUPPORTED | AMBIGUOUS | OPEN
++  epistemic_state: ESTABLISHED | QUALIFIED | AMBIGUOUS | DISPUTED | UNKNOWN
++  confidence: 0.0
++  numeric_comparison: null
+ ```
++
++The legacy `verification.verdict` field may remain during migration, but new logic must prefer the explicit fields above.
++
++`UNCHECKED` means that the verification operation has not established a result. It blocks evidence release, but does not by itself require hedged prose. Hedging follows `epistemic_state`, authorized modality and explicit uncertainty records.
++
++## 3. DOM core
++
++```yaml
+ product:
+   id: PROD-001
+-  kind: dissertation | monograph | textbook | paper   # шаблон, выбранный после постановки задачи
+-  title: ...
+-  status: drafted | editing | review | done
++  kind: dissertation | monograph | textbook | paper | article | report
+ 
+-structure:                     # базовая структура из шаблона
++structure:
+   chapters:
+     - id: CH-01
+-      title: ...
+       sections:
+-        - id: SEC-01-01
+-          title: ...
++        - id: SEC-01
+           paragraphs:
+-            - id: PAR-01-01-01
+-              claims: [C-001, C-002]      # какие клаймы этот параграф выражает
+-              text: ""                     # заполняется черновиком
++            - id: PAR-01
++              claims: [C-001, C-002]
++              evidence_refs: [EVD-001]
++              style_instruction_id: SI-...
++              text: "..."
+ 
+-claims:                        # реестр утверждений (совместим с research-контуром)
++claims:
+   - id: C-001
+-    text: "гуматы повышают эффективность удобрений на 15–30%"
+-    kind: factual | derived | assumed | recommendation
++    text: "..."
++    modality: assertive
++    causal_level: none
++    state: ACTIVE
+     evidence:
+       - source_id: S-012
+-        span: "p.47, §3.2: «...»"          # ТОЧНАЯ цитата, не пересказ
++        evidence_span_id: EVD-001
+     verification:
+-      verdict: SUPPORTED | CONTRADICTED | UNSUPPORTED | AMBIGUOUS | OPEN   # от fact-checker
+-      confidence: 0.8                        # 0.0–1.0
+-      numeric_comparison: {...}              # если число, прошло numeric_comparator
+-      verified_at: ...
+-
+-graphs:                        # базовые графы связей между клаймами
+-  - id: GRAPH-01
+-    kind: derivation | support | conflict | citation_chain
+-    edges:
+-      - from: C-001
+-        to: C-002
+-        relation: derived_from | supports | contradicts | depends_on
+-
+-uncertainty:                   # неопределённость — первичное поле, не послесловье
+-  C-001: { level: established | inferred | assumed | disputed, note: "..." }
+-  C-002: { level: assumed, note: "экстраполяция из C-001" }
+-
+-sources:                       # реестр источников
++      verification_state: VERIFIED
++      evidence_verdict: SUPPORTED
++      epistemic_state: ESTABLISHED
++
++sources:
+   - id: S-012
+-    ref: "Author. Title. Journal, year, p.47"
+-    doi: ...
+-    url: ...
+-    kind: primary | secondary
+-    accessed: ...
++    sha256: "..."
++    kind: primary
+ ```
+ 
+-## 3. Рабочий цикл
+-
+-1. **Постановка задачи** → выбор шаблона (`kind`: dissertation/monograph/textbook/paper).
+-2. **Создать DOM YAML** из шаблона: базовая структура (главы/секции) + **уже известные
+-   объекты как клаймы** + базовые графы (известные утверждения и их связи).
+-3. **Добавление черновиков**: каждый черновик заполняет `paragraphs[].text`; для новых
+-   утверждений Writer создаёт claim и **запрашивает источники** (через research-контур /
+-   source-fetcher), а не пересказывает.
+-4. **Когда параграф заполнен** → **стилистический синтез**: итеративно, используя
+-   **референсные работы из академических источников** (которые ТОЖЕ разбиты на клаймы и
+-   графы — их claim-структура загружается в `graphs` как модели стиля/структуры).
+-5. **Гейт прослеживаемости** (детерминированный, до выдачи): каждое фактическое утверждение
+-   в тексте → claim в DOM → source + span + verdict. Неопределённость явная.
+-6. **Выход**: сгенерированный текст из DOM (markdown/latex) + сам DOM как артефакт.
+-
+-## 4. Референсные работы как клаймы
+-
+-Для стилистического синтеза используются академические работы-образцы. Они разбираются
+-как обычные тексты: `claim-parser` → клаймы → графы. Writer загружает их claim-структуру
+-как **модель стиля/аргументации** (как открывают главу, как связывают секции, где
+-цитируют), но НЕ копирует содержание.
+-
+-## 5. Гейт «нельзя выдать»
+-
+-Гейт — детерминированный скрипт `${OPENCODE_HARNESS_ROOT}/scripts/writer/cli.py citation-trace`
+-(WS-18). Он сам проверяет (модель-агностично):
+-
+-- есть фактическое утверждение без claim_id в DOM → `orphan_claim`;
+-- есть claim без source/span → `dangling_claim` / `dangling_source`;
+-- есть claim с verdict=UNSUPPORTED/AMBIGUOUS/OPEN или level=assumed/disputed,
+-  поданный без маркера неопределённости → `masked_uncertainty`;
+-- есть `[Sxx]`-ссылка в тексте, не резолвящаяся в `sources` → `dangling_source`;
+-- числовой claim без `numeric_comparison` → `numeric_unverified`;
+-- внутренняя перекрёстная ссылка `[§N]` на несуществующую секцию → `dangling_section`;
+-- claim с `derived_from` без перекрёстной ссылки на источник вывода → `missing_crossref` (warn).
+-
+-Запуск перед выдачей:
++EvidenceSpan stores exact locator/hash provenance. SourceCatalog stores source versions. Dependency graph connects `Source → EvidenceSpan → Claim → Paragraph`.
++
++## 4. Drafting lifecycle
++
++1. Select writing object and section role.
++2. Prepare references.
++3. Style selection is tiered:
++   - same-language reference may provide bounded surface rhetoric plus structure;
++   - cross-language reference is `STRUCTURE_ONLY` and may provide argument architecture, graph motifs and citation architecture only.
++4. Select evidence per claim. Style genre/language filters do not apply to evidence.
++5. Build WritingPolicy and StyleInstructionArtifact.
++6. Build DraftRequest with authorized claims and `evidence_by_claim`.
++7. Writer returns DraftArtifact-compatible paragraphs.
++8. Any new proposition is returned as `ProposedClaim/1.0`; it is research debt, not an authorized fact.
++9. Code builds and applies an optimistic DOM patch.
++10. ChangeLedger records the exact changed claims/sources/paragraphs.
++11. Researcher validates unresolved evidence debt.
++12. Traceability + semantic round-trip + evidence gates determine release.
++
++## 5. Proposed claims
++
++Writer may discover useful synthesis while composing. It must not silently add it to the claim registry.
++
++```yaml
++schema: proposed_claim/1.0
++proposed_claim_id: PC-...
++text: "..."
++claim_type: SYNTHESIS | INTERPRETATION | COMPARISON | CAUSAL_HYPOTHESIS | EXTERNAL_FACT
++paragraph_id: DP-001
++span: {start: 0, end: 40}
++reason: UNAUTHORIZED_DRAFT_PROPOSITION
++requires_registration: true
+ ```
+-python "${OPENCODE_HARNESS_ROOT}/scripts/writer/cli.py" citation-trace --text <draft.md> --dom <slug>-dom.yaml [--strict]
++
++The orchestrator may route a ProposedClaim to Researcher, register it as a new claim after approval, weaken/rewrite it, or discard it.
++
++## 6. Source change and selective repair
++
++A changed source does not trigger blind chapter regeneration.
++
++```text
++SourceVersionChanged
++→ normalized/span hash comparison
++→ InvalidationPlan
++→ StateReducer
++→ affected claims only
++→ affected paragraphs only
++→ RepairRequest
++→ RTT/release
+ ```
+-exit 0 = PASS (можно выдавать), exit 1 = FAIL (править и перезапускать).
+ 
+-## 6. Интеграция с research-контуром
++Operational claim state is distinct from evidence verdict. Typical states include `PENDING_REVALIDATION` and `SUPPORTED_WITH_STALE_EVIDENCE`.
++
++## 7. Release invariants
++
++Release is fail-closed when any required gate fails:
++
++- evidence verification;
++- traceability, including DOM↔marker authority binding;
++- semantic round-trip validation.
++
++For current rendered scientific text, every realized claim must resolve through:
++
++```text
++DraftArtifact
++→ DOM paragraph.claims
++→ claim registry
++→ EvidenceSpan/source version
++```
+ 
+-- `claims[].verification.verdict` — приходит из fact-checker (тот же словарь: SUPPORTED/
+-  CONTRADICTED/UNSUPPORTED/AMBIGUOUS/OPEN).
+-- `claims[].verification.numeric_comparison` — из numeric_comparator.
+-- Источники — из source-fetcher / локального корпуса.
+-- Writer НЕ ведёт верификацию сам — он **потребляет** её из DOM.
++Rendered `[C-*]` and `[S-*]` markers are checked against this structure.
+ 
+-## 7. Совместимость
++## 8. Research boundary
+ 
+-- Этот контракт — расширение `writing-orchestration-process.md` для научных/инженерных жанров.
+-- `ai-slop-avoidance` — вторичный стилистический гейт поверх прослеживаемости, не заменяет её.
+-- Готовый текст несёт `[Sxx]`/`[Cxx]`/`[§N]` ссылки — они проверяются детерминированным
+-  цитатным аудитом (см. `scripts/writing/citation_trace.py`, WS-18).
+\ No newline at end of file
++Writer may create ValidationPlan / ResearchDispatchContract but may not execute web discovery or know backend/provider names. Researcher receives the research debt and enters at the narrowest appropriate stage: evidence validation, document analysis, source resolution, local corpus or discovery.
+diff --git a/shared/writing-orchestration-process.md b/shared/writing-orchestration-process.md
+index 2952544..3ca7b19 100644
+--- a/shared/writing-orchestration-process.md
++++ b/shared/writing-orchestration-process.md
+@@ -1,143 +1,78 @@
+-# Writing Orchestration Process
+-
+-Use this process when turning a premise, topic, subject, or rough idea into a researched article.
+-
+-## Goal
+-
+-Shape the article before researching it. A good article workflow starts by clarifying what the piece is trying to do: reader, stance, vibe, thesis, desired points, and boundaries. Research then serves that direction instead of creating a generic source summary.
+-
+-> **For scientific/engineering works** (dissertation, monograph, textbook, paper), the target is NOT an essay — it is a **traceable argumentation structure**:
+-> - Read `${OPENCODE_HARNESS_ROOT}/shared/writer-traceability-contract.md` first.
+-> - After the task is set and a template is chosen (dissertation/monograph/...), research and persist `claims.json` plus `writing_contract.json`, then create the **DOM YAML** (`templates/writer-dom-dissertation.yaml`). Never reference these consumer inputs before they exist.
+-> - Each draft paragraph fills the DOM; new claims request sources (never restate without a citation). When a paragraph is complete, run iterative **stylistic synthesis** using reference works from academic sources (which are themselves split into claims and graphs).
+-> - Traceability and uncertainty are primary — they live in the DOM, not in prose.
+->
+-> **Deterministic tooling (model-agnostic, run these — do not improvise).** `WRITER_PYTHON`, `WRITER_CORE_ROOT`, and `OPENCODE_HARNESS_ROOT` must be set. The scientific artifact order is research → `claims.json` + `writing_contract.json` → DOM → `verify_claims` → `draft_loop` → RTT/review → `citation_trace`.
+->
+-> PowerShell 5.1:
+-> ```powershell
+-> $wc = Join-Path $env:WRITER_CORE_ROOT "wc_cli.py"
+-> $template = Join-Path $env:OPENCODE_HARNESS_ROOT "templates\writer-dom-dissertation.yaml"
+-> $verifyClaims = Join-Path $env:OPENCODE_HARNESS_ROOT "scripts\researcher\verify_claims.py"
+-> $draftLoop = Join-Path $env:OPENCODE_HARNESS_ROOT "scripts\writer\cli.py"
+-> $citationTrace = Join-Path $env:OPENCODE_HARNESS_ROOT "scripts\writer\cli.py"
+-> & $env:WRITER_PYTHON $wc plan --topic "<confirmed topic>" --out structure_plan.json
+-> # Research now persists claims.json and writing_contract.json.
+-> & $env:WRITER_PYTHON $wc dom --template $template --plan structure_plan.json --claims claims.json --out <slug>-dom.yaml
+-> & $env:WRITER_PYTHON $verifyClaims --dom <slug>-dom.yaml --apply
+-> & $env:WRITER_PYTHON $draftLoop draft-loop --text <draft.md> --dom <slug>-dom.yaml --paragraph-id PAR-01-01-01 --apply
+-> & $env:WRITER_PYTHON $wc draftcheck --draft <draft.md> --contract writing_contract.json --out rtt_report.json
+-> & $env:WRITER_PYTHON $wc review --draft <draft.md> --contract writing_contract.json --plan structure_plan.json --dom <slug>-dom.yaml --out review_report.json
+-> & $env:WRITER_PYTHON $citationTrace citation-trace --text <draft.md> --dom <slug>-dom.yaml --strict
+-> ```
+->
+-> POSIX:
+-> ```sh
+-> "$WRITER_PYTHON" "$WRITER_CORE_ROOT/wc_cli.py" plan --topic "<confirmed topic>" --out structure_plan.json
+-> # Research now persists claims.json and writing_contract.json.
+-> "$WRITER_PYTHON" "$WRITER_CORE_ROOT/wc_cli.py" dom --template "$OPENCODE_HARNESS_ROOT/templates/writer-dom-dissertation.yaml" --plan structure_plan.json --claims claims.json --out <slug>-dom.yaml
+-> "$WRITER_PYTHON" "$OPENCODE_HARNESS_ROOT/scripts/researcher/verify_claims.py" --dom <slug>-dom.yaml --apply
+-> "$WRITER_PYTHON" "$OPENCODE_HARNESS_ROOT/scripts/writer/cli.py" draft-loop --text <draft.md> --dom <slug>-dom.yaml --paragraph-id PAR-01-01-01 --apply
+-> "$WRITER_PYTHON" "$WRITER_CORE_ROOT/wc_cli.py" draftcheck --draft <draft.md> --contract writing_contract.json --out rtt_report.json
+-> "$WRITER_PYTHON" "$WRITER_CORE_ROOT/wc_cli.py" review --draft <draft.md> --contract writing_contract.json --plan structure_plan.json --dom <slug>-dom.yaml --out review_report.json
+-> "$WRITER_PYTHON" "$OPENCODE_HARNESS_ROOT/scripts/writer/cli.py" citation-trace --text <draft.md> --dom <slug>-dom.yaml --strict
+-> ```
+->
+-> `--apply` on verification writes verdict/confidence/numeric comparison into DOM claims. A failed trace or review blocks handoff.
+-> Both use the deterministic extractor core (`scripts/writer/extractor/`) for span grounding —
+-> the LLM proposes claims, the code finds and accepts/rejects them by span.
+-> Numeric/guard/formula verification is provided by `scripts/researcher/researcher_core/`
+-> (verdict + confidence + numeric_comparison are written back to the DOM before drafting).
++# Writing Orchestration Process v1
+ 
+-## Phase 1: Discover Direction
++Use this process for structured scientific/engineering writing and substantial long-form drafting. The canonical public entrypoint is `scripts/writer/cli.py`. Provider/backend names are implementation details and must not be passed to Writer agents.
+ 
+-Extract or propose:
++## Pipeline
+ 
+-- Subject: what the piece is about.
+-- Tension: why it matters now.
+-- Audience: who the piece is for.
+-- Job: inform, persuade, reframe, explain, critique, compare, or provoke.
+-- Vibe: analytical, sharp, skeptical, explanatory, reported, practical, narrative, contrarian, calm, or another tone.
+-- Working thesis: the claim or question the piece will organize around.
++```text
++WritingObjectDecision
++→ Reference preparation
++→ tiered style selection
++→ per-claim evidence selection
++→ WritingPolicy
++→ StyleInstructionArtifact
++→ DraftRequest
++→ specialized Writer agent
++→ DraftArtifact
++→ DOM Patch
++→ ChangeLedger
++→ Research debt dispatch
++→ evidence / traceability / semantic RTT gates
++→ selective repair
++```
+ 
+-If the user gives only a topic, brainstorm 3-5 article directions. Each direction should change the thesis, reader, or argument, not just the title.
++## Object and reference selection
+ 
+-## Phase 2: Drill Down
++Explicit user intent determines document kind/section whenever available. Reference analysis is lazy: index the library cheaply, then fully profile only a small shortlist relevant to the current section.
+ 
+-Ask targeted questions only where the answer changes the article. Useful prompts:
++Style and evidence are separate roles:
+ 
+-- Who should feel this was written for them?
+-- What should the reader believe, understand, or reconsider after reading?
+-- What point do you already know you want to make?
+-- What should this piece not become?
+-- Should the tone be explanatory, skeptical, practical, reported, polemical, or something else?
+-- How deep should the research go?
+-- Is this meant to be a publishable article, a working draft, an outline, or a memo?
++- same-language STYLE may contribute bounded surface rhetoric and structure;
++- cross-language STYLE is `STRUCTURE_ONLY`;
++- EVIDENCE is selected per claim and may cross genre/language.
+ 
+-Prefer one compact question batch. Avoid turning discovery into an endless intake form.
++## Drafting
+ 
+-## Phase 3: Confirm The Writing Brief
++The Writer receives DraftRequest, authorized claims, evidence-by-claim and StyleInstruction. It may not search for sources itself. Every paragraph declares `realizes_claims`. Any new proposition is returned as ProposedClaim and becomes research debt.
+ 
+-Before research or drafting, produce a Writing Brief:
++The Writer does not mutate the DOM. Code validates DraftArtifact and applies a hash-guarded DOM Patch.
+ 
+-- Working title or title direction.
+-- Audience.
+-- Vibe.
+-- Central question or thesis.
+-- Desired points or ideas.
+-- Research questions.
+-- Evidence needs.
+-- Source priorities or exclusions.
+-- Out-of-scope items.
+-- Target format and length.
++## Authority and traceability
+ 
+-If the brief involves meaningful tradeoffs, ask for confirmation. If the user gave a complete direction, proceed.
++Authority order for realized claims:
+ 
+-## Phase 4: Research
++```text
++claim registry
++→ DraftRequest authorization
++→ DraftArtifact realizes_claims
++→ DOM paragraph.claims
++→ rendered [C-*] marker (projection only)
++```
+ 
+-Research is done by dispatching the built-in `general` sub-agent (single call) via `task`, then synthesizing its report inline. Do not dispatch `synthesizing-researcher` or `researcher-gpt`/`researcher-glm`/`researcher-minimax` — those agent files do not exist (phantoms); the `researcher` agent is disabled.
++A DOM/marker mismatch blocks traceability release.
+ 
+-Use cross-model research when:
++Verification is split into:
+ 
+-- The piece depends on recent facts.
+-- The claims are contested.
+-- The article needs examples, numbers, history, or expert views.
+-- The user asks for high confidence or cross-source validation.
++- `verification_state`: VERIFIED / UNCHECKED / FAILED;
++- `evidence_verdict`: SUPPORTED / CONTRADICTED / UNSUPPORTED / AMBIGUOUS / OPEN;
++- `epistemic_state`: ESTABLISHED / QUALIFIED / AMBIGUOUS / DISPUTED / UNKNOWN.
+ 
+-The research prompt should ask for article-useful findings: evidence for claims, counterpoints, examples, caveats, disagreement, and source URLs.
+-
+-After collecting the report, produce a lightweight inline synthesis: tag confidence, record divergences, and organize the evidence by likely article section. This synthesis does not need a consensus-report format — it needs to be citation-ready for the article-writer.
+-
+-For scientific/engineering work, research must be completed before DOM assembly when the DOM claims depend on research. Persist two validated artifacts first:
+-
+-- `claims.json`: stable claim ids, claim text/proposition, source ids, exact evidence spans, kind, and uncertainty.
+-- `writing_contract.json`: non-empty `{"claims": [...]}` where each entry has at least `claim_id` and `proposition`, and every id resolves to `claims.json`.
++An unchecked claim blocks evidence release but does not automatically require hedged prose.
+ 
+-Only after both files exist may the process assemble the DOM and run `verify_claims.py --apply`. If research is skipped because the user supplied sources, derive both files from those sources; never fabricate them.
++## Research debt
+ 
+-Skip research only when the user asks to use provided material or when the piece is explicitly opinion/personal and does not need factual grounding beyond supplied sources.
++The Writer/orchestrator creates a ValidationPlan and ResearchDispatchContract. Researcher starts at the narrowest appropriate stage. Writer does not receive web discovery capability.
+ 
+-## Phase 5: Draft
++## Source updates
+ 
+-Use `article-writer` to draft or revise. Provide the Writing Brief and the research output. Require the `ai-slop-avoidance` skill and the article-writing process.
++Source version changes flow through SourceCatalog and InvalidationPlan. State reducer marks affected claims and creates selective RepairRequests for only dependent paragraphs. Do not regenerate an entire chapter because one source changed.
+ 
+-The draft should serve the brief, not merely summarize the research.
++## Release
+ 
+-When a valid writing contract was supplied or generated, run `wc_cli.py draftcheck` after each material revision and `wc_cli.py review` before handoff. Pass `--plan` only if a plan exists and `--dom` only if a DOM exists. A failed report blocks handoff; an escalated review requires human approval. If no contract exists for an ordinary article, run neither command and report exactly: `Deterministic RTT/review not run: no writing contract was supplied or generated.` These checks supplement rather than replace the scientific `verify_claims.py` → `draft_loop.py` → `citation_trace.py` gates.
++Release requires all mandatory gates:
+ 
+-## Phase 6: Review And Handoff
++1. evidence verification;
++2. traceability including authority binding;
++3. semantic round-trip validation.
+ 
+-Before returning the final result, check:
+-
+-- Does the article answer the central question or support the thesis?
+-- Does the tone match the chosen vibe?
+-- Are the user's desired points present?
+-- Are sources attached to the claims they support?
+-- Are disagreements and uncertainty preserved where needed?
+-- Did the article avoid generic AI-style structure and filler?
+-
+-Return the article with a short note on interpretation, remaining gaps, and useful next revisions.
+-
+-## Activation
+-
+-After changing harness agent or skill contracts, sync the harness skill copies to the live OpenCode config and restart OpenCode so the new environment and prompts are loaded. Live copies under `${OPENCODE_CONFIG_DIR}/skills` are deployment artifacts, not the source edited here.
++A later PASS cannot erase an earlier FAIL.
+diff --git a/tests/test_writer_v1_freeze.py b/tests/test_writer_v1_freeze.py
+new file mode 100644
+index 0000000..b324ae0
+--- /dev/null
++++ b/tests/test_writer_v1_freeze.py
+@@ -0,0 +1,106 @@
++from __future__ import annotations
++import copy,tempfile,unittest
++from pathlib import Path
++import yaml
++from scripts.writer.references.select import select
++from scripts.writer.references.evidence_select import select_for_claims
++from scripts.writer.composition.style_instruction import build as build_style
++from scripts.writer.composition.writing_policy import build as build_policy
++from scripts.writer.drafting.artifact import build as build_draft
++from scripts.writer.drafting.request import build as build_request
++from scripts.writer.authority.realization import resolve as resolve_authority
++from scripts.writer.release.gate import evaluate_release
++from scripts.writer.provenance.state_policy import apply_invalidation
++from scripts.writer.review import citation_trace
++from scripts.researcher.verify_claims import verify_claim,_merge_verification
++
++class WriterV1FreezeTests(unittest.TestCase):
++    def _frag(self,fid,lang='ru',kind='dissertation',role='discussion',style=True,evidence=False,excerpt='азотирование фазовые превращения Fe4N',graph=True):
++        return {'fragment_id':fid,'reference_id':'R-'+fid,'document_kind':kind,'language':lang,'section_role':role,'permissions':{'style':style,'evidence':evidence},'locator':'pdf_page:1','excerpt':excerpt,'style_features':{'words':120,'citation_density_per_1000':8,'hedge_density_per_1000':2,'causal_density_per_1000':3},'graph_digest':{'available':graph,'graph_ids':['G5','G13'],'node_types':{'CLAIM':2},'edge_relations':{'SUPPORTS':2,'INTERPRETS':1}}}
++
++    def test_cross_language_style_is_structure_only(self):
++        fr=[self._frag('RU','ru'),self._frag('EN','en')]
++        target_graph={'available':True,'graph_ids':['G5','G13'],'node_types':{'CLAIM':1},'edge_relations':{'SUPPORTS':1,'INTERPRETS':1}}
++        r=select(fr,role='style',target_kind='dissertation',language='ru',section_role='discussion',target_style={'words':120,'citation_density_per_1000':8,'hedge_density_per_1000':2,'causal_density_per_1000':3},target_graph=target_graph,limit=2)
++        by={x['fragment_id']:x for x in r['selected']}
++        self.assertEqual('FULL',by['RU']['style_authority'])
++        self.assertEqual('STRUCTURE_ONLY',by['EN']['style_authority'])
++        self.assertIn('argument_structure',by['EN']['allowed_take'])
++        self.assertNotIn('surface_rhetoric',by['EN']['allowed_take'])
++
++    def test_style_instruction_does_not_take_cross_language_hedging(self):
++        sel={'schema':'reference_selection/1.1','role':'style','selected':[
++          {'fragment_id':'RU','style_authority':'FULL','components':{'style':1}},
++          {'fragment_id':'EN','style_authority':'STRUCTURE_ONLY','components':{'graph':1}},]}
++        obj={'schema':'writing_object_decision/1.0','kind':'dissertation','language':'ru'}
++        pol=build_policy(obj,'discussion',sel,target_language='ru')
++        fmap={'RU':self._frag('RU','ru'),'EN':self._frag('EN','en')}
++        fmap['EN']['style_features']['hedge_density_per_1000']=99
++        art=build_style(sel,fmap,pol)
++        self.assertEqual(2.0,art['instructions']['hedging_target'])
++        self.assertEqual(['EN'],art['structure_only_source_fragment_ids'])
++
++    def test_per_claim_evidence_selection_keeps_mapping(self):
++        fr=[self._frag('A',style=False,evidence=True,excerpt='Fe4N нитрид обнаружен рентгеновской дифракцией'),self._frag('B',style=False,evidence=True,excerpt='микротвердость увеличилась в два раза')]
++        claims=[{'id':'C-1','text':'Обнаружена фаза Fe4N.'},{'id':'C-2','text':'Микротвердость увеличилась в два раза.'}]
++        out=select_for_claims(fr,claims,limit_per_claim=1)
++        self.assertEqual('claim_evidence_selection/1.0',out['schema'])
++        self.assertEqual({'C-1','C-2'},{x['claim_id'] for x in out['claims']})
++        req=build_request({'schema':'writing_object_decision/1.0','kind':'dissertation','language':'ru'}, {'schema':'reference_selection/1.0','role':'style','selected':[]}, out, claims,'discussion')
++        self.assertEqual({'C-1','C-2'},set(req['evidence_by_claim']))
++
++    def test_draft_artifact_emits_typed_proposed_claim(self):
++        req={'schema':'draft_request/1.0','request_id':'DR1','authorized_claims':[{'id':'C-1'}]}
++        d=build_draft(req,[{'temp_id':'P1','text':'Наблюдение позволяет предположить причинную связь.','realizes_claims':['C-1'],'proposed_claims':[{'text':'Дефекты ускоряют диффузию азота.','claim_type':'CAUSAL_HYPOTHESIS','span':{'start':0,'end':33}}]}])
++        self.assertFalse(d['ok']);self.assertTrue(d['requires_claim_registration'])
++        pc=d['proposed_claims'][0]
++        self.assertEqual('proposed_claim/1.0',pc['schema']);self.assertEqual('CAUSAL_HYPOTHESIS',pc['claim_type'])
++
++    def test_verification_and_epistemic_states_are_separate(self):
++        r=verify_claim({'text':'Прочность составляет 10 МПа.'},'Прочность составляет 10 МПа.')
++        self.assertEqual('VERIFIED',r['verification_state']);self.assertEqual('SUPPORTED',r['evidence_verdict']);self.assertIn(r['epistemic_state'],{'ESTABLISHED','QUALIFIED'})
++        t=verify_claim({'text':'Фаза Fe4N наблюдается после обработки.'},'В источнике упомянута фаза Fe4N.')
++        self.assertEqual('UNCHECKED',t['verification_state']);self.assertEqual('UNKNOWN',t['epistemic_state']);self.assertEqual('OPEN',t['evidence_verdict'])
++        curated=_merge_verification({'verdict':'SUPPORTED','confidence':.7},{'verdict':'OPEN','confidence':.3})
++        self.assertEqual('VERIFIED',curated['verification_state']);self.assertEqual('SUPPORTED',curated['evidence_verdict'])
++
++    def test_dom_claim_binding_is_authority_and_marker_is_projection(self):
++        dom={'claims':[{'id':'C-1','text':'Прочность составляет 10 МПа.','evidence':[{'source_id':'S1'}],'verification':{'verdict':'SUPPORTED','confidence':.8}}], 'sources':[{'id':'S1','text':'Прочность составляет 10 МПа.'}], 'structure':{'chapters':[{'sections':[{'paragraphs':[{'id':'P1','text':'Прочность составляет 10 МПа.','claims':['C-1']}]}]}]}}
++        ok=resolve_authority(dom,'Прочность составляет 10 МПа. [C-1] [S1]')
++        self.assertEqual('PASS',ok['verdict']);self.assertEqual('DOM_PARAGRAPH_CLAIMS',ok['authority_source'])
++        bad=resolve_authority(dom,'Прочность составляет 10 МПа. [C-2] [S1]')
++        self.assertEqual('FAIL',bad['verdict']);self.assertEqual(['C-1'],bad['missing_markers'])
++
++    def test_release_fails_on_authority_binding_mismatch(self):
++        with tempfile.TemporaryDirectory() as td:
++            td=Path(td)
++            dom={'product':{'id':'P','kind':'article'},'claims':[{'id':'C-1','text':'Прочность составляет 10 МПа.','evidence':[{'source_id':'S1'}]}],'sources':[{'id':'S1','text':'Прочность составляет 10 МПа.'}],'structure':{'chapters':[{'sections':[{'paragraphs':[{'id':'P1','text':'x','claims':['C-1']}]}]}]},'uncertainty':{}}
++            dp=td/'d.yaml';tp=td/'t.md';dp.write_text(yaml.safe_dump(dom,allow_unicode=True,sort_keys=False),encoding='utf8');tp.write_text('Прочность составляет 10 МПа. [C-X] [S1]',encoding='utf8')
++            out=evaluate_release(dp,tp)
++            self.assertEqual('FAIL',out['gates']['traceability']['verdict'])
++            self.assertEqual('FAIL',out['gates']['traceability']['detail']['authority_binding']['verdict'])
++
++    def test_unchecked_is_not_epistemic_uncertainty(self):
++        dom={'claims':[{'id':'C-1','text':'После обработки обнаружена фаза нитрида.','evidence':[{'source_id':'S1'}],'verification':{'verdict':'OPEN','evidence_verdict':'OPEN','verification_state':'UNCHECKED','epistemic_state':'UNKNOWN'}}],'sources':[{'id':'S1','text':'После обработки обнаружена фаза нитрида.'}],'uncertainty':{}}
++        out=citation_trace.run('После обработки обнаружена фаза нитрида. [C-1] [S1]',dom,strict=True,fail_on='high')
++        self.assertEqual([],out.get('masked_uncertainty') or [])
++
++    def test_invalidation_separates_claim_state_from_evidence_verdict(self):
++        dom={'claims':[{'id':'C-1','text':'x','evidence':[{'source_id':'S1'}],'verification':{'verdict':'SUPPORTED','evidence_verdict':'SUPPORTED','verification_state':'VERIFIED','epistemic_state':'ESTABLISHED'}}]}
++        out=apply_invalidation(dom,{'claims_to_revalidate':['C-1'],'changed_sources':['S1']})
++        c=out['dom']['claims'][0]
++        self.assertEqual('PENDING_REVALIDATION',c['state'])
++        self.assertEqual('SUPPORTED',c['verification']['evidence_verdict'])
++        self.assertEqual('UNCHECKED',c['verification']['verification_state'])
++        self.assertEqual('UNKNOWN',c['verification']['epistemic_state'])
++
++    def test_frozen_contract_manifest(self):
++        import json
++        from pathlib import Path
++        d=json.loads(Path('config/writer_v1_contracts.json').read_text(encoding='utf8'))
++        self.assertEqual('FROZEN_FOR_RESEARCHER_INTEGRATION',d['status'])
++        self.assertEqual('reference_selection/1.1',d['contracts']['reference_selection'])
++        self.assertEqual('STRUCTURE_ONLY',d['style_authority']['cross_language'])
++        self.assertIn('web.discovery',d['writer_forbidden_capabilities'])
++
++if __name__=='__main__':unittest.main()
+-- 
+2.47.3
+

@@ -1,0 +1,14 @@
+{
+  "module": "W2-skill-agent-glossary",
+  "code": ".opencode/skills/glossary-registry/SKILL.md, agents/glossary-maintainer.md (+ глобальные копии)",
+  "description": "Скилл автоматической пересборки реестра + субагент-хранитель глоссария",
+  "notes": "Созданные файлы: (1) .opencode/skills/glossary-registry/SKILL.md (проектный исходник, впервые создан .opencode/skills/ в workspace), (2) agents/glossary-maintainer.md (исходник, по образцу code-tester.md: frontmatter name/description/mode:subagent/hidden:true/steps:40/permission edit|write|bash allow), (3) C:/Users/Arhys/.config/opencode/skills/glossary-registry/SKILL.md (глобальный, рабочий сразу), (4) C:/Users/Arhys/.config/opencode/agent/glossary-maintainer.md (рабочий), (5) E:/opencode_harness_portable/agents/glossary-maintainer.md, (6) E:/opencode_harness_portable/.opencode/skills/glossary-registry/SKILL.md. Все команды в SKILL.md сверены с фактическими CLI (gen_api_index.py --root/--out/--label, render_glossary.py --index/--out/--label, compare_trees.py --base/--target/--out) и с реальными путями (все 14 упомянутых путей Test-Path = True). Smoke пересборки workspace прогнан успешно: modules=197 functions=748 classes=397 methods=184. Запуск скилла: skill tool name=glossary-registry (глобально доступен сразу; в workspace после синка .opencode). Диспатч субагента: code-orchestrator маршрут glossary-maintenance -> agent glossary-maintainer; отчёт субагент пишет в <workspace>/glossary_<YYYY-MM-DD>.json. Примечания: portable scripts/glossary/*.py УЖЕ существуют (в отличие от ожиданий контракта), синк-шаг 5 остаётся в скилле как проверка идентичности; IMPLEMENTATION_STATUS.md обновляется только в разделе счётчиков реестра (частично ручной, остальное не трогать); git-коммит в оба репозитория не выполнялся (контракт — создать файлы, не коммитить).",
+  "files": [
+    ".opencode/skills/glossary-registry/SKILL.md",
+    "agents/glossary-maintainer.md",
+    "C:/Users/Arhys/.config/opencode/skills/glossary-registry/SKILL.md",
+    "C:/Users/Arhys/.config/opencode/agent/glossary-maintainer.md",
+    "E:/opencode_harness_portable/agents/glossary-maintainer.md",
+    "E:/opencode_harness_portable/.opencode/skills/glossary-registry/SKILL.md"
+  ]
+}

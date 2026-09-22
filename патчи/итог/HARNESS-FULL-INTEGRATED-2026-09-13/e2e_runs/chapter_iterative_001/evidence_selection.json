@@ -1,0 +1,144 @@
+{
+  "ok": true,
+  "schema": "reference_selection/1.0",
+  "status": "READY",
+  "reason_code": null,
+  "role": "evidence",
+  "hard_filters": {
+    "document_kind": null,
+    "language": null,
+    "section_role": null
+  },
+  "selected": [
+    {
+      "fragment_id": "EV-04",
+      "reference_id": "S-DEM-1",
+      "locator": "unknown",
+      "section_role": "results",
+      "document_kind": "article",
+      "language": "ru",
+      "score": 0.306667,
+      "components": {
+        "lexical": 0.133333,
+        "locator": 1.0
+      },
+      "allowed_take": [
+        "claim_support",
+        "exact_excerpt",
+        "locator",
+        "source_hash"
+      ],
+      "excerpt": "Предварительная пластическая деформация 3–50 %; азотирование при 853 K. Ускоренное образование ε- и γ′-фаз отмечено в интервалах 3–8 % и 20–30 %."
+    },
+    {
+      "fragment_id": "EV-03",
+      "reference_id": "S-RAK-87",
+      "locator": "pdf_page:87",
+      "section_role": "results",
+      "document_kind": "dissertation",
+      "language": "ru",
+      "score": 0.266667,
+      "components": {
+        "lexical": 0.083333,
+        "locator": 1.0
+      },
+      "allowed_take": [
+        "claim_support",
+        "exact_excerpt",
+        "locator",
+        "source_hash"
+      ],
+      "excerpt": "SEM выявляет мелкодисперсные нитриды легирующих элементов, однако XRD не выявил эти фазы; в тексте это связывается с низкой концентрацией и малым размером и предлагается TEM."
+    },
+    {
+      "fragment_id": "EV-02",
+      "reference_id": "S-RAK-85",
+      "locator": "pdf_page:85",
+      "section_role": "results",
+      "document_kind": "dissertation",
+      "language": "ru",
+      "score": 0.257143,
+      "components": {
+        "lexical": 0.071429,
+        "locator": 1.0
+      },
+      "allowed_take": [
+        "claim_support",
+        "exact_excerpt",
+        "locator",
+        "source_hash"
+      ],
+      "excerpt": "После азотирования на дифрактограммах Р9 и Р18 обнаружены линии Fe4N. Содержание γ′-Fe4N: Р9 5,5 %, Р6М5 3,9 %, Р18 3,7 %."
+    },
+    {
+      "fragment_id": "EV-01",
+      "reference_id": "S-RAK-83",
+      "locator": "pdf_page:83",
+      "section_role": "results",
+      "document_kind": "dissertation",
+      "language": "ru",
+      "score": 0.225806,
+      "components": {
+        "lexical": 0.032258,
+        "locator": 1.0
+      },
+      "allowed_take": [
+        "claim_support",
+        "exact_excerpt",
+        "locator",
+        "source_hash"
+      ],
+      "excerpt": "Содержание азота в поверхности стали Р6М5 достигает до 7 % (в весовых %). После азотирования наблюдается уширение, снижение интенсивности и сдвиг линии (110) α-фазы к меньшим углам; автор связывает это с образованием твердого раствора азота в железе."
+    },
+    {
+      "fragment_id": "EV-05",
+      "reference_id": "S-DEM-2",
+      "locator": "pdf_page:2",
+      "section_role": "results",
+      "document_kind": "article",
+      "language": "ru",
+      "score": 0.2,
+      "components": {
+        "lexical": 0.0,
+        "locator": 1.0
+      },
+      "allowed_take": [
+        "claim_support",
+        "exact_excerpt",
+        "locator",
+        "source_hash"
+      ],
+      "excerpt": "Толщина фазовых слоев меняется немонотонно; максимумы около 3–5 % и 20–25 % деформации. Микротвердость заметно возрастает в интервалах 3–8 % и 20–30 %."
+    },
+    {
+      "fragment_id": "EV-06",
+      "reference_id": "S-SCH-34",
+      "locator": "pdf_page:34",
+      "section_role": "results",
+      "document_kind": "dissertation",
+      "language": "ru",
+      "score": 0.2,
+      "components": {
+        "lexical": 0.0,
+        "locator": 1.0
+      },
+      "allowed_take": [
+        "claim_support",
+        "exact_excerpt",
+        "locator",
+        "source_hash"
+      ],
+      "excerpt": "Для Fe-Cr при 700 °C наблюдались четкие отражения CrN, отсутствовавшие при 450 и 580 °C; автор связывает это с укрупнением выделений."
+    }
+  ],
+  "selected_references": [
+    "S-DEM-1",
+    "S-DEM-2",
+    "S-RAK-83",
+    "S-RAK-85",
+    "S-RAK-87",
+    "S-SCH-34"
+  ],
+  "rejected_count": 0,
+  "rejected": []
+}

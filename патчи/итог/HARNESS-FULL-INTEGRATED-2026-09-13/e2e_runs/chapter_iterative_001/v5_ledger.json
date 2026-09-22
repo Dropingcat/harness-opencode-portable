@@ -1,0 +1,14 @@
+{
+  "ok": true,
+  "schema": "writer_change_ledger/1.1",
+  "old": {
+    "sha256": "1abcb3631964bfb08e5274148d6db01a4e531c60fd57aae4abd6b32596849289"
+  },
+  "new": {
+    "sha256": "1abcb3631964bfb08e5274148d6db01a4e531c60fd57aae4abd6b32596849289"
+  },
+  "changes": [],
+  "touched_claims": [],
+  "touched_paragraphs": [],
+  "touched_sources": []
+}

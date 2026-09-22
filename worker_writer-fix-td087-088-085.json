@@ -1,0 +1,17 @@
+{
+  "module": "writer-fix-td087-088-085",
+  "code": "scripts/writer-core/writer_core/dom_builder.py, scripts/writer-core/writer_core/register_control.py",
+  "description": "Фиксы TD-087 (sources dedup в dom merge + ремап evidence.source_id), TD-088 (монотонная нумерация claims qwen: раздельные si/ci, без C-001b/c и C-9XXX, uncertainty согласована), TD-085 (verdict честно согласован с issues: PASS / PASS_WITH_MINOR / FAIL + verdict_detail)",
+  "notes": [
+    "TD-087: build_dom() — existing_sids, _next_free_id(), sid_remap, обновление evidence[].source_id у qwen-claims",
+    "TD-088: qwen_to_dom() — раздельные счётчики si/ci, claims C-{ci:03d} без chr-суффиксов; build_dom() перенумерует коллизии продолжением после макс. C-номера (без C-9XXX); uncertainty через полный id_map-копию",
+    "TD-085: register_check() — PASS при 0 issues, PASS_WITH_MINOR при только minor/info, FAIL при MAJOR/CRITICAL/BLOCKER; добавлены verdict_detail и плоский issues[] (issues_by_axis сохранён)",
+    "Прогон TD-087/088 (оркестратором): dom --plan + --qwen-dir (2 карточки) -> dom_valid=true, errors=[], sources [S-001,S-002,S-003] без дублей, claims C-001..C-007 монотонны, evidence source_id ремаплен (C-003->S-002, C-006->S-003), uncertainty согласована",
+    "Прогон TD-085 (оркестратором): wc_cli register --draft (probe с 'ну') -> verdict=PASS_WITH_MINOR, n_issues=1 (R3 COLLOQUIAL) — вердикт согласован с issues",
+    "py_compile dom_builder.py и register_control.py — OK"
+  ],
+  "files": [
+    "scripts/writer-core/writer_core/dom_builder.py",
+    "scripts/writer-core/writer_core/register_control.py"
+  ]
+}

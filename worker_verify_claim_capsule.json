@@ -1,0 +1,22 @@
+{
+  "module": "verify_claim_capsule_test",
+  "code": "def test_verify_claim_non_dict_input_returns_verdict_dict(self):\n        \"\"\"Не-dict вход (None / строка) должен вернуть валидный dict схемы вердикта, НЕ бросать исключение.\n\n        Капсульный контракт verify_claim (F-5B2C5): claim: dict → dict (схема verification).\n        На момент добавления теста функция бросает AttributeError на claim.get('text')\n        — тест фиксирует дефект (красный), логика НЕ правилась (scope: только тест).\n        \"\"\"\n        for bad in (None, \"not a dict\", 42, [\"text\"]):\n            with self.subTest(bad=bad):\n                v = vc.verify_claim(bad, None)\n                self.assertIsInstance(v, dict)\n                self.assertIn(\"verdict\", v)\n                self.assertIn(\"confidence\", v)",
+  "description": "E2E через капсулу: тест на не-dict вход verify_claim. Добавлен в tests/test_verify_claims.py (class TestVerifyClaims). Тест НЕ подтверждает обработку не-dict — функция бросает AttributeError на строке verify_claims.py:173 (`text = claim.get(\"text\", \"\")`).",
+  "notes": [
+    "ДЕФЕКТ ПОДТВЕРЖДЁН: verify_claim не обрабатывает не-dict вход. claim=None → AttributeError 'NoneType' object has no attribute 'get'; claim='not a dict'/42/['text'] → тот же AttributeError (строка 173).",
+    "По контракту (scope out: не менять логику verify_claim) логика НЕ правилась — добавлен только красный тест.",
+    "Тест-файл найден в tests/test_verify_claims.py (НЕ tests/researcher/, как подсказывал паттерн discover).",
+    "Запуск: `python -m unittest tests.test_verify_claims.TestVerifyClaims.test_verify_claim_non_dict_input_returns_verdict_dict -v` → FAILED (errors=4, все 4 subtest'а: None/str/int/list).",
+    "Весь файл tests.test_verify_claims: Ran 11 tests, FAILED (errors=4) — падают ТОЛЬКО 4 subtest'а нового теста; существующие 10 тестов (включая fail-closed test_broken_claim_fail_closed_exit_2 для main()) проходят.",
+    "Примечание: main() (CLI) fail-closed для не-dict claim работает (exit 2, JSON error), но сама функция verify_claim не защищена — контракт функции нарушен.",
+    "TODO для владельца капсулы: в verify_claim перед claim.get добавить isinstance(claim, dict) guard → возвращать {'verdict': 'AMBIGUOUS', 'confidence': 0.0, 'error': 'claim must be dict'}; тест станет зелёным.",
+    "По капсульному правилу 2 перегенерация coder_dom.yaml и коммит DOM — за оркестратором (scope out)."
+  ],
+  "tests": [
+    {
+      "name": "test_verify_claim_non_dict_input_returns_verdict_dict",
+      "command": "unittest",
+      "description": "не-dict вход (None/str/int/list) -> dict схемы вердикта без TypeError/AttributeError. СЕЙЧАС ПАДАЕТ (AttributeError) — фиксирует дефект."
+    }
+  ]
+}

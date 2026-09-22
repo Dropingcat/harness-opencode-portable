@@ -1,0 +1,16 @@
+{
+  "ok": true,
+  "schema": "claim_state_transition/1.0",
+  "transitions": [
+    {
+      "claim_id": "C-004",
+      "from": "SUPPORTED",
+      "to": "PENDING_REVALIDATION"
+    },
+    {
+      "claim_id": "C-007",
+      "from": "SUPPORTED",
+      "to": "PENDING_REVALIDATION"
+    }
+  ]
+}

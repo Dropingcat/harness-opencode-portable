@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "plugin": {
+    "name": "tool-skill-contract-router",
+    "path": "E:/Documents/Документы/doc_Opencode_agern/plugins/tool-skill-contract-router.ts",
+    "entry_point": "default",
+    "enabled": true,
+    "auto_load": true
+  }
+}

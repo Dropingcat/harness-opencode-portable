@@ -1,0 +1,43 @@
+{
+  "schema": "harness-project-state/1.0",
+  "date": "2026-09-14",
+  "baselines": {
+    "integrated_harness": {
+      "name": "HARNESS-FULL-WRITER-RESEARCHER-CODER-FINAL-2026-09-13",
+      "closure_head": "badb5e2526307bf3ebfb4279cfba6a40b7932bf0",
+      "code_zip_sha256": "7d24cd04ea8311d3d028ffa6c2cd25fe5f0c2d18aa69764d1fdce61f23869802",
+      "evidence": "saved acceptance + Windows deployment verification",
+      "status": "DETERMINISTIC_ACCEPTANCE_VERIFIED"
+    },
+    "windows_deployment": {
+      "root": "C:\\Temp\\opencode\\harness-deploy",
+      "platform": "Windows 10 AMD64",
+      "python": "3.11.15",
+      "node": "22.23.1",
+      "status": "DEPLOYMENT_DETERMINISTIC_ACCEPTANCE_PASS"
+    },
+    "native_plugin_p1": {
+      "status": "HOSTLESS_IMPLEMENTATION_REPORTED",
+      "live_desktop_certified": false,
+      "tools": [
+        "harness_status",
+        "harness_run"
+      ],
+      "bridge_protocol": "harness-bridge-rpc/1.0",
+      "contracts": [
+        "HostContext/1.0",
+        "WorkspaceRef/1.0",
+        "SemanticExecutionRequest/1.0",
+        "SemanticExecutionResult/1.0"
+      ],
+      "semantic_execute": "present/design-reported but disabled by default pending live certification",
+      "exact_commit": "NOT_ESTABLISHED_IN_RECONCILED_SOURCES"
+    },
+    "live_opencode": {
+      "status": "NOT_CERTIFIED",
+      "last_deployment_preflight": "tribunal.role.execute degraded / missing:opencode on pre-native-plugin deployment",
+      "note": "This preflight proves only the deployed CLI-based provider was unavailable; it does not certify or reject the new Native Plugin path."
+    }
+  },
+  "next_required_gate": "Native Desktop P2 live plugin load + tool visibility + HostContext/handshake/health/cancel, followed by read-only semantic smoke."
+}

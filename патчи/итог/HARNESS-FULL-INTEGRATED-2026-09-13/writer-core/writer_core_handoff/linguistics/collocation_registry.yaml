@@ -1,0 +1,21 @@
+schema_version: academic-collocations/0.3
+entries:
+- concept: REGULARITY
+  preferred:
+  - выявить закономерность
+  - установить закономерность
+  source: seed
+  status: CANDIDATE
+- concept: DEPENDENCE
+  preferred:
+  - установить зависимость
+  - выявить зависимость
+  - наблюдать зависимость
+  source: seed
+  status: CANDIDATE
+- concept: ANALYSIS
+  preferred:
+  - провести анализ
+  - выполнить анализ
+  source: seed
+  status: CANDIDATE

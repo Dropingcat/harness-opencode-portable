@@ -1,0 +1,21 @@
+{
+  "snapshot": "HARNESS-WRITER-V1-RESEARCHER-R1.1-BACKUP-2026-09-12",
+  "git_head": "0573894fb01594daf3870777d4f1a82f4be24d00",
+  "git_tag": "backup-writer-v1-researcher-r1.1-2026-09-12",
+  "base": "harness.zip",
+  "writer_state": "Writer v1 freeze after Phase6C + E2E hardening + reference routing/trace + compose + iterative E2E",
+  "researcher_state": "Researcher R1 + R1.1 ResearchDOM planning runtime",
+  "validation": {
+    "writer_selected_tests": "36/36 PASS",
+    "researcher_r1_r1_1_tests": "18/18 PASS",
+    "capability_policy_hash": "b96fcb4341080bbc4d6c2b835c704bed60ee02d047f1bbb0c747c8a59af923cd",
+    "runtime_policy_hash": "6676bcbc8732fac4f97e88f13b712758dff818db849bf588adb0a7e1a2ea880a",
+    "compileall": "PASS",
+    "git_diff_check": "PASS"
+  },
+  "known_baseline_debt": [
+    "Existing Researcher Guard tests reported previously",
+    "Existing Researcher LocalCorpus tests reported previously"
+  ],
+  "next_boundary": "R2 KnowledgeGraph reconciliation and adaptive Gap/Conflict -> ResearchChallenge -> CHALLENGE card feedback"
+}

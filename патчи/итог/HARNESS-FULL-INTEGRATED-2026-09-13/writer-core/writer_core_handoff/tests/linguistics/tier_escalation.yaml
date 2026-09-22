@@ -1,0 +1,17 @@
+schema_version: tier-escalation-fixtures/0.3
+fixtures:
+- id: LOW_IMPACT_MORPH
+  ambiguity: adjective_case_parse_disagreement
+  claim_criticality: LOW
+  semantic_delta: NONE
+  expected_tier: T0_OR_T1
+- id: CRITICAL_NEGATION
+  ambiguity: negation_scope
+  claim_criticality: CORE_RESULT
+  semantic_delta: NEGATION_FLIP
+  expected_tier: T2
+- id: AMBIG_COREf
+  ambiguity: event_or_entity_reference
+  claim_criticality: SUPPORTING
+  semantic_delta: POSSIBLE_CLAIM_SHIFT
+  expected_tier: T2

@@ -1,0 +1,56 @@
+{
+  "version": 1,
+  "plugin": {
+    "auto_register": true,
+    "plugin_path": "E:/Documents/Документы/doc_Opencode_agern/plugins/tool-skill-contract-router.ts",
+    "entry_point": "default",
+    "required": true
+  },
+  "mcp": {
+    "auto_start": true,
+    "servers": ["coder_router", "academic_search", "doc_extract", "searxng_search"],
+    "health_check_interval_sec": 30,
+    "startup_timeout_sec": 10
+  },
+  "environment": {
+    "required_vars": [
+      "OPENCODE_HARNESS_ROOT",
+      "OPENCODE_SESSION_DB",
+      "DOC_GUARD_ENTRYPOINT",
+      "OPENCODE_RUNS_DIR",
+      "OPENCODE_CONFIG_DIR",
+      "HERMES_ROOT",
+      "OPENCODE_BIN",
+      "PYTHON",
+      "RESEARCH_RUNNER_SH",
+      "RESEARCH_RULES_PATH",
+      "RESEARCH_SCRIPTS_ROOT",
+      "RESEARCH_VERIFICATION_ROOT",
+      "RESEARCH_NUMERIC_COMPARATOR",
+      "RESEARCH_SYNTHESIZER",
+      "RESEARCH_JUDGE_BRIEF"
+    ],
+    "optional_vars": [
+      "OPENCODE_SESSION_DB",
+      "RESEARCH_RUNNER_SH",
+      "RESEARCH_RULES_PATH"
+    ],
+    "validation": "warn"
+  },
+  "paths": {
+    "hardcoded_patterns": [
+      {"pattern": "/home/orangepi/.config/opencode", "replacement": "${OPENCODE_CONFIG_DIR}"},
+      {"pattern": "/home/orangepi/.hermes", "replacement": "${HERMES_ROOT}"},
+      {"pattern": "/home/orangepi/.opencode", "replacement": "${OPENCODE_CONFIG_DIR}"},
+      {"pattern": "/tmp/opencode/runs", "replacement": "${OPENCODE_RUNS_DIR}"},
+      {"pattern": "/tmp/factory_state.json", "replacement": "${OPENCODE_RUNS_DIR}/factory_state.json"},
+      {"pattern": "/home/orangepi", "replacement": "${HOME}"}
+    ],
+    "scan_extensions": [".md", ".py", ".json", ".jsonc", ".ts", ".js", ".yaml", ".yml"]
+  },
+  "health_check": {
+    "enabled": true,
+    "checks": ["plugin_loaded", "mcp_servers", "guard_running", "db_accessible"],
+    "interval_sec": 60
+  }
+}

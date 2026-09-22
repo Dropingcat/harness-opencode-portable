@@ -1,0 +1,8 @@
+{
+  "ok": true,
+  "schema": "writing_object_decision/1.0",
+  "kind": "chapter",
+  "confidence": 1.0,
+  "authority": "explicit_user_or_contract",
+  "signals": []
+}

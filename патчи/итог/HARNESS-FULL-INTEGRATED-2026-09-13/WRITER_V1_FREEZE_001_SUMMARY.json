@@ -1,0 +1,22 @@
+{
+  "schema": "writer_v1_freeze_summary/1.0",
+  "status": "ACCEPT",
+  "tests": {"passed": 117, "failed": 0},
+  "runtime_policy_hash": "6676bcbc8732fac4f97e88f13b712758dff818db849bf588adb0a7e1a2ea880a",
+  "capability_policy_hash": "b96fcb4341080bbc4d6c2b835c704bed60ee02d047f1bbb0c747c8a59af923cd",
+  "implemented": [
+    "tiered cross-language style authority",
+    "per-claim evidence selection",
+    "ProposedClaim/1.0",
+    "verification_state/evidence_verdict/epistemic_state split",
+    "DOM paragraph claim authority with marker projection checks",
+    "claim-state/evidence-verdict separation on invalidation",
+    "Writer agent/orchestrator backend abstraction alignment",
+    "Writer v1 contract freeze manifest"
+  ],
+  "deferred": [
+    "live external OpenCode article-writer invocation in an environment that exposes the task runtime",
+    "Researcher textual semantic entailment and evidence-quality tribunal",
+    "Researcher source identity reconciliation and external provider live activation"
+  ]
+}

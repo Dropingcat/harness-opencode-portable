@@ -1,0 +1,1636 @@
+{
+  "baseline_note": "Pre-merge behavioral outputs from the original seven-case Phase-2 extractor comparison. Fixture content was reserialized without semantic changes when the reviewer added an eighth post-merge trap case.",
+  "comparison": {
+    "case_count": 7,
+    "differences": [
+      {
+        "fields": [
+          "span",
+          "qa"
+        ],
+        "id": "ocr_nbsp",
+        "v2": {
+          "classification": {
+            "kind": "OBSERVATIONAL",
+            "role": "факт"
+          },
+          "extract": {
+            "claims": [
+              {
+                "class": "A_claim_candidate",
+                "end": 56,
+                "hedged": null,
+                "raw_span": "Показано, что скорость азотирования составляет 0,4 мм/ч.",
+                "sentence_idx": 0,
+                "start": 0,
+                "text": "Показано, что скорость азотирования составляет 0,4 мм/ч."
+              }
+            ],
+            "discourse": [
+              {
+                "class": "C_discourse",
+                "marker": "показано",
+                "role": "result"
+              },
+              {
+                "class": "C_modality",
+                "kind": "strong_assertive"
+              }
+            ],
+            "objects": [
+              {
+                "class": "B_number",
+                "dimension": "length",
+                "end": 54,
+                "id": "P4_Q0",
+                "raw": "0,4мм/ч",
+                "start": 47,
+                "unit": "мм",
+                "value_lower": 0.4,
+                "value_upper": 0.4
+              }
+            ],
+            "style": [],
+            "tail": [
+              {
+                "class": "symbol",
+                "raw": ","
+              },
+              {
+                "class": "symbol",
+                "raw": "."
+              }
+            ]
+          },
+          "id": "ocr_nbsp",
+          "qa": {
+            "grounded": true,
+            "reason": "",
+            "status": "GROUNDED"
+          },
+          "span": {
+            "confidence": 1.0,
+            "end": 56,
+            "method": "exact",
+            "start": 0
+          }
+        },
+        "writer": {
+          "classification": {
+            "kind": "OBSERVATIONAL",
+            "role": "факт"
+          },
+          "extract": {
+            "claims": [
+              {
+                "class": "A_claim_candidate",
+                "end": 56,
+                "hedged": null,
+                "raw_span": "Показано, что скорость азотирования составляет 0,4 мм/ч.",
+                "sentence_idx": 0,
+                "start": 0,
+                "text": "Показано, что скорость азотирования составляет 0,4 мм/ч."
+              }
+            ],
+            "discourse": [
+              {
+                "class": "C_discourse",
+                "marker": "показано",
+                "role": "result"
+              },
+              {
+                "class": "C_modality",
+                "kind": "strong_assertive"
+              }
+            ],
+            "objects": [
+              {
+                "class": "B_number",
+                "dimension": "length",
+                "end": 54,
+                "id": "P4_Q0",
+                "raw": "0,4мм/ч",
+                "start": 47,
+                "unit": "мм",
+                "value_lower": 0.4,
+                "value_upper": 0.4
+              }
+            ],
+            "style": [],
+            "tail": [
+              {
+                "class": "symbol",
+                "raw": ","
+              },
+              {
+                "class": "symbol",
+                "raw": "."
+              }
+            ]
+          },
+          "id": "ocr_nbsp",
+          "qa": {
+            "grounded": false,
+            "reason": "",
+            "status": "UNGROUNDED"
+          },
+          "span": {
+            "confidence": 0.0,
+            "end": null,
+            "method": "none",
+            "start": null
+          }
+        }
+      },
+      {
+        "fields": [
+          "span",
+          "qa"
+        ],
+        "id": "ocr_newline",
+        "v2": {
+          "classification": {
+            "kind": "OBSERVATIONAL",
+            "role": "факт"
+          },
+          "extract": {
+            "claims": [
+              {
+                "class": "A_claim_candidate",
+                "end": 56,
+                "hedged": null,
+                "raw_span": "Показано, что скорость азотирования составляет 0,4 мм/ч.",
+                "sentence_idx": 0,
+                "start": 0,
+                "text": "Показано, что скорость азотирования составляет 0,4 мм/ч."
+              }
+            ],
+            "discourse": [
+              {
+                "class": "C_discourse",
+                "marker": "показано",
+                "role": "result"
+              },
+              {
+                "class": "C_modality",
+                "kind": "strong_assertive"
+              }
+            ],
+            "objects": [
+              {
+                "class": "B_number",
+                "dimension": "length",
+                "end": 54,
+                "id": "P3_Q0",
+                "raw": "0,4мм/ч",
+                "start": 47,
+                "unit": "мм",
+                "value_lower": 0.4,
+                "value_upper": 0.4
+              }
+            ],
+            "style": [],
+            "tail": [
+              {
+                "class": "symbol",
+                "raw": ","
+              },
+              {
+                "class": "symbol",
+                "raw": "."
+              }
+            ]
+          },
+          "id": "ocr_newline",
+          "qa": {
+            "grounded": true,
+            "reason": "",
+            "status": "GROUNDED"
+          },
+          "span": {
+            "confidence": 1.0,
+            "end": 56,
+            "method": "exact",
+            "start": 0
+          }
+        },
+        "writer": {
+          "classification": {
+            "kind": "OBSERVATIONAL",
+            "role": "факт"
+          },
+          "extract": {
+            "claims": [
+              {
+                "class": "A_claim_candidate",
+                "end": 56,
+                "hedged": null,
+                "raw_span": "Показано, что скорость азотирования составляет 0,4 мм/ч.",
+                "sentence_idx": 0,
+                "start": 0,
+                "text": "Показано, что скорость азотирования составляет 0,4 мм/ч."
+              }
+            ],
+            "discourse": [
+              {
+                "class": "C_discourse",
+                "marker": "показано",
+                "role": "result"
+              },
+              {
+                "class": "C_modality",
+                "kind": "strong_assertive"
+              }
+            ],
+            "objects": [
+              {
+                "class": "B_number",
+                "dimension": "length",
+                "end": 54,
+                "id": "P3_Q0",
+                "raw": "0,4мм/ч",
+                "start": 47,
+                "unit": "мм",
+                "value_lower": 0.4,
+                "value_upper": 0.4
+              }
+            ],
+            "style": [],
+            "tail": [
+              {
+                "class": "symbol",
+                "raw": ","
+              },
+              {
+                "class": "symbol",
+                "raw": "."
+              }
+            ]
+          },
+          "id": "ocr_newline",
+          "qa": {
+            "grounded": false,
+            "reason": "",
+            "status": "UNGROUNDED"
+          },
+          "span": {
+            "confidence": 0.0,
+            "end": null,
+            "method": "none",
+            "start": null
+          }
+        }
+      },
+      {
+        "fields": [
+          "span",
+          "qa"
+        ],
+        "id": "scientific_objects",
+        "v2": {
+          "classification": {
+            "kind": "OBSERVATIONAL",
+            "role": "факт"
+          },
+          "extract": {
+            "claims": [
+              {
+                "class": "A_claim_candidate",
+                "end": 89,
+                "hedged": null,
+                "raw_span": "Сталь 12Х18Н10Т после обработки при 1100°С содержит Cr23C6; твердость составляет 900 МПа.",
+                "sentence_idx": 0,
+                "start": 0,
+                "text": "Сталь 12Х18Н10Т после обработки при 1100°С содержит Cr23C6; твердость составляет 900 МПа."
+              }
+            ],
+            "discourse": [
+              {
+                "class": "C_modality",
+                "kind": "strong_assertive"
+              }
+            ],
+            "objects": [
+              {
+                "class": "B_number",
+                "dimension": "temperature",
+                "end": 42,
+                "id": "P6_Q0",
+                "raw": "1100°С",
+                "start": 36,
+                "unit": "°C",
+                "value_lower": 1100.0,
+                "value_upper": 1100.0
+              },
+              {
+                "class": "B_number",
+                "dimension": "stress",
+                "end": 87,
+                "id": "P6_Q1",
+                "raw": "900МПа",
+                "start": 81,
+                "unit": "МПа",
+                "value_lower": 900.0,
+                "value_upper": 900.0
+              },
+              {
+                "class": "B_steel",
+                "end": 15,
+                "id": "P6_S2",
+                "raw": "12Х18Н10Т",
+                "start": 6
+              },
+              {
+                "class": "B_chemical",
+                "end": 58,
+                "id": "P6_F3",
+                "raw": "Cr23C6",
+                "start": 52
+              }
+            ],
+            "style": [],
+            "tail": [
+              {
+                "class": "particle",
+                "raw": "при"
+              },
+              {
+                "class": "particle",
+                "raw": "С"
+              },
+              {
+                "class": "symbol",
+                "raw": ";"
+              },
+              {
+                "class": "symbol",
+                "raw": "."
+              }
+            ]
+          },
+          "id": "scientific_objects",
+          "qa": {
+            "grounded": false,
+            "reason": "",
+            "status": "UNGROUNDED"
+          },
+          "span": {
+            "confidence": 0.0,
+            "end": null,
+            "method": "none",
+            "start": null
+          }
+        },
+        "writer": {
+          "classification": {
+            "kind": "OBSERVATIONAL",
+            "role": "факт"
+          },
+          "extract": {
+            "claims": [
+              {
+                "class": "A_claim_candidate",
+                "end": 89,
+                "hedged": null,
+                "raw_span": "Сталь 12Х18Н10Т после обработки при 1100°С содержит Cr23C6; твердость составляет 900 МПа.",
+                "sentence_idx": 0,
+                "start": 0,
+                "text": "Сталь 12Х18Н10Т после обработки при 1100°С содержит Cr23C6; твердость составляет 900 МПа."
+              }
+            ],
+            "discourse": [
+              {
+                "class": "C_modality",
+                "kind": "strong_assertive"
+              }
+            ],
+            "objects": [
+              {
+                "class": "B_number",
+                "dimension": "temperature",
+                "end": 42,
+                "id": "P6_Q0",
+                "raw": "1100°С",
+                "start": 36,
+                "unit": "°C",
+                "value_lower": 1100.0,
+                "value_upper": 1100.0
+              },
+              {
+                "class": "B_number",
+                "dimension": "stress",
+                "end": 87,
+                "id": "P6_Q1",
+                "raw": "900МПа",
+                "start": 81,
+                "unit": "МПа",
+                "value_lower": 900.0,
+                "value_upper": 900.0
+              },
+              {
+                "class": "B_steel",
+                "end": 15,
+                "id": "P6_S2",
+                "raw": "12Х18Н10Т",
+                "start": 6
+              },
+              {
+                "class": "B_chemical",
+                "end": 58,
+                "id": "P6_F3",
+                "raw": "Cr23C6",
+                "start": 52
+              }
+            ],
+            "style": [],
+            "tail": [
+              {
+                "class": "particle",
+                "raw": "при"
+              },
+              {
+                "class": "particle",
+                "raw": "С"
+              },
+              {
+                "class": "symbol",
+                "raw": ";"
+              },
+              {
+                "class": "symbol",
+                "raw": "."
+              }
+            ]
+          },
+          "id": "scientific_objects",
+          "qa": {
+            "grounded": true,
+            "reason": "",
+            "status": "GROUNDED"
+          },
+          "span": {
+            "confidence": 1.0,
+            "end": 88,
+            "method": "exact",
+            "start": 60
+          }
+        }
+      },
+      {
+        "fields": [
+          "span",
+          "qa"
+        ],
+        "id": "word_boundary_false_positive",
+        "v2": {
+          "classification": {
+            "kind": "OBSERVATIONAL",
+            "role": "факт"
+          },
+          "extract": {
+            "claims": [
+              {
+                "class": "A_claim_candidate",
+                "end": 52,
+                "hedged": null,
+                "raw_span": "Сверхпрочность материала повышается после обработки.",
+                "sentence_idx": 0,
+                "start": 0,
+                "text": "Сверхпрочность материала повышается после обработки."
+              }
+            ],
+            "discourse": [],
+            "objects": [],
+            "style": [],
+            "tail": [
+              {
+                "class": "symbol",
+                "raw": "."
+              }
+            ]
+          },
+          "id": "word_boundary_false_positive",
+          "qa": {
+            "grounded": false,
+            "reason": "",
+            "status": "UNGROUNDED"
+          },
+          "span": {
+            "confidence": 0.0,
+            "end": null,
+            "method": "none",
+            "start": null
+          }
+        },
+        "writer": {
+          "classification": {
+            "kind": "OBSERVATIONAL",
+            "role": "факт"
+          },
+          "extract": {
+            "claims": [
+              {
+                "class": "A_claim_candidate",
+                "end": 52,
+                "hedged": null,
+                "raw_span": "Сверхпрочность материала повышается после обработки.",
+                "sentence_idx": 0,
+                "start": 0,
+                "text": "Сверхпрочность материала повышается после обработки."
+              }
+            ],
+            "discourse": [],
+            "objects": [],
+            "style": [],
+            "tail": [
+              {
+                "class": "symbol",
+                "raw": "."
+              }
+            ]
+          },
+          "id": "word_boundary_false_positive",
+          "qa": {
+            "grounded": true,
+            "reason": "",
+            "status": "GROUNDED"
+          },
+          "span": {
+            "confidence": 1.0,
+            "end": 35,
+            "method": "exact",
+            "start": 5
+          }
+        }
+      }
+    ],
+    "different_cases": 4,
+    "equal_cases": 3
+  },
+  "cost": {
+    "v2": {
+      "import_ms_median": 4.5895,
+      "import_ms_samples": [
+        4.473,
+        4.5895,
+        4.9076,
+        4.1963,
+        4.9316
+      ],
+      "nonstdlib_static_imports": [
+        "pymupdf",
+        "yaml"
+      ],
+      "python_files": 12
+    },
+    "writer": {
+      "import_ms_median": 6.3902,
+      "import_ms_samples": [
+        6.314,
+        6.6027,
+        6.194,
+        6.5708,
+        6.3902
+      ],
+      "nonstdlib_static_imports": [
+        "yaml"
+      ],
+      "python_files": 6
+    }
+  },
+  "fixture_file": "experiments/writer_extractor_phase3/fixtures_baseline_7case.json",
+  "fixtures_sha256": "dac30b077ef768cf0d1b3e1dc505235dbed7853d0e432c05f01f47fac54a5b2c",
+  "schema": "writer-extractor-experiment/1.0",
+  "v2": {
+    "backend": "v2",
+    "cases": [
+      {
+        "classification": {
+          "kind": "OBSERVATIONAL",
+          "role": "факт"
+        },
+        "extract": {
+          "claims": [
+            {
+              "class": "A_claim_candidate",
+              "end": 46,
+              "hedged": null,
+              "raw_span": "Установлено, что твердость составляет 900 МПа.",
+              "sentence_idx": 0,
+              "start": 0,
+              "text": "Установлено, что твердость составляет 900 МПа."
+            }
+          ],
+          "discourse": [
+            {
+              "class": "C_discourse",
+              "marker": "установлено",
+              "role": "result"
+            },
+            {
+              "class": "C_modality",
+              "kind": "strong_assertive"
+            }
+          ],
+          "objects": [
+            {
+              "class": "B_number",
+              "dimension": "stress",
+              "end": 44,
+              "id": "P1_Q0",
+              "raw": "900МПа",
+              "start": 38,
+              "unit": "МПа",
+              "value_lower": 900.0,
+              "value_upper": 900.0
+            }
+          ],
+          "style": [],
+          "tail": [
+            {
+              "class": "symbol",
+              "raw": ","
+            },
+            {
+              "class": "symbol",
+              "raw": "."
+            }
+          ]
+        },
+        "id": "plain_exact",
+        "qa": {
+          "grounded": true,
+          "reason": "",
+          "status": "GROUNDED"
+        },
+        "span": {
+          "confidence": 1.0,
+          "end": 46,
+          "method": "exact",
+          "start": 0
+        }
+      },
+      {
+        "classification": {
+          "kind": "OBSERVATIONAL",
+          "role": "факт"
+        },
+        "extract": {
+          "claims": [
+            {
+              "class": "A_claim_candidate",
+              "end": 67,
+              "hedged": null,
+              "raw_span": "Показано, что деформация изменяется от 0,1 – 0,4 % после обработки.",
+              "sentence_idx": 0,
+              "start": 0,
+              "text": "Показано, что деформация изменяется от 0,1 – 0,4 % после обработки."
+            }
+          ],
+          "discourse": [
+            {
+              "class": "C_discourse",
+              "marker": "показано",
+              "role": "result"
+            }
+          ],
+          "objects": [
+            {
+              "class": "B_number",
+              "dimension": "ratio",
+              "end": 49,
+              "id": "P2_Q0",
+              "raw": "0,1 – 0,4%",
+              "start": 39,
+              "unit": "%",
+              "value_lower": 0.1,
+              "value_upper": 0.4
+            }
+          ],
+          "style": [],
+          "tail": [
+            {
+              "class": "particle",
+              "raw": "от"
+            },
+            {
+              "class": "symbol",
+              "raw": ","
+            },
+            {
+              "class": "symbol",
+              "raw": "–"
+            },
+            {
+              "class": "symbol",
+              "raw": "."
+            }
+          ]
+        },
+        "id": "typographic_range",
+        "qa": {
+          "grounded": true,
+          "reason": "",
+          "status": "GROUNDED"
+        },
+        "span": {
+          "confidence": 1.0,
+          "end": 67,
+          "method": "exact",
+          "start": 0
+        }
+      },
+      {
+        "classification": {
+          "kind": "OBSERVATIONAL",
+          "role": "факт"
+        },
+        "extract": {
+          "claims": [
+            {
+              "class": "A_claim_candidate",
+              "end": 56,
+              "hedged": null,
+              "raw_span": "Показано, что скорость азотирования составляет 0,4 мм/ч.",
+              "sentence_idx": 0,
+              "start": 0,
+              "text": "Показано, что скорость азотирования составляет 0,4 мм/ч."
+            }
+          ],
+          "discourse": [
+            {
+              "class": "C_discourse",
+              "marker": "показано",
+              "role": "result"
+            },
+            {
+              "class": "C_modality",
+              "kind": "strong_assertive"
+            }
+          ],
+          "objects": [
+            {
+              "class": "B_number",
+              "dimension": "length",
+              "end": 54,
+              "id": "P3_Q0",
+              "raw": "0,4мм/ч",
+              "start": 47,
+              "unit": "мм",
+              "value_lower": 0.4,
+              "value_upper": 0.4
+            }
+          ],
+          "style": [],
+          "tail": [
+            {
+              "class": "symbol",
+              "raw": ","
+            },
+            {
+              "class": "symbol",
+              "raw": "."
+            }
+          ]
+        },
+        "id": "ocr_newline",
+        "qa": {
+          "grounded": true,
+          "reason": "",
+          "status": "GROUNDED"
+        },
+        "span": {
+          "confidence": 1.0,
+          "end": 56,
+          "method": "exact",
+          "start": 0
+        }
+      },
+      {
+        "classification": {
+          "kind": "OBSERVATIONAL",
+          "role": "факт"
+        },
+        "extract": {
+          "claims": [
+            {
+              "class": "A_claim_candidate",
+              "end": 56,
+              "hedged": null,
+              "raw_span": "Показано, что скорость азотирования составляет 0,4 мм/ч.",
+              "sentence_idx": 0,
+              "start": 0,
+              "text": "Показано, что скорость азотирования составляет 0,4 мм/ч."
+            }
+          ],
+          "discourse": [
+            {
+              "class": "C_discourse",
+              "marker": "показано",
+              "role": "result"
+            },
+            {
+              "class": "C_modality",
+              "kind": "strong_assertive"
+            }
+          ],
+          "objects": [
+            {
+              "class": "B_number",
+              "dimension": "length",
+              "end": 54,
+              "id": "P4_Q0",
+              "raw": "0,4мм/ч",
+              "start": 47,
+              "unit": "мм",
+              "value_lower": 0.4,
+              "value_upper": 0.4
+            }
+          ],
+          "style": [],
+          "tail": [
+            {
+              "class": "symbol",
+              "raw": ","
+            },
+            {
+              "class": "symbol",
+              "raw": "."
+            }
+          ]
+        },
+        "id": "ocr_nbsp",
+        "qa": {
+          "grounded": true,
+          "reason": "",
+          "status": "GROUNDED"
+        },
+        "span": {
+          "confidence": 1.0,
+          "end": 56,
+          "method": "exact",
+          "start": 0
+        }
+      },
+      {
+        "classification": {
+          "kind": "OBSERVATIONAL",
+          "role": "факт"
+        },
+        "extract": {
+          "claims": [
+            {
+              "class": "A_claim_candidate",
+              "end": 52,
+              "hedged": null,
+              "raw_span": "Сверхпрочность материала повышается после обработки.",
+              "sentence_idx": 0,
+              "start": 0,
+              "text": "Сверхпрочность материала повышается после обработки."
+            }
+          ],
+          "discourse": [],
+          "objects": [],
+          "style": [],
+          "tail": [
+            {
+              "class": "symbol",
+              "raw": "."
+            }
+          ]
+        },
+        "id": "word_boundary_false_positive",
+        "qa": {
+          "grounded": false,
+          "reason": "",
+          "status": "UNGROUNDED"
+        },
+        "span": {
+          "confidence": 0.0,
+          "end": null,
+          "method": "none",
+          "start": null
+        }
+      },
+      {
+        "classification": {
+          "kind": "OBSERVATIONAL",
+          "role": "факт"
+        },
+        "extract": {
+          "claims": [
+            {
+              "class": "A_claim_candidate",
+              "end": 89,
+              "hedged": null,
+              "raw_span": "Сталь 12Х18Н10Т после обработки при 1100°С содержит Cr23C6; твердость составляет 900 МПа.",
+              "sentence_idx": 0,
+              "start": 0,
+              "text": "Сталь 12Х18Н10Т после обработки при 1100°С содержит Cr23C6; твердость составляет 900 МПа."
+            }
+          ],
+          "discourse": [
+            {
+              "class": "C_modality",
+              "kind": "strong_assertive"
+            }
+          ],
+          "objects": [
+            {
+              "class": "B_number",
+              "dimension": "temperature",
+              "end": 42,
+              "id": "P6_Q0",
+              "raw": "1100°С",
+              "start": 36,
+              "unit": "°C",
+              "value_lower": 1100.0,
+              "value_upper": 1100.0
+            },
+            {
+              "class": "B_number",
+              "dimension": "stress",
+              "end": 87,
+              "id": "P6_Q1",
+              "raw": "900МПа",
+              "start": 81,
+              "unit": "МПа",
+              "value_lower": 900.0,
+              "value_upper": 900.0
+            },
+            {
+              "class": "B_steel",
+              "end": 15,
+              "id": "P6_S2",
+              "raw": "12Х18Н10Т",
+              "start": 6
+            },
+            {
+              "class": "B_chemical",
+              "end": 58,
+              "id": "P6_F3",
+              "raw": "Cr23C6",
+              "start": 52
+            }
+          ],
+          "style": [],
+          "tail": [
+            {
+              "class": "particle",
+              "raw": "при"
+            },
+            {
+              "class": "particle",
+              "raw": "С"
+            },
+            {
+              "class": "symbol",
+              "raw": ";"
+            },
+            {
+              "class": "symbol",
+              "raw": "."
+            }
+          ]
+        },
+        "id": "scientific_objects",
+        "qa": {
+          "grounded": false,
+          "reason": "",
+          "status": "UNGROUNDED"
+        },
+        "span": {
+          "confidence": 0.0,
+          "end": null,
+          "method": "none",
+          "start": null
+        }
+      },
+      {
+        "classification": {
+          "kind": "OBSERVATIONAL",
+          "role": "факт"
+        },
+        "extract": {
+          "claims": [
+            {
+              "class": "A_claim_candidate",
+              "end": 77,
+              "hedged": null,
+              "raw_span": "Показано, что скорость повышается на 15 %.",
+              "sentence_idx": 1,
+              "start": 35,
+              "text": "Показано, что скорость повышается на 15 %."
+            },
+            {
+              "class": "A_claim_candidate",
+              "end": 123,
+              "hedged": null,
+              "raw_span": "Таким образом, результат является устойчивым.",
+              "sentence_idx": 2,
+              "start": 78,
+              "text": "Таким образом, результат является устойчивым."
+            }
+          ],
+          "discourse": [
+            {
+              "class": "C_discourse",
+              "marker": "показано",
+              "role": "result"
+            },
+            {
+              "class": "C_discourse",
+              "marker": "исследован",
+              "role": "method"
+            },
+            {
+              "class": "C_discourse",
+              "marker": "таким образом",
+              "role": "conclusion"
+            },
+            {
+              "class": "C_modality",
+              "kind": "strong_assertive"
+            }
+          ],
+          "objects": [
+            {
+              "class": "B_number",
+              "dimension": "ratio",
+              "end": 75,
+              "id": "P7_Q0",
+              "raw": "15%",
+              "start": 72,
+              "unit": "%",
+              "value_lower": 15.0,
+              "value_upper": 15.0
+            }
+          ],
+          "style": [
+            {
+              "class": "D_passive",
+              "marker": "passive_voice"
+            },
+            {
+              "class": "D_connector",
+              "marker": "таким образом"
+            }
+          ],
+          "tail": [
+            {
+              "class": "particle",
+              "raw": "на"
+            },
+            {
+              "class": "symbol",
+              "raw": "."
+            },
+            {
+              "class": "symbol",
+              "raw": ","
+            }
+          ]
+        },
+        "id": "multi_sentence",
+        "qa": {
+          "grounded": true,
+          "reason": "",
+          "status": "GROUNDED"
+        },
+        "span": {
+          "confidence": 1.0,
+          "end": 77,
+          "method": "exact",
+          "start": 35
+        }
+      }
+    ],
+    "source_hashes": {
+      "c1_c2_structure.py": "e0171b9b95b728e6545d52d6d55b6331f4349c4de87f4c0d94e3a14af3d1bfa6",
+      "c5_number.py": "3a7be57d6b06634c8d9a263bbd5e89b50cf7513ebe313844ffa520f0bdb2ddac",
+      "claim_qa.py": "b275bde4ab77fb8639ff700305a16148e7e3c9b38d60260bc3cae6d7f7fb26ca",
+      "context_analyzer.py": "b0b102867645a585968e57d2fd915c79657c42a73ee8ff01f7861e7d7d4ad9c8",
+      "extraction_engine.py": "ad7742bc6d03e70faa5c976a0aac7fa86994a4fd737677fbcc4bfc3935df45b8",
+      "graph_builder.py": "5ae2674e8add98ab11bc26ba5014ac4ec5910dd10087d8948611e669b98ee89d",
+      "linguo_harness.py": "0ad09b8ffd5cc7d5c7e069e23473d1ae7d585fee034852c096f09944510e7303",
+      "llm_contracts.py": "d5cafe55939ff742b407ee07821f45d4b566df149386238e3e7757d7f28dff1f",
+      "llm_extractor.py": "fa623012735aa76eb3c259fed98a74928a730953c9c72168fa71be1fa25c2987",
+      "llm_philology.py": "cce28a0c82b43839db92d5cf7a257ad58adb27f81ce24fa2701cfcacd698105e",
+      "philologcal_layer.py": "f5fe72f577905daab8b785cf4b496b6241fd3d3906240e9adef15044d2d0da95",
+      "unified.py": "7e3e2139850da12acdf50c954a1a3d9caacc663c8ef5664f4b77962de6d138cd"
+    }
+  },
+  "writer": {
+    "backend": "writer",
+    "cases": [
+      {
+        "classification": {
+          "kind": "OBSERVATIONAL",
+          "role": "факт"
+        },
+        "extract": {
+          "claims": [
+            {
+              "class": "A_claim_candidate",
+              "end": 46,
+              "hedged": null,
+              "raw_span": "Установлено, что твердость составляет 900 МПа.",
+              "sentence_idx": 0,
+              "start": 0,
+              "text": "Установлено, что твердость составляет 900 МПа."
+            }
+          ],
+          "discourse": [
+            {
+              "class": "C_discourse",
+              "marker": "установлено",
+              "role": "result"
+            },
+            {
+              "class": "C_modality",
+              "kind": "strong_assertive"
+            }
+          ],
+          "objects": [
+            {
+              "class": "B_number",
+              "dimension": "stress",
+              "end": 44,
+              "id": "P1_Q0",
+              "raw": "900МПа",
+              "start": 38,
+              "unit": "МПа",
+              "value_lower": 900.0,
+              "value_upper": 900.0
+            }
+          ],
+          "style": [],
+          "tail": [
+            {
+              "class": "symbol",
+              "raw": ","
+            },
+            {
+              "class": "symbol",
+              "raw": "."
+            }
+          ]
+        },
+        "id": "plain_exact",
+        "qa": {
+          "grounded": true,
+          "reason": "",
+          "status": "GROUNDED"
+        },
+        "span": {
+          "confidence": 1.0,
+          "end": 46,
+          "method": "exact",
+          "start": 0
+        }
+      },
+      {
+        "classification": {
+          "kind": "OBSERVATIONAL",
+          "role": "факт"
+        },
+        "extract": {
+          "claims": [
+            {
+              "class": "A_claim_candidate",
+              "end": 67,
+              "hedged": null,
+              "raw_span": "Показано, что деформация изменяется от 0,1 – 0,4 % после обработки.",
+              "sentence_idx": 0,
+              "start": 0,
+              "text": "Показано, что деформация изменяется от 0,1 – 0,4 % после обработки."
+            }
+          ],
+          "discourse": [
+            {
+              "class": "C_discourse",
+              "marker": "показано",
+              "role": "result"
+            }
+          ],
+          "objects": [
+            {
+              "class": "B_number",
+              "dimension": "ratio",
+              "end": 49,
+              "id": "P2_Q0",
+              "raw": "0,1 – 0,4%",
+              "start": 39,
+              "unit": "%",
+              "value_lower": 0.1,
+              "value_upper": 0.4
+            }
+          ],
+          "style": [],
+          "tail": [
+            {
+              "class": "particle",
+              "raw": "от"
+            },
+            {
+              "class": "symbol",
+              "raw": ","
+            },
+            {
+              "class": "symbol",
+              "raw": "–"
+            },
+            {
+              "class": "symbol",
+              "raw": "."
+            }
+          ]
+        },
+        "id": "typographic_range",
+        "qa": {
+          "grounded": true,
+          "reason": "",
+          "status": "GROUNDED"
+        },
+        "span": {
+          "confidence": 1.0,
+          "end": 67,
+          "method": "exact",
+          "start": 0
+        }
+      },
+      {
+        "classification": {
+          "kind": "OBSERVATIONAL",
+          "role": "факт"
+        },
+        "extract": {
+          "claims": [
+            {
+              "class": "A_claim_candidate",
+              "end": 56,
+              "hedged": null,
+              "raw_span": "Показано, что скорость азотирования составляет 0,4 мм/ч.",
+              "sentence_idx": 0,
+              "start": 0,
+              "text": "Показано, что скорость азотирования составляет 0,4 мм/ч."
+            }
+          ],
+          "discourse": [
+            {
+              "class": "C_discourse",
+              "marker": "показано",
+              "role": "result"
+            },
+            {
+              "class": "C_modality",
+              "kind": "strong_assertive"
+            }
+          ],
+          "objects": [
+            {
+              "class": "B_number",
+              "dimension": "length",
+              "end": 54,
+              "id": "P3_Q0",
+              "raw": "0,4мм/ч",
+              "start": 47,
+              "unit": "мм",
+              "value_lower": 0.4,
+              "value_upper": 0.4
+            }
+          ],
+          "style": [],
+          "tail": [
+            {
+              "class": "symbol",
+              "raw": ","
+            },
+            {
+              "class": "symbol",
+              "raw": "."
+            }
+          ]
+        },
+        "id": "ocr_newline",
+        "qa": {
+          "grounded": false,
+          "reason": "",
+          "status": "UNGROUNDED"
+        },
+        "span": {
+          "confidence": 0.0,
+          "end": null,
+          "method": "none",
+          "start": null
+        }
+      },
+      {
+        "classification": {
+          "kind": "OBSERVATIONAL",
+          "role": "факт"
+        },
+        "extract": {
+          "claims": [
+            {
+              "class": "A_claim_candidate",
+              "end": 56,
+              "hedged": null,
+              "raw_span": "Показано, что скорость азотирования составляет 0,4 мм/ч.",
+              "sentence_idx": 0,
+              "start": 0,
+              "text": "Показано, что скорость азотирования составляет 0,4 мм/ч."
+            }
+          ],
+          "discourse": [
+            {
+              "class": "C_discourse",
+              "marker": "показано",
+              "role": "result"
+            },
+            {
+              "class": "C_modality",
+              "kind": "strong_assertive"
+            }
+          ],
+          "objects": [
+            {
+              "class": "B_number",
+              "dimension": "length",
+              "end": 54,
+              "id": "P4_Q0",
+              "raw": "0,4мм/ч",
+              "start": 47,
+              "unit": "мм",
+              "value_lower": 0.4,
+              "value_upper": 0.4
+            }
+          ],
+          "style": [],
+          "tail": [
+            {
+              "class": "symbol",
+              "raw": ","
+            },
+            {
+              "class": "symbol",
+              "raw": "."
+            }
+          ]
+        },
+        "id": "ocr_nbsp",
+        "qa": {
+          "grounded": false,
+          "reason": "",
+          "status": "UNGROUNDED"
+        },
+        "span": {
+          "confidence": 0.0,
+          "end": null,
+          "method": "none",
+          "start": null
+        }
+      },
+      {
+        "classification": {
+          "kind": "OBSERVATIONAL",
+          "role": "факт"
+        },
+        "extract": {
+          "claims": [
+            {
+              "class": "A_claim_candidate",
+              "end": 52,
+              "hedged": null,
+              "raw_span": "Сверхпрочность материала повышается после обработки.",
+              "sentence_idx": 0,
+              "start": 0,
+              "text": "Сверхпрочность материала повышается после обработки."
+            }
+          ],
+          "discourse": [],
+          "objects": [],
+          "style": [],
+          "tail": [
+            {
+              "class": "symbol",
+              "raw": "."
+            }
+          ]
+        },
+        "id": "word_boundary_false_positive",
+        "qa": {
+          "grounded": true,
+          "reason": "",
+          "status": "GROUNDED"
+        },
+        "span": {
+          "confidence": 1.0,
+          "end": 35,
+          "method": "exact",
+          "start": 5
+        }
+      },
+      {
+        "classification": {
+          "kind": "OBSERVATIONAL",
+          "role": "факт"
+        },
+        "extract": {
+          "claims": [
+            {
+              "class": "A_claim_candidate",
+              "end": 89,
+              "hedged": null,
+              "raw_span": "Сталь 12Х18Н10Т после обработки при 1100°С содержит Cr23C6; твердость составляет 900 МПа.",
+              "sentence_idx": 0,
+              "start": 0,
+              "text": "Сталь 12Х18Н10Т после обработки при 1100°С содержит Cr23C6; твердость составляет 900 МПа."
+            }
+          ],
+          "discourse": [
+            {
+              "class": "C_modality",
+              "kind": "strong_assertive"
+            }
+          ],
+          "objects": [
+            {
+              "class": "B_number",
+              "dimension": "temperature",
+              "end": 42,
+              "id": "P6_Q0",
+              "raw": "1100°С",
+              "start": 36,
+              "unit": "°C",
+              "value_lower": 1100.0,
+              "value_upper": 1100.0
+            },
+            {
+              "class": "B_number",
+              "dimension": "stress",
+              "end": 87,
+              "id": "P6_Q1",
+              "raw": "900МПа",
+              "start": 81,
+              "unit": "МПа",
+              "value_lower": 900.0,
+              "value_upper": 900.0
+            },
+            {
+              "class": "B_steel",
+              "end": 15,
+              "id": "P6_S2",
+              "raw": "12Х18Н10Т",
+              "start": 6
+            },
+            {
+              "class": "B_chemical",
+              "end": 58,
+              "id": "P6_F3",
+              "raw": "Cr23C6",
+              "start": 52
+            }
+          ],
+          "style": [],
+          "tail": [
+            {
+              "class": "particle",
+              "raw": "при"
+            },
+            {
+              "class": "particle",
+              "raw": "С"
+            },
+            {
+              "class": "symbol",
+              "raw": ";"
+            },
+            {
+              "class": "symbol",
+              "raw": "."
+            }
+          ]
+        },
+        "id": "scientific_objects",
+        "qa": {
+          "grounded": true,
+          "reason": "",
+          "status": "GROUNDED"
+        },
+        "span": {
+          "confidence": 1.0,
+          "end": 88,
+          "method": "exact",
+          "start": 60
+        }
+      },
+      {
+        "classification": {
+          "kind": "OBSERVATIONAL",
+          "role": "факт"
+        },
+        "extract": {
+          "claims": [
+            {
+              "class": "A_claim_candidate",
+              "end": 77,
+              "hedged": null,
+              "raw_span": "Показано, что скорость повышается на 15 %.",
+              "sentence_idx": 1,
+              "start": 35,
+              "text": "Показано, что скорость повышается на 15 %."
+            },
+            {
+              "class": "A_claim_candidate",
+              "end": 123,
+              "hedged": null,
+              "raw_span": "Таким образом, результат является устойчивым.",
+              "sentence_idx": 2,
+              "start": 78,
+              "text": "Таким образом, результат является устойчивым."
+            }
+          ],
+          "discourse": [
+            {
+              "class": "C_discourse",
+              "marker": "показано",
+              "role": "result"
+            },
+            {
+              "class": "C_discourse",
+              "marker": "исследован",
+              "role": "method"
+            },
+            {
+              "class": "C_discourse",
+              "marker": "таким образом",
+              "role": "conclusion"
+            },
+            {
+              "class": "C_modality",
+              "kind": "strong_assertive"
+            }
+          ],
+          "objects": [
+            {
+              "class": "B_number",
+              "dimension": "ratio",
+              "end": 75,
+              "id": "P7_Q0",
+              "raw": "15%",
+              "start": 72,
+              "unit": "%",
+              "value_lower": 15.0,
+              "value_upper": 15.0
+            }
+          ],
+          "style": [
+            {
+              "class": "D_passive",
+              "marker": "passive_voice"
+            },
+            {
+              "class": "D_connector",
+              "marker": "таким образом"
+            }
+          ],
+          "tail": [
+            {
+              "class": "particle",
+              "raw": "на"
+            },
+            {
+              "class": "symbol",
+              "raw": "."
+            },
+            {
+              "class": "symbol",
+              "raw": ","
+            }
+          ]
+        },
+        "id": "multi_sentence",
+        "qa": {
+          "grounded": true,
+          "reason": "",
+          "status": "GROUNDED"
+        },
+        "span": {
+          "confidence": 1.0,
+          "end": 77,
+          "method": "exact",
+          "start": 35
+        }
+      }
+    ],
+    "source_hashes": {
+      "__init__.py": "0a225e7cebad031de0a7630e2dfd418a15b1f994afccd9594e183c6fd80cee0b",
+      "c5_number.py": "3a7be57d6b06634c8d9a263bbd5e89b50cf7513ebe313844ffa520f0bdb2ddac",
+      "claim_qa.py": "975c7c21772ec7a280568aa78a2721f90d964b63177ea0bcca2c5ee1e8a9e1cb",
+      "context_analyzer.py": "b0b102867645a585968e57d2fd915c79657c42a73ee8ff01f7861e7d7d4ad9c8",
+      "extraction_engine.py": "d876e761dedac83d732408493ea274acdffe8253e696043c8fda7e25b6b588a5",
+      "graph_builder.py": "5ae2674e8add98ab11bc26ba5014ac4ec5910dd10087d8948611e669b98ee89d"
+    }
+  }
+}

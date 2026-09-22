@@ -1,0 +1,412 @@
+schema_version: research-policy/0.1
+policy_id: researcher_core_default_v0
+policy_version: 0.1.0
+description: >-
+  Минимальный policy-файл R0. Даже временные эвристики и лимиты должны
+  появляться здесь с reason/owner/tests, а не в коде или prompt-ах.
+
+reason_codes:
+  CLAIM_EVIDENCE_UPDATED:
+    description: "Claim evidence set changed or was re-evaluated."
+    owner: researcher-core
+    tests: [test_reason_code_registry_rejects_unknown]
+  DEPENDS_ON_UNSUPPORTED_ASSUMPTION:
+    description: "Target depends on an assumption that lacks admitted evidence."
+    owner: researcher-core
+    tests: [test_reason_code_registry_rejects_unknown]
+  RANGE_TRANSFORM_NOT_REPRODUCIBLE:
+    description: "Derived numeric range cannot be reproduced from declared formula/inputs."
+    owner: researcher-core
+    tests: [test_reason_code_registry_rejects_unknown]
+  EXPLICIT_SOURCE_REFERENCE:
+    description: "Report span contains explicit source reference."
+    owner: researcher-core
+    tests: [test_reason_code_registry_rejects_unknown]
+  NUMERIC_RANGE_ATTACHED:
+    description: "Numeric range is represented by a Quantity object."
+    owner: researcher-core
+    tests: [test_reason_code_registry_rejects_unknown]
+  POLICY_INTERNAL_TRACE_ONLY:
+    description: "Run validates internal trace only, not external truth."
+    owner: researcher-core
+    tests: [test_reason_code_registry_rejects_unknown]
+  RELATION_PROVENANCE_STALE:
+    description: "Canonical graph relation lost current provenance support and became stale."
+    owner: researcher-core
+    tests: [test_relation_reason_codes_are_registered]
+  RELATION_REVALIDATED:
+    description: "Previously stale graph relation was revalidated against current provenance."
+    owner: researcher-core
+    tests: [test_relation_reason_codes_are_registered]
+  RELATION_INVALIDATED:
+    description: "Graph relation was explicitly invalidated while endpoint entities remain independently addressable."
+    owner: researcher-core
+    tests: [test_relation_reason_codes_are_registered]
+  RESEARCH_CARD_STATE_CHANGED:
+    description: "Research planning card state changed through the ResearchDOM reducer."
+    owner: researcher-core
+    tests: [test_research_card_state_reason_code_is_registered]
+
+heuristics:
+  debt.scan.default_fail_on:
+    value:
+      - critical
+    unit: severity_list
+    applies_to: [developer_workflow]
+    reason: >-
+      R0 не должен запрещать весь старт из-за документационных debt markers, но critical
+      debt должен блокировать acceptance.
+    owner: researcher-core
+    introduced_in: 0.0.1
+    review_after: {runs: 20}
+    failure_if_wrong: [silent_critical_debt]
+    tests: [test_debt_scan_detects_markers]
+
+  debt.scan.excluded_files:
+    value:
+      - debt-report.json
+      - artifact-gap-report.json
+    unit: file_name_list
+    applies_to: [developer_workflow]
+    reason: >-
+      Debt scanner may write this report during local checks; scanning its own
+      previous output creates recursive false positives.
+    owner: researcher-core
+    introduced_in: 0.0.1
+    review_after: {runs: 20}
+    failure_if_wrong: [recursive_debt_report_noise]
+    tests: [test_debt_config_excludes_report_file]
+
+  debt.scan.excluded_dirs:
+    value:
+      - .git
+      - .venv
+      - venv
+      - __pycache__
+      - .pytest_cache
+      - build
+      - dist
+      - preprint
+    unit: directory_name_list
+    applies_to: [developer_workflow]
+    reason: >-
+      The workspace may contain unrelated generated/preprint artifacts and tool
+      distributions. R0 debt scanning targets researcher_core source, tests,
+      docs, config and controlled artifacts, not external publication workspaces.
+    owner: researcher-core
+    introduced_in: 0.0.1
+    review_after: {runs: 20}
+    failure_if_wrong: [external_artifact_debt_noise, hidden_core_debt_if_overbroad]
+    tests: [test_debt_config_excludes_dirs]
+
+  research.planning.max_cards:
+    value:
+      - 80
+    unit: cards
+    applies_to: [research_planning]
+    reason: >-
+      Limits authoritative ResearchDOM growth per planning tree. Large studies expand
+      iteratively instead of materialising every possible topic/method combination at once.
+    owner: researcher-core
+    introduced_in: 0.2.0
+    review_after: {runs: 20}
+    failure_if_wrong: [planning_tree_explosion, premature_pruning]
+    tests: [test_planning_gate_reads_limits_from_policy]
+
+  research.planning.max_depth:
+    value:
+      - 8
+    unit: tree_depth
+    applies_to: [research_planning]
+    reason: >-
+      Caps recursive decomposition depth while allowing objective, direction, discipline,
+      question, method and executable task layers.
+    owner: researcher-core
+    introduced_in: 0.2.0
+    review_after: {runs: 20}
+    failure_if_wrong: [unbounded_decomposition, forced_flattening]
+    tests: [test_planning_gate_reads_limits_from_policy]
+
+  research.escalation.max_hops:
+    value:
+      - 3
+    unit: hops
+    applies_to: [research_workflow]
+    reason: >-
+      Портирован из legacy rules.yaml max_hops=3. Ограничивает эскалацию
+      AMBIGUOUS/UNSUPPORTED/OPEN в TRIBUNAL, экономя токены на хвостах без потери точности.
+    owner: researcher-core
+    introduced_in: 0.1.0
+    review_after: {runs: 20}
+    failure_if_wrong: [unbounded_escalation_tokens]
+    tests: [test_policy_loads_real_file_returns_hash_and_reason_codes]
+
+  research.escalation.max_nodes:
+    value:
+      - 15
+    unit: nodes
+    applies_to: [research_workflow]
+    reason: >-
+      Портирован из legacy rules.yaml max_nodes=15. Лимит узлов графа эскалации,
+      предотвращает разрастание синтеза/трибунала.
+    owner: researcher-core
+    introduced_in: 0.1.0
+    review_after: {runs: 20}
+    failure_if_wrong: [graph_growth_tokens]
+    tests: [test_policy_loads_real_file_returns_hash_and_reason_codes]
+
+  research.budget.max_tokens_per_run:
+    value:
+      - 40000
+    unit: tokens
+    applies_to: [research_workflow]
+    reason: >-
+      Портирован из legacy rules.yaml max_tokens=40000. Потолок токенов на один
+      research run; детерм. гейты (numeric/evidence) уже отфильтровали шум, бюджет режет только хвосты.
+    owner: researcher-core
+    introduced_in: 0.1.0
+    review_after: {runs: 20}
+    failure_if_wrong: [cost_overrun_without_accuracy_gain]
+    tests: [test_budget_enforces_limits]
+
+  # --- Потребление: детерм. гейты, local-first, hash, batch, cache (7 пунктов, токен-анализ 2026-08-31) ---
+  research.deterministic.gates_enabled:
+    value:
+      - true
+    unit: boolean_flag
+    applies_to: [research_workflow]
+    reason: >-
+      Включает детерм. гейты до LLM (numeric dimension, evidence sha256, justification).
+      Снимает 30-40% факт-чеков без потери точности; NoAgent для рутины.
+    owner: researcher-core
+    introduced_in: 0.1.1
+    review_after: {runs: 20}
+    failure_if_wrong: [llm_on_deterministic_mismatch]
+    tests: [test_deterministic_gates_flag]
+
+  research.literature.local_first_enabled:
+    value:
+      - true
+    unit: boolean_flag
+    applies_to: [research_workflow]
+    reason: >-
+      Local-corpus-first: exact span+hash из PDF/DJVU, web только как fallback (trust 0.3).
+      Минус 50% web-поиска и 20% токенов на span.
+    owner: researcher-core
+    introduced_in: 0.1.1
+    review_after: {runs: 20}
+    failure_if_wrong: [web_before_local_tokens]
+    tests: [test_local_first_flag]
+
+  research.policy.hash_ref_enabled:
+    value:
+      - true
+    unit: boolean_flag
+    applies_to: [research_workflow]
+    reason: >-
+      Вместо полного дампа rules.yaml (120 строк) в промпт — policy_hash sha256 + 3 строки heuristic.
+      Экономия ~1-2k input per orchestrator call (~400k суммарно).
+    owner: researcher-core
+    introduced_in: 0.1.1
+    review_after: {runs: 20}
+    failure_if_wrong: [prompt_bloat]
+    tests: [test_policy_hash_is_stable_for_same_content]
+
+  research.batch.max_claims_per_call:
+    value:
+      - 10
+    unit: claims
+    applies_to: [research_workflow]
+    reason: >-
+      Батч-экстракция: один LLM вызов на 10 claims + dedup normalizeTitle, минус 25% extraction вызовов.
+    owner: researcher-core
+    introduced_in: 0.1.1
+    review_after: {runs: 20}
+    failure_if_wrong: [per_claim_llm_waste]
+    tests: [test_batch_size_flag]
+
+  research.cache.tail_turns:
+    value:
+      - 25
+    unit: turns
+    applies_to: [developer_workflow]
+    reason: >-
+      Увеличено с 15 до 25 — реже compaction (было 5×134k avg), держит cacheRead/input >10 и снижает 7% input.
+    owner: researcher-core
+    introduced_in: 0.1.1
+    review_after: {runs: 20}
+    failure_if_wrong: [frequent_compaction_tokens]
+    tests: [test_cache_tail_turns_flag]
+
+  research.cache.prune_enabled:
+    value:
+      - true
+    unit: boolean_flag
+    applies_to: [developer_workflow]
+    reason: >-
+      Prune=true сохраняет prompt cache (11.3 hit), не сбрасывает системный контекст каждый вызов.
+    owner: researcher-core
+    introduced_in: 0.1.1
+    review_after: {runs: 20}
+    failure_if_wrong: [cache_miss_tokens]
+    tests: [test_cache_prune_flag]
+
+  # --- Модельный роутинг: градация по минимальной достаточной сложности, fallback, NoAgent ---
+  # Идея: кастомные модели цепляются через policy; если не отмечено иного или модель не отозвалась — fallback на общую.
+  # NoAgent — рутина заведомо не меняется (numeric, hash, validation, budget) — без LLM, детерм. код.
+  # Динамическая эвристика (в коде): payload size / budget remaining → понизить/повысить tier.
+  research.model.routing.fallback:
+    value:
+      - gpt-5.5
+    unit: model_id
+    applies_to: [research_workflow]
+    reason: >-
+      Общая модель-фолбэк, если tier не задан или кастомная не ответила. Гарантирует прогресс без хардкода в коде.
+    owner: researcher-core
+    introduced_in: 0.1.1
+    review_after: {runs: 20}
+    failure_if_wrong: [no_fallback_stall]
+    tests: [test_model_routing_resolves_with_fallback]
+
+  research.model.tier.extraction:
+    value:
+      - gpt-5.5-mini
+    unit: model_id
+    applies_to: [research_workflow]
+    reason: >-
+      Минимально достаточная для extraction: извлечение, не рассуждение. Дешевле в 5×, точность не падает.
+      Можно заменить на локальную/дешёвую — fallback спасёт.
+    owner: researcher-core
+    introduced_in: 0.1.1
+    review_after: {runs: 20}
+    failure_if_wrong: [overpay_extraction]
+    tests: [test_model_routing_resolves_with_fallback]
+
+  research.model.tier.fact_check:
+    value:
+      - gpt-5.5
+    unit: model_id
+    applies_to: [research_workflow]
+    reason: >-
+      Fact-check требует среднего tier, но детерм. гейты уже сняли 30% — можно mini, если enabled.
+    owner: researcher-core
+    introduced_in: 0.1.1
+    review_after: {runs: 20}
+    failure_if_wrong: [overpay_fact_check]
+    tests: [test_model_routing_resolves_with_fallback]
+
+  research.model.tier.tribunal:
+    value:
+      - gpt-5.6-terra
+    unit: model_id
+    applies_to: [research_workflow]
+    reason: >-
+      Трибунал/адвокат — сложные рассуждения, нужен high tier. Fallback на gpt-5.5 если terra недоступна.
+    owner: researcher-core
+    introduced_in: 0.1.1
+    review_after: {runs: 20}
+    failure_if_wrong: [underpowered_tribunal]
+    tests: [test_model_routing_resolves_with_fallback]
+
+  research.model.tier.synthesizer:
+    value:
+      - gpt-5.6-terra
+    unit: model_id
+    applies_to: [research_workflow]
+    reason: >-
+      Синтез — high tier для финальной точности. Допускает кастом/локаль, fallback обязателен.
+    owner: researcher-core
+    introduced_in: 0.1.1
+    review_after: {runs: 20}
+    failure_if_wrong: [underpowered_synthesis]
+    tests: [test_model_routing_resolves_with_fallback]
+
+  research.model.tier.orchestrator:
+    value:
+      - gpt-5.6-terra
+    unit: model_id
+    applies_to: [research_workflow]
+    reason: >-
+      Оркестратор — планирует, решает, дорогой но редкий. Можно gpt-5.5 если бюджет жмёт.
+    owner: researcher-core
+    introduced_in: 0.1.1
+    review_after: {runs: 20}
+    failure_if_wrong: [orchestrator_cost_or_quality]
+    tests: [test_model_routing_resolves_with_fallback]
+
+  research.model.no_agent.operations:
+    value:
+      - numeric
+      - unit_conversion
+      - evidence_hash
+      - policy_hash
+      - validation
+      - budget_check
+    unit: capability_list
+    applies_to: [research_workflow]
+    reason: >-
+      NoAgent — рутина заведомо детерм. (конверсия юнитов, хеши, валидация, бюджет). Без LLM, без потери точности.
+      Динамическая эвристика в коде может расширить список, если payload тривиален.
+    owner: researcher-core
+    introduced_in: 0.1.1
+    review_after: {runs: 20}
+    failure_if_wrong: [llm_on_trivial_routine]
+    tests: [test_model_routing_resolves_with_fallback]
+
+  # --- Guard (doc_guard) — защита от утечек / prompt injection, polza P2 оставлен ---
+  # P0 — детерм. stdlib (STRONG_EN/WEAK_RU), P2 — polza gemma/lunaris как tie-breaker для low/no-match untrusted.
+  # Простенькая модель polza (l3-lunaris-8b) оставлена как дешёвый fallback, 0.001₽/вызов.
+  research.guard.enabled:
+    value:
+      - true
+    unit: boolean_flag
+    applies_to: [research_workflow, developer_workflow]
+    reason: >-
+      Включает P0 guard как NoAgent блок перед admit и pre-resume (trust-boundary).
+      Fail-closed: ошибка guard → FAIL → блок, как в doc_guard.
+    owner: researcher-core
+    introduced_in: 0.1.1
+    review_after: {runs: 20}
+    failure_if_wrong: [untrusted_injection_passes]
+    tests: [test_p0_detects_strong_en_in_untrusted]
+
+  research.guard.p2_enabled:
+    value:
+      - true
+    unit: boolean_flag
+    applies_to: [research_workflow]
+    reason: >-
+      P2 polza (gemma-4-26b → l3-lunaris-8b) — tie-breaker для untrusted где P0 дал low/no-match.
+      Включён как в исходном doc_guard для researcher/оркестратора: были инъекции, нужен целиком (P0+P2).
+      Простенькая lunaris оставлена как дешёвый fallback 0.001₽, fail-closed.
+    owner: researcher-core
+    introduced_in: 0.1.1
+    review_after: {runs: 20}
+    failure_if_wrong: [semantic_paraphrase_bypass]
+    tests: [test_guard_p2_enabled]
+
+  research.guard.p2_budget_max_rub:
+    value:
+      - 5.0
+    unit: rub
+    applies_to: [research_workflow]
+    reason: >-
+      Бюджет P2 как в guard_config.json: max 5.0₽, warn 4.0, alarm 4.8. Preventive STOP до вызова.
+    owner: researcher-core
+    introduced_in: 0.1.1
+    review_after: {runs: 20}
+    failure_if_wrong: [p2_budget_overrun]
+    tests: [test_guard_p2_budget]
+
+  research.guard.fail_closed:
+    value:
+      - true
+    unit: boolean_flag
+    applies_to: [research_workflow]
+    reason: >-
+      Fail-closed как в doc_guard: timeout/ошибка P2 → YES → FAIL. Лучше ложная тревога, чем утечка.
+    owner: researcher-core
+    introduced_in: 0.1.1
+    review_after: {runs: 20}
+    failure_if_wrong: [leak_on_p2_error]
+    tests: [test_guard_fail_closed]

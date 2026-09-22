@@ -1,0 +1,36 @@
+{
+  "ok": true,
+  "schema": "style_instruction_artifact/1.0",
+  "style_instruction_id": "SI-26cc26a7143186a8",
+  "source_fragment_ids": [
+    "RF-RAK-87"
+  ],
+  "instructions": {
+    "section_role": "discussion",
+    "paragraph_words_target": 135.0,
+    "citation_density_target": 0.0,
+    "hedging_target": 14.815,
+    "causal_density_target": 0.0,
+    "preferred_argument_patterns": [
+      "CONCLUDES",
+      "CONTRASTS",
+      "ELABORATES",
+      "HEAD_OF",
+      "INTERPRETS",
+      "LEADS_TO",
+      "MOTIVATES",
+      "PREPARES",
+      "QUALIFIES_ARGUMENT",
+      "SUMMARIZES",
+      "USES_AS_BACKING",
+      "USES_AS_REBUTTAL"
+    ],
+    "architecture_hint": "OBSERVATION → COMPARISON → INTERPRETATION → LIMITATION",
+    "prohibitions": [
+      "do not copy lexical wording from references",
+      "do not import reference claims as facts",
+      "preserve authorized claim modality and causal strength"
+    ]
+  },
+  "content_hash": "26cc26a7143186a86538700193860c83fb173a6dd4f181841e12fedd96d5b4e6"
+}

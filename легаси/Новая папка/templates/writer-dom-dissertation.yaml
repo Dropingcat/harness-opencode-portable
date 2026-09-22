@@ -1,0 +1,94 @@
+# Шаблон DOM YAML — диссертация (literary object structure)
+# Создаётся ПОСЛЕ постановки задачи и выбора шаблона.
+# Прослеживаемость и неопределённость — первичны: заполняются сразу,
+# черновики прозы добавляются позже и наследуют клаймы отсюда.
+
+product:
+  id: PROD-XXX                # назначить
+  kind: dissertation
+  template: dissertation
+  status: drafted
+  language: ru
+  meta:
+    degree: candidate | doctor
+    field: ""
+    university: ""
+
+structure:
+  chapters:
+    - id: CH-01
+      title: "Введение"
+      sections:
+        - id: SEC-01-01
+          title: "Актуальность темы"
+          paragraphs:
+            - id: PAR-01-01-01
+              claims: []
+              text: ""
+        - id: SEC-01-02
+          title: "Цели и задачи"
+          paragraphs:
+            - id: PAR-01-02-01
+              claims: []
+              text: ""
+    - id: CH-02
+      title: "Обзор литературы"
+      sections:
+        - id: SEC-02-01
+          title: "Состояние исследований"
+          paragraphs:
+            - id: PAR-02-01-01
+              claims: []
+              text: ""
+    - id: CH-03
+      title: "Методы"
+      sections: []
+    - id: CH-04
+      title: "Результаты"
+      sections: []
+    - id: CH-05
+      title: "Обсуждение"
+      sections: []
+    - id: CH-06
+      title: "Выводы"
+      sections: []
+
+claims:                      # известные утверждения на момент старта
+  - id: C-001
+    text: ""
+    kind: factual            # factual | derived | assumed | recommendation
+    evidence: []
+    verification:
+      verdict: OPEN
+      confidence: 0.0
+  - id: C-002
+    text: ""
+    kind: assumed
+    evidence: []
+    verification:
+      verdict: OPEN
+      confidence: 0.0
+
+graphs:                      # базовые графы известных утверждений
+  - id: GRAPH-01
+    kind: dependency         # derivation | support | conflict | citation_chain
+    edges: []
+
+uncertainty:
+  C-001: { level: assumed, note: "" }
+  C-002: { level: assumed, note: "" }
+
+sources:                     # реестр источников (заполняется при верификации)
+  - id: S-000
+    ref: ""
+    doi: null
+    url: null
+    kind: primary
+    accessed: ""
+
+# --- черновики (добавляются по мере написания) ---
+# draft_log:
+#   - id: DRAFT-01
+#     source_path: "drafts/ch01.md"
+#     added_claims: [C-003]
+#     date: ""

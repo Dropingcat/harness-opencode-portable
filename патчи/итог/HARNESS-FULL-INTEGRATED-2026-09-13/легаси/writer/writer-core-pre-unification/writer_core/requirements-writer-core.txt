@@ -1,0 +1,14 @@
+# writer-core (m_writer_harness) — детерминированный слой фабрики письма.
+# Python 3.12+; канонический venv: E:\Documents\Документы\writer-core\.venv
+# (Python 3.12.2). Установка: pip install -r requirements-writer-core.txt
+
+razdel>=0.5.0          # сегментация предложений/токенов (T0 + hybrid_extract)
+pymorphy3>=1.0.0       # морфологический анализатор (t0_ru, НЕ pymorphy2)
+pydantic>=2.0          # контракты фабрики письма (contracts.py) + writer_core_ir
+python-docx>=1.1.0     # извлечение .docx (абзацы И таблицы, hybrid_extract)
+pymupdf>=1.24.0        # извлечение .pdf  (import fitz / pymupdf)
+PyYAML>=6.0            # graph_registry.yaml (graph_builder_hybrid, registry_loader)
+
+# Опционально (не входит в критический контур):
+# pytest>=8.0           # test_writer_harness.py
+# polza_light использует только stdlib + env POLZA_API_KEY (вне этого пакета)

@@ -1,0 +1,20 @@
+schema_version: connective-registry/0.3
+entries:
+- form: следовательно
+  relation: INFERENCE
+  requires_argument_support: true
+- form: поэтому
+  relation: CONSEQUENCE
+  requires_argument_support: true
+- form: однако
+  relation: CONTRAST
+- form: вместе с тем
+  relation: CONCESSION_OR_CONTRAST
+- form: в частности
+  relation: SPECIFICATION_OR_EXAMPLE
+- form: иными словами
+  relation: REFORMULATION
+  requires_semantic_equivalence: true
+- form: таким образом
+  relation: SUMMARY_OR_INFERENCE
+  requires_argument_support: true
