@@ -89,13 +89,15 @@ def run_py(args: list, timeout: int = 120, check: bool = False) -> subprocess.Co
     )
 
 
-def run_agent(agent: str, prompt: str, model: str, timeout: int = 600) -> str | None:
-    """Вызов субагента через его primary-обёртку (opencode run).
+def run_agent(agent: str, prompt: str, model: str, timeout: int = 600,
+              retries: int = 2, backoff: tuple = (10, 30)) -> str | None:
+    """Вызов субагента через его primary-обёртку (opencode run) с ретраями.
 
     Субагенты (claim-parser, fact-checker и т.д.) НЕ вызываются через
     `opencode run --agent <subagent>` — это не поддерживается CLI. Каждый
     субагент имеет primary-обёртку `<name>-runner`, которая диспатчит его
     через task-инструмент. Здесь мы вызываем обёртку.
+    TD-118: ретраи с backoff при timeout/сетевых сбоях (полza.ai DNS-флапы).
     """
     if _DRY_RUN:
         _log(f"DRY-RUN: пропуск агента {agent}")
@@ -103,18 +105,37 @@ def run_agent(agent: str, prompt: str, model: str, timeout: int = 600) -> str | 
     runner_agent = f"{agent}-runner" if agent not in ("research-orchestrator", "writing-orchestrator", "code-orchestrator") else agent
     opencode_bin = os.environ.get("OPENCODE_BIN", "opencode")
     cmd = [opencode_bin, "run", "--agent", runner_agent, prompt, "--model", model]
-    try:
-        proc = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout,
-                              env={**os.environ, "PYTHONIOENCODING": "utf-8"},
-                              encoding="utf-8", errors="replace")
-    except subprocess.TimeoutExpired:
-        _err(f"агент {agent} упал (timeout {timeout}s)")
-        return None
-    if proc.returncode != 0:
-        _err(f"агент {agent} упал (exit {proc.returncode})")
-        (_RUN_DIR / f"{agent}_stderr.log").open("a", encoding="utf-8").write(proc.stderr + "\n")
-        return None
-    return proc.stdout
+
+    last_err = "unknown"
+    for attempt in range(retries + 1):
+        try:
+            proc = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout,
+                                  env={**os.environ, "PYTHONIOENCODING": "utf-8"},
+                                  encoding="utf-8", errors="replace")
+        except subprocess.TimeoutExpired:
+            last_err = f"timeout {timeout}s"
+            if attempt < retries:
+                wait = backoff[min(attempt, len(backoff) - 1)]
+                _log(f"агент {agent} timeout ({timeout}s), ретрай {attempt + 1}/{retries} через {wait}s")
+                time.sleep(wait)
+            continue
+        except Exception as e:
+            last_err = str(e)[:120]
+            if attempt < retries:
+                wait = backoff[min(attempt, len(backoff) - 1)]
+                _log(f"агент {agent} ошибка ({last_err}), ретрай {attempt + 1}/{retries} через {wait}s")
+                time.sleep(wait)
+            continue
+        if proc.returncode == 0:
+            return proc.stdout
+        last_err = f"exit {proc.returncode}: {proc.stderr[:200]}"
+        if attempt < retries:
+            wait = backoff[min(attempt, len(backoff) - 1)]
+            _log(f"агент {agent} {last_err}, ретрай {attempt + 1}/{retries} через {wait}s")
+            time.sleep(wait)
+    _err(f"агент {agent} упал после {retries + 1} попыток ({last_err})")
+    (_RUN_DIR / f"{agent}_stderr.log").open("a", encoding="utf-8").write(f"FINAL: {last_err}\n")
+    return None
 
 
 def extract_json(text: str) -> dict | None:
