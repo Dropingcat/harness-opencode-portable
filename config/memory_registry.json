@@ -164,6 +164,29 @@
        "note": "HTTP 401/капча 'Verifying your access' при автоматическом доступе. Вручную в браузере — рабочий."
       }
      ]
+    },
+    "039f6cc39692ead0277ae3acbac933fca578e2a31c2b153f3769d083a1f64223": {
+     "admissions": 1,
+     "evidence_refs": [
+      "SEARCH_PROTOCOL.md",
+      "ch1_dom.json",
+      "decomposition_methodology.json"
+     ],
+     "lesson_text": "РАБОЧАЯ ДИРЕКТОРИЯ ИССЛЕДОВАНИЯ: F:\\1\\_STRUCTURED (2026-09-19, подтверждено пользователем). Это ГЛАВНАЯ рабочая папка НКР Черенкова (сплавы Fe-N, азотирование, XRD). Ключевые подпапки: 00_RAW_DATA\\XRD_raw\\fils (исходные XRDML), 02_INTERMEDIATE (обработанные), 03_RESULTS (epsilon_beta_with_tan_UPDATED.csv, wh_results.csv, depth_calc.py), 05_MODELS (phase_composition.csv, alloy_composition.csv), 06_SCRIPTS (depth_calc.py, график*.py), 07_AUTOREF (авторефераты v6/v20, material_cards), 08_THERMODYNAMICS (TDB, alpha_xrd_570C.json), 09_LITERATURE (статьи автора), 10_ARCHIVE. research_verification\\ — артефакты оркестратора (DOM, вердикты, диаграммы, TD-артефакты). Связанные внешние: F:\\AnalisysDataSet (корпус PDF + 02-Methods заметки + ChromaDB .chroma_papers), F:\\1\\_STRUCTURED\\07_AUTOREF. Git-репозиторий: F:\\1\\_STRUCTURED. Флешка для литературных данных: D:\\1_Литература_данные (XCOM_tables, Фазовые_составы, ГОСТы_ТУ).",
+     "resources": [
+      {
+       "name": "Рабочая директория исследования",
+       "path": "F:\\1\\_STRUCTURED"
+      },
+      {
+       "name": "Корпус статей",
+       "path": "F:\\AnalisysDataSet"
+      },
+      {
+       "name": "USB литература",
+       "path": "D:\\1_Литература_данные"
+      }
+     ]
     }
    }
   }
