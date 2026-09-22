@@ -21,6 +21,16 @@ permission:
 - **`read` / `write` / `edit`** — работа с артефактами в рабочей папке.
 - **`todowrite`** — трекинг этапов цикла.
 
+## Кросс-оркестрация (TD-099)
+
+Ты можешь делегировать задачи ДРУГИМ оркестраторам целиком (со своими субагентами). Для этого вызови их **primary-обёртку** через `bash` (не напрямую субагента чужого контура):
+
+- Писательский контур: `opencode run --agent writing-orchestrator "<контракт>"` (статья/отчёт/рерайт — он диспатчит article-writer/writer сам)
+- Кодерский контур: `opencode run --agent code-orchestrator "<контракт>"` (реализация/ревью/тесты — он диспатчит coder-worker/reviewer/tester сам)
+- Обёртки субагентов для точечного диспатча: `claim-parser-runner`, `source-fetcher-runner`, `fact-checker-runner`, `tribunal-judge-runner`, `synthesizer-runner`, `writer-runner`, `coder-worker-runner`, `code-reviewer-runner`, `code-tester-runner`, `code-auditor-runner`
+
+Правила: передавай полный контракт входа/выхода; результат чужого оркестратора — как есть; не вмешивайся во внутренний цикл чужого контура. Это закрывает TD-099 (cross-orchestrator dispatch).
+
 ## Рабочая папка
 
 В начале задачи создавай `${RESEARCH_WORKSPACE:-/tmp/research-<timestamp>/}` (где `<timestamp>` — `date +%s` через bash). Runner сам создаёт подпапку `run/<ts>/` для audit-логов. Артефакты (по жёстким именам runner'а): `input.txt`, `claims.json`, `sources_<claim_id>.json`, `sources_index.json`, `verdicts_raw.json`, `numeric_result.json`, `verdicts_enriched.json`, `evidence_out.json`, `verdicts_final.json`, `judge_briefs.json`, `tribunal_combined.json`, `final_report.md`, `run/<ts>/_audit.json`, `run/<ts>/summary.json`. Не используй устаревшие имена (`numeric_out.json`, `tribunal_<claim_id>.json`, `research_tasks.json`, `problematic_theses.json`) — runner их не создаёт.

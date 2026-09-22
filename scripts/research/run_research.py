@@ -639,7 +639,7 @@ _INPUT: Path | None = None
 _WORKSPACE: Path | None = None
 _RULES: Path | None = None
 _DRY_RUN = False
-_MODEL = "deepseek-v4-flash-0731"
+_MODEL = "polza/deepseek/deepseek-v4-flash-0731"
 _MAX_COST_RUB = 20.0
 _MAX_ITER = 3
 _TS = ""
@@ -654,7 +654,7 @@ def main() -> int:
     ap.add_argument("input", help="path to input .txt")
     ap.add_argument("--workspace", default=None, help="workspace dir (default: <temp>/research-<ts>)")
     ap.add_argument("--rules", default=None, help="rules yaml (default: RESEARCH_RULES_PATH)")
-    ap.add_argument("--opencode-model", default=os.environ.get("OPENCODE_MODEL", "deepseek-v4-flash-0731"))
+    ap.add_argument("--opencode-model", default=os.environ.get("OPENCODE_MODEL", "polza/deepseek/deepseek-v4-flash-0731"))
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--max-cost-rub", type=float, default=20.0)
     ap.add_argument("--max-iterations", type=int, default=3)

@@ -1,6 +1,6 @@
 {
   "version": 3,
-  "generated_from_policy_hash": "c49ce840ebf84d72e19e5030ee849551a874ab553b0c0c41e4378300f2ce5811",
+  "generated_from_policy_hash": "080662462cc38cfcbcca50a3eaf16ff2645cc94ee5ec4bd7ecd7141aa1c89141",
   "generated": true,
   "nodes": [
     {
@@ -97,84 +97,84 @@
       "id": "route:academic-research",
       "type": "route",
       "name": "academic-research",
-      "match_regex": "(paper|arxiv|openalex|doi|pubmed|literature|citation|study|статья|публикац|литератур|источник)",
+      "match_regex": "(paper|arxiv|openalex|doi|pubmed|literature|citation|study|статья|публикац|литератур|источник|верификац|клайм|клаим|проверь факт|проверь утверждени|научн\\w* текст|fact.?check|вердикт)",
       "priority": 75
     },
     {
       "id": "route:code-implementation",
       "type": "route",
       "name": "code-implementation",
-      "match_regex": "(implement|add|fix|refactor|bug|feature|compile|build|исправ|добав|рефактор|код|тест)",
+      "match_regex": "(implement|add|fix|refactor|bug|feature|compile|build|исправ|добав|рефактор|код|тест|реализуй|реализация|почини|исправь баг)",
       "priority": 50
     },
     {
       "id": "route:code-review",
       "type": "route",
       "name": "code-review",
-      "match_regex": "(review|audit|quality|security|ревью|аудит|проверь код)",
+      "match_regex": "(review|audit|quality|security|ревью|аудит|проверь код|проверь качество|найди проблем)",
       "priority": 90
     },
     {
       "id": "route:document-extraction",
       "type": "route",
       "name": "document-extraction",
-      "match_regex": "(pdf|docx|xlsx|extract|document|документ|извлеч|распарс)",
+      "match_regex": "(pdf|docx|xlsx|extract|document|документ|извлеч|распарс|распарси|прочитай файл)",
       "priority": 65
     },
     {
       "id": "route:glossary-maintenance",
       "type": "route",
       "name": "glossary-maintenance",
-      "match_regex": "(glossary|глоссари|реестр функц|обнови реестр|registry|функцион.*реестр)",
+      "match_regex": "(glossary|глоссари|реестр функц|обнови реестр|registry|функциональн\\w* реестр|пересобери)",
       "priority": 79
     },
     {
       "id": "route:opencode-config",
       "type": "route",
       "name": "opencode-config",
-      "match_regex": "(opencode|agent|skill|mcp|plugin|config|router|hook|конфиг|агент|скил|роутер|хук)",
+      "match_regex": "(opencode|agent|skill|mcp|plugin|config|router|hook|конфиг|агент|скилл|настрой opencode)",
       "priority": 60
     },
     {
       "id": "route:optimization",
       "type": "route",
       "name": "optimization",
-      "match_regex": "(optimize|performance|latency|speed|memory|benchmark|ускор|оптимиз|памят|бенч)",
+      "match_regex": "(optimize|performance|latency|speed|memory|benchmark|ускор|оптимизируй|производительн)",
       "priority": 85
     },
     {
       "id": "route:service-automation",
       "type": "route",
       "name": "service-automation",
-      "match_regex": "(calendar|gmail|drive|slack|github issue|send email|service|календар|почт|диск|сервис)",
+      "match_regex": "(calendar|gmail|drive|slack|github issue|send email|service|автоматизир)",
       "priority": 82
     },
     {
       "id": "route:tech-debt",
       "type": "route",
       "name": "tech-debt",
-      "match_regex": "(tech debt|техдолг|debt|sunset|owner|severity)",
+      "match_regex": "(tech debt|техдолг|debt|sunset|owner|severity|долг|зафиксируй блок|запиши в долг)",
       "priority": 80
     },
     {
       "id": "route:triz-architecture",
       "type": "route",
       "name": "triz-architecture",
-      "match_regex": "(triz|ariz|contradiction|ИКР|ideal|trade-off|архитектура|противоречие|refactor architecture)",
+      "match_regex": "(triz|ariz|contradiction|ИКР|ideal|trade-off|архитектура|противореч)",
       "priority": 88
     },
     {
       "id": "route:web-research",
       "type": "route",
       "name": "web-research",
-      "match_regex": "(web|search|latest|current|url|site|интернет|поиск|сайт|актуальн)",
+      "match_regex": "(web|search|latest|current|url|site|интернет|поиск|сайт|актуальн|найди источник|найди статью|найди информацию|поищи|собери материал)",
       "priority": 70
     },
     {
       "id": "route:writing-prose",
       "type": "route",
       "name": "writing-prose",
-      "match_regex": "(rewrite|writing|prose|article|report|перепиши|написать текст|стиль|редактир)",
+      "match_regex": "(rewrite|writing|prose|article|report|перепиши|написать текст|написать статью|напиши статью|напиши|стиль|редактир|рерайт|черновик|оформи)",
       "priority": 55
     },
     {

@@ -1,12 +1,12 @@
 {
   "version": 2,
   "generated": true,
-  "generated_from_policy_hash": "c49ce840ebf84d72e19e5030ee849551a874ab553b0c0c41e4378300f2ce5811",
+  "generated_from_policy_hash": "080662462cc38cfcbcca50a3eaf16ff2645cc94ee5ec4bd7ecd7141aa1c89141",
   "invariant": "GENERATED COMPATIBILITY VIEW. Edit routes_authority.json / tool_contracts_authority.json instead.",
   "context_routes": [
     {
       "id": "academic-research",
-      "when_regex": "(paper|arxiv|openalex|doi|pubmed|literature|citation|study|статья|публикац|литератур|источник)",
+      "when_regex": "(paper|arxiv|openalex|doi|pubmed|literature|citation|study|статья|публикац|литератур|источник|верификац|клайм|клаим|проверь факт|проверь утверждени|научн\\w* текст|fact.?check|вердикт)",
       "skills": [
         "literature-review",
         "citation-management",
@@ -25,7 +25,7 @@
     },
     {
       "id": "code-implementation",
-      "when_regex": "(implement|add|fix|refactor|bug|feature|compile|build|исправ|добав|рефактор|код|тест)",
+      "when_regex": "(implement|add|fix|refactor|bug|feature|compile|build|исправ|добав|рефактор|код|тест|реализуй|реализация|почини|исправь баг)",
       "skills": [
         "verification-planning",
         "incremental-implementation",
@@ -40,7 +40,7 @@
     },
     {
       "id": "code-review",
-      "when_regex": "(review|audit|quality|security|ревью|аудит|проверь код)",
+      "when_regex": "(review|audit|quality|security|ревью|аудит|проверь код|проверь качество|найди проблем)",
       "skills": [
         "code-review-and-quality",
         "doubt-driven-development"
@@ -53,7 +53,7 @@
     },
     {
       "id": "document-extraction",
-      "when_regex": "(pdf|docx|xlsx|extract|document|документ|извлеч|распарс)",
+      "when_regex": "(pdf|docx|xlsx|extract|document|документ|извлеч|распарс|распарси|прочитай файл)",
       "skills": [
         "markitdown"
       ],
@@ -65,7 +65,7 @@
     },
     {
       "id": "glossary-maintenance",
-      "when_regex": "(glossary|глоссари|реестр функц|обнови реестр|registry|функцион.*реестр)",
+      "when_regex": "(glossary|глоссари|реестр функц|обнови реестр|registry|функциональн\\w* реестр|пересобери)",
       "skills": [
         "glossary-registry",
         "context-engineering"
@@ -78,7 +78,7 @@
     },
     {
       "id": "opencode-config",
-      "when_regex": "(opencode|agent|skill|mcp|plugin|config|router|hook|конфиг|агент|скил|роутер|хук)",
+      "when_regex": "(opencode|agent|skill|mcp|plugin|config|router|hook|конфиг|агент|скилл|настрой opencode)",
       "skills": [
         "customize-opencode",
         "context-engineering"
@@ -91,7 +91,7 @@
     },
     {
       "id": "optimization",
-      "when_regex": "(optimize|performance|latency|speed|memory|benchmark|ускор|оптимиз|памят|бенч)",
+      "when_regex": "(optimize|performance|latency|speed|memory|benchmark|ускор|оптимизируй|производительн)",
       "skills": [
         "autoresearch",
         "triz-problem-solving",
@@ -106,7 +106,7 @@
     },
     {
       "id": "service-automation",
-      "when_regex": "(calendar|gmail|drive|slack|github issue|send email|service|календар|почт|диск|сервис)",
+      "when_regex": "(calendar|gmail|drive|slack|github issue|send email|service|автоматизир)",
       "skills": [
         "context-engineering"
       ],
@@ -118,7 +118,7 @@
     },
     {
       "id": "tech-debt",
-      "when_regex": "(tech debt|техдолг|debt|sunset|owner|severity)",
+      "when_regex": "(tech debt|техдолг|debt|sunset|owner|severity|долг|зафиксируй блок|запиши в долг)",
       "skills": [
         "context-engineering",
         "verification-planning"
@@ -131,7 +131,7 @@
     },
     {
       "id": "triz-architecture",
-      "when_regex": "(triz|ariz|contradiction|ИКР|ideal|trade-off|архитектура|противоречие|refactor architecture)",
+      "when_regex": "(triz|ariz|contradiction|ИКР|ideal|trade-off|архитектура|противореч)",
       "skills": [
         "compare",
         "doubt-driven-development"
@@ -146,7 +146,7 @@
     },
     {
       "id": "web-research",
-      "when_regex": "(web|search|latest|current|url|site|интернет|поиск|сайт|актуальн)",
+      "when_regex": "(web|search|latest|current|url|site|интернет|поиск|сайт|актуальн|найди источник|найди статью|найди информацию|поищи|собери материал)",
       "skills": [
         "conducting-scientific-research",
         "physics-verification"
@@ -161,7 +161,7 @@
     },
     {
       "id": "writing-prose",
-      "when_regex": "(rewrite|writing|prose|article|report|перепиши|написать текст|стиль|редактир)",
+      "when_regex": "(rewrite|writing|prose|article|report|перепиши|написать текст|написать статью|напиши статью|напиши|стиль|редактир|рерайт|черновик|оформи)",
       "skills": [
         "deslop-ai-lint-skill",
         "export",
