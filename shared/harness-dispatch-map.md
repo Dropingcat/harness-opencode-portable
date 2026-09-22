@@ -28,6 +28,7 @@
 | `dom_builder.py` | детерминированный билдер research-DOM/артефактов (TD-143) | `dom_builder.py update-claim --claim c0 --citations "[...]"` / `sync-citations --cmap citations_map.json` / `report` / `verify` / `stats` |
 | `gost_collector.py` | сбор ГОСТов/ТУ по маппингу марок (TD-122..125) | `gost_collector.py registry` / `collect --mark ВКС-10` / `backfill` / `provenance --gost 5632-2014` |
 | `downloader.py url` | универсальный загрузчик: PDF с проверкой типа, retry, провенанс | `downloader.py url --url ... --out ... --name f.pdf --expect pdf` |
+| `downloader.py resolve` | каскадный DOI→PDF: локальный корпус→CrossRef/OpenAlex→openAccessPdf→Sci-Hub→wayback (TD-152) | `downloader.py resolve --doi "10.1007/..." --out ...` |
 
 ## Шаг 2: Поиск источников — порядок (жёсткий)
 
