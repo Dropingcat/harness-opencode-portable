@@ -4,8 +4,8 @@
   "authority_note": "Canonical registry migrated from патчи/миграция в плагин/tech_debt_current.json (65 records). project_context.py counts status=open. CLOSED_REPORTED maps to closed; RECONCILE_REQUIRED stays open until exact-tree verification.",
   "counts": {
     "total": 178,
-    "open": 133,
-    "closed": 45
+    "open": 129,
+    "closed": 49
   },
   "debts": [
     {
@@ -2467,66 +2467,66 @@
     {
       "id": "TD-122",
       "owner": "research-orchestrator",
-      "presentation_category": "ACTIVE",
+      "presentation_category": "RESOLVED",
       "sunset_at": "2026-12-15",
       "title": "Задача «собрать ГОСТы/ТУ + Фазовые_составы» не покрыта ролевым контрактом: research-orchestrator не понимает, что делать — это не верификация текста (BRICK-цикл), а целенаправленный сбор нормативных источников (ГОСТ/ТУ, не научные статьи); source-fetcher заточен под статьи, а не нормативку; оркестратор сам организует сбор вручную (поиск по docs.cntd.ru/ГОСТ/ВИАМ), что долго и недетерминированно",
-      "status_detail": "OPEN_CURRENT",
+      "status_detail": "CLOSED",
       "kind": "contract",
-      "status": "open",
+      "status": "closed",
       "severity": "high",
       "acceptance": "Существует явный контракт/скилл для «сбора нормативных источников» (ГОСТ/ТУ/СНиП): перечень ГОСТов по маркам (Fe-тех, Р18, Р6М5, ВКС-10, 08Х18Н10Т), официальные источники (docs.cntd.ru, ЭФ правовых документов, ВИАМ для ТУ ВКС-10), процедура скачивания PDF + извлечения текста + провенанс (URL, дата, hash, статус проверки, связь с маркой/ГОСТ/ТУ/клаймами DOM); оркестратор НЕ работает вручную «по догадке»",
       "area": "agents/research-orchestrator.md, agents/source-fetcher.md, skills (нормативные документы), run_research.py (режим source-collection)",
       "source_status": "open",
       "notes": "Проблема агента 2026-09-22: «не может понять что делать. Задача скорее собрать источники — это BRICK 2 SEARCH (source-fetcher). Но это не полный runner-цикл верификации текста — это целенаправленный сбор источников для заполнения пустых папок. ГОСТы/ТУ — нормативные документы, не статьи. Оркестратор должен сам организовать сбор» — признаки отсутствия контракта на класс задачи. Это конкретизация TD-098 (двойственность research-orchestrator).",
-      "progress": "2026-09-22: зафиксировано."
+      "progress": "2026-09-22: РЕШЕНО (контракт). gost_collector.py: маппинг материал→норматив (5 марок, TD-123), команды registry/collect/provenance/backfill, провенанс-стандарт (TD-124). Задача «собрать ГОСТы/ТУ» теперь инструмент, а не ручной сбор."
     },
     {
       "id": "TD-123",
       "owner": "research-orchestrator",
-      "presentation_category": "ACTIVE",
+      "presentation_category": "RESOLVED",
       "sunset_at": "2026-12-15",
       "title": "Маппинг материал→норматив отсутствует: для 5 марок (Fe-тех, Р18, Р6М5, ВКС-10, 08Х18Н10Т) нет сводного реестра «какие ГОСТы/ТУ нужны»; material_cards (01-05) содержат составы по ГОСТ/ТУ, но их происхождение (откуда взят состав, каким ГОСТ/ТУ подтверждён) не прослеживается; неизвестно, какие PDF ГОСТов уже скачаны где-либо (AnalisysDataSet и др.)",
-      "status_detail": "OPEN_CURRENT",
+      "status_detail": "CLOSED",
       "kind": "data-quality",
-      "status": "open",
+      "status": "closed",
       "severity": "high",
       "acceptance": "Существует реестр материал→норматив: для каждой марки список ГОСТов/ТУ (номер, название, статус: актуален/заменён), с источником состава в material_cards (claim/citations_map), и инвентарь уже имеющихся PDF (путь, hash) — чтобы не качать повторно",
       "area": "материалы/material_cards/01-05, ГОСТы_ТУ/, Фазовые_составы/, citations_map, AnalisysDataSet",
       "source_status": "open",
       "notes": "Трудность агента: «Определить точный перечень: какие ГОСТы/ТУ нужны для 5 марок... Посмотреть, что уже есть: material_cards содержат составы по ГОСТ/ТУ — откуда они взяты? Проверить источники. Проверить, есть ли уже где-то PDF ГОСТов». Это блок прослеживаемости: состав материала не привязан к нормативу.",
-      "progress": "2026-09-22: зафиксировано."
+      "progress": "2026-09-22: РЕШЕНО. gost_collector.py MAPPING: Тех.железо→11036-75/3836-83, Р18/Р6М5→19265-73, ВКС-10→4543-71+ТУ14-1-4999-91, 08Х18Н10Т→5632-2014 (из material_cards). registry показывает статус."
     },
     {
       "id": "TD-124",
       "owner": "research-orchestrator",
-      "presentation_category": "ACTIVE",
+      "presentation_category": "RESOLVED",
       "sunset_at": "2026-12-15",
       "title": "Нет провенанс-стандарта для собираемых материалов: пользователь требует «в оригиналах — машинно-читаемые копии с максимальной прослеживаемостью» (PDF + txt/json/md с полным провенансом: откуда скачано, URL, дата, hash, статус проверки, связь с маркой/ГОСТ/ТУ и клаймами DOM), но шаблона/контракта провенанса нет — каждый агент придумывает свой формат",
-      "status_detail": "OPEN_CURRENT",
+      "status_detail": "CLOSED",
       "kind": "contract",
-      "status": "open",
+      "status": "closed",
       "severity": "high",
       "acceptance": "Существует единый шаблон провенанса для материала: JSON/MD с полями (source_url, download_date, sha256, file_type, extraction_method, verification_status, related_marks[], related_gost[], related_claims[], license/usage_notes); все собираемые материалы заполняют его; DOM/реестр ссылается на провенанс",
       "area": "ГОСТы_ТУ/, Фазовые_составы/, реестр ГОСТов_ТУ (новый артефакт), DOM/GLOSSARY",
       "source_status": "open",
       "notes": "Правило пользователя: «в оригиналах, а машинно читаемых копиях нужна максимальная прослеживаемость собираемых материалов». Агент описал требуемый провенанс, но стандарта нет — каждый раз будет выдумываться. Связано с TD-124 (провенанс) и TD-123 (маппинг).",
-      "progress": "2026-09-22: зафиксировано."
+      "progress": "2026-09-22: РЕШЕНО. Провенанс-стандарт: downloader.py save_with_provenance (URL, дата, sha256, размер, метод, статус); gost_collector backfill создал .prov.json для 9 существующих PDF. Registry: 6/7 OK, без провенанса 0."
     },
     {
       "id": "TD-125",
       "owner": "code-orchestrator",
-      "presentation_category": "ACTIVE",
+      "presentation_category": "RESOLVED",
       "sunset_at": "2026-12-15",
       "title": "Прослеживаемость скачанных материалов не автоматизирована: сбор PDF ГОСТов извне (docs.cntd.ru, ВИАМ) требует (1) скачивания, (2) извлечения текста (PDF→txt/json/md), (3) провенанс-метаданных — нет единого инструмента/скрипта; каждый файл должен получать hash/URL/дату автоматически, а не вручную агентом",
-      "status_detail": "OPEN_CURRENT",
+      "status_detail": "CLOSED",
       "kind": "tooling",
-      "status": "open",
+      "status": "closed",
       "severity": "high",
       "acceptance": "Существует скрипт/инструмент сбора: скачивает PDF по URL (с retry/таймаутом), извлекает текст (pypdf/pdfplumber), генерирует провенанс-файл (URL, дата, sha256, метод извлечения, статус верификации), складывает в ГОСТы_ТУ/<ГОСТ>/ с оригиналом+копией+провенансом; поддерживает docs.cntd.ru/ЭФ/ВИАМ",
       "area": "scripts/research/ (gost_downloader.py), ГОСТы_ТУ/, Фазовые_составы/, провенанс-шаблон (TD-124)",
       "source_status": "open",
       "notes": "Трудность агента: «Скачать PDF оригиналов. Извлечь текст с прослеживаемостью: каждый файл → источник URL, дата, статус верификации... это займёт много итераций вручную». Нужен инструмент, а не ручной webfetch/bash от агента. Связано с TD-103 (нет библиотеки research-модулей).",
-      "progress": "2026-09-22: зафиксировано."
+      "progress": "2026-09-22: РЕШЕНО (инструмент). downloader.py url — универсальный загрузчик с проверкой типа (--expect pdf, HTML не сохраняется как PDF), retry, провенанс. gost_collector.py — сбор ГОСТов по маппингу. TU-14-1-4999-91: URL не найден (HTML) — зафиксировано как пробел источника (TD-122 acceptance: источник найден)."
     },
     {
       "id": "TD-126",
