@@ -16,6 +16,8 @@
 
 ## Шаг 1: Инструменты (канонические, из `scripts/tools/`)
 
+**Шаблоны контрактов — в роутере.** `harness_run`/`resolve_bundle` возвращает `templates` (13 шт.): `arxiv_search`, `openalex_search`, `extract_document`, `searxng_search`, `sci_bot`, `downloader_doi`, `downloader_resolve`, `downloader_dns`, `gost_collector`, `code_work`, `literature-review`, `profile_config`, `customize-opencode`. Каждый шаблон содержит: команду, required_input, forbidden_input, start_with/finish_with, guard. **Не выдумывай вызов — возьми шаблон из bundle.**
+
 **НЕ пиши ad-hoc скрипты в C:\Temp\opencode. Используй готовые:**
 
 | Инструмент | Когда | Команда |

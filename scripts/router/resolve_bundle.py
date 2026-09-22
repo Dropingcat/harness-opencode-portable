@@ -82,7 +82,16 @@ def resolve_bundle(task:str,route_id=None,stage=None,profile=None,preflight_path
             'verify_gate': 'scripts/glossary/verify_coder_dom.py',
             'rule': 'work through the capsule; regen + commit DOM with code',
         }
-    return {'ok':state=='READY','bundle_state':state,'route_id':route,'stage':sid,'domains':domains,'profile':base.get('profile'),'execution_mode':base.get('execution_mode'),'skills':skills,'logical_tools':logical,'required_capabilities':req,'required_any_of':scfg.get('required_any_of',[]),'optional_capabilities':list(dict.fromkeys(opt)),'forbidden_capabilities':sorted(forb),'providers':providers,'missing_required':missing,'failed_requirement_groups':failed_groups,'next_stages':scfg.get('next',[]),'escalation':scfg.get('escalation',{}),'base_policy_hash':base.get('policy_hash'),'capability_policy_hash':snap.get('policy_hash'),'bundle_mode':'capability','guard_required':base.get('guard_required',False),'agent':base.get('agent'),'agent_hint':base.get('agent_hint',''),'coder_dom_hint':coder_dom_hint}
+    return {'ok':state=='READY','bundle_state':state,'route_id':route,'stage':sid,'domains':domains,'profile':base.get('profile'),'execution_mode':base.get('execution_mode'),'skills':skills,'logical_tools':logical,'required_capabilities':req,'required_any_of':scfg.get('required_any_of',[]),'optional_capabilities':list(dict.fromkeys(opt)),'forbidden_capabilities':sorted(forb),'providers':providers,'missing_required':missing,'failed_requirement_groups':failed_groups,'next_stages':scfg.get('next',[]),'escalation':scfg.get('escalation',{}),'base_policy_hash':base.get('policy_hash'),'capability_policy_hash':snap.get('policy_hash'),'bundle_mode':'capability','guard_required':base.get('guard_required',False),'agent':base.get('agent'),'agent_hint':base.get('agent_hint',''),'coder_dom_hint':coder_dom_hint,'templates':_load_templates()}
+
+def _load_templates() -> dict:
+    """Шаблоны инструментов (контракты вызова) из tool_skill_templates.json."""
+    try:
+        tpl = read("config/tool_skill_templates.json")
+        return tpl.get("templates", {})
+    except Exception:
+        return {}
+
 
 def main()->int:
     ap=argparse.ArgumentParser(); ap.add_argument('task'); ap.add_argument('--route-id'); ap.add_argument('--stage'); ap.add_argument('--profile'); ap.add_argument('--preflight')

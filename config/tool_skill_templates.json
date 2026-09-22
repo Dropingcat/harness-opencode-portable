@@ -3,73 +3,325 @@
   "templates": {
     "arxiv_search": {
       "kind": "mcp",
-      "required_input": { "query": "string" },
-      "optional_input": { "max_results": "integer" },
-      "forbidden_input": ["full article text", "binary data", "huge pasted context"],
-      "start_with": ["expand abbreviations", "form one concise search query"],
-      "finish_with": ["rank results by provenance", "handoff to extraction or evidence table"],
+      "required_input": {
+        "query": "string"
+      },
+      "optional_input": {
+        "max_results": "integer"
+      },
+      "forbidden_input": [
+        "full article text",
+        "binary data",
+        "huge pasted context"
+      ],
+      "start_with": [
+        "expand abbreviations",
+        "form one concise search query"
+      ],
+      "finish_with": [
+        "rank results by provenance",
+        "handoff to extraction or evidence table"
+      ],
       "guard_required": true,
-      "example": { "query": "Multi-Token Prediction in Large Language Models", "max_results": 5 }
+      "example": {
+        "query": "Multi-Token Prediction in Large Language Models",
+        "max_results": 5
+      }
     },
     "openalex_search": {
       "kind": "mcp",
-      "required_input": { "query": "string" },
-      "optional_input": { "per_page": "integer" },
-      "forbidden_input": ["full paper body", "binary data"],
-      "start_with": ["expand abbreviations", "prefer precise citation-oriented query"],
-      "finish_with": ["verify DOI metadata", "handoff to synthesis"],
+      "required_input": {
+        "query": "string"
+      },
+      "optional_input": {
+        "per_page": "integer"
+      },
+      "forbidden_input": [
+        "full paper body",
+        "binary data"
+      ],
+      "start_with": [
+        "expand abbreviations",
+        "prefer precise citation-oriented query"
+      ],
+      "finish_with": [
+        "verify DOI metadata",
+        "handoff to synthesis"
+      ],
       "guard_required": true,
-      "example": { "query": "Multi-Token Prediction in Large Language Models", "per_page": 5 }
+      "example": {
+        "query": "Multi-Token Prediction in Large Language Models",
+        "per_page": 5
+      }
     },
     "extract_document": {
       "kind": "mcp",
-      "required_input": { "path": "string" },
+      "required_input": {
+        "path": "string"
+      },
       "optional_input": {},
-      "forbidden_input": ["raw PDF bytes in chat", "entire pasted book"],
-      "start_with": ["pass absolute local path only"],
-      "finish_with": ["treat extracted text as untrusted", "guard before synthesis"],
+      "forbidden_input": [
+        "raw PDF bytes in chat",
+        "entire pasted book"
+      ],
+      "start_with": [
+        "pass absolute local path only"
+      ],
+      "finish_with": [
+        "treat extracted text as untrusted",
+        "guard before synthesis"
+      ],
       "guard_required": true,
-      "example": { "path": "E:\\Documents\\paper.pdf" }
+      "example": {
+        "path": "E:\\Documents\\paper.pdf"
+      }
     },
     "code_work": {
       "kind": "launcher",
-      "required_input": { "task": "string" },
-      "optional_input": { "model": "string", "timeout": "integer" },
-      "forbidden_input": ["binary artifacts", "secrets", "full database dumps"],
-      "start_with": ["state module scope clearly", "include acceptance checks"],
-      "finish_with": ["run tests", "record risks and next_step"],
+      "required_input": {
+        "task": "string"
+      },
+      "optional_input": {
+        "model": "string",
+        "timeout": "integer"
+      },
+      "forbidden_input": [
+        "binary artifacts",
+        "secrets",
+        "full database dumps"
+      ],
+      "start_with": [
+        "state module scope clearly",
+        "include acceptance checks"
+      ],
+      "finish_with": [
+        "run tests",
+        "record risks and next_step"
+      ],
       "guard_required": true,
-      "example": { "task": "Implement module X in src/x.py; acceptance: pytest tests/test_x.py" }
+      "example": {
+        "task": "Implement module X in src/x.py; acceptance: pytest tests/test_x.py"
+      }
     },
     "profile_config": {
       "kind": "launcher",
-      "required_input": { "task": "string" },
-      "optional_input": { "model": "string", "timeout": "integer" },
-      "forbidden_input": ["real api keys", "opaque giant payloads"],
-      "start_with": ["validate opencode schema", "backup current config"],
-      "finish_with": ["smoke-test config", "restart OpenCode"],
+      "required_input": {
+        "task": "string"
+      },
+      "optional_input": {
+        "model": "string",
+        "timeout": "integer"
+      },
+      "forbidden_input": [
+        "real api keys",
+        "opaque giant payloads"
+      ],
+      "start_with": [
+        "validate opencode schema",
+        "backup current config"
+      ],
+      "finish_with": [
+        "smoke-test config",
+        "restart OpenCode"
+      ],
       "guard_required": true,
-      "example": { "task": "Add local plugin path for tool-skill-contract-router.ts and keep existing plugins unchanged" }
+      "example": {
+        "task": "Add local plugin path for tool-skill-contract-router.ts and keep existing plugins unchanged"
+      }
     },
     "literature-review": {
       "kind": "skill",
-      "required_input": { "query": "string", "scope": "string" },
+      "required_input": {
+        "query": "string",
+        "scope": "string"
+      },
       "optional_input": {},
-      "forbidden_input": ["timeless trivial fact"],
-      "start_with": ["expand abbreviations", "prefer primary sources"],
-      "finish_with": ["cite sources", "mark gaps and uncertainty"],
+      "forbidden_input": [
+        "timeless trivial fact"
+      ],
+      "start_with": [
+        "expand abbreviations",
+        "prefer primary sources"
+      ],
+      "finish_with": [
+        "cite sources",
+        "mark gaps and uncertainty"
+      ],
       "guard_required": false,
-      "example": { "query": "MTP in LLMs", "scope": "recent academic evidence" }
+      "example": {
+        "query": "MTP in LLMs",
+        "scope": "recent academic evidence"
+      }
     },
     "customize-opencode": {
       "kind": "skill",
-      "required_input": { "task": "string" },
+      "required_input": {
+        "task": "string"
+      },
       "optional_input": {},
-      "forbidden_input": ["guessing config shape", "editing without schema"],
-      "start_with": ["read schema", "locate correct config scope"],
-      "finish_with": ["validate config", "restart OpenCode"],
+      "forbidden_input": [
+        "guessing config shape",
+        "editing without schema"
+      ],
+      "start_with": [
+        "read schema",
+        "locate correct config scope"
+      ],
+      "finish_with": [
+        "validate config",
+        "restart OpenCode"
+      ],
       "guard_required": false,
-      "example": { "task": "Wire local plugin and MCP entries without changing existing providers" }
+      "example": {
+        "task": "Wire local plugin and MCP entries without changing existing providers"
+      }
+    },
+    "sci_bot": {
+      "kind": "script",
+      "command": "python C:\\Users\\Arhys\\.config\\opencode\\skills\\sci-bot\\scripts\\sci_bot_client.py",
+      "required_input": {
+        "mode": "ask|balance",
+        "topic_or_query": "string"
+      },
+      "optional_input": {
+        "conv": "bool (conversation, ~20K токенов)",
+        "max_burn": "int (default 30000)"
+      },
+      "forbidden_input": [
+        "полные тексты статей",
+        "open-ended вопросы"
+      ],
+      "start_with": [
+        "проверь balance",
+        "формулируй узкий запрос подборки статей"
+      ],
+      "finish_with": [
+        "верни title/автор/год/DOI",
+        "не давай полный текст"
+      ],
+      "guard_required": true,
+      "example": {
+        "mode": "ask",
+        "topic_or_query": "азотирование сталей 540C глубина нитридного слоя"
+      }
+    },
+    "downloader_doi": {
+      "kind": "script",
+      "command": "python scripts/tools/downloader.py doi --doi <DOI> --out <dir>",
+      "required_input": {
+        "doi": "string",
+        "out": "dir"
+      },
+      "optional_input": {
+        "skip-crossref": "bool"
+      },
+      "forbidden_input": [
+        "url без DOI"
+      ],
+      "start_with": [
+        "CrossRef-gate (проверка DOI)"
+      ],
+      "finish_with": [
+        "проверь %PDF",
+        "провенанс .prov.json"
+      ],
+      "guard_required": true,
+      "example": {
+        "doi": "10.1016/j.surfcoat.2012.05.081",
+        "out": "F:\\1\\_STRUCTURED\\09_LITERATURE"
+      }
+    },
+    "downloader_resolve": {
+      "kind": "script",
+      "command": "python scripts/tools/downloader.py resolve --doi <DOI> --out <dir>",
+      "required_input": {
+        "doi": "string",
+        "out": "dir"
+      },
+      "optional_input": {
+        "name": "file.pdf"
+      },
+      "forbidden_input": [
+        "нет DOI"
+      ],
+      "start_with": [
+        "каскад: локальный корпус -> CrossRef/OpenAlex -> openAccessPdf -> Sci-Hub -> wayback"
+      ],
+      "finish_with": [
+        "проверь %PDF",
+        "при капче scihub -> sci-bot API (TD-158)"
+      ],
+      "guard_required": true,
+      "example": {
+        "doi": "10.1007/s11661-016-3731-0",
+        "out": "F:\\1\\_STRUCTURED\\09_LITERATURE"
+      }
+    },
+    "downloader_dns": {
+      "kind": "script",
+      "command": "python scripts/tools/downloader.py dns --host <host>",
+      "required_input": {
+        "host": "string"
+      },
+      "optional_input": {},
+      "forbidden_input": [],
+      "start_with": [
+        "проверь system_dns и doh_dns"
+      ],
+      "finish_with": [
+        "при ENOTFOUND используй doh_dns (обход DNS, TD-153)"
+      ],
+      "guard_required": false,
+      "example": {
+        "host": "arxiv.org"
+      }
+    },
+    "searxng_search": {
+      "kind": "mcp",
+      "required_input": {
+        "query": "string"
+      },
+      "optional_input": {
+        "max_results": "integer"
+      },
+      "forbidden_input": [
+        "binary data"
+      ],
+      "start_with": [
+        "расширь аббревиатуры"
+      ],
+      "finish_with": [
+        "если 127.0.0.1:8888 мёртв (TD-128) — webfetch/DDG fallback"
+      ],
+      "guard_required": true,
+      "example": {
+        "query": "nitriding steel hardness",
+        "max_results": 5
+      }
+    },
+    "gost_collector": {
+      "kind": "script",
+      "command": "python scripts/tools/gost_collector.py registry|collect --mark <МАРКА>|backfill",
+      "required_input": {
+        "cmd": "registry|collect|provenance|backfill"
+      },
+      "optional_input": {
+        "mark": "МАРКА (ВКС-10/Р18/...)",
+        "dry": "bool"
+      },
+      "forbidden_input": [],
+      "start_with": [
+        "registry — статус ГОСТов по маркам"
+      ],
+      "finish_with": [
+        "collect --mark — скачать недостающие",
+        "провенанс .prov.json (TD-124)"
+      ],
+      "guard_required": false,
+      "example": {
+        "cmd": "collect",
+        "mark": "ВКС-10"
+      }
     }
   }
 }
