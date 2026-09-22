@@ -1,0 +1,501 @@
+[
+  {
+    "claim_id": 1,
+    "claim_text": "Nitriding of steels is a process of surface hardening.",
+    "verdict": "SUPPORTED",
+    "original_verdict": "SUPPORTED",
+    "confidence": 1.0,
+    "original_confidence": 1.0,
+    "reason": "multiple_caveats_problematic",
+    "caveats": [
+      {
+        "text": "Nitriding can also be applied to non-ferrous metals (Ti, Al, Mo) for surface hardening, but the claim correctly specifies steels.",
+        "severity": "info"
+      },
+      {
+        "text": "At very low temperatures or short processing times, the hardened case may be thin, but the process remains a surface-hardening treatment by definition.",
+        "severity": "info"
+      }
+    ],
+    "changes": [
+      "marked problematic (multiple_caveats_problematic)"
+    ],
+    "suggested_reformulation": ""
+  },
+  {
+    "claim_id": 2,
+    "claim_text": "При азотировании происходит диффузия азота в поверхностный слой металла",
+    "verdict": "SUPPORTED",
+    "original_verdict": "SUPPORTED",
+    "confidence": 1.0,
+    "original_confidence": 1.0,
+    "reason": "multiple_caveats_problematic",
+    "caveats": [
+      {
+        "text": "The claim is fundamentally correct but incomplete: nitriding involves not only nitrogen diffusion but also subsequent chemical reactions forming nitride compounds.",
+        "severity": "info"
+      },
+      {
+        "text": "Local corpus search failed due to filesystem path length error — all evidence from web sources.",
+        "severity": "warning"
+      }
+    ],
+    "changes": [
+      "marked problematic (multiple_caveats_problematic)"
+    ],
+    "suggested_reformulation": ""
+  },
+  {
+    "claim_id": 3,
+    "claim_text": "При азотировании происходит образование нитридов",
+    "verdict": "SUPPORTED",
+    "original_verdict": "SUPPORTED",
+    "confidence": 0.98,
+    "original_confidence": 0.98,
+    "reason": "multiple_caveats_problematic",
+    "caveats": [
+      {
+        "text": "При очень низком азотном потенциале среды или на самых ранних стадиях процесса азот может находиться только в твёрдом растворе без образования различимых нитридных фаз.",
+        "severity": "info"
+      },
+      {
+        "text": "В стандартных промышленных режимах азотирования образование нитридов является основным механизмом упрочнения.",
+        "severity": "info"
+      }
+    ],
+    "changes": [
+      "marked problematic (multiple_caveats_problematic)"
+    ],
+    "suggested_reformulation": ""
+  },
+  {
+    "claim_id": 4,
+    "claim_text": "The process of nitriding [of steels] is conducted at temperatures 500-570°C in an ammonia atmosphere.",
+    "verdict": "UNSUPPORTED",
+    "original_verdict": "SUPPORTED",
+    "confidence": 0.5,
+    "original_confidence": 0.85,
+    "reason": "confidence_lt_0.6",
+    "caveats": [
+      {
+        "text": "The 500-570°C range is standard for gas nitriding specifically. Other nitriding methods (plasma, salt bath) operate at different temperature ranges and atmospheres.",
+        "severity": "info"
+      },
+      {
+        "text": "Some authoritative sources give a narrower range of 495-565°C (Neal Systems) or 500-530°C (ScienceDirect), while others extend the upper limit to 580-650°C.",
+        "severity": "warning"
+      },
+      {
+        "text": "At temperatures above ~560-570°C, the compound layer can become porous due to increased ammonia dissociation.",
+        "severity": "info"
+      },
+      {
+        "text": "The claim implicitly refers to gas nitriding. Plasma nitriding can operate from 340-590°C, and salt bath nitriding typically at ~570°C using molten cyanide salts rather than ammonia.",
+        "severity": "warning"
+      }
+    ],
+    "changes": [
+      "confidence 0.85 → 0.5 (many_caveats_caps_confidence)",
+      "verdict SUPPORTED → UNSUPPORTED (confidence_below_problematic_threshold)",
+      "marked problematic (verdict_unsupported)",
+      "marked problematic (confidence_lt_0.6)"
+    ],
+    "suggested_reformulation": "Gas nitriding of steels is typically conducted at temperatures 495-570°C in an ammonia atmosphere. Other nitriding methods (plasma, salt bath) operate at different temperature ranges."
+  },
+  {
+    "claim_id": 5,
+    "claim_text": "The holding time during nitriding ranges from 10 to 50 hours",
+    "verdict": "UNSUPPORTED",
+    "original_verdict": "SUPPORTED",
+    "confidence": 0.5,
+    "original_confidence": 0.75,
+    "reason": "confidence_lt_0.6",
+    "caveats": [
+      {
+        "text": "The 10-50 hour range is a reasonable typical range for conventional gas nitriding and plasma/ion nitriding of structural steels, but not universal.",
+        "severity": "warning"
+      },
+      {
+        "text": "Salt bath nitriding is typically much shorter (0.5-4 hours), tool steel nitriding can be 15 min-3 hours.",
+        "severity": "info"
+      },
+      {
+        "text": "Deep case depths can require 80-160 hours.",
+        "severity": "info"
+      }
+    ],
+    "changes": [
+      "confidence 0.75 → 0.5 (many_caveats_caps_confidence)",
+      "verdict SUPPORTED → UNSUPPORTED (confidence_below_problematic_threshold)",
+      "marked problematic (verdict_unsupported)",
+      "marked problematic (confidence_lt_0.6)"
+    ],
+    "suggested_reformulation": "The holding time during conventional gas nitriding typically ranges from 10 to 50 hours, but can vary from 0.5 hours (salt bath) to 160 hours (deep case gas nitriding) depending on the method and required case depth."
+  },
+  {
+    "claim_id": 6,
+    "claim_text": "The holding time during nitriding depends on the required depth of the nitrided layer",
+    "verdict": "SUPPORTED",
+    "original_verdict": "SUPPORTED",
+    "confidence": 0.95,
+    "original_confidence": 0.95,
+    "reason": "multiple_caveats_problematic",
+    "caveats": [
+      {
+        "text": "This is a logical/definitional claim — depth is proportional to sqrt(D·t) per Fick's law, so time directly controls depth.",
+        "severity": "info"
+      },
+      {
+        "text": "Other factors also affect depth: temperature, steel composition, nitrogen potential.",
+        "severity": "info"
+      }
+    ],
+    "changes": [
+      "marked problematic (multiple_caveats_problematic)"
+    ],
+    "suggested_reformulation": ""
+  },
+  {
+    "claim_id": 7,
+    "claim_text": "Образование ε-фазы (Fe2-3N) происходит на поверхности [металла] при высоких концентрациях азота.",
+    "verdict": "SUPPORTED",
+    "original_verdict": "SUPPORTED",
+    "confidence": 0.92,
+    "original_confidence": 0.92,
+    "reason": "multiple_caveats_problematic",
+    "caveats": [
+      {
+        "text": "ε-фаза образуется только при азотном потенциале выше границы γ'/ε на диаграмме Лерера; при низком потенциале формируется γ'-Fe₄N.",
+        "severity": "info"
+      },
+      {
+        "text": "Стехиометрия ε-фазы варьирует от Fe₂N до Fe₃N (8-11.2 wt% N), что шире заявленного Fe2-3N.",
+        "severity": "info"
+      }
+    ],
+    "changes": [
+      "marked problematic (multiple_caveats_problematic)"
+    ],
+    "suggested_reformulation": ""
+  },
+  {
+    "claim_id": 8,
+    "claim_text": "Нитриды молибдена обеспечивают дисперсионное твердение [в контексте процесса азотирования]",
+    "verdict": "UNSUPPORTED",
+    "original_verdict": "SUPPORTED",
+    "confidence": 0.5,
+    "original_confidence": 0.75,
+    "reason": "confidence_lt_0.6",
+    "caveats": [
+      {
+        "text": "Mo is a weak nitride former (Group 2 in Лахтин classification) — its nitrides form only via solid-state reaction.",
+        "severity": "warning"
+      },
+      {
+        "text": "Mo nitride precipitation is kinetically delayed due to large volume misfit with the ferrite matrix.",
+        "severity": "warning"
+      },
+      {
+        "text": "The dispersion hardening contribution of Mo₂N (γ=0.4) is lower than CrN (γ=1.2), VN (γ=0.8), TiN (γ=2.0).",
+        "severity": "warning"
+      }
+    ],
+    "changes": [
+      "confidence 0.75 → 0.5 (many_caveats_caps_confidence)",
+      "verdict SUPPORTED → UNSUPPORTED (confidence_below_problematic_threshold)",
+      "marked problematic (verdict_unsupported)",
+      "marked problematic (confidence_lt_0.6)"
+    ],
+    "suggested_reformulation": "Нитриды молибдена (Mo₂N, MoN) вносят вклад в дисперсионное твердение при азотировании, однако Mo является слабым нитридообразующим элементом (группа 2 по Лахтину) с кинетически замедленным выделением, и его упрочняющий вклад (γ=0.4) ниже, чем у CrN (γ=1.2) или VN (γ=0.8)."
+  },
+  {
+    "claim_id": 9,
+    "claim_text": "Нитриды ванадия обеспечивают дисперсионное твердение [в контексте процесса азотирования]",
+    "verdict": "SUPPORTED",
+    "original_verdict": "SUPPORTED",
+    "confidence": 0.92,
+    "original_confidence": 0.92,
+    "reason": "multiple_caveats_problematic",
+    "caveats": [
+      {
+        "text": "The hardening effect is strongest for finely dispersed, coherent VN precipitates. Discontinuous coarsening reduces hardness significantly.",
+        "severity": "warning"
+      },
+      {
+        "text": "The effect is concentration-dependent: Fe-2wt.%V shows 1000-1050 HV0.1, Fe-4wt.%V shows ~1200 HV0.1.",
+        "severity": "info"
+      }
+    ],
+    "changes": [
+      "marked problematic (multiple_caveats_problematic)"
+    ],
+    "suggested_reformulation": ""
+  },
+  {
+    "claim_id": 10,
+    "claim_text": "Глубина азотированного слоя составляет 0.3-0.6 мм при стандартном режиме азотирования",
+    "verdict": "UNSUPPORTED",
+    "original_verdict": "SUPPORTED",
+    "confidence": 0.5,
+    "original_confidence": 0.92,
+    "reason": "confidence_lt_0.6",
+    "caveats": [
+      {
+        "text": "The 0.3-0.6 mm range is typical for gas nitriding of medium-alloy structural steels at 500-520°C for 24-60 hours.",
+        "severity": "info"
+      },
+      {
+        "text": "The term 'standard regime' is not precisely defined — it generally refers to gas nitriding at 500-570°C.",
+        "severity": "warning"
+      },
+      {
+        "text": "Depth varies significantly with steel grade: carbon steels achieve less depth, some alloy steels can exceed 0.6 mm.",
+        "severity": "info"
+      }
+    ],
+    "changes": [
+      "confidence 0.92 → 0.5 (many_caveats_caps_confidence)",
+      "verdict SUPPORTED → UNSUPPORTED (confidence_below_problematic_threshold)",
+      "marked problematic (verdict_unsupported)",
+      "marked problematic (confidence_lt_0.6)"
+    ],
+    "suggested_reformulation": "Глубина азотированного слоя при газовом азотировании среднелегированных конструкционных сталей (500-520°C, 24-60 ч) составляет 0.3-0.6 мм. Для других сталей и режимов глубина может существенно отличаться."
+  },
+  {
+    "claim_id": 11,
+    "claim_text": "X-ray diffraction analysis confirms the presence of the ε phase [in the nitrided layer]",
+    "verdict": "SUPPORTED",
+    "original_verdict": "SUPPORTED",
+    "confidence": 0.92,
+    "original_confidence": 0.92,
+    "reason": "multiple_caveats_problematic",
+    "caveats": [
+      {
+        "text": "XRD samples only the near-surface region (3-6 μm for Cr-Kα in Fe alloys); ε-phase deeper in the compound layer may not be detected.",
+        "severity": "info"
+      },
+      {
+        "text": "Peak overlap between ε-Fe₂₋₃N and γ'-Fe₄N can occur, requiring Rietveld refinement for unambiguous quantification.",
+        "severity": "warning"
+      }
+    ],
+    "changes": [
+      "marked problematic (multiple_caveats_problematic)"
+    ],
+    "suggested_reformulation": ""
+  },
+  {
+    "claim_id": 12,
+    "claim_text": "X-ray diffraction analysis confirms the presence of the γ' phase [in the nitrided layer]",
+    "verdict": "SUPPORTED",
+    "original_verdict": "SUPPORTED",
+    "confidence": 0.95,
+    "original_confidence": 0.95,
+    "reason": "multiple_caveats_problematic",
+    "caveats": [
+      {
+        "text": "XRD alone cannot distinguish γ'-Fe4N from other cubic phases with similar lattice parameters without careful peak profile analysis.",
+        "severity": "info"
+      },
+      {
+        "text": "The claim is generic — it does not specify which XRD radiation or which specific peaks were used.",
+        "severity": "info"
+      }
+    ],
+    "changes": [
+      "marked problematic (multiple_caveats_problematic)"
+    ],
+    "suggested_reformulation": ""
+  },
+  {
+    "claim_id": 13,
+    "claim_text": "Микротвёрдость измеряется по методу Виккерса с нагрузкой 0.1-0.5 Н",
+    "verdict": "SUPPORTED",
+    "original_verdict": "SUPPORTED",
+    "confidence": 0.92,
+    "original_confidence": 0.92,
+    "reason": "multiple_caveats_problematic",
+    "caveats": [
+      {
+        "text": "The claim states 0.1-0.5 N, but ISO 6507-1 defines microhardness range as 0.09807-1.961 N. The claim's upper bound is conservative.",
+        "severity": "info"
+      },
+      {
+        "text": "Loads below ~0.05 N are affected by indentation size effect per ASTM E384.",
+        "severity": "info"
+      }
+    ],
+    "changes": [
+      "marked problematic (multiple_caveats_problematic)"
+    ],
+    "suggested_reformulation": ""
+  },
+  {
+    "claim_id": 14,
+    "claim_text": "Измерения проводятся на шлифах после травления",
+    "verdict": "SUPPORTED",
+    "original_verdict": "SUPPORTED",
+    "confidence": 0.95,
+    "original_confidence": 0.95,
+    "reason": "multiple_caveats_problematic",
+    "caveats": [
+      {
+        "text": "В некоторых случаях (измерение поверхностной микротвердости) травление может не требоваться, но для измерений на поперечных шлифах травление является стандартной практикой.",
+        "severity": "info"
+      },
+      {
+        "text": "Конкретный травитель и режим зависят от материала и типа исследуемого слоя.",
+        "severity": "info"
+      }
+    ],
+    "changes": [
+      "marked problematic (multiple_caveats_problematic)"
+    ],
+    "suggested_reformulation": ""
+  },
+  {
+    "claim_id": 15,
+    "claim_text": "The speed of nitrogen diffusion is described by Fick's equation",
+    "verdict": "SUPPORTED",
+    "original_verdict": "SUPPORTED",
+    "confidence": 0.9,
+    "original_confidence": 0.9,
+    "reason": "multiple_caveats_problematic",
+    "caveats": [
+      {
+        "text": "Fick's laws describe diffusion in ideal dilute solutions. For concentrated solutions or moving boundaries, more complex models (Darken, Stefan) are more accurate.",
+        "severity": "warning"
+      },
+      {
+        "text": "Stress-induced diffusion adds a driving force term not captured by Fick's concentration-gradient formulation.",
+        "severity": "info"
+      }
+    ],
+    "changes": [
+      "marked problematic (multiple_caveats_problematic)"
+    ],
+    "suggested_reformulation": ""
+  },
+  {
+    "claim_id": 16,
+    "claim_text": "Коэффициент диффузии азота зависит от температуры по закону Аррениуса",
+    "verdict": "SUPPORTED",
+    "original_verdict": "SUPPORTED",
+    "confidence": 0.92,
+    "original_confidence": 0.92,
+    "reason": "multiple_caveats_problematic",
+    "caveats": [
+      {
+        "text": "Trapping effects in alloyed steels (Fe-V-N) can reduce effective diffusion coefficient at lower temperatures, making apparent Arrhenius slope steeper.",
+        "severity": "warning"
+      },
+      {
+        "text": "At high nitrogen concentrations, diffusion coefficient becomes concentration-dependent, deviating from simple Arrhenius behavior.",
+        "severity": "info"
+      }
+    ],
+    "changes": [
+      "marked problematic (multiple_caveats_problematic)"
+    ],
+    "suggested_reformulation": ""
+  },
+  {
+    "claim_id": 17,
+    "claim_text": "Энергия активации диффузии азота в α-железе составляет 77 кДж/моль.",
+    "verdict": "SUPPORTED",
+    "original_verdict": "SUPPORTED",
+    "confidence": 0.95,
+    "original_confidence": 0.95,
+    "reason": "multiple_caveats_problematic",
+    "caveats": [
+      {
+        "text": "Callister gives Q_d = 76.15 kJ/mol for N in α-Fe. 77 kJ/mol is a rounding (~1.1% difference), well within acceptable tolerance.",
+        "severity": "info"
+      },
+      {
+        "text": "The activation energy can vary with alloy composition — in alloyed steels, trapping effects can increase the effective activation energy.",
+        "severity": "warning"
+      }
+    ],
+    "changes": [
+      "marked problematic (multiple_caveats_problematic)"
+    ],
+    "suggested_reformulation": ""
+  },
+  {
+    "claim_id": 18,
+    "claim_text": "The pre-exponential factor for diffusion of nitrogen in α-iron is 0.003 cm²/s.",
+    "verdict": "UNSUPPORTED",
+    "original_verdict": "SUPPORTED",
+    "confidence": 0.5,
+    "original_confidence": 0.8,
+    "reason": "confidence_lt_0.6",
+    "caveats": [
+      {
+        "text": "Callister gives D₀ = 0.003 cm²/s for N in α-Fe. This is a standard textbook value.",
+        "severity": "info"
+      },
+      {
+        "text": "Literature shows significant scatter: D₀ values range from 0.001 to 0.01 cm²/s depending on measurement method and material purity.",
+        "severity": "warning"
+      },
+      {
+        "text": "The pre-exponential factor is sensitive to alloy composition and microstructure.",
+        "severity": "warning"
+      }
+    ],
+    "changes": [
+      "confidence 0.8 → 0.5 (many_caveats_caps_confidence)",
+      "verdict SUPPORTED → UNSUPPORTED (confidence_below_problematic_threshold)",
+      "marked problematic (verdict_unsupported)",
+      "marked problematic (confidence_lt_0.6)"
+    ],
+    "suggested_reformulation": "The pre-exponential factor for diffusion of nitrogen in α-iron is 0.003 cm²/s (Callister), though literature values range from 0.001 to 0.01 cm²/s depending on measurement conditions and material purity."
+  },
+  {
+    "claim_id": 19,
+    "claim_text": "Nitriding increases the wear resistance of parts by 2-3 times.",
+    "verdict": "SUPPORTED",
+    "original_verdict": "SUPPORTED",
+    "confidence": 0.85,
+    "original_confidence": 0.85,
+    "reason": "multiple_caveats_problematic",
+    "caveats": [
+      {
+        "text": "The 2-3x range is a conservative generalization. Лахтин & Коган report 2-2.7x for grey cast iron (dry friction) and 3-5x for alloyed steels (lubricated friction).",
+        "severity": "info"
+      },
+      {
+        "text": "Wear resistance improvement depends on steel grade, nitriding parameters, and wear test conditions.",
+        "severity": "warning"
+      }
+    ],
+    "changes": [
+      "marked problematic (multiple_caveats_problematic)"
+    ],
+    "suggested_reformulation": ""
+  },
+  {
+    "claim_id": 20,
+    "claim_text": "A dense oxide film forms during oxidation that follows the nitriding process",
+    "verdict": "SUPPORTED",
+    "original_verdict": "SUPPORTED",
+    "confidence": 0.9,
+    "original_confidence": 0.9,
+    "reason": "multiple_caveats_problematic",
+    "caveats": [
+      {
+        "text": "The oxide film consists primarily of magnetite Fe₃O₄ (sometimes with Fe₂O₃), thickness 1-2 μm.",
+        "severity": "info"
+      },
+      {
+        "text": "The term 'dense oxide film' is used in peer-reviewed literature (Alsaran & Altun, 2004) to describe the post-oxidation layer.",
+        "severity": "info"
+      }
+    ],
+    "changes": [
+      "marked problematic (multiple_caveats_problematic)"
+    ],
+    "suggested_reformulation": ""
+  }
+]

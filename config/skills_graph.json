@@ -1,6 +1,6 @@
 {
   "version": 3,
-  "generated_from_policy_hash": "877983967d84b1f2e5c73c77782a60554b7740968cdbbe6fcb25b3c05105e848",
+  "generated_from_policy_hash": "c49ce840ebf84d72e19e5030ee849551a874ab553b0c0c41e4378300f2ce5811",
   "generated": true,
   "nodes": [
     {
@@ -387,6 +387,12 @@
       "type": "skill",
       "name": "physics-verification",
       "runtime_class": "core_runtime"
+    },
+    {
+      "id": "skill:sci-bot",
+      "type": "skill",
+      "name": "sci-bot",
+      "runtime_class": "optional_domain"
     },
     {
       "id": "skill:scientific-critical-thinking",
@@ -1010,6 +1016,11 @@
     {
       "src": "capsule:research-core",
       "rel": "PROVIDES_SKILL",
+      "dst": "skill:sci-bot"
+    },
+    {
+      "src": "capsule:research-core",
+      "rel": "PROVIDES_SKILL",
       "dst": "skill:scientific-critical-thinking"
     },
     {
@@ -1131,6 +1142,11 @@
       "src": "route:academic-research",
       "rel": "REQUIRES_SKILL",
       "dst": "skill:literature-review"
+    },
+    {
+      "src": "route:academic-research",
+      "rel": "REQUIRES_SKILL",
+      "dst": "skill:sci-bot"
     },
     {
       "src": "route:academic-research",
@@ -1862,6 +1878,7 @@
       "skill:markitdown",
       "skill:ml-paper-writing",
       "skill:physics-verification",
+      "skill:sci-bot",
       "skill:scientific-critical-thinking",
       "skill:scientific-writing",
       "skill:triz-problem-solving",

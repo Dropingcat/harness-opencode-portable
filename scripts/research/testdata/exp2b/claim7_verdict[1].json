@@ -1,0 +1,29 @@
+{
+  "claim_id": 7,
+  "claim_text": "Нитриды молибдена обеспечивают дисперсионное твердение [в контексте процесса азотирования]",
+  "verdict": "SUPPORTED",
+  "confidence": 0.75,
+  "caveats": [
+    {"text": "Mo is a weak nitride former (Group 2 in Лахтин classification) — its nitrides form only via solid-state reaction, requiring higher nitrogen supersaturation", "severity": "warning"},
+    {"text": "Mo nitride precipitation is kinetically delayed and difficult due to large volume misfit with the ferrite matrix (Meka PhD thesis)", "severity": "warning"},
+    {"text": "The dispersion hardening contribution of Mo₂N (γ=0.4) is significantly lower than CrN (γ=1.2), VN (γ=0.8), TiN (γ=2.0) per Лахтин Table 26", "severity": "warning"},
+    {"text": "Steels without Mo can achieve excellent nitriding results using Cr, Al, V, Ti — Mo is not strictly necessary", "severity": "info"}
+  ],
+  "sources": [
+    {"title": "Лахтин Ю.М., Коган Я.Д. Теория и технология азотирования (1991)", "type": "textbook", "trust": 0.9, "relevance": 0.95},
+    {"title": "Meka S.R. PhD Thesis: Nitriding of iron-based binary and ternary alloys (2011)", "type": "primary", "trust": 0.9, "relevance": 0.85},
+    {"title": "Steiner T. et al. Alloying element nitride stability in iron-based alloys (2016)", "type": "primary", "doi": "10.1080/02670836.2016.1155254", "trust": 0.85, "relevance": 0.8},
+    {"title": "Molybdenum-Nitride Precipitation in Fe-1 at. pct Mo Alloy (2013)", "type": "primary", "doi": "10.1007/s11661-013-1762-3", "trust": 0.85, "relevance": 0.9}
+  ],
+  "reason": "Mo nitrides (Mo₂N, MoN) form as nanometer-sized coherent platelets during nitriding of Fe-Mo alloys and Mo-containing steels, confirmed by Лахтин textbook, Meka PhD thesis, and journal papers. However, Mo is a weak nitride former with delayed precipitation kinetics and modest hardening contribution (γ=0.4).",
+  "number_comparison": {},
+  "fragile_points": [
+    "Mo nitride precipitation is kinetically delayed — at short nitriding times or low Mo content, Mo may remain in solid solution",
+    "Mo is typically used at 0.25-1% in commercial steels — its contribution is secondary to Cr, Al, or V nitrides"
+  ],
+  "questions_for_author": [
+    "What specific Mo nitride phase (Mo₂N vs MoN) and what size/distribution range are you assuming?",
+    "At what minimum Mo concentration does Mo nitride dispersion hardening become experimentally measurable?",
+    "Is the claim intended to mean Mo nitrides are the primary hardening mechanism, or that they contribute alongside other nitride formers?"
+  ]
+}

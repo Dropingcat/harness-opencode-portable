@@ -1,0 +1,127 @@
+[
+  {
+    "claim_id": 4,
+    "claim_text": "The process of nitriding [of steels] is conducted at temperatures 500-570°C in an ammonia atmosphere.",
+    "verdict": "UNSUPPORTED",
+    "confidence": 0.5,
+    "caveats": [
+      {
+        "severity": "warning",
+        "text": "Верхняя граница варьирует (550-590°C) в зависимости от источника"
+      },
+      {
+        "severity": "warning",
+        "text": "Пористость ε-фазы возможна при >560°C"
+      },
+      {
+        "severity": "info",
+        "text": "Диапазон корректен для газового азотирования; плазменное шире (260-600+°C)"
+      }
+    ],
+    "reason": "confidence_lt_0.6",
+    "changes": [
+      "confidence 0.8 → 0.5 (many_caveats_caps_confidence)",
+      "verdict SUPPORTED → UNSUPPORTED (confidence_below_problematic_threshold)",
+      "marked problematic (verdict_unsupported)",
+      "marked problematic (confidence_lt_0.6)"
+    ],
+    "suggested_reformulation": "The process of gas nitriding of steels is typically conducted at temperatures 500-570°C in an ammonia atmosphere. Note: upper boundary varies (550-590°C) depending on steel grade; porosity risk above 560°C."
+  },
+  {
+    "claim_id": 5,
+    "claim_text": "The holding time during nitriding ranges from 10 to 50 hours",
+    "verdict": "UNSUPPORTED",
+    "confidence": 0.5,
+    "caveats": [
+      {
+        "severity": "warning",
+        "text": "Диапазон 10-50 ч корректен для газового азотирования; возможны более длительные процессы (до 100 ч)"
+      },
+      {
+        "severity": "info",
+        "text": "Плазменное азотирование быстрее (4-12 ч)"
+      },
+      {
+        "severity": "info",
+        "text": "Зависит от требуемой глубины слоя и марки стали"
+      }
+    ],
+    "reason": "confidence_lt_0.6",
+    "changes": [
+      "confidence 0.75 → 0.5 (many_caveats_caps_confidence)",
+      "verdict SUPPORTED → UNSUPPORTED (confidence_below_problematic_threshold)",
+      "marked problematic (verdict_unsupported)",
+      "marked problematic (confidence_lt_0.6)"
+    ],
+    "suggested_reformulation": "The holding time during gas nitriding typically ranges from 10 to 50 hours, depending on the required case depth and steel grade. Longer times (up to 100 h) may be used for deep cases."
+  },
+  {
+    "claim_id": 10,
+    "claim_text": "Глубина азотированного слоя составляет 0.3-0.6 мм при стандартном режиме азотирования",
+    "verdict": "AMBIGUOUS",
+    "confidence": 0.6,
+    "caveats": [
+      {
+        "severity": "info",
+        "text": "0.3-0.6 мм — типичный диапазон для стандартного газового азотирования (40-70 ч)"
+      },
+      {
+        "severity": "info",
+        "text": "Некоторые источники указывают 0.1-0.6 мм"
+      }
+    ],
+    "reason": "verdict_ambiguous",
+    "changes": [
+      "marked problematic (multiple_caveats_problematic)",
+      "confidence 0.8 → 0.6 (numeric_partial_match_capped)",
+      "verdict SUPPORTED → AMBIGUOUS (confidence_in_ambiguous_range)",
+      "marked problematic (verdict_ambiguous)"
+    ],
+    "suggested_reformulation": "The depth of the nitrided layer is typically 0.3-0.6 mm under standard gas nitriding conditions (40-70 h at 500-570°C). Some sources report 0.1-0.6 mm."
+  },
+  {
+    "claim_id": 18,
+    "claim_text": "The pre-exponential factor for diffusion of nitrogen in α-iron is 0.003 cm²/s.",
+    "verdict": "SUPPORTED",
+    "confidence": 0.8,
+    "caveats": [
+      {
+        "severity": "info",
+        "text": "Значение D0 = 0.003 cm²/s — стандартное для диффузии внедрения N в α-Fe"
+      },
+      {
+        "severity": "info",
+        "text": "Разброс в литературе: 0.001-0.005 cm²/s"
+      }
+    ],
+    "reason": "multiple_caveats_problematic",
+    "changes": [
+      "marked problematic (multiple_caveats_problematic)"
+    ],
+    "suggested_reformulation": "The pre-exponential factor for diffusion of nitrogen in α-iron is approximately 0.003 cm²/s (Callister: D0 = 3×10⁻⁷ m²/s). Literature range: 0.001-0.005 cm²/s."
+  },
+  {
+    "claim_id": 19,
+    "claim_text": "Nitriding increases the wear resistance of parts by 2-3 times.",
+    "verdict": "AMBIGUOUS",
+    "confidence": 0.6,
+    "caveats": [
+      {
+        "severity": "warning",
+        "text": "2-3x — консервативная оценка. Реальный диапазон: 2-5x в зависимости от материала"
+      },
+      {
+        "severity": "info",
+        "text": "Для легированных сталей (с Cr, Mo, V, Al) — до 5x"
+      }
+    ],
+    "reason": "verdict_ambiguous",
+    "changes": [
+      "marked problematic (multiple_caveats_problematic)",
+      "confidence 0.8 → 0.6 (numeric_partial_match_capped)",
+      "verdict SUPPORTED → AMBIGUOUS (confidence_in_ambiguous_range)",
+      "marked problematic (verdict_ambiguous)"
+    ],
+    "suggested_reformulation": "Nitriding increases the wear resistance of steel parts by 2-3 times (conservative estimate). For alloyed steels with Cr, Mo, V, Al, the increase can reach 3-5 times."
+  }
+]

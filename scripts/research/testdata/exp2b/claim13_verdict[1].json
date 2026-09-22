@@ -1,0 +1,30 @@
+{
+  "claim_id": 13,
+  "claim_text": "Микротвёрдость измеряется по методу Виккерса с нагрузкой 0.1-0.5 Н",
+  "verdict": "SUPPORTED",
+  "confidence": 0.92,
+  "caveats": [
+    {"text": "The claim states 0.1-0.5 N, but the exact standard microhardness range per ISO 6507-1 is 0.09807-1.961 N. The claim's upper bound (0.5 N) is conservative — loads up to ~1 N (100 gf) are also commonly used.", "severity": "info"},
+    {"text": "Loads below ~0.05 N (<5 gf) are affected by the indentation size effect (ISE) and are not recommended per ASTM E384.", "severity": "info"}
+  ],
+  "sources": [
+    {"title": "Clarke et al. (2005) Surface & Coatings Technology 194, 283-289", "type": "primary", "doi": "10.1016/j.surfcoat.2004.09.018", "trust": 0.9, "relevance": 0.95},
+    {"title": "Meka PhD Thesis — Vickers microhardness of nitrided Fe-2at.%Si, load 50 g (0.49 N)", "type": "primary", "trust": 0.85, "relevance": 0.9},
+    {"title": "ISO 6507-1:2005 / ГОСТ Р ИСО 6507-1-2007 — Vickers hardness test", "type": "textbook", "trust": 0.95, "relevance": 0.85},
+    {"title": "ASTM E384-22 — Microindentation Hardness", "type": "textbook", "trust": 0.95, "relevance": 0.8}
+  ],
+  "reason": "Well-supported by local corpus and international standards. Clarke et al. (2005) use 0.098-0.49 N for nitrided AISI 1045. Meka uses 50 g (0.49 N) and 100 mN (0.1 N). ISO 6507-1 defines microhardness range 0.09807-1.961 N. For thin nitrided layers (10-200 μm), 0.1-0.5 N is appropriate.",
+  "number_comparison": {
+    "claim_value": "0.1-0.5 N",
+    "source_value": "0.09807-1.961 N (ISO 6507-1); 0.098-0.49 N (Clarke et al.)",
+    "deviation": "Claim range is a subset of the standard microhardness range. No deviation."
+  },
+  "fragile_points": [
+    "The claim does not specify dwell time (typically 10-15 s per ISO 6507)",
+    "The claim does not specify that measurements are typically taken on cross-sections"
+  ],
+  "questions_for_author": [
+    "What specific dwell time was used?",
+    "Were measurements taken on cross-sections or on the surface?"
+  ]
+}

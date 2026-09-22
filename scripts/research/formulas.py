@@ -1,20 +1,39 @@
-"""formulas.py: мост у researcher_core.formulas (детект формул/констант).
+FORMULA_MARKERS: dict[str, dict] = {
+    "scherrer": {
+        "patterns": ["scherrer", "шеррер", "шенер", "βcosθ"],
+        "constants": {"K": {"canonical": 0.9, "alternative": 1.0}},
+    },
+    "williamson_hall": {
+        "patterns": ["williamson-hall", "уильямсон-холл", "w-h"],
+        "constants": {},
+    },
+    "dislocation": {
+        "patterns": ["дислокац", "ρ =", "rho", "плотность дислокаций"],
+        "constants": {},
+    },
+    "arrhenius": {
+        "patterns": ["аррениус", "arrhenius", "exp(-ea/(rt))"],
+        "constants": {},
+    },
+}
 
-Совместимость numeric_comparator.py (top-level import).
-Источник истины: scripts/researcher/researcher_core/formulas.py.
-"""
 
-from __future__ import annotations
+def detect_formula(text: str) -> str | None:
+    lowered = text.lower()
+    for name, info in FORMULA_MARKERS.items():
+        for pattern in info["patterns"]:
+            if pattern.lower() in lowered:
+                return name
+    return None
 
-import sys
-from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "researcher"))
-
-from researcher_core.formulas import (  # noqa: E402
-    check_constant,
-    detect_formula,
-    list_formulas,
-)
-
-__all__ = ["detect_formula", "check_constant", "list_formulas"]
+def check_constant(formula_name: str, text: str) -> str:
+    if formula_name == "scherrer":
+        if "0.9" in text:
+            return "formula_consistent"
+        if "1.0" in text or "K=1" in text:
+            return "formula_conflict"
+        return "unknown"
+    if detect_formula(text) == formula_name:
+        return "formula_consistent"
+    return "unknown"

@@ -1,0 +1,83 @@
+;; session-2026-08-10-11.lock — состояние сессии разработки блока «Писатель»
+;; Сохранено: 2026-08-11 ~20:30
+
+(session
+ (date "2026-08-10 — 2026-08-11")
+ (profile resercher)
+ (model deepseek-v4-flash)
+
+ (phases-completed
+  (phase-0 "state_machine + writer_state + discussions" ✅)
+  (phase-1 "sexpr + patch_planner + contracts + meta_select + registry + SKILL" ✅)
+  (phase-2 "Writer Cell: writer-rewriter SKILL + контракты + оверлеп" ✅)
+  (phase-3 "Свита: 4 SKILL (critic/reviewer/editor/proofreader)" ✅)
+  (phase-4 "consistency_check + reverify" ✅)
+  (phase-5 "regression_suite + revert + versions.lock" ✅)
+  (phase-6 "writer_orchestrator + интеграция в run_pipeline.sh" ✅))
+
+ (files-created
+  (scripts/writer
+   (state_machine.py "400+ строк, 10 фаз, чекпоинты, восстановление")
+   (test_state_machine.py "15 тестов, 103 проверки")
+   (sexpr.py "450 строк, S-expression парсер/принтер/DSL")
+   (patch_planner.py "280 строк, детерм. планировщик, --output")
+   (contracts.py "250 строк, 9 S-expression контрактов")
+   (meta_select.py "200 строк, оверлеп + LLM fallback")
+   (consistency_check.py "180 строк, двухслойная приёмка")
+   (reverify.py "100 строк, сравнение вердиктов")
+   (regression_suite.py "200 строк, KS + conformal")
+   (revert.py "100 строк, откат патча")
+   (writer_orchestrator.py "847 строк, сквозной оркестратор")
+   (live_test.py "260 строк, живой тест через AITunnel")
+   (llm_client.py "136 строк, единый LLM-клиент")
+   (config_loader.py "80 строк, загрузчик writer_config.yaml")
+   (writer_config.yaml "62 строки, все параметры")
+   (writer_registry.yaml "240 строк, 5 мета-ролей + 4 доменных")
+   (versions.lock "S-expression, версии моделей/контрактов")
+   (STUBS_LOG.md "журнал заглушек")
+   (test_patch_planner.py "8 тестов, 75 проверок")
+   (test_llm_client.py "тесты LLM-клиента")
+   (test_config_loader.py "тесты конфиг-лоадера")
+   (test_grow_cells.py "тесты роста ячеек"))
+  (skills
+   (writer-rewriter/SKILL.md "писатель-генератор")
+   (writer-critic/SKILL.md "критик-скептик")
+   (writer-reviewer/SKILL.md "рецензент")
+   (writer-editor/SKILL.md "редактор")
+   (writer-proofreader/SKILL.md "корректор"))
+  (discussions
+   (vntr2017-nitride-review/writer_state.json "пилотный стейт: 6 вопросов, 3 патча")
+   (exp1-live/writer_state.json "живой прогон: 5 патчей, 2 итерации")))
+
+ (integration
+  (run_pipeline.sh "флаг --writer, этапы N9-N12.5 между трибуналом и domain_map")
+  (config.yaml "env: HERMES_HOME для MCP writer + literature"))
+
+ (live-test-results
+  (model deepseek-v4-flash)
+  (calls 20 "4 патча × 5 ролей")
+  (cost "~0.49 ₽ за полный цикл")
+  (s-expr-rate "writer 4/4, proofreader 4/4, critic 3/4, reviewer 3/4, editor 2/4")
+  (consistency "4/5 accepted")
+  (regression "gate=accept, 0 регрессий")
+  (key-fix "S-expression промты (200-350 chars) вместо русских (800-1300 chars) — input -50%")
+  (model-choice "flash для всех ролей; pro не помог, qwen3.7-flash — 0% S-expr"))
+
+ (key-decisions
+  (s-expr-prompts "чистый Lisp в системных промтах — модель не уходит в reasoning")
+  (hermes-home-env "критично для MCP literature_server — без него индекс пуст")
+  (session-memory "writer_state.json + state_machine — чекпоинты после каждой фазы")
+  (question-ids "q_<gi>_<n> — детерминированные, переживают перезапуски")
+  (suite-on-deepseek "свита на flash, P3 Polza/Vega отложен"))
+
+ (next-steps
+  (codera "достройка пайплайна ресерчера до этапа 8.5 — domain_map/overlay.json")
+  (golden "golden.json + reference_texts для калибровки conformal")
+  (full-run "живой прогон run_pipeline.sh --writer на реальном автореферате")
+  (editor-fix "editor всё ещё reasoning ~50% — нужен более жёсткий S-expression промт")))
+
+ (docs-updated
+  (49-writer-master-plan.md "секции 3.1c, 3.7, 6, 7")
+  (48-writer-implementation-plan.md "статусы фаз, таблица файлов")
+  (35-mcp-search-servers.md "секция 0: локальный literature MCP")
+  (PILOT-REPORT-2026-08-10.md "итоговый отчёт пилота")))

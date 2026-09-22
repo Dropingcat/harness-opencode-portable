@@ -15,6 +15,11 @@
     2. Как скрипт: python3 numeric_comparator.py <claim.json> <sources.json> <output.json>
 """
 import sys
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+if hasattr(sys.stderr, 'reconfigure'):
+    sys.stderr.reconfigure(encoding='utf-8', errors='replace')
+
 import json
 import re
 from pathlib import Path

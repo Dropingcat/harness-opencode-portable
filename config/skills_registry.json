@@ -39,7 +39,8 @@
     "fluid-dynamics",
     "diffdock",
     "bayesian-inference",
-    "market-research-reports"
+    "market-research-reports",
+    "sci-bot"
   ],
   "reference_only_skills": [
     "infographics",

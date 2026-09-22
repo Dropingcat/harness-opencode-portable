@@ -1,0 +1,65 @@
+# writer_config.yaml
+# Единый конфиг блока «Писатель»: все параметры LLM, роста по графу,
+# регрессионного гейта, consistency, бюджета, meta-select и стейта.
+# Читается через config_loader.get('path.to.param').
+
+llm:
+  provider: aitunnel
+  base_url: https://api.aitunnel.ru/v1/
+  key_env: AITUNNEL_KEY
+  default_model: deepseek-v4-flash
+  fallback_model: deepseek-v4-pro
+  retry_on_content_none: true
+  max_retries: 2
+  timeout_seconds: 120
+  models:
+    critic: deepseek-v4-flash
+    reviewer: deepseek-v4-flash
+
+temperature:
+  writer: 0.3
+  critic: 0.2
+  reviewer: 0.2
+  editor: 0.3
+  proofreader: 0.1
+  meta_select: 0.2
+  reverify: 0.0
+
+max_tokens:
+  writer: 2048
+  critic: 1024
+  reviewer: 1024
+  editor: 1024
+  proofreader: 1024
+  meta_select: 512
+  reverify: 2048
+
+growth:
+  max_hops: 3
+  max_nodes: 15
+  max_tokens: 40000
+
+regression:
+  alpha: 0.05
+  conformal_fallback_ratio: 0.75
+  conformal_majority_ratio: 0.5
+  semantic_agreement_weight: 0.6
+  ks_min_groups: 5
+
+consistency:
+  hard_min_justification: 10
+  content_loss_threshold: 0.3
+  soft_warnings_to_fail: 2
+
+budget:
+  max_cost_rub: 20.0
+  max_cost_per_iteration_rub: 5.0
+  default_cell_budget_rub: 0.5
+  waves_parallel: true
+
+meta_select:
+  min_score: 1
+  use_llm_when_ambiguous: true
+
+state:
+  max_iterations: 3

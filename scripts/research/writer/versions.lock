@@ -1,0 +1,62 @@
+;; versions.lock — метаданные версий промтов/моделей/провайдеров
+;; Позволяет отличить «сломалась модель» от «сломалась правка» при регрессии.
+;; Обновляется при каждом изменении конфигурации.
+
+(versions
+  (writer-block
+    (version . "0.1.0")
+    (date . "2026-08-10")
+    (profile . "resercher"))
+
+  (models
+    (generator
+      (model . "deepseek-v4-flash")
+      (provider . "aitunnel-flash")
+      (temperature . 0.3)
+      (max-tokens . 4096))
+    (critic
+      (model . "deepseek-v4-flash")
+      (provider . "aitunnel-flash")
+      (temperature . 0.2)
+      (max-tokens . 2048))
+    (reviewer
+      (model . "deepseek-v4-pro")
+      (provider . "aitunnel-flash")
+      (temperature . 0.2)
+      (max-tokens . 2048))
+    (editor
+      (model . "deepseek-v4-flash")
+      (provider . "aitunnel-flash")
+      (temperature . 0.3)
+      (max-tokens . 2048))
+    (proofreader
+      (model . "deepseek-v4-flash")
+      (provider . "aitunnel-flash")
+      (temperature . 0.1)
+      (max-tokens . 1024)))
+
+  (contracts
+    (writer . "v1")
+    (critic . "v1")
+    (reviewer . "v1")
+    (editor . "v1")
+    (proofreader . "v1")
+    (consistency . "v1")
+    (reverify . "v1")
+    (regression . "v1"))
+
+  (skills
+    (writer-rewriter . "v0.1.0")
+    (writer-critic . "v0.1.0")
+    (writer-reviewer . "v0.1.0")
+    (writer-editor . "v0.1.0")
+    (writer-proofreader . "v0.1.0"))
+
+  (parameters
+    (max-hops . 3)
+    (max-nodes . 15)
+    (max-tokens-per-cell . 40000)
+    (max-cost-per-cell-rub . 0.5)
+    (max-iterations . 3)
+    (max-cost-total-rub . 20.0)
+    (conformal-alpha . 0.05)))

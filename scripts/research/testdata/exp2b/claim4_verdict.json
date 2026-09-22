@@ -1,0 +1,35 @@
+{
+  "claim_id": 4,
+  "claim_text": "The process of nitriding [of steels] is conducted at temperatures 500-570°C in an ammonia atmosphere.",
+  "verdict": "SUPPORTED",
+  "confidence": 0.85,
+  "caveats": [
+    {"text": "The 500-570°C range is standard for gas nitriding specifically. Other nitriding methods (plasma, salt bath) operate at different temperature ranges and atmospheres.", "severity": "info"},
+    {"text": "Some authoritative sources give a narrower range of 495-565°C (Neal Systems) or 500-530°C (ScienceDirect), while others extend the upper limit to 580-650°C (Miheu, Thermal Processing Magazine). The 570°C upper bound is a commonly cited textbook value but not universal.", "severity": "warning"},
+    {"text": "At temperatures above ~560-570°C, the compound layer can become porous due to increased ammonia dissociation and nitrogen supersaturation.", "severity": "info"},
+    {"text": "The claim implicitly refers to gas nitriding. Plasma nitriding can operate from 340-590°C, and salt bath nitriding typically at ~570°C using molten cyanide salts rather than ammonia.", "severity": "warning"}
+  ],
+  "sources": [
+    {"title": "Neal Systems — Gas Nitriding technical guide", "type": "primary", "trust": 0.90, "relevance": 0.95},
+    {"title": "Wikipedia — Nitriding", "type": "review", "trust": 0.80, "relevance": 0.90},
+    {"title": "ScienceDirect — Gas Nitriding overview", "type": "review", "trust": 0.85, "relevance": 0.90},
+    {"title": "Thermal Processing Magazine — Temperature effect on nitride layers", "type": "primary", "trust": 0.85, "relevance": 0.85},
+    {"title": "tehnoinfa.ru — Подготовка поверхности к азотированию", "type": "textbook", "trust": 0.80, "relevance": 0.95},
+    {"title": "БРЭ — Азотирование", "type": "textbook", "trust": 0.85, "relevance": 0.80}
+  ],
+  "reason": "The 500-570°C range in an ammonia atmosphere is a standard textbook description of gas nitriding of steels, confirmed by multiple independent sources. The range is broadly correct but the upper bound varies across sources (530-650°C depending on specific process conditions).",
+  "number_comparison": {
+    "claim_value": "500-570°C",
+    "source_value": "495-580°C (consensus range across sources)",
+    "deviation": "Minor — the claim's 570°C upper bound is within the commonly cited range"
+  },
+  "fragile_points": [
+    "The 570°C upper limit is not universal — many authoritative sources cite 530°C or 565°C as the practical maximum",
+    "The claim does not distinguish between gas nitriding and other nitriding methods",
+    "At temperatures approaching 590°C, the Fe-N eutectoid transformation can occur"
+  ],
+  "questions_for_author": [
+    "Does the claim refer specifically to gas nitriding (ammonia atmosphere) or to nitriding in general?",
+    "Is the 570°C upper bound taken from a specific textbook or standard (e.g., Lakhtin's classification)?"
+  ]
+}

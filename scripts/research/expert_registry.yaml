@@ -1,0 +1,64 @@
+# Реестр ролей судей (Волна 2, слой 0.6)
+# Роль назначается узлу дерева, если есть оверлеп keywords узла ↔ markers роли.
+# markers — лемматизированные корни/подстроки (как в topics_tree.py).
+
+roles:
+  - id: physicist
+    label: физик-кристаллограф
+    focus: фазовые превращения, параметр решётки, микроструктура
+    markers: [фазов, phase, решётк, lattice, кристалл, crystal, окр, зерн, grain, дифракц, diffraction, scattering, когерентн, микродеформац, microdeformation, межплоскост, interplanar, кристаллит, rystallite]
+    stance: neutral
+
+  - id: metallurgist
+    label: металловед / материаловед
+    focus: сплавы, стали, азотирование, термическая обработка
+    markers: [стал, steel, сплав, alloy, азотирован, nitriding, нитрид, nitride, карбид, carbide, r18, вкс, 08х18н10т, желез, iron, закалк, отпуск, мартенсит, austenit, аустенит, fe-n, nitrided, эталон, reference]
+    stance: neutral
+
+  - id: chemist
+    label: физико-химик
+    focus: химический состав, соединения, фазы, диффузия
+    markers: [химич, chemical, состав, composition, нитрид, nitride, карбид, carbide, диффуз, diffusion, азот, nitrogen, легир, doping, концентрац, concentration]
+    stance: neutral
+
+  - id: mathematician
+    label: математик-моделёр
+    focus: регуляризация, численные методы, аппроксимация
+    markers: [регуляриз, regulariz, тихонов, tikhonov, модель, model, численн, numerical, аппроксимац, approximation, итерац, iteration, алгоритм, algorithm, фредгольм, fredholm, l-крив, l-curve, разрешен, resolution]
+    stance: neutral
+
+  - id: methodologist
+    label: методолог измерений
+    focus: методы XRD, Ритвельд, деконволюция, обработка результатов
+    markers: [метод, method, xrd, рентген, x-ray, ритвельд, rietveld, деконволюц, deconvolution, профил, profile, съёмк, scan, дифрактометр, diffractometer, полнопрофильн, full-profile, рентгеноструктурн]
+    stance: neutral
+
+  - id: statistician
+    label: статистик
+    focus: достоверность, погрешности, объём выборки, значимость
+    markers: [погрешн, error, точн, accuracy, статистик, statistic, значимост, significance, дисперс, dispersion, доверит, confidence, ошибк, uncertainty]
+    stance: neutral
+
+  - id: bibliographer
+    label: библиограф / источниковед
+    focus: наличие источников, полнота доказательств, цитирование
+    markers: [публикац, publication, источник, source, doi, литератур, literature, ссылк, citation, библиограф, bibliography]
+    stance: neutral
+
+  - id: skeptic
+    label: скептик
+    focus: поиск противоречий и недоказанных утверждений
+    markers: []  # назначается каждому узлу (пара)
+    stance: critical
+
+  - id: advocate
+    label: адвокат
+    focus: поиск подтверждений и защита утверждения
+    markers: []  # назначается каждому узлу (пара)
+    stance: supportive
+
+  - id: aggregator
+    label: агрегатор
+    focus: сбор и взвешивание вердиктов судей, итоговый вердикт
+    markers: []  # итоговая роль: каждый claim получает бриф (не оверлеп)
+    stance: neutral

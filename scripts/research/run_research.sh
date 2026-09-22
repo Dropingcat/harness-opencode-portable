@@ -32,12 +32,17 @@
 
 set -uo pipefail
 
-# === ПУТИ (детерминированные, абсолютные) ===
-SCRIPTS="/home/orangepi/projects/claimeai-service/scripts"
-VERIF="/home/orangepi/projects/claimeai-service/scripts/verification"
-RULES_DEFAULT="/home/orangepi/.hermes/profiles/resercher/rules_balanced.yaml"
-SHARED="/home/orangepi/.config/opencode/shared/research-orchestration-process.md"
-BROWSER_VENV="/home/orangepi/.hermes/venvs/browser-mcp/bin/python"
+# === ПУТИ (детерминированные, из окружения harness с fallback на относительные) ===
+# Приоритет: env-переменные harness (RESEARCH_SCRIPTS_ROOT / RESEARCH_RULES_PATH /
+# OPENCODE_HARNESS_ROOT), иначе относительные пути от текущего скрипта.
+SCRIPT_DIR_ABS="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPTS="${RESEARCH_SCRIPTS_ROOT:-$SCRIPT_DIR_ABS}"
+VERIF="$SCRIPTS/verification"
+RULES_DEFAULT="${RESEARCH_RULES_PATH:-$SCRIPTS/rules_balanced.yaml}"
+HARNESS_ROOT="${OPENCODE_HARNESS_ROOT:-$(dirname "$SCRIPT_DIR_ABS")}"
+SHARED="${RESEARCH_SHARED_METHODOLOGY:-$HARNESS_ROOT/shared/research-orchestration-process.md}"
+# BROWSER_VENV: только для Linux (browser-MCP venv); на Windows не используется.
+BROWSER_VENV="${BROWSER_VENV:-}"
 
 # === Параметры по умолчанию ===
 INPUT=""
