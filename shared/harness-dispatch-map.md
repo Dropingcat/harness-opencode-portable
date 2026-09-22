@@ -38,6 +38,8 @@
 4. DOI → **CrossRef-gate** → `downloader.py doi` (Sci-Hub)
 
 > SearXNG (`127.0.0.1:8888`) — НЕ поднят (нет Docker). TD-128. Не жди его: используй browser-MCP/webfetch напрямую.
+>
+> **MCP-серверы** (arxiv_search/openalex_search/extract_document/searxng_search) подключены в `.opencode/.mcp.json` (генератор `scripts/router/gen_mcp_config.py`), но видны субагентам только ПОСЛЕ РЕСТАРТА opencode (MCP инжектятся при старте сессии). TD-155. Резервный канал (работает всегда): `webfetch` → `https://export.arxiv.org/api/query?search_query=...` / `https://api.openalex.org/works?search=...`.
 
 ## Шаг 3: Блоки/долги — где смотреть
 

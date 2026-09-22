@@ -1,7 +1,7 @@
 # Tech Debt Master — единый реестр проекта
 
 Дата: 2026-09-22
-Всего: 180 | open: 129 | closed: 51
+Всего: 182 | open: 130 | closed: 52
 
 Префиксы: CD-* Coder, WR-* Writer, RS-* Researcher, PL-* plugin, TD-* общий.
 
@@ -138,6 +138,7 @@
 | TD-149 | high | research-orchestrator | Найти аналог модуля глубокого исследования (как GPT Deep Research / Qw | - |
 | TD-150 | high | research-orchestrator | Агент не может прочитать сессию субагента (субагентская ветка opencode | - |
 | TD-151 | high | research-orchestrator | Резолвер извлекает только первые 4 страницы (свойства на других страни | - |
+| TD-155 | high | research-orchestrator | MCP-tools подключены в .mcp.json (4 сервера), но НЕ инжектированы в те | - |
 
 ## Закрытые (closed)
 
@@ -194,3 +195,4 @@
 | TD-147 | Проверить авто-добавление техдолгов (tech_debt_cli auto) на дупликаты  | - |
 | TD-152 | Универсальный PDF-resolver с каскадом источников: агент вручную боретс | - |
 | TD-153 | Обход DNS-блокировок в downloader: ENOTFOUND polza.ai / doi.org / SINT | - |
+| TD-154 | MCP-инструменты не проброшены в сессию субагентов + RESEARCH_WORKSPACE | - |
