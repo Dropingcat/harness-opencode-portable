@@ -25,6 +25,7 @@
 | `downloader.py` | скачать статью по DOI (CrossRef+Sci-Hub), URL, извлечь текст PDF | `downloader.py doi --doi ... --out ...` / `url` / `extract --pdf ...` |
 | `session_analyzer.py` | разобрать opencode-сессию (dump/tools/errors/writes/text) | `python scripts/tools/session_analyzer.py <cmd> <session.json>` |
 | `chroma_indexer.py` | индекс/поиск по локальному корпусу (ChromaDB) | `python scripts/tools/chroma_indexer.py search --query "..."` |
+| `dom_builder.py` | детерминированный билдер research-DOM/артефактов (TD-143) | `dom_builder.py update-claim --claim c0 --citations "[...]"` / `sync-citations --cmap citations_map.json` / `report` / `verify` / `stats` |
 
 ## Шаг 2: Поиск источников — порядок (жёсткий)
 
@@ -54,6 +55,8 @@ Dry-run: `--dry-run` (агенты не вызываются).
 - [ ] Я знаю, что SearXNG недоступен (TD-128) и ищу через browser-MCP/webfetch?
 - [ ] Для сбора нормативки (ГОСТ/ТУ) — это source-collection, НЕ полный BRICKS-цикл (TD-122)?
 - [ ] Техдолги — через `tech_debt_cli.py`, не вручную?
+- [ ] DOM/артефакты (ch1_dom.json, citations_map, отчёты) — через `dom_builder.py`, не ad-hoc скриптами? (TD-143)
+- [ ] Семпоиск — через `chroma_indexer.py`, не вручную? (TD-142)
 
 ## Авто-фиксация блока (TD-144) — зафиксировать за 1 шаг
 
