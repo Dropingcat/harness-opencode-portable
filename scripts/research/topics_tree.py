@@ -195,10 +195,15 @@ def load_groups(groups_path):
     Группировка по original_index — тот же ключ, что у claim_groups.json.
     """
     if Path(groups_path).is_file():
-        data = json.load(open(groups_path, encoding="utf-8"))
-        if isinstance(data, dict) and "groups" in data:
-            return data["groups"]
-        return data
+        # TD-115: битый/пустой claim_groups.json -> fallback на claims.json (не краш)
+        try:
+            data = json.load(open(groups_path, encoding="utf-8"))
+            if isinstance(data, dict) and "groups" in data:
+                return data["groups"]
+            return data
+        except (json.JSONDecodeError, ValueError):
+            print(f"WARN: {groups_path} повреждён/пуст, fallback на claims.json", file=sys.stderr)
+            # продолжить к фолбэку ниже
     # фолбэк: генерируем из claims.json (файл рядом с groups_path)
     claims_path = str(groups_path).replace("claim_groups.json", "claims.json")
     if not Path(claims_path).is_file():

@@ -3,8 +3,8 @@
   "updated": "2026-09-22",
   "authority_note": "Canonical registry migrated from патчи/миграция в плагин/tech_debt_current.json (65 records). project_context.py counts status=open. CLOSED_REPORTED maps to closed; RECONCILE_REQUIRED stays open until exact-tree verification.",
   "counts": {
-    "total": 175,
-    "open": 134,
+    "total": 176,
+    "open": 135,
     "closed": 41
   },
   "debts": [
@@ -2901,6 +2901,22 @@
       "source_status": "open",
       "notes": "Риск: auto --desc 'X сломалось' вызывается многократно → N долгов про X. Нужен дедуп-гейт: (1) при auto проверка существующих похожих (по title/owner/severity), (2) предложение 'уже есть TD-XXX, обновить вместо добавления', (3) порог ложных срабатываний (эвристика может неверно определить kind/severity). Тест: прогон серии описаний → проверка отсутствия дублей.",
       "progress": "2026-09-22: РЕШЕНО. tech_debt_cli auto: дедуп-гейт (TD-147) — (1) открытый похожий (>=2 общих токена по title, ratio>=0.35) → блокировка + подсказка update; (2) закрытый похожий → предупреждение о РЕГРЕССИИ + блокировка (--force для дубликата, update --status open для реанимации). Тесты: новый -> OK, повтор -> блок, закрытый -> блок-регрессия. Прошёл проверку на реальных данных."
+    },
+    {
+      "id": "TD-149",
+      "owner": "research-orchestrator",
+      "presentation_category": "ACTIVE",
+      "sunset_at": "2027-09-22",
+      "title": "Найти аналог модуля глубокого исследования (как GPT Deep Research / Qwen Research) для внедрения в harness — многошаговое автономное исследование с планом, итеративным поиском и синтезом",
+      "status_detail": "OPEN_CURRENT",
+      "kind": "architecture",
+      "status": "open",
+      "severity": "high",
+      "acceptance": "Найден и задокументирован референс-аналог (архитектура deep-research: план→итеративный поиск→синтез); спроектирован режим deep-research для harness (какие BRICKS/агенты переиспользуются, что нового); есть прототип или каркас; решение зафиксировано в долгах/README",
+      "area": "",
+      "source_status": "open",
+      "notes": "Идея: harness-исследователь сейчас ведёт BRICKS-цикл верификации текста (клаймы→источники→вердикты), но нет 'глубокого исследования' в стиле GPT Deep Research/Qwen: пользователь задаёт вопрос → агент строит план → итеративно ищет/читает/уточняет (многошаговый search-retrieve-revise) → синтезирует отчёт с цитатами. Нужно: (1) изучить архитектуру deep-research модулей (GPT Deep Research, Qwen Deep Research / Qwen-Research, OpenDeepResearch, gpt-researcher), (2) спроектировать аналог поверх существующего стека (run_research.py BRICKS + source-fetcher + downloader + ChromaDB + dispatch-map), (3) внедрить как режим 'deep-research' в research-контур.",
+      "progress": "2026-09-22: создано через tech_debt_cli.py"
     },
     {
       "id": "RS-001",
