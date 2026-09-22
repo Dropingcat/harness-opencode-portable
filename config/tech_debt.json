@@ -3,9 +3,9 @@
   "updated": "2026-09-22",
   "authority_note": "Canonical registry migrated from патчи/миграция в плагин/tech_debt_current.json (65 records). project_context.py counts status=open. CLOSED_REPORTED maps to closed; RECONCILE_REQUIRED stays open until exact-tree verification.",
   "counts": {
-    "total": 169,
+    "total": 170,
     "open": 138,
-    "closed": 31
+    "closed": 32
   },
   "debts": [
     {
@@ -2805,6 +2805,22 @@
       "source_status": "open",
       "notes": "Проверено 2026-09-22: resolve('Проведи верификацию') = academic-research/research-orchestrator (core). harness_run с тем же task = no_route_match (policy_hash 08066246 — свежий). resolve_route.py не менялся с 18.09, pycache старый. Подозрение: bridge_peer стартовал до правок и держит старый импорт, или кириллица бьётся при передаче task через NDJSON-протокол плагина.",
       "progress": "2026-09-22: создано через tech_debt_cli.py"
+    },
+    {
+      "id": "TD-142",
+      "owner": "code-orchestrator",
+      "presentation_category": "RESOLVED",
+      "sunset_at": "2027-09-22",
+      "title": "Разные Python-окружения: chromadb (1.5.9) доступен только в системном python (hermes-agent venv), НЕ в harness venv (.venv) — harness-скрипты (chroma_indexer) падают на venv, работают на системном; агент путается какой python запускать",
+      "status_detail": "CLOSED",
+      "kind": "infrastructure",
+      "status": "closed",
+      "severity": "medium",
+      "acceptance": "chroma_indexer search/index работает из любого python (harness venv или системный); агент не гадает какой python; единая команда",
+      "area": "",
+      "source_status": "open",
+      "notes": "Системный: C:\\Users\\Arhys\\AppData\\Local\\hermes\\hermes-agent\\venv\\Scripts\\python.exe (chromadb 1.5.9). Harness venv: E:\\Documents\\Документы\\doc_Opencode_agern-new\\.venv (нет chromadb). Старый semsearch.py (C:\\Temp\\opencode) — та же логика, что chroma_indexer.py search. Решение: (а) установить chromadb в harness venv (тяжёлые зависимости), ИЛИ (б) chroma_indexer определяет рабочий python (с chromadb) автоматически, ИЛИ (в) venv-обёртка.",
+      "progress": "2026-09-22: РЕШЕНО. chroma_indexer.py: _ensure_chromadb() — если chromadb нет в текущем python, перевызывает себя через системный hermes python (FALLBACK_PYTHONS). Проверено: запуск через harness venv → авто-перезапуск → 14070 чанков. Единая команда, агент не гадает."
     },
     {
       "id": "RS-001",
