@@ -33,6 +33,34 @@ DEFAULT_COLLECTION = os.environ.get("CHROMA_COLLECTION", "papers")
 DEFAULT_BATCH = int(os.environ.get("CHROMA_BATCH", "2000"))
 MAX_BATCH = 5461  # chroma 1.5.9 лимит
 
+# Python-окружения: chromadb есть не везде (TD-142). Если chromadb недоступен в
+# текущем python — перевызвать себя через python, где он есть (системный hermes).
+FALLBACK_PYTHONS = [
+    r"C:\Users\Arhys\AppData\Local\hermes\hermes-agent\venv\Scripts\python.exe",
+    "python",
+]
+
+
+def _ensure_chromadb() -> None:
+    """Если chromadb недоступен — перевызвать скрипт через python с chromadb."""
+    try:
+        import chromadb  # noqa: F401
+        return
+    except ImportError:
+        pass
+    for py in FALLBACK_PYTHONS:
+        try:
+            import subprocess
+            probe = subprocess.run([py, "-c", "import chromadb"], capture_output=True, timeout=15)
+            if probe.returncode == 0:
+                print(f"INFO: chromadb нет в текущем python, перезапуск через {py} (TD-142)", file=sys.stderr)
+                subprocess.run([py, *sys.argv], env={**os.environ, "PYTHONIOENCODING": "utf-8"})
+                raise SystemExit(0)
+        except (subprocess.TimeoutExpired, FileNotFoundError):
+            continue
+    print("ERROR: chromadb не найден ни в одном python. pip install chromadb", file=sys.stderr)
+    raise SystemExit(3)
+
 
 def extract_text(path: Path) -> str:
     try:
@@ -140,6 +168,7 @@ def cmd_reset(args) -> int:
 
 
 def main() -> int:
+    _ensure_chromadb()
     ap = argparse.ArgumentParser(description="Канонический индексер ChromaDB (TD-104/TD-127)")
     ap.add_argument("--db", default=DEFAULT_DB)
     ap.add_argument("--collection", default=DEFAULT_COLLECTION)
