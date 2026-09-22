@@ -192,9 +192,10 @@ def test_c3_rules_yaml_all_keys_used():
 
     dead = []
 
-    if '"supported"' not in pp and "thresholds" in rules:
+    thresholds = rules.get("thresholds", {})
+    if "supported" in thresholds and '"supported"' not in pp:
         dead.append("thresholds.supported (в rules, не читается post_processor)")
-    if '"ambiguous"' not in pp:
+    if "ambiguous" in thresholds and '"ambiguous"' not in pp:
         dead.append("thresholds.ambiguous (в rules, не читается post_processor)")
     if rules.get("problematic_rules", {}).get("caveats_gte_2") is not None \
             and "caveats_gte_2" not in pp:
@@ -226,22 +227,42 @@ def test_c4_config_matches_code():
 
 
 def test_c5_id_space_group_coverage():
-    """Вердикты (claim_id) находят свой узел в дереве (original_index)."""
+    """Вердикты (claim_id) находят свой узел в дереве (original_index).
+
+    id-пространства: verdicts.claim_id (порядковый) vs topics.claims (original_index).
+    Связь устанавливается через claim_text == claims[].text (как в exp1).
+    """
     artifacts = run_det_chain()
     rc, tt_path = artifacts["topics"]
     assert rc == 0 and tt_path.exists()
     tt = load_json(tt_path)
     verdicts = load_json(EXP1_VERDICTS)
+    claims = load_json(EXP1_CLAIMS)
 
     node_claims = set()
-
     def walk(n):
         node_claims.update(str(c) for c in n.get("claims", []))
         for c in n.get("children", []):
             walk(c)
     walk(tt["topics_tree"])
 
-    matched = sum(1 for v in verdicts if str(v.get("claim_id")) in node_claims)
+    # маппинг claim_id -> original_index через claim_text == claims[].text
+    validated = claims.get("claims", {}).get("validated", [])
+    text_to_idx = {}
+    for cl in validated:
+        t = (cl.get("text") or "").strip().lower()[:80]
+        text_to_idx.setdefault(t, str(cl.get("original_index")))
+    missing_map = []
+    matched = 0
+    for v in verdicts:
+        t = (v.get("claim_text") or "").strip().lower()[:80]
+        oi = text_to_idx.get(t)
+        if oi is None:
+            missing_map.append(v.get("claim_id"))
+            continue
+        if oi in node_claims:
+            matched += 1
+    assert not missing_map, f"claim_text не мапится на original_index: {missing_map}"
     assert matched == len(verdicts), \
         f"claim_id ↔ original_index расходятся: совпало {matched}/{len(verdicts)}"
 

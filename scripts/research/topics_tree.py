@@ -207,10 +207,13 @@ def load_groups(groups_path):
     # фолбэк: генерируем из claims.json (файл рядом с groups_path)
     claims_path = str(groups_path).replace("claim_groups.json", "claims.json")
     if not Path(claims_path).is_file():
-        raise FileNotFoundError(
-            f"Нет ни {groups_path}, ни {claims_path} — нельзя построить дерево"
-        )
-    data = json.load(open(claims_path, encoding="utf-8"))
+        print(f"WARN: нет {groups_path} и {claims_path} — пустое дерево", file=sys.stderr)
+        return {}
+    try:
+        data = json.load(open(claims_path, encoding="utf-8"))
+    except (json.JSONDecodeError, ValueError):
+        print(f"WARN: {claims_path} повреждён/пуст — пустое дерево", file=sys.stderr)
+        return {}
     validated = data.get("claims", {}).get("validated", [])
     groups = {}
     for v in validated:
