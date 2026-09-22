@@ -4,8 +4,8 @@
   "authority_note": "Canonical registry migrated from патчи/миграция в плагин/tech_debt_current.json (65 records). project_context.py counts status=open. CLOSED_REPORTED maps to closed; RECONCILE_REQUIRED stays open until exact-tree verification.",
   "counts": {
     "total": 178,
-    "open": 134,
-    "closed": 44
+    "open": 133,
+    "closed": 45
   },
   "debts": [
     {
@@ -2403,18 +2403,18 @@
     {
       "id": "TD-118",
       "owner": "research-orchestrator",
-      "presentation_category": "ACTIVE",
+      "presentation_category": "RESOLVED",
       "sunset_at": "2026-11-30",
       "title": "Таймауты агентов BRICKS-runner: source-fetcher упал по timeout 600с при медленной сети к polza.ai (DNS-флапы, ENOTFOUND polza.ai в логах); каждый агент ~5-10 мин — полный цикл не укладывается в разумное время",
-      "status_detail": "OPEN_CURRENT",
+      "status_detail": "CLOSED",
       "kind": "robustness",
-      "status": "open",
+      "status": "closed",
       "severity": "high",
       "acceptance": "Агенты BRICKS-runner устойчивы к медленной сети: ретраи (3 попытки с backoff), таймауты конфигурируемы, распараллеливание независимых агентов (source-fetcher по claim'ам), DNS-fallback (полный FQDN в --model, проверка доступности перед вызовом); полный цикл BRICK 1-10 укладывается в управляемое время",
       "area": "run_research.py (run_agent timeout/retry), source-fetcher per-claim параллельно, OPENCODE_MODEL полный id, polza.ai доступность",
       "source_status": "open",
       "notes": "Фальсификация 2026-09-22: BRICK 1 SPLIT прошёл за ~5 мин (6 клаймов), BRICK 2 CASCADE за ~2 мин (5 источников), source-fetcher по claim 0 — timeout 600с (сеть). В логах opencode: 'AI_APICallError: Cannot connect to API: getaddrinfo ENOTFOUND polza.ai' — DNS-флапы. Test-NetConnection polza.ai:443 = True, но Resolve-DnsName пуст — нестабильный DNS.",
-      "progress": "2026-09-22: зафиксировано по E2E-прогону."
+      "progress": "2026-09-22: РЕШЕНО. run_research.py run_agent: ретраи (2 попытки) с backoff (10s/30s) при timeout/сетевых сбоях/DNS-флапах polza.ai; stderr пишется в <agent>_stderr.log после всех попыток. Dry-run работает. Таймауты остаются конфигурируемыми (timeout=600)."
     },
     {
       "id": "TD-119",
