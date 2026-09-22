@@ -4,8 +4,8 @@
   "authority_note": "Canonical registry migrated from патчи/миграция в плагин/tech_debt_current.json (65 records). project_context.py counts status=open. CLOSED_REPORTED maps to closed; RECONCILE_REQUIRED stays open until exact-tree verification.",
   "counts": {
     "total": 174,
-    "open": 142,
-    "closed": 32
+    "open": 138,
+    "closed": 36
   },
   "debts": [
     {
@@ -1577,11 +1577,11 @@
       "owner": "code-orchestrator",
       "sunset_at": "2026-09-24",
       "acceptance": "harness_run без route и bridge_peer с той же задачей дают одинаковый маршрут (детерминированно); peer-процесс инструмента идентифицирован; прогон в чистом окружении воспроизводим",
-      "status": "open",
-      "status_detail": "OPEN_CURRENT",
-      "presentation_category": "ACTIVE",
+      "status": "closed",
+      "status_detail": "CLOSED",
+      "presentation_category": "RESOLVED",
       "source_status": "open",
-      "progress": "2026-09-17: harness_run (эта среда) без route -> no_route_match для непустых задач; прямой bridge_peer (тот же snapshot, policy_hash 8910fd) -> academic-research/code-implementation. Расхождение воспроизведено стабильно. Вероятная причина: инструмент исполняет другой peer-процесс (кэш/транспорт). Требуется идентификация peer, исправление до production.",
+      "progress": "ДУБЛИКАТ TD-141 (канонический): harness_run no_route_match при рабочем core resolve. Тот же баг, TD-141 свежее с полным контекстом. 2026-09-22 дедупликация.",
       "notes": "Прогоны сценариев временно выполняются с явным route; авто-детект требует фикса до прод-версии. Нужен четкий fallback или безальтернативный роутинг."
     },
     {
@@ -2115,18 +2115,18 @@
     {
       "id": "TD-100",
       "owner": "research-orchestrator",
-      "presentation_category": "ACTIVE",
+      "presentation_category": "RESOLVED",
       "sunset_at": "2026-10-25",
       "title": "RESEARCH_RUNNER_SH — старый легаси-переменная в окружении research-orchestrator; убрать и заменить на актуальный раннер",
-      "status_detail": "OPEN_CURRENT",
+      "status_detail": "CLOSED",
       "kind": "workflow",
-      "status": "open",
+      "status": "closed",
       "severity": "medium",
       "acceptance": "RESEARCH_RUNNER_SH удалена из окружения/конфига research-orchestrator; актуальный путь раннера (scripts/researcher/... или research runner) зафиксирован в research-orchestration-process.md; прогон исследовательского цикла работает без обращения к легаси-переменной",
       "area": "research-orchestrator окружение (env/конфиг), research-orchestration-process.md, scripts/researcher/",
       "source_status": "open",
       "notes": "RESEARCH_RUNNER_SH — легаси (болтается в окружении ресерчера). Требуется аудит: где объявлена, кто читает, чем заменить (актуальный детерминированный раннер исследовательского цикла).",
-      "progress": "2026-09-18: зафиксировано по обращению пользователя."
+      "progress": "ДУБЛИКАТ TD-116 (канонический: перенос runner). RESEARCH_RUNNER_SH легаси — покрыто TD-116 (run_research.py). 2026-09-22 дедупликация."
     },
     {
       "id": "TD-101",
@@ -2541,7 +2541,7 @@
       "acceptance": "Есть детерминированный критерий завершения задачи (definition of done): артефакты созданы + валидированы + зафиксированы в реестре (DOM/tech_debt/citations_map) + закоммичены; агент останавливается при достижении DoD, а не «когда станет достаточно хорошо»; есть guard от бесконечных итераций (лимит витков/таймаут/эскалация на человеческое решение); самооценка «недостаточно хорошо» эскалируется в открытый техдолг, а НЕ блокирует завершение задачи",
       "area": "agents/research-orchestrator.md (Workflow/ритуал закрытия), agents/writing-orchestrator.md, agents/code-orchestrator.md, run_research.py, shared/orchestration-thread-process.md (ритуал закрытия), definition-of-done",
       "source_status": "open",
-      "notes": "Признание агента 2026-09-22: «я ещё недостаточно хорошо реализовал код/поиск/исследование/оформил техдолги/аудит». Симптомы: (1) задача «собрать ГОСТы/ТУ» не завершается — агент ищет всё более совершенный подход; (2) аудит/техдолги переписываются повторно вместо фиксации; (3) исследование расширяется без критерия остановки. Это класс проблемы «внутренний критик блокирует закрытие», а не «работа не доделана». Связано с TD-122 (нет контракта на класс задачи). Решение: жёсткий DoD + guard итераций + эскалация «хочу улучшить» в отдельный долг.",
+      "notes": "СВЯЗЬ: перекрывается с TD-145 (аудит повторов — механизм, который должен ловить перфекционизм автоматически) и TD-143 (почему агент не использует инструменты). 2026-09-22: НЕ дубликат (разные аспекты), но TD-145 — это решение для TD-126.",
       "progress": "2026-09-22: зафиксировано."
     },
     {
@@ -2729,18 +2729,18 @@
     {
       "id": "TD-137",
       "owner": "code-orchestrator",
-      "presentation_category": "ACTIVE",
+      "presentation_category": "RESOLVED",
       "sunset_at": "2027-09-22",
       "title": "Канонический стек tools/ создан: scripts/tools/tech_debt_cli.py (add/close/update/get/list/next/master) заменяет ad-hoc add_td*.py скрипты",
-      "status_detail": "OPEN_CURRENT",
+      "status_detail": "CLOSED",
       "kind": "tooling",
-      "status": "open",
+      "status": "closed",
       "severity": "medium",
       "acceptance": "Агенты используют tech_debt_cli.py вместо создания add_td*.py; новые ad-hoc мутаторы не появляются",
       "area": "",
       "source_status": "open",
       "notes": "Начало TD-127: анализ 668 временных скриптов в C:\\Temp\\opencode выявил группы; tech_debt-мутаторы (46+) обобщены в tech_debt_cli.py. Остальные группы (session_analyzer, downloader, dom_builder) — отдельные инструменты.",
-      "progress": "2026-09-22: создано через tech_debt_cli.py"
+      "progress": "ФАКТ ВЫПОЛНЕН: стек tools/ создан (tech_debt_cli, sync, downloader, session_analyzer, chroma_indexer). Запись была маркером создания — закрыта как выполненная. 2026-09-22."
     },
     {
       "id": "TD-138",
@@ -2787,7 +2787,7 @@
       "acceptance": "Карта ссылается из промптов всех оркестраторов; агент при новой задаче определяет тип→контур→инструмент за 1 шаг; нет блуждания 'верификация vs сбор vs поиск'",
       "area": "",
       "source_status": "open",
-      "notes": "Создана shared/harness-dispatch-map.md (типы задач 1-6, инструменты tools/, порядок поиска, анти-путаница checklist). Нужно: (1) ссылка на карту в research-orchestrator/writing/code промптах, (2) агент читает карту перед задачей.",
+      "notes": "СВЯЗЬ: TD-140 (карта диспатча создана) ↔ TD-143 (аудит: агент не использует — карта не внедрена/не протестирована). TD-143 — это проверка внедрения TD-140. 2026-09-22.",
       "progress": "2026-09-22: создано через tech_debt_cli.py"
     },
     {
@@ -2835,7 +2835,7 @@
       "acceptance": "Проведён аудит реальной сессии (session_analyzer.py) → выявлены конкретные точки, где агент не дошёл до инструмента; dispatch-map внедрена в промпты оркестраторов и проверена (агент выбирает tools/ в типовых задачах); есть фидбек-механизм 'агент застрял → подсказка какой инструмент'",
       "area": "",
       "source_status": "open",
-      "notes": "Наблюдения сессии: (1) агент пишет python -c и падает на кавычках PowerShell (TD-139); (2) не знает про tools/ стек (TD-127); (3) не знает какой python с chromadb (TD-142); (4) блуждает между верификацией/сбором ГОСТов/поиском (TD-122); (5) не вызывает resolve()/роутер для диспатча (TD-107/141); (6) SearXNG не поднят (TD-128). Признак: отсутствует прослойка, которая агентУ ОБЪЯСНЯЕТ 'какую задачу каким инструментом' — harness-dispatch-map.md создана (TD-140), но не внедрена в промпты/не тестирована на реальном агенте.",
+      "notes": "Наблюдения сессии: (1) агент пишет python -c и падает на кавычках PowerShell (TD-139); (2) не знает про tools/ стек (TD-127); (3) не знает какой python с chromadb (TD-142); (4) блуждает между верификацией/сбором ГОСТов/поиском (TD-122); (5) не вызывает resolve()/роутер для диспатча (TD-107/141); (6) SearXNG не поднят (TD-128). НОВОЕ 2026-09-22: МНОГО РУЧНОГО ТРУДА ПО ЗАПОЛНЕНИЮ DOM и документов — агент вручную формирует/правит DOM-артефакты (ch1_dom.json, claims_parsed.json, citations_map, протоколы), тратя итерации на ручные правки вместо детерминированных билдеров/патчеров; нет инструмента 'заполнить DOM из фактов' (аналог wc_cli для research). Признак: отсутствует прослойка, которая агентУ ОБЪЯСНЯЕТ 'какую задачу каким инструментом' — harness-dispatch-map.md создана (TD-140), но не внедрена в промпты/не тестирована на реальном агенте.",
       "progress": "2026-09-22: создано через tech_debt_cli.py"
     },
     {
@@ -2867,24 +2867,24 @@
       "acceptance": "Существует паттерн-аудитор: анализирует сессию (session_analyzer), выявляет повторяющиеся действия, при пороге создаёт техдолг оптимизации с конкретикой (что повторяется, как оптимизировать); агент-аудитор диспатчится автоматически",
       "area": "",
       "source_status": "open",
-      "notes": "Механизм: (1) детектор повторов (сколько раз агент делает X), (2) триггер при пороге (например, 3+ повтора), (3) вызов аудитора (анализ через session_analyzer.py), (4) результат: новый tools/-инструмент ИЛИ техдолг оптимизации (TD-127/143). Примеры паттернов: python -c ломается (TD-139), плодит скрипты (TD-127), не знает python (TD-142).",
+      "notes": "СВЯЗЬ: TD-145 — механизм-решение для TD-126 (перфекционизм) и части TD-143. Не дубликат, но внедрение TD-145 закрывает симптомы TD-126. 2026-09-22.",
       "progress": "2026-09-22: создано через tech_debt_cli.py"
     },
     {
       "id": "TD-146",
       "owner": "code-orchestrator",
-      "presentation_category": "ACTIVE",
+      "presentation_category": "RESOLVED",
       "sunset_at": "2027-09-22",
       "title": "agent повторно пишет ad-hoc скрипты для скачивания PDF вместо использования downloader",
-      "status_detail": "OPEN_CURRENT",
+      "status_detail": "CLOSED",
       "kind": "tooling",
-      "status": "open",
+      "status": "closed",
       "severity": "medium",
       "acceptance": "",
       "area": "",
       "source_status": "open",
       "notes": "agent повторно пишет ad-hoc скрипты для скачивания PDF вместо использования downloader.py — нужен паттерн-аудитор",
-      "progress": "2026-09-22: авто-фиксация через tech_debt_cli.py add --auto"
+      "progress": "ДУБЛИКАТ TD-127 (канонический: стек tools/): конкретный случай ad-hoc скриптов скачивания. Поглощён TD-127/TD-103. 2026-09-22 дедупликация."
     },
     {
       "id": "RS-001",
