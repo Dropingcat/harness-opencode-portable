@@ -3,8 +3,8 @@
   "updated": "2026-09-22",
   "authority_note": "Canonical registry migrated from патчи/миграция в плагин/tech_debt_current.json (65 records). project_context.py counts status=open. CLOSED_REPORTED maps to closed; RECONCILE_REQUIRED stays open until exact-tree verification.",
   "counts": {
-    "total": 181,
-    "open": 129,
+    "total": 182,
+    "open": 130,
     "closed": 52
   },
   "debts": [
@@ -2997,6 +2997,22 @@
       "source_status": "open",
       "notes": "Из теста source-fetcher (2026-09-22): (1) research_papers НЕ зарегистрирован, а контракт source-fetcher на него ссылается — контракт надо актуализировать; (2) arxiv_search/openalex_search есть в config/mcp_registry.json, но НЕ проброшены в сессию субагента (агент не видит tools) — fallback: прямой вызов кода mcp/academic_search_server.py через .venv (тот же API, работает); (3) RESEARCH_WORKSPACE не задан → файлы пишутся в .runs/verification/ по умолчанию; (4) browser-MCP нет в mcp_registry (контракт ссылается — устарел); (5) SearXNG мёртв (TD-128). Итог: 7 primary/textbook источников с DOI найдено, status=partial (часть каналов недоступна).",
       "progress": "2026-09-22: РЕШЕНО. (1) mcp==1.26.0 установлен в harness venv (2.2 ломал API list_tools) и зафиксирован в requirements-mcp-doc.txt. (2) scripts/router/gen_mcp_config.py генерирует .opencode/.mcp.json из mcp_registry (4 stdio-сервера: academic_search, searxng_search, doc_extract, coder_router) — сгенерировано в portable и work. (3) Проверено: arxiv_search + openalex_search отвечают (M2 nitriding, Group-III nitrides). (4) Контракт source-fetcher актуализирован: research_papers/browser-MCP → реальные MCP-tools (arxiv_search/openalex_search), SearXNG опционален. Субагенты теперь видят tools после рестарта opencode."
+    },
+    {
+      "id": "TD-155",
+      "owner": "research-orchestrator",
+      "presentation_category": "ACTIVE",
+      "sunset_at": "2027-09-22",
+      "title": "MCP-tools подключены в .mcp.json (4 сервера), но НЕ инжектированы в текущую сессию — нужен РЕСТАРТ opencode: после рестарта source-fetcher увидит arxiv_search/openalex_search/extract_document/searxng_search; пока работает fallback через webfetch (arXiv/OpenAlex API напрямую)",
+      "status_detail": "OPEN_CURRENT",
+      "kind": "infrastructure",
+      "status": "open",
+      "severity": "high",
+      "acceptance": "После рестарта opencode субагент source-fetcher видит arxiv_search/openalex_search/extract_document/searxng_search как tools и может их вызвать (повторный тест: status=full для академического канала); webfetch-fallback задокументирован как резерв",
+      "area": "",
+      "source_status": "open",
+      "notes": "Тест 2026-09-22 (source-fetcher, ses_f35898680ffe): arxiv_search/openalex_search/searxng_search/extract_document зарегистрированы в mcp_registry + tool_runtime_bindings, .mcp.json сгенерирован (4 сервера), скрипты компилируются, но functions list субагента НЕ содержит их — MCP подключаются при СТАРТЕ сессии, текущая сессия стартовала до генерации. РЕШЕНИЕ: рестарт opencode (новая сессия) → MCP-серверы подхватятся. Рабочий fallback уже есть: webfetch → arXiv API (121 res) / OpenAlex API (31140 res) — поиск не блокирован.",
+      "progress": "2026-09-22: создано через tech_debt_cli.py"
     },
     {
       "id": "RS-001",
