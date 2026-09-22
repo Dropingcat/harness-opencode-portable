@@ -3,9 +3,9 @@
   "updated": "2026-09-22",
   "authority_note": "Canonical registry migrated from патчи/миграция в плагин/tech_debt_current.json (65 records). project_context.py counts status=open. CLOSED_REPORTED maps to closed; RECONCILE_REQUIRED stays open until exact-tree verification.",
   "counts": {
-    "total": 178,
+    "total": 179,
     "open": 129,
-    "closed": 49
+    "closed": 50
   },
   "debts": [
     {
@@ -2949,6 +2949,22 @@
       "source_status": "open",
       "notes": "От агента: 'мой резолвер извлекает только первые 4 страницы (а свойства на других), и формульный keyword-матчинг груб'. Проблема: (1) PDF-резолвер (pypdf/extract) ограничивает страницы (лимит 4) — свойства материала/норматива на 5+ страницах не извлекаются; (2) keyword-матчинг свойств (по формулам/обозначениям, напр. химический состав, марки) слишком грубый — не находит по синонимам/вариантам написания/формулам. Нужно: (а) извлекать ВСЕ страницы или целевые (по оглавлению/поиску), (б) улучшить матчинг (варианты написания, нормализация, формулы→свойства).",
       "progress": "2026-09-22: создано через tech_debt_cli.py"
+    },
+    {
+      "id": "TD-152",
+      "owner": "research-orchestrator",
+      "presentation_category": "RESOLVED",
+      "sunset_at": "2027-09-22",
+      "title": "Универсальный PDF-resolver с каскадом источников: агент вручную борется с 403/429/Cloudflare (DDG, Semantic Scholar, IUCr, SINTEF, CrossRef 429) и парсит HTML-ссылки ad-hoc; нужен каскад DOI→CrossRef/OpenAlex→openAccessPdf→зеркала→web.archive.org→Sci-Hub + проверка %PDF + rate-limit backoff",
+      "status_detail": "CLOSED",
+      "kind": "tooling",
+      "status": "closed",
+      "severity": "high",
+      "acceptance": "downloader.py resolve --doi <DOI> пробует каскад: CrossRef/OpenAlex (метаданные) → openAccessPdf → Sci-Hub → web.archive.org → зеркала; при 403/429 делает backoff+retry; возвращает валидный PDF (проверка %PDF) или честный 'not found'; агент использует resolve вместо ad-hoc PowerShell",
+      "area": "",
+      "source_status": "open",
+      "notes": "Из реальной сессии: агент вручную пробует DDG(403)→S2(403)→IUCr(Cloudflare)→scripts.iucr.org(Cloudflare)→SINTEF(403)→archive.org, парсит result__a href, читает сигнатуру %PDF байтами (а есть is_pdf() в downloader!). CrossRef дал 429 (rate limit). Нужно: (1) в downloader добавить openalex_search (без лимитов, как fallback метаданных), (2) doi_redirect (curl -I doi.org → Location), (3) wayback_fetch (web.archive.org для 404/403), (4) cascade resolve DOI→PDF с проверкой %PDF и backoff при 429/403, (5) агент знает про это (TD-143).",
+      "progress": "2026-09-22: РЕШЕНО. downloader.py resolve --doi: каскад (0) локальный корпус (F:\\AnalisysDataSet\\pdfs + 09_LITERATURE, поиск по DOI/автору/году в имени файла) → (1) CrossRef/OpenAlex метаданные → (1.5) локальный по метаданным → (2) openAccessPdf → (3) Sci-Hub → (4) wayback. Проверено: DOI 10.1007/s11661-016-3731-0 найден локально (1.2МБ PDF, мгновенно); IUCr DOI — честный NOT FOUND. Backoff при 403/429. + openalex_search/doi_redirect/wayback_fetch."
     },
     {
       "id": "RS-001",

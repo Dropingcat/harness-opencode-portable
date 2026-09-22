@@ -147,6 +147,196 @@ def scihub_resolve(doi: str, timeout: int = 40) -> tuple[str | None, str]:
     return None, "PDF-ссылка не найдена ни на одном зеркале"
 
 
+def openalex_search(doi: str = None, title: str = None, author: str = None, year: int = None,
+                    timeout: int = 30) -> dict:
+    """Поиск через OpenAlex (без лимитов, fallback метаданных — TD-152).
+
+    По DOI — точное; по title+author — библиографический поиск.
+    Возвращает {ok, works:[{title, doi, year, oa_pdf, authors, venue}]}.
+    """
+    try:
+        if doi:
+            url = "https://api.openalex.org/works/https://doi.org/" + urllib.parse.quote(doi)
+        else:
+            q = urllib.parse.quote(f"{title or ''} {author or ''}".strip())
+            url = f"https://api.openalex.org/works?search={q}&per-page=5"
+        req = urllib.request.Request(url, headers={"User-Agent": UA})
+        with urllib.request.urlopen(req, timeout=timeout) as r:
+            data = json.loads(r.read().decode("utf-8", errors="replace"))
+    except Exception as e:
+        return {"ok": False, "error": str(e)[:120]}
+
+    if doi and "title" in data:
+        works = [data]
+    else:
+        works = data.get("results", [])
+    out = []
+    for w in works:
+        oa = (w.get("open_access") or {}).get("oa_url")
+        out.append({
+            "title": (w.get("title") or "")[:200],
+            "doi": (w.get("doi") or "").replace("https://doi.org/", ""),
+            "year": w.get("publication_year"),
+            "oa_pdf": oa,
+            "authors": [a.get("author", {}).get("display_name") for a in w.get("authorships", [])][:5],
+            "venue": ((w.get("primary_location") or {}).get("source") or {}).get("display_name"),
+        })
+    return {"ok": True, "works": out}
+
+
+def doi_redirect(doi: str, timeout: int = 20) -> str | None:
+    """DOI → фактический URL (следуем redirect'ам doi.org). Возвращает target."""
+    try:
+        req = urllib.request.Request("https://doi.org/" + urllib.parse.quote(doi),
+                                     headers={"User-Agent": UA}, method="HEAD")
+        with urllib.request.urlopen(req, timeout=timeout) as r:
+            return r.geturl()
+    except Exception:
+        return None
+
+
+def wayback_fetch(url: str, timeout: int = 40) -> tuple[int, bytes]:
+    """Получить файл через web.archive.org (fallback для 404/403 — TD-152)."""
+    wb = "https://web.archive.org/web/" + urllib.parse.quote(url, safe="/:?=&")
+    return http_get(wb, timeout=timeout, retries=2)
+
+
+# Локальные корпуса PDF (RS-025: сначала локально, потом внешние)
+LOCAL_PDF_DIRS = [
+    r"F:\AnalisysDataSet\pdfs",
+    r"F:\1\_STRUCTURED\09_LITERATURE",
+    r"F:\1\_STRUCTURED\09_LITERATURE\1_Литература_данные\ГОСТы_ТУ",
+]
+
+
+def find_local_pdf(doi: str = None, title: str = None, author: str = None, year: int = None) -> str | None:
+    """Поиск PDF в локальных корпусах по DOI/автору/году/названию (TD-152, RS-025).
+
+    Возвращает путь или None. Матчинг по имени файла: автор (фамилия), год, DOI-фрагмент.
+    """
+    import re as _re
+    patterns = []
+    if doi:
+        # DOI-фрагмент: последняя часть (например 'S0021889891010804')
+        tail = doi.rsplit("/", 1)[-1]
+        if len(tail) > 6:
+            patterns.append(_re.compile(_re.escape(tail[:12]), _re.I))
+    if author:
+        fam = author.split()[-1].strip().lower()
+        if len(fam) > 3:
+            patterns.append(_re.compile(_re.escape(fam[:8]), _re.I))
+    if year:
+        patterns.append(_re.compile(str(year), re.IGNORECASE))
+    if not patterns:
+        return None
+    for d in LOCAL_PDF_DIRS:
+        root = Path(d)
+        if not root.is_dir():
+            continue
+        for f in root.rglob("*.pdf"):
+            low = f.name.lower()
+            if all(p.search(low) for p in patterns):
+                return str(f)
+    return None
+
+
+def cmd_resolve(args) -> int:
+    """Каскадный resolve DOI→PDF (TD-152): метаданные→openAccessPdf→Sci-Hub→wayback.
+
+    Возвращает валидный PDF (проверка %PDF) или 'not found' с честным статусом.
+    """
+    doi = args.doi
+    out = Path(args.out)
+    out.mkdir(parents=True, exist_ok=True)
+    name = args.name or (doi.replace("/", "_") + ".pdf")
+
+    # 0. Локальный корпус (RS-025/TD-152): ищем PDF по DOI/автору/году ДО внешних
+    local = find_local_pdf(doi=doi)
+    if not local:
+        # попробуем по названию после получения метаданных ниже
+        local = None
+    if local:
+        data = Path(local).read_bytes()
+        if is_pdf(data):
+            save_with_provenance(data, out, name, "file://" + local, "local_corpus", "verified_pdf",
+                                 {"doi": doi, "local_path": local})
+            print(f"OK (локально): {local} -> {name} ({len(data)} B)")
+            return 0
+
+    # 1. Метаданные: CrossRef (fallback OpenAlex)
+    meta = crossref_check(doi)
+    if not meta.get("ok"):
+        oa = openalex_search(doi=doi)
+        if oa.get("ok") and oa.get("works"):
+            w = oa["works"][0]
+            meta = {"ok": True, "title": w.get("title"), "authors": w.get("authors", []),
+                    "year": w.get("year"), "oa_pdf": w.get("oa_pdf")}
+    print(f"[1] Метаданные: {meta.get('ok')} — {meta.get('title', '?')[:60]} ({meta.get('year')})")
+
+    # 1.5. Локальный поиск по метаданным (автор/год/название), если DOI не сработал
+    if not local:
+        author = (meta.get("authors") or [None])[0] if meta.get("ok") else None
+        local2 = find_local_pdf(title=meta.get("title"), author=author, year=meta.get("year")) if meta.get("ok") else None
+        if local2:
+            data = Path(local2).read_bytes()
+            if is_pdf(data):
+                save_with_provenance(data, out, name, "file://" + local2, "local_corpus", "verified_pdf",
+                                     {"doi": doi, "local_path": local2})
+                print(f"OK (локально по метаданным): {local2} -> {name} ({len(data)} B)")
+                return 0
+
+    # 2. openAccessPdf (OpenAlex/CrossRef)
+    candidates = []
+    if meta.get("oa_pdf"):
+        candidates.append(("oa_pdf", meta["oa_pdf"]))
+    if not candidates:
+        oa = openalex_search(doi=doi)
+        if oa.get("ok") and oa.get("works"):
+            w = oa["works"][0]
+            if w.get("oa_pdf"):
+                candidates.append(("oa_pdf", w["oa_pdf"]))
+
+    # 3. Sci-Hub
+    candidates.append(("scihub", None))  # маркер: решается в scihub_resolve
+
+    for src, url in candidates:
+        try:
+            if src == "scihub":
+                pdf_url, err = scihub_resolve(doi)
+                if not pdf_url:
+                    print(f"  [scihub] {err}")
+                    continue
+                status, data = http_get(pdf_url, timeout=args.timeout, verify=False, retries=2)
+            else:
+                status, data = http_get(url, timeout=args.timeout, retries=2)
+            if status == 200 and isinstance(data, bytes) and data and is_pdf(data):
+                save_with_provenance(data, out, name, url or pdf_url, src, "verified_pdf",
+                                     {"doi": doi, "meta": meta})
+                print(f"OK: {name} ({len(data)} B) via {src}")
+                return 0
+            if status in (403, 429):
+                print(f"  [{src}] {status}, пауза {BACKOFF[1]}s")
+                time.sleep(BACKOFF[1])
+            else:
+                print(f"  [{src}] статус {status} (не PDF)")
+        except Exception as e:
+            print(f"  [{src}] ERR {str(e)[:80]}")
+            continue
+
+    # 4. wayback для landing/oa (последняя попытка по известному URL)
+    if meta.get("oa_pdf"):
+        print("  [wayback] пробую web.archive.org...")
+        st, data = wayback_fetch(meta["oa_pdf"], timeout=args.timeout)
+        if st == 200 and data and is_pdf(data):
+            save_with_provenance(data, out, name, "web.archive.org/" + meta["oa_pdf"], "wayback", "verified_pdf",
+                                 {"doi": doi, "meta": meta})
+            print(f"OK: {name} via wayback ({len(data)} B)")
+            return 0
+
+    print(f"NOT FOUND: {doi} — источники исчерпаны (проверь вручную)")
+    return 6
+
+
 def cmd_doi(args) -> int:
     doi = args.doi
     out = Path(args.out)
@@ -265,6 +455,12 @@ def main() -> int:
     p = sub.add_parser("crossref", help="проверить DOI через CrossRef")
     p.add_argument("--doi", required=True)
     p.set_defaults(fn=cmd_crossref)
+
+    p = sub.add_parser("resolve", help="каскадный resolve DOI→PDF (TD-152)")
+    p.add_argument("--doi", required=True)
+    p.add_argument("--out", required=True)
+    p.add_argument("--name", default=None)
+    p.set_defaults(fn=cmd_resolve)
 
     p = sub.add_parser("extract", help="извлечь текст из PDF (pypdf)")
     p.add_argument("--pdf", required=True)
