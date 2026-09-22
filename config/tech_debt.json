@@ -3,8 +3,8 @@
   "updated": "2026-09-22",
   "authority_note": "Canonical registry migrated from патчи/миграция в плагин/tech_debt_current.json (65 records). project_context.py counts status=open. CLOSED_REPORTED maps to closed; RECONCILE_REQUIRED stays open until exact-tree verification.",
   "counts": {
-    "total": 171,
-    "open": 139,
+    "total": 174,
+    "open": 142,
     "closed": 32
   },
   "debts": [
@@ -2837,6 +2837,54 @@
       "source_status": "open",
       "notes": "Наблюдения сессии: (1) агент пишет python -c и падает на кавычках PowerShell (TD-139); (2) не знает про tools/ стек (TD-127); (3) не знает какой python с chromadb (TD-142); (4) блуждает между верификацией/сбором ГОСТов/поиском (TD-122); (5) не вызывает resolve()/роутер для диспатча (TD-107/141); (6) SearXNG не поднят (TD-128). Признак: отсутствует прослойка, которая агентУ ОБЪЯСНЯЕТ 'какую задачу каким инструментом' — harness-dispatch-map.md создана (TD-140), но не внедрена в промпты/не тестирована на реальном агенте.",
       "progress": "2026-09-22: создано через tech_debt_cli.py"
+    },
+    {
+      "id": "TD-144",
+      "owner": "code-orchestrator",
+      "presentation_category": "ACTIVE",
+      "sunset_at": "2027-09-22",
+      "title": "Авто-фиксация техдолга: агент, столкнувшись с блоком, вызывает функцию (tech_debt_cli.py add --auto), которая САМА оформляет долг через LLM-диспатч (генерирует title/notes/acceptance/severity по описанию проблемы) — без ручного заполнения полей",
+      "status_detail": "OPEN_CURRENT",
+      "kind": "process",
+      "status": "open",
+      "severity": "medium",
+      "acceptance": "tech_debt_cli.py add --auto '<описание>' создаёт валидную запись (id/owner/severity/title/notes/acceptance) без ручного ввода полей; агент в типовых задачах фиксирует блоки одной командой; можно --dry-run показать сгенерированное",
+      "area": "",
+      "source_status": "open",
+      "notes": "Сейчас add требует явные --title/--notes. Цель: агент пишет 'зафиксируй блок: <описание>' → tech_debt_cli.py add --auto '<описание>' → LLM-диспатч (через claim-parser-runner или локальный эвристический генератор) оформляет структурированную запись. Это снижает барьер фиксации (TD-126 перфекционизм, TD-143 не использует инструменты).",
+      "progress": "2026-09-22: создано через tech_debt_cli.py"
+    },
+    {
+      "id": "TD-145",
+      "owner": "code-orchestrator",
+      "presentation_category": "ACTIVE",
+      "sunset_at": "2027-09-22",
+      "title": "Аудит повторяющихся действий агента: если один и тот же паттерн (ad-hoc скрипт, ручной поиск, переписывание) повторяется N раз — автоматически вызывать аудитора (session_analyzer + анализ паттернов), который либо оптимизирует (создаёт инструмент), либо оформляет техдолг оптимизации",
+      "status_detail": "OPEN_CURRENT",
+      "kind": "process",
+      "status": "open",
+      "severity": "medium",
+      "acceptance": "Существует паттерн-аудитор: анализирует сессию (session_analyzer), выявляет повторяющиеся действия, при пороге создаёт техдолг оптимизации с конкретикой (что повторяется, как оптимизировать); агент-аудитор диспатчится автоматически",
+      "area": "",
+      "source_status": "open",
+      "notes": "Механизм: (1) детектор повторов (сколько раз агент делает X), (2) триггер при пороге (например, 3+ повтора), (3) вызов аудитора (анализ через session_analyzer.py), (4) результат: новый tools/-инструмент ИЛИ техдолг оптимизации (TD-127/143). Примеры паттернов: python -c ломается (TD-139), плодит скрипты (TD-127), не знает python (TD-142).",
+      "progress": "2026-09-22: создано через tech_debt_cli.py"
+    },
+    {
+      "id": "TD-146",
+      "owner": "code-orchestrator",
+      "presentation_category": "ACTIVE",
+      "sunset_at": "2027-09-22",
+      "title": "agent повторно пишет ad-hoc скрипты для скачивания PDF вместо использования downloader",
+      "status_detail": "OPEN_CURRENT",
+      "kind": "tooling",
+      "status": "open",
+      "severity": "medium",
+      "acceptance": "",
+      "area": "",
+      "source_status": "open",
+      "notes": "agent повторно пишет ad-hoc скрипты для скачивания PDF вместо использования downloader.py — нужен паттерн-аудитор",
+      "progress": "2026-09-22: авто-фиксация через tech_debt_cli.py add --auto"
     },
     {
       "id": "RS-001",
