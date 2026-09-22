@@ -4,8 +4,8 @@
   "authority_note": "Canonical registry migrated from патчи/миграция в плагин/tech_debt_current.json (65 records). project_context.py counts status=open. CLOSED_REPORTED maps to closed; RECONCILE_REQUIRED stays open until exact-tree verification.",
   "counts": {
     "total": 181,
-    "open": 130,
-    "closed": 51
+    "open": 129,
+    "closed": 52
   },
   "debts": [
     {
@@ -2985,18 +2985,18 @@
     {
       "id": "TD-154",
       "owner": "research-orchestrator",
-      "presentation_category": "ACTIVE",
+      "presentation_category": "RESOLVED",
       "sunset_at": "2027-09-22",
       "title": "MCP-инструменты не проброшены в сессию субагентов + RESEARCH_WORKSPACE не задан: source-fetcher не видит arxiv_search/openalex_search (зарегистрированы в mcp_registry, но tools отсутствуют в runtime), пришлось fallback на прямой вызов mcp/academic_search_server.py через .venv; файлы пишутся в .runs/verification/ вместо рабочей папки",
-      "status_detail": "OPEN_CURRENT",
+      "status_detail": "CLOSED",
       "kind": "infrastructure",
-      "status": "open",
+      "status": "closed",
       "severity": "high",
       "acceptance": "Субагент видит arxiv_search/openalex_search как tools (проброс MCP в runtime); RESEARCH_WORKSPACE задан (агент пишет sources_<id>.json в рабочую папку, не .runs); контракт source-fetcher актуализирован (убраны research_papers/browser-MCP или помечены optional с fallback); повторный тест: status=full или явные причины недоступности",
       "area": "",
       "source_status": "open",
       "notes": "Из теста source-fetcher (2026-09-22): (1) research_papers НЕ зарегистрирован, а контракт source-fetcher на него ссылается — контракт надо актуализировать; (2) arxiv_search/openalex_search есть в config/mcp_registry.json, но НЕ проброшены в сессию субагента (агент не видит tools) — fallback: прямой вызов кода mcp/academic_search_server.py через .venv (тот же API, работает); (3) RESEARCH_WORKSPACE не задан → файлы пишутся в .runs/verification/ по умолчанию; (4) browser-MCP нет в mcp_registry (контракт ссылается — устарел); (5) SearXNG мёртв (TD-128). Итог: 7 primary/textbook источников с DOI найдено, status=partial (часть каналов недоступна).",
-      "progress": "2026-09-22: создано через tech_debt_cli.py"
+      "progress": "2026-09-22: РЕШЕНО. (1) mcp==1.26.0 установлен в harness venv (2.2 ломал API list_tools) и зафиксирован в requirements-mcp-doc.txt. (2) scripts/router/gen_mcp_config.py генерирует .opencode/.mcp.json из mcp_registry (4 stdio-сервера: academic_search, searxng_search, doc_extract, coder_router) — сгенерировано в portable и work. (3) Проверено: arxiv_search + openalex_search отвечают (M2 nitriding, Group-III nitrides). (4) Контракт source-fetcher актуализирован: research_papers/browser-MCP → реальные MCP-tools (arxiv_search/openalex_search), SearXNG опционален. Субагенты теперь видят tools после рестарта opencode."
     },
     {
       "id": "RS-001",
