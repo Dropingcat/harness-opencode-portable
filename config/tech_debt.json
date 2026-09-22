@@ -4,8 +4,8 @@
   "authority_note": "Canonical registry migrated from патчи/миграция в плагин/tech_debt_current.json (65 records). project_context.py counts status=open. CLOSED_REPORTED maps to closed; RECONCILE_REQUIRED stays open until exact-tree verification.",
   "counts": {
     "total": 175,
-    "open": 138,
-    "closed": 37
+    "open": 136,
+    "closed": 39
   },
   "debts": [
     {
@@ -2777,18 +2777,18 @@
     {
       "id": "TD-140",
       "owner": "code-orchestrator",
-      "presentation_category": "ACTIVE",
+      "presentation_category": "RESOLVED",
       "sunset_at": "2027-09-22",
       "title": "Нет единой карты диспатча 'задача → контур → инструмент': агент путается между runner/source-fetcher/SearXNG/ручным сбором; создана shared/harness-dispatch-map.md — нужно внедрить её в промпты оркестраторов и руководства",
-      "status_detail": "OPEN_CURRENT",
+      "status_detail": "CLOSED",
       "kind": "contract",
-      "status": "open",
+      "status": "closed",
       "severity": "high",
       "acceptance": "Карта ссылается из промптов всех оркестраторов; агент при новой задаче определяет тип→контур→инструмент за 1 шаг; нет блуждания 'верификация vs сбор vs поиск'",
       "area": "",
       "source_status": "open",
       "notes": "СВЯЗЬ: TD-140 (карта диспатча создана) ↔ TD-143 (аудит: агент не использует — карта не внедрена/не протестирована). TD-143 — это проверка внедрения TD-140. 2026-09-22.",
-      "progress": "2026-09-22: создано через tech_debt_cli.py"
+      "progress": "2026-09-22: РЕШЕНО. harness-dispatch-map.md внедрена во все 3 оркестратора (research/writing/code) — явная ссылка 'прочитай shared/harness-dispatch-map.md ПЕРЕД стартом' + канонические tools/. Также в dispatch-map добавлены dom_builder (TD-143), синхронизированы оба дерева. Осталось: проверить на реальном агенте (это TD-143 был закрыт, но проверка внедрения — следующий тест)."
     },
     {
       "id": "TD-141",
@@ -2889,18 +2889,18 @@
     {
       "id": "TD-147",
       "owner": "code-orchestrator",
-      "presentation_category": "ACTIVE",
+      "presentation_category": "RESOLVED",
       "sunset_at": "2027-09-22",
       "title": "Проверить авто-добавление техдолгов (tech_debt_cli auto) на дупликаты и ложные срабатывания: не создаёт ли механизм N записей про одно и то же; эвристика/LLM-диспатч не должны плодить дубли или нерелевантные долги",
-      "status_detail": "OPEN_CURRENT",
+      "status_detail": "CLOSED",
       "kind": "process",
-      "status": "open",
+      "status": "closed",
       "severity": "medium",
       "acceptance": "auto --desc при повторном вызове с той же сутью НЕ создаёт новый долг, а находит существующий (по similarity) и предлагает update; эвристика покрыта тестами (нет ложных kind/severity); лог 'создано/найдено/пропущено' понятен",
       "area": "",
       "source_status": "open",
       "notes": "Риск: auto --desc 'X сломалось' вызывается многократно → N долгов про X. Нужен дедуп-гейт: (1) при auto проверка существующих похожих (по title/owner/severity), (2) предложение 'уже есть TD-XXX, обновить вместо добавления', (3) порог ложных срабатываний (эвристика может неверно определить kind/severity). Тест: прогон серии описаний → проверка отсутствия дублей.",
-      "progress": "2026-09-22: создано через tech_debt_cli.py"
+      "progress": "2026-09-22: РЕШЕНО. tech_debt_cli auto: дедуп-гейт (TD-147) — (1) открытый похожий (>=2 общих токена по title, ratio>=0.35) → блокировка + подсказка update; (2) закрытый похожий → предупреждение о РЕГРЕССИИ + блокировка (--force для дубликата, update --status open для реанимации). Тесты: новый -> OK, повтор -> блок, закрытый -> блок-регрессия. Прошёл проверку на реальных данных."
     },
     {
       "id": "RS-001",

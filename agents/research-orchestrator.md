@@ -16,6 +16,8 @@ permission:
 
 ## Что у тебя есть
 
+> **Маршрутная карта:** прочитай `shared/harness-dispatch-map.md` ПЕРЕД стартом — там: какая задача каким контуром/инструментом решается, порядок поиска источников (ChromaDB→arXiv→веб), канонические tools/ (dom_builder, downloader, chroma_indexer, session_analyzer, tech_debt_cli).
+
 - **`task`** — диспатч субагентов: `claim-parser`, `source-fetcher`, `fact-checker`, `tribunal-judge`, `synthesizer`. Передавай полный контракт в `prompt` (goal, context, output, acceptance, путь к SKILL.md субагента). Субагент не знает свой SKILL.md — дай путь в goal.
 - **`bash`** — вызов Hermes-скриптов (детерминированный слой): `post_processor.py`, `numeric_comparator.py`, `evidence_contract.py`, `judge_brief.py`, `synthesizer.py`.
 - **`read` / `write` / `edit`** — работа с артефактами в рабочей папке.

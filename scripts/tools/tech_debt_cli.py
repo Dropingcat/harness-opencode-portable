@@ -197,16 +197,108 @@ def _auto_generate(desc: str) -> dict:
     return {"kind": kind, "severity": sev, "owner": owner, "title": title}
 
 
+def _tokens(s: str) -> set:
+    """Стоп-слова + токенизация (лат/кир, >=4 символа)."""
+    import re
+    stop = {"этот", "который", "которая", "через", "потому", "блок", "вместо", "сказать",
+            "which", "that", "with", "from", "then", "себя", "между", "после", "когда"}
+    toks = set(re.findall(r"[a-zа-яё]{4,}", s.lower()))
+    return toks - stop
+
+
+def _similarity(a: str, b: str) -> float:
+    ta, tb = _tokens(a), _tokens(b)
+    if not ta or not tb:
+        return 0.0
+    inter = len(ta & tb)
+    # Jaccard взвешенный: важнее общие значимые слова, а не размер
+    return inter / (len(ta) + len(tb) - inter) if (len(ta) + len(tb) - inter) else 0.0
+
+
+def _find_similar(debts: list, desc: str, threshold: float = 0.35) -> dict | None:
+    """Найти похожий долг (TD-147 дедуп).
+
+    Сравниваем только по TITLE (короткий, не раздувает знаменатель).
+    Критерий: >=2 общих значимых токена И доля общих в минимуме двух наборов
+    (>= threshold). Ищем в ОТКРЫТЫХ записях. Если похожий найден среди закрытых
+    с маркером «ДУБЛИКАТ»/«РЕШЕНО» — не считаем дублем (долг реально решён).
+    """
+    desc_toks = _tokens(desc)
+    best = None
+    best_score = 0.0
+    for r in debts:
+        if r.get("status") != "open":
+            continue
+        title = r.get("title") or ""
+        title_toks = _tokens(title)
+        common = desc_toks & title_toks
+        if len(common) < 2:
+            continue
+        # доля общих значимых в меньшем наборе — «описание в основном про это»
+        overlap_ratio = len(common) / min(len(desc_toks), len(title_toks))
+        if overlap_ratio >= threshold and overlap_ratio > best_score:
+            best_score = overlap_ratio
+            best = r
+    return best
+
+
+def _similarity_score(debts: list, desc: str, threshold: float = 0.35) -> float:
+    """Скор лучшего похожего открытого долга (для вывода)."""
+    best = _find_similar(debts, desc, threshold)
+    if not best:
+        return 0.0
+    desc_toks = _tokens(desc)
+    title_toks = _tokens(best.get("title") or "")
+    common = desc_toks & title_toks
+    return len(common) / min(len(desc_toks), len(title_toks)) if title_toks else 0.0
+
+
+def _find_similar_closed(debts: list, desc: str, threshold: float = 0.35) -> dict | None:
+    """Похожий ЗАКРЫТЫЙ долг — предупреждение о возможной регрессии."""
+    desc_toks = _tokens(desc)
+    best = None
+    best_score = threshold
+    for r in debts:
+        if r.get("status") != "closed":
+            continue
+        title = r.get("title") or ""
+        title_toks = _tokens(title)
+        common = desc_toks & title_toks
+        if len(common) < 2:
+            continue
+        overlap_ratio = len(common) / min(len(desc_toks), len(title_toks))
+        if overlap_ratio >= best_score:
+            best_score = overlap_ratio
+            best = r
+    return best
+
+
 def cmd_add_auto(args) -> int:
     """add --auto '<описание>' — оформить долг по описанию.
 
     Эвристика задаёт kind/severity/owner; при --llm опционально вызывается
     LLM-диспатч (claim-parser-runner) для структуризации notes/acceptance.
+    TD-147: дедуп-гейт — если похожий открытый долг уже есть, предложить update.
     """
     if not args.desc:
         print("ERROR: --auto требует описание ('<текст>')", file=sys.stderr)
         return 1
     data = _load(args.debt)
+    # TD-147: дедуп-гейт
+    dup = _find_similar(data["debts"], args.desc, threshold=args.dup_threshold)
+    if dup is not None and not args.force:
+        print(f"WARN: похожий долг уже есть — {dup['id']}: {(dup.get('title') or '')[:80]}")
+        print(f"  Похожесть: {_similarity_score(data['debts'], args.desc, args.dup_threshold):.2f}")
+        print(f"  Хочешь создать дубликат? Используй --force, ИЛИ обнови существующий:")
+        print(f"    python tech_debt_cli.py update --id {dup['id']} --notes '<дополнение>' --progress '...'")
+        return 3
+    # TD-147: предупреждение о похожих ЗАКРЫТЫХ (вероятно регрессия) -> блокировка без --force
+    closed_dup = _find_similar_closed(data["debts"], args.desc, threshold=args.dup_threshold)
+    if closed_dup and not args.force:
+        print(f"WARN: похожий долг {closed_dup['id']} уже ЗАКРЫТ ({closed_dup.get('status_detail')}) — это может быть РЕГРЕССИЯ той же проблемы, а НЕ новый долг.")
+        print(f"  Проверь: python tech_debt_cli.py get --id {closed_dup['id']}")
+        print(f"  Если это новая проблема — создай как дубликат: --force. Если та же — реанимируй: update --id {closed_dup['id']} --status open --progress 'регрессия'")
+        return 3
     nid = args.id or _next_id(data["debts"])
     if _find(data["debts"], nid):
         print(f"ERROR: {nid} уже существует", file=sys.stderr)
@@ -311,6 +403,8 @@ def main() -> int:
     p.add_argument("--acceptance", default=None)
     p.add_argument("--area", default=None)
     p.add_argument("--llm", action="store_true", help="LLM-диспатч для оформления")
+    p.add_argument("--dup-threshold", type=float, default=0.35, help="порог похожести для дедуп-гейта (TD-147)")
+    p.add_argument("--force", action="store_true", help="создать дубликат, игнорируя дедуп-гейт")
     p.add_argument("--sunset-at", dest="sunset_at", default=None)
     p.set_defaults(fn=cmd_add_auto)
 
