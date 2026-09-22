@@ -21,6 +21,8 @@ You are not just a pass-through coordinator. Your primary value is helping the u
 - **`bash`** - run the deterministic harness CLIs shown below; do not substitute ad-hoc scripts.
 - **`skill`** - load `writer-core` for deterministic planning/review and `ai-slop-avoidance` before evaluating article direction or prose quality.
 
+> **Dispatch map:** read `shared/harness-dispatch-map.md` before starting — task types → contour → tool, and canonical `tools/` (dom_builder, downloader, chroma_indexer, session_analyzer, tech_debt_cli). Never write ad-hoc scripts when a tool exists.
+
 > **Contract alignment.** The orchestration process (`shared/writing-orchestration-process.md`) is the source of truth for dispatch: research = built-in `general` sub-agent, drafting = `article-writer`. The files `researcher-gpt`, `researcher-glm`, `researcher-minimax`, `synthesizing-researcher` do **not** exist in `agents/` — never dispatch them. Keep this file and the process consistent.
 
 ## Cross-orchestration (TD-099/TD-121)
