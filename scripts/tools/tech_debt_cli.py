@@ -166,6 +166,107 @@ def cmd_next(args) -> int:
     return 0
 
 
+# --- TD-144: авто-оформление долга по описанию (эвристика + опц. LLM-диспатч) ---
+AUTO_HINTS = [
+    # (regex, kind, severity, owner)
+    (r"(поиск|источник|литератур|статья|верификац|клайм|гост|норматив)", "research", "high", "research-orchestrator"),
+    (r"(роутер|роут|маршрут|route|диспатч|bundle|snapshot)", "routing", "high", "code-orchestrator"),
+    (r"(python|скрипт|инструмент|tools|powershell|кавычк|окружени|venv|chromadb)", "tooling", "medium", "code-orchestrator"),
+    (r"(архитектур|контракт|провайдер|хардкод|мёртв|конфиг)", "architecture", "high", "code-orchestrator"),
+    (r"(таймаут|сеть|dns|timeout|медленн)", "robustness", "high", "research-orchestrator"),
+    (r"(база|данных|db|реестр|json)", "data-quality", "medium", "research-orchestrator"),
+    (r"(процесс|ритуал|цикл|перфекцион|повтор)", "process", "medium", "research-orchestrator"),
+]
+
+
+def _auto_generate(desc: str) -> dict:
+    """Детерминированная эвристика: kind/severity/owner по ключевым словам."""
+    low = desc.lower()
+    kind, sev, owner = "tooling", "medium", "code-orchestrator"
+    for pat, k, s, o in AUTO_HINTS:
+        import re
+        if re.search(pat, low):
+            kind, sev, owner = k, s, o
+            break
+    # заголовок: первые ~110 символов описания (первое предложение)
+    title = re.split(r"[.!?\n]", desc)[0].strip()
+    if len(title) > 110:
+        title = title[:107] + "..."
+    if not title:
+        title = desc[:110]
+    return {"kind": kind, "severity": sev, "owner": owner, "title": title}
+
+
+def cmd_add_auto(args) -> int:
+    """add --auto '<описание>' — оформить долг по описанию.
+
+    Эвристика задаёт kind/severity/owner; при --llm опционально вызывается
+    LLM-диспатч (claim-parser-runner) для структуризации notes/acceptance.
+    """
+    if not args.desc:
+        print("ERROR: --auto требует описание ('<текст>')", file=sys.stderr)
+        return 1
+    data = _load(args.debt)
+    nid = args.id or _next_id(data["debts"])
+    if _find(data["debts"], nid):
+        print(f"ERROR: {nid} уже существует", file=sys.stderr)
+        return 1
+
+    gen = _auto_generate(args.desc)
+    notes = args.desc
+    acceptance = ""
+    if args.llm:
+        # LLM-диспатч через claim-parser-runner (TD-144)
+        opencode_bin = os.environ.get("OPENCODE_BIN", "opencode")
+        prompt = (f"Оформи техдолг по описанию. Верни JSON: "
+                  f"{{title, notes(2-4 предложения, зачем/что), acceptance(критерий готовности), "
+                  f"severity(critical|high|medium|low), owner}}. Описание: {args.desc}")
+        try:
+            r = subprocess.run([opencode_bin, "run", "--agent", "claim-parser-runner", prompt],
+                               capture_output=True, text=True, timeout=300,
+                               env={**os.environ, "PYTHONIOENCODING": "utf-8"},
+                               encoding="utf-8", errors="replace")
+            if r.returncode == 0 and r.stdout.strip():
+                # извлечь JSON из ответа
+                import re as _re
+                m = _re.search(r"\{.*\}", r.stdout, _re.DOTALL)
+                if m:
+                    import json as _json
+                    parsed = _json.loads(m.group(0))
+                    gen["title"] = parsed.get("title", gen["title"])
+                    notes = parsed.get("notes", notes)
+                    acceptance = parsed.get("acceptance", "")
+                    if parsed.get("severity") in VALID_SEVERITY:
+                        gen["severity"] = parsed["severity"]
+                    if parsed.get("owner"):
+                        gen["owner"] = parsed["owner"]
+        except Exception as e:
+            print(f"LLM-диспатч не сработал ({e}), используется эвристика", file=sys.stderr)
+
+    record = {
+        "id": nid,
+        "owner": args.owner or gen["owner"],
+        "presentation_category": "ACTIVE",
+        "sunset_at": args.sunset_at or (datetime.date.today().replace(year=datetime.date.today().year + 1).isoformat()),
+        "title": args.title or gen["title"],
+        "status_detail": "OPEN_CURRENT",
+        "kind": args.kind or gen["kind"],
+        "status": "open",
+        "severity": args.severity or gen["severity"],
+        "acceptance": args.acceptance or acceptance,
+        "area": args.area or "",
+        "source_status": "open",
+        "notes": notes,
+        "progress": f"{datetime.date.today().isoformat()}: авто-фиксация через tech_debt_cli.py add --auto",
+    }
+    data["debts"].append(record)
+    _save(args.debt, data)
+    print(f"OK: {nid} авто-добавлен (total={len(data['debts'])})")
+    print(f"  kind={record['kind']} severity={record['severity']} owner={record['owner']}")
+    print(f"  title: {record['title'][:100]}")
+    return 0
+
+
 def cmd_master(args) -> int:
     root = Path(args.root) if args.root else HARNESS_ROOT
     gen = root / "scripts" / "glossary" / "coder_techdebt_master.py"
@@ -199,6 +300,19 @@ def main() -> int:
     p.add_argument("--progress", default=None)
     p.add_argument("--sunset-at", dest="sunset_at", default=None)
     p.set_defaults(fn=cmd_add)
+
+    p = sub.add_parser("auto", help="авто-оформить долг по описанию (TD-144)")
+    p.add_argument("--id", default=None)
+    p.add_argument("--desc", required=True, help="описание блока (текстом)")
+    p.add_argument("--owner", default=None)
+    p.add_argument("--severity", choices=VALID_SEVERITY, default=None)
+    p.add_argument("--kind", default=None)
+    p.add_argument("--title", default=None)
+    p.add_argument("--acceptance", default=None)
+    p.add_argument("--area", default=None)
+    p.add_argument("--llm", action="store_true", help="LLM-диспатч для оформления")
+    p.add_argument("--sunset-at", dest="sunset_at", default=None)
+    p.set_defaults(fn=cmd_add_auto)
 
     p = sub.add_parser("close", help="закрыть долг")
     p.add_argument("--id", required=True)
