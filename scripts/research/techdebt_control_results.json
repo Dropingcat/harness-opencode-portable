@@ -1,0 +1,41 @@
+{
+  "nodes": [
+    {
+      "tag": "root",
+      "rank": 0,
+      "links": [
+        "все"
+      ],
+      "status": "активен",
+      "updated": null,
+      "source": "claims_table"
+    },
+    {
+      "tag": "a1",
+      "rank": 1,
+      "links": [
+        "root"
+      ],
+      "status": "в работе",
+      "updated": null,
+      "source": "claims_table"
+    }
+  ],
+  "alerts": [],
+  "order": [
+    "a1",
+    "root"
+  ],
+  "cycles": [],
+  "clean": true,
+  "summary": {
+    "nodes": 2,
+    "critical": 0,
+    "warning": 0
+  },
+  "stale_days": 14,
+  "sources": {
+    "claims": "/tmp/pytest-of-orangepi/pytest-30/test_cli_clean_dag_exit_00/fake.md",
+    "todo": null
+  }
+}

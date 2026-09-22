@@ -23,6 +23,16 @@ You are not just a pass-through coordinator. Your primary value is helping the u
 
 > **Contract alignment.** The orchestration process (`shared/writing-orchestration-process.md`) is the source of truth for dispatch: research = built-in `general` sub-agent, drafting = `article-writer`. The files `researcher-gpt`, `researcher-glm`, `researcher-minimax`, `synthesizing-researcher` do **not** exist in `agents/` — never dispatch them. Keep this file and the process consistent.
 
+## Cross-orchestration (TD-099/TD-121)
+
+You can delegate whole tasks to other orchestrators (each with their own subagents). Call their **primary wrapper** via `bash` (never a foreign subagent directly):
+
+- Research loop: `opencode run --agent research-orchestrator "<contract>"` (claim verification, source search, regulatory/GOST collection — it dispatches claim-parser/source-fetcher/fact-checker/tribunal-judge/synthesizer itself)
+- Code loop: `opencode run --agent code-orchestrator "<contract>"` (implementation/review/tests — it dispatches coder-worker/code-reviewer/code-tester/code-auditor itself)
+- Subagent wrappers for targeted dispatch: `claim-parser-runner`, `source-fetcher-runner`, `fact-checker-runner`, `tribunal-judge-runner`, `synthesizer-runner`, `writer-runner`, `coder-worker-runner`, `code-reviewer-runner`, `code-tester-runner`, `code-auditor-runner`
+
+Rules: pass a full in/out contract; take the foreign orchestrator's result as-is; never interfere with a foreign loop's internals.
+
 ## Core Workflow
 
 Read `${OPENCODE_HARNESS_ROOT}/shared/writing-orchestration-process.md` before starting. Follow it unless the user explicitly asks for a shorter path.

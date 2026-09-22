@@ -1,0 +1,20 @@
+{"claim_id":1,"etalon_verdict":"SUPPORTED","etalon_confidence":0.98,"etalon_notes":"тривиально"}
+{"claim_id":2,"etalon_verdict":"SUPPORTED","etalon_confidence":0.95,"etalon_notes":"тривиально"}
+{"claim_id":3,"etalon_verdict":"SUPPORTED","etalon_confidence":0.95,"etalon_notes":"тривиально"}
+{"claim_id":4,"etalon_verdict":"AMBIGUOUS","etalon_confidence":0.6,"etalon_notes":"570°C пористость, марка стали не указана"}
+{"claim_id":5,"etalon_verdict":"SUPPORTED","etalon_confidence":0.85,"etalon_notes":"типичный диапазон"}
+{"claim_id":6,"etalon_verdict":"SUPPORTED","etalon_confidence":0.9,"etalon_notes":"x~sqrt(Dt)"}
+{"claim_id":7,"etalon_verdict":"SUPPORTED","etalon_confidence":0.9,"etalon_notes":"фазовая диаграмма Fe-N"}
+{"claim_id":8,"etalon_verdict":"UNSUPPORTED","etalon_confidence":0.4,"etalon_notes":"нет конкретики: какие нитриды Mo? размер?"}
+{"claim_id":9,"etalon_verdict":"UNSUPPORTED","etalon_confidence":0.4,"etalon_notes":"нет конкретики: VN? V2N? размер?"}
+{"claim_id":10,"etalon_verdict":"AMBIGUOUS","etalon_confidence":0.5,"etalon_notes":"стандартный режим не определён"}
+{"claim_id":11,"etalon_verdict":"SUPPORTED","etalon_confidence":0.85,"etalon_notes":"стандарт РФА для epsilon"}
+{"claim_id":12,"etalon_verdict":"SUPPORTED","etalon_confidence":0.85,"etalon_notes":"стандарт РФА для gamma-prime"}
+{"claim_id":13,"etalon_verdict":"SUPPORTED","etalon_confidence":0.8,"etalon_notes":"HV0.01-0.05 стандарт"}
+{"claim_id":14,"etalon_verdict":"UNSUPPORTED","etalon_confidence":0.5,"etalon_notes":"какое травление? для микротвёрдости искажает"}
+{"claim_id":15,"etalon_verdict":"SUPPORTED","etalon_confidence":0.95,"etalon_notes":"закон Фика"}
+{"claim_id":16,"etalon_verdict":"SUPPORTED","etalon_confidence":0.9,"etalon_notes":"Аррениус"}
+{"claim_id":17,"etalon_verdict":"SUPPORTED","etalon_confidence":0.85,"etalon_notes":"Callister 76.15, 77=округление"}
+{"claim_id":18,"etalon_verdict":"AMBIGUOUS","etalon_confidence":0.6,"etalon_notes":"D0 варьирует 10x в литературе"}
+{"claim_id":19,"etalon_verdict":"UNSUPPORTED","etalon_confidence":0.3,"etalon_notes":"общее утверждение, зависит от стали/типа износа"}
+{"claim_id":20,"etalon_verdict":"AMBIGUOUS","etalon_confidence":0.5,"etalon_notes":"не всегда, зависит от пост-обработки"}

@@ -1,7 +1,7 @@
 # Tech Debt Master — единый реестр проекта
 
-Дата: 2026-09-18
-Всего: 99 | open: 79 | closed: 20
+Дата: 2026-09-22
+Всего: 167 | open: 140 | closed: 27
 
 Префиксы: CD-* Coder, WR-* Writer, RS-* Researcher, PL-* plugin, TD-* общий.
 
@@ -10,6 +10,30 @@
 | ID | Sevr | Owner | Title | Source/Created |
 |---|---|---|---|---|
 | CD-004 | medium | coder-worker:factory | Pre-commit hook: проверка coder_dom в sync + stub-детекция на коммит | - |
+| RS-001 | critical | research-orchestrator | Автореферат v20: исправить завышенную плотность дислокаций ρ в литобзо | - |
+| RS-002 | critical | research-orchestrator | Автореферат v20: уточнить формулировку по ВКС-10 (термостабильность 55 | - |
+| RS-003 | high | research-orchestrator | Автореферат v20: дополнить состав ВКС-10 (W≈1%, V≈0.1%) и Р6М5 (W≈6%,  | - |
+| RS-004 | medium | research-orchestrator | Автореферат v20: вынести числа глубины проникновения рентгеновского из | - |
+| RS-006 | high | research-orchestrator | Список литературы НКР: УБРАТЬ ссылку [6] Гусакова (Al-Si сплавы) — не  | - |
+| RS-007 | high | research-orchestrator | Список литературы НКР: УБРАТЬ ссылку [13] Bacca (спектральное слияние  | - |
+| RS-009 | critical | research-orchestrator | Список литературы НКР: ИСПРАВИТЬ [7] — в тексте 'Энтин [7]', в списке  | - |
+| RS-010 | medium | research-orchestrator | Список литературы НКР: ИСПРАВИТЬ [9] — используется для Лахтина, но пр | - |
+| RS-011 | critical | research-orchestrator | Список литературы НКР: ДОБАВИТЬ реальные статьи, цитируемые в тексте,  | - |
+| RS-012 | high | research-orchestrator | Дерево клаймов: ИСПРАВИТЬ привязку c20-c24 (ВКС-10) — ошибочно привяза | - |
+| RS-013 | high | research-orchestrator | Список литературы НКР: ДОБАВИТЬ Trubin & Szasz 1991 (регуляризация XRD | - |
+| RS-014 | medium | research-orchestrator | Получить недостающие работы: статьи — sci-bot; монографии/книги — толь | - |
+| RS-015 | high | research-orchestrator | Sci-bot: баланс аккаунта = 0 (ниже floor 300000) — требуется пополнени | - |
+| RS-016 | medium | research-orchestrator | Найти sci-bot skill на Linux-машине orangepi (клиент лежал в /home/ora | - |
+| RS-017 | medium | research-orchestrator | Направление «лазер-индуцированные деформации»: добавлены статьи в клай | - |
+| RS-018 | medium | research-orchestrator | Направление «легирование»: Zhang 2014 (alloyed ε-(Fe1-xMx)3N) + Yang&S | - |
+| RS-019 | medium | research-orchestrator | Направление «напряжения/микродеформации в γ′-Fe4N»: Somers&Mittemeijer | - |
+| RS-020 | medium | research-orchestrator | Направление «избыточный азот»: Hekker 1985 (Fe-Cr) + Jung&Meka 2011 (F | - |
+| RS-021 | medium | research-orchestrator | Направление «термомеханическая обработка»: поиск по ТМО+азотирование д | - |
+| RS-022 | medium | research-orchestrator | Рекурсивное раскручивание дерева: собраны 39 DOI из списков литературы | - |
+| RS-023 | medium | research-orchestrator | Глубокий рекурсивный шаг: найдены классики диффузии N из списка Leinew | - |
+| RS-024 | critical | research-orchestrator | ГЛОБАЛЬНЫЙ ДОЛГ RESEARCHER: формализация отделения мусора от ценных ст | - |
+| RS-025 | high | research-orchestrator | Поисковый контракт: ОБЯЗАТЕЛЬНО сначала шерстить локальную БД (ChromaD | - |
+| RS-026 | critical | research-orchestrator | АВТОМАТИЗАЦИЯ КЛАСТЕРНОГО МЕТОДА ИЗУЧЕНИЯ ЛИТЕРАТУРЫ (cluster → Q&A →  | - |
 | TD-001 | high | code-orchestrator | Хардкод Linux путей | - |
 | TD-002 | high | profile_config | Legacy plugin hook не зарегистрирован в runtime | - |
 | TD-003 | medium | code-orchestrator | Дублирование route данных JSON vs TS | - |
@@ -76,8 +100,6 @@
 | TD-080 | high | writing-orchestrator | plan --topic всегда строит академический каркас (RELEVANCE/METHODS/RES | - |
 | TD-081 | medium | writing-orchestrator | Writing Brief не формализован как JSON-контракт (audience/vibe/thesis/ | - |
 | TD-082 | medium | writing-orchestrator | session_memory.json не инициализирована/не читается — кросс-сессионные | - |
-| TD-083 | high | writing-orchestrator | extract не извлекает citation/reference маркеры из markdown (только pa | - |
-| TD-084 | medium | writing-orchestrator | graphs строит только 7 из 13 графов на paragraph-artifact; G1/G2/G7/G8 | - |
 | TD-086 | low | writing-orchestrator | L1-ревью считает Mermaid-блоки, таблицы и код «предложениями» (LONG_SE | - |
 | TD-089 | medium | code-orchestrator | extract не извлекает markdown-таблицы (meta.table_count=0, tables=[])  | - |
 | TD-090 | medium | code-orchestrator | Пассивный скилл кодера: сбор тех долгов и актуализация в едином докуме | - |
@@ -88,12 +110,53 @@
 | TD-095 | medium | code-orchestrator | G9_revision_dependency дублирует ClaimRef-ноды (по одной на каждую rev | - |
 | TD-096 | low | code-orchestrator | G7_citation_provenance строится ClaimRef-only (1 нода) на параграфах Б | - |
 | TD-097 | medium | writing-orchestrator | Раздел результатов SEM/EDS Р18 540C: 8 подразделов и их проза в главе  | - |
+| TD-098 | high | research-orchestrator | Двойственность research-orchestrator: блок верификации текста не адапт | - |
+| TD-099 | high | code-orchestrator | Мост между оркестраторами (cross-orchestrator dispatch): code-orchestr | - |
+| TD-100 | medium | research-orchestrator | RESEARCH_RUNNER_SH — старый легаси-переменная в окружении research-orc | - |
+| TD-101 | high | claim-parser | claim-parser: контракт требует записать файл claims_parsed.json, но у  | - |
+| TD-102 | high | research-orchestrator | Детерминированная генерация claims_parsed.json даёт воду и плохо режет | - |
+| TD-103 | high | research-orchestrator | Нет переиспользуемой библиотеки research-модулей (sci-hub качальщик, п | - |
+| TD-104 | high | research-orchestrator | ChromaDB-инфраструктура семпоиска хрупкая: batch 17662 > лимит 5461 (п | - |
+| TD-105 | medium | research-orchestrator | Кросс-сессионное засорение временной папки C:\Temp\opencode: файл h2.p | - |
+| TD-106 | high | research-orchestrator | Нет авто-валидации внешних данных в пайплайне: sci-bot выдал фейк-DOI  | - |
+| TD-107 | high | code-orchestrator | harness_run: роуты не покрывают естественные формулировки задач — 'вер | - |
+| TD-108 | high | code-orchestrator | Роуты в runtime_snapshot.json не назначают агентов: agent: None почти  | - |
+| TD-109 | critical | code-orchestrator | Нет исполнения бандла: harness_run возвращает route/bundle/skills/tool | - |
+| TD-111 | medium | code-orchestrator | semantic_execute отключён по умолчанию (HARNESS_SEMANTIC_ENABLED!=1),  | - |
+| TD-112 | high | code-orchestrator | Маппинг путей (path_resolution_map.json / runtime_integration_policy.j | - |
+| TD-113 | high | research-orchestrator | Архитектурная ревизия BRICKS-кода (перенесён с сервера): мёртвая конфи | - |
+| TD-114 | high | research-orchestrator | Хардкод API-провайдера в synthesizer.py (base_url=https://api.aitunnel | - |
+| TD-115 | high | research-orchestrator | topics_tree.py: покрытие claim_id расходятся — test_c5: совпало 14/20  | - |
+| TD-116 | high | research-orchestrator | BRICKS-скрипты перенесены с сервера в рабочий harness, но требуют закр | - |
+| TD-117 | high | code-orchestrator | opencode run --agent НЕ вызывает субагентов: 'agent X is a subagent, n | - |
+| TD-118 | high | research-orchestrator | Таймауты агентов BRICKS-runner: source-fetcher упал по timeout 600с пр | - |
+| TD-120 | medium | research-orchestrator | run_research.py: фактор времени агентов не учтён в budget — PER_CALL_E | - |
+| TD-122 | high | research-orchestrator | Задача «собрать ГОСТы/ТУ + Фазовые_составы» не покрыта ролевым контрак | - |
+| TD-123 | high | research-orchestrator | Маппинг материал→норматив отсутствует: для 5 марок (Fe-тех, Р18, Р6М5, | - |
+| TD-124 | high | research-orchestrator | Нет провенанс-стандарта для собираемых материалов: пользователь требуе | - |
+| TD-125 | high | code-orchestrator | Прослеживаемость скачанных материалов не автоматизирована: сбор PDF ГО | - |
+| TD-126 | high | research-orchestrator | Цикл перфекционизма агента: «я ещё недостаточно хорошо реализовал код/ | - |
+| TD-127 | high | research-orchestrator | Агенты плодят временные скрипты: каждый виток/сессия создаёт ad-hoc py | - |
+| TD-128 | high | code-orchestrator | SearXNG-инстанс не поднимается автоматически: конфиг есть (config/mcp_ | - |
+| TD-129 | critical | research-orchestrator | КЛАСТЕР CL-16: Предварительная лазерная обработка → градиентные поля д | - |
+| TD-130 | high | researcher-orchestrator | Режим «сыщика» для researcher: раскрутка клубка зависимостей (citation | - |
+| TD-131 | high | researcher-orchestrator | Аналитика склонированных OSINT/детективных репозиториев: СНАЧАЛА тести | - |
+| TD-132 | critical | research-orchestrator | ИНТЕГРАЦИЯ СОВРЕМЕННЫХ ПАРАДИГМ В ЛИТОБЗОР (S-фаза, анизотропия XRD, t | - |
+| TD-133 | high | research-orchestrator | c18: исследовать возможности line profile analysis для корректного опр | - |
+| TD-134 | high | research-orchestrator | c22: проработать ОБОСНОВАНИЕ выбора температуры и времени азотирования | - |
+| TD-135 | high | research-orchestrator | Лазер: подобрать из литературы ОБОСНОВАНИЕ типов обработки, мощности л | - |
+| TD-136 | low | research-orchestrator | Папка литературных данных: F:\1\_STRUCTURED\09_LITERATURE\1_Литература | - |
+| TD-137 | medium | code-orchestrator | Канонический стек tools/ создан: scripts/tools/tech_debt_cli.py (add/c | - |
+| TD-138 | medium | code-orchestrator | Консолидация реестров техдолгов: канонический реестр = portable; иссле | - |
+| TD-139 | medium | code-orchestrator | Экранирование кавычек в PowerShell ломает inline python -c: агенты вын | - |
 
 ## Закрытые (closed)
 
 | ID | Title | Закрыт |
 |---|---|---|
 | CD-003 | verify_claim бросает AttributeError на не-dict входе (contract: должен | 2026-09-18 |
+| RS-005 | СПРАВКА: ссылка [3] Березина = АЗОТИРОВАНИЕ КОБАЛЬТСОДЕРЖАЩИХ СТАЛЕЙ ( | - |
+| RS-008 | Список литературы НКР: ИСПРАВИТЬ [4] — в тексте 'Гуляев [4]', в списке | - |
 | TD-012 | Memory policy lacks schema/storage contract | - |
 | TD-015 | Researcher baseline Guard/LocalCorpus failures remain unresolved | 2026-09-13 |
 | TD-018 | R2.3 dependency records are explicit and not yet derived from canonica | - |
@@ -110,6 +173,11 @@
 | TD-055 | Versioned bidirectional bridge protocol | - |
 | TD-063 | Workspace identity normalization | - |
 | TD-067 | doc_extract_server зависит от неустановленных MCP-doc зависимостей (py | 2026-09-17 |
+| TD-083 | extract не извлекает citation/reference маркеры из markdown (только pa | - |
+| TD-084 | graphs строит только 7 из 13 графов на paragraph-artifact; G1/G2/G7/G8 | - |
 | TD-085 | register (R3) возвращает verdict PASS при непустых MINOR issues — разм | - |
 | TD-087 | dom --qwen-dir даёт duplicate source id / claim id при слиянии plan-cl | - |
 | TD-088 | dom --qwen-dir: нумерация claims от qwen непоследовательна (C-9001, C- | - |
+| TD-110 | portable harness рассинхронизирован с исходным: OPENCODE_HARNESS_ROOT  | - |
+| TD-119 | Primary-обёртки субагентов (10 <name>-runner) созданы ТОЛЬКО в глобаль | - |
+| TD-121 | Кросс-оркестрация (TD-099) закрыта ТОЛЬКО для research-контура (resear | - |

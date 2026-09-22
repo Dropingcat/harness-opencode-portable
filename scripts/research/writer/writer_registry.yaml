@@ -1,0 +1,241 @@
+# writer_registry.yaml
+# Реестр ролей блока «Писатель»: мета-роли свиты + доменные писатели-генераторы.
+# Расширяет expert_registry.yaml (роли судей) генеративными ролями.
+#
+# Принцип: роли домен-агностичны (мета-роли) + доменные под-словари (физика, химия, ...).
+# Выбор роли — через оверлеп keywords узла ↔ markers роли (как в pattern_generator).
+
+version: 1
+
+# ── Мета-роли свиты (домен-агностичные) ──
+meta_roles:
+  generator:
+    id: "writer-generator"
+    description: "Писатель-генератор: переписывает научный текст по патчу"
+    competence: "владелец блока: получает claim + вектор + ответы автора → генерирует исправленный текст"
+    model: "deepseek-v4-flash"
+    provider: "aitunnel-flash"
+    temperature: 0.3
+    max_tokens: 4096
+    contract: "writer"
+    markers: ["переписать", "исправить", "добавить", "уточнить", "сформулировать"]
+
+  critic:
+    id: "writer-critic"
+    description: "Критик-скептик: атакует сгенерированный патч, ищет уязвимости"
+    competence: "адверсальная проверка: факт-чекинг, поиск противоречий, проверка границ компетенции"
+    model: "deepseek-v4-flash"
+    provider: "aitunnel-flash"
+    temperature: 0.2
+    max_tokens: 2048
+    contract: "critic"
+    markers: ["атаковать", "проверить", "противоречие", "уязвимость", "дыра", "ошибка"]
+    adversarial: true
+
+  reviewer:
+    id: "writer-reviewer"
+    description: "Рецензент: оценивает патч по критериям, сравнивает с соседними блоками"
+    competence: "внешняя рецензия: критерии научности, связность с соседними группами, соответствие стандартам"
+    model: "deepseek-v4-pro"
+    provider: "aitunnel-flash"
+    temperature: 0.2
+    max_tokens: 2048
+    contract: "review"
+    markers: ["рецензировать", "оценить", "критерии", "стандарт", "сравнить"]
+    scope: "global"  # видит соседние блоки
+
+  editor:
+    id: "writer-editor"
+    description: "Редактор: правит стиль, связность, терминологию без смены смысла"
+    competence: "стилистическая правка: связность, ясность, терминология, академический стиль"
+    model: "deepseek-v4-flash"
+    provider: "aitunnel-flash"
+    temperature: 0.3
+    max_tokens: 2048
+    contract: "edit"
+    markers: ["отредактировать", "стиль", "связность", "ясность", "терминология"]
+
+  proofreader:
+    id: "writer-proofreader"
+    description: "Корректор: сверяет числа, единицы, JSON-валидность, согласованность с ответами автора"
+    competence: "детерминированная + агентная проверка: числа из ответов автора, единицы, формат"
+    model: "deepseek-v4-flash"
+    provider: "aitunnel-flash"
+    temperature: 0.1
+    max_tokens: 1024
+    contract: "proof"
+    markers: ["скорректировать", "числа", "единицы", "формат", "опечатка"]
+    deterministic_priority: true  # сначала детерм. проверка, потом LLM
+
+# ── Доменные писатели-генераторы (физика конденсированного состояния) ──
+domain_writers:
+  physicist:
+    id: "writer-physicist"
+    description: "Физик-писатель: переписывает claims по физике КС (фазы, дифракция, параметры решётки)"
+    domain: "condensed_matter_physics"
+    competence: "физика конденсированного состояния: азотирование, РФА, нитридные фазы, микроструктура"
+    model: "deepseek-v4-pro"
+    provider: "aitunnel-flash"
+    temperature: 0.3
+    max_tokens: 4096
+    markers:
+      - "фаз"
+      - "phase"
+      - "нитрид"
+      - "nitride"
+      - "дифракц"
+      - "diffract"
+      - "решётк"
+      - "lattice"
+      - "микродеформац"
+      - "microstrain"
+      - "азотирован"
+      - "nitriding"
+      - "рентген"
+      - "xrd"
+      - "кристалл"
+      - "crystal"
+      - "структур"
+      - "structural"
+      - "параметр решетки"
+      - "lattice parameter"
+      - "област когерентного"
+      - "coherent scattering"
+      - "scherrer"
+      - "шеррер"
+      - "williamson"
+      - "уильямсон"
+    context_vector: "physical"
+
+  methodologist:
+    id: "writer-methodologist"
+    description: "Методолог-писатель: переписывает методические claims (методы, погрешности, выборка)"
+    domain: "scientific_methodology"
+    competence: "методология научного исследования: методы, погрешности, воспроизводимость, приборы"
+    model: "deepseek-v4-pro"
+    provider: "aitunnel-flash"
+    temperature: 0.3
+    max_tokens: 4096
+    markers:
+      - "метод"
+      - "method"
+      - "погрешност"
+      - "error"
+      - "измерен"
+      - "measure"
+      - "прибор"
+      - "instrument"
+      - "выборк"
+      - "sample"
+      - "воспроизводим"
+      - "reproducib"
+      - "методик"
+      - "procedure"
+      - "протокол"
+      - "protocol"
+      - "калибровк"
+      - "calibration"
+      - "стандарт"
+      - "standard"
+    context_vector: "structural"
+
+  tribologist:
+    id: "writer-tribologist"
+    description: "Триболог-писатель: переписывает claims по трибологии (износ, трение, твёрдость)"
+    domain: "tribology"
+    competence: "трибология: износ, трение, твёрдость, микротвёрдость, контактная выносливость"
+    model: "deepseek-v4-flash"
+    provider: "aitunnel-flash"
+    temperature: 0.3
+    max_tokens: 4096
+    markers:
+      - "износ"
+      - "wear"
+      - "трение"
+      - "friction"
+      - "твёрдост"
+      - "hardness"
+      - "триболог"
+      - "tribolog"
+      - "контактн"
+      - "contact"
+      - "смазк"
+      - "lubricat"
+      - "шероховатост"
+      - "roughness"
+      - "коэффициент трения"
+      - "friction coefficient"
+    context_vector: "physical"
+
+  materials_scientist:
+    id: "writer-materials"
+    description: "Материаловед-писатель: переписывает claims по материаловедению (сплавы, термообработка)"
+    domain: "materials_science"
+    competence: "материаловедение: сплавы, термообработка, микроструктура, механические свойства"
+    model: "deepseek-v4-flash"
+    provider: "aitunnel-flash"
+    temperature: 0.3
+    max_tokens: 4096
+    markers:
+      - "сплав"
+      - "alloy"
+      - "стал"
+      - "steel"
+      - "термообработк"
+      - "heat treatment"
+      - "закалк"
+      - "quench"
+      - "отпуск"
+      - "temper"
+      - "микроструктур"
+      - "microstructure"
+      - "зерно"
+      - "grain"
+      - "мартенсит"
+      - "martensit"
+      - "аустенит"
+      - "austenit"
+      - "прочност"
+      - "strength"
+      - "пластичност"
+      - "ductility"
+    context_vector: "physical"
+
+# ── Правила выбора писателя ──
+selection:
+  # Детерминированный оверлеп (0₽): keywords узла ∩ markers роли
+  # При неоднозначности (несколько кандидатов) — meta-select (LLM, ~0.02₽)
+  method: "overlap_first"
+  fallback: "meta_select"
+  meta_select_model: "deepseek-v4-flash"
+  meta_select_max_candidates: 3
+
+# ── Параметры свиты ──
+suite:
+  # Волна A: критик + корректор (параллельно)
+  wave_A:
+    roles: ["critic", "proofreader"]
+    parallel: true
+    order: "any"
+  # Волна B: редактор + рецензент (параллельно, после revising)
+  wave_B:
+    roles: ["editor", "reviewer"]
+    parallel: true
+    order: "any"
+  # Полная свита: все 5 ролей
+  full_suite:
+    roles: ["generator", "critic", "reviewer", "editor", "proofreader"]
+
+# ── Бюджеты ──
+budgets:
+  # На одну Writer Cell (ячейку)
+  per_cell:
+    max_tokens: 40000
+    max_cost_rub: 0.5
+  # Распределение по ролям (доли от бюджета ячейки)
+  shares:
+    generator: 0.35
+    critic: 0.15
+    reviewer: 0.20
+    editor: 0.15
+    proofreader: 0.15

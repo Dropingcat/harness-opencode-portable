@@ -1,0 +1,59 @@
+# context_vectors.yaml
+# Динамический контекст по тезису: вектора сжатия для ролей.
+# Правило: контекст сжимается ПО-РАЗНОМУ под роль — разный объём и вектор.
+
+vectors:
+  physical:
+    role: "физик-критик"
+    volume: "max"
+    focus: "все числа, единицы, размерности, условия, методика, фазы"
+    collect: ["numbers", "units", "conditions", "method", "phases"]
+    drop: ["пересказы без чисел", "общие рассуждения"]
+  structural:
+    role: "методолог"
+    volume: "medium"
+    focus: "методика, погрешности, выборка, воспроизводимость, перекрёстные упоминания"
+    collect: ["method", "error", "sample", "reproducibility", "cross_mentions"]
+    drop: ["числа без методики"]
+  critical:
+    role: "скептик"
+    volume: "compact"
+    focus: "уязвимости, дыры, противоречия, отсутствующие условия"
+    collect: ["contradictions", "gaps", "missing_conditions", "weak_points"]
+    adversarial: true
+    drop: ["подтверждающее без противоречий"]
+  defensive:
+    role: "адвокат"
+    volume: "compact"
+    focus: "что защищает claim: прямые подтверждения, числа в диапазоне"
+    collect: ["supports", "confirming_numbers", "in_range"]
+    drop: ["противоречащее"]
+  logic:
+    role: "логик"
+    volume: "medium"
+    focus: "посылки → данные → вывод, порядок выкладок"
+    collect: ["premises", "inferences", "conclusions", "sequence"]
+    drop: ["несвязанные факты"]
+
+# Маппинг ролей на вектора
+role_to_vector:
+  physics-advocate: "critical"
+  fact-checker: "physical"
+  tribunal-judge-physic: "physical"
+  tribunal-judge-methodologist: "structural"
+  tribunal-judge-skeptic: "critical"
+  tribunal-judge-advocate: "defensive"
+  literature-searcher: "physical"
+
+# Параметры сборки
+collection:
+  completeness_over_brevity: true
+  adversarial_for_critical: true
+  numbers_never_dropped: true
+  max_fragments_per_vector: 15
+
+# Лимиты на пере-сбор (эксперимент 3g, ещё не включено)
+recollect:
+  enabled: false
+  max_iterations: 2
+  trigger: "gaps_not_empty OR weak_verdict"

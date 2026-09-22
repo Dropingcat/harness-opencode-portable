@@ -29,3 +29,13 @@ Thumbs.db
 
 # OpenCode session data (machine-specific)
 opencode.db*
+
+# Nested .opencode inside scripts/research (machine-local, node_modules etc.)
+scripts/research/.opencode/
+
+# Server copy-duplicates "[1]" and lock files (machine-local artifacts)
+*[1].json
+*[1].md
+*[1].txt
+*[1].jsonl
+*.lock

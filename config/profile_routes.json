@@ -1,70 +1,76 @@
 {
   "version": 2,
   "generated": true,
-  "generated_from_policy_hash": "8910fd61122b450212d5bc459cdb52acdc02aa3cf6d87a37c5eaa3778e3cdfef",
+  "generated_from_policy_hash": "df07cc313e630e6a37113748e77d356467d978c94d30104b9a28965cf85e0cd9",
   "routes": {
     "academic-research": {
-      "match_regex": "(paper|arxiv|openalex|doi|pubmed|literature|citation|study|статья|публикац|литератур|источник)",
+      "match_regex": "(paper|arxiv|openalex|doi|pubmed|literature|citation|study|статья|публикац|литератур|источник|верификац|клайм|клаим|проверь факт|проверь утверждени|научн\\w* текст|fact.?check|вердикт)",
       "bucket": "research",
       "default_profile": "strict",
       "priority": 75
     },
     "code-implementation": {
-      "match_regex": "(implement|add|fix|refactor|bug|feature|compile|build|исправ|добав|рефактор|код|тест)",
+      "match_regex": "(implement|add|fix|refactor|bug|feature|compile|build|исправ|добав|рефактор|код|тест|реализуй|реализация|почини|исправь баг)",
       "bucket": "code",
       "default_profile": "standard",
       "priority": 50
     },
     "code-review": {
-      "match_regex": "(review|audit|quality|security|ревью|аудит|проверь код)",
+      "match_regex": "(review|audit|quality|security|ревью|аудит|проверь код|проверь качество|найди проблем)",
       "bucket": "code",
       "default_profile": "standard",
       "priority": 90
     },
     "document-extraction": {
-      "match_regex": "(pdf|docx|xlsx|extract|document|документ|извлеч|распарс)",
+      "match_regex": "(pdf|docx|xlsx|extract|document|документ|извлеч|распарс|распарси|прочитай файл)",
       "bucket": "writing",
       "default_profile": "standard",
       "priority": 65
     },
+    "glossary-maintenance": {
+      "match_regex": "(glossary|глоссари|реестр функц|обнови реестр|registry|функциональн\\w* реестр|пересобери)",
+      "bucket": "integration",
+      "default_profile": "standard",
+      "priority": 79
+    },
     "opencode-config": {
-      "match_regex": "(opencode|agent|skill|mcp|plugin|config|router|hook|конфиг|агент|скил|роутер|хук)",
+      "match_regex": "(opencode|agent|skill|mcp|plugin|config|router|hook|конфиг|агент|скилл|настрой opencode)",
       "bucket": "integration",
       "default_profile": "standard",
       "priority": 60
     },
     "optimization": {
-      "match_regex": "(optimize|performance|latency|speed|memory|benchmark|ускор|оптимиз|памят|бенч)",
+      "match_regex": "(optimize|performance|latency|speed|memory|benchmark|ускор|оптимизируй|производительн)",
       "bucket": "code",
       "default_profile": "strict",
       "priority": 85
     },
     "service-automation": {
-      "match_regex": "(calendar|gmail|drive|slack|github issue|send email|service|календар|почт|диск|сервис)",
+      "match_regex": "(calendar|gmail|drive|slack|github issue|send email|service|автоматизир)",
       "bucket": "integration",
       "default_profile": "strict",
       "priority": 82
     },
     "tech-debt": {
-      "match_regex": "(tech debt|техдолг|debt|sunset|owner|severity)",
+      "match_regex": "(tech debt|техдолг|debt|sunset|owner|severity|долг|зафиксируй блок|запиши в долг)",
       "bucket": "integration",
       "default_profile": "standard",
       "priority": 80
     },
     "triz-architecture": {
-      "match_regex": "(triz|ariz|contradiction|ИКР|ideal|trade-off|архитектура|противоречие|refactor architecture)",
+      "match_regex": "(triz|ariz|contradiction|ИКР|ideal|trade-off|архитектура|противореч)",
       "bucket": "code",
       "default_profile": "strict",
       "priority": 88
     },
     "web-research": {
-      "match_regex": "(web|search|latest|current|url|site|интернет|поиск|сайт|актуальн)",
+      "match_regex": "(web|search|latest|current|url|site|интернет|поиск|сайт|актуальн|найди источник|найди статью|найди информацию|поищи|собери материал)",
       "bucket": "research",
       "default_profile": "standard",
       "priority": 70
     },
     "writing-prose": {
-      "match_regex": "(rewrite|writing|prose|article|report|перепиши|написать текст|стиль|редактир)",
+      "match_regex": "(rewrite|writing|prose|article|report|перепиши|написать текст|написать статью|напиши статью|напиши|стиль|редактир|рерайт|черновик|оформи)",
       "bucket": "writing",
       "default_profile": "standard",
       "priority": 55
