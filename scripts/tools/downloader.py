@@ -26,6 +26,8 @@ import re
 import ssl
 import sys
 import time
+import json
+import socket
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -42,6 +44,48 @@ DEFAULT_TIMEOUT = 60
 MAX_RETRIES = 3
 BACKOFF = [2, 5, 10]
 
+# DoH (DNS over HTTPS) резолверы — обход системного DNS (TD-153)
+DOH_RESOLVERS = [
+    "https://cloudflare-dns.com/dns-query?name={host}&type=A",
+    "https://dns.google/resolve?name={host}&type=A",
+    "https://1.1.1.1/dns-query?name={host}&type=A",
+]
+DOH_HEADERS = {"accept": "application/dns-json"}
+
+
+def resolve_alt_dns(host: str, timeout: int = 8) -> str | None:
+    """Резолв хоста через DoH (DNS over HTTPS), обходя системный DNS (TD-153)."""
+    for tmpl in DOH_RESOLVERS:
+        try:
+            url = tmpl.format(host=urllib.parse.quote(host))
+            req = urllib.request.Request(url, headers={**UA_HEADERS(), **DOH_HEADERS})
+            with urllib.request.urlopen(req, timeout=timeout) as r:
+                d = json.loads(r.read().decode("utf-8", errors="replace"))
+            for ans in d.get("Answer", []):
+                if ans.get("type") == 1 and ans.get("data"):
+                    ip = ans["data"]
+                    if ip and not ip.startswith("0."):
+                        return ip
+        except Exception:
+            continue
+    return None
+
+
+def UA_HEADERS() -> dict:
+    return {"User-Agent": UA}
+
+
+def dns_preflight(host: str) -> dict:
+    """Проверить резолв хоста системным DNS и DoH (TD-153)."""
+    result = {"host": host, "system_dns": None, "doh_dns": None, "ok": False}
+    try:
+        result["system_dns"] = socket.gethostbyname(host)
+    except Exception as e:
+        result["system_dns_error"] = str(e)[:80]
+    result["doh_dns"] = resolve_alt_dns(host)
+    result["ok"] = bool(result["system_dns"] or result["doh_dns"])
+    return result
+
 
 def _ctx(verify: bool = True) -> ssl.SSLContext:
     c = ssl.create_default_context()
@@ -53,11 +97,22 @@ def _ctx(verify: bool = True) -> ssl.SSLContext:
 
 def http_get(url: str, timeout: int = DEFAULT_TIMEOUT, verify: bool = True,
              retries: int = MAX_RETRIES, binary: bool = True) -> tuple[int, bytes | str]:
-    """GET с retry/backoff. Возвращает (status, body_bytes|text)."""
+    """GET с retry/backoff + обход DNS (TD-153).
+
+    При ENOTFOUND/NameResolutionError резолвим хост через DoH и повторяем
+    запрос на IP с Host-заголовком (обход заблокированного системного DNS).
+    Возвращает (status, body_bytes|text).
+    """
     last = None
+    host_by_ip = None  # (ip, host) для обхода DNS
     for attempt in range(retries + 1):
         try:
             req = urllib.request.Request(url, headers={"User-Agent": UA, "Accept": "*/*"})
+            if host_by_ip:
+                ip, host = host_by_ip
+                url_ip = url.replace(f"://{host}", f"://{ip}", 1)
+                req = urllib.request.Request(url_ip, headers={"User-Agent": UA, "Accept": "*/*",
+                                                             "Host": host})
             with urllib.request.urlopen(req, timeout=timeout, context=_ctx(verify)) as r:
                 data = r.read()
                 return r.status, data
@@ -65,6 +120,16 @@ def http_get(url: str, timeout: int = DEFAULT_TIMEOUT, verify: bool = True,
             last = f"HTTP {e.code}"
             if e.code in (403, 404, 410):
                 return e.code, b""
+        except (socket.gaierror, urllib.error.URLError) as e:
+            last = str(e)[:120]
+            # Обход DNS: резолвим через DoH и пробуем IP+Host
+            if not host_by_ip:
+                parsed = urllib.parse.urlparse(url)
+                ip = resolve_alt_dns(parsed.hostname)
+                if ip:
+                    host_by_ip = (ip, parsed.hostname)
+                    print(f"DNS fallback: {parsed.hostname} -> {ip} (DoH)", file=sys.stderr)
+                    continue  # пробуем сразу
         except Exception as e:
             last = str(e)[:120]
         if attempt < retries:
@@ -432,6 +497,13 @@ def cmd_extract(args) -> int:
     return 0
 
 
+def cmd_dns(args) -> int:
+    """Проверка резолва хоста системным DNS и DoH (TD-153)."""
+    res = dns_preflight(args.host)
+    print(json.dumps(res, ensure_ascii=False, indent=2))
+    return 0 if res.get("ok") else 3
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description="Канонический загрузчик источников (TD-127)")
     ap.add_argument("--timeout", type=int, default=DEFAULT_TIMEOUT)
@@ -461,6 +533,10 @@ def main() -> int:
     p.add_argument("--out", required=True)
     p.add_argument("--name", default=None)
     p.set_defaults(fn=cmd_resolve)
+
+    p = sub.add_parser("dns", help="проверить резолв хоста (TD-153)")
+    p.add_argument("--host", required=True)
+    p.set_defaults(fn=cmd_dns)
 
     p = sub.add_parser("extract", help="извлечь текст из PDF (pypdf)")
     p.add_argument("--pdf", required=True)

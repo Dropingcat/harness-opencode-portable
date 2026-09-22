@@ -85,3 +85,21 @@ python scripts/tools/tech_debt_cli.py auto --desc "<что случилось, �
 3. **Диагностику повторов** делай через: `python scripts/tools/session_analyzer.py tools <session.json>` (частые инструменты/ошибки).
 
 Роутер: задача «аудитор проверь повторы» → tech-debt/opencode-config маршрут → code-orchestrator → session_analyzer + техдолг оптимизации.
+
+## Просмотр сессий агентов (TD-150) — oc://renderer
+
+Чтобы посмотреть, что реально сделал агент (в т.ч. субагент в отдельной ветке opencode), используй **renderer-ссылку сессии**:
+
+```
+oc://renderer/server/<server-id>/session/<session-id>
+```
+
+- **server-id** — идентификатор opencode-сервера (например `c2lkZWNhcg`)
+- **session-id** — id сессии (например `ses_f35d789d1ffeerjnBq3Mzs4vmg`)
+- Формат открывает сессию в интерфейсе opencode (renderer), где видна вся ветка сообщений агента — включая субагентские вызовы, ошибки, артефакты.
+
+**Как узнать id:**
+- Текущая сессия: `oc://renderer/server/<server-id>/session/<текущий-id>` — id виден в начале сессии (при старте) или в логе.
+- Субагентская: при падении субагента (task) его сессия живёт во вложенной ветке; renderer-ссылка на неё открывается из родительской сессии (клик по задаче/ветке) или из лога `storage/session_diff/`.
+
+**Когда использовать (TD-150):** субагент упал → НЕ гадай «ничего не сделал» — открой его сессию через renderer-ссылку, посмотри stdout/stderr/артефакты. Если ссылка не доступна — прочитай сессию через `session_analyzer.py dump <session.json>`.
