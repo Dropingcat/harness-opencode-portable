@@ -178,13 +178,30 @@ def cmd_doi(args) -> int:
 
 
 def cmd_url(args) -> int:
+    """Универсальный загрузчик: GET URL → файл + провенанс.
+
+    --expect pdf (или .pdf в имени) — проверяет %PDF; при несоответствии НЕ
+    сохраняет как успех (TD-125/151: не подсовывать HTML вместо PDF).
+    """
     url = args.url
     out = Path(args.out)
-    status, data = http_get(url, timeout=args.timeout)
-    if status != 200 or not isinstance(data, bytes):
-        print(f"GET {url} -> {status}", file=sys.stderr)
-        return 4
     name = args.name or Path(urllib.parse.urlparse(url).path).name or "download.bin"
+    expect_pdf = args.expect == "pdf" or (not args.expect and name.lower().endswith(".pdf"))
+
+    status, data = http_get(url, timeout=args.timeout, retries=args.retries)
+    if status != 200 or not isinstance(data, bytes) or not data:
+        print(f"GET {url} -> {status} (после {args.retries} ретраев)", file=sys.stderr)
+        return 4
+
+    if expect_pdf and not is_pdf(data):
+        # Не PDF: сохраняем как unknown (не .pdf), помечаем, чтобы не путать
+        if data[:4] in (b"<htm", b"<!DO", b"<hea"):
+            print(f"ERROR: {url} вернул HTML (не PDF), не сохраняю как {name} — вероятно, ссылка/капча", file=sys.stderr)
+            (out / f"{name}.html").write_bytes(data)
+            return 5
+        print(f"WARN: {url} — не PDF (первые {data[:8]!r}), сохраняю как {name}.bin", file=sys.stderr)
+        name = name + ".bin"
+
     method = "http"
     vstatus = "verified_pdf" if is_pdf(data) else ("text" if data[:2] in (b"{\"", b"[{") else "unknown")
     save_with_provenance(data, out, name, url, method, vstatus)
@@ -237,10 +254,12 @@ def main() -> int:
     p.add_argument("--skip-crossref", action="store_true")
     p.set_defaults(fn=cmd_doi)
 
-    p = sub.add_parser("url", help="скачать по прямому URL")
+    p = sub.add_parser("url", help="скачать по прямому URL (универсальный)")
     p.add_argument("--url", required=True)
     p.add_argument("--out", required=True)
     p.add_argument("--name", default=None)
+    p.add_argument("--expect", choices=["pdf", "text", "any"], default=None, help="ожидаемый тип (pdf — проверит %PDF)")
+    p.add_argument("--retries", type=int, default=3)
     p.set_defaults(fn=cmd_url)
 
     p = sub.add_parser("crossref", help="проверить DOI через CrossRef")

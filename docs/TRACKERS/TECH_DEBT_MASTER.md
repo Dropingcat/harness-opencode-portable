@@ -1,7 +1,7 @@
 # Tech Debt Master — единый реестр проекта
 
 Дата: 2026-09-22
-Всего: 177 | open: 133 | closed: 44
+Всего: 178 | open: 129 | closed: 49
 
 Префиксы: CD-* Coder, WR-* Writer, RS-* Researcher, PL-* plugin, TD-* общий.
 
@@ -121,12 +121,7 @@
 | TD-112 | high | code-orchestrator | Маппинг путей (path_resolution_map.json / runtime_integration_policy.j | - |
 | TD-116 | high | research-orchestrator | BRICKS-скрипты перенесены с сервера в рабочий harness, но требуют закр | - |
 | TD-117 | high | code-orchestrator | opencode run --agent НЕ вызывает субагентов: 'agent X is a subagent, n | - |
-| TD-118 | high | research-orchestrator | Таймауты агентов BRICKS-runner: source-fetcher упал по timeout 600с пр | - |
 | TD-120 | medium | research-orchestrator | run_research.py: фактор времени агентов не учтён в budget — PER_CALL_E | - |
-| TD-122 | high | research-orchestrator | Задача «собрать ГОСТы/ТУ + Фазовые_составы» не покрыта ролевым контрак | - |
-| TD-123 | high | research-orchestrator | Маппинг материал→норматив отсутствует: для 5 марок (Fe-тех, Р18, Р6М5, | - |
-| TD-124 | high | research-orchestrator | Нет провенанс-стандарта для собираемых материалов: пользователь требуе | - |
-| TD-125 | high | code-orchestrator | Прослеживаемость скачанных материалов не автоматизирована: сбор PDF ГО | - |
 | TD-126 | high | research-orchestrator | Цикл перфекционизма агента: «я ещё недостаточно хорошо реализовал код/ | - |
 | TD-128 | high | code-orchestrator | SearXNG-инстанс не поднимается автоматически: конфиг есть (config/mcp_ | - |
 | TD-129 | critical | research-orchestrator | КЛАСТЕР CL-16: Предварительная лазерная обработка → градиентные поля д | - |
@@ -142,6 +137,7 @@
 | TD-141 | medium | code-orchestrator | harness_run (плагин) расходится с core resolve(): core возвращает прав | - |
 | TD-149 | high | research-orchestrator | Найти аналог модуля глубокого исследования (как GPT Deep Research / Qw | - |
 | TD-150 | high | research-orchestrator | Агент не может прочитать сессию субагента (субагентская ветка opencode | - |
+| TD-151 | high | research-orchestrator | Резолвер извлекает только первые 4 страницы (свойства на других страни | - |
 
 ## Закрытые (closed)
 
@@ -180,8 +176,13 @@
 | TD-113 | Архитектурная ревизия BRICKS-кода (перенесён с сервера): мёртвая конфи | - |
 | TD-114 | Хардкод API-провайдера в synthesizer.py (base_url=https://api.aitunnel | - |
 | TD-115 | topics_tree.py: покрытие claim_id расходятся — test_c5: совпало 14/20  | - |
+| TD-118 | Таймауты агентов BRICKS-runner: source-fetcher упал по timeout 600с пр | - |
 | TD-119 | Primary-обёртки субагентов (10 <name>-runner) созданы ТОЛЬКО в глобаль | - |
 | TD-121 | Кросс-оркестрация (TD-099) закрыта ТОЛЬКО для research-контура (resear | - |
+| TD-122 | Задача «собрать ГОСТы/ТУ + Фазовые_составы» не покрыта ролевым контрак | - |
+| TD-123 | Маппинг материал→норматив отсутствует: для 5 марок (Fe-тех, Р18, Р6М5, | - |
+| TD-124 | Нет провенанс-стандарта для собираемых материалов: пользователь требуе | - |
+| TD-125 | Прослеживаемость скачанных материалов не автоматизирована: сбор PDF ГО | - |
 | TD-127 | Агенты плодят временные скрипты: каждый виток/сессия создаёт ad-hoc py | - |
 | TD-137 | Канонический стек tools/ создан: scripts/tools/tech_debt_cli.py (add/c | - |
 | TD-140 | Нет единой карты диспатча 'задача → контур → инструмент': агент путает | - |
