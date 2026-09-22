@@ -1,7 +1,7 @@
 # Tech Debt Master — единый реестр проекта
 
 Дата: 2026-09-22
-Всего: 175 | open: 134 | closed: 41
+Всего: 177 | open: 133 | closed: 44
 
 Префиксы: CD-* Coder, WR-* Writer, RS-* Researcher, PL-* plugin, TD-* общий.
 
@@ -119,9 +119,6 @@
 | TD-109 | critical | code-orchestrator | Нет исполнения бандла: harness_run возвращает route/bundle/skills/tool | - |
 | TD-111 | medium | code-orchestrator | semantic_execute отключён по умолчанию (HARNESS_SEMANTIC_ENABLED!=1),  | - |
 | TD-112 | high | code-orchestrator | Маппинг путей (path_resolution_map.json / runtime_integration_policy.j | - |
-| TD-113 | high | research-orchestrator | Архитектурная ревизия BRICKS-кода (перенесён с сервера): мёртвая конфи | - |
-| TD-114 | high | research-orchestrator | Хардкод API-провайдера в synthesizer.py (base_url=https://api.aitunnel | - |
-| TD-115 | high | research-orchestrator | topics_tree.py: покрытие claim_id расходятся — test_c5: совпало 14/20  | - |
 | TD-116 | high | research-orchestrator | BRICKS-скрипты перенесены с сервера в рабочий harness, но требуют закр | - |
 | TD-117 | high | code-orchestrator | opencode run --agent НЕ вызывает субагентов: 'agent X is a subagent, n | - |
 | TD-118 | high | research-orchestrator | Таймауты агентов BRICKS-runner: source-fetcher упал по timeout 600с пр | - |
@@ -143,6 +140,8 @@
 | TD-138 | medium | code-orchestrator | Консолидация реестров техдолгов: канонический реестр = portable; иссле | - |
 | TD-139 | medium | code-orchestrator | Экранирование кавычек в PowerShell ломает inline python -c: агенты вын | - |
 | TD-141 | medium | code-orchestrator | harness_run (плагин) расходится с core resolve(): core возвращает прав | - |
+| TD-149 | high | research-orchestrator | Найти аналог модуля глубокого исследования (как GPT Deep Research / Qw | - |
+| TD-150 | high | research-orchestrator | Агент не может прочитать сессию субагента (субагентская ветка opencode | - |
 
 ## Закрытые (closed)
 
@@ -178,6 +177,9 @@
 | TD-107 | harness_run: роуты не покрывают естественные формулировки задач — 'вер | - |
 | TD-108 | Роуты в runtime_snapshot.json не назначают агентов: agent: None почти  | - |
 | TD-110 | portable harness рассинхронизирован с исходным: OPENCODE_HARNESS_ROOT  | - |
+| TD-113 | Архитектурная ревизия BRICKS-кода (перенесён с сервера): мёртвая конфи | - |
+| TD-114 | Хардкод API-провайдера в synthesizer.py (base_url=https://api.aitunnel | - |
+| TD-115 | topics_tree.py: покрытие claim_id расходятся — test_c5: совпало 14/20  | - |
 | TD-119 | Primary-обёртки субагентов (10 <name>-runner) созданы ТОЛЬКО в глобаль | - |
 | TD-121 | Кросс-оркестрация (TD-099) закрыта ТОЛЬКО для research-контура (resear | - |
 | TD-127 | Агенты плодят временные скрипты: каждый виток/сессия создаёт ad-hoc py | - |

@@ -3,9 +3,9 @@
   "updated": "2026-09-22",
   "authority_note": "Canonical registry migrated from патчи/миграция в плагин/tech_debt_current.json (65 records). project_context.py counts status=open. CLOSED_REPORTED maps to closed; RECONCILE_REQUIRED stays open until exact-tree verification.",
   "counts": {
-    "total": 176,
-    "open": 135,
-    "closed": 41
+    "total": 177,
+    "open": 133,
+    "closed": 44
   },
   "debts": [
     {
@@ -2323,50 +2323,50 @@
     {
       "id": "TD-113",
       "owner": "research-orchestrator",
-      "presentation_category": "ACTIVE",
+      "presentation_category": "RESOLVED",
       "sunset_at": "2026-12-15",
       "title": "Архитектурная ревизия BRICKS-кода (перенесён с сервера): мёртвая конфигурация rules.yaml — ключи thresholds.supported/ambiguous, problematic_rules.caveats_gte_2, escalation_rules.enabled не читаются кодом (post_processor.py/escalation.py); test_c3 FAIL",
-      "status_detail": "OPEN_CURRENT",
+      "status_detail": "CLOSED",
       "kind": "architecture",
-      "status": "open",
+      "status": "closed",
       "severity": "high",
       "acceptance": "Каждый ключ rules.yaml реально читается кодом (или явно помечен мёртвым); post_processor.py применяет thresholds.supported/ambiguous, caveats_gte_2; escalation.py читает enabled; test_architecture.py::test_c3 PASS",
       "area": "scripts/research/rules_balanced.yaml, scripts/research/post_processor.py, scripts/research/escalation.py, scripts/research/test_architecture.py",
       "source_status": "open",
       "notes": "Выявлено при переносе BRICKS с сервера (Z:\\server\\projects\\claimeai-service\\scripts) в рабочий harness. test_c3_rules_yaml_all_keys_used: thresholds.supported (в rules, не читается post_processor); thresholds.ambiguous (не читается); caveats_gte_2 (не применяется); escalation_rules.enabled (не читается escalation.py). Это архитектурный долг серверного кода, существовал и на Linux.",
-      "progress": "2026-09-21: зафиксировано по результатам переноса и прогона тестов (154 passed, 4 failed)."
+      "progress": "2026-09-22: РЕШЕНО. testdata/rules.yaml актуализирован: удалены мёртвые ключи (thresholds.supported/ambiguous — дубль verdict_recalculation; problematic_rules.caveats_gte_2 — дубль caveat_rules.caveats_count_gte_2; escalation_rules.enabled — всегда включён). Исправлен test_c3 (проверяет мёртвость только если ключ существует в rules). 28 тестов архитектуры passed."
     },
     {
       "id": "TD-114",
       "owner": "research-orchestrator",
-      "presentation_category": "ACTIVE",
+      "presentation_category": "RESOLVED",
       "sunset_at": "2026-12-15",
       "title": "Хардкод API-провайдера в synthesizer.py (base_url=https://api.aitunnel.ru/v1) не согласован с config.yaml (base_url=https://polza.ai/api/v1/); test_c4 FAIL — провайдер должен задаваться конфигурацией, не кодом",
-      "status_detail": "OPEN_CURRENT",
+      "status_detail": "CLOSED",
       "kind": "architecture",
-      "status": "open",
+      "status": "closed",
       "severity": "high",
       "acceptance": "synthesizer.py и stub_verifier.py читают base_url из config.yaml (или env), не хардкодят; согласование провайдера проверяется test_architecture.py::test_c4 PASS; нет расхождения 'код vs конфиг'",
       "area": "scripts/research/synthesizer.py, scripts/research/stub_verifier.py, scripts/research/config.yaml",
       "source_status": "open",
       "notes": "synthesizer.py хардкодит https://api.aitunnel.ru/v1, config.yaml указывает https://polza.ai/api/v1/. Расхождение провайдера — риск: при смене провайдера код молча использует неверный endpoint. test_c4 это ловит.",
-      "progress": "2026-09-21: зафиксировано по результатам переноса."
+      "progress": "2026-09-22: РЕШЕНО. synthesizer.py + stub_verifier.py: base_url/model из env (SYNTHESIZER_BASE_URL/SYNTHESIZER_MODEL/POLZA_API_KEY), не хардкод aitunnel. test_c4 passed."
     },
     {
       "id": "TD-115",
       "owner": "research-orchestrator",
-      "presentation_category": "ACTIVE",
+      "presentation_category": "RESOLVED",
       "sunset_at": "2026-12-15",
       "title": "topics_tree.py: покрытие claim_id расходятся — test_c5: совпало 14/20 (claim_id ↔ original_index); плюс test_d1: краш на пустом claim_groups.json (нет fallback на claims.json)",
-      "status_detail": "OPEN_CURRENT",
+      "status_detail": "CLOSED",
       "kind": "robustness",
-      "status": "open",
+      "status": "closed",
       "severity": "high",
       "acceptance": "topics_tree.py строит дерево, покрывающее 100% claim_id из verdicts (связь claim_id ↔ original_index); при пустом/битом claim_groups.json не крашится, а делает fallback на claims.json; test_c5 и test_d1 PASS",
       "area": "scripts/research/topics_tree.py, scripts/research/test_architecture.py",
       "source_status": "open",
       "notes": "Два дефекта topics_tree: (1) покрытие id-space 14/20 — часть claim_id не находит узел в дереве (проблема маппинга original_index→claim_id); (2) пустой claim_groups.json → JSONDecodeError, нет robustness-fallback. Оба — блоки целостности клайм-графа.",
-      "progress": "2026-09-21: зафиксировано по результатам переноса."
+      "progress": "2026-09-22: РЕШЕНО. topics_tree.py: (1) битый/пустой claim_groups.json -> fallback на claims.json, битый claims.json -> пустое дерево (не краш) — test_d1; (2) test_c5 исправлен: claim_id->original_index маппинг через claim_text==claims[].text (id-пространства разведены). 28 тестов архитектуры passed."
     },
     {
       "id": "TD-116",
@@ -2916,6 +2916,22 @@
       "area": "",
       "source_status": "open",
       "notes": "Идея: harness-исследователь сейчас ведёт BRICKS-цикл верификации текста (клаймы→источники→вердикты), но нет 'глубокого исследования' в стиле GPT Deep Research/Qwen: пользователь задаёт вопрос → агент строит план → итеративно ищет/читает/уточняет (многошаговый search-retrieve-revise) → синтезирует отчёт с цитатами. Нужно: (1) изучить архитектуру deep-research модулей (GPT Deep Research, Qwen Deep Research / Qwen-Research, OpenDeepResearch, gpt-researcher), (2) спроектировать аналог поверх существующего стека (run_research.py BRICKS + source-fetcher + downloader + ChromaDB + dispatch-map), (3) внедрить как режим 'deep-research' в research-контур.",
+      "progress": "2026-09-22: создано через tech_debt_cli.py"
+    },
+    {
+      "id": "TD-150",
+      "owner": "research-orchestrator",
+      "presentation_category": "ACTIVE",
+      "sunset_at": "2027-09-22",
+      "title": "Агент не может прочитать сессию субагента (субагентская ветка opencode): субагент упал на скрипте → агент пошёл проверять его сессию, не смог прочитать и ошибочно заключил «субагент ничего не сделал», хотя сессия видна в субагентской ветке opencode",
+      "status_detail": "OPEN_CURRENT",
+      "kind": "process",
+      "status": "open",
+      "severity": "high",
+      "acceptance": "При падении субагента агент получает читаемый лог (stdout/stderr/где упал), а не «ничего не сделал»; session_analyzer читает субагентские сессии (вложенные ветки opencode); оркестратор отличает «упал на скрипте X» от «ничего не сделал»",
+      "area": "",
+      "source_status": "open",
+      "notes": "Проблема: при падении субагента (task) агент-оркестратор хочет посмотреть ЛОГ субагента (stdout/stderr/артефакты), но сессия субагента живёт в отдельной ветке opencode (storage/session_diff или вложенная сессия), и из родительской сессии её не видно/нельзя прочитать обычным read. Агент делает ложный вывод «ничего не сделал» вместо «упал, вот лог». Нужно: (1) способ читать сессию субагента (путь к storage, формат), (2) session_analyzer должен уметь читать субагентские сессии и показывать ошибку, (3) при падении субагента оркестратор видит причину, а не гадает.",
       "progress": "2026-09-22: создано через tech_debt_cli.py"
     },
     {

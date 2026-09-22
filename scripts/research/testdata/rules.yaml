@@ -1,68 +1,53 @@
-# rules.yaml — детерминированные правила пост-обработки вердиктов
-# Решения принимаются КОДОМ, не LLM. LLM производит свидетельства, код — решения.
-
-# Пороги confidence
 thresholds:
-  supported: 0.8          # ≥ → SUPPORTED
-  ambiguous: 0.6          # 0.6-0.8 → AMBIGUOUS
-  problematic: 0.6        # < → problematic_thesis
-  tribunal_trigger: 0.8   # advocate confidence ≥ → НЕ запускать L5
-
-# Verdict-правила (после caveat caps)
+  problematic: 0.6
+  tribunal_trigger: 0.8
 verdict_recalculation:
-  # После cap confidence — пересчитать verdict
   confidence_lt_0.6:
     action: set_verdict
     value: UNSUPPORTED
-    reason: "confidence_below_problematic_threshold"
+    reason: confidence_below_problematic_threshold
   confidence_0.6_to_0.8:
     action: set_verdict
     value: AMBIGUOUS
-    reason: "confidence_in_ambiguous_range"
-
-# Caveat-правила (применяются ПОСЛЕ advocate)
+    reason: confidence_in_ambiguous_range
 caveat_rules:
   critical_caveat:
     action: cap_confidence
-    value: 0.6             # critical caveat → confidence не выше 0.6
-    reason: "critical_caveat_caps_confidence"
+    value: 0.6
+    reason: critical_caveat_caps_confidence
   critical_caveat_count_gte_1:
-    action: trigger_tribunal  # ≥1 critical → L5 даже при confidence ≥ 0.8
-    reason: "critical_caveat_triggers_tribunal"
+    action: trigger_tribunal
+    reason: critical_caveat_triggers_tribunal
   caveats_count_gte_2:
     action: mark_problematic
-    reason: "multiple_caveats_problematic"
+    reason: multiple_caveats_problematic
   caveats_count_gte_3:
     action: cap_confidence
     value: 0.5
-    reason: "many_caveats_caps_confidence"
-
-# Числовые правила (от numeric_comparator)
+    reason: many_caveats_caps_confidence
 numeric_rules:
   numeric_mismatch:
     action: set_verdict
     value: UNSUPPORTED
     cap_confidence: 0.3
-    reason: "numeric_mismatch_unsupported"
+    reason: numeric_mismatch_unsupported
   numeric_partial_match:
     action: cap_confidence
     value: 0.6
-    reason: "numeric_partial_match_capped"
+    reason: numeric_partial_match_capped
   qualifier_mismatch:
     action: cap_confidence
     value: 0.5
-    reason: "qualifier_mismatch_capped"
+    reason: qualifier_mismatch_capped
   no_numeric_data:
     action: cap_confidence
     value: 0.7
-    reason: "no_numeric_data_capped"
+    reason: no_numeric_data_capped
   dimension_mismatch:
     action: set_verdict
     value: UNSUPPORTED
     cap_confidence: 0.3
-    reason: "dimension_mismatch_unsupported"
-
-# Проблемные тезисы
+    reason: dimension_mismatch_unsupported
 problematic_rules:
   verdict_unsupported:
     action: mark_problematic
@@ -70,20 +55,14 @@ problematic_rules:
     action: mark_problematic
   confidence_lt_0.6:
     action: mark_problematic
-  caveats_gte_2:
-    action: mark_problematic
-
-# Tribunal (L5)
 tribunal_rules:
   trigger_when:
-    - critical_caveat_count_gte_1
-    - verdict_ambiguous_after_postprocess
-    - verdict_contradicted
+  - critical_caveat_count_gte_1
+  - verdict_ambiguous_after_postprocess
+  - verdict_contradicted
   skip_when:
-    - no_caveats
-    - confidence_gte_0.8_and_no_critical
-
-# Источник-правила (доверие к типам источников)
+  - no_caveats
+  - confidence_gte_0.8_and_no_critical
 source_trust:
   primary: 0.9
   textbook: 0.9
@@ -93,38 +72,31 @@ source_trust:
   researchgate: 0.6
   blog: 0.3
   local_md: 0.75
-  # Если все источники с trust < 0.6 → cap confidence 0.5
   low_trust_only:
     action: cap_confidence
     value: 0.5
-    reason: "low_trust_sources_only"
-
-# Обязательная обоснованность вердикта (Волна 4, justification_check.py)
+    reason: low_trust_sources_only
 justification_required:
   enabled: true
-  # вердикт без justification/reason/evidence → не принимается
   fallback_status: OPEN
-  open_reason: "verdict_without_justification"
-  fields: [justification, reason, evidence, rationale]
-
-# Резак и эскалация (Волна 4, escalation.py)
+  open_reason: verdict_without_justification
+  fields:
+  - justification
+  - reason
+  - evidence
+  - rationale
 escalation_rules:
-  enabled: true
-  # зародыши — группы с нерешённым статусом
   seeds:
-    - AMBIGUOUS
-    - UNSUPPORTED
-    - OPEN
-  # расширение +1 хоп по рёбрам дерева направлений
+  - AMBIGUOUS
+  - UNSUPPORTED
+  - OPEN
   max_hops: 3
   max_nodes: 15
   max_tokens: 40000
-  # сходимость: >=2 независимых вердикта, conf>=0.8, dispersion<=0.2
   convergence:
     min_verdicts: 2
     min_confidence: 0.8
     max_dispersion: 0.2
-  # резак: превышение лимита → OPEN + аларм
   cut_off:
     status: OPEN
     alarm_type: escalation_cutoff
