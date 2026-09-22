@@ -1,7 +1,7 @@
 # Tech Debt Master — единый реестр проекта
 
 Дата: 2026-09-22
-Всего: 179 | open: 129 | closed: 50
+Всего: 180 | open: 129 | closed: 51
 
 Префиксы: CD-* Coder, WR-* Writer, RS-* Researcher, PL-* plugin, TD-* общий.
 
@@ -193,3 +193,4 @@
 | TD-146 | agent повторно пишет ad-hoc скрипты для скачивания PDF вместо использо | - |
 | TD-147 | Проверить авто-добавление техдолгов (tech_debt_cli auto) на дупликаты  | - |
 | TD-152 | Универсальный PDF-resolver с каскадом источников: агент вручную боретс | - |
+| TD-153 | Обход DNS-блокировок в downloader: ENOTFOUND polza.ai / doi.org / SINT | - |

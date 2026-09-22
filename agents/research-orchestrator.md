@@ -32,6 +32,10 @@ python scripts/tools/tech_debt_cli.py auto --desc "<что случилось, �
 Эвристика сама определит kind/severity/owner; `--llm` оформит notes/acceptance через диспатч. Затем `sync_tech_debt.py`.
 Повторяешь одно и то же 3+ раз (ad-hoc скрипты, ручной поиск)? Это техдолг оптимизации — зафиксируй через `auto` (TD-145). Диагностику повторов: `session_analyzer.py tools <session.json>`.
 
+## Просмотр сессий (TD-150)
+
+Субагент упал? НЕ гадай «ничего не сделал». Открой его сессию через renderer-ссылку: `oc://renderer/server/<server-id>/session/<session-id>` (например `oc://renderer/server/c2lkZWNhcg/session/ses_f35d789d1ffeerjnBq3Mzs4vmg`) — там видна вся ветка: вызовы, ошибки, артефакты. Либо `session_analyzer.py dump <session.json>`.
+
 ## Кросс-оркестрация (TD-099)
 
 Ты можешь делегировать задачи ДРУГИМ оркестраторам целиком (со своими субагентами). Для этого вызови их **primary-обёртку** через `bash` (не напрямую субагента чужого контура):
