@@ -4,8 +4,8 @@
   "authority_note": "Canonical registry migrated from патчи/миграция в плагин/tech_debt_current.json (65 records). project_context.py counts status=open. CLOSED_REPORTED maps to closed; RECONCILE_REQUIRED stays open until exact-tree verification.",
   "counts": {
     "total": 175,
-    "open": 136,
-    "closed": 39
+    "open": 134,
+    "closed": 41
   },
   "debts": [
     {
@@ -2841,12 +2841,12 @@
     {
       "id": "TD-144",
       "owner": "code-orchestrator",
-      "presentation_category": "ACTIVE",
+      "presentation_category": "RESOLVED",
       "sunset_at": "2027-09-22",
       "title": "Авто-фиксация техдолга: агент, столкнувшись с блоком, вызывает функцию (tech_debt_cli.py add --auto), которая САМА оформляет долг через LLM-диспатч (генерирует title/notes/acceptance/severity по описанию проблемы) — без ручного заполнения полей",
-      "status_detail": "OPEN_CURRENT",
+      "status_detail": "CLOSED",
       "kind": "process",
-      "status": "open",
+      "status": "closed",
       "severity": "medium",
       "acceptance": "tech_debt_cli.py add --auto '<описание>' создаёт валидную запись (id/owner/severity/title/notes/acceptance) без ручного ввода полей; агент в типовых задачах фиксирует блоки одной командой; можно --dry-run показать сгенерированное",
       "area": "",
@@ -2857,12 +2857,12 @@
     {
       "id": "TD-145",
       "owner": "code-orchestrator",
-      "presentation_category": "ACTIVE",
+      "presentation_category": "RESOLVED",
       "sunset_at": "2027-09-22",
       "title": "Аудит повторяющихся действий агента: если один и тот же паттерн (ad-hoc скрипт, ручной поиск, переписывание) повторяется N раз — автоматически вызывать аудитора (session_analyzer + анализ паттернов), который либо оптимизирует (создаёт инструмент), либо оформляет техдолг оптимизации",
-      "status_detail": "OPEN_CURRENT",
+      "status_detail": "CLOSED",
       "kind": "process",
-      "status": "open",
+      "status": "closed",
       "severity": "medium",
       "acceptance": "Существует паттерн-аудитор: анализирует сессию (session_analyzer), выявляет повторяющиеся действия, при пороге создаёт техдолг оптимизации с конкретикой (что повторяется, как оптимизировать); агент-аудитор диспатчится автоматически",
       "area": "",

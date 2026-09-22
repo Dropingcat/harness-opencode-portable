@@ -1,7 +1,7 @@
 # Tech Debt Master — единый реестр проекта
 
 Дата: 2026-09-22
-Всего: 167 | open: 140 | closed: 27
+Всего: 175 | open: 134 | closed: 41
 
 Префиксы: CD-* Coder, WR-* Writer, RS-* Researcher, PL-* plugin, TD-* общий.
 
@@ -84,7 +84,6 @@
 | TD-062 | high | UNASSIGNED | Semantic transport duplication | - |
 | TD-064 | high | UNASSIGNED | Host readiness overclaim | - |
 | TD-065 | medium | UNASSIGNED | Agent/skill discovery dependency | - |
-| TD-066 | critical | code-orchestrator | harness_run live-инструмент возвращает no_route_match при рабочем brid | - |
 | TD-068 | high | researcher-orchestrator | Writer DOM extractor не извлекает числовые/фактические claims | - |
 | TD-069 | high | research-orchestrator | uncertainty_bridge не распознаёт уровень 'assumed' из DOM -> research_ | - |
 | TD-070 | high | research-orchestrator | claim_type не типизирован: нет enum ClaimType, CAUSAL_HYPOTHESIS/EXTER | - |
@@ -112,15 +111,11 @@
 | TD-097 | medium | writing-orchestrator | Раздел результатов SEM/EDS Р18 540C: 8 подразделов и их проза в главе  | - |
 | TD-098 | high | research-orchestrator | Двойственность research-orchestrator: блок верификации текста не адапт | - |
 | TD-099 | high | code-orchestrator | Мост между оркестраторами (cross-orchestrator dispatch): code-orchestr | - |
-| TD-100 | medium | research-orchestrator | RESEARCH_RUNNER_SH — старый легаси-переменная в окружении research-orc | - |
 | TD-101 | high | claim-parser | claim-parser: контракт требует записать файл claims_parsed.json, но у  | - |
 | TD-102 | high | research-orchestrator | Детерминированная генерация claims_parsed.json даёт воду и плохо режет | - |
 | TD-103 | high | research-orchestrator | Нет переиспользуемой библиотеки research-модулей (sci-hub качальщик, п | - |
-| TD-104 | high | research-orchestrator | ChromaDB-инфраструктура семпоиска хрупкая: batch 17662 > лимит 5461 (п | - |
 | TD-105 | medium | research-orchestrator | Кросс-сессионное засорение временной папки C:\Temp\opencode: файл h2.p | - |
 | TD-106 | high | research-orchestrator | Нет авто-валидации внешних данных в пайплайне: sci-bot выдал фейк-DOI  | - |
-| TD-107 | high | code-orchestrator | harness_run: роуты не покрывают естественные формулировки задач — 'вер | - |
-| TD-108 | high | code-orchestrator | Роуты в runtime_snapshot.json не назначают агентов: agent: None почти  | - |
 | TD-109 | critical | code-orchestrator | Нет исполнения бандла: harness_run возвращает route/bundle/skills/tool | - |
 | TD-111 | medium | code-orchestrator | semantic_execute отключён по умолчанию (HARNESS_SEMANTIC_ENABLED!=1),  | - |
 | TD-112 | high | code-orchestrator | Маппинг путей (path_resolution_map.json / runtime_integration_policy.j | - |
@@ -136,7 +131,6 @@
 | TD-124 | high | research-orchestrator | Нет провенанс-стандарта для собираемых материалов: пользователь требуе | - |
 | TD-125 | high | code-orchestrator | Прослеживаемость скачанных материалов не автоматизирована: сбор PDF ГО | - |
 | TD-126 | high | research-orchestrator | Цикл перфекционизма агента: «я ещё недостаточно хорошо реализовал код/ | - |
-| TD-127 | high | research-orchestrator | Агенты плодят временные скрипты: каждый виток/сессия создаёт ad-hoc py | - |
 | TD-128 | high | code-orchestrator | SearXNG-инстанс не поднимается автоматически: конфиг есть (config/mcp_ | - |
 | TD-129 | critical | research-orchestrator | КЛАСТЕР CL-16: Предварительная лазерная обработка → градиентные поля д | - |
 | TD-130 | high | researcher-orchestrator | Режим «сыщика» для researcher: раскрутка клубка зависимостей (citation | - |
@@ -146,9 +140,9 @@
 | TD-134 | high | research-orchestrator | c22: проработать ОБОСНОВАНИЕ выбора температуры и времени азотирования | - |
 | TD-135 | high | research-orchestrator | Лазер: подобрать из литературы ОБОСНОВАНИЕ типов обработки, мощности л | - |
 | TD-136 | low | research-orchestrator | Папка литературных данных: F:\1\_STRUCTURED\09_LITERATURE\1_Литература | - |
-| TD-137 | medium | code-orchestrator | Канонический стек tools/ создан: scripts/tools/tech_debt_cli.py (add/c | - |
 | TD-138 | medium | code-orchestrator | Консолидация реестров техдолгов: канонический реестр = portable; иссле | - |
 | TD-139 | medium | code-orchestrator | Экранирование кавычек в PowerShell ломает inline python -c: агенты вын | - |
+| TD-141 | medium | code-orchestrator | harness_run (плагин) расходится с core resolve(): core возвращает прав | - |
 
 ## Закрытые (closed)
 
@@ -172,12 +166,26 @@
 | TD-052 | Coder acceptance assumed a Git-backed Harness checkout | 2026-09-13 |
 | TD-055 | Versioned bidirectional bridge protocol | - |
 | TD-063 | Workspace identity normalization | - |
+| TD-066 | harness_run live-инструмент возвращает no_route_match при рабочем brid | - |
 | TD-067 | doc_extract_server зависит от неустановленных MCP-doc зависимостей (py | 2026-09-17 |
 | TD-083 | extract не извлекает citation/reference маркеры из markdown (только pa | - |
 | TD-084 | graphs строит только 7 из 13 графов на paragraph-artifact; G1/G2/G7/G8 | - |
 | TD-085 | register (R3) возвращает verdict PASS при непустых MINOR issues — разм | - |
 | TD-087 | dom --qwen-dir даёт duplicate source id / claim id при слиянии plan-cl | - |
 | TD-088 | dom --qwen-dir: нумерация claims от qwen непоследовательна (C-9001, C- | - |
+| TD-100 | RESEARCH_RUNNER_SH — старый легаси-переменная в окружении research-orc | - |
+| TD-104 | ChromaDB-инфраструктура семпоиска хрупкая: batch 17662 > лимит 5461 (п | - |
+| TD-107 | harness_run: роуты не покрывают естественные формулировки задач — 'вер | - |
+| TD-108 | Роуты в runtime_snapshot.json не назначают агентов: agent: None почти  | - |
 | TD-110 | portable harness рассинхронизирован с исходным: OPENCODE_HARNESS_ROOT  | - |
 | TD-119 | Primary-обёртки субагентов (10 <name>-runner) созданы ТОЛЬКО в глобаль | - |
 | TD-121 | Кросс-оркестрация (TD-099) закрыта ТОЛЬКО для research-контура (resear | - |
+| TD-127 | Агенты плодят временные скрипты: каждый виток/сессия создаёт ad-hoc py | - |
+| TD-137 | Канонический стек tools/ создан: scripts/tools/tech_debt_cli.py (add/c | - |
+| TD-140 | Нет единой карты диспатча 'задача → контур → инструмент': агент путает | - |
+| TD-142 | Разные Python-окружения: chromadb (1.5.9) доступен только в системном  | - |
+| TD-143 | Аудит: почему агент НЕ использует инструменты harness — нужна прослойк | - |
+| TD-144 | Авто-фиксация техдолга: агент, столкнувшись с блоком, вызывает функцию | - |
+| TD-145 | Аудит повторяющихся действий агента: если один и тот же паттерн (ad-ho | - |
+| TD-146 | agent повторно пишет ad-hoc скрипты для скачивания PDF вместо использо | - |
+| TD-147 | Проверить авто-добавление техдолгов (tech_debt_cli auto) на дупликаты  | - |
