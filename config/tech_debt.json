@@ -4,8 +4,8 @@
   "authority_note": "Canonical registry migrated from патчи/миграция в плагин/tech_debt_current.json (65 records). project_context.py counts status=open. CLOSED_REPORTED maps to closed; RECONCILE_REQUIRED stays open until exact-tree verification.",
   "counts": {
     "total": 185,
-    "open": 131,
-    "closed": 54
+    "open": 130,
+    "closed": 55
   },
   "debts": [
     {
@@ -2563,18 +2563,18 @@
     {
       "id": "TD-128",
       "owner": "code-orchestrator",
-      "presentation_category": "ACTIVE",
+      "presentation_category": "RESOLVED",
       "sunset_at": "2026-12-15",
-      "title": "SearXNG-инстанс не поднимается автоматически: конфиг есть (config/mcp_registry.json → searxng_search MCP-server, providers_authority.json → existing.searxng), но mcp/searxng_search_server.py — ТОЛЬКО клиент к внешнему http://127.0.0.1:8888 (ожидает Docker-контейнер); нет скрипта запуска инстанса (docker-compose/setup/докер-файл), docker не установлен, порт 8888 не слушается → агент не может пользоваться searxng_search по запросу",
-      "status_detail": "OPEN_CURRENT",
+      "title": "SearXNG-инстанс: установка полного SearXNG на Windows невозможна без Docker (исходники содержат файлы с ':' в имени — несовместимо с NTFS), Docker не установлен; решение: (а) локальный mini-searxng (Python-обёртка: DDG-HTML + arXiv/OpenAlex через тот же JSON-интерфейс), (б) Docker Desktop для полного инстанса, (в) публичный инстанс (блокирует JSON 403)",
+      "status_detail": "CLOSED",
       "kind": "infrastructure",
-      "status": "open",
+      "status": "closed",
       "severity": "high",
       "acceptance": "Существует детерминированный способ запуска SearXNG-инстанса: либо (а) setup-скрипт (run_searxng.ps1/py), который поднимает локальный инстанс (docker-compose или python-реализация с fallback на публичный searx.space/searx.be), либо (б) падение mcp-сервера с понятным сообщением «SearXNG недоступен, используется fallback (searx.space)»; агент по запросу «найди источник» получает работающий searxng_search (или явный fallback), а не ConnectionError",
       "area": "mcp/searxng_search_server.py, config/mcp_registry.json, config/providers_authority.json, scripts/ (run_searxng.*), docker-compose/searxng",
       "source_status": "open",
       "notes": "Проверено 2026-09-22: mcp/searxng_search_server.py = клиент к http://127.0.0.1:8888 (Docker-контейнер). Docker не установлен (Get-Command docker → пусто), порт 8888 не слушается (TcpTestSucceeded=False). Setup-скриптов для SearXNG нет. Агент: «сиар не поднимается автоматом — нет скрипта, и агент не может им сразу пользоваться по запросу». Связано с TD-118 (поиск медленный — нет локального инстанса, всё через внешние API) и TD-125 (сбор источников).",
-      "progress": "2026-09-22: зафиксировано."
+      "progress": "2026-09-22: РЕШЕНО. (1) Полный SearXNG невозможен на Windows без Docker (файлы с ':' в NTFS) — задокументировано. (2) Создан mcp/mini_searxng.py — локальная Python-замена SearXNG (JSON /search?q=&format=json на 127.0.0.1:8888; каналы: arXiv/OpenAlex + DDG fallback). (3) scripts/tools/start_searxng.py — авто-запуск если порт мёртв. (4) mcp==1.26.0 зафиксирован в venv (2.2 ломал @server.list_tools). Проверено: healthz OK, search возвращает arXiv результаты, searxng_search_server (MCP) отвечает через mini-searxng."
     },
     {
       "id": "TD-129",

@@ -1,7 +1,7 @@
 # Tech Debt Master — единый реестр проекта
 
 Дата: 2026-09-22
-Всего: 185 | open: 131 | closed: 54
+Всего: 185 | open: 130 | closed: 55
 
 Префиксы: CD-* Coder, WR-* Writer, RS-* Researcher, PL-* plugin, TD-* общий.
 
@@ -123,7 +123,6 @@
 | TD-117 | high | code-orchestrator | opencode run --agent НЕ вызывает субагентов: 'agent X is a subagent, n | - |
 | TD-120 | medium | research-orchestrator | run_research.py: фактор времени агентов не учтён в budget — PER_CALL_E | - |
 | TD-126 | high | research-orchestrator | Цикл перфекционизма агента: «я ещё недостаточно хорошо реализовал код/ | - |
-| TD-128 | high | code-orchestrator | SearXNG-инстанс не поднимается автоматически: конфиг есть (config/mcp_ | - |
 | TD-129 | critical | research-orchestrator | КЛАСТЕР CL-16: Предварительная лазерная обработка → градиентные поля д | - |
 | TD-130 | high | researcher-orchestrator | Режим «сыщика» для researcher: раскрутка клубка зависимостей (citation | - |
 | TD-131 | high | researcher-orchestrator | Аналитика склонированных OSINT/детективных репозиториев: СНАЧАЛА тести | - |
@@ -186,6 +185,7 @@
 | TD-124 | Нет провенанс-стандарта для собираемых материалов: пользователь требуе | - |
 | TD-125 | Прослеживаемость скачанных материалов не автоматизирована: сбор PDF ГО | - |
 | TD-127 | Агенты плодят временные скрипты: каждый виток/сессия создаёт ad-hoc py | - |
+| TD-128 | SearXNG-инстанс: установка полного SearXNG на Windows невозможна без D | - |
 | TD-137 | Канонический стек tools/ создан: scripts/tools/tech_debt_cli.py (add/c | - |
 | TD-140 | Нет единой карты диспатча 'задача → контур → инструмент': агент путает | - |
 | TD-142 | Разные Python-окружения: chromadb (1.5.9) доступен только в системном  | - |

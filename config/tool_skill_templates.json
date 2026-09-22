@@ -322,6 +322,25 @@
         "cmd": "collect",
         "mark": "ВКС-10"
       }
+    },
+    "start_searxng": {
+      "kind": "script",
+      "command": "python scripts/tools/start_searxng.py [--check]",
+      "required_input": {},
+      "optional_input": {
+        "check": "bool"
+      },
+      "forbidden_input": [],
+      "start_with": [
+        "проверь порт 127.0.0.1:8888"
+      ],
+      "finish_with": [
+        "если мёртв — запусти mini-searxng (arXiv/OpenAlex/DDG)"
+      ],
+      "guard_required": false,
+      "example": {
+        "check": true
+      }
     }
   }
 }
