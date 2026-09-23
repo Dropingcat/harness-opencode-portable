@@ -22,7 +22,8 @@ if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
 HERE = Path(__file__).resolve().parent
-MINI = (HERE.parent / "mcp" / "mini_searxng.py").resolve()  # scripts/tools/../mcp
+# scripts/tools/../mcp/mini_searxng.py (корневой mcp/, не scripts/mcp) — TD-128
+MINI = (HERE.parent.parent / "mcp" / "mini_searxng.py").resolve()
 URL = "http://127.0.0.1:8888/healthz"
 PYTHON = sys.executable
 

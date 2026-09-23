@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""gen_mcp_config.py — генератор .opencode/.mcp.json из mcp_registry.json.
+"""gen_mcp_config.py — генератор MCP-секции opencode.json из mcp_registry.json.
 
 TD-154: проброс harness MCP-серверов (academic_search, searxng_search, doc_extract,
-coder_router) в opencode как stdio-серверов. Генерирует .opencode/.mcp.json
-детерминированно, чтобы субагенты (source-fetcher и др.) видели tools
+coder_router) в opencode как LOCAL MCP-серверов. Пишет секцию "mcp" в
+.opencode/opencode.json (формат opencode: {name: {type:"local", command:[...]}}),
+чтобы субагенты (source-fetcher и др.) видели tools
 (arxiv_search/openalex_search/searxng_search/extract_document/coder_run).
 
 Usage:
@@ -62,34 +63,42 @@ def gen(root: Path, python_exe: str, dry_run: bool) -> int:
         }
         enabled.append(name)
 
-    config = {
-        "_meta": {
-            "generatedBy": "harness gen_mcp_config.py",
-            "version": 1,
-            "generatedAt": "",
-            "note": "Авто-сгенерировано из config/mcp_registry.json. Не править вручную.",
-        },
-        "mcpServers": mcp_servers,
-    }
-    # сохранить метаданные
-    from datetime import datetime, timezone
-    config["_meta"]["generatedAt"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
+    # Формат opencode: секция "mcp" в opencode.json: {name: {type:"local", command:[...]}}
+    mcp_block = {}
+    for name in enabled:
+        cfg = servers[name]
+        ep = root / cfg.get("entrypoint", "")
+        mcp_block[name] = {
+            "type": "local",
+            "command": [python_exe, str(ep)],
+            "enabled": True,
+        }
 
-    out = root / ".opencode" / ".mcp.json"
+    # Целевой файл: .opencode/opencode.json (opencode читает .opencode директории)
+    out = root / ".opencode" / "opencode.json"
+    if out.exists():
+        try:
+            cfg_doc = json.loads(out.read_text(encoding="utf-8"))
+        except Exception:
+            cfg_doc = {}
+    else:
+        cfg_doc = {}
+    cfg_doc["mcp"] = mcp_block
+
     if dry_run:
-        print(json.dumps(config, ensure_ascii=False, indent=2))
+        print(json.dumps(cfg_doc, ensure_ascii=False, indent=2))
         print(f"\n[DRY] Будет записано в {out}")
         return 0
 
     # бэкап существующего
     if out.exists():
-        bak = out.with_suffix(".mcp.json.bak")
+        bak = out.with_suffix(".opencode.json.bak")
         shutil.copy2(out, bak)
         print(f"  бэкап: {out.name} -> {bak.name}")
 
     out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(json.dumps(config, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    print(f"OK: {out} — подключено MCP-серверов: {len(mcp_servers)}")
+    out.write_text(json.dumps(cfg_doc, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    print(f"OK: {out} — MCP-серверов в opencode.json: {len(mcp_block)}")
     for n in enabled:
         tools = servers[n].get("tools", [])
         print(f"  {n}: {tools}")
@@ -97,7 +106,7 @@ def gen(root: Path, python_exe: str, dry_run: bool) -> int:
 
 
 def main() -> int:
-    ap = argparse.ArgumentParser(description="Генератор .opencode/.mcp.json из mcp_registry (TD-154)")
+    ap = argparse.ArgumentParser(description="Генератор MCP-секции opencode.json (TD-154)")
     ap.add_argument("--root", default=None)
     ap.add_argument("--python", default=None, help="python с mcp-библиотекой")
     ap.add_argument("--dry-run", action="store_true")

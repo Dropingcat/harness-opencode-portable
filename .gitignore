@@ -39,3 +39,6 @@ scripts/research/.opencode/
 *[1].txt
 *[1].jsonl
 *.lock.mcp.mcp.json.bak
+
+# OpenCode config backups
+.opencode/*.bak
