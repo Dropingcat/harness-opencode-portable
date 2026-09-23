@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "updated": "2026-09-22",
+  "updated": "2026-09-23",
   "authority_note": "Canonical registry migrated from патчи/миграция в плагин/tech_debt_current.json (65 records). project_context.py counts status=open. CLOSED_REPORTED maps to closed; RECONCILE_REQUIRED stays open until exact-tree verification.",
   "counts": {
-    "total": 185,
-    "open": 130,
+    "total": 186,
+    "open": 131,
     "closed": 55
   },
   "debts": [
@@ -2996,7 +2996,7 @@
       "area": "",
       "source_status": "open",
       "notes": "Из теста source-fetcher (2026-09-22): (1) research_papers НЕ зарегистрирован, а контракт source-fetcher на него ссылается — контракт надо актуализировать; (2) arxiv_search/openalex_search есть в config/mcp_registry.json, но НЕ проброшены в сессию субагента (агент не видит tools) — fallback: прямой вызов кода mcp/academic_search_server.py через .venv (тот же API, работает); (3) RESEARCH_WORKSPACE не задан → файлы пишутся в .runs/verification/ по умолчанию; (4) browser-MCP нет в mcp_registry (контракт ссылается — устарел); (5) SearXNG мёртв (TD-128). Итог: 7 primary/textbook источников с DOI найдено, status=partial (часть каналов недоступна).",
-      "progress": "2026-09-22: РЕШЕНО. (1) mcp==1.26.0 установлен в harness venv (2.2 ломал API list_tools) и зафиксирован в requirements-mcp-doc.txt. (2) scripts/router/gen_mcp_config.py генерирует .opencode/.mcp.json из mcp_registry (4 stdio-сервера: academic_search, searxng_search, doc_extract, coder_router) — сгенерировано в portable и work. (3) Проверено: arxiv_search + openalex_search отвечают (M2 nitriding, Group-III nitrides). (4) Контракт source-fetcher актуализирован: research_papers/browser-MCP → реальные MCP-tools (arxiv_search/openalex_search), SearXNG опционален. Субагенты теперь видят tools после рестарта opencode."
+      "progress": "2026-09-22: ЧАСТИЧНО + УТОЧНЕНИЕ. gen_mcp_config.py теперь пишет MCP-секцию в .opencode/opencode.json (формат opencode: {name:{type:local, command:[...]}}), а НЕ .mcp.json (не читается). Сгенерировано в portable+work (4 local-сервера). Требует РЕСТАРТ opencode для инжекции tools в сессию (TD-155). Осталось: повторный тест после рестарта."
     },
     {
       "id": "TD-155",
@@ -3061,6 +3061,22 @@
       "source_status": "open",
       "notes": "Из сессии 2026-09-22: sci-hub нашёл страницу книги (Diffraction Analysis, Springer 2004), но PDF за капчей «проверка на робота» — автоматическое скачивание заблокировано. Агент помечает «доступны через sci-hub/scibot вручную». Это повторяющийся блок (TD-125/128/152 связаны). Нужно: (1) в downloader scihub-канал добавить обработку капчи (определение Cloudflare-challenge по HTML, отчёт «capcha» вместо сдачи), (2) если решение капчи автоматически невозможно — чёткий маршрут (sci-bot API / пользователь), (3) агент не должен просто сдаваться.",
       "progress": "2026-09-22: создано через tech_debt_cli.py"
+    },
+    {
+      "id": "TD-159",
+      "owner": "research-orchestrator",
+      "presentation_category": "ACTIVE",
+      "sunset_at": "2027-09-23",
+      "title": "MCP-tools подтянутся ТОЛЬКО после рестарта opencode: mcp-секция в opencode.json (4 local-сервера: academic_search/searxng_search/doc_extract/coder_router) готова, но текущая сессия их не видит; нужен рестарт + повторный тест source-fetcher",
+      "status_detail": "OPEN_CURRENT",
+      "kind": "infrastructure",
+      "status": "open",
+      "severity": "high",
+      "acceptance": "После рестарта opencode субагент source-fetcher видит 4 MCP-tools (arxiv_search/openalex_search/searxng_search/extract_document) и может их вызвать; повторный тест: status=full для академического+веб каналов",
+      "area": "",
+      "source_status": "open",
+      "notes": "Тесты: (1) tool_test_report2 (после 1-го рестарта): MCP не инжектированы, т.к. тогда был .mcp.json (неверный формат); (2) fault_test (агент): MCP-tools отсутствуют, реестр есть, но opencode.json не имел mcp-секции. Теперь mcp-секция добавлена (gen_mcp_config). После РЕСТАРТА opencode сессия должна подхватить 4 сервера. Проверка: agent видит arxiv_search/openalex_search/searxng_search/extract_document.",
+      "progress": "2026-09-23: создано через tech_debt_cli.py"
     },
     {
       "id": "RS-001",
@@ -3581,7 +3597,7 @@
   ],
   "consolidation": {
     "merged_from_work": true,
-    "date": "2026-09-22",
+    "date": "2026-09-23",
     "note": "Единый реестр: work-записи с конфликтующими ID сохранены как RS-*"
   }
 }
