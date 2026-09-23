@@ -1,0 +1,7 @@
+{
+  "schema": "harness-model-bindings/1.0",
+  "version": 1,
+  "default_model": "polza/deepseek/deepseek-v4-flash-0731",
+  "comment": "Маппинг «агент → модель» для TD-A1/TD-A3 (Фаза 2). Ключи — имена из runtime/registry.py; 'model' обязателен при наличии записи. Приоритет: binding > frontmatter источника. Пустой agents = дефолт хоста.",
+  "agents": {}
+}
