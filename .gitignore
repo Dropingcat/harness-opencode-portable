@@ -1,6 +1,2 @@
-# Python compiled files
 __pycache__/
 *.pyc
-
-# Environment and config (if sensitive, but usually config/ is tracked)
-.env

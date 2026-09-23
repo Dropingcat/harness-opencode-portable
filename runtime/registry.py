@@ -55,6 +55,7 @@ class AgentRecord:
     temperature: Optional[float] = None
     permission: dict = field(default_factory=dict)
     extra_fm: dict = field(default_factory=dict)   # прочие поля frontmatter as-is
+    raw_frontmatter: dict = field(default_factory=dict)  # весь frontmatter as-is (для кодогенерации)
     body: str = ""                    # промпт роли (всё после frontmatter)
     categories: list = field(default_factory=list)
     default_bucket: Optional[str] = None
@@ -157,6 +158,7 @@ def parse_agent_file(path: Path) -> AgentRecord:
         temperature=_as_float(fm.get("temperature"), "temperature"),
         permission=perm if isinstance(perm, dict) else {},
         extra_fm=extra,
+        raw_frontmatter=fm,
         body=body.strip(),
     )
 

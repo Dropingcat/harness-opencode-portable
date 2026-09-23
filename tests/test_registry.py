@@ -176,9 +176,9 @@ class TestValidateNegative(unittest.TestCase):
             errors = "\n".join(reg.validate())
             self.assertIn("bad-name: name 'WRONG' != filename", errors)
             self.assertIn("badmode: mode 'wizard'", errors)
-            self.assertIn("bad-name: missing config/agent_categories/bad-name.json", errors)
-            # overlay ищется по имени файла (проверка name==filename
-            # ловит несоответствие отдельно)
+            # overlay отсутствует -> default_bucket=None -> loud fail через
+            # проверку bucket_contracts (тихого дефолта нет)
+            self.assertIn("bad-name: default_bucket 'nope' not in bucket_contracts", errors)
             self.assertIn("badbucket: default_bucket 'not-a-bucket'", errors)
             self.assertIn("model_bindings: unknown agent 'ghost'", errors)
 
