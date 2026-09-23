@@ -1,9 +1,10 @@
 # Tech Debt Master — единый реестр проекта
 
-Дата: 2026-09-22
-Всего: 185 | open: 130 | closed: 55
+Дата: 2026-09-24
+Всего: 199 | open: 144 | closed: 55 (счётчики пересчитаны по фактическим строкам реестра; прежняя шапка 185/130/55 была рассинхронизирована)
 
 Префиксы: CD-* Coder, WR-* Writer, RS-* Researcher, PL-* plugin, TD-* общий.
+Реестр TECH_DEBT_AGENTS.md (TD-A*/TD-D*/TD-I*/TD-T*): закрыто в 2026-09-24 — TD-A4, TD-D4, TD-D7, TD-D9; частично — TD-A3, TD-D5.
 
 ## Активные (open)
 
@@ -139,6 +140,20 @@
 | TD-151 | high | research-orchestrator | Резолвер извлекает только первые 4 страницы (свойства на других страни | - |
 | TD-155 | high | research-orchestrator | MCP-tools подключены в .mcp.json (4 сервера), но НЕ инжектированы в те | - |
 | TD-158 | high | research-orchestrator | Обход капчи sci-hub: «проверка на робота» (Cloudflare/анти-бот) блокир | - |
+| AG-A1 | high | code-orchestrator | [TECH_DEBT_AGENTS] Агенты не зарегистрированы как субагенты OpenCode (генератор .opencode/agent/*.md) | 2026-09-24 |
+| AG-A2 | high | code-orchestrator | [TECH_DEBT_AGENTS] Нет иерархии parent/child сессий (semantic.execute не сертифицирован live) | 2026-09-24 |
+| AG-A3 | medium | code-orchestrator | [TECH_DEBT_AGENTS] Маппинг роль→агент→model: нет `model:` во frontmatter и `agent_hint` в harness_run (частично: формат агентов готов) | 2026-09-24 |
+| AG-A4 | high | code-orchestrator | [TECH_DEBT_AGENTS] ЗАКРЫТО 2026-09-24: обязательный шаг 0 git-ритуала добавлен в agents/code-orchestrator.md | 2026-09-24 |
+| AG-D1 | medium | code-orchestrator | [TECH_DEBT_AGENTS] Списки модулей в доке vs фактический состав v1 (writer/kanban/memory/capsules/shared не перенесены) | 2026-09-24 |
+| AG-D2 | medium | code-orchestrator | [TECH_DEBT_AGENTS] health_check.py не стал полноценным doctor (bridge handshake, host snapshot) | 2026-09-24 |
+| AG-D3 | low | code-orchestrator | [TECH_DEBT_AGENTS] register_plugin.py — временный project-scoped helper, канон — installer | 2026-09-24 |
+| AG-D4 | low | code-orchestrator | [TECH_DEBT_AGENTS] ЗАКРЫТО 2026-09-24: capability hash синхронизирован с runtime_snapshot (df07cc…, 12 роутов) | 2026-09-24 |
+| AG-D5 | high | code-orchestrator | [TECH_DEBT_AGENTS] semantic.execute cancel/timeout E2E: тесты перенесены, live-сертификация P3 остаётся (частично) | 2026-09-24 |
+| AG-D6 | medium | code-orchestrator | [TECH_DEBT_AGENTS] Launchers на legacy `opencode run`; зафиксировать transport=opencode_cli_legacy | 2026-09-24 |
+| AG-D7 | medium | code-orchestrator | [TECH_DEBT_AGENTS] ЗАКРЫТО 2026-09-24: smoke-тесты tests/test_job_ctl.py + host_ref mapping документирован | 2026-09-24 |
+| AG-D8 | medium | code-orchestrator | [TECH_DEBT_AGENTS] compatibility/1.18.30.json: привести к шкале evidence LIVE_CERTIFIED | 2026-09-24 |
+| AG-D9 | low | code-orchestrator | [TECH_DEBT_AGENTS] ЗАКРЫТО 2026-09-24: MANIFEST.json + SHA256SUMS.txt + decision_aliases.json (scripts/tools/gen_manifest.py) | 2026-09-24 |
+| AG-D10 | medium | code-orchestrator | [TECH_DEBT_AGENTS] Дублирование route-данных JSON vs TS: нет validation snapshot↔schemas | 2026-09-24 |
 
 ## Закрытые (closed)
 
