@@ -1,2 +1,95 @@
-(empty)__pycache__/
-*.pyc
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg-info/
+dist/
+build/
+
+# Virtual environments
+.venv/
+venv/
+env/
+.env
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+*.log.*
+logs/
+
+# Node.js
+node_modules/
+dist/
+*.log
+*.tsbuildinfo
+
+# Python packaging
+*.egg-info/
+dist/
+build/
+*.egg-info/
+pip-wheel-metadata/
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Build outputs
+dist/
+build/
+*.egg-info/
+
+# Test/coverage
+.pytest_cache/
+htmlcov/
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Build outputs
+*.egg-info/
+dist/
+build/
+
+# Node.js
+node_modules/
+dist/
+*.log
+*.tsbuildinfo
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Build outputs
+dist/
+build/
+*.egg-info/
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# TypeScript
+*.tsbuildinfo
