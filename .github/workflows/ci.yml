@@ -40,15 +40,20 @@ jobs:
 
       - name: Set up environment
         run: |
-          $env:PYTHONIOENCODING = "utf-8"
-          $env:PYTHONPATH = "${{ github.workspace }}\scripts\research"
-          $env:OPENCODE_HARNESS_ROOT = "${{ github.workspace }}"
-          $env:PYTHONIOENCODING = "utf-8"
+          echo "PYTHONIOENCODING=utf-8" >> $GITHUB_ENV
+          echo "PYTHONPATH=${{ github.workspace }}/scripts/research" >> $GITHUB_ENV
+          echo "OPENCODE_HARNESS_ROOT=${{ github.workspace }}" >> $GITHUB_ENV
+          echo "PYTHONIOENCODING=utf-8" >> $GITHUB_ENV
+          # Configurable paths for local data (override via env vars)
+          echo "ANALISYS_DATA_DIR=${{ env.ANALISYS_DATA_DIR || 'F:/AnalisysDataSet' }}" >> $GITHUB_ENV
+          echo "LITERATURE_DIR=${{ env.LITERATURE_DIR || 'F:/1/_STRUCTURED/09_LITERATURE' }}" >> $GITHUB_ENV
+          echo "TEMP_DIR=${{ env.TEMP_DIR || 'C:/Temp/opencode' }}" >> $GITHUB_ENV
+          echo "CHROMA_DB_DIR=${{ env.CHROMA_DB_DIR || 'F:/AnalisysDataSet/.chroma_papers' }}" >> $GITHUB_ENV
+          echo "LITERATURE_DIR=${{ env.LITERATURE_DIR || 'F:/1/_STRUCTURED/09_LITERATURE' }}" >> $GITHUB_ENV
 
       - name: Generate MCP config
         run: |
           python scripts/router/gen_mcp_config.py --root "${{ github.workspace }}"
-          python scripts/router/gen_mcp_config.py --root "E:\Documents\Документы\doc_Opencode_agern-new" 2>&1 || true
 
       - name: Run core tests
         run: |
@@ -170,12 +175,12 @@ asyncio.run(test_mcp())
           python -m pip install --upgrade pip
           pip install chromadb pytest pytest-asyncio
 
-      - name: Test ChromaDB
+- name: Test ChromaDB
         run: |
           cd scripts/research
           python -c "
 import chromadb
-client = chromadb.PersistentClient(path=r'F:\AnalisysDataSet\.chroma_papers')
+client = chromadb.PersistentClient(path='${{ env.CHROMA_DB_DIR || 'F:/AnalisysDataSet/.chroma_papers' }}')
 print('Collections:', [c.name for c in client.list_collections()])
 col = client.get_collection('papers')
 print(f'Count: {col.count()}')
@@ -209,27 +214,33 @@ print(f'Results: {len(results[\"ids\"][0])} chunks')
 
       - name: Set up environment
         run: |
-          $env:PYTHONIOENCODING = "utf-8"
-          $env:OPENCODE_HARNESS_ROOT = "${{ github.workspace }}"
-          $env:PYTHONIOENCODING = "utf-8"
-          $env:OPENCODE_HARNESS_ROOT = "${{ github.workspace }}"
+          echo "PYTHONIOENCODING=utf-8" >> $GITHUB_ENV
+          echo "OPENCODE_HARNESS_ROOT=${{ github.workspace }}" >> $GITHUB_ENV
+          echo "PYTHONIOENCODING=utf-8" >> $GITHUB_ENV
+          echo "OPENCODE_HARNESS_ROOT=${{ github.workspace }}" >> $GITHUB_ENV
+          # Configurable paths for local data (override via env vars)
+          echo "ANALISYS_DATA_DIR=${{ env.ANALISYS_DATA_DIR || 'F:/AnalisysDataSet' }}" >> $GITHUB_ENV
+          echo "LITERATURE_DIR=${{ env.LITERATURE_DIR || 'F:/1/_STRUCTURED/09_LITERATURE' }}" >> $GITHUB_ENV
+          echo "TEMP_DIR=${{ env.TEMP_DIR || 'C:/Temp/opencode' }}" >> $GITHUB_ENV
+          echo "CHROMA_DB_DIR=${{ env.CHROMA_DB_DIR || 'F:/AnalisysDataSet/.chroma_papers' }}" >> $GITHUB_ENV
+          echo "LITERATURE_DIR=${{ env.LITERATURE_DIR || 'F:/1/_STRUCTURED/09_LITERATURE' }}" >> $GITHUB_ENV
 
-      - name: Full pipeline test
+- name: Full pipeline test
         run: |
           cd scripts/research
-          python run_research.py "testdata/exp1/input.txt" --dry-run --workspace "C:\Temp\opencode\ci_test" --max-iterations 1 --max-cost-rub 5
+          python run_research.py "testdata/exp1/input.txt" --dry-run --workspace "${{ env.TEMP_DIR || 'C:/Temp/opencode/ci_test' }}" --max-iterations 1 --max-cost-rub 5
 
       - name: Verify outputs
         run: |
-          ls -la C:\Temp\opencode\ci_test\research_verification\ 2>$null || true
+          ls -la "${{ env.TEMP_DIR || 'C:/Temp/opencode/ci_test' }}/research_verification/" 2>$null || true
           python -c "
 import json, os
 files = ['ch1_dom.json', 'claims_parsed.json', 'citations_map.json', 'verdicts_final.json']
 for f in files:
-    p = fr'C:\Temp\opencode\ci_test\research_verification\{f}'
+    p = os.path.join('${{ env.TEMP_DIR || 'C:/Temp/opencode/ci_test' }}', 'research_verification', f)
     if os.path.exists(p):
         d = __import__('json').load(open(p, encoding='utf-8'))
-        print(f'{f}: OK, keys={list(d.keys()) if isinstance(d, dict) else \"list\"}')
+        print(f'{f}: OK, keys={list(d.keys()) if isinstance(d, dict) else "list"}')
       else:
         print(f'{f}: MISSING')
 "
