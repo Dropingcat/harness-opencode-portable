@@ -1,7 +1,7 @@
 {
   "schema": "harness-manifest/1.0",
   "root": ".",
-  "file_count": 1129,
+  "file_count": 1131,
   "files": [
     {
       "path": "AGENT_REPO_ACCESS.md",
@@ -2219,9 +2219,14 @@
       "sha256": "7c3a8a651f785fd216be4f697fc406de0ed173fcc3823a60baa6b57e8b41f7e9"
     },
     {
+      "path": "scripts/tools/gh_debt_api.sh",
+      "size": 1647,
+      "sha256": "dcd70d2ceae27f0babe5f766de540891a61ec341994919fe566bce1ebf758e80"
+    },
+    {
       "path": "scripts/tools/gh_debt_survey.sh",
-      "size": 2358,
-      "sha256": "95d5c915ca5a05112e740d79b59695bceaaa225ebdefa36f91fa3a65cc60449e"
+      "size": 5858,
+      "sha256": "5070758253b85fee92af54f43a28779cd8ec797cf5cbf3256d8ca3228f472762"
     },
     {
       "path": "scripts/tools/gh_take_debt.sh",
@@ -5612,6 +5617,11 @@
       "path": "tests/test_evidence_levels.py",
       "size": 4149,
       "sha256": "4f177630497cd3ba4d7003110d03328f8b1d644be480b59ea899db61a8b72400"
+    },
+    {
+      "path": "tests/test_gh_debt_survey_cli.py",
+      "size": 5849,
+      "sha256": "3795eb58309824ae4a72678dada27eb619d05cb17ca317812a3d2e2ab680fc9c"
     },
     {
       "path": "tests/test_health_doctor.py",
