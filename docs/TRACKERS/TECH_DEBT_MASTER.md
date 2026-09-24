@@ -149,7 +149,7 @@
 | AG-D4 | low | code-orchestrator | [TECH_DEBT_AGENTS] ЗАКРЫТО 2026-09-24: capability hash синхронизирован с runtime_snapshot (df07cc…, 12 роутов) | 2026-09-24 |
 | AG-D6 | medium | code-orchestrator | [TECH_DEBT_AGENTS] Launchers на legacy `opencode run`; зафиксировать transport=opencode_cli_legacy | 2026-09-24 |
 | AG-D7 | medium | code-orchestrator | [TECH_DEBT_AGENTS] ЗАКРЫТО 2026-09-24: smoke-тесты tests/test_job_ctl.py + host_ref mapping документирован | 2026-09-24 |
-| AG-D8 | medium | code-orchestrator | [TECH_DEBT_AGENTS] compatibility/1.18.30.json: привести к шкале evidence LIVE_CERTIFIED | 2026-09-24 |
+| ~~AG-D8~~ | closed | code-orchestrator | [TECH_DEBT_AGENTS] compatibility/1.18.30.json: привести к шкале evidence LIVE_CERTIFIED | 2026-09-24 |
 | AG-D9 | low | code-orchestrator | [TECH_DEBT_AGENTS] ЗАКРЫТО 2026-09-24: MANIFEST.json + SHA256SUMS.txt + decision_aliases.json (scripts/tools/gen_manifest.py) | 2026-09-24 |
 | AG-D10 | medium | code-orchestrator | [TECH_DEBT_AGENTS] Дублирование route-данных JSON vs TS: нет validation snapshot↔schemas | 2026-09-24 |
 | TD-200 | low | qwen-coder | Тестирование работы git qwen-coder'ом: загрузка в репо (push) и коммиты — проверка токена/веток/кредов в изолированном репо | 2026-09-24 |
@@ -160,6 +160,7 @@
 |---|---|---|
 | AG-A2 | ЗАКРЫТО 2026-09-24: semantic.execute parent/child E2E-сертификация — tests/test_bridge_semantic_execute.py (4 теста: handshake контрактов, roundtrip request→child-result со schema-валидацией, error propagation) | 2026-09-24 |
 | AG-D5 | ЗАКРЫТО 2026-09-24: cancel/timeout E2E-сертификация — tests/test_bridge_cancel_timeout.py (5 тестов: TIMED_OUT по timeout_ms запроса с восстановлением сервера, harness.cancel{execution_id} кооперативная отмена in-flight, идемпотентность/NOT_PENDING, отсутствие resurrection поздним ответом); bridge_peer: handlers в worker-потоках (cancel доставляем во время blocking execute), pending-drop после timeout/cancel; протокол harness-bridge-rpc/1.0 и схемы без изменений | 2026-09-24 |
+| AG-D8 | ЗАКРЫТО 2026-09-24: compatibility/1.18.30.json schema 2.0 — feature_probes {level, evidence} по шкале LIVE_CERTIFIED/HOSTLESS_REPORTED/TYPE_VERIFIED/NOT_CERTIFIED; гейт scripts/tools/check_evidence_levels.py + tests/test_evidence_levels.py (11); issue #14 | 2026-09-24 |
 | CD-003 | verify_claim бросает AttributeError на не-dict входе (contract: должен | 2026-09-18 |
 | RS-005 | СПРАВКА: ссылка [3] Березина = АЗОТИРОВАНИЕ КОБАЛЬТСОДЕРЖАЩИХ СТАЛЕЙ ( | - |
 | RS-008 | Список литературы НКР: ИСПРАВИТЬ [4] — в тексте 'Гуляев [4]', в списке | - |

@@ -290,7 +290,15 @@
 - **Задача**: добавить smoke-тест `job_ctl` и задокументировать host_ref mapping
   (OpenCode session ≠ Harness Job).
 
-### TD-D8. **Документация P1→P2 status**: `compatibility/opencode/1.18.30.json` утверждает больше, чем доказывает
+### TD-D8. **Документация P1→P2 status**: `compatibility/opencode/1.18.30.json` утверждает больше, чем доказывает — ЗАКРЫТО (2026-09-24)
+- **Закрытие**: `feature_probes` переведены в структурированный вид `{level, evidence[]}` по канонической шкале
+  `LIVE_CERTIFIED / HOSTLESS_REPORTED / TYPE_VERIFIED / NOT_CERTIFIED` (schema 2.0). `LIVE_CERTIFIED`
+  оставлен только для capability, доказанных live-секциями `P1_STATUS.md` (plugin load marker,
+  harness_status/harness_run живыми моделями, host/workspace snapshot); `SDK_CLIENT_AVAILABLE` и session/event API
+  понижены до `TYPE_VERIFIED`, `BRIDGE_FULL_DUPLEX` — до `HOSTLESS_REPORTED`, `semantic_status` → `NOT_CERTIFIED`.
+  Устаревшие токены удалены; ссылка на отсутствующий `1.18.16.json` в `P1_STATUS.md` исправлена.
+  Гейт: `scripts/tools/check_evidence_levels.py` (I1–I6, fail-closed); тесты: `tests/test_evidence_levels.py` (11).
+  Issue #14.
 - **Факт**: `TEST_AND_EVIDENCE_MATRIX.md` строго различает evidence-уровни: `HOSTLESS_REPORTED`,
   `LIVE_CERTIFIED`, `PENDING`. В v1 `compatibility/opencode/1.18.30.json` содержит
   `LIVE_VERIFIED` для `PLUGIN_LOADED`, `CUSTOM_TOOL_VISIBLE`, `BRIDGE_FULL_DUPLEX`,
