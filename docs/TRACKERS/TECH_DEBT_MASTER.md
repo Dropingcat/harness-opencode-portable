@@ -1,7 +1,7 @@
 # Tech Debt Master — единый реестр проекта
 
 Дата: 2026-09-24
-Всего: 200 | open: 144 | closed: 56 (счётчики пересчитаны по фактическим строкам реестра; AG-A1 закрыт 2026-09-24: генератор субагентов + регресс-тесты контракта)
+Всего: 186 | open: 130 | closed: 56 (счётчики пересчитаны по фактическим строкам реестра; TD-003/TD-D10 закрыт гейтом route-дублирования 2026-09-24; AG-A1 закрыт 2026-09-24: генератор субагентов + регресс-тесты контракта)
 
 Префиксы: CD-* Coder, WR-* Writer, RS-* Researcher, PL-* plugin, TD-* общий.
 Реестр TECH_DEBT_AGENTS.md (TD-A*/TD-D*/TD-I*/TD-T*): закрыто в 2026-09-24 — TD-A4, TD-D4, TD-D7, TD-D9; частично — TD-A3, TD-D5.
@@ -37,7 +37,6 @@
 | RS-026 | critical | research-orchestrator | АВТОМАТИЗАЦИЯ КЛАСТЕРНОГО МЕТОДА ИЗУЧЕНИЯ ЛИТЕРАТУРЫ (cluster → Q&A →  | - |
 | TD-001 | high | code-orchestrator | Хардкод Linux путей | - |
 | TD-002 | high | profile_config | Legacy plugin hook не зарегистрирован в runtime | - |
-| TD-003 | medium | code-orchestrator | Дублирование route данных JSON vs TS | - |
 | TD-004 | high | profile_config | Guard env / OPENCODE_SESSION_DB coupling | - |
 | TD-005 | medium | code-tester | Source-fetcher fallback не покрыт тестом | - |
 | TD-006 | low | code-orchestrator | Исторически отсутствовал config/tech_debt.json | - |
@@ -216,4 +215,5 @@
 | TD-154 | MCP-инструменты не проброшены в сессию субагентов + RESEARCH_WORKSPACE | - |
 | TD-156 | Агент не знает, что sci-bot — это просто API-запрос (sci-bot.ru, WebSo | - |
 | TD-157 | downloader.py resolve: каскад падает, хотя прямой doi-путь (тот же sci | - |
+| TD-003 | medium | code-orchestrator | Дублирование route данных JSON vs TS — закрыто гейтом check_route_duplication.py (TD-D10) + tests/test_route_duplication.py | 2026-09-24 |
 | AG-A1 | [TECH_DEBT_AGENTS] Агенты не зарегистрированы как субагенты OpenCode — ЗАКРЫТО: пайплайн registry+compile_agents, артефакты .opencode/agent/*.md (26), регресс-тесты tests/test_agent_gen.py (qwen-coder) | 2026-09-24 |

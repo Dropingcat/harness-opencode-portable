@@ -1,7 +1,7 @@
 {
   "schema": "harness-manifest/1.0",
   "root": ".",
-  "file_count": 1091,
+  "file_count": 1117,
   "files": [
     {
       "path": "AGENT_REPO_ACCESS.md",
@@ -20,8 +20,8 @@
     },
     {
       "path": "TECH_DEBT_AGENTS.md",
-      "size": 32774,
-      "sha256": "e14fc69da6e3dfaf3e52d6cb386421eb6a33bc14319f9caa2a95109cd69e718a"
+      "size": 33895,
+      "sha256": "1b14048125fb6d0bf9a66533315a823393a8661d3ee2c9c1f3739dd3e8cfa407"
     },
     {
       "path": "agents/article-writer.md",
@@ -169,9 +169,19 @@
       "sha256": "edb7f2f5ddb84b0b5c028d456b3fff609a4187aa958cfbefcae0b6b316d5aec9"
     },
     {
+      "path": "config/agent_categories/claim-parser-runner.json",
+      "size": 294,
+      "sha256": "9101380a519c142ed860577240c9c4078c7593a2d383fd71f111ea0eeb3599dd"
+    },
+    {
       "path": "config/agent_categories/claim-parser.json",
       "size": 175,
       "sha256": "a10455c596bc27f16048dd72615bb8926e3f0153b1ebcc7b7f5f9f15ca8740be"
+    },
+    {
+      "path": "config/agent_categories/code-auditor-runner.json",
+      "size": 299,
+      "sha256": "aa1468bded13c1a6417620a8055c92a95ba9c1a549a35422f3f7761834f4e189"
     },
     {
       "path": "config/agent_categories/code-auditor.json",
@@ -184,9 +194,19 @@
       "sha256": "302efe856d890bef70aed36a149b073abacc5b9a9360c2db26cce3febe49db09"
     },
     {
+      "path": "config/agent_categories/code-reviewer-runner.json",
+      "size": 283,
+      "sha256": "649c0790b1af60b76feba9831c6e0b6900f9a04fd9079222a9f3006380259c43"
+    },
+    {
       "path": "config/agent_categories/code-reviewer.json",
       "size": 152,
       "sha256": "f9b3be7dc9c8848e3ffb228b5c0138611b139ee60d9a275b000022d183af71e2"
+    },
+    {
+      "path": "config/agent_categories/code-tester-runner.json",
+      "size": 279,
+      "sha256": "293a735f69a68087521c4797133a86fc851d69f73033cd2e95a5a21b170bd0c3"
     },
     {
       "path": "config/agent_categories/code-tester.json",
@@ -199,6 +219,11 @@
       "sha256": "fd20fccef35865ee8c52ded77bb9f25d15f4d885b8d3b2b0f410c1d5f7808e77"
     },
     {
+      "path": "config/agent_categories/coder-worker-runner.json",
+      "size": 281,
+      "sha256": "7cf4be97aca0af28d73699e0d8740d81d039f8d3deb0f759cc40e558cca0e2ff"
+    },
+    {
       "path": "config/agent_categories/coder-worker.json",
       "size": 133,
       "sha256": "41fd650cb86067217a0f7cd37e4c904005d6b7ec361c8c6c45d834b3bdb10bdb"
@@ -209,6 +234,11 @@
       "sha256": "d4369166514aa65138b9a9f597db4234c508d37b713b3fe08c83984678687144"
     },
     {
+      "path": "config/agent_categories/fact-checker-runner.json",
+      "size": 294,
+      "sha256": "cd560b6cea4f391e20b205071509e21503b5d2a59f76121d64062a220c8f9f4d"
+    },
+    {
       "path": "config/agent_categories/fact-checker.json",
       "size": 170,
       "sha256": "c163734fb159e0e74a9aa61f1d6fb3446250fbf73b4022fac8f8b55352f3f7da"
@@ -217,6 +247,11 @@
       "path": "config/agent_categories/general.json",
       "size": 128,
       "sha256": "991f6e77236c186403a83abbb28634e08da5924cf7b8134a5366947ed2334122"
+    },
+    {
+      "path": "config/agent_categories/glossary-maintainer.json",
+      "size": 177,
+      "sha256": "f0933af755806684a2373caf6f7a5b72c603390f1e7c27df23cff7cc89a75a87"
     },
     {
       "path": "config/agent_categories/research-orchestrator.json",
@@ -234,9 +269,19 @@
       "sha256": "c0bedf22f31af2c195eea9fb32855ec5fe569815f6e1b61a3d0f41b81d728fcf"
     },
     {
+      "path": "config/agent_categories/source-fetcher-runner.json",
+      "size": 298,
+      "sha256": "7a0f490a8f69018cb9f46a912d6e11d67fc724f0c5fb50f6ef1f919b99dcbbef"
+    },
+    {
       "path": "config/agent_categories/source-fetcher.json",
       "size": 180,
       "sha256": "c081f75f54ec8527ed674bac0710b37603f6a0711b96aa18edb94c40eb39f9f4"
+    },
+    {
+      "path": "config/agent_categories/synthesizer-runner.json",
+      "size": 292,
+      "sha256": "abe27632f51aaa40d359e21817670529f0035c863a009d3fe08628aa1869f4b1"
     },
     {
       "path": "config/agent_categories/synthesizer.json",
@@ -244,9 +289,19 @@
       "sha256": "303f97d2e35fefcd005eff7354cc23adda77e9a1d8e30129936cdc0065236a8c"
     },
     {
+      "path": "config/agent_categories/tribunal-judge-runner.json",
+      "size": 303,
+      "sha256": "d228639a40b530c1c108ebf30e441b6467bc4694984b017176df8e09db05466d"
+    },
+    {
       "path": "config/agent_categories/tribunal-judge.json",
       "size": 195,
       "sha256": "2b05e099e36a37669e32b732ccf35ca446d0f818625f24894d13a04cec38fd1c"
+    },
+    {
+      "path": "config/agent_categories/writer-runner.json",
+      "size": 275,
+      "sha256": "ed5abf4e79585ef6f64ff98c57937e34df829ce5d65d6eb10ceb490a8d9085c5"
     },
     {
       "path": "config/agent_categories/writer.json",
@@ -475,8 +530,8 @@
     },
     {
       "path": "config/tech_debt.json",
-      "size": 296402,
-      "sha256": "8f31bdd6b02b6a8f8eb0a5a0143f0c78dfea964e590a2e7e9c6a68168fde3382"
+      "size": 297095,
+      "sha256": "013f75f1e809a247c9c0e5dab8eed0f3d9d6294984fbb00c9398181fab8dbeda"
     },
     {
       "path": "config/tool_capsule_policy.json",
@@ -555,8 +610,8 @@
     },
     {
       "path": "docs/TRACKERS/TECH_DEBT_MASTER.md",
-      "size": 27435,
-      "sha256": "eadc4a1d98d5d395a4cd9be9131fc644ec4ac72e02d98492252744626a6e0f96"
+      "size": 29100,
+      "sha256": "dfe628daf2bf8a9e674a88c8d7cfbd4bd2db5258b342d21222d74364d54da26d"
     },
     {
       "path": "docs/glossary/GLOSSARY.md",
@@ -632,6 +687,11 @@
       "path": "docs/plugin-dialectic/SESSION_REVIEW_GLOSSARY_20260918.md",
       "size": 9416,
       "sha256": "8101247d71063b425b932eda6b7e28e3ae1fb5ca220da17f4251fb33c4a4fdf3"
+    },
+    {
+      "path": "git-access.sh",
+      "size": 2561,
+      "sha256": "7178b373332f97a9cebeb91a8881e33723d49eccced734326195c0b746370f6f"
     },
     {
       "path": "guard/configs/guard_config.json.example",
@@ -800,8 +860,8 @@
     },
     {
       "path": "packages/opencode-harness-plugin/core/bridge_peer.py",
-      "size": 10298,
-      "sha256": "da4bca23073e74106704cf272be8a4ecbe8d60dd54e6d5f58c05257d01eda14e"
+      "size": 13132,
+      "sha256": "ae5e1b2761508bcf37accfb5c3345a4631d63de9308e7a8b079670122c20b490"
     },
     {
       "path": "packages/opencode-harness-plugin/core/doctor.py",
@@ -929,9 +989,39 @@
       "sha256": "68f447c6e1f62cb816e19e72c68b6ef4e0a67df71ea03ef57515f4f2d1c965b3"
     },
     {
+      "path": "runtime/__init__.py",
+      "size": 130,
+      "sha256": "e4fbc7a8fe5c00dae01b5d2590d637e2b309801f92ade0e043b67e908259b5ab"
+    },
+    {
+      "path": "runtime/model_bindings.json",
+      "size": 459,
+      "sha256": "a37221c28dce379d70d95730970a3c75ec03b820e9963f372480756d9a58e440"
+    },
+    {
+      "path": "runtime/registry.py",
+      "size": 14313,
+      "sha256": "75db6958a68016ed2e61aade2adc353d2a13526df32dd819dc3e996f650ac726"
+    },
+    {
       "path": "scripts/add_skill.py",
       "size": 7800,
       "sha256": "31f61e5e1cc62396390bce2f9b7346018bba10830fa4b618ceba56d5dfa487e5"
+    },
+    {
+      "path": "scripts/agent_gen/__init__.py",
+      "size": 88,
+      "sha256": "8b449fd963070358da73e16096f1daa0ef37dedb96d91c308ace5b69f4f3b95c"
+    },
+    {
+      "path": "scripts/agent_gen/compile_agents.py",
+      "size": 11651,
+      "sha256": "3ae0b4901983ef2f23416f2586aab07eac33d90aca713261597fafb8fd89d6cf"
+    },
+    {
+      "path": "scripts/agent_gen/gen_runners.py",
+      "size": 12761,
+      "sha256": "916b8db98cb17c254776f33c04865f7e017adb20b4b02bf643247a63b2543195"
     },
     {
       "path": "scripts/code-factory/code_factory_runner.py",
@@ -2004,14 +2094,19 @@
       "sha256": "cbbb3a42718f81fb969d6ae0dea1d53fe8ea245ca88e009406db521037f525d0"
     },
     {
+      "path": "scripts/router/check_route_duplication.py",
+      "size": 10131,
+      "sha256": "3bdd461c8c21abfc01197c5e24e95ef8578915183dfe16c2ebb9dfc8ed9e1a01"
+    },
+    {
       "path": "scripts/router/compile_capability_runtime.py",
       "size": 5948,
       "sha256": "a13122eaec7a7cffaca33d8fb77c3fa52850616106c09d5d2091b9e802ed2fa4"
     },
     {
       "path": "scripts/router/compile_runtime.py",
-      "size": 15308,
-      "sha256": "c25da4525425acf9d969de2dcafdf5fa013f744a14e27d54f236b161baac57c6"
+      "size": 16252,
+      "sha256": "1c72c79307e2bd8342fc075df5871795c98cd792bf81d252a689b785aba46b04"
     },
     {
       "path": "scripts/router/gen_mcp_config.py",
@@ -5404,6 +5499,11 @@
       "sha256": "5d493ba6b5e7c783838c8b89268eb3ee24f0bedf5cef3941e2a827a5d3cfad0d"
     },
     {
+      "path": "tests/__init__.py",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
       "path": "tests/coder/test_bridge_channel_e2e.py",
       "size": 16276,
       "sha256": "5690b54c7ea50270ac2ce7b612116da42be271040acf09fce4e55dd4a54cda68"
@@ -5454,9 +5554,39 @@
       "sha256": "114b4e213509df59dcd3ad970e1e56c62003e9b05edb80bebb86da0d41e04ef1"
     },
     {
+      "path": "tests/test_agent_gen.py",
+      "size": 5147,
+      "sha256": "6d5095b117f650e3fe18369c00480b39a85d293d82928d9122faed7754bf8d23"
+    },
+    {
+      "path": "tests/test_bridge_cancel_timeout.py",
+      "size": 9487,
+      "sha256": "2b320777afa0caca01f5546453a201e034a87e9192e6c8f82f8bc1a7e82defa4"
+    },
+    {
+      "path": "tests/test_bridge_semantic_execute.py",
+      "size": 10091,
+      "sha256": "6fb761c51e8e075363837b01d0befbeea12b86ffb81f4a9cb838a2924cfe69d5"
+    },
+    {
       "path": "tests/test_job_ctl.py",
       "size": 7031,
       "sha256": "10fce0676976c238db73aa8ff82952510697aa47a5f89f31089baaa111bd59e6"
+    },
+    {
+      "path": "tests/test_registry.py",
+      "size": 9509,
+      "sha256": "f4c7d9c663545f82b2fd83812657bc4c7f20e345f62895b33aab0adcbdd274a9"
+    },
+    {
+      "path": "tests/test_route_duplication.py",
+      "size": 5910,
+      "sha256": "a8bc2a6e8253bfa9b83e6e1eed4dfe7edc845928d6d686fdcae39e9535544974"
+    },
+    {
+      "path": "tests/test_runner_overlay.py",
+      "size": 6060,
+      "sha256": "482478a8b034a99557e1fadba32dcd37c0ab8cea09a0ced88fd9df9349dad642"
     }
   ]
 }

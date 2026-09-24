@@ -10,7 +10,8 @@
 >   `model:` и `agent_hint`), TD-D5 (перенос тестов выполнен, live-сертификация P3 не выполнена).
 > - **Открыто (подтверждено фактом отсутствия)**: TD-A1 (`.opencode/agent/` отсутствует),
 >   TD-D7 (нет тестов `job_ctl.py`), TD-D9 (нет `MANIFEST.json` / `SHA256SUMS.txt` /
->   `config/decision_aliases.json`), а также TD-A2, TD-D1–D3, TD-D6, TD-D8, TD-D10, TD-I*, TD-T*.
+>   `config/decision_aliases.json`), а также TD-A2, TD-D1–D3, TD-D6, TD-D8. TD-D10 закрыт
+>   2026-09-24 (гейт `check_route_duplication.py` + тесты). Остальное: TD-I*, TD-T*.
 > - Единый реестр проекта: `docs/TRACKERS/TECH_DEBT_MASTER.md` (185 записей, open: 130).
 
 ---
@@ -299,7 +300,16 @@
 - **Задача (низкий приоритет)**: сгенерировать `MANIFEST.json` + `SHA256SUMS.txt`
   из текущего release tree + `decision_aliases.json`.
 
-### TD-D10. **Дублирование route-данных (TD-003) в v1 не проверено**
+### TD-D10. **Дублирование route-данных (TD-003) в v1 не проверено** — ЗАКРЫТО (2026-09-24)
+- **Закрытие**: добавлен детерминированный гейт `scripts/router/check_route_duplication.py`
+  (invariant-проверки I1–I4: snapshot ↔ авторитетные источники через пересборку
+  `compile_runtime`, compat-вью `profile_routes/tool_skill_routes/skill_to_route_map`
+  ↔ проекция snapshot + актуальность `generated_from_policy_hash`, hardcode route-id
+  в TS плагина (`packages/opencode-harness-plugin/src/**/*.ts`) ↔ snapshot, идентичность
+  id-наборов и индексов). Выход != 0 при любом дрейфе; готов к CI/pre-commit.
+  Тесты: `tests/test_route_duplication.py` (7 тестов: позитив на реальном дереве +
+  мутации каждой категории нарушений). На HEAD все инварианты выполняются (PASS).
+- **Исходная формулировка**:
 - **Факт**: `TECH_DEBT_CURRENT.md` (TD-003, RECONCILE_REQUIRED): «Дублирование route данных
   JSON vs TS»; `RECONCILIATION_REQUIRED.md` требует проверить exact release tree.
 - **Проблема**: в v1 `runtime_snapshot.json` (компилируемый) и TS-схемы — потенциально
