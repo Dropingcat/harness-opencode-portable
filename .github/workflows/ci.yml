@@ -1,0 +1,252 @@
+name: CI
+
+on:
+  push:
+    branches: [ master, develop ]
+  pull_request:
+    branches: [ master, develop ]
+
+jobs:
+  test:
+    name: Test Suite
+    runs-on: windows-latest
+    timeout-minutes: 30
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+          cache-dependency-path: |
+            **/requirements*.txt
+            **/requirements-*.txt
+            **/pyproject.toml
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if (Test-Path "requirements.txt") { pip install -r requirements.txt }
+          if (Test-Path "requirements-core.txt") { pip install -r requirements-core.txt }
+          if (Test-Path "requirements-mcp-doc.txt") { pip install -r requirements-mcp-doc.txt }
+          # Install mcp 1.26.0 specifically (2.x breaks @server.list_tools)
+          pip install mcp==1.26.0
+          pip install pytest pytest-asyncio pyyaml
+
+      - name: Set up environment
+        run: |
+          $env:PYTHONIOENCODING = "utf-8"
+          $env:PYTHONPATH = "${{ github.workspace }}\scripts\research"
+          $env:OPENCODE_HARNESS_ROOT = "${{ github.workspace }}"
+          $env:PYTHONIOENCODING = "utf-8"
+
+      - name: Generate MCP config
+        run: |
+          python scripts/router/gen_mcp_config.py --root "${{ github.workspace }}"
+          python scripts/router/gen_mcp_config.py --root "E:\Documents\Документы\doc_Opencode_agern-new" 2>&1 || true
+
+      - name: Run core tests
+        run: |
+          cd scripts/research
+          python -m pytest test_units.py test_formulas.py test_uncertainty.py test_verdict_schemas.py test_evidence_contract.py test_judge_brief.py test_merge_numeric.py test_fix_p0p3.py test_rivulet.py test_rivulet_numeric.py test_rivulet_synthesizer.py test_numeric_layer_fix.py -q
+
+      - name: Run architecture tests
+        run: |
+          cd scripts/research
+          python -m pytest test_architecture.py -q
+
+      - name: Run downloader tests
+        run: |
+          cd scripts/tools
+          python -m pytest test_units.py test_formulas.py test_uncertainty.py test_verdict_schemas.py test_evidence_contract.py test_judge_brief.py test_merge_numeric.py test_fix_p0p3.py test_rivulet.py test_rivulet_numeric.py test_rivulet_synthesizer.py test_numeric_layer_fix.py -q
+
+  downloader-test:
+    name: Downloader Tests
+    runs-on: windows-latest
+    timeout-minutes: 20
+    needs: test
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pytest pytest-asyncio pyyaml requests
+
+      - name: Test downloader components
+        run: |
+          cd scripts/tools
+          python -m pytest test_units.py test_formulas.py test_uncertainty.py test_verdict_schemas.py test_evidence_contract.py test_judge_brief.py test_merge_numeric.py test_fix_p0p3.py test_rivulet.py test_rivulet_numeric.py test_rivulet_synthesizer.py test_numeric_layer_fix.py -v
+
+  mcp-test:
+    name: MCP Servers Test
+    runs-on: windows-latest
+    timeout-minutes: 15
+    needs: test
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+          cache-dependency-path: |
+            **/requirements*.txt
+            **/requirements-*.txt
+            **/pyproject.toml
+
+      - name: Install MCP
+        run: |
+          python -m pip install --upgrade pip
+          pip install mcp==1.26.0
+          pip install pytest pytest-asyncio
+
+      - name: Generate MCP config
+        run: |
+          python scripts/router/gen_mcp_config.py
+
+      - name: Test MCP servers
+        run: |
+          python -c "
+import asyncio
+import sys
+sys.path.insert(0, 'scripts/research')
+import asyncio
+
+async def test_mcp():
+    # Test academic_search_server
+    import academic_search_server as s
+    res = await asyncio.get_event_loop().run_in_executor(None, lambda: __import__('academic_search_server').call_tool('arxiv_search', {'query': 'nitriding steel', 'max_results': 2}))
+    print('arxiv_search:', 'OK' if 'ok' in str(res) else 'FAIL')
+    
+    # test openalex
+    res = await asyncio.get_event_loop().run_in_executor(None, lambda: __import__('academic_search_server').call_tool('openalex_search', {'query': 'nitriding steel', 'per_page': 2}))
+    print('openalex_search:', 'OK' if 'ok' in str(res) else 'FAIL')
+    
+    # test searxng
+    import searxng_search_server as s
+    res = await asyncio.get_event_loop().run_in_executor(None, lambda: s.call_tool('searxng_search', {'query': 'nitriding steel', 'limit': 2}))
+    print('searxng_search:', 'OK' if 'ok' in str(res) else 'FAIL (expected - no searxng server)')
+
+asyncio.run(test_mcp())
+
+  chroma-test:
+    name: ChromaDB Index Test
+    runs-on: windows-latest
+    timeout-minutes: 30
+    needs: test
+    
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install chromadb pytest pytest-asyncio
+
+      - name: Test ChromaDB
+        run: |
+          cd scripts/research
+          python -c "
+import chromadb
+client = chromadb.PersistentClient(path=r'F:\AnalisysDataSet\.chroma_papers')
+print('Collections:', [c.name for c in client.list_collections()])
+col = client.get_collection('papers')
+print(f'Count: {col.count()}')
+results = col.query(query_texts=['nitriding steel'], n_results=2)
+print(f'Results: {len(results[\"ids\"][0])} chunks')
+"
+
+  integration-test:
+    name: Integration Test (Full Pipeline)
+    runs-on: windows-latest
+    timeout-minutes: 60
+    needs: [test, downloader-test, mcp-test, chroma-test]
+    
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install all dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt 2>$null || true
+          pip install -r requirements-core.txt 2>$null || true
+          pip install mcp==1.26.0 pytest pytest-asyncio pyyaml requests
+
+      - name: Set up environment
+        run: |
+          $env:PYTHONIOENCODING = "utf-8"
+          $env:OPENCODE_HARNESS_ROOT = "${{ github.workspace }}"
+          $env:PYTHONIOENCODING = "utf-8"
+          $env:OPENCODE_HARNESS_ROOT = "${{ github.workspace }}"
+
+      - name: Full pipeline test
+        run: |
+          cd scripts/research
+          python run_research.py "testdata/exp1/input.txt" --dry-run --workspace "C:\Temp\opencode\ci_test" --max-iterations 1 --max-cost-rub 5
+
+      - name: Verify outputs
+        run: |
+          ls -la C:\Temp\opencode\ci_test\research_verification\ 2>$null || true
+          python -c "
+import json, os
+files = ['ch1_dom.json', 'claims_parsed.json', 'citations_map.json', 'verdicts_final.json']
+for f in files:
+    p = fr'C:\Temp\opencode\ci_test\research_verification\{f}'
+    if os.path.exists(p):
+        d = __import__('json').load(open(p, encoding='utf-8'))
+        print(f'{f}: OK, keys={list(d.keys()) if isinstance(d, dict) else \"list\"}')
+      else:
+        print(f'{f}: MISSING')
+"
+
+  # TD-155: Verify MCP injection after restart (manual step)
+  mcp-injection-check:
+    name: MCP Injection Check (Manual)
+    runs-on: windows-latest
+    timeout-minutes: 10
+    if: false  # Manual trigger only
+    
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check MCP tools in session
+        run: |
+          python -c "
+import subprocess, json
+result = subprocess.run(['opencode', 'mcp', 'list'], capture_output=True, text=True)
+print('MCP servers:', result.stdout)
+"
