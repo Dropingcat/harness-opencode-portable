@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import json
 import sys
+import time
 from pathlib import Path
 from typing import Any, Callable, Dict
 
@@ -63,6 +64,30 @@ class BridgeServer:
         self.handlers["harness.status"] = self._status
         self.handlers["harness.run"] = self._run
         self.handlers["semantic.execute"] = self._semantic_execute
+        # AG-D5: cooperative cancellation of an in-flight semantic.execute.
+        # Wire method is harness.cancel (already declared in
+        # schemas/BridgeMessage.schema.json and src/bridge/protocol.ts);
+        # params.execution_id targets the reverse call to cancel.
+        self.handlers["harness.cancel"] = self._cancel
+
+    def _cancel(self, params: Dict[str, Any]) -> Dict[str, Any]:
+        """Cancel a pending semantic.execute by execution_id (AG-D5).
+
+        Marks the matching pending reverse request as cancelled; the blocked
+        _await_reverse loop observes the flag and fails the parent handler
+        with CANCELLED, so the plugin receives a definitive error response
+        instead of waiting out the timeout. Cancelling an unknown or already
+        finished id is reported as ok=False / NOT_PENDING (idempotent).
+        """
+        target = params.get("execution_id")
+        if not isinstance(target, str) or not target.strip():
+            raise ValueError("harness.cancel requires params.execution_id")
+        for rid, entry in list(getattr(self, "_pending_reverse", {}).items()):
+            req = (entry.get("params") or {}).get("request") or {}
+            if req.get("execution_id") == target and not entry.get("cancelled"):
+                entry["cancelled"] = True
+                return {"ok": True, "cancelled": True, "execution_id": target}
+        return {"ok": False, "cancelled": False, "execution_id": target, "reason": "NOT_PENDING"}
 
     def _semantic_execute(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """Forward a SemanticExecutionRequest/1.0 to the plugin via reverse RPC.
@@ -83,7 +108,13 @@ class BridgeServer:
         if request is None:
             raise ValueError("semantic.execute requires params.request")
         timeout_ms = _request_timeout_ms(request)
-        raw = self._send_reverse("semantic.execute", {"request": request}, timeout_ms=timeout_ms)
+        try:
+            raw = self._send_reverse("semantic.execute", {"request": request}, timeout_ms=timeout_ms)
+        except TimeoutError as exc:
+            # AG-D5: a reverse-call timeout is a TIMED_OUT semantic outcome,
+            # not an unknown handler crash. Fail the parent request with the
+            # canonical status so callers can branch on it deterministically.
+            raise RuntimeError(f"TIMED_OUT: {exc}") from None
         if isinstance(raw, dict) and "tool_result" in raw:
             return {"semantic_result": raw["tool_result"]}
         return {"semantic_result": raw}
@@ -169,21 +200,32 @@ class BridgeServer:
         import uuid
 
         rid = str(uuid.uuid4())
-        self._pending_reverse[rid] = {"resolved": False, "result": None, "error": None}
+        self._pending_reverse[rid] = {
+            "resolved": False,
+            "result": None,
+            "error": None,
+            "cancelled": False,
+            "params": params,
+        }
         self._write({"id": rid, "method": method, "params": params})
         return self._await_reverse(rid, timeout_ms or _REVERSE_TIMEOUT_MS_DEFAULT)
 
     def _await_reverse(self, rid: str, timeout_ms: int = _REVERSE_TIMEOUT_MS_DEFAULT) -> Any:
-        import time
-
         deadline = time.time() + timeout_ms / 1000.0
         while time.time() < deadline:
             entry = self._pending_reverse.get(rid)
+            if entry and entry.get("cancelled"):
+                # AG-D5: cooperative cancellation observed mid-wait; drop the
+                # pending entry so a late plugin response cannot resurrect it.
+                self._pending_reverse.pop(rid, None)
+                raise RuntimeError("CANCELLED: reverse request cancelled by harness.cancel")
             if entry and entry["resolved"]:
+                self._pending_reverse.pop(rid, None)
                 if entry["error"]:
                     raise RuntimeError(entry["error"])
                 return entry["result"]
             time.sleep(0.02)
+        self._pending_reverse.pop(rid, None)
         raise TimeoutError(f"reverse request timeout: {rid}")
 
     def _resolve_reverse(self, msg: Dict[str, Any]) -> bool:
@@ -244,13 +286,21 @@ class BridgeServer:
             if handler is None:
                 self._write({"id": rid, "ok": False, "error": {"code": "NO_METHOD", "message": method}})
                 continue
-            try:
-                result = handler(msg.get("params") or {})
-                self._write({"id": rid, "ok": True, "result": result})
-            except Exception as exc:  # noqa: BLE001
-                self._write({"id": rid, "ok": False, "error": {"code": "HANDLER_ERROR", "message": str(exc)}})
+            # AG-D5: run handlers in worker threads so a blocking semantic
+            # .execute (awaiting its reverse call) never wedges the serve loop
+            # — harness.cancel must stay receivable while it is in flight.
+            threading.Thread(
+                target=self._dispatch, args=(rid, handler, msg.get("params") or {}), daemon=True
+            ).start()
             if getattr(self, "_shutdown_requested", False):
                 break
+
+    def _dispatch(self, rid: str, handler: Callable[[Dict[str, Any]], Any], params: Dict[str, Any]) -> None:
+        try:
+            result = handler(params)
+            self._write({"id": rid, "ok": True, "result": result})
+        except Exception as exc:  # noqa: BLE001
+            self._write({"id": rid, "ok": False, "error": {"code": "HANDLER_ERROR", "message": str(exc)}})
 
     def _write(self, obj: Dict[str, Any]) -> None:
         sys.stdout.write(json.dumps(obj, ensure_ascii=False) + "\n")

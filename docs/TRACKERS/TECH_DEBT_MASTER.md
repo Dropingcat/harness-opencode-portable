@@ -141,13 +141,13 @@
 | TD-155 | high | research-orchestrator | MCP-tools подключены в .mcp.json (4 сервера), но НЕ инжектированы в те | - |
 | TD-158 | high | research-orchestrator | Обход капчи sci-hub: «проверка на робота» (Cloudflare/анти-бот) блокир | - |
 | AG-A2 | high | code-orchestrator | [TECH_DEBT_AGENTS] Нет иерархии parent/child сессий (semantic.execute не сертифицирован live) | 2026-09-24 |
+| AG-A1 | high | code-orchestrator | [TECH_DEBT_AGENTS] Агенты не зарегистрированы как субагенты OpenCode (генератор .opencode/agent/*.md) | 2026-09-24 |
 | AG-A3 | medium | code-orchestrator | [TECH_DEBT_AGENTS] Маппинг роль→агент→model: нет `model:` во frontmatter и `agent_hint` в harness_run (частично: формат агентов готов) | 2026-09-24 |
 | AG-A4 | high | code-orchestrator | [TECH_DEBT_AGENTS] ЗАКРЫТО 2026-09-24: обязательный шаг 0 git-ритуала добавлен в agents/code-orchestrator.md | 2026-09-24 |
 | AG-D1 | medium | code-orchestrator | [TECH_DEBT_AGENTS] Списки модулей в доке vs фактический состав v1 (writer/kanban/memory/capsules/shared не перенесены) | 2026-09-24 |
 | AG-D2 | medium | code-orchestrator | [TECH_DEBT_AGENTS] health_check.py не стал полноценным doctor (bridge handshake, host snapshot) | 2026-09-24 |
 | AG-D3 | low | code-orchestrator | [TECH_DEBT_AGENTS] register_plugin.py — временный project-scoped helper, канон — installer | 2026-09-24 |
 | AG-D4 | low | code-orchestrator | [TECH_DEBT_AGENTS] ЗАКРЫТО 2026-09-24: capability hash синхронизирован с runtime_snapshot (df07cc…, 12 роутов) | 2026-09-24 |
-| AG-D5 | high | code-orchestrator | [TECH_DEBT_AGENTS] semantic.execute cancel/timeout E2E: тесты перенесены, live-сертификация P3 остаётся (частично) | 2026-09-24 |
 | AG-D6 | medium | code-orchestrator | [TECH_DEBT_AGENTS] Launchers на legacy `opencode run`; зафиксировать transport=opencode_cli_legacy | 2026-09-24 |
 | AG-D7 | medium | code-orchestrator | [TECH_DEBT_AGENTS] ЗАКРЫТО 2026-09-24: smoke-тесты tests/test_job_ctl.py + host_ref mapping документирован | 2026-09-24 |
 | AG-D8 | medium | code-orchestrator | [TECH_DEBT_AGENTS] compatibility/1.18.30.json: привести к шкале evidence LIVE_CERTIFIED | 2026-09-24 |
@@ -159,6 +159,8 @@
 
 | ID | Title | Закрыт |
 |---|---|---|
+| AG-A2 | ЗАКРЫТО 2026-09-24: semantic.execute parent/child E2E-сертификация — tests/test_bridge_semantic_execute.py (4 теста: handshake контрактов, roundtrip request→child-result со schema-валидацией, error propagation) | 2026-09-24 |
+| AG-D5 | ЗАКРЫТО 2026-09-24: cancel/timeout E2E-сертификация — tests/test_bridge_cancel_timeout.py (5 тестов: TIMED_OUT по timeout_ms запроса с восстановлением сервера, harness.cancel{execution_id} кооперативная отмена in-flight, идемпотентность/NOT_PENDING, отсутствие resurrection поздним ответом); bridge_peer: handlers в worker-потоках (cancel доставляем во время blocking execute), pending-drop после timeout/cancel; протокол harness-bridge-rpc/1.0 и схемы без изменений | 2026-09-24 |
 | CD-003 | verify_claim бросает AttributeError на не-dict входе (contract: должен | 2026-09-18 |
 | RS-005 | СПРАВКА: ссылка [3] Березина = АЗОТИРОВАНИЕ КОБАЛЬТСОДЕРЖАЩИХ СТАЛЕЙ ( | - |
 | RS-008 | Список литературы НКР: ИСПРАВИТЬ [4] — в тексте 'Гуляев [4]', в списке | - |
