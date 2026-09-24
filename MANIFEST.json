@@ -1,7 +1,7 @@
 {
   "schema": "harness-manifest/1.0",
   "root": ".",
-  "file_count": 1120,
+  "file_count": 1122,
   "files": [
     {
       "path": "AGENT_REPO_ACCESS.md",
@@ -20,8 +20,8 @@
     },
     {
       "path": "TECH_DEBT_AGENTS.md",
-      "size": 35379,
-      "sha256": "e4b936d08b87ae8734608613e039f7f4bd2cb2bea17118b3a9a93a4b5e44fe10"
+      "size": 36366,
+      "sha256": "8a521590f5018ef5fe0bd397d878edf084d65ad08d548c713e04c9b69a03a7c1"
     },
     {
       "path": "agents/article-writer.md",
@@ -155,8 +155,8 @@
     },
     {
       "path": "compatibility/opencode/1.18.30.json",
-      "size": 1393,
-      "sha256": "76f77369b8f7d8d2d0941e36d9c0d4eb07415f0407f319b0a860cb22c24661c1"
+      "size": 3674,
+      "sha256": "36d2e8729590d71383563395f73727ce009892d1544d631ed653abbfdc57d8b4"
     },
     {
       "path": "config/agent_categories/article-writer.json",
@@ -610,8 +610,8 @@
     },
     {
       "path": "docs/TRACKERS/TECH_DEBT_MASTER.md",
-      "size": 29722,
-      "sha256": "a7e018da5a7e81faec0a29c040b3ac83d571974a699d53b45f0d541785d77618"
+      "size": 30027,
+      "sha256": "c5a4518f0a88b3c0dc43c8edda6ac98ab1582efea346642e1a91807a2cd9dfa5"
     },
     {
       "path": "docs/glossary/GLOSSARY.md",
@@ -845,8 +845,8 @@
     },
     {
       "path": "packages/opencode-harness-plugin/P1_STATUS.md",
-      "size": 4168,
-      "sha256": "c20dae63b0e208e92173dc71cdb945da85a1b074672982439320dcb7e6fc174a"
+      "size": 4294,
+      "sha256": "4209d8d3b941291b95738b36cdfa5cd1b0eb5df3f7f9069341c2c3c4a3d667ef"
     },
     {
       "path": "packages/opencode-harness-plugin/README.md",
@@ -2167,6 +2167,11 @@
       "path": "scripts/sync_to_live.py",
       "size": 3637,
       "sha256": "5cea67ca72e4d2fa5e3f0bd00c1f15964d720e95a99bb3c1f88183387ade14da"
+    },
+    {
+      "path": "scripts/tools/check_evidence_levels.py",
+      "size": 4567,
+      "sha256": "a5aea504d1cd933d9ee2fedc1d501ec4415e0b68564c2895e5cd10c5514c6c3f"
     },
     {
       "path": "scripts/tools/check_health_canonical.py",
@@ -5577,6 +5582,11 @@
       "path": "tests/test_bridge_semantic_execute.py",
       "size": 10091,
       "sha256": "6fb761c51e8e075363837b01d0befbeea12b86ffb81f4a9cb838a2924cfe69d5"
+    },
+    {
+      "path": "tests/test_evidence_levels.py",
+      "size": 4149,
+      "sha256": "4f177630497cd3ba4d7003110d03328f8b1d644be480b59ea899db61a8b72400"
     },
     {
       "path": "tests/test_health_doctor.py",

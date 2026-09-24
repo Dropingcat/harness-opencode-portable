@@ -1,26 +1,76 @@
 {
-  "schema": "harness-opencode-compatibility/1.0",
+  "schema": "harness-opencode-compatibility/2.0",
   "opencode_version": "1.18.30",
   "plugin_api_package": "@opencode-ai/plugin@1.18.16",
   "sdk_package": "@opencode-ai/sdk@1.18.16",
   "tested_platform": "Windows 10 AMD64, Node 22.23.1, OpenCode CLI 1.18.30 native",
-  "feature_probes": {
-    "PLUGIN_LOADED": "LIVE_VERIFIED",
-    "CUSTOM_TOOL_VISIBLE": "LIVE_VERIFIED harness_status + harness_run",
-    "SDK_CLIENT_AVAILABLE": "LIVE_VERIFIED",
-    "SESSION_CREATE": "verified against package types",
-    "SESSION_PROMPT": "verified against package types",
-    "SESSION_ABORT": "verified against package types",
-    "HOST_CONTEXT": "LIVE_VERIFIED (session/message/agent/directory/worktree normalized)",
-    "WORKSPACE_CONTEXT": "LIVE_VERIFIED",
-    "BRIDGE_FULL_DUPLEX": "hostless test + LIVE harness.status/harness.run through Python peer",
-    "STRUCTURED_OUTPUT": "NOT_LIVE_CERTIFIED",
-    "EVENT_STREAM": "verified against package types"
+  "evidence_scale": {
+    "source": "packages/opencode-harness-plugin/TASK_TREE.md; TECH_DEBT_AGENTS.md TD-D8 (TEST_AND_EVIDENCE_MATRIX шкала)",
+    "levels": {
+      "LIVE_CERTIFIED": "доказано живым OpenCode host (live gate); достижимо только через настоящий host",
+      "HOSTLESS_REPORTED": "доказано hostless-тестами (TS/Python) без живого хоста",
+      "TYPE_VERIFIED": "проверено против типов установленного пакета (@opencode-ai/plugin|sdk)",
+      "NOT_CERTIFIED": "не сертифицировано ни одним уровнем"
+    },
+    "allowed_live_certified": [
+      "PLUGIN_LOADED",
+      "CUSTOM_TOOL_VISIBLE",
+      "HOST_CONTEXT",
+      "WORKSPACE_CONTEXT"
+    ]
   },
-  "semantic_status": "NOT_LIVE_CERTIFIED",
+  "feature_probes": {
+    "PLUGIN_LOADED": {
+      "level": "LIVE_CERTIFIED",
+      "evidence": ["packages/opencode-harness-plugin/P1_STATUS.md#p2-live-verification-2026-09-14-opencode-11830"]
+    },
+    "CUSTOM_TOOL_VISIBLE": {
+      "level": "LIVE_CERTIFIED",
+      "evidence": ["packages/opencode-harness-plugin/P1_STATUS.md#p2-live-verification-2026-09-14-opencode-11830"]
+    },
+    "SDK_CLIENT_AVAILABLE": {
+      "level": "TYPE_VERIFIED",
+      "evidence": ["packages/opencode-harness-plugin/P1_STATUS.md#verified-against-actual-sdk-types"]
+    },
+    "SESSION_CREATE": {
+      "level": "TYPE_VERIFIED",
+      "evidence": ["packages/opencode-harness-plugin/P1_STATUS.md#verified-against-actual-sdk-types"]
+    },
+    "SESSION_PROMPT": {
+      "level": "TYPE_VERIFIED",
+      "evidence": ["packages/opencode-harness-plugin/P1_STATUS.md#verified-against-actual-sdk-types"]
+    },
+    "SESSION_ABORT": {
+      "level": "TYPE_VERIFIED",
+      "evidence": ["packages/opencode-harness-plugin/P1_STATUS.md#verified-against-actual-sdk-types"]
+    },
+    "HOST_CONTEXT": {
+      "level": "LIVE_CERTIFIED",
+      "evidence": ["packages/opencode-harness-plugin/P1_STATUS.md#p2-live-verification-2026-09-14-opencode-11830"]
+    },
+    "WORKSPACE_CONTEXT": {
+      "level": "LIVE_CERTIFIED",
+      "evidence": ["packages/opencode-harness-plugin/P1_STATUS.md#p2-live-verification-2026-09-14-opencode-11830"]
+    },
+    "BRIDGE_FULL_DUPLEX": {
+      "level": "HOSTLESS_REPORTED",
+      "evidence": ["tests/test_bridge_semantic_execute.py", "packages/opencode-harness-plugin/core/bridge_peer.py"]
+    },
+    "STRUCTURED_OUTPUT": {
+      "level": "NOT_CERTIFIED",
+      "evidence": []
+    },
+    "EVENT_STREAM": {
+      "level": "TYPE_VERIFIED",
+      "evidence": ["packages/opencode-harness-plugin/P1_STATUS.md#verified-against-actual-sdk-types"]
+    }
+  },
+  "semantic_status": "NOT_CERTIFIED",
   "known_upstream_issues": [],
   "supported_plugin_version_range": ">=1.18.0",
   "certification_date": "2026-09-14",
+  "rescored_date": "2026-09-24",
+  "rescore_reason": "TD-D8: feature_probes приведены к канонической шкале evidence levels; LIVE_CERTIFIED оставлен только для capability, доказанных live-секциями P1_STATUS.md (P2 live verification 2026-09-14).",
   "evidence": [
     "harness plugin loaded protocol=harness-bridge-rpc/1.0 required_features_ok=true",
     "tool harness_status executed by live model opencode/big-pickle, returned core status",

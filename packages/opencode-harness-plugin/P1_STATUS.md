@@ -20,7 +20,7 @@ Status: `P1 HOSTLESS PASS / P2 LIVE LOAD + TOOLS VERIFIED / P3 SEMANTIC LIVE SMO
 - `@opencode-ai/plugin` / `@opencode-ai/sdk` `1.18.16` (installed in this package).
 - Confirmed: `Plugin` is `(input: PluginInput) => Promise<Hooks>`; `Hooks.tool` is a map of `tool()` definitions; `ToolContext` carries `sessionID/messageID/agent/directory/worktree/abort`.
 - SDK v1 client: `session.create/prompt/abort/messages`, `event.subscribe` — these are the future child-session transport.
-- Compatibility record: `compatibility/opencode/1.18.16.json` (`NOT_LIVE_CERTIFIED` for semantic).
+- Compatibility record: type-level verification is reflected in `compatibility/opencode/1.18.30.json` as `TYPE_VERIFIED` probes (the separate 1.18.16 record was not carried into v1; see TD-D8 rescore).
 
 ## Test evidence
 
@@ -45,7 +45,7 @@ Status: `P1 HOSTLESS PASS / P2 LIVE LOAD + TOOLS VERIFIED / P3 SEMANTIC LIVE SMO
 - `harness_status` invoked by live model (`opencode/big-pickle`), returned real core status; `host_version` correctly reported as `1.18.30` (captured from `session.created` event).
 - `harness_run` invoked by live model, routed through the Python core `resolve()` (deterministic escalation on unmatched task = correct).
 - Verified in both OpenCode CLI 1.18.30 and Desktop (session agent=`build`).
-- Compatibility record: `compatibility/opencode/1.18.30.json` (semantic status still `NOT_LIVE_CERTIFIED`).
+- Compatibility record: `compatibility/opencode/1.18.30.json` (schema 2.0, evidence-level scale; semantic status `NOT_CERTIFIED`).
 
 ## P2 (next, live OpenCode)
 
