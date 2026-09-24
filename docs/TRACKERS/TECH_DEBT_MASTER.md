@@ -1,7 +1,7 @@
 # Tech Debt Master — единый реестр проекта
 
 Дата: 2026-09-24
-Всего: 186 | open: 130 | closed: 56 (счётчики пересчитаны по фактическим строкам реестра; TD-003/TD-D10 закрыт гейтом route-дублирования 2026-09-24; AG-A1 закрыт 2026-09-24: генератор субагентов + регресс-тесты контракта)
+Всего: 186 | open: 129 | closed: 57 (счётчики пересчитаны по фактическим строкам реестра; TD-003/TD-D10 закрыт гейтом route-дублирования 2026-09-24; AG-A1 закрыт 2026-09-24: генератор субагентов + регресс-тесты контракта; AG-D2/TD-D2 закрыт 2026-09-24: канонический plugin-aware doctor + health_check-обёртка + гейт check_health_canonical.py, issue #10)
 
 Префиксы: CD-* Coder, WR-* Writer, RS-* Researcher, PL-* plugin, TD-* общий.
 Реестр TECH_DEBT_AGENTS.md (TD-A*/TD-D*/TD-I*/TD-T*): закрыто в 2026-09-24 — TD-A4, TD-D4, TD-D7, TD-D9; частично — TD-A3, TD-D5.
@@ -144,7 +144,7 @@
 | AG-A3 | medium | code-orchestrator | [TECH_DEBT_AGENTS] Маппинг роль→агент→model: нет `model:` во frontmatter и `agent_hint` в harness_run (частично: формат агентов готов) | 2026-09-24 |
 | AG-A4 | high | code-orchestrator | [TECH_DEBT_AGENTS] ЗАКРЫТО 2026-09-24: обязательный шаг 0 git-ритуала добавлен в agents/code-orchestrator.md | 2026-09-24 |
 | AG-D1 | medium | code-orchestrator | [TECH_DEBT_AGENTS] Списки модулей в доке vs фактический состав v1 (writer/kanban/memory/capsules/shared не перенесены) | 2026-09-24 |
-| AG-D2 | medium | code-orchestrator | [TECH_DEBT_AGENTS] health_check.py не стал полноценным doctor (bridge handshake, host snapshot) | 2026-09-24 |
+| AG-D2 | medium | code-orchestrator | [TECH_DEBT_AGENTS] ЗАКРЫТО 2026-09-24: doctor.py — живой bridge.hello/harness.status probe + protocol compat + host snapshot; health_check.py — обёртка; гейт scripts/tools/check_health_canonical.py + tests/test_health_doctor.py (issue #10) | 2026-09-24 |
 | AG-D3 | low | code-orchestrator | [TECH_DEBT_AGENTS] register_plugin.py — временный project-scoped helper, канон — installer | 2026-09-24 |
 | AG-D4 | low | code-orchestrator | [TECH_DEBT_AGENTS] ЗАКРЫТО 2026-09-24: capability hash синхронизирован с runtime_snapshot (df07cc…, 12 роутов) | 2026-09-24 |
 | AG-D6 | medium | code-orchestrator | [TECH_DEBT_AGENTS] Launchers на legacy `opencode run`; зафиксировать transport=opencode_cli_legacy | 2026-09-24 |
@@ -217,3 +217,4 @@
 | TD-157 | downloader.py resolve: каскад падает, хотя прямой doi-путь (тот же sci | - |
 | TD-003 | medium | code-orchestrator | Дублирование route данных JSON vs TS — закрыто гейтом check_route_duplication.py (TD-D10) + tests/test_route_duplication.py | 2026-09-24 |
 | AG-A1 | [TECH_DEBT_AGENTS] Агенты не зарегистрированы как субагенты OpenCode — ЗАКРЫТО: пайплайн registry+compile_agents, артефакты .opencode/agent/*.md (26), регресс-тесты tests/test_agent_gen.py (qwen-coder) | 2026-09-24 |
+| AG-D2 | [TECH_DEBT_AGENTS] health_check→doctor: канонический plugin-aware doctor с живыми probes (bridge.hello/harness.status/protocol.compat/host snapshot/semantic readiness), health_check — тонкая обёртка; гейт + 8 тестов (TD-D2, qwen-coder) | 2026-09-24 |

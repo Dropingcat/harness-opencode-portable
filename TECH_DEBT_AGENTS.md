@@ -10,8 +10,10 @@
 >   `model:` и `agent_hint`), TD-D5 (перенос тестов выполнен, live-сертификация P3 не выполнена).
 > - **Открыто (подтверждено фактом отсутствия)**: TD-A1 (`.opencode/agent/` отсутствует),
 >   TD-D7 (нет тестов `job_ctl.py`), TD-D9 (нет `MANIFEST.json` / `SHA256SUMS.txt` /
->   `config/decision_aliases.json`), а также TD-A2, TD-D1–D3, TD-D6, TD-D8. TD-D10 закрыт
->   2026-09-24 (гейт `check_route_duplication.py` + тесты). Остальное: TD-I*, TD-T*.
+>   `config/decision_aliases.json`), а также TD-A2, TD-D1, TD-D3, TD-D6, TD-D8. TD-D10 закрыт
+>   2026-09-24 (гейт `check_route_duplication.py` + тесты); TD-D2 закрыт 2026-09-24
+>   (канонический plugin-aware doctor + health_check-обёртка + гейт `check_health_canonical.py`).
+>   Остальное: TD-I*, TD-T*.
 > - Единый реестр проекта: `docs/TRACKERS/TECH_DEBT_MASTER.md` (185 записей, open: 130).
 
 ---
@@ -213,7 +215,18 @@
 - **Задача v1.1**: портировать `scripts/writer/`, `scripts/capsules/`, `scripts/memory/`,
   `scripts/kanban/`, `shared/` (или явно задокументировать их исключение из v1).
 
-### TD-D2. **`health_check.py` всё ещё legacy-ориентирован** (документация требует замены)
+### TD-D2. **`health_check.py` всё ещё legacy-ориентирован** (документация требует замены) — ЗАКРЫТО (2026-09-24)
+- **Закрытие**: `packages/opencode-harness-plugin/core/doctor.py` стал каноническим plugin-aware
+  doctor: живые hostless-probes `bridge.hello` и `harness.status` (stdio-запуск `bridge_peer.py`,
+  реальный JSON-RPC handshake), protocol-compat (`BRIDGE_PROTOCOL` в TS == `PROTOCOL` в Python),
+  host feature snapshot (регистрация native/legacy, dist-бандл), semantic provider readiness
+  (informational, не блокирует вердикт до live-сертификации P3). `scripts/health_check.py` сведён
+  к тонкой совместимой обёртке над doctor (exit-контракт HEALTHY/UNHEALTHY сохранён; legacy-проверки
+  sqlite/DB/guard/mcp из него удалены). Гейт единства: `scripts/tools/check_health_canonical.py`
+  (I1 чистота обёртки, I2 live-probes в doctor, I3 parity протокольных литералов, I4 идентичный
+  вердикт через оба входа). Тесты: `tests/test_health_doctor.py` (8: позитив на реальном дереве,
+  мутации protocol-drift/snapshot-missing/legacy-regression/probe-removal). GitHub issue #10.
+- **Исходная формулировка**:
 - **Факт**: `HARNESS_OPENCODE_INTERFACE_CONTROL.md` §2 RED-6 и `BOUNDARY_MATRIX.json` требуют
   заменить `scripts/health_check.py` (legacy: «plugin registered + DB accessible») на
   **plugin-aware doctor** (plugin loaded probe, bridge handshake, core health, protocol compat,
