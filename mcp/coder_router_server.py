@@ -52,7 +52,9 @@ MODEL_BY_CLASS = {
 
 _LEGACY_REASON = "plugin bridge not enabled or adapter unavailable"
 
-# transport identifiers in responses (M3a)
+# transport identifiers in responses (M3a).
+# TD-D6/AG-D6 (issue #18): legacy-транспорт зафиксирован канонически; модуль объявлен
+# в docs/LEGACY_TRANSPORT_REGISTRY.json (гейт scripts/tools/check_legacy_transport.py).
 _TRANSPORT_PLUGIN = "harness-plugin-bridge"
 _TRANSPORT_LEGACY = "opencode_cli_legacy"
 

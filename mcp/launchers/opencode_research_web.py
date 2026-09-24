@@ -45,6 +45,10 @@ CONTRACT = """\
 }
 """
 
+# TD-D6/AG-D6 (issue #18): явная фиксация legacy-транспорта (см.
+# docs/LEGACY_TRANSPORT_REGISTRY.json; гейт check_legacy_transport.py).
+TRANSPORT_TAG = "opencode_cli_legacy"
+
 MODEL = "ollama-cloud/glm-5.2"
 TIMEOUT = 300
 
