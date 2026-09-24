@@ -1,7 +1,7 @@
 # Tech Debt Master — единый реестр проекта
 
 Дата: 2026-09-24
-Всего: 199 | open: 144 | closed: 55 (счётчики пересчитаны по фактическим строкам реестра; прежняя шапка 185/130/55 была рассинхронизирована)
+Всего: 199 | open: 143 | closed: 56 (счётчики пересчитаны по фактическим строкам реестра; прежняя шапка 185/130/55 была рассинхронизирована)
 
 Префиксы: CD-* Coder, WR-* Writer, RS-* Researcher, PL-* plugin, TD-* общий.
 Реестр TECH_DEBT_AGENTS.md (TD-A*/TD-D*/TD-I*/TD-T*): закрыто в 2026-09-24 — TD-A4, TD-D4, TD-D7, TD-D9; частично — TD-A3, TD-D5.
@@ -141,7 +141,6 @@
 | TD-155 | high | research-orchestrator | MCP-tools подключены в .mcp.json (4 сервера), но НЕ инжектированы в те | - |
 | TD-158 | high | research-orchestrator | Обход капчи sci-hub: «проверка на робота» (Cloudflare/анти-бот) блокир | - |
 | AG-A1 | high | code-orchestrator | [TECH_DEBT_AGENTS] Агенты не зарегистрированы как субагенты OpenCode (генератор .opencode/agent/*.md) | 2026-09-24 |
-| AG-A2 | high | code-orchestrator | [TECH_DEBT_AGENTS] Нет иерархии parent/child сессий (semantic.execute не сертифицирован live) | 2026-09-24 |
 | AG-A3 | medium | code-orchestrator | [TECH_DEBT_AGENTS] Маппинг роль→агент→model: нет `model:` во frontmatter и `agent_hint` в harness_run (частично: формат агентов готов) | 2026-09-24 |
 | AG-A4 | high | code-orchestrator | [TECH_DEBT_AGENTS] ЗАКРЫТО 2026-09-24: обязательный шаг 0 git-ритуала добавлен в agents/code-orchestrator.md | 2026-09-24 |
 | AG-D1 | medium | code-orchestrator | [TECH_DEBT_AGENTS] Списки модулей в доке vs фактический состав v1 (writer/kanban/memory/capsules/shared не перенесены) | 2026-09-24 |
@@ -159,6 +158,7 @@
 
 | ID | Title | Закрыт |
 |---|---|---|
+| AG-A2 | ЗАКРЫТО 2026-09-24: semantic.execute parent/child E2E-сертификация — tests/test_bridge_semantic_execute.py (4 теста: handshake контрактов, roundtrip request→child-result со schema-валидацией, error propagation) | 2026-09-24 |
 | CD-003 | verify_claim бросает AttributeError на не-dict входе (contract: должен | 2026-09-18 |
 | RS-005 | СПРАВКА: ссылка [3] Березина = АЗОТИРОВАНИЕ КОБАЛЬТСОДЕРЖАЩИХ СТАЛЕЙ ( | - |
 | RS-008 | Список литературы НКР: ИСПРАВИТЬ [4] — в тексте 'Гуляев [4]', в списке | - |
