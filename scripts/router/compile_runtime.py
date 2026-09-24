@@ -11,6 +11,7 @@ import argparse
 import hashlib
 import json
 import re
+import sys
 from pathlib import Path
 from typing import Any
 
@@ -50,6 +51,20 @@ def load_sources(root: Path | None = None) -> tuple[dict, dict[str, dict]]:
 def validate_sources(s: dict[str, dict]) -> list[str]:
     errors: list[str] = []
     routes = s["routes"].get("routes", {})
+    # Cross-validation с Agent Registry (TD-A1): каждый route.agent обязан быть
+    # зарегистрированной ролью. Fail-loud — без тихих пропусков несуществующих агентов.
+    try:
+        registry_root = Path(__file__).resolve().parents[2]
+        if str(registry_root) not in sys.path:
+            sys.path.insert(0, str(registry_root))
+        from runtime.registry import AgentRegistry
+        known_agents = set(AgentRegistry.load(registry_root).records)
+    except FileNotFoundError:
+        known_agents = None  # реестр недоступен — пропускаем только в этом случае
+    for rid, r in routes.items():
+        agent = r.get("agent")
+        if agent and known_agents is not None and agent not in known_agents:
+            _fail(errors, f"route {rid}: unknown agent {agent!r} (not in agents/*.md registry)")
     contracts = s["tool_contracts"].get("contracts", {})
     buckets = s["buckets"].get("buckets", {})
     capsules = s["capsules"].get("capsules", {})

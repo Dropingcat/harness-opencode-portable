@@ -1,0 +1,10 @@
+{
+  "agent": "fact-checker-runner",
+  "categories": [
+    "CAT_RUNNER_PROXY"
+  ],
+  "default_bucket": "research",
+  "capsule": "research-core",
+  "wraps": "fact-checker",
+  "note": "primary-обёртка субагента для точечного диспатча (TD-A1 registry overlay)"
+}

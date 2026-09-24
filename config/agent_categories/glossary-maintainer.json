@@ -1,0 +1,9 @@
+{
+  "agent": "glossary-maintainer",
+  "categories": [
+    "CAT_GLOSSARY",
+    "CAT_INDEX_MAINTENANCE"
+  ],
+  "default_bucket": "integration",
+  "capsule": "core-orchestration"
+}

@@ -4,6 +4,15 @@
 Этот документ — реестр технического долга по агентам и их интеграции, который
 необходимо закрыть в **v1.1**. Здесь же — дорожная карта работ.
 
+> **Аудит соответствия коду: 2026-09-24.** Сводка статусов:
+> - **Закрыто**: TD-D4 (хэш синхронизирован), TD-A4 (шаг 0 добавлен в `code-orchestrator.md`).
+> - **Частично закрыто**: TD-A3 (роли уже содержат frontmatter `mode: subagent`; не хватает
+>   `model:` и `agent_hint`), TD-D5 (перенос тестов выполнен, live-сертификация P3 не выполнена).
+> - **Открыто (подтверждено фактом отсутствия)**: TD-A1 (`.opencode/agent/` отсутствует),
+>   TD-D7 (нет тестов `job_ctl.py`), TD-D9 (нет `MANIFEST.json` / `SHA256SUMS.txt` /
+>   `config/decision_aliases.json`), а также TD-A2, TD-D1–D3, TD-D6, TD-D8, TD-D10, TD-I*, TD-T*.
+> - Единый реестр проекта: `docs/TRACKERS/TECH_DEBT_MASTER.md` (185 записей, open: 130).
+
 ---
 
 ## 1. Что уже работает в v1
@@ -12,7 +21,7 @@
 |---|---|
 | Native plugin (`@harness/opencode-plugin`) | Загружается через `.opencode/opencode.json` (file:// → dist/index.js) |
 | `harness_status` / `harness_run` | Детерминированный роутинг через Core (`resolve_route.py`) |
-| Runtime policy (`runtime_snapshot.json`) | 11 роутов, 10 инструментов, policy_hash `8910fd…` |
+| Runtime policy (`runtime_snapshot.json`) | 12 роутов, 10 инструментов, policy_hash `df07cc…` (аудит 2026-09-24, `compile_runtime.py --check` PASS) |
 | MCP-серверы | 10/10 импортируются; academic_search, coder_router, searxng (degraded без SearXNG), doc_extract |
 | Guard (`guard/src`) | Встроенный `session_guard.py` подхватывается researcher'ом (`_HAS_DOC_GUARD=True`) |
 | Bootstrap | venv + build + register + health, idempotent |
@@ -36,13 +45,21 @@
   (`parentID`), потому что P3 не сертифицирован live.
 - **Решение (v1.1)**: live-сертификация `semantic.execute`, затем миграция Tribunal на дочерние сессии (P4).
 
-### TD-A3. Нет маппинга «роль → агент → модель»
+### TD-A3. Нет маппинга «роль → агент → модель» — ЧАСТИЧНО ЗАКРЫТО (аудит 2026-09-24)
+- **Обновление**: роли в `agents/*.md` уже содержат корректный OpenCode-frontmatter
+  (`name`, `description`, `mode: subagent`, `permission`, `steps`), т.е. формат агента готов —
+  конвертация frontmatter не требуется. Остаётся: привязка `model:` и `agent_hint` в `harness_run`.
 - **Факт**: `config/model_routing` в researcher-ядре есть, но в `agents/*.md` роли не привязаны к моделям.
 - **Проблема**: `harness_run` не говорит, какой моделью исполнять роль; Desktop использует дефолт.
 - **Решение (v1.1)**: в `.opencode/agent/*.md` проставить `model:` из `config/providers_auth` /
   `config/model_routing`; в `harness_run` вернуть `agent_hint` с моделью.
 
-### TD-A4. Кодер: нет обязательной сверки с git-репо и создания принимающей репо-структуры при старте
+### TD-A4. Кодер: нет обязательной сверки с git-репо и создания принимающей репо-структуры при старте — ЗАКРЫТО (2026-09-24)
+- **Закрытие**: в `agents/code-orchestrator.md` добавлен раздел «Шаг 0 — ритуал старта (обязателен)»:
+  сверка `git rev-parse --is-inside-work-tree`, создание принимающей директории/репо
+  (`git init` + `.gitignore` + базовый коммит), трекер, `MAP.md`, README, архитектурные файлы,
+  фиксация базового среза коммитом до первой правки кода.
+- **Исходная формулировка**:
 - **Факт**: в `agents/code-orchestrator.md` есть только пассивное упоминание (строка «Безопасность
   работы»): «проверь, что воркспейс — git-репо (или создай при старте задачи)» и «factory_ctl submit
   при воркере автоматически делает git add -A && git commit в CWD». **Нет явного, обязательного
@@ -216,14 +233,17 @@
 - **Задача**: понизить приоритет; документировать, что `register_plugin.py` в v1 — временный
   project-scoped helper, канонический путь — bootstrap + `.opencode/opencode.json`.
 
-### TD-D4. **Capability hash расходится с документацией**
+### TD-D4. **Capability hash расходится с документацией** — ЗАКРЫТО (2026-09-24)
+- **Закрытие**: таблица §1 синхронизирована с фактическим `config/runtime_snapshot.json`
+  (12 роутов, policy_hash `df07cc…`; подтверждено `compile_runtime.py --check`).
+- **Исходная формулировка**:
 - **Факт**: документация (`TEST_AND_EVIDENCE_MATRIX.md`, `PROJECT_STATE.md`) заявляет
   capability compiler hash `60105d715f8df50917156216b085f85ee25a2b1deb62947e041bd8537a1a9076`.
 - **Реальность**: исходник и v1 дают `f9de8128f960000470c286b0b153861ec8ff906b2fa6f3be712dbf1d924e47a0`
   (base = runtime `8910fd…`, совпадает). Документация **устарела** (или относится к другому дереву).
 - **Действие**: не наш долг; зафиксировать в доке расхождение (документация не синхронизирована с кодом).
 
-### TD-D5. **`semantic.execute` reverse adapter не имеет cancel/timeout E2E на v1**
+### TD-D5. **`semantic.execute` reverse adapter не имеет cancel/timeout E2E на v1** — ЧАСТИЧНО ЗАКРЫТО (перенос тестов выполнен, аудит 2026-09-24)
 - **Факт**: `INTERFACE_CONTROL.md` §1.2/§10 требует `AbortSignal → harness.cancel → session abort`,
   и M2 acceptance включает cancellation + 100 concurrent messages.
 - **Проблема**: в v1 bridge-тесты (hostless) **не перенесены** (TD-F2), cancel propagation
@@ -245,7 +265,10 @@
 - **Задача**: зафиксировать `transport=opencode_cli_legacy` для них; не мигрировать до
   сертификации plugin semantic E2E (по `NEXT_PHASE_PLAN.md` — это P5).
 
-### TD-D7. **`scripts/jobs/job_ctl.py` перенесён, но нет канонических job-тестов**
+### TD-D7. **`scripts/jobs/job_ctl.py` перенесён, но нет канонических job-тестов** — ЗАКРЫТО (2026-09-24)
+- **Закрытие**: добавлен smoke-набор `tests/test_job_ctl.py` (create → start → attempt → artifact →
+  stage/gate → complete, reconcile, reject-missing-job) + документирование host_ref mapping в
+  разделе «Host-ref mapping» ниже. Оставшаяся корреляция session↔Job — metadata, не Job ID (осознанно).
 - **Факт**: `INTERFACE_CONTROL.md` §1.2 называет `job_ctl.py` canonical Job/Attempt runtime
   с event-sourced JSON state, attempts, children, artifacts, stages, gates, reconciliation.
 - **Проблема**: файл перенесён (закрыт TD-T1), но в v1 **нет тестов** Job/Attempt runtime
@@ -265,7 +288,10 @@
 - **Задача**: в v1.1 привести `compatibility/*.json` к шкале `TEST_AND_EVIDENCE_MATRIX.md`
   (`LIVE_CERTIFIED` только после live P2 gate на чистой установке).
 
-### TD-D9. **Отсутствуют канонические машинные файлы из README_FIRST**
+### TD-D9. **Отсутствуют канонические машинные файлы из README_FIRST** — ЗАКРЫТО (2026-09-24)
+- **Закрытие**: добавлен генератор `scripts/tools/gen_manifest.py` (stdlib, детерминированный);
+  сгенерированы `MANIFEST.json`, `SHA256SUMS.txt` и стаб `config/decision_aliases.json`.
+  Проверка поставки: `python3 scripts/tools/gen_manifest.py --check`.
 - **Факт**: `README_FIRST(2).md` перечисляет канонические machine-файлы: `MANIFEST.json`,
   `SHA256SUMS.txt`, `config/decision_aliases.json`. В v1 их **нет**.
 - **Проблема**: нет инвентаря точного дерева и чексумм — невозможно верифицировать
