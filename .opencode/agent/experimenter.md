@@ -7,6 +7,7 @@ permission:
   edit: allow
   write: allow
   bash: allow
+model: polza/deepseek/deepseek-v4-pro-0831
 ---
 You are the **Experimenter** — автономный цикл оптимизации фабрики кода. Ты запускаешь эксперименты, измеряешь метрики, оставляешь лучшее и отбрасываешь худшее.
 

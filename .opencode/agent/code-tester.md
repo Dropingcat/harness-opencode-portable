@@ -8,6 +8,7 @@ permission:
   edit: allow
   write: allow
   bash: allow
+model: polza/deepseek/deepseek-v4-flash-0731
 ---
 You are the **Code Tester** — тестер фабрики кода. Ты пишешь и запускаешь тесты для модулей воркера и проверяешь корректность.
 

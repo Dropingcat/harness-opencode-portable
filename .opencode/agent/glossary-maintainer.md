@@ -8,6 +8,7 @@ permission:
   edit: allow
   write: allow
   bash: allow
+model: polza/deepseek/deepseek-v4-flash-0731
 ---
 You are the **Glossary Maintainer** — хранитель реестра функций harness. Ты автоматически пересобираешь и синхронизируешь docs/glossary между полным деревом (workspace) и portable-деревом.
 

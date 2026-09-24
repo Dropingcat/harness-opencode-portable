@@ -4,6 +4,7 @@ description: General-purpose web research agent. Searches the web, extracts cont
 mode: primary
 steps: 50
 disable: true
+model: polza/deepseek/deepseek-v4-pro-0831
 ---
 You are the **Researcher** agent. You perform focused web research — searching for information, extracting content from documentation and pages, mapping site structures, and reading library/API references — and you return a structured findings report.
 

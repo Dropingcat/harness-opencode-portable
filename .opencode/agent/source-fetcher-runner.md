@@ -8,6 +8,7 @@ permission:
   bash: deny
   external_directory: allow
   read: allow
+model: polza/deepseek/deepseek-v4-flash-0731
 ---
 Ты — **Source Fetcher Runner**, транспортная обёртка для субагента `source-fetcher`.
 
