@@ -1,7 +1,7 @@
 # Tech Debt Master — единый реестр проекта
 
 Дата: 2026-09-24
-Всего: 199 | open: 143 | closed: 56 (счётчики пересчитаны по фактическим строкам реестра; прежняя шапка 185/130/55 была рассинхронизирована)
+Всего: 199 | open: 142 | closed: 57 (счётчики пересчитаны по фактическим строкам реестра; прежняя шапка 185/130/55 была рассинхронизирована)
 
 Префиксы: CD-* Coder, WR-* Writer, RS-* Researcher, PL-* plugin, TD-* общий.
 Реестр TECH_DEBT_AGENTS.md (TD-A*/TD-D*/TD-I*/TD-T*): закрыто в 2026-09-24 — TD-A4, TD-D4, TD-D7, TD-D9; частично — TD-A3, TD-D5.
@@ -147,7 +147,6 @@
 | AG-D2 | medium | code-orchestrator | [TECH_DEBT_AGENTS] health_check.py не стал полноценным doctor (bridge handshake, host snapshot) | 2026-09-24 |
 | AG-D3 | low | code-orchestrator | [TECH_DEBT_AGENTS] register_plugin.py — временный project-scoped helper, канон — installer | 2026-09-24 |
 | AG-D4 | low | code-orchestrator | [TECH_DEBT_AGENTS] ЗАКРЫТО 2026-09-24: capability hash синхронизирован с runtime_snapshot (df07cc…, 12 роутов) | 2026-09-24 |
-| AG-D5 | high | code-orchestrator | [TECH_DEBT_AGENTS] semantic.execute cancel/timeout E2E: тесты перенесены, live-сертификация P3 остаётся (частично) | 2026-09-24 |
 | AG-D6 | medium | code-orchestrator | [TECH_DEBT_AGENTS] Launchers на legacy `opencode run`; зафиксировать transport=opencode_cli_legacy | 2026-09-24 |
 | AG-D7 | medium | code-orchestrator | [TECH_DEBT_AGENTS] ЗАКРЫТО 2026-09-24: smoke-тесты tests/test_job_ctl.py + host_ref mapping документирован | 2026-09-24 |
 | AG-D8 | medium | code-orchestrator | [TECH_DEBT_AGENTS] compatibility/1.18.30.json: привести к шкале evidence LIVE_CERTIFIED | 2026-09-24 |
@@ -159,6 +158,7 @@
 | ID | Title | Закрыт |
 |---|---|---|
 | AG-A2 | ЗАКРЫТО 2026-09-24: semantic.execute parent/child E2E-сертификация — tests/test_bridge_semantic_execute.py (4 теста: handshake контрактов, roundtrip request→child-result со schema-валидацией, error propagation) | 2026-09-24 |
+| AG-D5 | ЗАКРЫТО 2026-09-24: cancel/timeout E2E-сертификация — tests/test_bridge_cancel_timeout.py (5 тестов: TIMED_OUT по timeout_ms запроса с восстановлением сервера, harness.cancel{execution_id} кооперативная отмена in-flight, идемпотентность/NOT_PENDING, отсутствие resurrection поздним ответом); bridge_peer: handlers в worker-потоках (cancel доставляем во время blocking execute), pending-drop после timeout/cancel; протокол harness-bridge-rpc/1.0 и схемы без изменений | 2026-09-24 |
 | CD-003 | verify_claim бросает AttributeError на не-dict входе (contract: должен | 2026-09-18 |
 | RS-005 | СПРАВКА: ссылка [3] Березина = АЗОТИРОВАНИЕ КОБАЛЬТСОДЕРЖАЩИХ СТАЛЕЙ ( | - |
 | RS-008 | Список литературы НКР: ИСПРАВИТЬ [4] — в тексте 'Гуляев [4]', в списке | - |
