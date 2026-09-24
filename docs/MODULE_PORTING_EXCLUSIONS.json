@@ -1,0 +1,67 @@
+{
+  "schema": "module_porting_exclusions/1.0",
+  "generated_purpose": "TD-D1/AG-D1 closure (issue #17): canonical registry reconciling module lists in migration documentation vs actual v1 portable-repo composition. Gate: scripts/tools/check_module_porting.py.",
+  "source_of_truth": [
+    "TECH_DEBT_AGENTS.md#TD-D1",
+    "docs/TRACKERS/TECH_DEBT_MASTER.md AG-D1"
+  ],
+  "statuses_allowed": ["PORTED", "PARTIAL", "EXCLUDED_PENDING_PORT"],
+  "modules": [
+    {
+      "id": "scripts/writer",
+      "declared_in": "миграция в плагин: CURRENT_ARCHITECTURE.md §5 Module inventory (источник расхождения, в v1 не перенесён)",
+      "status": "EXCLUDED_PENDING_PORT",
+      "actual_paths": [],
+      "rationale": "Канонический Writer CLI не перенесён в v1; функциональное ядро перенесено как scripts/writer-core (writer_core пакет). Полноценный writer/ CLI — отдельная задача переноса (ROADMAP v1.1).",
+      "owner": "code-orchestrator",
+      "related_debt": ["TD-I2", "TD-D1"]
+    },
+    {
+      "id": "scripts/writer-core",
+      "declared_in": "v1 фактический состав",
+      "status": "PORTED",
+      "actual_paths": ["scripts/writer-core/writer_core/cli.py"],
+      "rationale": "Writer-core перенесён и является действующим Writer-модулем v1.",
+      "owner": "writing-orchestrator",
+      "related_debt": []
+    },
+    {
+      "id": "scripts/kanban",
+      "declared_in": "миграция в плагин: CURRENT_ARCHITECTURE.md §5 Module inventory (в v1 не перенесён)",
+      "status": "EXCLUDED_PENDING_PORT",
+      "actual_paths": [],
+      "rationale": "Kanban-подсистема не перенесена в v1; перенос запланирован (v1.1), до переноса недоступна на чистом сервере.",
+      "owner": "code-orchestrator",
+      "related_debt": ["TD-D1"]
+    },
+    {
+      "id": "scripts/memory",
+      "declared_in": "миграция в плагин: CURRENT_ARCHITECTURE.md §5 Module inventory (в v1 не перенесён)",
+      "status": "EXCLUDED_PENDING_PORT",
+      "actual_paths": [],
+      "rationale": "Harness memory не перенесена в v1 — отслеживается отдельным тезисом TD-I2 (память в harness); здесь фиксируется факт исключения из состава v1.",
+      "owner": "code-orchestrator",
+      "related_debt": ["TD-I2", "TD-D1"]
+    },
+    {
+      "id": "scripts/capsules",
+      "declared_in": "миграция в плагин: CURRENT_ARCHITECTURE.md §5 Module inventory (в v1 не перенесён)",
+      "status": "EXCLUDED_PENDING_PORT",
+      "actual_paths": [],
+      "rationale": "Capsule-подсистема не перенесена в v1; перенос вне объёма v1, задокументировано как явное исключение.",
+      "owner": "code-orchestrator",
+      "related_debt": ["TD-D1"]
+    },
+    {
+      "id": "shared",
+      "declared_in": "миграция в плагин: CURRENT_ARCHITECTURE.md §5 (research-orchestration-process.md и др.)",
+      "status": "PARTIAL",
+      "actual_paths": ["shared/harness-dispatch-map.md"],
+      "required_paths_present": ["shared/harness-dispatch-map.md"],
+      "absent_declared_files": ["shared/research-orchestration-process.md"],
+      "rationale": "Из shared/ перенесён только harness-dispatch-map.md; research-orchestration-process.md и остальные документы объявлены как не перенесённые (явное исключение).",
+      "owner": "code-orchestrator",
+      "related_debt": ["TD-D1"]
+    }
+  ]
+}

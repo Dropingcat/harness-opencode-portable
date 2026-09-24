@@ -8,11 +8,13 @@
 > - **Закрыто**: TD-D4 (хэш синхронизирован), TD-A4 (шаг 0 добавлен в `code-orchestrator.md`).
 > - **Частично закрыто**: TD-A3 (роли уже содержат frontmatter `mode: subagent`; не хватает
 >   `model:` и `agent_hint`), TD-D5 (перенос тестов выполнен, live-сертификация P3 не выполнена).
-> - **Открыто (подтверждено фактом отсутствия)**: TD-A1 (`.opencode/agent/` отсутствует),
->   TD-D7 (нет тестов `job_ctl.py`), TD-D9 (нет `MANIFEST.json` / `SHA256SUMS.txt` /
->   `config/decision_aliases.json`), а также TD-A2, TD-D1, TD-D6. TD-D10 закрыт
->   2026-09-24 (гейт `check_route_duplication.py` + тесты); TD-D2 закрыт 2026-09-24
->   (канонический plugin-aware doctor + health_check-обёртка + гейт `check_health_canonical.py`).
+> - **Открыто (подтверждено фактом отсутствия)**: TD-A2, TD-D6.
+>   TD-D10 закрыт 2026-09-24 (гейт `check_route_duplication.py` + тесты); TD-D2 закрыт 2026-09-24
+>   (канонический plugin-aware doctor + health_check-обёртка + гейт `check_health_canonical.py`);
+>   TD-D3 закрыт 2026-09-24 (transitional-статус регистрации плагина + гейт, issue #16);
+>   TD-D8 закрыт 2026-09-24 (evidence-level шкала + гейт `check_evidence_levels.py`, issue #14);
+>   TD-D1 закрыт 2026-09-24 (канонический реестр исключений переноса
+>   `docs/MODULE_PORTING_EXCLUSIONS.json` + гейт `check_module_porting.py`, issue #17).
 >   Остальное: TD-I*, TD-T*.
 > - Единый реестр проекта: `docs/TRACKERS/TECH_DEBT_MASTER.md` (185 записей, open: 130).
 
@@ -202,7 +204,12 @@
 `HARNESS_PLUGIN_BOUNDARY_MATRIX.json`, `TEST_AND_EVIDENCE_MATRIX.md`, `TECH_DEBT_CURRENT.md`,
 `HARNESS_NATIVE_PLUGIN_MIGRATION_PLAN_V2.md`, `NEXT_PHASE_PLAN.md`, `NEXT_SESSION_HANDOFF.md`).
 
-### TD-D1. **Списки модулей в документации vs фактический состав v1** (расхождение переноса)
+### TD-D1. **Списки модулей в документации vs фактический состав v1** (расхождение переноса) — ЗАКРЫТО (2026-09-24, issue #17)
+- **Закрытие**: реализована легальная ветка задачи — «явно задокументировать исключение из v1»:
+  канонический реестр `docs/MODULE_PORTING_EXCLUSIONS.json` (статусы PORTED/PARTIAL/
+  EXCLUDED_PENDING_PORT по каждому объявленному модулю: writer, writer-core, kanban, memory,
+  capsules, shared) + гейт `scripts/tools/check_module_porting.py` (I1–I6, fail-closed) +
+  тесты `tests/test_module_porting.py`. Раздел в `docs/ARCHITECTURE_NOTES.md`.
 - **Факт**: `CURRENT_ARCHITECTURE.md` (§5 Module inventory) и `BOUNDARY_MATRIX.json` перечисляют
   подсистемы, которые **есть в исходнике, но НЕ перенесены в v1**:
   - `scripts/writer/` (канонический Writer CLI) — **отсутствует** (в v1 только `writer-core`);

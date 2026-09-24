@@ -20,3 +20,27 @@ this helper remains operational but must not acquire new responsibilities.
 no executable module (.py/.ts/.sh/.js) may read it at runtime. This invariant is enforced by
 the fail-closed gate `scripts/tools/check_plugin_registration_status.py` (I1–I5) with mutation
 tests in `tests/test_plugin_registration_status.py`.
+
+## Module porting reconciliation: docs vs actual v1 composition (TD-D1, issue #17)
+
+The migration documentation (`CURRENT_ARCHITECTURE.md` §5 Module inventory,
+`BOUNDARY_MATRIX.json`) lists subsystems that exist in the source deployment but were
+**not** carried into the v1 portable repo. TD-D1 is closed via the explicitly allowed
+branch of the task: *document the exclusion*, not silently ship an incomplete port.
+
+**Canonical registry**: `docs/MODULE_PORTING_EXCLUSIONS.json` — one record per declared
+module with status `PORTED` (present and wired), `PARTIAL` (some files present, others
+declared absent), or `EXCLUDED_PENDING_PORT` (absent from v1; port tracked separately):
+
+- `scripts/writer` — EXCLUDED_PENDING_PORT (only `scripts/writer-core` shipped);
+- `scripts/writer-core` — PORTED (active Writer module of v1);
+- `scripts/kanban`, `scripts/memory` (tracked as TD-I2), `scripts/capsules` —
+  EXCLUDED_PENDING_PORT;
+- `shared/` — PARTIAL: only `shared/harness-dispatch-map.md` ported;
+  `research-orchestration-process.md` and siblings are declared-absent by design.
+
+**Invariant**: the registry must never drift from the filesystem. Enforced by the
+fail-closed gate `scripts/tools/check_module_porting.py` (I1–I6: schema/parse, required
+fields, status↔tree consistency, completeness of mandatory records, debt-id format,
+ledger marked ЗАКРЫТО) with mutation tests in `tests/test_module_porting.py`. Adding a
+new module to migration docs without a registry record fails CI.

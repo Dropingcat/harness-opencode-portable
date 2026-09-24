@@ -1,7 +1,7 @@
 # Tech Debt Master — единый реестр проекта
 
 Дата: 2026-09-24
-Всего: 186 | open: 128 | closed: 58 (счётчики пересчитаны по фактическим строкам реестра; AG-D3/TD-D3 закрыт 2026-09-24: документирование transitional-статуса регистрации плагина + гейт check_plugin_registration_status.py, issue #16; TD-003/TD-D10 закрыт гейтом route-дублирования 2026-09-24; AG-A1 закрыт 2026-09-24: генератор субагентов + регресс-тесты контракта; AG-D2/TD-D2 закрыт 2026-09-24: канонический plugin-aware doctor + health_check-обёртка + гейт check_health_canonical.py, issue #10)
+Всего: 186 | open: 127 | closed: 59 (AG-D1/TD-D1 закрыт 2026-09-24: реестр исключений переноса + гейт check_module_porting.py, issue #17; счётчики пересчитаны по фактическим строкам реестра; AG-D3/TD-D3 закрыт 2026-09-24: документирование transitional-статуса регистрации плагина + гейт check_plugin_registration_status.py, issue #16; TD-003/TD-D10 закрыт гейтом route-дублирования 2026-09-24; AG-A1 закрыт 2026-09-24: генератор субагентов + регресс-тесты контракта; AG-D2/TD-D2 закрыт 2026-09-24: канонический plugin-aware doctor + health_check-обёртка + гейт check_health_canonical.py, issue #10)
 
 Префиксы: CD-* Coder, WR-* Writer, RS-* Researcher, PL-* plugin, TD-* общий.
 Реестр TECH_DEBT_AGENTS.md (TD-A*/TD-D*/TD-I*/TD-T*): закрыто в 2026-09-24 — TD-A4, TD-D4, TD-D7, TD-D9; частично — TD-A3, TD-D5.
@@ -143,7 +143,7 @@
 | AG-A1 | high | code-orchestrator | [TECH_DEBT_AGENTS] Агенты не зарегистрированы как субагенты OpenCode (генератор .opencode/agent/*.md) | 2026-09-24 |
 | AG-A3 | medium | code-orchestrator | [TECH_DEBT_AGENTS] Маппинг роль→агент→model: нет `model:` во frontmatter и `agent_hint` в harness_run (частично: формат агентов готов) | 2026-09-24 |
 | AG-A4 | high | code-orchestrator | [TECH_DEBT_AGENTS] ЗАКРЫТО 2026-09-24: обязательный шаг 0 git-ритуала добавлен в agents/code-orchestrator.md | 2026-09-24 |
-| AG-D1 | medium | code-orchestrator | [TECH_DEBT_AGENTS] Списки модулей в доке vs фактический состав v1 (writer/kanban/memory/capsules/shared не перенесены) | 2026-09-24 |
+| ~~AG-D1~~ | closed | code-orchestrator | [TECH_DEBT_AGENTS] ЗАКРЫТО 2026-09-24: канонический реестр docs/MODULE_PORTING_EXCLUSIONS.json + гейт scripts/tools/check_module_porting.py (I1-I6) + tests/test_module_porting.py (13); issue #17 | 2026-09-24 |
 | AG-D2 | medium | code-orchestrator | [TECH_DEBT_AGENTS] ЗАКРЫТО 2026-09-24: doctor.py — живой bridge.hello/harness.status probe + protocol compat + host snapshot; health_check.py — обёртка; гейт scripts/tools/check_health_canonical.py + tests/test_health_doctor.py (issue #10) | 2026-09-24 |
 | ~~AG-D3~~ | low | code-orchestrator | ЗАКРЫТО 2026-09-24: transitional-статус задокументирован (docstring register_plugin.py + config v3 status/note/canonical_path + docs/ARCHITECTURE_NOTES.md); гейт scripts/tools/check_plugin_registration_status.py (I1-I6) + tests/test_plugin_registration_status.py (8); issue #16 | 2026-09-24 |
 | AG-D4 | low | code-orchestrator | [TECH_DEBT_AGENTS] ЗАКРЫТО 2026-09-24: capability hash синхронизирован с runtime_snapshot (df07cc…, 12 роутов) | 2026-09-24 |

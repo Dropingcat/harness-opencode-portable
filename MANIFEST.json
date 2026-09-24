@@ -1,7 +1,7 @@
 {
   "schema": "harness-manifest/1.0",
   "root": ".",
-  "file_count": 1125,
+  "file_count": 1129,
   "files": [
     {
       "path": "AGENT_REPO_ACCESS.md",
@@ -20,8 +20,8 @@
     },
     {
       "path": "TECH_DEBT_AGENTS.md",
-      "size": 37069,
-      "sha256": "62c6412dab9884432d2faf5c03a5e77736da6964e0819c265e1dc464ddc707e0"
+      "size": 37933,
+      "sha256": "6313fc51e45b3bbe0ab4e1c8268db825ae6e311a8359429fdbd932165ead2162"
     },
     {
       "path": "agents/article-writer.md",
@@ -610,13 +610,18 @@
     },
     {
       "path": "docs/ARCHITECTURE_NOTES.md",
-      "size": 1474,
-      "sha256": "36506528971b8aed55c311cfe10226cdaae651e96ef2979afe1c4bf15b08446c"
+      "size": 2983,
+      "sha256": "ed65f3b9ca34f4b7456ddf62b040a8c0f080c01cbc609dbeb608690c4392ac35"
+    },
+    {
+      "path": "docs/MODULE_PORTING_EXCLUSIONS.json",
+      "size": 3849,
+      "sha256": "b53dcef0000d34af871ea217bc7655f2c478d83312b1c3dbad31ba02ba158993"
     },
     {
       "path": "docs/TRACKERS/TECH_DEBT_MASTER.md",
-      "size": 30428,
-      "sha256": "197aa8b4f2df2e792d40742e98462ea55042d8af5ad5ebe367c5788acc412ccd"
+      "size": 30625,
+      "sha256": "6d1e922060e78ea80da9f8f1379edb804f3e50ed65f398789506c0b278f8701c"
     },
     {
       "path": "docs/glossary/GLOSSARY.md",
@@ -2184,6 +2189,11 @@
       "sha256": "737d210996bf13840833a6a6efb7c7968ea5506742afcd7d4064bca1db93fd67"
     },
     {
+      "path": "scripts/tools/check_module_porting.py",
+      "size": 9134,
+      "sha256": "5f3e28b591550f96f3445f31851bbda80aa8b014df4b066d19420687570cbbf8"
+    },
+    {
       "path": "scripts/tools/check_plugin_registration_status.py",
       "size": 6822,
       "sha256": "44ddb17b4f19fc47f326ca045a08aa3f07e6d60a4c3f6045856f6c4f6bd7f065"
@@ -2207,6 +2217,11 @@
       "path": "scripts/tools/gen_manifest.py",
       "size": 4440,
       "sha256": "7c3a8a651f785fd216be4f697fc406de0ed173fcc3823a60baa6b57e8b41f7e9"
+    },
+    {
+      "path": "scripts/tools/gh_debt_survey.sh",
+      "size": 2358,
+      "sha256": "95d5c915ca5a05112e740d79b59695bceaaa225ebdefa36f91fa3a65cc60449e"
     },
     {
       "path": "scripts/tools/gh_take_debt.sh",
@@ -5607,6 +5622,11 @@
       "path": "tests/test_job_ctl.py",
       "size": 7031,
       "sha256": "10fce0676976c238db73aa8ff82952510697aa47a5f89f31089baaa111bd59e6"
+    },
+    {
+      "path": "tests/test_module_porting.py",
+      "size": 7809,
+      "sha256": "6480fd94116308458885e7c5db4aed0291d03fac80dd5ff42776e1ae0fa0d83d"
     },
     {
       "path": "tests/test_plugin_registration_status.py",
