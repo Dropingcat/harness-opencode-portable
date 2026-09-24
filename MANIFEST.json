@@ -1,7 +1,7 @@
 {
   "schema": "harness-manifest/1.0",
   "root": ".",
-  "file_count": 1117,
+  "file_count": 1120,
   "files": [
     {
       "path": "AGENT_REPO_ACCESS.md",
@@ -20,8 +20,8 @@
     },
     {
       "path": "TECH_DEBT_AGENTS.md",
-      "size": 33895,
-      "sha256": "1b14048125fb6d0bf9a66533315a823393a8661d3ee2c9c1f3739dd3e8cfa407"
+      "size": 35379,
+      "sha256": "e4b936d08b87ae8734608613e039f7f4bd2cb2bea17118b3a9a93a4b5e44fe10"
     },
     {
       "path": "agents/article-writer.md",
@@ -610,8 +610,8 @@
     },
     {
       "path": "docs/TRACKERS/TECH_DEBT_MASTER.md",
-      "size": 29100,
-      "sha256": "dfe628daf2bf8a9e674a88c8d7cfbd4bd2db5258b342d21222d74364d54da26d"
+      "size": 29722,
+      "sha256": "a7e018da5a7e81faec0a29c040b3ac83d571974a699d53b45f0d541785d77618"
     },
     {
       "path": "docs/glossary/GLOSSARY.md",
@@ -865,8 +865,8 @@
     },
     {
       "path": "packages/opencode-harness-plugin/core/doctor.py",
-      "size": 4389,
-      "sha256": "6636ddbb62c892a8657d408c03ae705a4d8ff39bba5e4060951dd264eb6b74ae"
+      "size": 11640,
+      "sha256": "1ef817a27741d0cac78ef512ce0b39b350f634d59e534432f6dff43b8b955489"
     },
     {
       "path": "packages/opencode-harness-plugin/core/install_plugin.py",
@@ -1135,8 +1135,8 @@
     },
     {
       "path": "scripts/health_check.py",
-      "size": 4492,
-      "sha256": "00b97d52d83415d1b283a39165f4984765e3c1579e05993e4c3e244ffebd83ed"
+      "size": 1288,
+      "sha256": "9ffd481bf2a33905df3139362ee7e9996ae7e2dbc3442fb1363fc90fb8ca4928"
     },
     {
       "path": "scripts/jobs/job_ctl.py",
@@ -2169,6 +2169,11 @@
       "sha256": "5cea67ca72e4d2fa5e3f0bd00c1f15964d720e95a99bb3c1f88183387ade14da"
     },
     {
+      "path": "scripts/tools/check_health_canonical.py",
+      "size": 6095,
+      "sha256": "737d210996bf13840833a6a6efb7c7968ea5506742afcd7d4064bca1db93fd67"
+    },
+    {
       "path": "scripts/tools/chroma_indexer.py",
       "size": 7504,
       "sha256": "3ccc372ae9237a55a134bf83ece188a256422cd845c204a8f498707c78666afd"
@@ -2187,6 +2192,11 @@
       "path": "scripts/tools/gen_manifest.py",
       "size": 4440,
       "sha256": "7c3a8a651f785fd216be4f697fc406de0ed173fcc3823a60baa6b57e8b41f7e9"
+    },
+    {
+      "path": "scripts/tools/gh_take_debt.sh",
+      "size": 2699,
+      "sha256": "3598dd4dfee79a367d9a4cd52d937d6506cb8b9b0a9098e9506fba39c826004e"
     },
     {
       "path": "scripts/tools/gost_collector.py",
@@ -5567,6 +5577,11 @@
       "path": "tests/test_bridge_semantic_execute.py",
       "size": 10091,
       "sha256": "6fb761c51e8e075363837b01d0befbeea12b86ffb81f4a9cb838a2924cfe69d5"
+    },
+    {
+      "path": "tests/test_health_doctor.py",
+      "size": 6705,
+      "sha256": "7e42ee164153fc007c31057f0b7ce50470c67ea3c715cf750422d73beda2539f"
     },
     {
       "path": "tests/test_job_ctl.py",
