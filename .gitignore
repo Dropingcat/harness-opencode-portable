@@ -1,2 +1,5 @@
-(empty)__pycache__/
-*.pyc
+# Environment files
+*.env
+# GitHub access token (credential — never commit)
+.github-token.env
+*.token.env
