@@ -8,6 +8,7 @@ permission:
   edit: allow
   write: allow
   bash: allow
+model: polza/deepseek/deepseek-v4-pro-0831
 ---
 You are the **Coder Worker** — исполнитель фабрики кода. Ты пишешь конкретный модуль/функцию по контракту от оркестратора.
 

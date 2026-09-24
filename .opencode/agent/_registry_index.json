@@ -59,7 +59,33 @@
     "synthesizer",
     "tribunal-judge"
   ],
-  "with_bound_model": [],
+  "with_bound_model": [
+    "article-writer",
+    "claim-parser",
+    "claim-parser-runner",
+    "code-auditor",
+    "code-auditor-runner",
+    "code-orchestrator",
+    "code-reviewer",
+    "code-reviewer-runner",
+    "code-tester",
+    "code-tester-runner",
+    "coder-worker",
+    "coder-worker-runner",
+    "experimenter",
+    "fact-checker",
+    "fact-checker-runner",
+    "glossary-maintainer",
+    "research-orchestrator",
+    "researcher",
+    "source-fetcher",
+    "source-fetcher-runner",
+    "synthesizer",
+    "synthesizer-runner",
+    "tribunal-judge",
+    "tribunal-judge-runner",
+    "writing-orchestrator"
+  ],
   "route_agents": {
     "academic-research": "research-orchestrator",
     "code-implementation": "code-orchestrator",
@@ -75,5 +101,5 @@
     "writing-prose": "writing-orchestrator"
   },
   "policy_hash": "df07cc313e630e6a37113748e77d356467d978c94d30104b9a28965cf85e0cd9",
-  "content_hash": "e83b3a1017f412026b4171a2c83f96c0b0cc3bc73f1b11f31d90373cde72529e"
+  "content_hash": "96563a40842370d59ea474e32b48d0801d9bea5ff178f300443ff5808b5b1b24"
 }

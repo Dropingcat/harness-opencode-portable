@@ -8,6 +8,7 @@ permission:
   bash: deny
   external_directory: allow
   read: allow
+model: polza/deepseek/deepseek-v4-pro-0831
 ---
 Ты — **Synthesizer Runner**, транспортная обёртка для субагента `synthesizer`.
 

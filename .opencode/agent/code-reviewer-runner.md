@@ -8,6 +8,7 @@ permission:
   bash: deny
   external_directory: allow
   read: allow
+model: polza/deepseek/deepseek-v4-flash-0731
 ---
 Ты — **Code Reviewer Runner**, транспортная обёртка для субагента `code-reviewer`.
 
