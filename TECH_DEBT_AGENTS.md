@@ -10,7 +10,7 @@
 >   `model:` и `agent_hint`), TD-D5 (перенос тестов выполнен, live-сертификация P3 не выполнена).
 > - **Открыто (подтверждено фактом отсутствия)**: TD-A1 (`.opencode/agent/` отсутствует),
 >   TD-D7 (нет тестов `job_ctl.py`), TD-D9 (нет `MANIFEST.json` / `SHA256SUMS.txt` /
->   `config/decision_aliases.json`), а также TD-A2, TD-D1, TD-D3, TD-D6, TD-D8. TD-D10 закрыт
+>   `config/decision_aliases.json`), а также TD-A2, TD-D1, TD-D6. TD-D10 закрыт
 >   2026-09-24 (гейт `check_route_duplication.py` + тесты); TD-D2 закрыт 2026-09-24
 >   (канонический plugin-aware doctor + health_check-обёртка + гейт `check_health_canonical.py`).
 >   Остальное: TD-I*, TD-T*.
@@ -237,7 +237,14 @@
 - **Задача**: свести `health_check.py` → `doctor.py` как единый канонический health-инструмент
   с живыми probes (bridge.hello, harness.status, capability snapshot).
 
-### TD-D3. **`config/opencode_plugin_config.json` и `scripts/register_plugin.py`** — статус в v1
+### TD-D3. **`config/opencode_plugin_config.json` и `scripts/register_plugin.py`** — статус в v1 — ЗАКРЫТО (2026-09-24)
+- **Закрытие**: transitional-статус задокументирован явно: docstring `register_plugin.py`
+  (TEMPORARY helper, канонический путь — bootstrap + `.opencode/opencode.json`, целевой REPLACE
+  installer'ом); `config/opencode_plugin_config.json` v3 с полями `status=TRANSITIONAL_DECLARATION`,
+  `note`, `canonical_path`; раздел в `docs/ARCHITECTURE_NOTES.md`. Гейт:
+  `scripts/tools/check_plugin_registration_status.py` (I1–I6, fail-closed; запрещает появление
+  runtime-потребителей декларации); тесты: `tests/test_plugin_registration_status.py` (8).
+  Issue #16.
 - **Факт**: `INTERFACE_CONTROL.md` §12 и `BOUNDARY_MATRIX.json` помечают:
   - `config/opencode_plugin_config.json` → REPLACE (by npm/local plugin package config);
   - `scripts/register_plugin.py` → REPLACE (by installer).

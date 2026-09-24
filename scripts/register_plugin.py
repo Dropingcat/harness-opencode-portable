@@ -1,6 +1,15 @@
 #!/usr/bin/env python3
 """Register/unregister the native Harness OpenCode plugin in the project config.
 
+TD-D3 (issue #16): TEMPORARY transitional helper. In v1 this project-scoped helper is
+the operational way to (un)register the plugin for development/bootstrap convenience.
+The canonical production path is bootstrap + `.opencode/opencode.json` (project-scoped
+file:// registration of packages/opencode-harness-plugin/dist/index.js); the eventual
+target architecture replaces this helper with installer/package registration
+(INTERFACE_CONTROL.md §12: REPLACE by installer). Do NOT add new runtime consumers of
+config/opencode_plugin_config.json — it is a status declaration, not a source of truth.
+Gate: scripts/tools/check_plugin_registration_status.py (I1-I5, fail-closed).
+
 Portable module uses project-scoped registration (.opencode/opencode.json) with a
 file:// URI to the compiled dist/index.js. Nothing is written to the global config.
 """

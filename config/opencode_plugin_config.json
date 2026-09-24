@@ -1,5 +1,8 @@
 {
-  "version": 2,
+  "version": 3,
+  "status": "TRANSITIONAL_DECLARATION",
+  "note": "TD-D3 (issue #16): этот файл — декларация статуса, а НЕ runtime-источник истины. Единственный потребитель — человек/гейт check_plugin_registration_status.py. Канонический путь регистрации плагина: bootstrap + .opencode/opencode.json (project-scoped file:// на packages/opencode-harness-plugin/dist/index.js). scripts/register_plugin.py — временный project-scoped helper; целевая архитектура — installer/package registration (INTERFACE_CONTROL.md §12: REPLACE).",
+  "canonical_path": ".opencode/opencode.json",
   "plugin": {
     "name": "@harness/opencode-plugin",
     "mode": "native",
