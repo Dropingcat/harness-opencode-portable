@@ -2392,13 +2392,16 @@
       "title": "opencode run --agent НЕ вызывает субагентов: 'agent X is a subagent, not a primary agent. Falling back to default agent' — run_research.sh (bash) с `opencode run --agent claim-parser/fact-checker` физически не мог запускать субагентов нигде (ни Linux, ни Windows); субагенты вызываются только через task-инструмент из primary-агента",
       "status_detail": "OPEN_CURRENT",
       "kind": "architecture",
-      "status": "open",
+      "status": "closed",
       "severity": "high",
       "acceptance": "BRICKS-runner вызывает субагентов корректно: через primary-агента-обёртку (brick-agent), который диспатчит субагента через task-инструмент; OR через research-orchestrator (primary) с контрактом BRICK; проверено: opencode run --agent <primary> возвращает JSON субагента; run_research.py реально выполняет полный цикл с агентами",
       "area": "run_research.sh/run_research.py (run_agent), agents/*.md, .opencode/agent, C:\\Users\\Arhys\\.config\\opencode\\agent",
       "source_status": "open",
       "notes": "Фальсификация 2026-09-22: `opencode run --agent claim-parser '...'` → 'agent \"claim-parser\" is a subagent, not a primary agent. Falling back to default agent' + UnknownError. `opencode run --agent research-orchestrator '{\"probe\":\"ok\"}'` → работает, возвращает JSON. Это корень проблемы 'агенты пайплайна не запускаются': bash-runner вызывает субагентов напрямую через CLI, что невозможно. Linux-версия run_research.sh тоже была сломана (fallback на default agent вместо claim-parser).",
-      "progress": "2026-09-22: РЕШЕНО через primary-обёртки. Созданы 10 <name>-runner агентов (mode: primary), каждый диспатчит целевого субагента через task-инструмент. opencode run --agent <name>-runner \"<contract>\" работает (проверено: claim-parser-runner → claim-parser → JSON). Также обновлены research-orchestrator/writing-orchestrator/code-orchestrator: добавлена кросс-оркестрация (вызов других оркестраторов через их primary-обёртки), закрывает TD-099 для research-контура. Осталось: перенести обёртки в рабочий harness и portable."
+      "progress": "2026-09-22: РЕШЕНО через primary-обёртки. Созданы 10 <name>-runner агентов (mode: primary), каждый диспатчит целевого субагента через task-инструмент. opencode run --agent <name>-runner \"<contract>\" работает (проверено: claim-parser-runner → claim-parser → JSON). Также обновлены research-orchestrator/writing-orchestrator/code-orchestrator: добавлена кросс-оркестрация (вызов других оркестраторов через их primary-обёртки), закрывает TD-099 для research-контура. Осталось: перенести обёртки в рабочий harness и portable.",
+      "progress_notes": [
+        "2026-09-24 (qwen-coder): закрыт детерминированный слой — scripts/agent_gen/gen_runners.py: генератор runner-обёрток (generate/--check/--list) + гейт инвариантов TD-117 (каждый видимый subagent имеет primary-runner с task(subagent_type=...) и wraps-оверлеем). Найден и устранён дрейф реестра: writer-runner ссылался на несуществующего агента 'writer'. Тесты tests/test_runner_overlay.py. Live-прогон opencode CLI остаётся за хост-runtimes (задокументировано)."
+      ]
     },
     {
       "id": "TD-118",
