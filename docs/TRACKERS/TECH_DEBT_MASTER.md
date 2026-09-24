@@ -121,7 +121,7 @@
 | TD-111 | medium | code-orchestrator | semantic_execute отключён по умолчанию (HARNESS_SEMANTIC_ENABLED!=1),  | - |
 | TD-112 | high | code-orchestrator | Маппинг путей (path_resolution_map.json / runtime_integration_policy.j | - |
 | TD-116 | high | research-orchestrator | BRICKS-скрипты перенесены с сервера в рабочий harness, но требуют закр | - |
-| TD-117 | high | code-orchestrator | opencode run --agent НЕ вызывает субагентов: 'agent X is a subagent, n | - |
+| TD-117 | high | code-orchestrator | opencode run --agent НЕ вызывает субагентов: закрыт детерминированный слой (gen_runners.py + гейт инвариантов); live-прогон CLI — за хост-runtimes | 2026-09-24 |
 | TD-120 | medium | research-orchestrator | run_research.py: фактор времени агентов не учтён в budget — PER_CALL_E | - |
 | TD-126 | high | research-orchestrator | Цикл перфекционизма агента: «я ещё недостаточно хорошо реализовал код/ | - |
 | TD-129 | critical | research-orchestrator | КЛАСТЕР CL-16: Предварительная лазерная обработка → градиентные поля д | - |
