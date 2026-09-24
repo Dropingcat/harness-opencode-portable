@@ -8,7 +8,9 @@
 > - **Закрыто**: TD-D4 (хэш синхронизирован), TD-A4 (шаг 0 добавлен в `code-orchestrator.md`).
 > - **Частично закрыто**: TD-A3 (роли уже содержат frontmatter `mode: subagent`; не хватает
 >   `model:` и `agent_hint`), TD-D5 (перенос тестов выполнен, live-сертификация P3 не выполнена).
-> - **Открыто (подтверждено фактом отсутствия)**: TD-A2, TD-D6.
+> - **Открыто (подтверждено фактом отсутствия)**: TD-A2.
+>   TD-D6 закрыт 2026-09-24 (фиксация transport=opencode_cli_legacy в `_runner.py`/launchers +
+>   реестр `docs/LEGACY_TRANSPORT_REGISTRY.json` + гейт `check_legacy_transport.py`, issue #18).
 >   TD-D10 закрыт 2026-09-24 (гейт `check_route_duplication.py` + тесты); TD-D2 закрыт 2026-09-24
 >   (канонический plugin-aware doctor + health_check-обёртка + гейт `check_health_canonical.py`);
 >   TD-D3 закрыт 2026-09-24 (transitional-статус регистрации плагина + гейт, issue #16);
@@ -284,7 +286,7 @@
 - **Задача (v1.1)**: перенести эти тесты в portable (уже скопированы в `tests/coder/` на этой ветке),
   добавить cancel propagation через AbortSignal на живой сборке Desktop; live-сертификация P3 остаётся.
 
-### TD-D6. **Writer/Coder «semantic launcher leakage» сохранена** (legacy CLI)
+### TD-D6. **Writer/Coder «semantic launcher leakage» сохранена** (legacy CLI) — ЗАКРЫТО (2026-09-24, issue #18)
 - **Факт**: `INTERFACE_CONTROL.md` §1.6/RED-5: `mcp/coder_router_server.py`,
   `mcp/launchers/opencode_code_worker.py`, `_runner.py`, `opencode_research_*`,
   `opencode_tribunal_role.py` используют прямой `opencode run` (CLI legacy transport).
@@ -292,6 +294,15 @@
   Это legacy-путь, который должен остаться только как явный fallback, но не стать production.
 - **Задача**: зафиксировать `transport=opencode_cli_legacy` для них; не мигрировать до
   сертификации plugin semantic E2E (по `NEXT_PHASE_PLAN.md` — это P5).
+- **Закрытие (2026-09-24, issue #18)**: фиксация выполнена без миграции:
+  `mcp/launchers/_runner.py` несёт канонический `TRANSPORT = "opencode_cli_legacy"` и
+  включает его в `meta.json` и результат `run_with_contract`; каждый launcher объявляет
+  `TRANSPORT_TAG`; канонический реестр `docs/LEGACY_TRANSPORT_REGISTRY.json`
+  (schema `legacy_transport_registry/1.0`) перечисляет все 8 legacy-модулей;
+  гейт `scripts/tools/check_legacy_transport.py` (I1–I6) запрещает необъявленную протечку
+  (`"run", "--pure"` / `from _runner import` вне реестра → FAIL); тесты
+  `tests/test_legacy_transport.py` (PASS на реальном дереве + мутации I1/I2/I3/I4/I5/I6).
+  Миграция на `semantic.execute` отложена до live-сертификации P5.
 
 ### TD-D7. **`scripts/jobs/job_ctl.py` перенесён, но нет канонических job-тестов** — ЗАКРЫТО (2026-09-24)
 - **Закрытие**: добавлен smoke-набор `tests/test_job_ctl.py` (create → start → attempt → artifact →

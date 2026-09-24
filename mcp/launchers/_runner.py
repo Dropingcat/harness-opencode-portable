@@ -19,6 +19,12 @@ from typing import Any
 OPENCODE_BIN = os.environ.get("OPENCODE_BIN") or shutil.which("opencode") or str(Path.home() / ".opencode" / "bin" / "opencode")
 RUNS_BASE = Path(os.environ.get("OPENCODE_RUNS_DIR", str(Path.home() / ".opencode" / "runs")))
 
+# TD-D6/AG-D6 (issue #18): канонический токен legacy-транспорта. Все launchers поверх
+# run_with_contract вызывают `opencode run --pure` напрямую — это явный fallback-путь,
+# НЕ сертифицированный plugin semantic.execute (миграция — P5 по NEXT_PHASE_PLAN.md).
+# Гейт фиксации: scripts/tools/check_legacy_transport.py, реестр: docs/LEGACY_TRANSPORT_REGISTRY.json.
+TRANSPORT = "opencode_cli_legacy"
+
 
 async def run_with_contract(
     launcher_name: str,
@@ -59,6 +65,8 @@ async def run_with_contract(
         "created_at": time.strftime("%Y-%m-%d %H:%M:%S"),
         "declared_read_only_paths": read_only_paths or [],
         "sandbox_enforced": False,
+        # TD-D6: фиксация транспорта — meta.json обязан нести legacy-токен.
+        "transport": TRANSPORT,
     }
     (run_dir / "meta.json").write_text(json.dumps(meta, indent=2), encoding="utf-8")
 
@@ -90,6 +98,7 @@ async def run_with_contract(
             "error": f"opencode timed out after {timeout}s",
             "run_dir": str(run_dir),
             "run_id": run_id,
+            "transport": TRANSPORT,
         }
         (run_dir / "result.json").write_text(json.dumps(result, indent=2), encoding="utf-8")
         return result
@@ -99,6 +108,7 @@ async def run_with_contract(
             "error": f"failed to start opencode: {exc}",
             "run_dir": str(run_dir),
             "run_id": run_id,
+            "transport": TRANSPORT,
         }
         (run_dir / "result.json").write_text(json.dumps(result, indent=2), encoding="utf-8")
         return result
@@ -114,6 +124,9 @@ async def run_with_contract(
         "run_dir": str(run_dir),
         "stdout": stdout,
         "stderr": stderr,
+        # TD-D6: явная фиксация legacy-транспорта в результате tool-call.
+        "transport": TRANSPORT,
+        "legacy_reason": "semantic.execute plugin path not live-certified (P5 migration)",
     }
     (run_dir / "result.json").write_text(json.dumps(result, indent=2, ensure_ascii=False), encoding="utf-8")
     return result

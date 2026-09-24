@@ -1,0 +1,77 @@
+{
+  "schema": "legacy_transport_registry/1.0",
+  "generated_purpose": "TD-D6/AG-D6 closure (issue #18): canonical registry of MCP modules that intentionally run on the legacy 'opencode run' CLI transport (semantic-launcher leakage pinned, NOT migrated). Migration to plugin semantic.execute is gated behind P5 live certification (NEXT_PHASE_PLAN.md). Gate: scripts/tools/check_legacy_transport.py.",
+  "source_of_truth": [
+    "TECH_DEBT_AGENTS.md#TD-D6",
+    "docs/TRACKERS/TECH_DEBT_MASTER.md AG-D6",
+    "INTERFACE_CONTROL.md §1.6 / RED-5"
+  ],
+  "canonical_transport_token": "opencode_cli_legacy",
+  "migration_gate": "P5: plugin semantic E2E live certification (NEXT_PHASE_PLAN.md); до сертификации модули обязаны оставаться на зафиксированном legacy-транспорте",
+  "modules": [
+    {
+      "id": "mcp/coder_router_server.py",
+      "transport": "opencode_cli_legacy",
+      "declaration": "_TRANSPORT_LEGACY",
+      "rationale": "M3a/DEV-05: прямой `opencode run --pure` как явный fallback; plugin-транспорт fail-closed без тихого CLI-fallback; токен в каждом ответе.",
+      "owner": "code-orchestrator",
+      "related_debt": ["TD-D6", "TD-A2"]
+    },
+    {
+      "id": "mcp/launchers/_runner.py",
+      "transport": "opencode_cli_legacy",
+      "declaration": "TRANSPORT",
+      "rationale": "Общий runner всех launchers: `opencode run --pure`; транспорт зафиксирован в meta.json и в результате run_with_contract.",
+      "owner": "code-orchestrator",
+      "related_debt": ["TD-D6"]
+    },
+    {
+      "id": "mcp/launchers/opencode_code_worker.py",
+      "transport": "opencode_cli_legacy",
+      "declaration": "TRANSPORT_TAG",
+      "rationale": "Legacy-лаунчер code_work поверх _runner.run_with_contract; не мигрирован до P5.",
+      "owner": "coder-worker",
+      "related_debt": ["TD-D6"]
+    },
+    {
+      "id": "mcp/launchers/opencode_profile_configurator.py",
+      "transport": "opencode_cli_legacy",
+      "declaration": "TRANSPORT_TAG",
+      "rationale": "Legacy-лаунчер profile-конфигуратора поверх _runner.run_with_contract; не мигрирован до P5.",
+      "owner": "code-orchestrator",
+      "related_debt": ["TD-D6"]
+    },
+    {
+      "id": "mcp/launchers/opencode_research_academic.py",
+      "transport": "opencode_cli_legacy",
+      "declaration": "TRANSPORT_TAG",
+      "rationale": "Legacy-лаунчер academic research поверх _runner.run_with_contract; не мигрирован до P5.",
+      "owner": "research-orchestrator",
+      "related_debt": ["TD-D6"]
+    },
+    {
+      "id": "mcp/launchers/opencode_research_web.py",
+      "transport": "opencode_cli_legacy",
+      "declaration": "TRANSPORT_TAG",
+      "rationale": "Legacy-лаунчер web research поверх _runner.run_with_contract; не мигрирован до P5.",
+      "owner": "research-orchestrator",
+      "related_debt": ["TD-D6"]
+    },
+    {
+      "id": "mcp/launchers/opencode_service_task.py",
+      "transport": "opencode_cli_legacy",
+      "declaration": "TRANSPORT_TAG",
+      "rationale": "Legacy-лаунчер service tasks поверх _runner.run_with_contract; не мигрирован до P5.",
+      "owner": "code-orchestrator",
+      "related_debt": ["TD-D6"]
+    },
+    {
+      "id": "mcp/launchers/opencode_tribunal_role.py",
+      "transport": "opencode_cli_legacy",
+      "declaration": "TRANSPORT_TAG",
+      "rationale": "Legacy-лаунчер трибунальных ролей поверх _runner.run_with_contract; миграция на дочерние сессии — после live-сертификации semantic.execute (TD-A2/P4-P5).",
+      "owner": "tribunal-judge",
+      "related_debt": ["TD-D6", "TD-T2", "TD-A2"]
+    }
+  ]
+}
