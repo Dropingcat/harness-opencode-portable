@@ -71,8 +71,38 @@ Then **open this folder in OpenCode Desktop**. The plugin loads automatically.
 - Node.js + npm (for plugin build; a prebuilt `dist/` can be shipped instead)
 - OpenCode Desktop 1.18.30+ (tested)
 
+## GitHub remote & access token
+
+The external GitHub repository is wired in as the `origin` remote:
+
+```bash
+git remote -v
+# origin  https://github.com/Dropingcat/harness-opencode-portable.git
+```
+
+The access token is stored **as an environment variable** in the git-ignored file
+`.github-token.env` (never commit it):
+
+```bash
+export GITHUB_TOKEN="ghp_************"   # full value lives only in .github-token.env
+```
+
+Load and use it:
+
+```bash
+source ./.github-token.env
+git config --local credential.helper '!f() { echo "username=x-access-token"; echo "password=$GITHUB_TOKEN"; }; f'
+git fetch origin && git push origin <branch>
+```
+
+> ⚠️ Verification status: with the token currently provided, `git ls-remote origin` and
+> `GET /user` both return **401 (invalid credentials)**, and the repo returns **404** when
+> accessed anonymously (private or not yet created). Replace the value in
+> `.github-token.env` with a valid PAT to enable fetch/push.
+> Full instructions: [GITHUB_ACCESS.md](GITHUB_ACCESS.md).
+
 ## Notes
 
 - Never load the legacy `plugins/tool-skill-contract-router.ts` alongside the native plugin.
 - All paths are resolved relative to the repo root (`OPENCODE_HARNESS_ROOT` auto-detected).
-- Secrets belong in `.env` (git-ignored), never in committed configs.
+- Secrets belong in `.env` / `.github-token.env` (git-ignored), never in committed configs.
