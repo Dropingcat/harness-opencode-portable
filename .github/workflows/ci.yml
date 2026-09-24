@@ -175,7 +175,29 @@ asyncio.run(test_mcp())
           python -m pip install --upgrade pip
           pip install chromadb pytest pytest-asyncio
 
-- name: Test ChromaDB
+chroma-test:
+    name: ChromaDB Index Test
+    runs-on: windows-latest
+    timeout-minutes: 30
+    needs: test
+    
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install chromadb pytest pytest-asyncio
+
+      - name: Test ChromaDB
         run: |
           cd scripts/research
           python -c "
@@ -225,7 +247,45 @@ print(f'Results: {len(results[\"ids\"][0])} chunks')
           echo "CHROMA_DB_DIR=${{ env.CHROMA_DB_DIR || 'F:/AnalisysDataSet/.chroma_papers' }}" >> $GITHUB_ENV
           echo "LITERATURE_DIR=${{ env.LITERATURE_DIR || 'F:/1/_STRUCTURED/09_LITERATURE' }}" >> $GITHUB_ENV
 
-- name: Full pipeline test
+- name: Full pipeline test (conditional - only runs on self-hosted Windows runner)
+    name: Integration Test (Full Pipeline)
+    runs-on: windows-latest
+    timeout-minutes: 60
+    needs: [test, downloader-test, mcp-test, chroma-test]
+    if: runner.os == 'Windows' && env.LOCAL_TEST_DATA == 'true'
+    
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install all dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt 2>$null || true
+          pip install -r requirements-core.txt 2>$null || true
+          pip install mcp==1.26.0 pytest pytest-asyncio pyyaml requests
+
+      - name: Set up environment
+        run: |
+          echo "PYTHONIOENCODING=utf-8" >> $GITHUB_ENV
+          echo "OPENCODE_HARNESS_ROOT=${{ github.workspace }}" >> $GITHUB_ENV
+          echo "PYTHONIOENCODING=utf-8" >> $GITHUB_ENV
+          echo "OPENCODE_HARNESS_ROOT=${{ github.workspace }}" >> $GITHUB_ENV
+          echo "ANALISYS_DATA_DIR=${{ env.ANALISYS_DATA_DIR || 'F:/AnalisysDataSet' }}" >> $GITHUB_ENV
+          echo "LITERATURE_DIR=${{ env.LITERATURE_DIR || 'F:/1/_STRUCTURED/09_LITERATURE' }}" >> $GITHUB_ENV
+          echo "TEMP_DIR=${{ env.TEMP_DIR || 'C:/Temp/opencode' }}" >> $GITHUB_ENV
+          echo "CHROMA_DB_DIR=${{ env.CHROMA_DB_DIR || 'F:/AnalisysDataSet/.chroma_papers' }}" >> $GITHUB_ENV
+          echo "LITERATURE_DIR=${{ env.LITERATURE_DIR || 'F:/1/_STRUCTURED/09_LITERATURE' }}" >> $GITHUB_ENV
+
+      - name: Full pipeline test (conditional)
+        if: env.LOCAL_TEST_DATA == 'true'
         run: |
           cd scripts/research
           python run_research.py "testdata/exp1/input.txt" --dry-run --workspace "${{ env.TEMP_DIR || 'C:/Temp/opencode/ci_test' }}" --max-iterations 1 --max-cost-rub 5
