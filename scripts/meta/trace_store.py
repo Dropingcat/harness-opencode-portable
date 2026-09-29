@@ -109,11 +109,21 @@ class TraceStore:
     - verify_transition(from_v, to_v): проверить S_{t-1}+Δ == S_t.
     """
 
-    def __init__(self, storage_path: str | Path) -> None:
-        self.storage_path = Path(storage_path)
+    def __init__(self, storage_path: str | Path | None = None) -> None:
+        self.storage_path = Path(storage_path) if storage_path else Path(__file__).parent / '_trace_store.json'
         self.entries: List[TraceEntry] = []
         self.transitions: List[TransitionRecord] = []
+        self.state_snapshots: Dict[str, Any] = {}
         self._load()
+
+    # --- снимки состояний (V8-TD-02 reconstruct_state) ---
+    def save_snapshot(self, state: Any) -> None:
+        """Сохранить снимок состояния (объект с version_id + to_dict)."""
+        self.state_snapshots[state.version_id] = state.to_dict()
+        self._save()
+
+    def get_snapshot(self, version_id: str) -> Optional[Dict[str, Any]]:
+        return self.state_snapshots.get(version_id)
 
     # --- запись ---
     def append(self, entry: TraceEntry) -> None:
@@ -133,13 +143,21 @@ class TraceStore:
         return [e for e in self.entries if e.related_branch_id == branch_id]
 
     # --- воспроизведение ---
-    def reconstruct_state(self, initial_state: Dict[str, Any],
-                          version_id: Optional[str] = None) -> Dict[str, Any]:
+    def reconstruct_state(self, initial_state: Optional[Dict[str, Any]] = None,
+                          version_id: Optional[str] = None) -> Optional[Dict[str, Any]]:
         """Replay: S_0 + Δ_1 + ... + Δ_n = S_n.
 
-        initial_state — базовое состояние (S_0).
-        version_id — до какой версии реконструировать (None = все переходы).
+        Если version_id есть в state_snapshots — вернуть его (быстрый путь).
+        Иначе replay из initial_state через transitions.
         """
+        if version_id and version_id in self.state_snapshots:
+            return self.state_snapshots[version_id]
+        if initial_state is None:
+            # пытаемся найти начальное состояние из снимков
+            if not self.state_snapshots:
+                return None
+            initial_state = min(self.state_snapshots.values(),
+                                key=lambda s: s.get("timestamp", ""))
         state = json.loads(json.dumps(initial_state, ensure_ascii=False))
         for tr in sorted(self.transitions, key=lambda t: t.timestamp):
             if version_id and tr.to_version != version_id:
@@ -185,15 +203,18 @@ class TraceStore:
             data = json.loads(self.storage_path.read_text(encoding="utf-8"))
             self.entries = [TraceEntry.from_dict(e) for e in data.get("entries", [])]
             self.transitions = [TransitionRecord(**t) for t in data.get("transitions", [])]
+            self.state_snapshots = data.get("state_snapshots", {})
         except Exception:
             self.entries = []
             self.transitions = []
+            self.state_snapshots = {}
 
     def _save(self) -> None:
         self.storage_path.parent.mkdir(parents=True, exist_ok=True)
         data = {
             "entries": [e.to_dict() for e in self.entries],
             "transitions": [t.to_dict() for t in self.transitions],
+            "state_snapshots": self.state_snapshots,
         }
         self.storage_path.write_text(
             json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8"

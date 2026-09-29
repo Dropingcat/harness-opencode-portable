@@ -24,6 +24,142 @@ from typing import Any, Callable, Dict, List, Optional
 
 # ---------------------------------------------------------------- контракты
 
+class HealthLevel:
+    """Уровни здоровья системы (V-1)."""
+    EXCELLENT = "excellent"
+    GOOD = "good"
+    WARNING = "warning"
+    CRITICAL = "critical"
+    DEAD = "dead"
+
+
+class StyleMetrics:
+    """Метрики стиля текста (V-1 канал тренда)."""
+
+    __slots__ = ("avg_sentence_length", "terminology_density", "filler_word_ratio",
+                 "citation_per_claim", "method_specification_ratio",
+                 "golden_corpus_similarity")
+
+    def __init__(self, avg_sentence_length=0.0, terminology_density=0.0,
+                 filler_word_ratio=0.0, citation_per_claim=0.0,
+                 method_specification_ratio=0.0, golden_corpus_similarity=0.0) -> None:
+        self.avg_sentence_length = avg_sentence_length
+        self.terminology_density = terminology_density
+        self.filler_word_ratio = filler_word_ratio
+        self.citation_per_claim = citation_per_claim
+        self.method_specification_ratio = method_specification_ratio
+        self.golden_corpus_similarity = golden_corpus_similarity
+
+    def to_dict(self) -> dict:
+        return {k: getattr(self, k) for k in self.__slots__}
+
+
+class SystemHealth:
+    """HP системы (V-1): очки здоровья, жизни, счётчики циклов."""
+
+    __slots__ = ("health_points", "level", "lives_remaining", "consecutive_good_cycles",
+                 "consecutive_bad_cycles", "total_deaths", "total_recoveries")
+
+    def __init__(self, health_points=100.0, lives_remaining=3) -> None:
+        self.health_points = max(0.0, min(100.0, health_points))
+        self.level = HealthLevel.EXCELLENT
+        self.lives_remaining = lives_remaining
+        self.consecutive_good_cycles = 0
+        self.consecutive_bad_cycles = 0
+        self.total_deaths = 0
+        self.total_recoveries = 0
+        self._recompute_level()
+
+    def _recompute_level(self) -> None:
+        hp = self.health_points
+        if hp > 90:
+            self.level = HealthLevel.EXCELLENT
+        elif hp > 70:
+            self.level = HealthLevel.GOOD
+        elif hp > 50:
+            self.level = HealthLevel.WARNING
+        elif hp > 20:
+            self.level = HealthLevel.CRITICAL
+        else:
+            self.level = HealthLevel.DEAD
+
+    def apply_impact(self, delta_hp: float) -> None:
+        self.health_points = max(0.0, min(100.0, self.health_points + delta_hp))
+        if delta_hp > 0:
+            self.consecutive_good_cycles += 1
+            self.consecutive_bad_cycles = 0
+        elif delta_hp < 0:
+            self.consecutive_bad_cycles += 1
+            self.consecutive_good_cycles = 0
+        self._recompute_level()
+
+    def record_death(self) -> None:
+        self.total_deaths += 1
+        self.lives_remaining = max(0, self.lives_remaining - 1)
+
+    def record_recovery(self) -> None:
+        self.total_recoveries += 1
+
+    def to_dict(self) -> dict:
+        return {k: getattr(self, k) for k in self.__slots__}
+
+
+class Achievement:
+    """Достижение (V-1): награда за стабильность."""
+
+    __slots__ = ("achievement_id", "name", "description", "unlocked_at", "reward")
+
+    def __init__(self, name: str, description: str, reward: str = "") -> None:
+        import uuid
+        from datetime import datetime
+        self.achievement_id = str(uuid.uuid4())
+        self.name = name
+        self.description = description
+        self.reward = reward
+        self.unlocked_at = datetime.now().isoformat()
+
+
+class HealthReport:
+    """Полный отчёт о здоровье (V-1)."""
+
+    __slots__ = ("report_id", "timestamp", "health", "signals", "metrics",
+                 "achievements_unlocked", "can_generate")
+
+    def __init__(self, health: SystemHealth, signals: list,
+                 metrics: StyleMetrics) -> None:
+        import uuid
+        from datetime import datetime
+        self.report_id = str(uuid.uuid4())
+        self.timestamp = datetime.now().isoformat()
+        self.health = health
+        self.signals = signals
+        self.metrics = metrics
+        self.achievements_unlocked: list = []
+        self.can_generate = True
+        self._check_permission()
+
+    def _check_permission(self) -> None:
+        def sev(s):
+            return s.get('severity') if isinstance(s, dict) else getattr(s, 'severity', 'OK')
+        critical = sum(1 for s in self.signals if sev(s) == "CRITICAL")
+        if self.health.level == HealthLevel.DEAD:
+            self.can_generate = False
+        elif critical >= 2:
+            self.can_generate = False
+        elif self.health.lives_remaining <= 0:
+            self.can_generate = False
+
+    def to_dict(self) -> dict:
+        def sig_to_dict(s):
+            return s if isinstance(s, dict) else s.__dict__
+        return {
+            "report_id": self.report_id, "timestamp": self.timestamp,
+            "health": self.health.to_dict(),
+            "signals": [sig_to_dict(s) for s in self.signals],
+            "metrics": self.metrics.to_dict(), "can_generate": self.can_generate,
+        }
+
+
 class DriftSignal:
     """Сигнал деградации от одного канала."""
 

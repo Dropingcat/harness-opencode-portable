@@ -1,0 +1,28 @@
+{
+  "entries": [
+    {
+      "entry_id": "eae48c68-e637-41f5-88c4-fd4b8c1ad5fa",
+      "timestamp": "2026-09-29T23:30:52.299718",
+      "source_branch": "V-1",
+      "event_type": "damage",
+      "payload": {
+        "hp": 40.0
+      },
+      "related_state_version": null,
+      "related_branch_id": null
+    },
+    {
+      "entry_id": "f5a3d094-611b-4220-9383-6fd6c428854d",
+      "timestamp": "2026-09-29T23:30:53.133493",
+      "source_branch": "V-1",
+      "event_type": "damage",
+      "payload": {
+        "hp": 55.0
+      },
+      "related_state_version": null,
+      "related_branch_id": null
+    }
+  ],
+  "transitions": [],
+  "state_snapshots": {}
+}
