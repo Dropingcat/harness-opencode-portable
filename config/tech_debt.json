@@ -1,11 +1,11 @@
 {
   "version": 2,
-  "updated": "2026-09-23",
+  "updated": "2026-09-29",
   "authority_note": "Canonical registry migrated from патчи/миграция в плагин/tech_debt_current.json (65 records). project_context.py counts status=open. CLOSED_REPORTED maps to closed; RECONCILE_REQUIRED stays open until exact-tree verification.",
   "counts": {
-    "total": 186,
+    "total": 187,
     "open": 131,
-    "closed": 55
+    "closed": 56
   },
   "debts": [
     {
@@ -2392,13 +2392,16 @@
       "title": "opencode run --agent НЕ вызывает субагентов: 'agent X is a subagent, not a primary agent. Falling back to default agent' — run_research.sh (bash) с `opencode run --agent claim-parser/fact-checker` физически не мог запускать субагентов нигде (ни Linux, ни Windows); субагенты вызываются только через task-инструмент из primary-агента",
       "status_detail": "OPEN_CURRENT",
       "kind": "architecture",
-      "status": "open",
+      "status": "closed",
       "severity": "high",
       "acceptance": "BRICKS-runner вызывает субагентов корректно: через primary-агента-обёртку (brick-agent), который диспатчит субагента через task-инструмент; OR через research-orchestrator (primary) с контрактом BRICK; проверено: opencode run --agent <primary> возвращает JSON субагента; run_research.py реально выполняет полный цикл с агентами",
       "area": "run_research.sh/run_research.py (run_agent), agents/*.md, .opencode/agent, C:\\Users\\Arhys\\.config\\opencode\\agent",
       "source_status": "open",
       "notes": "Фальсификация 2026-09-22: `opencode run --agent claim-parser '...'` → 'agent \"claim-parser\" is a subagent, not a primary agent. Falling back to default agent' + UnknownError. `opencode run --agent research-orchestrator '{\"probe\":\"ok\"}'` → работает, возвращает JSON. Это корень проблемы 'агенты пайплайна не запускаются': bash-runner вызывает субагентов напрямую через CLI, что невозможно. Linux-версия run_research.sh тоже была сломана (fallback на default agent вместо claim-parser).",
-      "progress": "2026-09-22: РЕШЕНО через primary-обёртки. Созданы 10 <name>-runner агентов (mode: primary), каждый диспатчит целевого субагента через task-инструмент. opencode run --agent <name>-runner \"<contract>\" работает (проверено: claim-parser-runner → claim-parser → JSON). Также обновлены research-orchestrator/writing-orchestrator/code-orchestrator: добавлена кросс-оркестрация (вызов других оркестраторов через их primary-обёртки), закрывает TD-099 для research-контура. Осталось: перенести обёртки в рабочий harness и portable."
+      "progress": "2026-09-22: РЕШЕНО через primary-обёртки. Созданы 10 <name>-runner агентов (mode: primary), каждый диспатчит целевого субагента через task-инструмент. opencode run --agent <name>-runner \"<contract>\" работает (проверено: claim-parser-runner → claim-parser → JSON). Также обновлены research-orchestrator/writing-orchestrator/code-orchestrator: добавлена кросс-оркестрация (вызов других оркестраторов через их primary-обёртки), закрывает TD-099 для research-контура. Осталось: перенести обёртки в рабочий harness и portable.",
+      "progress_notes": [
+        "2026-09-24 (qwen-coder): закрыт детерминированный слой — scripts/agent_gen/gen_runners.py: генератор runner-обёрток (generate/--check/--list) + гейт инвариантов TD-117 (каждый видимый subagent имеет primary-runner с task(subagent_type=...) и wraps-оверлеем). Найден и устранён дрейф реестра: writer-runner ссылался на несуществующего агента 'writer'. Тесты tests/test_runner_overlay.py. Live-прогон opencode CLI остаётся за хост-runtimes (задокументировано)."
+      ]
     },
     {
       "id": "TD-118",
@@ -3079,6 +3082,22 @@
       "progress": "2026-09-23: создано через tech_debt_cli.py"
     },
     {
+      "id": "TD-160",
+      "owner": "research-orchestrator",
+      "presentation_category": "ACTIVE",
+      "sunset_at": "2027-09-29",
+      "title": "Обзор: аддитивность интегральных величин (Stokes&Wilson 1944) для блока [180] ДОПОЛНЕНИЯ_ГЛАВА1_В2",
+      "status_detail": "OPEN_CURRENT",
+      "kind": "literature",
+      "status": "open",
+      "severity": "medium",
+      "acceptance": "В текст главы 1 добавлен абзац с обоснованием аддитивности интегральных ширин (свёртка → сумма ширин по Stokes&Wilson 1944) и аддитивности интегральной интенсивности (КРФА); ссылка [180] заменена на Stokes&Wilson 1944 / Mittemeijer&Scardi 2004; гейт citation_trace PASS",
+      "area": "research_verification/ДОПОЛНЕНИЕ_ГЛАВА1_В2.md, research_verification/ch1_dom.json (c163-c164, c178-c182, c233, c284), 09_LITERATURE/datasets/РЫБА_ГЛАВА1_ПРОБЛЕМНАЯ.md (секция 1.3.4)",
+      "source_status": "open",
+      "notes": "В литобзоре главы 1 (раздел про восстановление перекрывающихся профилей / аддитивность ширин) требуется написать про работы, обосновывающие АДДИТИВНОСТЬ ИНТЕГРАЛЬНЫХ ВЕЛИЧИН — интегральной интенсивности и полуширины (FWHM/интегральной ширины). Ключевой первоисточник: Stokes & Wilson 1944 (аддитивность интегральных ширин при свёртке профилей). Связано: блок [180] в ДОПОЛНЕНИЕ_ГЛАВА1_В2.md — 'аддитивность ИНТЕГРАЛЬНЫХ ширин (не функций распределения)' — операционная модель; замена нестабильной ссылки qwenlm [180] на Stokes&Wilson 1944 + Mittemeijer&Scardi 2004 (подтверждено верификацией B2, TD-158). Дополнительно: аддитивность интегральной интенсивности как суммы фазовых вкладов (КРФА) — см. c163/c164/c178-c182 (Wj, R-факторы).",
+      "progress": "0%"
+    },
+    {
       "id": "RS-001",
       "title": "Автореферат v20: исправить завышенную плотность дислокаций ρ в литобзоре НКР (глава 1) [было work TD-103]",
       "area": "НКР_Черенков 20-06-25.docx (глава 1, 1.1.1), claims c18, research_verification/",
@@ -3597,7 +3616,7 @@
   ],
   "consolidation": {
     "merged_from_work": true,
-    "date": "2026-09-23",
+    "date": "2026-09-29",
     "note": "Единый реестр: work-записи с конфликтующими ID сохранены как RS-*"
   }
 }
