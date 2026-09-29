@@ -42,3 +42,9 @@ scripts/research/.opencode/
 
 # OpenCode config backups
 .opencode/*.bak
+
+# Большие бинарники (>100MB блокируются GitHub)
+патчи/99_misc/
+*.deb.part
+патчи/07_r4_4_l3b/*.zip
+патчи/**/*.zip
