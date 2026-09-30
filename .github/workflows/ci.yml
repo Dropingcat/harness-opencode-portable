@@ -11,7 +11,7 @@ jobs:
     name: Test Suite
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -34,7 +34,7 @@ jobs:
           pip install -r requirements.txt 2>/dev/null || true
           pip install -r requirements-core.txt 2>/dev/null || true
           pip install -r requirements-mcp-doc.txt 2>/dev/null || true
-          # Install mcp 1.26.0 specifically (2.x breaks @server.list_tools)
+          # mcp 1.26.0 required (2.x breaks @server.list_tools)
           pip install mcp==1.26.0
           pip install pytest pytest-asyncio pyyaml
 
@@ -43,11 +43,9 @@ jobs:
           echo "PYTHONIOENCODING=utf-8" >> $GITHUB_ENV
           echo "PYTHONPATH=${{ github.workspace }}/scripts/research" >> $GITHUB_ENV
           echo "OPENCODE_HARNESS_ROOT=${{ github.workspace }}" >> $GITHUB_ENV
-          echo "PYTHONIOENCODING=utf-8" >> $GITHUB_ENV
 
       - name: Generate MCP config
-        run: |
-          python scripts/router/gen_mcp_config.py --root "${{ github.workspace }}"
+        run: python scripts/router/gen_mcp_config.py --root "${{ github.workspace }}"
 
       - name: Run core tests
         run: |
@@ -59,17 +57,12 @@ jobs:
           cd scripts/research
           python -m pytest test_architecture.py -q
 
-      - name: Run downloader tests
-        run: |
-          cd scripts/tools
-          python -m pytest test_units.py test_formulas.py test_uncertainty.py test_verdict_schemas.py test_evidence_contract.py test_judge_brief.py test_merge_numeric.py test_fix_p0p3.py test_rivulet.py test_rivulet_numeric.py test_rivulet_synthesizer.py test_numeric_layer_fix.py -q
-
   downloader-test:
     name: Downloader Tests
     runs-on: ubuntu-latest
     timeout-minutes: 20
     needs: test
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -95,7 +88,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     needs: test
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -119,40 +112,17 @@ jobs:
           pip install pytest pytest-asyncio
 
       - name: Generate MCP config
-        run: |
-          python scripts/router/gen_mcp_config.py
+        run: python scripts/router/gen_mcp_config.py
 
       - name: Test MCP servers
-        run: |
-          python -c "
-import asyncio
-import sys
-sys.path.insert(0, 'scripts/research')
-import asyncio
-
-async def test_mcp():
-    # Test academic_search_server
-    import academic_search_server as s
-    res = await asyncio.get_event_loop().run_in_executor(None, lambda: __import__('academic_search_server').call_tool('arxiv_search', {'query': 'nitriding steel', 'max_results': 2}))
-    print('arxiv_search:', 'OK' if 'ok' in str(res) else 'FAIL')
-    
-    # test openalex
-    res = await asyncio.get_event_loop().run_in_executor(None, lambda: __import__('academic_search_server').call_tool('openalex_search', {'query': 'nitriding steel', 'per_page': 2}))
-    print('openalex_search:', 'OK' if 'ok' in str(res) else 'FAIL')
-    
-    # test searxng
-    import searxng_search_server as s
-    res = await asyncio.get_event_loop().run_in_executor(None, lambda: s.call_tool('searxng_search', {'query': 'nitriding steel', 'limit': 2}))
-    print('searxng_search:', 'OK' if 'ok' in str(res) else 'FAIL (expected - no searxng server)')
-
-asyncio.run(test_mcp())
+        run: python scripts/ci/test_mcp_servers.py
 
   chroma-test:
     name: ChromaDB Index Test
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 15
     needs: test
-    
+
     steps:
       - uses: actions/checkout@v4
         with:
@@ -170,25 +140,14 @@ asyncio.run(test_mcp())
           pip install chromadb pytest pytest-asyncio
 
       - name: Test ChromaDB
-        run: |
-          cd scripts/research
-          python -c "
-import chromadb
-client = chromadb.PersistentClient(path='${{ env.CHROMA_DB_DIR || 'F:/AnalisysDataSet/.chroma_papers' }}')
-print('Collections:', [c.name for c in client.list_collections()])
-col = client.get_collection('papers')
-print(f'Count: {col.count()}')
-results = col.query(query_texts=['nitriding steel'], n_results=2)
-print(f'Results: {len(results[\"ids\"][0])} chunks')
-"
+        run: python scripts/ci/test_chromadb.py
 
   integration-test:
     name: Integration Test (Full Pipeline)
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 30
     needs: [test, downloader-test, mcp-test, chroma-test]
-    if: env.LOCAL_TEST_DATA == 'true'
-    
+
     steps:
       - uses: actions/checkout@v4
         with:
@@ -211,49 +170,19 @@ print(f'Results: {len(results[\"ids\"][0])} chunks')
         run: |
           echo "PYTHONIOENCODING=utf-8" >> $GITHUB_ENV
           echo "OPENCODE_HARNESS_ROOT=${{ github.workspace }}" >> $GITHUB_ENV
-          echo "PYTHONIOENCODING=utf-8" >> $GITHUB_ENV
-          echo "OPENCODE_HARNESS_ROOT=${{ github.workspace }}" >> $GITHUB_ENV
-          # Configurable paths for local data (override via env vars)
-          echo "ANALISYS_DATA_DIR=${{ env.ANALISYS_DATA_DIR || 'F:/AnalisysDataSet' }}" >> $GITHUB_ENV
-          echo "LITERATURE_DIR=${{ env.LITERATURE_DIR || 'F:/1/_STRUCTURED/09_LITERATURE' }}" >> $GITHUB_ENV
-          echo "TEMP_DIR=${{ env.TEMP_DIR || '/tmp/opencode/ci_test' }}" >> $GITHUB_ENV
-          echo "CHROMA_DB_DIR=${{ env.CHROMA_DB_DIR || 'F:/AnalisysDataSet/.chroma_papers' }}" >> $GITHUB_ENV
-          echo "LITERATURE_DIR=${{ env.LITERATURE_DIR || 'F:/1/_STRUCTURED/09_LITERATURE' }}" >> $GITHUB_ENV
+          echo "LOCAL_TEST_DATA=${{ env.LOCAL_TEST_DATA }}" >> $GITHUB_ENV
+          echo "TEMP_DIR=/tmp/opencode/ci_test" >> $GITHUB_ENV
 
-      - name: Full pipeline test (conditional - only runs on self-hosted Windows runner with LOCAL_TEST_DATA=true)
-        if: env.LOCAL_TEST_DATA == 'true'
-        run: |
-          cd scripts/research
-          python run_research.py "testdata/exp1/input.txt" --dry-run --workspace "${{ env.TEMP_DIR || '/tmp/opencode/ci_test' }}" --max-iterations 1 --max-cost-rub 5
+      - name: Full pipeline test (conditional on LOCAL_TEST_DATA)
+        run: python scripts/ci/test_integration.py
 
-      - name: Verify outputs
-        run: |
-          ls -la "${{ env.TEMP_DIR || '/tmp/opencode/ci_test' }}/research_verification/" 2>/dev/null || true
-          python -c "
-import json, os
-files = ['ch1_dom.json', 'claims_parsed.json', 'citations_map.json', 'verdicts_final.json']
-for f in files:
-    p = os.path.join('${{ env.TEMP_DIR || '/tmp/opencode/ci_test' }}', 'research_verification', f)
-    if os.path.exists(p):
-        d = __import__('json').load(open(p, encoding='utf-8'))
-        print(f'{f}: OK, keys={list(d.keys()) if isinstance(d, dict) else "list"}')
-      else:
-        print(f'{f}: MISSING')
-"
-
-  # TD-155: Verify MCP injection after restart (manual step)
   mcp-injection-check:
     name: MCP Injection Check (Manual)
     runs-on: ubuntu-latest
     timeout-minutes: 10
     if: false  # Manual trigger only
-    
+
     steps:
       - uses: actions/checkout@v4
       - name: Check MCP tools in session
-        run: |
-          python -c "
-import subprocess, json
-result = subprocess.run(['opencode', 'mcp', 'list'], capture_output=True, text=True)
-print('MCP servers:', result.stdout)
-"
+        run: opencode mcp list
