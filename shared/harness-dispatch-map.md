@@ -14,6 +14,18 @@
 | 5 | Управлять техдолгами/реестром | **coder** | `code-orchestrator` | `tech_debt_cli.py` (не ad-hoc скрипты!) |
 | 6 | Семпоиск по локальному корпусу | **research** | research-orchestrator | `chroma_indexer.py search` |
 
+## Приоритет диспатча research-задачи (TD-161)
+
+Агент НЕ должен путаться между способами запуска research-цикла. Правило однозначное:
+
+| Способ | Когда | Команда |
+|---|---|---|
+| **1. `task` внутри сессии** (ПЕРВЫЙ) | Задача принадлежит текущему контуру (research-агент внутри research-сессии, верификация/поиск/сбор) | `task(subagent_type="general" или "research-orchestrator", prompt=<контракт>)` |
+| **2. Внешний `opencode run --agent research-orchestrator`** | ТОЛЬКО кросс-контур: ты — writer/coder/другой агент и НЕ можешь вызвать research через task (нет такого subagent в своей сессии) | `opencode run --agent research-orchestrator "<contract>"` |
+
+**Почему:** `task` внутри сессии быстрее, безопаснее (нет внешнего процесса), сохраняет контекст и уже проверен (верификация B2 через `task general` сработала). Внешний `opencode run` — тяжёлый и рискованный (новый процесс, без общего контекста) — только для чужих контуров.
+**Если `research-orchestrator` не в списке task-subagents твоей сессии** — используй `general` с полным контрактом research-задачи (он диспатчит BRICKS-скрипты детерминированно).
+
 ## Шаг 1: Инструменты (канонические, из `scripts/tools/`)
 
 **Шаблоны контрактов — в роутере.** `harness_run`/`resolve_bundle` возвращает `templates` (13 шт.): `arxiv_search`, `openalex_search`, `extract_document`, `searxng_search`, `sci_bot`, `downloader_doi`, `downloader_resolve`, `downloader_dns`, `gost_collector`, `code_work`, `literature-review`, `profile_config`, `customize-opencode`. Каждый шаблон содержит: команду, required_input, forbidden_input, start_with/finish_with, guard. **Не выдумывай вызов — возьми шаблон из bundle.**
