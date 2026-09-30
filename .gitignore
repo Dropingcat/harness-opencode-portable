@@ -48,3 +48,6 @@ scripts/research/.opencode/
 *.deb.part
 патчи/07_r4_4_l3b/*.zip
 патчи/**/*.zip
+
+# GitHub workflow (требует workflow scope, не используется)
+.github/
