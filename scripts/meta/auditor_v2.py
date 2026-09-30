@@ -59,15 +59,19 @@ class ExternalAuditorV2:
     def __init__(self, auditor_id: str = "external-v2",
                  basket: Optional[DamageBasket] = None,
                  rules_loader: Optional[Callable[[str, str], List[Dict[str, Any]]]] = None,
-                 state_dir: Optional[str] = None) -> None:
+                 state_dir: Optional[str] = None,
+                 hardcore: bool = False) -> None:
         self.auditor_id = auditor_id
         self.basket = basket or DamageBasket(state_dir)
-        self.rules_loader = rules_loader or self._default_rules
+        self.rules_loader = rules_loader or (self._hardcore_rules if hardcore else self._default_rules)
+        self.hardcore = hardcore
         self.state_dir = Path(state_dir) if state_dir else Path(os.environ.get(
             'HARNESS_AUDITOR_V2_STATE', str(Path(__file__).parent.parent.parent / '.auditor_v2_state')))
         self.state_dir.mkdir(parents=True, exist_ok=True)
         self.contract: Optional[AuditorContract] = None
         self.observations = 0
+        # хардкор: всегда гоняем 5 движков на структуру
+        self._pipe = self._build_validation_pipe()
 
     # ------------------------------------------------------ цикл наблюдения
 
@@ -82,29 +86,53 @@ class ExternalAuditorV2:
 
     def observe_and_audit(self, artifact: Any) -> List[DamageEntry]:
         """
-        Наблюдение артефакта → проверка по контракту → бросок долгов в корзину.
-        Возвращает брошенные записи (для логирования), урон считает скрипт.
+        ХАРДКОР-наблюдение: 5 движков (структура) + все правила + эскалация.
+        Каждый такт — максимальное давление.
         """
         self.observations += 1
         if self.contract is None:
-            # без контракта — минимальная проверка
             self.bind_contract('unknown', str(artifact))
         dropped: List[DamageEntry] = []
+
+        # 1. Структурные находки от 5 движков (всегда, если dict)
+        struct = self._struct_findings(artifact)
+        for f in struct:
+            entry = DamageEntry(f['rule_id'], f['engine'], f['severity'],
+                                f['message'], f['target'], self.auditor_id)
+            self.basket.drop(entry)
+            dropped.append(entry)
+
+        # 2. Текстовые правила контракта
+        text = str(artifact) if not isinstance(artifact, dict) else json.dumps(artifact, ensure_ascii=False)
         for rule in self.contract.rules:
+            if rule.get('check_fn') and rule['rule_id'] == 'RULE_STRUCT':
+                continue  # структура уже проверена выше
             try:
                 if self._check_rule(rule, artifact):
                     entry = DamageEntry(
-                        rule_id=rule['rule_id'],
-                        engine=rule['engine'],
-                        severity=rule['severity'],
-                        message=rule['message'],
-                        target=rule.get('target', ''),
-                        auditor_id=self.auditor_id,
-                    )
+                        rule_id=rule['rule_id'], engine=rule['engine'],
+                        severity=rule['severity'], message=rule['message'],
+                        target=rule.get('target', ''), auditor_id=self.auditor_id)
                     self.basket.drop(entry)
                     dropped.append(entry)
             except Exception:
                 continue
+
+        # 3. Хардкор: дополнительный прогон по всем хардкор-правилам (эскалация)
+        if self.hardcore and self.contract:
+            for rule in self._hardcore_rules(self.contract.orchestrator, self.contract.prompt_hash):
+                if rule['rule_id'] == 'RULE_STRUCT':
+                    continue
+                try:
+                    if self._check_rule(rule, artifact):
+                        entry = DamageEntry(
+                            rule_id=rule['rule_id'], engine=rule['engine'],
+                            severity=rule['severity'], message=rule['message'],
+                            target=rule.get('target', ''), auditor_id=self.auditor_id)
+                        self.basket.drop(entry)
+                        dropped.append(entry)
+                except Exception:
+                    continue
         return dropped
 
     def basket_damage(self) -> int:
@@ -126,9 +154,105 @@ class ExternalAuditorV2:
             return pattern.lower() in text.lower()
         return False
 
-    def _default_rules(self, orchestrator: str, prompt_hash: str) -> List[Dict[str, Any]]:
-        """Правила по умолчанию (инварианты оркестратора)."""
+    def _build_validation_pipe(self):
+        """Конвейер 5 движков (Ontology/Relation/Epistemic/Boundary/Completeness)."""
+        try:
+            from validation_engines import KnowledgeBase, ValidationPipeline
+            kb = KnowledgeBase()
+            kb.add_entity('OBS_XRD_FWHM', 'Observable')
+            kb.add_entity('OBS_XRD_PHASE', 'Observable')
+            kb.add_entity('CLAIM_MECH', 'Mechanism')
+            kb.add_entity('CLAIM_PROP', 'PhysicalProperty')
+            kb.set_allowed_slot_types('data', ['Observable', 'PhysicalProperty'])
+            kb.set_allowed_slot_types('claim', ['Mechanism', 'PhysicalProperty'])
+            kb.forbid_relation('OBS_XRD_FWHM', 'proves', 'Mechanism')
+            kb.forbid_relation('OBS_XRD_PHASE', 'proves', 'Mechanism')
+            kb.allow_relation('OBS_XRD_FWHM', 'indicates', 'PhysicalProperty')
+            kb.allow_relation('OBS_XRD_PHASE', 'indicates', 'PhysicalProperty')
+            kb.set_evidence_type('OBS_XRD_FWHM', 'indirect')
+            kb.set_evidence_type('OBS_XRD_PHASE', 'indirect')
+            return ValidationPipeline(kb)
+        except Exception:
+            return None
+
+    def _struct_findings(self, artifact):
+        """Прогон 5 движков на структуру (dict со слотами)."""
+        if self._pipe is None or not isinstance(artifact, dict):
+            return []
+        result = self._pipe.validate_instance(artifact)
+        findings = []
+        for e in result.errors:
+            sev = 'CRITICAL' if e.severity == 'CRITICAL' else 'WARNING'
+            findings.append({
+                'rule_id': e.rule_id, 'engine': e.engine, 'severity': sev,
+                'message': e.message, 'target': e.context.get('missing_slot')
+                or e.context.get('target') or e.context.get('source') or 'slots',
+            })
+        return findings
+
+    def _hardcore_rules(self, orchestrator: str, prompt_hash: str) -> List[Dict[str, Any]]:
+        """ХАРДКОР-правила: агрессивные, больше нарушений, эскалация."""
         return [
+            # структура (5 движков) — критично
+            {"rule_id": "RULE_STRUCT", "engine": "Structure", "severity": "CRITICAL",
+             "message": "структура нарушает 5 движков", "target": "slots", "check_fn": None},
+            # физика
+            {"rule_id": "RULE_REL_04", "engine": "RelationGraph", "severity": "CRITICAL",
+             "message": "XRD не может 'доказывать' механизм", "pattern": "доказывает", "target": "claim"},
+            {"rule_id": "RULE_REL_01", "engine": "RelationGraph", "severity": "CRITICAL",
+             "message": "связь не разрешена в графе знаний", "pattern": "указывает", "target": "claim"},
+            # epistemic
+            {"rule_id": "RULE_EPI_02", "engine": "Epistemic", "severity": "WARNING",
+             "message": "косвенное с сильной модальностью", "pattern": "устанавливает", "target": "claim"},
+            {"rule_id": "RULE_EPI_03", "engine": "Epistemic", "severity": "WARNING",
+             "message": "claim требует cross-check", "pattern": "демонстрирует", "target": "claim"},
+            # completeness
+            {"rule_id": "RULE_CMP_01", "engine": "Completeness", "severity": "CRITICAL",
+             "message": "нет warrant/обоснования", "pattern": "warrant", "target": "paragraph"},
+            # style — хардкор: больше воды ловим
+            {"rule_id": "AP_T01", "engine": "Style", "severity": "LOW",
+             "message": "вода", "pattern": "как известно", "target": "style"},
+            {"rule_id": "AP_T01b", "engine": "Style", "severity": "LOW",
+             "message": "вода", "pattern": "в последние годы", "target": "style"},
+            {"rule_id": "AP_T02", "engine": "Style", "severity": "LOW",
+             "message": "ложная скромность", "pattern": "очевидно", "target": "style"},
+        ]
+
+    def _default_rules(self, orchestrator: str, prompt_hash: str) -> List[Dict[str, Any]]:
+        """Правила по умолчанию: текст + структура (5 движков)."""
+        try:
+            from validation_engines import KnowledgeBase, ValidationPipeline
+            kb = KnowledgeBase()
+            kb.add_entity('OBS_XRD_FWHM', 'Observable')
+            kb.add_entity('OBS_XRD_PHASE', 'Observable')
+            kb.add_entity('CLAIM_MECH', 'Mechanism')
+            kb.add_entity('CLAIM_PROP', 'PhysicalProperty')
+            kb.set_allowed_slot_types('data', ['Observable', 'PhysicalProperty'])
+            kb.set_allowed_slot_types('claim', ['Mechanism', 'PhysicalProperty'])
+            kb.forbid_relation('OBS_XRD_FWHM', 'proves', 'Mechanism')
+            kb.forbid_relation('OBS_XRD_PHASE', 'proves', 'Mechanism')
+            kb.allow_relation('OBS_XRD_FWHM', 'indicates', 'PhysicalProperty')
+            kb.allow_relation('OBS_XRD_PHASE', 'indicates', 'PhysicalProperty')
+            kb.set_evidence_type('OBS_XRD_FWHM', 'indirect')
+            kb.set_evidence_type('OBS_XRD_PHASE', 'indirect')
+            pipe = ValidationPipeline(kb)
+
+            def struct_check(artifact):
+                """Проверка структуры: если dict со слотами — 5 движков."""
+                if not isinstance(artifact, dict):
+                    return False
+                result = pipe.validate_instance(artifact)
+                return result.status == 'FAIL'
+
+            struct_rule = {
+                "rule_id": "RULE_STRUCT", "engine": "Structure",
+                "severity": "CRITICAL", "message": "структура нарушает 5 движков",
+                "target": "slots", "check_fn": struct_check,
+            }
+        except Exception:
+            struct_rule = None
+
+        rules = [
             {"rule_id": "RULE_CMP_01", "engine": "Completeness", "severity": "CRITICAL",
              "message": "нет warrant/обоснования", "pattern": "warrant", "target": "paragraph"},
             {"rule_id": "RULE_REL_04", "engine": "RelationGraph", "severity": "CRITICAL",
@@ -138,6 +262,9 @@ class ExternalAuditorV2:
             {"rule_id": "AP_T01", "engine": "Style", "severity": "LOW",
              "message": "вода/фраза-заполнитель", "pattern": "как известно", "target": "style"},
         ]
+        if struct_rule:
+            rules.append(struct_rule)
+        return rules
 
     def _default_scope(self, orchestrator: str) -> List[str]:
         return ["claims", "citations", "physics", "style"]
