@@ -43,14 +43,30 @@
 | `gost_collector.py` | сбор ГОСТов/ТУ по маппингу марок (TD-122..125) | `gost_collector.py registry` / `collect --mark ВКС-10` / `backfill` / `provenance --gost 5632-2014` |
 | `downloader.py url` | универсальный загрузчик: PDF с проверкой типа, retry, провенанс | `downloader.py url --url ... --out ... --name f.pdf --expect pdf` |
 | `downloader.py resolve` | каскадный DOI→PDF: локальный корпус→CrossRef/OpenAlex→openAccessPdf→Sci-Hub→wayback (TD-152) | `downloader.py resolve --doi "10.1007/..." --out ...` |
-| `book_finder.py` | поиск книги по ISBN: resolve-isbn (Google Books+OpenLibrary кросспроверка), search-mirrors (dokumen/vdoc/libgen), verdict (TD-165) | `book_finder.py verdict --isbn 978-5-7038-3933-1 [--title "..."] [--out prov.json]` |
+| `book_finder.py` | поиск книги по ISBN: resolve-isbn (Google Books+OpenLibrary кросспроверка), search-mirrors (dokumen/vdoc/libgen/annas), verdict (TD-165) | `book_finder.py verdict --isbn 978-5-7038-3933-1 [--title "..."] [--out prov.json]` |
+| **`unified_search`** (skill) | **ЕДИНАЯ точка входа поиска** через роутер: тип→каналы по порядку (TD-165) | `search "<запрос>" --type article\|book\|doi\|any [--isbn ...]` |
 
-## Шаг 2: Поиск источников — порядок (жёсткий)
+## Шаг 2: Поиск источников — ЕДИНЫЙ СКИЛЛ (TD-165)
 
+**Используй `unified_search` (skill в роутере) — единую точку входа.** Он сам выбирает каналы по типу:
+
+### Статья (DOI/научный текст) — порядок каналов
 1. **Локальный корпус** (ChromaDB): `chroma_indexer.py search --query "<claim/термин>"`
-2. **arXiv/OpenAlex** (research_papers MCP / source-fetcher)
-3. **Веб** (browser-MCP / webfetch / SearXNG **если поднят**)
-4. DOI → **CrossRef-gate** → `downloader.py doi` (Sci-Hub)
+2. **arXiv/OpenAlex**: `arxiv_search` / `openalex_search` (MCP) или webfetch fallback
+3. **Веб**: `searxng_search` (mini-searxng на 8888) / webfetch
+4. DOI → **CrossRef-gate** → `downloader.py resolve --doi` (каскад: локальный→OA→Sci-Hub→wayback)
+5. **Sci-Bot** (если нужна статья за капчей): `sci_bot_client.py ask`
+
+### Книга (ISBN) — порядок каналов
+1. **`book_finder.py resolve-isbn`** — кросспроверка ISBN (Google Books+OpenLibrary). **Всегда сверяй resolved.title** — user-input ISBN может быть подменой (TD-165)
+2. **`book_finder.py search-mirrors`** — dokumen.pub / vdoc.pub / **libgen.*** / **annas-archive.org** (с retry/backoff/DNS-bypass)
+3. **`book_finder.py verdict`** — честный итог: `found` (pdf_url) | `toc_only` | `not_found`
+4. При капче/Cloudflare на annas/libgen — отметь `captcha`, предложи cookie-обход/ручной доступ (TD-158)
+
+### Ключевые правила
+- ISBN проверяется, НЕ доверяется user-input.
+- Провенанс (URL/дата/hash/источник) — через `downloader.py save_with_provenance`.
+- Обходы: DNS-bypass (DoH, TD-153), зеркала libgen (is/rs/st/gs/li/lc), annas-archive (org/se).
 
 > SearXNG (`127.0.0.1:8888`) — **восстановлен** (TD-128): `mcp/mini_searxng.py` (arXiv/OpenAlex + DDG, JSON-интерфейс). Если порт мёртв — запусти: `python scripts/tools/start_searxng.py`. Используй `searxng_search` (MCP) или `webfetch` к `http://127.0.0.1:8888/search?q=...&format=json`.
 >

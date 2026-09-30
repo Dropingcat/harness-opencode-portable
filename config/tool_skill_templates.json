@@ -366,6 +366,46 @@
       "example": {
         "isbn": "978-5-7038-3933-1"
       }
+    },
+    "unified_search": {
+      "kind": "skill",
+      "command": "search <запрос> [--type article|book|doi|any] [--isbn <ISBN>]",
+      "required_input": {
+        "query": "string"
+      },
+      "optional_input": {
+        "type": "article|book|doi|any",
+        "isbn": "string"
+      },
+      "forbidden_input": [
+        "полные тексты книг (только поиск/идентификация/скачивание PDF)"
+      ],
+      "start_with": [
+        "ОПРЕДЕЛИ тип: статья(DOI) / книга(ISBN) / веб / любой",
+        "Для статьи: локальный корпус (chroma_indexer) -> arxiv_search -> openalex_search -> searxng/webfetch -> downloader resolve",
+        "Для книги: book_finder resolve-isbn (кросспроверка ISBN!) -> search-mirrors (dokumen/vdoc/libgen/annas) -> verdict"
+      ],
+      "finish_with": [
+        "Всегда сверяй ISBN с resolved.title (подмена — TD-165)",
+        "При капче/Cloudflare — отметь captcha, предложи cookie-обход/ручной доступ (TD-158)",
+        "Провенанс: URL, дата, hash, источник (downloader save_with_provenance)"
+      ],
+      "guard_required": false,
+      "channels_ordered": [
+        "chroma_indexer",
+        "arxiv_search",
+        "openalex_search",
+        "searxng_search",
+        "webfetch",
+        "downloader_resolve",
+        "book_finder",
+        "sci_bot"
+      ],
+      "example": {
+        "query": "Герасимов структура азотированных сталей",
+        "type": "book",
+        "isbn": "978-5-7038-3933-1"
+      }
     }
   }
 }

@@ -3,8 +3,8 @@
   "updated": "2026-09-30",
   "authority_note": "Canonical registry migrated from патчи/миграция в плагин/tech_debt_current.json (65 records). project_context.py counts status=open. CLOSED_REPORTED maps to closed; RECONCILE_REQUIRED stays open until exact-tree verification.",
   "counts": {
-    "total": 215,
-    "open": 158,
+    "total": 219,
+    "open": 162,
     "closed": 57
   },
   "debts": [
@@ -3175,7 +3175,71 @@
       "area": "",
       "source_status": "open",
       "notes": "Из сессии: агент искал книгу Герасимов/Куксенова/Лаптева (ISBN 978-5-7038-3933-1, 2014 2-е изд. 518 стр.), но пользователь дал ISBN 978-5-392-19319-6 — это ДРУГАЯ книга (Материаловедение. Цветные металлы, dokumen.pub). Агент написал ad-hoc: gb_check.py (Google Books API с retry 5x), curl к libgen.is/.rs/.st/.gs/.li/.lc (все timed out), jina reader (451), dokumen.pub (SSL handshake fail). Нужен канонический инструмент: (1) resolve ISBN через Google Books/Open Library (идентификация, не доверять user-input), (2) поиск fulltext по зеркалам (dokumen/vdoc/libgen) с retry/backoff и DNS-bypass (TD-153), (3) честный verdict 'нет открытого fulltext' + TOC/справка, (4) провенанс (URL/дата/источник). Связано: TD-151 (резолвер), TD-152 (каскад), TD-153 (DNS).",
-      "progress": "2026-09-30: создано через tech_debt_cli.py"
+      "progress": "2026-09-30: РЕШЕНО (частично) + РАСШИРЕНО. book_finder.py: resolve-isbn (Google Books+OpenLibrary кросспроверка, matched flag), search-mirrors (dokumen/vdoc/libgen.is/rs/st/gs/li/lc с md5/direct-download парсингом + annas-archive.org/.se с captcha-маркером), verdict (found|toc_only|not_found + провенанс). Единый skill unified_search в роутере (tool_skill_templates.json #16): тип->каналы по порядку (статья: chroma->arxiv/openalex->searxng->downloader resolve->sci-bot; книга: resolve-isbn->search-mirrors->verdict). dispatch-map обновлён (Шаг 2). Обходы: DNS-bypass (TD-153), зеркала, captcha-маркер (TD-158). Логика проверена мок-тестом (matched True/False). В песочнице внешние API 404/429 (прокси) — на реальной машине работают."
+    },
+    {
+      "id": "TD-166",
+      "title": "F3: Merge атомарный протокол + статистический гейт + clean replay",
+      "area": "merge_protocol.py",
+      "kind": "architecture",
+      "severity": "high",
+      "owner": "research-orchestrator",
+      "status": "open",
+      "status_detail": "OPEN_CURRENT",
+      "presentation_category": "ACTIVE",
+      "source_status": "open",
+      "sunset_at": null,
+      "acceptance": "MergeDecision(accepted|partial|rejected|rolled_back_to); significance_test(candidate, baseline, τ); pareto_admissible; clean_replay_required()",
+      "priority": "critical",
+      "notes": "Фича из legacy-чатов (LEGACY_CHATS_FEATURES_2026-09-30.md). MergeDecision(accepted|partial|rejected|rolled_back_to); significance_test(candidate, baseline, τ); pareto_admissible; clean_replay_required()"
+    },
+    {
+      "id": "TD-167",
+      "title": "F4: AcademicTextGrammar — шаблоны T1-T16 + claim type-system + переходы",
+      "area": "templates.py + validation_engines.py",
+      "kind": "architecture",
+      "severity": "medium",
+      "owner": "research-orchestrator",
+      "status": "open",
+      "status_detail": "OPEN_CURRENT",
+      "presentation_category": "ACTIVE",
+      "source_status": "open",
+      "sunset_at": null,
+      "acceptance": "RhetoricalTemplate; ClaimType (D,F,C,E,I,R,X,L,H,Q,G,S,M); AllowedTransitions/ForbiddenTransitions; quasi_gap_detector; RhetoricalValidity/GenreValidity движки",
+      "priority": "high",
+      "notes": "Фича из legacy-чатов (LEGACY_CHATS_FEATURES_2026-09-30.md). RhetoricalTemplate; ClaimType (D,F,C,E,I,R,X,L,H,Q,G,S,M); AllowedTransitions/ForbiddenTransitions; quasi_gap_detector; RhetoricalValidity/GenreValidity движки"
+    },
+    {
+      "id": "TD-168",
+      "title": "F5: ReAct-аудитор как внешняя сила — наблюдения → мутация политики",
+      "area": "react_auditor.py, orchestrator.py, health_monitor.py",
+      "kind": "architecture",
+      "severity": "high",
+      "owner": "research-orchestrator",
+      "status": "open",
+      "status_detail": "OPEN_CURRENT",
+      "presentation_category": "ACTIVE",
+      "source_status": "open",
+      "sunset_at": null,
+      "acceptance": "AuditObservation(claim, verdict, rule_id, evidence_level); PolicyMutation(retrieval|contract|prompt|validator); N провалов → V-1 veto",
+      "priority": "high",
+      "notes": "Фича из legacy-чатов (LEGACY_CHATS_FEATURES_2026-09-30.md). AuditObservation(claim, verdict, rule_id, evidence_level); PolicyMutation(retrieval|contract|prompt|validator); N провалов → V-1 veto"
+    },
+    {
+      "id": "TD-169",
+      "title": "F1: StateMutationProposal + Candidate-State gate (ошибка не меняет state напрямую)",
+      "area": "state.py, aar.py, debt_cycle.py",
+      "kind": "architecture",
+      "severity": "high",
+      "owner": "research-orchestrator",
+      "status": "open",
+      "status_detail": "OPEN_CURRENT",
+      "presentation_category": "ACTIVE",
+      "source_status": "open",
+      "sunset_at": null,
+      "priority": "critical",
+      "acceptance": "StateMutationProposal(root_cause, target_variable, old/new, expected_effect, risk, reversibility, validation_plan, delta_budget); приём только при I(S')=true и ΔS≤B; отклонённые → legacy",
+      "notes": "Фича F1 из legacy-чатов (LEGACY_CHATS_FEATURES_2026-09-30.md). Центральное звено между aar.py, debt_cycle.py, state.py."
     },
     {
       "id": "RS-001",

@@ -1,7 +1,7 @@
 # Tech Debt Master — единый реестр проекта
 
 Дата: 2026-09-30
-Всего: 214 | open: 157 | closed: 57
+Всего: 219 | open: 162 | closed: 57
 
 Префиксы: CD-* Coder, WR-* Writer, RS-* Researcher, PL-* plugin, TD-* общий.
 
@@ -143,6 +143,11 @@
 | TD-162 | high | research-orchestrator | Изучить и внедрить научные методологии структуры текста и аргументации | - |
 | TD-163 | high | code-orchestrator | Внешний агент-валидатор через цикл ReAct с динамическим промптом и кон | - |
 | TD-164 | high | code-orchestrator | Git-подобный Harness Meta-Cycle для всех оркестраторов: Baseline → Cyc | - |
+| TD-165 | medium | research-orchestrator | Внешний поиск книг (ISBN/зеркала/libgen/jina/Google Books) ведётся ad- | - |
+| TD-166 | high | research-orchestrator | F3: Merge атомарный протокол + статистический гейт + clean replay | - |
+| TD-167 | medium | research-orchestrator | F4: AcademicTextGrammar — шаблоны T1-T16 + claim type-system + переход | - |
+| TD-168 | high | research-orchestrator | F5: ReAct-аудитор как внешняя сила — наблюдения → мутация политики | - |
+| TD-169 | high | research-orchestrator | F1: StateMutationProposal + Candidate-State gate (ошибка не меняет sta | - |
 | V1-TD-01 | high | research-orchestrator | Golden Corpus не собран (эталон для сравнения) | - |
 | V1-TD-02 | high | research-orchestrator | Детектор тренда метрик | - |
 | V1-TD-03 | high | research-orchestrator | Физический валидатор (код, не LLM) | - |
