@@ -1,206 +1,313 @@
 {
- "kind": "memory_registry",
- "levels": {
-  "L3": {
-   "lessons": {
-    "163eb32181ca63f952aca05f0b21eead35b6989313d245905d4d00a0625b141d": {
-     "admissions": 1,
-     "evidence_refs": [
-      "REPORT_reconciliation.md",
-      "REPORT_uncertainty.md",
-      "nkr_ch1_dom.yaml"
-     ],
-     "lesson_text": "Writer-контур обкатан на диссертации: литературный DOM (nkr_ch1_dom.yaml, 58 claims) — конкорданс НКР↔автореферат v20; verify_claims --apply (guard PASS, 44 SUPPORTED/14 AMBIGUOUS) + citation_trace PASS при хеджах из словаря гейта (предположи/по-видимому/возможно/может); PowerShell 5.1 НЕ поддерживает heredoc <<'PY' — пиши python-скрипт в файл; извлечение .doc/.docx — Word COM через Content.Text + WriteAllText UTF8 (SaveAs кодом 7 падает).",
-     "reason_codes": [
-      "powershell_heredoc_no",
-      "word_com_extract",
-      "writer_dom_ok"
-     ],
-     "sources": [
-      {
-       "added_via": "memory_bridge.add",
-       "snapshot_id": null,
-       "task_id": null
+  "kind": "memory_registry",
+  "levels": {
+    "L3": {
+      "lessons": {
+        "039f6cc39692ead0277ae3acbac933fca578e2a31c2b153f3769d083a1f64223": {
+          "admissions": 1,
+          "evidence_refs": [
+            "SEARCH_PROTOCOL.md",
+            "ch1_dom.json",
+            "decomposition_methodology.json"
+          ],
+          "lesson_text": "РАБОЧАЯ ДИРЕКТОРИЯ ИССЛЕДОВАНИЯ: F:\\1\\_STRUCTURED (2026-09-19, подтверждено пользователем). Это ГЛАВНАЯ рабочая папка НКР Черенкова (сплавы Fe-N, азотирование, XRD). Ключевые подпапки: 00_RAW_DATA\\XRD_raw\\fils (исходные XRDML), 02_INTERMEDIATE (обработанные), 03_RESULTS (epsilon_beta_with_tan_UPDATED.csv, wh_results.csv, depth_calc.py), 05_MODELS (phase_composition.csv, alloy_composition.csv), 06_SCRIPTS (depth_calc.py, график*.py), 07_AUTOREF (авторефераты v6/v20, material_cards), 08_THERMODYNAMICS (TDB, alpha_xrd_570C.json), 09_LITERATURE (статьи автора), 10_ARCHIVE. research_verification\\ — артефакты оркестратора (DOM, вердикты, диаграммы, TD-артефакты). Связанные внешние: F:\\AnalisysDataSet (корпус PDF + 02-Methods заметки + ChromaDB .chroma_papers), F:\\1\\_STRUCTURED\\07_AUTOREF. Git-репозиторий: F:\\1\\_STRUCTURED. Флешка для литературных данных: D:\\1_Литература_данные (XCOM_tables, Фазовые_составы, ГОСТы_ТУ).",
+          "resources": [
+            {
+              "name": "Рабочая директория исследования",
+              "path": "F:\\1\\_STRUCTURED"
+            },
+            {
+              "name": "Корпус статей",
+              "path": "F:\\AnalisysDataSet"
+            },
+            {
+              "name": "USB литература",
+              "path": "D:\\1_Литература_данные"
+            }
+          ]
+        },
+        "068fd7ee3b739ffe523a1292b4fc818ffafae01f32fba0fad50e90c8df2700f9": {
+          "admissions": 2,
+          "evidence_refs": [
+            "skill:xrd_skill:lvl2"
+          ],
+          "lesson_text": "Skill 'xrd_skill' reached level 2: интегрировать 5 временных суб-скриптов",
+          "reason_codes": [
+            "LEVEL_2",
+            "SKILL_XRD_SKILL"
+          ],
+          "sources": [
+            {
+              "added_via": "meta_core.skill_upgrade",
+              "snapshot_id": null,
+              "task_id": "test"
+            }
+          ]
+        },
+        "163eb32181ca63f952aca05f0b21eead35b6989313d245905d4d00a0625b141d": {
+          "admissions": 1,
+          "evidence_refs": [
+            "REPORT_reconciliation.md",
+            "REPORT_uncertainty.md",
+            "nkr_ch1_dom.yaml"
+          ],
+          "lesson_text": "Writer-контур обкатан на диссертации: литературный DOM (nkr_ch1_dom.yaml, 58 claims) — конкорданс НКР↔автореферат v20; verify_claims --apply (guard PASS, 44 SUPPORTED/14 AMBIGUOUS) + citation_trace PASS при хеджах из словаря гейта (предположи/по-видимому/возможно/может); PowerShell 5.1 НЕ поддерживает heredoc <<'PY' — пиши python-скрипт в файл; извлечение .doc/.docx — Word COM через Content.Text + WriteAllText UTF8 (SaveAs кодом 7 падает).",
+          "reason_codes": [
+            "powershell_heredoc_no",
+            "word_com_extract",
+            "writer_dom_ok"
+          ],
+          "sources": [
+            {
+              "added_via": "memory_bridge.add",
+              "snapshot_id": null,
+              "task_id": null
+            }
+          ]
+        },
+        "1ac5b919266c2522de2b4731acaaa41f9fa466feb7d876b3b1f91358e49bcba1": {
+          "admissions": 2,
+          "evidence_refs": [
+            "skill:alpha:lvl2"
+          ],
+          "lesson_text": "Skill 'alpha' reached level 2: уточнение параметров по истории использования",
+          "reason_codes": [
+            "LEVEL_2",
+            "SKILL_ALPHA"
+          ],
+          "sources": [
+            {
+              "added_via": "meta_core.skill_upgrade",
+              "snapshot_id": null,
+              "task_id": "test"
+            }
+          ]
+        },
+        "23c88b290012eb8cba8ba51636611e4f37a6617ebecca142811586289a0fb04d": {
+          "admissions": 1,
+          "evidence_refs": [],
+          "lesson_text": "ИТОГОВАЯ КОНФИГУРАЦИЯ 2026-09-19: рабочая директория исследования = F:\\1\\_STRUCTURED; литературные данные = F:\\1\\_STRUCTURED\\09_LITERATURE\\1_Литература_данные (папка ПЕРЕНЕСЕНА туда из D:). Подпапки: XCOM_tables, Фазовые_составы, ГОСТы_ТУ. Артефакты оркестратора: F:\\1\\_STRUCTURED\\research_verification. Корпус: F:\\AnalisysDataSet.",
+          "resources": [
+            {
+              "name": "Литературные данные (финал)",
+              "path": "F:\\1\\_STRUCTURED\\09_LITERATURE\\1_Литература_данные"
+            }
+          ]
+        },
+        "28cf522a6a28e26b4476402f118d27f1a886dfd499c10f32f61d31987158a2e1": {
+          "admissions": 1,
+          "evidence_refs": [
+            "factory_smoke-2026-09-01"
+          ],
+          "lesson_text": "PowerShell 5.1 Set-Content -Encoding UTF8 writes UTF-8 BOM; factory_ctl and contract_validator reject BOM as invalid JSON. Write JSON via UTF8Encoding(false).",
+          "reason_codes": [
+            "CONTRACT",
+            "PORTABILITY"
+          ],
+          "sources": [
+            {
+              "added_via": "memory_bridge.add",
+              "snapshot_id": "snap-2026-09-01",
+              "task_id": "post-audit-2026-09-01"
+            }
+          ]
+        },
+        "5a994975e2bf47a57b4663a30473bca1d58b6f42c3a10e2792928b3275470cd9": {
+          "admissions": 2,
+          "evidence_refs": [
+            "skill:persist_skill:lvl2"
+          ],
+          "lesson_text": "Skill 'persist_skill' reached level 2: уточнение параметров по истории использования",
+          "reason_codes": [
+            "LEVEL_2",
+            "SKILL_PERSIST_SKILL"
+          ],
+          "sources": [
+            {
+              "added_via": "meta_core.skill_upgrade",
+              "snapshot_id": null,
+              "task_id": "test"
+            }
+          ]
+        },
+        "5da5189a09ad603861aef4791bcbe16af6a8881b91e908b3b2f1d4097475b601": {
+          "admissions": 1,
+          "evidence_refs": [
+            "docs/glossary/PORTABLE_DELTA.md",
+            "docs/glossary/function_index.json",
+            "scripts/glossary/gen_api_index.py"
+          ],
+          "lesson_text": "Реестр функций harness генерируется детерминированно: gen_api_index.py (AST, без импорта) -> function_index.json; render_glossary.py -> GLOSSARY.md; compare_trees.py -> PORTABLE_DELTA. Полное дерево = workspace (197 mod/748 fn), portable v1 = 157/637; дельта 40 модулей + 90 функций = карта переноса v1.1 (TD-D1). Ключевые уроки: (1) читать .py как utf-8-sig (файлы с BOM иначе молча теряются), (2) исключения путей - точными компонентами, не substring ('copy' режет легитимные модули), (3) контуры = первая папка после scripts/, плоские scripts/*.py -> контур 'scripts', (4) _signature ломалась на posonly-defaults - считать offset от posonlyargs+args, (5) пересборка: python scripts/glossary/gen_api_index.py --root <дерево>.",
+          "reason_codes": [
+            "BOM_UTF8_SIG",
+            "EXACT_PATH_COMPONENTS",
+            "INFRA_GLOSSARY_AST",
+            "PORTABLE_DELTA_V11"
+          ],
+          "sources": [
+            {
+              "added_via": "memory_bridge.add",
+              "snapshot_id": null,
+              "task_id": null
+            }
+          ]
+        },
+        "646ca8420e0026a13e58ff22a632ce6486254b7cda2b1cfc4e899a1b537af6ce": {
+          "admissions": 1,
+          "evidence_refs": [
+            "runbook-junction",
+            "setup_env.ps1"
+          ],
+          "lesson_text": "Memory bridge: API paths must use ASCII junction E:\\opencode_harness on Windows, not cyrillic E:\\Documents\\Документы",
+          "reason_codes": [
+            "PORTABILITY",
+            "RUNTIME"
+          ],
+          "sources": [
+            {
+              "added_via": "memory_bridge.add",
+              "snapshot_id": "snap-2026-09-01",
+              "task_id": "post-audit-2026-09-01"
+            }
+          ]
+        },
+        "752c07e554cdc893e9ffd5de0a97fcca35901990c4d27132ea98600622ff232a": {
+          "admissions": 2,
+          "evidence_refs": [
+            "skill:memory_skill:lvl2"
+          ],
+          "lesson_text": "Skill 'memory_skill' reached level 2: уточнение параметров по истории использования",
+          "reason_codes": [
+            "LEVEL_2",
+            "SKILL_MEMORY_SKILL"
+          ],
+          "sources": [
+            {
+              "added_via": "meta_core.skill_upgrade",
+              "snapshot_id": null,
+              "task_id": "test"
+            }
+          ]
+        },
+        "a1fcc0f1ed8799c11286fe9095904c934f73dea1029704920ed926b2728f702e": {
+          "admissions": 2,
+          "evidence_refs": [
+            "skill:xrd_depth_calc:lvl2"
+          ],
+          "lesson_text": "Skill 'xrd_depth_calc' reached level 2: интегрировать 5 временных суб-скриптов",
+          "reason_codes": [
+            "LEVEL_2",
+            "SKILL_XRD_DEPTH_CALC"
+          ],
+          "sources": [
+            {
+              "added_via": "meta_core.skill_upgrade",
+              "snapshot_id": null,
+              "task_id": "research"
+            }
+          ]
+        },
+        "a3134ce09f0354b0702c63528964d016e5e04ba97d535fa5f5efbe4e302e20bb": {
+          "admissions": 1,
+          "evidence_refs": [
+            "C:/Temp/opencode/harness-deploy/remote_acceptance_runs/production_001/LOCAL_DEPLOYMENT_STATUS.md"
+          ],
+          "lesson_text": "При acceptance code-only deployment на Windows нужно явно переопределять OPENCODE_HARNESS_ROOT на deployment root и ставить GIT_CEILING_DIRECTORIES в parent deployment; иначе compiler/preflight может проверить основной репозиторий, а git — ошибочно обнаружить родительский temp repository.",
+          "reason_codes": [
+            "DEPLOYMENT_ROOT_LEAK",
+            "PARENT_GIT_DISCOVERY"
+          ],
+          "sources": [
+            {
+              "added_via": "memory_bridge.add",
+              "snapshot_id": null,
+              "task_id": "DEPLOY-FINAL-20260914"
+            }
+          ]
+        },
+        "ce5cf6cc6fc115a3fcd0e872e5768bf549b31e42e65c7badb655c3624e1a4c2b": {
+          "admissions": 1,
+          "evidence_refs": [
+            "NKR-CH1-001",
+            "bf87518",
+            "scripts/researcher/verify_claims.py",
+            "tests/test_verify_claims.py"
+          ],
+          "lesson_text": "Writer DOM verification must be append-only: automated verify_claims --apply may fill OPEN or missing fields, but must never downgrade curated verdicts or erase an existing numeric_comparison. Run draft_loop in dry-run before final --apply to catch unlinked factual sentences without polluting the claim registry.",
+          "reason_codes": [
+            "DRAFT_LOOP_DRY_RUN",
+            "WRITER_DOM_APPEND_ONLY"
+          ],
+          "sources": [
+            {
+              "added_via": "writing-orchestrator",
+              "snapshot_id": null,
+              "task_id": "NKR-CH1-001"
+            }
+          ]
+        },
+        "d25835eeb126fa2cd2205fdb6409fb191d6e38da1c1a3204d7b5017813fc999a": {
+          "admissions": 1,
+          "evidence_refs": [
+            "citations_map.json",
+            "scibot_requests_ch1.md",
+            "pmc8307547.html"
+          ],
+          "lesson_text": "Ресурсы поиска для цитат главы 1 НКР (материаловедение/азотирование), 2026-09-18: (1) Лахтин/Леонтьева 'Материаловедение' 1990 — djvu.online/file/OtddrQw4yX3Zf (доступна); (2) архив тех.книг sheba.spb.ru/za/teh-1950.htm (до 1950, исторические источники); (3) PMC8307547 — Wetzel/Friák/Šob/Leineweber 'Phase Stability of Fe4N at High Pressure' Materials 2021 DOI 10.3390/ma14143963 (открытый доступ; DNS блокируется локально — обход через dns.google DoH + прямой socket SNI, IP 34.107.134.59; копия pmc8307547.html); (4) каталог TU Chemnitz 'Nitriding' (katalog.bibliothek.tu-chemnitz.de) — вручную в браузере. Монографии/книги ищем ТОЛЬКО в сети (PDF/DJVU), sci-bot — только статьи.",
+          "resources": [
+            {
+              "name": "DJVU-онлайн: Лахтин Ю.М., Леонтьева В.П. Материаловедение (1990)",
+              "note": "HTTP 200, доступна. В корпусе есть др. работа Лахтина 'Теория и технология азотирования' 1991.",
+              "relevance": "Лахтин — базовый источник по азотированию (литобзор 1.3); Материаловедение 1990 — общее металловедение, легирующие элементы, фазы",
+              "type": "книга (DJVU)",
+              "url": "https://djvu.online/file/OtddrQw4yX3Zf",
+              "verified": true
+            },
+            {
+              "name": "sheba.spb.ru — архив технических книг до 1950 г.",
+              "note": "HTTP 200. Каталог: выделка, золочение, монеты и т.п. — тех. творчество до 1950. Для исторических ссылок.",
+              "relevance": "Исторические работы по металлургии/технологии до 1950 (Чернов Д.К., старые издания)",
+              "type": "архив книг (PDF/HTML)",
+              "url": "https://sheba.spb.ru/za/teh-1950.htm",
+              "verified": true
+            },
+            {
+              "name": "PMC8307547: Wetzel, Friák, Všianská, Šob, Leineweber — Phase Stability of Fe4N at High Pressure (Materials 2021, DOI 10.3390/ma14143963)",
+              "note": "DNS блокируется локально (getaddrinfo failed); получено через DoH (dns.google) + прямой socket с SNI. IP: 34.107.134.59. Локальная копия: C:\\Temp\\opencode\\pmc8307547.html",
+              "relevance": "КРИТИЧНО для главы 1: фазовые равновесия Fe-N, γ′-Fe4N, эвтектоид γ′→α+ε′, ε′⇌γ+γ′ между 550-500°C, квадрупольная точка 5 ГПа/375°C. Связано с c274/c280 (белый слой Fe4N, ε-/γ'-фазы). Авторы Friák/Šob — DFT-расчёты, цитируемые в литобзоре",
+              "type": "статья (открытый доступ)",
+              "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8307547/",
+              "verified": true
+            },
+            {
+              "name": "Каталог TU Chemnitz (библиотека) — поиск по 'Nitriding'",
+              "note": "HTTP 401/капча 'Verifying your access' при автоматическом доступе. Вручную в браузере — рабочий.",
+              "relevance": "Поиск статей/книг по азотированию (немецкие/международные источники)",
+              "type": "библиотечный каталог",
+              "url": "https://katalog.bibliothek.tu-chemnitz.de/Search/Results?lookfor=+Nitriding&type=AllFields&testvu_fw=1",
+              "verified": false
+            }
+          ]
+        },
+        "f7073fcafc44ab0dc8d45ff836803f5fe48f2db1b97fd19430d1f8f54bc727ba": {
+          "admissions": 2,
+          "evidence_refs": [
+            "e2"
+          ],
+          "lesson_text": "важный урок",
+          "reason_codes": [
+            "R2"
+          ],
+          "sources": [
+            {
+              "added_via": "memory_circulator.promote",
+              "snapshot_id": null,
+              "task_id": "t2"
+            }
+          ]
+        }
       }
-     ]
-    },
-    "28cf522a6a28e26b4476402f118d27f1a886dfd499c10f32f61d31987158a2e1": {
-     "admissions": 1,
-     "evidence_refs": [
-      "factory_smoke-2026-09-01"
-     ],
-     "lesson_text": "PowerShell 5.1 Set-Content -Encoding UTF8 writes UTF-8 BOM; factory_ctl and contract_validator reject BOM as invalid JSON. Write JSON via UTF8Encoding(false).",
-     "reason_codes": [
-      "CONTRACT",
-      "PORTABILITY"
-     ],
-     "sources": [
-      {
-       "added_via": "memory_bridge.add",
-       "snapshot_id": "snap-2026-09-01",
-       "task_id": "post-audit-2026-09-01"
-      }
-     ]
-    },
-    "5da5189a09ad603861aef4791bcbe16af6a8881b91e908b3b2f1d4097475b601": {
-     "admissions": 1,
-     "evidence_refs": [
-      "docs/glossary/PORTABLE_DELTA.md",
-      "docs/glossary/function_index.json",
-      "scripts/glossary/gen_api_index.py"
-     ],
-     "lesson_text": "Реестр функций harness генерируется детерминированно: gen_api_index.py (AST, без импорта) -> function_index.json; render_glossary.py -> GLOSSARY.md; compare_trees.py -> PORTABLE_DELTA. Полное дерево = workspace (197 mod/748 fn), portable v1 = 157/637; дельта 40 модулей + 90 функций = карта переноса v1.1 (TD-D1). Ключевые уроки: (1) читать .py как utf-8-sig (файлы с BOM иначе молча теряются), (2) исключения путей - точными компонентами, не substring ('copy' режет легитимные модули), (3) контуры = первая папка после scripts/, плоские scripts/*.py -> контур 'scripts', (4) _signature ломалась на posonly-defaults - считать offset от posonlyargs+args, (5) пересборка: python scripts/glossary/gen_api_index.py --root <дерево>.",
-     "reason_codes": [
-      "BOM_UTF8_SIG",
-      "EXACT_PATH_COMPONENTS",
-      "INFRA_GLOSSARY_AST",
-      "PORTABLE_DELTA_V11"
-     ],
-     "sources": [
-      {
-       "added_via": "memory_bridge.add",
-       "snapshot_id": null,
-       "task_id": null
-      }
-     ]
-    },
-    "646ca8420e0026a13e58ff22a632ce6486254b7cda2b1cfc4e899a1b537af6ce": {
-     "admissions": 1,
-     "evidence_refs": [
-      "runbook-junction",
-      "setup_env.ps1"
-     ],
-     "lesson_text": "Memory bridge: API paths must use ASCII junction E:\\opencode_harness on Windows, not cyrillic E:\\Documents\\Документы",
-     "reason_codes": [
-      "PORTABILITY",
-      "RUNTIME"
-     ],
-     "sources": [
-      {
-       "added_via": "memory_bridge.add",
-       "snapshot_id": "snap-2026-09-01",
-       "task_id": "post-audit-2026-09-01"
-      }
-     ]
-    },
-    "a3134ce09f0354b0702c63528964d016e5e04ba97d535fa5f5efbe4e302e20bb": {
-     "admissions": 1,
-     "evidence_refs": [
-      "C:/Temp/opencode/harness-deploy/remote_acceptance_runs/production_001/LOCAL_DEPLOYMENT_STATUS.md"
-     ],
-     "lesson_text": "При acceptance code-only deployment на Windows нужно явно переопределять OPENCODE_HARNESS_ROOT на deployment root и ставить GIT_CEILING_DIRECTORIES в parent deployment; иначе compiler/preflight может проверить основной репозиторий, а git — ошибочно обнаружить родительский temp repository.",
-     "reason_codes": [
-      "DEPLOYMENT_ROOT_LEAK",
-      "PARENT_GIT_DISCOVERY"
-     ],
-     "sources": [
-      {
-       "added_via": "memory_bridge.add",
-       "snapshot_id": null,
-       "task_id": "DEPLOY-FINAL-20260914"
-      }
-     ]
-    },
-    "ce5cf6cc6fc115a3fcd0e872e5768bf549b31e42e65c7badb655c3624e1a4c2b": {
-     "admissions": 1,
-     "evidence_refs": [
-      "NKR-CH1-001",
-      "bf87518",
-      "scripts/researcher/verify_claims.py",
-      "tests/test_verify_claims.py"
-     ],
-     "lesson_text": "Writer DOM verification must be append-only: automated verify_claims --apply may fill OPEN or missing fields, but must never downgrade curated verdicts or erase an existing numeric_comparison. Run draft_loop in dry-run before final --apply to catch unlinked factual sentences without polluting the claim registry.",
-     "reason_codes": [
-      "DRAFT_LOOP_DRY_RUN",
-      "WRITER_DOM_APPEND_ONLY"
-     ],
-     "sources": [
-      {
-       "added_via": "writing-orchestrator",
-       "snapshot_id": null,
-       "task_id": "NKR-CH1-001"
-      }
-     ]
-    },
-    "d25835eeb126fa2cd2205fdb6409fb191d6e38da1c1a3204d7b5017813fc999a": {
-     "admissions": 1,
-     "evidence_refs": [
-      "citations_map.json",
-      "scibot_requests_ch1.md",
-      "pmc8307547.html"
-     ],
-     "lesson_text": "Ресурсы поиска для цитат главы 1 НКР (материаловедение/азотирование), 2026-09-18: (1) Лахтин/Леонтьева 'Материаловедение' 1990 — djvu.online/file/OtddrQw4yX3Zf (доступна); (2) архив тех.книг sheba.spb.ru/za/teh-1950.htm (до 1950, исторические источники); (3) PMC8307547 — Wetzel/Friák/Šob/Leineweber 'Phase Stability of Fe4N at High Pressure' Materials 2021 DOI 10.3390/ma14143963 (открытый доступ; DNS блокируется локально — обход через dns.google DoH + прямой socket SNI, IP 34.107.134.59; копия pmc8307547.html); (4) каталог TU Chemnitz 'Nitriding' (katalog.bibliothek.tu-chemnitz.de) — вручную в браузере. Монографии/книги ищем ТОЛЬКО в сети (PDF/DJVU), sci-bot — только статьи.",
-     "resources": [
-      {
-       "name": "DJVU-онлайн: Лахтин Ю.М., Леонтьева В.П. Материаловедение (1990)",
-       "url": "https://djvu.online/file/OtddrQw4yX3Zf",
-       "type": "книга (DJVU)",
-       "relevance": "Лахтин — базовый источник по азотированию (литобзор 1.3); Материаловедение 1990 — общее металловедение, легирующие элементы, фазы",
-       "verified": true,
-       "note": "HTTP 200, доступна. В корпусе есть др. работа Лахтина 'Теория и технология азотирования' 1991."
-      },
-      {
-       "name": "sheba.spb.ru — архив технических книг до 1950 г.",
-       "url": "https://sheba.spb.ru/za/teh-1950.htm",
-       "type": "архив книг (PDF/HTML)",
-       "relevance": "Исторические работы по металлургии/технологии до 1950 (Чернов Д.К., старые издания)",
-       "verified": true,
-       "note": "HTTP 200. Каталог: выделка, золочение, монеты и т.п. — тех. творчество до 1950. Для исторических ссылок."
-      },
-      {
-       "name": "PMC8307547: Wetzel, Friák, Všianská, Šob, Leineweber — Phase Stability of Fe4N at High Pressure (Materials 2021, DOI 10.3390/ma14143963)",
-       "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8307547/",
-       "type": "статья (открытый доступ)",
-       "relevance": "КРИТИЧНО для главы 1: фазовые равновесия Fe-N, γ′-Fe4N, эвтектоид γ′→α+ε′, ε′⇌γ+γ′ между 550-500°C, квадрупольная точка 5 ГПа/375°C. Связано с c274/c280 (белый слой Fe4N, ε-/γ'-фазы). Авторы Friák/Šob — DFT-расчёты, цитируемые в литобзоре",
-       "verified": true,
-       "note": "DNS блокируется локально (getaddrinfo failed); получено через DoH (dns.google) + прямой socket с SNI. IP: 34.107.134.59. Локальная копия: C:\\Temp\\opencode\\pmc8307547.html"
-      },
-      {
-       "name": "Каталог TU Chemnitz (библиотека) — поиск по 'Nitriding'",
-       "url": "https://katalog.bibliothek.tu-chemnitz.de/Search/Results?lookfor=+Nitriding&type=AllFields&testvu_fw=1",
-       "type": "библиотечный каталог",
-       "relevance": "Поиск статей/книг по азотированию (немецкие/международные источники)",
-       "verified": false,
-       "note": "HTTP 401/капча 'Verifying your access' при автоматическом доступе. Вручную в браузере — рабочий."
-      }
-     ]
-    },
-    "039f6cc39692ead0277ae3acbac933fca578e2a31c2b153f3769d083a1f64223": {
-     "admissions": 1,
-     "evidence_refs": [
-      "SEARCH_PROTOCOL.md",
-      "ch1_dom.json",
-      "decomposition_methodology.json"
-     ],
-     "lesson_text": "РАБОЧАЯ ДИРЕКТОРИЯ ИССЛЕДОВАНИЯ: F:\\1\\_STRUCTURED (2026-09-19, подтверждено пользователем). Это ГЛАВНАЯ рабочая папка НКР Черенкова (сплавы Fe-N, азотирование, XRD). Ключевые подпапки: 00_RAW_DATA\\XRD_raw\\fils (исходные XRDML), 02_INTERMEDIATE (обработанные), 03_RESULTS (epsilon_beta_with_tan_UPDATED.csv, wh_results.csv, depth_calc.py), 05_MODELS (phase_composition.csv, alloy_composition.csv), 06_SCRIPTS (depth_calc.py, график*.py), 07_AUTOREF (авторефераты v6/v20, material_cards), 08_THERMODYNAMICS (TDB, alpha_xrd_570C.json), 09_LITERATURE (статьи автора), 10_ARCHIVE. research_verification\\ — артефакты оркестратора (DOM, вердикты, диаграммы, TD-артефакты). Связанные внешние: F:\\AnalisysDataSet (корпус PDF + 02-Methods заметки + ChromaDB .chroma_papers), F:\\1\\_STRUCTURED\\07_AUTOREF. Git-репозиторий: F:\\1\\_STRUCTURED. Флешка для литературных данных: D:\\1_Литература_данные (XCOM_tables, Фазовые_составы, ГОСТы_ТУ).",
-     "resources": [
-      {
-       "name": "Рабочая директория исследования",
-       "path": "F:\\1\\_STRUCTURED"
-      },
-      {
-       "name": "Корпус статей",
-       "path": "F:\\AnalisysDataSet"
-      },
-      {
-       "name": "USB литература",
-       "path": "D:\\1_Литература_данные"
-      }
-     ]
-    },
-    "23c88b290012eb8cba8ba51636611e4f37a6617ebecca142811586289a0fb04d": {
-     "admissions": 1,
-     "evidence_refs": [],
-     "lesson_text": "ИТОГОВАЯ КОНФИГУРАЦИЯ 2026-09-19: рабочая директория исследования = F:\\1\\_STRUCTURED; литературные данные = F:\\1\\_STRUCTURED\\09_LITERATURE\\1_Литература_данные (папка ПЕРЕНЕСЕНА туда из D:). Подпапки: XCOM_tables, Фазовые_составы, ГОСТы_ТУ. Артефакты оркестратора: F:\\1\\_STRUCTURED\\research_verification. Корпус: F:\\AnalisysDataSet.",
-     "resources": [
-      {
-       "name": "Литературные данные (финал)",
-       "path": "F:\\1\\_STRUCTURED\\09_LITERATURE\\1_Литература_данные"
-      }
-     ]
     }
-   }
-  }
- },
- "version": 1
+  },
+  "version": 1
 }
