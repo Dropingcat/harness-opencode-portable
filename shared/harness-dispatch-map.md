@@ -43,6 +43,7 @@
 | `gost_collector.py` | сбор ГОСТов/ТУ по маппингу марок (TD-122..125) | `gost_collector.py registry` / `collect --mark ВКС-10` / `backfill` / `provenance --gost 5632-2014` |
 | `downloader.py url` | универсальный загрузчик: PDF с проверкой типа, retry, провенанс | `downloader.py url --url ... --out ... --name f.pdf --expect pdf` |
 | `downloader.py resolve` | каскадный DOI→PDF: локальный корпус→CrossRef/OpenAlex→openAccessPdf→Sci-Hub→wayback (TD-152) | `downloader.py resolve --doi "10.1007/..." --out ...` |
+| `book_finder.py` | поиск книги по ISBN: resolve-isbn (Google Books+OpenLibrary кросспроверка), search-mirrors (dokumen/vdoc/libgen), verdict (TD-165) | `book_finder.py verdict --isbn 978-5-7038-3933-1 [--title "..."] [--out prov.json]` |
 
 ## Шаг 2: Поиск источников — порядок (жёсткий)
 

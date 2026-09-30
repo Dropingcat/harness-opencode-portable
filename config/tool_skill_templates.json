@@ -341,6 +341,31 @@
       "example": {
         "check": true
       }
+    },
+    "book_finder": {
+      "kind": "script",
+      "command": "python scripts/tools/book_finder.py verdict --isbn <ISBN> [--title <заголовок>] [--out prov.json]",
+      "required_input": {
+        "isbn": "string"
+      },
+      "optional_input": {
+        "title": "string",
+        "out": "path"
+      },
+      "forbidden_input": [
+        "полные тексты книг (только поиск/идентификация)"
+      ],
+      "start_with": [
+        "resolve-isbn (Google Books+OpenLibrary кросспроверка) — user-input ISBN может быть подменой"
+      ],
+      "finish_with": [
+        "verdict: found | toc_only | not_found",
+        "при matched=False — ISBN подозрителен, сверь title"
+      ],
+      "guard_required": false,
+      "example": {
+        "isbn": "978-5-7038-3933-1"
+      }
     }
   }
 }

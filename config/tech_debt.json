@@ -3,8 +3,8 @@
   "updated": "2026-09-30",
   "authority_note": "Canonical registry migrated from патчи/миграция в плагин/tech_debt_current.json (65 records). project_context.py counts status=open. CLOSED_REPORTED maps to closed; RECONCILE_REQUIRED stays open until exact-tree verification.",
   "counts": {
-    "total": 214,
-    "open": 157,
+    "total": 215,
+    "open": 158,
     "closed": 57
   },
   "debts": [
@@ -3159,6 +3159,22 @@
       "area": "",
       "source_status": "open",
       "notes": "Концепция из обсуждения (Harness как система управления эволюцией результата). Главная единица — НЕ task→answer, а цикл с собственным baseline. Ключевые правила: (1) каждый цикл имеет baseline C0→C1→C2; (2) ошибки НЕ сразу ветки — сначала накапливаются в CycleErrorSet, кластеризуются в RootCause (5 сообщений валидатора могут быть одной причиной), потом fix/RC01; (3) merge не успешен по факту объединения — только после CLEAN REPLAY (полный повтор цикла на merged-состоянии, проверка regression suite — ошибки прошлых циклов становятся регрессионными инвариантами); (4) rollback при regression failure; (5) три типа ветвей: feature/fix/debug-replay. Геймификация: внешний аудит накапливает damage; при критическом уроне — 'засыпание' (рефлексия от начала до критического момента, учёт техдолгов, поиск путей реализации), разбор техдолгов на ветки, слияние без новых ошибок, 'просыпание' и вливание в основную ветку. Приблизить к реальной Git-разработке в науке/технике: разделение архитектуры, валидация при merge, выявление ошибок через GitHub-подобные механики.",
+      "progress": "2026-09-30: создано через tech_debt_cli.py"
+    },
+    {
+      "id": "TD-165",
+      "owner": "research-orchestrator",
+      "presentation_category": "ACTIVE",
+      "sunset_at": "2027-09-30",
+      "title": "Внешний поиск книг (ISBN/зеркала/libgen/jina/Google Books) ведётся ad-hoc скриптами агента (gb_check.py, curl к libgen.is/libgen.rs, jina proxy r.jina.ai), не канонизирован: нужен book_finder.py (ISBN-резолв через Google Books/Open Library, поиск fulltext на dokumen/vdoc/libgen-зеркала с retry/backoff/DNS-bypass, проверка ISBN на подмену)",
+      "status_detail": "OPEN_CURRENT",
+      "kind": "tooling",
+      "status": "open",
+      "severity": "medium",
+      "acceptance": "scripts/tools/book_finder.py: resolve-isbn (Google Books + Open Library, кросспроверка), search-mirrors (dokumen/vdoc/libgen.*, retry+backoff+DNS), провенанс-файл, verdict (found/pdf_url | toc_only | not_found); покрыт тестом на ISBN 978-5-7038-3933-1 и 978-5-392-19319-6 (разные книги); добавлен в dispatch-map/шаблоны роутера",
+      "area": "",
+      "source_status": "open",
+      "notes": "Из сессии: агент искал книгу Герасимов/Куксенова/Лаптева (ISBN 978-5-7038-3933-1, 2014 2-е изд. 518 стр.), но пользователь дал ISBN 978-5-392-19319-6 — это ДРУГАЯ книга (Материаловедение. Цветные металлы, dokumen.pub). Агент написал ad-hoc: gb_check.py (Google Books API с retry 5x), curl к libgen.is/.rs/.st/.gs/.li/.lc (все timed out), jina reader (451), dokumen.pub (SSL handshake fail). Нужен канонический инструмент: (1) resolve ISBN через Google Books/Open Library (идентификация, не доверять user-input), (2) поиск fulltext по зеркалам (dokumen/vdoc/libgen) с retry/backoff и DNS-bypass (TD-153), (3) честный verdict 'нет открытого fulltext' + TOC/справка, (4) провенанс (URL/дата/источник). Связано: TD-151 (резолвер), TD-152 (каскад), TD-153 (DNS).",
       "progress": "2026-09-30: создано через tech_debt_cli.py"
     },
     {
