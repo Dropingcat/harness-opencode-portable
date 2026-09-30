@@ -668,6 +668,63 @@ _RUN_DIR: Path
 _BUDGET_SPENT_RUB = 0.0
 
 
+# === BRICK 11-13: Meta-Cycle интеграция (V-1 Health / Legacy / Debt) ===
+_meta_integration = None
+
+def _get_meta():
+    global _meta_integration
+    if _meta_integration is None:
+        sys.path.insert(0, str(Path(__file__).parent.parent / 'meta'))
+        try:
+            from orchestrator_integration import OrchestratorIntegration
+            _meta_integration = OrchestratorIntegration('research')
+        except Exception as e:
+            _log(f'  [meta] integration недоступна: {e}')
+            _meta_integration = False
+    return _meta_integration if _meta_integration is not False else None
+
+def brick_meta_health(workspace: Path, task: str = '') -> str:
+    _log('BRICK 11: META-HEALTH — V-1 проверка перед генерацией')
+    meta = _get_meta()
+    if meta is None:
+        return 'OK'
+    ok, hint = meta.pre_task(task or str(_INPUT))
+    if hint:
+        _log(f'  [legacy-hint] {hint}')
+    if meta.veto():
+        _err('VETO: система в критическом состоянии, генерация заблокирована')
+        return 'VETO'
+    return 'OK'
+
+def brick_meta_debt(workspace: Path, status: str = 'OK') -> None:
+    _log(f'BRICK 12: META-DEBT — запись результата ({status})')
+    meta = _get_meta()
+    if meta is None:
+        return
+    try:
+        metrics = {}
+        if (workspace / 'verdicts_final.json').exists():
+            import json
+            vf = json.loads((workspace / 'verdicts_final.json').read_text(encoding='utf-8'))
+            n = len(vf.get('verdicts', []))
+            ambiguous = sum(1 for v in vf.get('verdicts', []) if v.get('verdict') == 'AMBIGUOUS')
+            metrics['error_score'] = ambiguous / max(n, 1)
+        signals = []
+        if status == 'VETO':
+            signals = [{'severity': 'CRITICAL', 'channel': 'meta', 'message': 'veto'}]
+        res = meta.post_task(str(_INPUT), 'research-run', metrics=metrics, signals=signals)
+        if res == 'DEATH':
+            _log('  [meta] СМЕРТЬ цикла → рефлексия + legacy')
+    except Exception as e:
+        _log(f'  [meta-debt] err: {e}')
+
+def brick_meta_legacy(workspace: Path, reason: str = '') -> None:
+    _log('BRICK 13: META-LEGACY — архивация провала')
+    meta = _get_meta()
+    if meta is None or not reason:
+        return
+    meta.on_failure(reason, task=str(_INPUT), tags=['research'])
+
 def main() -> int:
     global _INPUT, _WORKSPACE, _RULES, _DRY_RUN, _MODEL, _MAX_COST_RUB, _MAX_ITER, _TS, _RUN_DIR, _BUDGET_SPENT_RUB
 
@@ -724,6 +781,11 @@ def main() -> int:
         exit_code = 1
     _log(f"=== клаймов: {n_claims} ===")
 
+    meta_status = brick_meta_health(_WORKSPACE)
+    if meta_status == 'VETO':
+        _err('META VETO: остановка цикла')
+        return 3
+
     stop_reason = ""
     iteration = 0
     while iteration < _MAX_ITER and not stop_reason:
@@ -755,6 +817,7 @@ def main() -> int:
     if not stop_reason:
         brick_tribunal(_WORKSPACE, _MODEL)
     brick_synthesize(_WORKSPACE, _MODEL)
+    brick_meta_debt(_WORKSPACE, meta_status)
     brick_audit(_WORKSPACE)
 
     _log("=== RUN_RESEARCH END ===")
