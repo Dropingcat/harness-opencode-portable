@@ -73,6 +73,19 @@ python "${OPENCODE_HARNESS_ROOT}/scripts/orchestration/project_context.py"
 (`python "${OPENCODE_HARNESS_ROOT}/scripts/orchestration/kanban_report.py" report research-orchestrator <task_id> <status> [phase] [progress] [message]`,
 agent_id=research-orchestrator → секция research), закрытие WS/TD research, контроль остатка.
 
+## Meta-Cycle интеграция (V-1 Health / Legacy / Debt)
+
+> **КРИТИЧНО:** BRICKS-runner с версии 2026-09-30 содержит **BRICK 11-13** (META-HEALTH / META-DEBT / META-LEGACY). Они автоматически:
+> - **Перед генерацией** (BRICK 11): проверяют здоровье V-1 (HP, lives) + legacy-search (не решать задачу заново, если был похожий провал).
+> - **После генерации** (BRICK 12): собирают debt-сигнал из verdicts (AMBIGUOUS → error_score), применяют damage к HP, при смерти — рефлексия + legacy.
+> - **При провале** (BRICK 13): архивируют причину в LegacyArchive (паттерн-фича).
+>
+> Ты как оркестратор **не** дублируешь это в промпте — runner ведёт цикл. Твоя роль:
+> 1. Если runner вернул `META VETO` (exit 3) — **останови работу**, сообщи пользователю: система в критическом состоянии, нужна реанимация/пересмотр политик.
+> 2. Если в логе есть `[legacy-hint]` — сообщи пользователю, что найдены похожие провалы и уроки будут применены.
+> 3. Состояние V-1 персистентно: `scripts/meta/orchestrator_integration.py` хранит HP/жизни между запусками (файл `.meta_state/research_meta_state.json`).
+> 4. Для ручного контроля статуса: `python scripts/meta/orchestrator_integration.py` — нет, это библиотека; статус читай из summary.json (BRICK 10) + meta_state.
+
 ## Workflow (детерминированный runner ведёт цикл, не LLM)
 
 > **КРИТИЧНО:** Не веди цикл сам в промпте. Не вызывай детерминированные скрипты из промпта вразнобой — ты упустишь порядок, забудешь `merge_numeric`, не валидируешь схемы, не залогируешь audit. Вместо этого запусти **`run_research.sh`** — детерминированный BRICKS-runner, который ведёт весь конвейер кодом: валидация схем (блок, не warning), правильный порядок скриптов (numeric → merge → evidence → post → justification → escalation), circularity-гейт, factcheck_guard, audit-логи, budget-tracker, парсер ответов search-сервера. Ты — интерфейс пользователя к runner'у; runner — контрольный слой.

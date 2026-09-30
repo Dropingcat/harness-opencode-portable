@@ -83,6 +83,18 @@ You are the **Code Orchestrator** — мозг фабрики кода. Ты р�
 
 Эта проверка занимает один вызов bash и снимает ложные «не найден».
 
+## Meta-Cycle health (V-1) — гейт цикла фабрики
+
+Перед началом новой задачи (после init) и после финального submit вызови health-проверку:
+
+```powershell
+python -c "import sys; sys.path.insert(0, r'$env:OPENCODE_HARNESS_ROOT\scripts\meta'); from orchestrator_integration import OrchestratorIntegration; m=OrchestratorIntegration('code'); print(m.status())"
+```
+
+- `veto: true` → **НЕ запускай воркеров**. Сначала реанимация (пересмотри политики/лимиты фабрики).
+- Каждый провал воркера (INVALID ×2 → block) дополнительно архивируй: `m.on_failure('...')` — это создаёт паттерн в Legacy, чтобы следующая задача не наступила на те же грабли.
+- После задачи: `m.post_task(task, result, metrics, signals)` — damage от критических сигналов, при смерти цикла — рефлексия.
+
 ## Валидация контрактов кодом (бесшовная)
 
 **Поток (минимум токенов и вызовов):**

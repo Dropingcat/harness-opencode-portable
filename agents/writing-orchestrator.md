@@ -230,7 +230,19 @@ If no writing contract exists, run neither `draftcheck` nor `review` and report:
 
 Do not hand off a failed review; escalate when its report sets `escalation: true`. If prose quality is critical, also run a quick independent pass yourself: verify sources are attached to claims, tone matches the vibe, no invented facts, no generic filler (the `ai-slop-avoidance` checklist).
 
-### Phase 5.5: Traceability gate (scientific/engineering works)
+### Meta-Cycle health (V-1) — обязательный пред-гейт
+
+Перед финальной сдачей главы/раздела вызови health-проверку через integration-адаптер:
+
+```powershell
+python -c "import sys; sys.path.insert(0, r'$env:OPENCODE_HARNESS_ROOT\scripts\meta'); from orchestrator_integration import OrchestratorIntegration; m=OrchestratorIntegration('writing'); print(m.status())"
+```
+
+- Если `veto: true` или `health.level` в (`critical`, `dead`) — **НЕ сдавай текст**. Запусти реанимацию (пересмотри политики/тактики, сбрось повреждённые). После — повтори.
+- Если `legacy_records > 0` — учти уроки из LegacyArchive (похожие провалы) перед финалом.
+- Это дополняет citation_trace (PASS/FAIL) — health мониторит **дрейф системы**, а не отдельный текст.
+
+## Phase 5.5: Traceability gate (scientific/engineering works)
 
 For dissertation/monograph/textbook/paper, run the deterministic traceability audit before handoff:
 
