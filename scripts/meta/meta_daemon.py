@@ -57,9 +57,9 @@ class MetaDaemon:
         self.ctrl = SleepController(self.meta, self.auditor)
         # папка с артефактами для проверки (или пусто = проверять состояние)
         self.artifacts_dir = Path(artifacts_dir) if artifacts_dir else None
-        # контракт сна (агент увидит его при входе в сон)
+        # контракт сна (агент увидит его при входе в сон) — в state_dir
         self.contract_file = Path(contract_file) if contract_file else Path(
-            _META.parent.parent / '.meta_state' / f'{orchestrator}_sleep_contract.json')
+            self.meta.state_dir / f'{orchestrator}_sleep_contract.json')
         self.contract_file.parent.mkdir(parents=True, exist_ok=True)
         self.loop_count = 0
         self.sleep_count = 0
