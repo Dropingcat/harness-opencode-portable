@@ -51,3 +51,6 @@ scripts/research/.opencode/
 
 # GitHub workflow (требует workflow scope, не используется)
 .github/
+
+# артефакт тестов trace_store
+scripts/meta/_trace_store.json
