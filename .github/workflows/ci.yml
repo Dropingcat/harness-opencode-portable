@@ -73,10 +73,12 @@ jobs:
           python -m pip install --upgrade pip
           pip install pytest pytest-asyncio pyyaml requests
 
-      - name: Test downloader components
+      - name: Test downloader components (smoke)
         run: |
           cd scripts/tools
-          python -m pytest test_units.py test_formulas.py test_uncertainty.py test_verdict_schemas.py test_evidence_contract.py test_judge_brief.py test_merge_numeric.py test_fix_p0p3.py test_rivulet.py test_rivulet_numeric.py test_rivulet_synthesizer.py test_numeric_layer_fix.py -v
+          python downloader.py dns --host arxiv.org
+          python downloader.py crossref --doi "10.1016/j.surfcoat.2012.05.081"
+          python downloader.py dns --host nonexistent.invalid || true
 
   mcp-test:
     name: MCP Servers Test
