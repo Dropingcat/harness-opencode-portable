@@ -59,6 +59,45 @@ def test_status():
         assert 'orchestrator' in s and 'health' in s and 'veto' in s
 
 
+def test_damage_log():
+    with tempfile.TemporaryDirectory() as td:
+        meta = OrchestratorIntegration('test', state_dir=td)
+        meta.pre_task('x')
+        meta.post_task('x', 'текст',
+                       signals=[{'severity': 'CRITICAL', 'validator': 'physics',
+                                 'rule_id': 'RULE_EPI_02', 'message': 'overclaim'}])
+        assert len(meta.damage_log) >= 1
+        entry = meta.damage_log[0]
+        assert entry['source'] == 'physics'
+        assert entry['rule_id'] == 'RULE_EPI_02'
+        assert entry['damage'] < 0
+
+
+def test_dashboard():
+    with tempfile.TemporaryDirectory() as td:
+        meta = OrchestratorIntegration('test', state_dir=td)
+        meta.pre_task('x')
+        meta.post_task('x', 'текст', metrics={'error_score': 0.5})
+        d = meta.dashboard()
+        assert 'hp' in d and 'recent_damage' in d and 'total_damage_taken' in d
+        txt = meta.dashboard_text()
+        assert '[DASHBOARD' in txt
+        assert 'HP=' in txt
+
+
+def test_sleep_cycle():
+    with tempfile.TemporaryDirectory() as td:
+        meta = OrchestratorIntegration('test', state_dir=td)
+        sleep_id = meta.sleep_begin('задача с техдолгами', branches=['fix-a', 'fix-b'])
+        assert meta.sleep_state['merged'] is False
+        meta.sleep_branch_add('fix-c')
+        assert len(meta.sleep_state['branches']) == 3
+        hp_before = meta.health.health_points
+        meta.sleep_merge(success=True, result_summary='все ветки слиты')
+        assert meta.sleep_state['merged'] is True
+        assert meta.health.health_points >= hp_before  # HP восстановлен
+
+
 if __name__ == '__main__':
     tests = [v for k, v in sorted(globals().items()) if k.startswith('test_')]
     failed = 0

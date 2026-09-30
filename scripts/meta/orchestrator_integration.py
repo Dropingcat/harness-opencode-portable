@@ -57,6 +57,8 @@ class OrchestratorIntegration:
         self.cycle = 0
         self.deaths = 0
         self.recoveries = 0
+        self.damage_log: List[Dict[str, Any]] = []   # урон + причина (от валидатора)
+        self.sleep_state: Dict[str, Any] = {}        # состояние сна (ветки, статус)
         self._load_state()
         # внедряемые колбэки (для кастомизации)
         self.generate_test_fn = None   # (text) -> StyleMetrics
@@ -89,15 +91,36 @@ class OrchestratorIntegration:
         # метрики стиля
         sm = self._build_style_metrics(result, metrics)
         report = HealthReport(self.health, signals, sm)
-        # damage: критичность сигналов
+        # damage: критичность сигналов (с записью причины — от внешнего валидатора)
         damage = 0.0
         for s in signals:
-            if s.get('severity') == 'CRITICAL':
+            sev = s.get('severity', 'OK')
+            if sev == 'CRITICAL':
                 damage -= 25.0
-            elif s.get('severity') == 'WARNING':
+            elif sev == 'WARNING':
                 damage -= 5.0
+            if sev in ('CRITICAL', 'WARNING'):
+                # причина урона: validator/rule_id/сообщение
+                self.damage_log.append({
+                    'cycle': self.cycle,
+                    'damage': -25.0 if sev == 'CRITICAL' else -5.0,
+                    'source': s.get('validator') or s.get('channel') or 'orchestrator',
+                    'rule_id': s.get('rule_id'),
+                    'message': s.get('message', '')[:100],
+                    'ts': datetime.now().isoformat(),
+                })
         if metrics and metrics.get('error_score') is not None:
-            damage -= metrics['error_score'] * 20.0
+            err_score = metrics['error_score']
+            damage -= err_score * 20.0
+            if err_score > 0.3:
+                self.damage_log.append({
+                    'cycle': self.cycle,
+                    'damage': -round(err_score * 20.0, 1),
+                    'source': 'metrics',
+                    'rule_id': 'ERROR_SCORE',
+                    'message': f'error_score={err_score:.2f}',
+                    'ts': datetime.now().isoformat(),
+                })
         self.health.apply_impact(damage)
         self.trace.append(TraceEntry('V-1', 'post_task',
                                      {'hp': self.health.health_points,
@@ -166,6 +189,8 @@ class OrchestratorIntegration:
             'cycle': self.cycle,
             'deaths': self.deaths,
             'recoveries': self.recoveries,
+            'damage_log': self.damage_log[-50:],
+            'sleep_state': self.sleep_state,
             'saved_at': datetime.now().isoformat(),
         }
         self.state_file.write_text(json.dumps(data, ensure_ascii=False, indent=2),
@@ -178,6 +203,8 @@ class OrchestratorIntegration:
                 self.cycle = data.get('cycle', 0)
                 self.deaths = data.get('deaths', 0)
                 self.recoveries = data.get('recoveries', 0)
+                self.damage_log = data.get('damage_log', [])
+                self.sleep_state = data.get('sleep_state', {})
                 h = data.get('health', {})
                 self.health = SystemHealth(
                     health_points=h.get('health_points', 100.0),
@@ -195,3 +222,77 @@ class OrchestratorIntegration:
             'legacy_records': len(self.legacy.records),
             'veto': self.veto(),
         }
+
+    # ---------------------------------------------------------- дашборд
+    def dashboard(self) -> Dict[str, Any]:
+        """Дашборд состояния для промптов: HP, урон, причины, сон."""
+        recent_damage = self.damage_log[-8:]
+        return {
+            'orchestrator': self.orchestrator,
+            'cycle': self.cycle,
+            'hp': self.health.health_points,
+            'level': self.health.level,
+            'lives': self.health.lives_remaining,
+            'deaths': self.deaths,
+            'recoveries': self.recoveries,
+            'veto': self.veto(),
+            'recent_damage': recent_damage,
+            'total_damage_taken': round(sum(d['damage'] for d in self.damage_log), 1),
+            'sleep': self.sleep_state,
+        }
+
+    def dashboard_text(self) -> str:
+        """Текстовая проекция дашборда для промпта (LLM видит это)."""
+        d = self.dashboard()
+        lines = [
+            f"[DASHBOARD {d['orchestrator']}]",
+            f"  HP={d['hp']:.0f} | level={d['level']} | lives={d['lives']} | cycle={d['cycle']}",
+            f"  deaths={d['deaths']} recoveries={d['recoveries']} veto={d['veto']}",
+            f"  total_damage={d['total_damage_taken']}",
+        ]
+        if d['recent_damage']:
+            lines.append("  recent_damage:")
+            for dm in d['recent_damage']:
+                lines.append(f"    -{abs(dm['damage'])} HP: [{dm['source']}] {dm.get('rule_id','')} {dm['message']}")
+        if d['sleep']:
+            lines.append(f"  SLEEP: {d['sleep']}")
+        return "\n".join(lines)
+
+    # ---------------------------------------------------------- цикл сна (гит-сон)
+    def sleep_begin(self, task: str, branches: Optional[List[str]] = None) -> str:
+        """Оркестратор уходит в сон: фиксируем ветки решения техдолгов.
+        Возвращает sleep_id."""
+        import uuid as _uuid
+        sleep_id = str(_uuid.uuid4())[:8]
+        self.sleep_state = {
+            'sleep_id': sleep_id,
+            'task': task[:80],
+            'branches': branches or [],
+            'merged': False,
+            'started_at': datetime.now().isoformat(),
+            'hp_at_sleep': self.health.health_points,
+        }
+        self.trace.append(TraceEntry('V2', 'sleep_begin', {'sleep_id': sleep_id}))
+        self._save_state()
+        return sleep_id
+
+    def sleep_branch_add(self, branch: str) -> None:
+        """Добавить ветку решения техдолга в текущий сон."""
+        if self.sleep_state:
+            self.sleep_state['branches'].append(branch)
+
+    def sleep_merge(self, success: bool = True, result_summary: str = "") -> None:
+        """Слияние всех веток сна в одну; при успехе — выход из сна."""
+        if not self.sleep_state:
+            return
+        self.sleep_state['merged'] = success
+        self.sleep_state['result'] = result_summary[:100]
+        self.sleep_state['ended_at'] = datetime.now().isoformat()
+        self.trace.append(TraceEntry('V2', 'sleep_merge', {
+            'sleep_id': self.sleep_state.get('sleep_id'),
+            'success': success,
+        }))
+        # после сна — восстановление HP (если слияние без багов)
+        if success:
+            self.health.apply_impact(+10.0)
+        self._save_state()
