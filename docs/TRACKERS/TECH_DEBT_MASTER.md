@@ -1,7 +1,7 @@
 # Tech Debt Master — единый реестр проекта
 
 Дата: 2026-09-30
-Всего: 214 | open: 158 | closed: 56
+Всего: 214 | open: 157 | closed: 57
 
 Префиксы: CD-* Coder, WR-* Writer, RS-* Researcher, PL-* plugin, TD-* общий.
 
@@ -119,7 +119,6 @@
 | TD-109 | critical | code-orchestrator | Нет исполнения бандла: harness_run возвращает route/bundle/skills/tool | - |
 | TD-111 | medium | code-orchestrator | semantic_execute отключён по умолчанию (HARNESS_SEMANTIC_ENABLED!=1),  | - |
 | TD-112 | high | code-orchestrator | Маппинг путей (path_resolution_map.json / runtime_integration_policy.j | - |
-| TD-116 | high | research-orchestrator | BRICKS-скрипты перенесены с сервера в рабочий harness, но требуют закр | - |
 | TD-120 | medium | research-orchestrator | run_research.py: фактор времени агентов не учтён в budget — PER_CALL_E | - |
 | TD-126 | high | research-orchestrator | Цикл перфекционизма агента: «я ещё недостаточно хорошо реализовал код/ | - |
 | TD-129 | critical | research-orchestrator | КЛАСТЕР CL-16: Предварительная лазерная обработка → градиентные поля д | - |
@@ -205,6 +204,7 @@
 | TD-113 | Архитектурная ревизия BRICKS-кода (перенесён с сервера): мёртвая конфи | - |
 | TD-114 | Хардкод API-провайдера в synthesizer.py (base_url=https://api.aitunnel | - |
 | TD-115 | topics_tree.py: покрытие claim_id расходятся — test_c5: совпало 14/20  | - |
+| TD-116 | BRICKS-скрипты перенесены с сервера в рабочий harness, но требуют закр | - |
 | TD-117 | opencode run --agent НЕ вызывает субагентов: 'agent X is a subagent, n | - |
 | TD-118 | Таймауты агентов BRICKS-runner: source-fetcher упал по timeout 600с пр | - |
 | TD-119 | Primary-обёртки субагентов (10 <name>-runner) созданы ТОЛЬКО в глобаль | - |

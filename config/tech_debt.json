@@ -4,8 +4,8 @@
   "authority_note": "Canonical registry migrated from патчи/миграция в плагин/tech_debt_current.json (65 records). project_context.py counts status=open. CLOSED_REPORTED maps to closed; RECONCILE_REQUIRED stays open until exact-tree verification.",
   "counts": {
     "total": 214,
-    "open": 158,
-    "closed": 56
+    "open": 157,
+    "closed": 57
   },
   "debts": [
     {
@@ -2371,18 +2371,18 @@
     {
       "id": "TD-116",
       "owner": "research-orchestrator",
-      "presentation_category": "ACTIVE",
+      "presentation_category": "RESOLVED",
       "sunset_at": "2026-11-15",
       "title": "BRICKS-скрипты перенесены с сервера в рабочий harness, но требуют закрепления: RUNNER — Python-эквивалент run_research.sh (Windows), т.к. bash-runner Linux-only; проверка скриптов закрепилась (154 теста), нужен CI-прогон",
-      "status_detail": "OPEN_CURRENT",
+      "status_detail": "CLOSED",
       "kind": "portability",
-      "status": "open",
+      "status": "closed",
       "severity": "high",
       "acceptance": "Существует run_research.py (Python, кросс-платформенный), вызывающий те же BRICKS-скрипты с env-путями; прогон полного тест-набора (154+) работает из любого cwd; пути не хардкодят /home/orangepi/*",
       "area": "scripts/research/*.py (перенесены), run_research.sh → run_research.py, scripts/setup_env.ps1, venv (pytest установлен)",
       "source_status": "open",
       "notes": "2026-09-21 выполнен перенос: 36 скриптов + 17 verification + writer-контур (27) + rules_balanced.yaml + config.yaml + context_vectors.yaml + skills/tribunal-judge. Исправлены пути тестов на testdata, добавлен PYTHONIOENCODING=utf-8 во все CLI-скрипты и тесты (Windows cp1251), clamp trust в evidence_contract. Итог: 154 passed / 4 архитектурных падения (TD-113..115). Осталось: run_research.py + CI.",
-      "progress": "2026-09-22: run_research.py создан и работает. Созданы primary-обёртки субагентов (claim-parser-runner, source-fetcher-runner, fact-checker-runner, tribunal-judge-runner, synthesizer-runner, writer-runner, coder-worker-runner, code-reviewer-runner, code-tester-runner, code-auditor-runner) с permission external_directory: allow + read: allow. Исправлена модель по умолчанию (polza/deepseek/deepseek-v4-flash-0731). E2E-прогон: BRICK 1 SPLIT (6 клаймов, валидация OK), BRICK 2 CASCADE (5 источников) работают с реальными агентами; source-fetcher медленный (timeout 600с при плохой сети к polza.ai) — поднять таймауты/ретраи. Детерминированный слой (BRICK 4-7) проверен на exp1: 154 теста прошли, 4 архитектурных падения (TD-113..115). Критический найденный блок: opencode run --agent НЕ вызывает субагентов напрямую (TD-117) — решено через primary-обёртки."
+      "progress": "2026-09-30: РЕШЕНО. GitHub Actions CI pipeline (.github/workflows/ci.yml) работает на ветках master/develop/feature/fix + workflow_dispatch. Jobs: Test Suite (core+architecture 158), Downloader (smoke: dns+crossref), MCP Servers (arxiv/openalex/searxng через scripts/ci/test_mcp_servers.py), ChromaDB (scripts/ci/test_chromadb.py, SKIP без локальных данных), Integration (scripts/ci/test_integration.py, dry-run run_research, SKIP без LOCAL_TEST_DATA). Устранены: YAML-invalid (inline python заменён на scripts/ci/*.py), pip cache (setup-python без requirements в корне), downloader-test (нет pytest в tools -> smoke). Итог: последний run 36751267548 — все 5 jobs SUCCESS. + fix(mcp): retry на 4xx/5xx + Accept-заголовки в academic_search_server (TD-118)."
     },
     {
       "id": "TD-117",
