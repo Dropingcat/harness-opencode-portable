@@ -1,10 +1,9 @@
 # Tech Debt Master — единый реестр проекта
 
-Дата: 2026-09-24
-Всего: 186 | open: 127 | closed: 59 (AG-D1/TD-D1 закрыт 2026-09-24: реестр исключений переноса + гейт check_module_porting.py, issue #17; счётчики пересчитаны по фактическим строкам реестра; AG-D3/TD-D3 закрыт 2026-09-24: документирование transitional-статуса регистрации плагина + гейт check_plugin_registration_status.py, issue #16; TD-003/TD-D10 закрыт гейтом route-дублирования 2026-09-24; AG-A1 закрыт 2026-09-24: генератор субагентов + регресс-тесты контракта; AG-D2/TD-D2 закрыт 2026-09-24: канонический plugin-aware doctor + health_check-обёртка + гейт check_health_canonical.py, issue #10)
+Дата: 2026-09-30
+Всего: 214 | open: 158 | closed: 56
 
 Префиксы: CD-* Coder, WR-* Writer, RS-* Researcher, PL-* plugin, TD-* общий.
-Реестр TECH_DEBT_AGENTS.md (TD-A*/TD-D*/TD-I*/TD-T*): закрыто в 2026-09-24 — TD-A4, TD-D4, TD-D7, TD-D9; частично — TD-A3, TD-D5.
 
 ## Активные (open)
 
@@ -37,6 +36,7 @@
 | RS-026 | critical | research-orchestrator | АВТОМАТИЗАЦИЯ КЛАСТЕРНОГО МЕТОДА ИЗУЧЕНИЯ ЛИТЕРАТУРЫ (cluster → Q&A →  | - |
 | TD-001 | high | code-orchestrator | Хардкод Linux путей | - |
 | TD-002 | high | profile_config | Legacy plugin hook не зарегистрирован в runtime | - |
+| TD-003 | medium | code-orchestrator | Дублирование route данных JSON vs TS | - |
 | TD-004 | high | profile_config | Guard env / OPENCODE_SESSION_DB coupling | - |
 | TD-005 | medium | code-tester | Source-fetcher fallback не покрыт тестом | - |
 | TD-006 | low | code-orchestrator | Исторически отсутствовал config/tech_debt.json | - |
@@ -120,7 +120,6 @@
 | TD-111 | medium | code-orchestrator | semantic_execute отключён по умолчанию (HARNESS_SEMANTIC_ENABLED!=1),  | - |
 | TD-112 | high | code-orchestrator | Маппинг путей (path_resolution_map.json / runtime_integration_policy.j | - |
 | TD-116 | high | research-orchestrator | BRICKS-скрипты перенесены с сервера в рабочий harness, но требуют закр | - |
-| TD-117 | high | code-orchestrator | opencode run --agent НЕ вызывает субагентов: закрыт детерминированный слой (gen_runners.py + гейт инвариантов); live-прогон CLI — за хост-runtimes | 2026-09-24 |
 | TD-120 | medium | research-orchestrator | run_research.py: фактор времени агентов не учтён в budget — PER_CALL_E | - |
 | TD-126 | high | research-orchestrator | Цикл перфекционизма агента: «я ещё недостаточно хорошо реализовал код/ | - |
 | TD-129 | critical | research-orchestrator | КЛАСТЕР CL-16: Предварительная лазерная обработка → градиентные поля д | - |
@@ -139,28 +138,40 @@
 | TD-151 | high | research-orchestrator | Резолвер извлекает только первые 4 страницы (свойства на других страни | - |
 | TD-155 | high | research-orchestrator | MCP-tools подключены в .mcp.json (4 сервера), но НЕ инжектированы в те | - |
 | TD-158 | high | research-orchestrator | Обход капчи sci-hub: «проверка на робота» (Cloudflare/анти-бот) блокир | - |
-| AG-A2 | high | code-orchestrator | [TECH_DEBT_AGENTS] Нет иерархии parent/child сессий (semantic.execute не сертифицирован live) | 2026-09-24 |
-| AG-A1 | high | code-orchestrator | [TECH_DEBT_AGENTS] Агенты не зарегистрированы как субагенты OpenCode (генератор .opencode/agent/*.md) | 2026-09-24 |
-| AG-A3 | medium | code-orchestrator | [TECH_DEBT_AGENTS] Маппинг роль→агент→model: нет `model:` во frontmatter и `agent_hint` в harness_run (частично: формат агентов готов) | 2026-09-24 |
-| AG-A4 | high | code-orchestrator | [TECH_DEBT_AGENTS] ЗАКРЫТО 2026-09-24: обязательный шаг 0 git-ритуала добавлен в agents/code-orchestrator.md | 2026-09-24 |
-| ~~AG-D1~~ | closed | code-orchestrator | [TECH_DEBT_AGENTS] ЗАКРЫТО 2026-09-24: канонический реестр docs/MODULE_PORTING_EXCLUSIONS.json + гейт scripts/tools/check_module_porting.py (I1-I6) + tests/test_module_porting.py (13); issue #17 | 2026-09-24 |
-| AG-D2 | medium | code-orchestrator | [TECH_DEBT_AGENTS] ЗАКРЫТО 2026-09-24: doctor.py — живой bridge.hello/harness.status probe + protocol compat + host snapshot; health_check.py — обёртка; гейт scripts/tools/check_health_canonical.py + tests/test_health_doctor.py (issue #10) | 2026-09-24 |
-| ~~AG-D3~~ | low | code-orchestrator | ЗАКРЫТО 2026-09-24: transitional-статус задокументирован (docstring register_plugin.py + config v3 status/note/canonical_path + docs/ARCHITECTURE_NOTES.md); гейт scripts/tools/check_plugin_registration_status.py (I1-I6) + tests/test_plugin_registration_status.py (8); issue #16 | 2026-09-24 |
-| AG-D4 | low | code-orchestrator | [TECH_DEBT_AGENTS] ЗАКРЫТО 2026-09-24: capability hash синхронизирован с runtime_snapshot (df07cc…, 12 роутов) | 2026-09-24 |
-| AG-D6 | medium | code-orchestrator | [TECH_DEBT_AGENTS] Launchers на legacy `opencode run`; зафиксировать transport=opencode_cli_legacy | 2026-09-24 |
-| AG-D7 | medium | code-orchestrator | [TECH_DEBT_AGENTS] ЗАКРЫТО 2026-09-24: smoke-тесты tests/test_job_ctl.py + host_ref mapping документирован | 2026-09-24 |
-| ~~AG-D8~~ | closed | code-orchestrator | [TECH_DEBT_AGENTS] compatibility/1.18.30.json: привести к шкале evidence LIVE_CERTIFIED | 2026-09-24 |
-| AG-D9 | low | code-orchestrator | [TECH_DEBT_AGENTS] ЗАКРЫТО 2026-09-24: MANIFEST.json + SHA256SUMS.txt + decision_aliases.json (scripts/tools/gen_manifest.py) | 2026-09-24 |
-| AG-D10 | medium | code-orchestrator | [TECH_DEBT_AGENTS] Дублирование route-данных JSON vs TS: нет validation snapshot↔schemas | 2026-09-24 |
-| TD-200 | low | qwen-coder | Тестирование работы git qwen-coder'ом: загрузка в репо (push) и коммиты — проверка токена/веток/кредов в изолированном репо | 2026-09-24 |
+| TD-159 | high | research-orchestrator | MCP-tools подтянутся ТОЛЬКО после рестарта opencode: mcp-секция в open | - |
+| TD-160 | medium | research-orchestrator | Обзор: аддитивность интегральных величин (Stokes&Wilson 1944) для блок | - |
+| TD-161 | high | research-orchestrator | Агент путается между двумя способами диспатча research-задачи: dispatc | - |
+| TD-162 | high | research-orchestrator | Изучить и внедрить научные методологии структуры текста и аргументации | - |
+| TD-163 | high | code-orchestrator | Внешний агент-валидатор через цикл ReAct с динамическим промптом и кон | - |
+| TD-164 | high | code-orchestrator | Git-подобный Harness Meta-Cycle для всех оркестраторов: Baseline → Cyc | - |
+| V1-TD-01 | high | research-orchestrator | Golden Corpus не собран (эталон для сравнения) | - |
+| V1-TD-02 | high | research-orchestrator | Детектор тренда метрик | - |
+| V1-TD-03 | high | research-orchestrator | Физический валидатор (код, не LLM) | - |
+| V1-TD-04 | high | research-orchestrator | Исторический компаратор | - |
+| V1-TD-05 | medium | research-orchestrator | Внешний наблюдатель | - |
+| V1-TD-06 | high | research-orchestrator | Процедура реанимации | - |
+| V1-TD-07 | high | research-orchestrator | Право вето V-1 | - |
+| V1-TD-08 | medium | research-orchestrator | Метрики стиля | - |
+| V1-TD-NEW-01 | high | research-orchestrator | Закодировать MEAL-инварианты в 01_INVARIANTS.md | - |
+| V1-TD-NEW-02 | medium | research-orchestrator | Словарь filler_patterns (вода) | - |
+| V1-TD-NEW-03 | medium | research-orchestrator | Словарь физических терминов (AP-M02) | - |
+| V2-TD-NEW-01 | high | research-orchestrator | Иерархия угроз (4 уровня) в Debt-Driven Cycle | - |
+| V2-TD-NEW-02 | high | research-orchestrator | SURGERY с Flashback | - |
+| V2-TD-NEW-03 | medium | research-orchestrator | CatastrophicFailure exception (Level 0) | - |
+| V3-TD-NEW-01 | high | research-orchestrator | Детекторы антипаттернов AP-S01..AP-T05 | - |
+| V3-TD-NEW-02 | medium | research-orchestrator | Code Interpreter dimensional analysis | - |
+| V3-TD-NEW-03 | low | research-orchestrator | Temporal check устаревших данных | - |
+| V5-TD-NEW-01 | high | research-orchestrator | Шаблон SURGERY с инъекцией антипаттерна | - |
+| V5-TD-NEW-02 | medium | research-orchestrator | Инжекция антипаттернов в EXECUTION | - |
+| V5-TD-NEW-03 | low | research-orchestrator | Few-shot «хороший vs плохой» параграф | - |
+| V6-TD-NEW-01 | high | research-orchestrator | Каталог антипаттернов как FailurePattern | - |
+| V6-TD-NEW-02 | medium | research-orchestrator | Маппинг провал→антипаттерн | - |
+| V6-TD-NEW-03 | low | research-orchestrator | Promotion: AP > 5 раз → Policy | - |
 
 ## Закрытые (closed)
 
 | ID | Title | Закрыт |
 |---|---|---|
-| AG-A2 | ЗАКРЫТО 2026-09-24: semantic.execute parent/child E2E-сертификация — tests/test_bridge_semantic_execute.py (4 теста: handshake контрактов, roundtrip request→child-result со schema-валидацией, error propagation) | 2026-09-24 |
-| AG-D5 | ЗАКРЫТО 2026-09-24: cancel/timeout E2E-сертификация — tests/test_bridge_cancel_timeout.py (5 тестов: TIMED_OUT по timeout_ms запроса с восстановлением сервера, harness.cancel{execution_id} кооперативная отмена in-flight, идемпотентность/NOT_PENDING, отсутствие resurrection поздним ответом); bridge_peer: handlers в worker-потоках (cancel доставляем во время blocking execute), pending-drop после timeout/cancel; протокол harness-bridge-rpc/1.0 и схемы без изменений | 2026-09-24 |
-| AG-D8 | ЗАКРЫТО 2026-09-24: compatibility/1.18.30.json schema 2.0 — feature_probes {level, evidence} по шкале LIVE_CERTIFIED/HOSTLESS_REPORTED/TYPE_VERIFIED/NOT_CERTIFIED; гейт scripts/tools/check_evidence_levels.py + tests/test_evidence_levels.py (11); issue #14 | 2026-09-24 |
 | CD-003 | verify_claim бросает AttributeError на не-dict входе (contract: должен | 2026-09-18 |
 | RS-005 | СПРАВКА: ссылка [3] Березина = АЗОТИРОВАНИЕ КОБАЛЬТСОДЕРЖАЩИХ СТАЛЕЙ ( | - |
 | RS-008 | Список литературы НКР: ИСПРАВИТЬ [4] — в тексте 'Гуляев [4]', в списке | - |
@@ -194,6 +205,7 @@
 | TD-113 | Архитектурная ревизия BRICKS-кода (перенесён с сервера): мёртвая конфи | - |
 | TD-114 | Хардкод API-провайдера в synthesizer.py (base_url=https://api.aitunnel | - |
 | TD-115 | topics_tree.py: покрытие claim_id расходятся — test_c5: совпало 14/20  | - |
+| TD-117 | opencode run --agent НЕ вызывает субагентов: 'agent X is a subagent, n | - |
 | TD-118 | Таймауты агентов BRICKS-runner: source-fetcher упал по timeout 600с пр | - |
 | TD-119 | Primary-обёртки субагентов (10 <name>-runner) созданы ТОЛЬКО в глобаль | - |
 | TD-121 | Кросс-оркестрация (TD-099) закрыта ТОЛЬКО для research-контура (resear | - |
@@ -216,6 +228,3 @@
 | TD-154 | MCP-инструменты не проброшены в сессию субагентов + RESEARCH_WORKSPACE | - |
 | TD-156 | Агент не знает, что sci-bot — это просто API-запрос (sci-bot.ru, WebSo | - |
 | TD-157 | downloader.py resolve: каскад падает, хотя прямой doi-путь (тот же sci | - |
-| TD-003 | medium | code-orchestrator | Дублирование route данных JSON vs TS — закрыто гейтом check_route_duplication.py (TD-D10) + tests/test_route_duplication.py | 2026-09-24 |
-| AG-A1 | [TECH_DEBT_AGENTS] Агенты не зарегистрированы как субагенты OpenCode — ЗАКРЫТО: пайплайн registry+compile_agents, артефакты .opencode/agent/*.md (26), регресс-тесты tests/test_agent_gen.py (qwen-coder) | 2026-09-24 |
-| AG-D2 | [TECH_DEBT_AGENTS] health_check→doctor: канонический plugin-aware doctor с живыми probes (bridge.hello/harness.status/protocol.compat/host snapshot/semantic readiness), health_check — тонкая обёртка; гейт + 8 тестов (TD-D2, qwen-coder) | 2026-09-24 |

@@ -3,8 +3,8 @@
   "updated": "2026-09-30",
   "authority_note": "Canonical registry migrated from патчи/миграция в плагин/tech_debt_current.json (65 records). project_context.py counts status=open. CLOSED_REPORTED maps to closed; RECONCILE_REQUIRED stays open until exact-tree verification.",
   "counts": {
-    "total": 211,
-    "open": 155,
+    "total": 214,
+    "open": 158,
     "closed": 56
   },
   "debts": [
@@ -3112,6 +3112,54 @@
       "source_status": "open",
       "notes": "Агент путается между двумя способами диспатча research-задачи: dispatch-map рекомендует внешний opencode run research-orchestrator через bash, но внутри сессии доступен task-инструмент с general subagent, который агент уже успешно использовал для верификации B2. Нет однозначного правила когда внешний процесс а когда внутренний task. Нужен приоритет диспатча.",
       "progress": "2026-09-24: ЗАФИКСИРОВАНО + РЕШЕНИЕ в dispatch-map. Приоритет: (1) task внутри сессии (general/research-orchestrator) — первый, быстрее и безопаснее; (2) внешний opencode run research-orchestrator — только кросс-контур. Если research-orchestrator нет в task-subagents — использовать general с полным контрактом (B2 через task general сработал). Секция 'Приоритет диспатча research-задачи' добавлена в shared/harness-dispatch-map.md."
+    },
+    {
+      "id": "TD-162",
+      "owner": "research-orchestrator",
+      "presentation_category": "ACTIVE",
+      "sunset_at": "2027-09-30",
+      "title": "Изучить и внедрить научные методологии структуры текста и аргументации для writer/research контуров: Swales CARS (введение/обзор литературы), Toulmin (Claim-Data-Warrant-Rebuttal), Hyland Metadiscourse (hedges/boosters/эвиденциальные маркеры)",
+      "status_detail": "OPEN_CURRENT",
+      "kind": "methodology",
+      "status": "open",
+      "severity": "high",
+      "acceptance": "В shared/ появилась методология (напр. shared/writing-methodology.md): CARS-структура введения, Toulmin-проверка аргумента в validator, Hyland-маркеры в writer-core; writer-orchestrator использует её при плане/ревью; примеры клaimов проходят Toulmin-схему (Claim/Data/Warrant/Rebuttal)",
+      "area": "",
+      "source_status": "open",
+      "notes": "Для research-orchestrator/writer-orchestrator: (1) John Swales CARS (Create a Research Space) — золотой стандарт структуры введения и обзора литературы; (2) Stephen Toulmin: Claim → Data → Warrant → Rebuttal — модель аргументации (прямо соотносится с BRICKS claim/warrant/justification); (3) Ken Hyland Metadiscourse: hedges (suggests, indicates), boosters (demonstrates, confirms), эвиденциальные маркеры (according to, as shown in). Это даёт детерминированные шаблоны для: структуры введения (CARS moves), проверки аргумента (Toulmin), стилистики научного текста (Hyland).",
+      "progress": "2026-09-30: создано через tech_debt_cli.py"
+    },
+    {
+      "id": "TD-163",
+      "owner": "code-orchestrator",
+      "presentation_category": "ACTIVE",
+      "sunset_at": "2027-09-30",
+      "title": "Внешний агент-валидатор через цикл ReAct с динамическим промптом и контрактом для универсальных задач harness (валидация результата любого контура: research/writer/coder)",
+      "status_detail": "OPEN_CURRENT",
+      "kind": "architecture",
+      "status": "open",
+      "severity": "high",
+      "acceptance": "Существует validator-agent (subagent или обёртка), который по контракту задачи выполняет ReAct-цикл: Reason (какие проверки нужны) → Act (вызовы tools/guards/LLM) → Observe (результат) → повтор до сходимости; результат — Verdict-контракт; интегрирован в dispatch-map как опция валидации для research/writer/coder; покрыт тестом на примере",
+      "area": "",
+      "source_status": "open",
+      "notes": "Идея: универсальный external validator agent, который ведёт ReAct-цикл (Reasoning → Acting → Observation) с динамическим промптом, генерируемым под задачу, и строгим контрактом валидации. Нужен для: проверки результата research (claim/verdict/evidence), writer (статья/структура CARS/Toulmin), coder (код/ревью). Отличается от фиксированных BRICKS-guards — это агент-цикл, который сам решает, что проверить, итеративно (ReAct), а не одноразовый детерминированный гейт. Динамический промпт: подбирается шаблон/контракт под тип задачи (из tool_skill_templates / dispatch-map).",
+      "progress": "2026-09-30: создано через tech_debt_cli.py"
+    },
+    {
+      "id": "TD-164",
+      "owner": "code-orchestrator",
+      "presentation_category": "ACTIVE",
+      "sunset_at": "2027-09-30",
+      "title": "Git-подобный Harness Meta-Cycle для всех оркестраторов: Baseline → Cycle → Error Set → Root Cause → Branch → Repair → Merge → Clean Replay → Commit, с геймификацией урона (накопление damage от аудита → порог → 'засыпание' → рефлексия задачи с учётом техдолгов → разбор техдолгов на ветки → слияние → 'просыпание' в основной поток)",
+      "status_detail": "OPEN_CURRENT",
+      "kind": "architecture",
+      "status": "open",
+      "severity": "high",
+      "acceptance": "Создан концепт-документ (напр. docs/ARCHITECTURE_HARNESS_META_CYCLE.md) с контрактами (Baseline/Cycle/Branch/Commit/RootCause, CycleErrorSet), описанием damage-геймификации и ролей; оркестраторы (research/writer/coder) следуют циклу; есть пилот (мини-реализация CycleExecutor на примере research-verification); merge+replay прогоняется на реальном кейсе",
+      "area": "",
+      "source_status": "open",
+      "notes": "Концепция из обсуждения (Harness как система управления эволюцией результата). Главная единица — НЕ task→answer, а цикл с собственным baseline. Ключевые правила: (1) каждый цикл имеет baseline C0→C1→C2; (2) ошибки НЕ сразу ветки — сначала накапливаются в CycleErrorSet, кластеризуются в RootCause (5 сообщений валидатора могут быть одной причиной), потом fix/RC01; (3) merge не успешен по факту объединения — только после CLEAN REPLAY (полный повтор цикла на merged-состоянии, проверка regression suite — ошибки прошлых циклов становятся регрессионными инвариантами); (4) rollback при regression failure; (5) три типа ветвей: feature/fix/debug-replay. Геймификация: внешний аудит накапливает damage; при критическом уроне — 'засыпание' (рефлексия от начала до критического момента, учёт техдолгов, поиск путей реализации), разбор техдолгов на ветки, слияние без новых ошибок, 'просыпание' и вливание в основную ветку. Приблизить к реальной Git-разработке в науке/технике: разделение архитектуры, валидация при merge, выявление ошибок через GitHub-подобные механики.",
+      "progress": "2026-09-30: создано через tech_debt_cli.py"
     },
     {
       "id": "RS-001",
