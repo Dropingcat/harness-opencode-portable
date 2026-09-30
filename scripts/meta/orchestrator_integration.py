@@ -282,9 +282,16 @@ class OrchestratorIntegration:
             self.sleep_state['branches'].append(branch)
 
     def sleep_merge(self, success: bool = True, result_summary: str = "") -> None:
-        """Слияние всех веток сна в одну; при успехе — выход из сна."""
+        """Слияние всех веток сна в одну; при успехе — выход из сна.
+        Автономно: если sleep_state пуст (контракт пришёл без sleep_begin) — создаём."""
         if not self.sleep_state:
-            return
+            self.sleep_state = {
+                'sleep_id': 'auto',
+                'branches': [],
+                'merged': False,
+                'started_at': datetime.now().isoformat(),
+                'hp_at_sleep': self.health.health_points,
+            }
         self.sleep_state['merged'] = success
         self.sleep_state['result'] = result_summary[:100]
         self.sleep_state['ended_at'] = datetime.now().isoformat()
