@@ -133,7 +133,31 @@ def search_mirrors(isbn: str, title: str | None = None) -> dict:
         if body:
             txt = body.decode("utf-8", errors="replace")
             if "No files found" not in txt and "не найдено" not in txt.lower() and "table" in txt.lower():
-                found.append({"mirror": h, "url": url, "kind": "libgen_search", "note": "найдено в выдаче libgen"})
+                # попытка извлечь прямую ссылку на скачивание (md5/download)
+                md5s = re.findall(r"md5=([a-f0-9]{32})", txt, re.I)
+                dl_links = re.findall(r'https?://[^"\']+\.(?:pdf|djvu|epub)(?:\?[^"\']*)?', txt, re.I)
+                found.append({"mirror": h, "url": url, "kind": "libgen_search",
+                              "md5": md5s[:3] if md5s else None,
+                              "direct_download": dl_links[:3] if dl_links else None,
+                              "note": "найдено в выдаче libgen"})
+
+    # Anna's Archive (annas-archive.org) — агрегатор libgen/duxiu/lingzi, обход через зеркала
+    annas_mirrors = ["https://annas-archive.org", "https://annas-archive.se"]
+    for h in annas_mirrors:
+        q = urllib.parse.urlencode({"q": isbn})
+        url = f"{h}/search?{q}"
+        body = _grab(url, retries=1)
+        checked.append({"url": url, "status": "ok" if body else "fail"})
+        if body:
+            txt = body.decode("utf-8", errors="replace").lower()
+            # annas-archive отдаёт список файлов; captcha/cloudflare блокируют — маркер
+            if "captcha" in txt or "cloudflare" in txt or "challenge" in txt:
+                checked[-1]["status"] = "captcha"
+                found.append({"mirror": h, "url": url, "kind": "annas_archive",
+                              "note": "капча/Cloudflare — обход: cookie-перехват или ручной доступ (TD-158)"})
+            elif "no results" not in txt and "не найдено" not in txt:
+                found.append({"mirror": h, "url": url, "kind": "annas_archive",
+                              "note": "найдено в выдаче Anna's Archive"})
 
     return {"isbn": isbn, "title": title, "checked": checked, "found": found,
             "count": len(found)}
