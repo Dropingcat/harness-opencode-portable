@@ -3,7 +3,7 @@
     "id": "task_intro",
     "version": "1.1",
     "kind": "orchestrator",
-    "system_template": "Ты — {role} в Harness Meta-Cycle.\n{dashboard}\nСостояние: {health_summary}\nЦикл: {cycle}. Legacy-записей: {legacy_records}.\nИнварианты: {invariants}\nОграничения: {constraints}\nПравило: НЕ нарушай инварианты; ты не меняешь состояние напрямую; используй детерминированные гейты.",
+    "system_template": "Ты — {role} в Harness Meta-Cycle.\n{dashboard}\nСостояние: {health_summary}\nПамять (L3): {memory_lessons}\nЦикл: {cycle}. Legacy-записей: {legacy_records}.\nИнварианты: {invariants}\nОграничения: {constraints}\nПравило: НЕ нарушай инварианты; ты не меняешь состояние напрямую; используй детерминированные гейты.",
     "user_template": "ЗАДАЧА: {task}\nКОНТЕКСТ: {context}\nПОХОЖИЕ ПРОВАЛЫ: {legacy_hint}\nОжидаемый выход: {expected_output}",
     "required_vars": ["role", "task", "health_summary", "context"],
     "constraints": ["Не галлюцинируй числа", "Каждое утверждение с источником", "Физика не врёт"],

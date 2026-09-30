@@ -35,7 +35,48 @@ def resolve(route_id: str) -> dict:
                 "side_effects": meta.get("side_effects", "unknown"),
             }
         )
+    # SkillMaster: фиксация использования скила (повседневный цикл)
+    _record_skill_usage(route_id, resolved)
+    # MemoryCirculator: L2->L3 перенос + L3->L1 циркуляция (изолированный агент)
+    _circulate_memory(route_id)
     return {"ok": bool(resolved), "route_id": route_id, "families": resolved}
+
+
+def _circulate_memory(route_id: str) -> None:
+    """Роутер обеспечивает циркуляцию паттернов (мягкая интеграция, без сбоев)."""
+    try:
+        import sys as _sys
+        meta_dir = root() / "scripts" / "meta"
+        if str(meta_dir) not in _sys.path:
+            _sys.path.insert(0, str(meta_dir))
+        from memory_circulator import MemoryCirculator
+        mc = MemoryCirculator()
+        # L2: запомнить факт использования route
+        mc.l2_remember(route_id, {
+            'lesson_text': f'route {route_id} used',
+            'reason_codes': [f'ROUTE_{route_id.upper()}'],
+            'evidence_refs': [f'route:{route_id}'],
+        })
+        # L2 -> L3: перенос зрелых уроков (admissions >= порога)
+        mc.promote_to_l3(route_id)
+    except Exception:
+        pass  # не ломаем роутер
+
+
+def _record_skill_usage(route_id: str, families: list) -> None:
+    """Каждый вызов тула → record_usage в SkillMaster (мягкая интеграция)."""
+    try:
+        import sys as _sys
+        meta_dir = root() / "scripts" / "meta"
+        if str(meta_dir) not in _sys.path:
+            _sys.path.insert(0, str(meta_dir))
+        from skill_master import SkillMaster
+        sm = SkillMaster()
+        skill_name = route_id.replace('/', '_') or 'route'
+        outcome = "ok" if families else "error"
+        sm.record_usage(skill_name, outcome=outcome)
+    except Exception:
+        pass  # не ломаем роутер
 
 
 def main() -> int:

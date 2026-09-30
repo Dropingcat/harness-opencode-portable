@@ -23,6 +23,7 @@ if str(_META) not in sys.path:
     sys.path.insert(0, str(_META))
 
 from orchestrator_integration import OrchestratorIntegration
+from memory_injector import MemoryInjector
 
 
 class Template:
@@ -82,6 +83,8 @@ class PromptEngine:
         self.templates: Dict[str, Template] = {}
         # интеграция с Meta-Cycle (источник переменных)
         self.meta = OrchestratorIntegration(orchestrator, state_dir=state_dir)
+        # динамическая память (L1-L3) для промта
+        self.memory = MemoryInjector()
         # внедряемые провайдеры доп. переменных
         self.providers: Dict[str, Callable[[], Any]] = {}
         self._load_defaults()
@@ -93,6 +96,8 @@ class PromptEngine:
             system_template=(
                 "Ты — {role} в Harness. {dashboard}\n"
                 "Состояние системы: {health_summary}.\n"
+                "Память (L3-уроки): {memory_lessons}\n"
+                "Память (L2): {memory_l2}\n"
                 "Инварианты: {invariants}.\n"
                 "Правило: не нарушай инварианты; LLM не меняет состояние напрямую.\n"
                 "Ограничения: {constraints}."),
@@ -137,6 +142,8 @@ class PromptEngine:
                 f"-{abs(dm['damage'])} HP: [{dm['source']}] {dm.get('rule_id','')} {dm['message']}"
                 for dm in dash['recent_damage']) or "нет",
             "sleep_status": json.dumps(dash['sleep'], ensure_ascii=False) if dash['sleep'] else "не в сне",
+            # память L1-L3 (динамическая, через MemoryInjector)
+            **self.memory.variables(),
         }
         # провайдеры
         for name, fn in self.providers.items():
