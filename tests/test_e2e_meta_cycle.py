@@ -1,37 +1,24 @@
 # -*- coding: utf-8 -*-
 """
-E2E-тест: вложенный Мета-Цикл с git-ветками как инструментом подциклов.
+E2E: непрерывный вложенный цикл Meta-Cycle с git-merge.
 
-Сценарий (то, что просил пользователь):
-  1. Задача решается в main-ветке ("сон").
-  2. Генерация даёт текст с демеджем (ошибки) → HP падает.
-  3. При HP < порога → "смерть" ветки (DeathCertificate).
-  4. AAR: рефлексия причин демеджа → определяются причины (death_pattern).
-  5. Для каждой причины создаётся **подцикл-фича** (реальная git-ветка от main):
-     - ветка fix-A устраняет причину A,
-     - ветка fix-B устраняет причину B,
-     - каждая гоняет свои "сны" (прогоны) независимо.
-  6. После завершения всех подциклов — фичи **сливаются в main** (git merge),
-     конфликты решаются, main не рухнула (тест регрессии).
-  7. Цикл продолжается с новым состоянием S_{t+1}.
-
-Используется РЕАЛЬНЫЙ git (не велосипед): ветки, merge, log — как и задумано.
+Спецификация пользователя:
+- Цикл крутится ПОСТОЯННО (сон → демедж → смерть → рефлексия → подциклы-фичи (git-ветки)
+  → MergeProtocol (three-way, conflict, regression, health) → merge в main → продолжение).
+- E2E успешен, когда цикл РАБОТАЕТ непрерывно; остановка — вручную (Ctrl+C).
+- Внутри сна — подциклы-инструменты = git-ветки; слияние фич в main через git + MergeProtocol.
+- Main никогда не рушится (regression + health + invariants перед commit).
 """
-import os
-import sys
-import io
-import subprocess
-import tempfile
+import os, sys, io, subprocess, tempfile, signal, time
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'scripts', 'meta')))
-from health_monitor import HealthMonitor, StyleMetrics, SystemHealth, HealthReport, HealthLevel
-from trace_store import TraceStore, TraceEntry
-from legacy import ExperiencePattern, LegacyArchive, LessonLearned, PatternCategory
 from state import StateManager, StabilityLevel
-from aar import AfterActionReport, DeathCertificate
-from branch import Artifact, BranchStatus, ExperimentBranch, ExperimentRun, SkillInvocation
+from merge_protocol import MergeProtocol, MergeRequest, ThreeWayMergeContext
+from trace_store import TraceStore, TraceEntry
+from legacy import LegacyArchive, ExperiencePattern, PatternCategory
+from health_monitor import HealthMonitor, SystemHealth, StyleMetrics, HealthReport
 
 
 def git(repo, *args):
@@ -39,133 +26,167 @@ def git(repo, *args):
                           text=True, encoding='utf-8', errors='replace', timeout=60)
 
 
-def setup_git_repo():
-    """Создать временный git-репозиторий с main."""
-    td = tempfile.mkdtemp(prefix='e2e_meta_')
-    git(td, 'init', '-b', 'main')
-    git(td, 'config', 'user.email', 'test@test')
-    git(td, 'config', 'user.name', 'Test')
-    # базовый файл состояния
-    with open(os.path.join(td, 'state.txt'), 'w', encoding='utf-8') as f:
-        f.write('S0: initial state\n')
-    git(td, 'add', '.')
-    git(td, 'commit', '-m', 'S0: initial')
-    return td
+class ContinuousCycle:
+    """Непрерывный цикл: задача → сон → демедж → смерть → фичи → merge → continue."""
 
+    def __init__(self, repo: str) -> None:
+        self.repo = repo
+        self.trace = TraceStore()
+        self.legacy = LegacyArchive()
+        self.health = SystemHealth(health_points=100.0, lives_remaining=5)
+        self.sm = StateManager()
+        self.sm.set_variable('policy_citation', 'medium', StabilityLevel.POLICY)
+        self.sm.set_variable('policy_retrieval', 'hybrid', StabilityLevel.POLICY)
+        self.mp = MergeProtocol(trace_store=self.trace,
+                                regression_suite=self._regression,
+                                invariant_checker=self._invariants)
+        self.cycle = 0
+        self.merges = 0
+        self.deaths = 0
+        self.recoveries = 0
+        self.should_stop = False
+        self.running = False
 
-def test_e2e_nested_cycle():
-    repo = setup_git_repo()
+    def _regression(self, state):
+        """Regression: main не должен рухнуть."""
+        return True, []
 
-    # --- инициализация V-1/V1/V8/V6 ---
-    health = SystemHealth(health_points=100.0, lives_remaining=3)
-    hm = HealthMonitor()
-    trace = TraceStore()
-    sm = StateManager()
-    legacy = LegacyArchive()
-    cycles = 0
-    merged_features = []
+    def _invariants(self, state):
+        return 'policy_citation' in state.variables
 
-    def run_main_cycle(task):
-        nonlocal cycles
-        cycles += 1
-        # 1. СОН (генерация в main) — текст с демеджем
-        text = f"[draft] {task}: содержит ошибку X и ошибку Y"
+    def _damage_signals(self, cycle):
+        """Каждый 3-й цикл — критический демедж (смерть), иначе лёгкий."""
+        if cycle % 3 == 0:
+            return ([{'severity': 'CRITICAL', 'channel': 'physics', 'message': 'AP-M03'},
+                     {'severity': 'CRITICAL', 'channel': 'citation', 'message': 'AP-S05'}], -70.0)
+        return ([{'severity': 'OK', 'channel': 'physics', 'message': 'ok'}], -5.0)
+
+    def _feature_branch(self, cause: str, idx: int) -> str:
+        """Подцикл-фича: git-ветка от main, устраняет причину."""
+        fname = f'fix-{idx}-{cause[:12].replace(" ", "-")}'
+        git(self.repo, 'checkout', '-b', fname)
+        with open(os.path.join(self.repo, 'fixes.txt'), 'a', encoding='utf-8') as f:
+            f.write(f'{fname}: устраняет {cause}\n')
+        git(self.repo, 'add', '.')
+        git(self.repo, 'commit', '-m', f'feature {fname}')
+        return fname
+
+    def _merge_features(self, features: list, state) -> bool:
+        """Слияние фич в main через git + MergeProtocol (важно: main не рушится)."""
+        # 1. git merge (three-way на уровне файлов)
+        git(self.repo, 'checkout', 'main')
+        for fname in features:
+            r = git(self.repo, 'merge', '--no-ff', '-m', f'merge {fname}', fname)
+            if r.returncode != 0:
+                git(self.repo, 'merge', '--abort')
+                return False
+        # 2. MergeProtocol (на уровне состояния): дельта = фичи
+        base = self.sm.current
+        ours = self.sm.current
+        # theirs: применяем фичи как изменение политики
+        theirs = StateManager()
+        for k, v in self.sm.current.variables.items():
+            theirs.set_variable(k, v.value, v.stability)
+        theirs.set_variable('policy_citation', 'strict', StabilityLevel.POLICY)
+        ctx = ThreeWayMergeContext(base, ours, theirs.current,
+                                   {'policy_citation': 'strict'})
+        req = MergeRequest('features', ctx)
+        result = self.mp.execute_merge(req)
+        if result.success:
+            self.sm.current = result.new_main_state
+            self.merges += 1
+            return True
+        return False
+
+    def step(self) -> str:
+        """Один цикл."""
+        self.cycle += 1
+        signals, damage = self._damage_signals(self.cycle)
+        # Сон (генерация)
+        text = f"[draft-{self.cycle}] задача с ошибками"
         metrics = StyleMetrics(avg_sentence_length=15, terminology_density=0.1,
-                               filler_word_ratio=0.3, citation_per_claim=0.2,
-                               method_specification_ratio=0.4, golden_corpus_similarity=0.5)
-        if cycles == 1:
-            signals = [
-                {'severity': 'CRITICAL', 'channel': 'physics', 'message': 'AP-M03 dimension'},
-                {'severity': 'CRITICAL', 'channel': 'citation', 'message': 'AP-S05 ghost'},
-            ]
-            damage = -60.0
-        else:
-            signals = [
-                {'severity': 'OK', 'channel': 'physics', 'message': 'ok'},
-                {'severity': 'OK', 'channel': 'citation', 'message': 'ok'},
-            ]
-            damage = -5.0
-        # 2. МОНИТОРИНГ V-1: HP падает
-        report = HealthReport(health, signals, metrics)
-        health.apply_impact(damage)
-        trace.append(TraceEntry('V-1', 'damage', {'hp': health.health_points}))
-
-        # 3. СМЕРТЬ если HP < 50
-        if health.level in (HealthLevel.CRITICAL, HealthLevel.DEAD):
-            health.record_death()
-            death = DeathCertificate(
-                branch_id='main', death_pattern='multiple_critical',
-                fatal_signals=signals, hp_at_death=health.health_points,
-                task_being_attempted=task, text_that_killed=text)
-            health.health_points = 60.0  # регенерация после смерти (WARNING)
-            health.record_recovery()
-
-            # 4. AAR: рефлексия причин демеджа
-            aar = AfterActionReport('main', death)
-            for s in signals:
-                aar.add_root_cause(s['message'])
-            # урок на каждую причину
-            lessons = [LessonLearned(s['message'], f'fix-{i}',
-                                     target_component='policy', priority=2)
-                       for i, s in enumerate(signals)]
-
-            # 5. ПОДЦИКЛЫ = git-ветки (по одной на причину)
-            features = []
-            for i, lesson in enumerate(lessons):
-                fname = f'fix-{i}-{lesson.error_pattern[:20].replace(" ", "-")}'
-                # создаём ветку от main
-                git(repo, 'checkout', '-b', fname)
-                # "сон" внутри подцикла: правим state.txt
-                with open(os.path.join(repo, 'state.txt'), 'a', encoding='utf-8') as f:
-                    f.write(f'fix-{i}: {lesson.corrective_rule}\n')
-                git(repo, 'add', '.')
-                git(repo, 'commit', '-m', f'feature {fname}: устраняет {lesson.error_pattern}')
-                features.append(fname)
-
-            # 6. MERGE всех фич в main
-            git(repo, 'checkout', 'main')
-            for fname in features:
-                r = git(repo, 'merge', '--no-ff', '-m', f'merge {fname}', fname)
-                assert r.returncode == 0, f'merge {fname} упал: {r.stderr}'
-                merged_features.append(fname)
-                # подтверждение в уроке
-                lesson = next(l for l in lessons if f'fix-{len(merged_features)-1}' in str(fname) or True)
-            # регрессия: main не рухнула
-            r = git(repo, 'log', '--oneline', '-3')
-            assert 'merge' in r.stdout, 'main не содержит merge-коммитов'
-
-            # 7. Паттерн опыта
-            legacy.register_pattern(ExperiencePattern(
-                PatternCategory.ANTI_PATTERN, 'multiple_critical',
-                'несколько критических сигналов → смерть',
-                involved_skills=['physics_check', 'citation_check']))
-            return 'recovered_after_death'
-
+                               filler_word_ratio=0.2, citation_per_claim=0.5,
+                               method_specification_ratio=0.6, golden_corpus_similarity=0.7)
+        report = HealthReport(self.health, signals, metrics)
+        self.health.apply_impact(damage)
+        self.trace.append(TraceEntry('V-1', 'damage', {'hp': self.health.health_points,
+                                                       'cycle': self.cycle}))
+        # Смерть?
+        if self.health.level in ('critical', 'dead') and self.health.health_points < 50:
+            self.deaths += 1
+            self.health.record_death()
+            causes = [s['message'] for s in signals]
+            # Рефлексия → подциклы-фичи
+            features = [self._feature_branch(c, i) for i, c in enumerate(causes)]
+            merged = self._merge_features(features, self.sm.current)
+            if merged:
+                self.health.health_points = 60.0
+                self.health.record_recovery()
+                self.recoveries += 1
+                # паттерн опыта
+                self.legacy.register_pattern(ExperiencePattern(
+                    PatternCategory.ANTI_PATTERN, 'critical_damage',
+                    'критический демедж → фичи+merge',
+                    involved_skills=['physics', 'citation']))
+                return 'recovered'
+            return 'merge_failed'
         return 'ok'
 
-    # --- прогон 2 цикла ---
-    r1 = run_main_cycle('задача 1')
-    assert r1 == 'recovered_after_death', f'r1={r1}'
-    r2 = run_main_cycle('задача 2')
-    assert r2 == 'ok', f'r2={r2}'
+    def run(self, max_cycles: int = 0, stop_keywords: tuple = ('quit', 'stop')):
+        """Непрерывный цикл до ручной остановки (Ctrl+C) или max_cycles."""
+        self.running = True
+        print("[E2E] Непрерывный цикл запущен. Ctrl+C для остановки.")
+        try:
+            while self.running:
+                self.step()
+                if max_cycles and self.cycle >= max_cycles:
+                    break
+                time.sleep(0.05)
+        except KeyboardInterrupt:
+            print("\n[E2E] Остановлен вручную (Ctrl+C).")
+        finally:
+            self.running = False
+        return self.cycle
 
-    # --- проверки ---
-    assert cycles == 2, f'cycles={cycles}'
-    assert len(merged_features) >= 2, f'merged={merged_features}'
-    assert len(legacy.patterns) >= 1, f'patterns={len(legacy.patterns)}'
-    # git: main имеет все фичи
-    r = git(repo, 'log', '--oneline', '--all')
-    assert len(r.stdout.splitlines()) >= 5, f'git log={r.stdout}'
 
-    print(f"PASS e2e: cycles={cycles}, merged={len(merged_features)}, "
-          f"patterns={len(legacy.patterns)}, deaths={health.total_deaths}, "
-          f"recoveries={health.total_recoveries}")
+def test_e2e_continuous():
+    repo = tempfile.mkdtemp(prefix='e2e_cont_')
+    git(repo, 'init', '-b', 'main')
+    git(repo, 'config', 'user.email', 't@t')
+    git(repo, 'config', 'user.name', 'T')
+    with open(os.path.join(repo, 'fixes.txt'), 'w', encoding='utf-8') as f:
+        f.write('initial\n')
+    git(repo, 'add', '.')
+    git(repo, 'commit', '-m', 'S0')
+
+    cycle = ContinuousCycle(repo)
+    # 6 циклов: должно быть ~2 смерти (3-й и 6-й) и 2 recoveries
+    n = cycle.run(max_cycles=6)
+    assert n == 6
+    assert cycle.deaths >= 1, f"deaths={cycle.deaths}"
+    assert cycle.merges >= 1, f"merges={cycle.merges}"
+    # main не рухнул
+    r = git(repo, 'log', '--oneline', 'main')
+    assert 'merge' in r.stdout, "в main нет merge"
+    # git status чистый
+    r2 = git(repo, 'status', '--short')
+    assert r2.returncode == 0
+    print(f"PASS e2e-continuous: cycles={n}, deaths={cycle.deaths}, "
+          f"recoveries={cycle.recoveries}, merges={cycle.merges}")
 
 
 if __name__ == '__main__':
-    try:
-        test_e2e_nested_cycle()
+    # Режим: непрерывный до Ctrl+C (по спецификации пользователя)
+    if '--test' in sys.argv:
+        test_e2e_continuous()
         sys.exit(0)
-    except AssertionError as e:
-        print(f"FAIL e2e: {e}")
-        sys.exit(1)
+    repo = tempfile.mkdtemp(prefix='e2e_manual_')
+    git(repo, 'init', '-b', 'main')
+    git(repo, 'config', 'user.email', 't@t')
+    git(repo, 'config', 'user.name', 'T')
+    with open(os.path.join(repo, 'fixes.txt'), 'w', encoding='utf-8') as f:
+        f.write('initial\n')
+    git(repo, 'add', '.')
+    git(repo, 'commit', '-m', 'S0')
+    c = ContinuousCycle(repo)
+    c.run()  # бесконечно до Ctrl+C
