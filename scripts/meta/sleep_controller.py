@@ -82,14 +82,34 @@ class SleepController:
         ﻿Наблюдатель (аудитор) → критический демедж → принудительный сон.
         Возвращает SleepContract, если сон начат; None — если всё в норме.
         """
-        # 1. Аудитор наблюдает (независимо)
-        findings = self.auditor.observe(artifact)
-        if not self.auditor.should_force_sleep(self.force_sleep_threshold):
-            return None
+        # 1. Аудитор наблюдает (независимо; v1: observe, v2: observe_and_audit)
+        if hasattr(self.auditor, 'observe_and_audit'):
+            findings = self.auditor.observe_and_audit(artifact)
+            # v2: порог урона из корзины
+            if hasattr(self.auditor, 'basket'):
+                if not self.auditor.basket.should_trigger_sleep():
+                    return None
+        else:
+            findings = self.auditor.observe(artifact)
+            if not self.auditor.should_force_sleep(self.force_sleep_threshold):
+                return None
 
         # 2. Приказ на сон (авто-контракт)
-        order = self.auditor.order_sleep(self.meta.orchestrator,
-                                         reason=findings[-1].message if findings else "критический демедж")
+        if hasattr(self.auditor, 'order_sleep'):
+            order = self.auditor.order_sleep(self.meta.orchestrator,
+                                             reason=findings[-1].message if findings else "критический демедж")
+        else:
+            # v2: контракт из корзины (debts = находки аудитора)
+            debts = []
+            for f in self.auditor.basket.entries[-10:]:
+                debts.append({
+                    "debt_id": f.rule_id, "source": f.engine, "target": f.target,
+                    "description": f.message,
+                    "repair_hint": f"устранить {f.rule_id} в {f.target}",
+                })
+            order = {"contract": {"orchestrator": "SLEEP", "debts": debts,
+                                  "exit_criteria": "все ветки слиты без багов и без увода от задачи",
+                                  "auditor": self.auditor.auditor_id}}
         contract = SleepContract(
             orchestrator=self.meta.orchestrator,
             debts=order['contract']['debts'],
