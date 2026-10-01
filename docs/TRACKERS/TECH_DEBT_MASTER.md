@@ -1,7 +1,7 @@
 # Tech Debt Master — единый реестр проекта
 
 Дата: 2026-10-01
-Всего: 227 | open: 168 | closed: 59
+Всего: 229 | open: 170 | closed: 59
 
 Префиксы: CD-* Coder, WR-* Writer, RS-* Researcher, PL-* plugin, TD-* общий.
 
@@ -154,6 +154,8 @@
 | TD-175 | high | code-orchestrator | Нет разделения памяти L1/L2/L3 по суб-агентам и оркестраторам + роутин | - |
 | TD-176 | medium | code-orchestrator | В роутере нет авто-подсказок для задач: какая задача это, для кого она | - |
 | TD-177 | medium | research-orchestrator | Нет skill-оценки задачи и оценки контекста для поискового агента: конт | - |
+| TD-178 | medium | research-orchestrator | perfectionist.completion_hook не распознаёт TODO как completeness: вер | - |
+| TD-179 | high | research-orchestrator | Разрыв: agent_loop (TD-173) НЕ интегрирован с Meta-Cycle (refactor-v2) | - |
 | V1-TD-01 | high | research-orchestrator | Golden Corpus не собран (эталон для сравнения) | - |
 | V1-TD-02 | high | research-orchestrator | Детектор тренда метрик | - |
 | V1-TD-03 | high | research-orchestrator | Физический валидатор (код, не LLM) | - |

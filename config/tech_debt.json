@@ -3,8 +3,8 @@
   "updated": "2026-10-01",
   "authority_note": "Canonical registry migrated from патчи/миграция в плагин/tech_debt_current.json (65 records). project_context.py counts status=open. CLOSED_REPORTED maps to closed; RECONCILE_REQUIRED stays open until exact-tree verification.",
   "counts": {
-    "total": 227,
-    "open": 168,
+    "total": 229,
+    "open": 170,
     "closed": 59
   },
   "debts": [
@@ -3367,6 +3367,38 @@
       "area": "",
       "source_status": "open",
       "notes": "Из сессии (research-orchestrator, idx 1082): «цикл и контракт на глубину поиска — я нашел что то но надо вспоминать? нужно не вспоминать а сделать запись для поискового агента осмотреться что ещё вокруг есть для поиска и глубокого изучения и идти дальше — скил оценки задачи и оценки контекста». TD-170 (search-depth-contract) уже создан и закрыт по search-depth-contract.md. Осталось: (1) оформление skill-оценки задачи (4 вопроса контракта глубины — как triggerable skill), (2) оценка контекста (что уже нашли, что есть в корпусе/каталогах вокруг, соседние источники), (3) запись для поискового агента «осмотреться вокруг» в skill, а не только в md-контракт.",
+      "progress": "2026-10-01: создано через tech_debt_cli.py"
+    },
+    {
+      "id": "TD-178",
+      "owner": "research-orchestrator",
+      "presentation_category": "ACTIVE",
+      "sunset_at": "2027-10-01",
+      "title": "perfectionist.completion_hook не распознаёт TODO как completeness: вердикт good при 'TODO: проверить' (должен needs_improvement), area не содержит 'completeness' (только verification/detail/precision/numbers); test_hook_finds_weaknesses F",
+      "status_detail": "OPEN_CURRENT",
+      "kind": "robustness",
+      "status": "open",
+      "severity": "medium",
+      "acceptance": "completion_hook: TODO/FIXME/XXX -> weakness area=completeness; наличие TODO -> verdict=needs_improvement (если не закрыты); test_hook_finds_weaknesses PASS",
+      "area": "",
+      "source_status": "open",
+      "notes": "Из проверки Meta-Cycle (сверка TD-173): completion_hook('Сделал анализ, TODO: проверить, где-то, и т.д.') -> verdict=good, weaknesses=[verification, detail, precision, numbers], НО тест test_hook_finds_weaknesses ожидает verdict=needs_improvement и area содержит 'completeness'. Значит, хук находит слабости, но (1) TODO-маркер не даёт area=completeness, (2) порог вердикта не учитывает TODO. Реальный дефект перфекциониста (смежный TD-126).",
+      "progress": "2026-10-01: создано через tech_debt_cli.py"
+    },
+    {
+      "id": "TD-179",
+      "owner": "research-orchestrator",
+      "presentation_category": "ACTIVE",
+      "sunset_at": "2027-10-01",
+      "title": "Разрыв: agent_loop (TD-173) НЕ интегрирован с Meta-Cycle (refactor-v2): внешний цикл opencode не передаёт память (memory_circulator), не вызывает внешний аудитор (audit_cycle/run_audit_cycle) после каждого прохода и не обрабатывает контракт сна (auto_bootstrap/sleep_controller) — три аспекта Meta-Cycle существуют и работают (тесты PASS), но НЕ подключены к итеративному запуску агента",
+      "status_detail": "OPEN_CURRENT",
+      "kind": "architecture",
+      "status": "open",
+      "severity": "high",
+      "acceptance": "agent_loop интегрирован с Meta-Cycle: после каждого прохода (1) инжектит память L1/L2/L3 (или вызывает auto_bootstrap.ensure_daemon+inject_dashboard), (2) вызывает внешний аудитор (run_audit_cycle на артефакт) -> урон в корзину, (3) при уроне >= порога -> sleep_planner -> ветки -> merge -> корзина сброшена; проверено E2E: многоходовый запуск с аудитом и сном",
+      "area": "",
+      "source_status": "open",
+      "notes": "Проверка 2026-10-01: (1) Память через роутинг — memory_circulator 5 PASS, memory_injector 4 PASS, research-orchestrator имеет memory_l3; НО agent_loop.py НЕ вызывает bootstrap/инжекцию дашборда (imports: только stdlib). (2) Внешний аудитор — audit_cycle 9 PASS, run_audit_cycle.py работает (аудит->корзина->порог->сон->merge); НО agent_loop не вызывает его. (3) Цикл гит снов — battle_meta stress PASS (HP=100, deaths=0, lives=3), daily_cycle 4 PASS, merge_protocol 6 PASS; НО agent_loop не запускает auto_bootstrap/meta_daemon. Итог: TD-173 решает 'дожать модель', но память/аудит/сон живут на refactor-v2 отдельно. Нужно: agent_loop после каждого прохода -> (а) память (инжекция L1/L2/L3 в контекст), (б) внешний аудитор артефакта (урон->корзина), (в) при пороге урона -> sleep-контракт -> ветки -> merge. Связано: TD-145, TD-163, TD-164, TD-174.",
       "progress": "2026-10-01: создано через tech_debt_cli.py"
     },
     {
