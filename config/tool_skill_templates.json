@@ -406,6 +406,39 @@
         "type": "book",
         "isbn": "978-5-7038-3933-1"
       }
+    },
+    "agent_loop": {
+      "kind": "script",
+      "command": "python scripts/tools/agent_loop.py --agent <агент> --contract \"<контракт>\" [--max-iters N] [--done-file artifact] [--done-regex маркер] [--session id]",
+      "required_input": {
+        "agent": "string",
+        "contract": "string"
+      },
+      "optional_input": {
+        "model": "provider/model",
+        "max_iters": "int (default 5)",
+        "timeout": "int (default 900)",
+        "done_file": "path",
+        "done_regex": "regex",
+        "done_tool": "tool-name",
+        "session": "session-id"
+      },
+      "forbidden_input": [],
+      "start_with": [
+        "Для ВНЕШНЕГО запуска агента (кросс-контур) — это итеративный цикл (TD-173)",
+        "ВНУТРЕННИЙ цикл: task-инструмент с субагентами (НЕ нужен agent_loop)"
+      ],
+      "finish_with": [
+        "Критерий завершения: done-file (артефакт) | done-regex (ответ) | done-tool (tool)",
+        "При reason=stop без критерия — цикл продолжает ту же сессию (-s)",
+        "Лимит итераций + честный timeout (иначе 124)"
+      ],
+      "guard_required": false,
+      "example": {
+        "agent": "research-orchestrator",
+        "contract": "верифицируй текст и запиши claims.json",
+        "done_file": "claims.json"
+      }
     }
   }
 }

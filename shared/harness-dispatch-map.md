@@ -45,6 +45,7 @@
 | `downloader.py resolve` | каскадный DOI→PDF: локальный корпус→CrossRef/OpenAlex→openAccessPdf→Sci-Hub→wayback (TD-152) | `downloader.py resolve --doi "10.1007/..." --out ...` |
 | `book_finder.py` | поиск книги по ISBN: resolve-isbn (Google Books+OpenLibrary кросспроверка), search-mirrors (dokumen/vdoc/libgen/annas), verdict (TD-165) | `book_finder.py verdict --isbn 978-5-7038-3933-1 [--title "..."] [--out prov.json]` |
 | **`unified_search`** (skill) | **ЕДИНАЯ точка входа поиска** через роутер: тип→каналы по порядку (TD-165) | `search "<запрос>" --type article\|book\|doi\|any [--isbn ...]` |
+| **`agent_loop.py`** | итеративный запуск агента (TD-173): opencode как framework, runner рулит продолжением через --session | `agent_loop.py --agent <агент> --contract "<...>" [--done-file артефакт] [--max-iters N]` |
 
 ## Шаг 2: Поиск источников — ЕДИНЫЙ СКИЛЛ (TD-165)
 
