@@ -66,7 +66,8 @@
 ### Ключевые правила
 - ISBN проверяется, НЕ доверяется user-input.
 - Провенанс (URL/дата/hash/источник) — через `downloader.py save_with_provenance`.
-- Обходы: DNS-bypass (DoH, TD-153), зеркала libgen (is/rs/st/gs/li/lc), annas-archive (org/se).
+- Обходы: DNS-bypass (DoH, TD-153), зеркала libgen (is/rs/st/gs/li/lc), annas-archive (org/se), **lib-bkm.ru** (Библиотека Машиностроителя: /load/104 Материаловедение, /load/25 ГОСТы, /load/135 Диссертации).
+- **Глубина поиска** — по контракту `shared/search-depth-contract.md` (TD-170): зафиксировать → осмотреться → оценить глубину → идти дальше. НЕ «вспоминать» контекст, НЕ зацикливаться.
 
 > SearXNG (`127.0.0.1:8888`) — **восстановлен** (TD-128): `mcp/mini_searxng.py` (arXiv/OpenAlex + DDG, JSON-интерфейс). Если порт мёртв — запусти: `python scripts/tools/start_searxng.py`. Используй `searxng_search` (MCP) или `webfetch` к `http://127.0.0.1:8888/search?q=...&format=json`.
 >

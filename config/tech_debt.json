@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "updated": "2026-09-30",
+  "updated": "2026-10-01",
   "authority_note": "Canonical registry migrated from патчи/миграция в плагин/tech_debt_current.json (65 records). project_context.py counts status=open. CLOSED_REPORTED maps to closed; RECONCILE_REQUIRED stays open until exact-tree verification.",
   "counts": {
-    "total": 219,
-    "open": 162,
+    "total": 220,
+    "open": 163,
     "closed": 57
   },
   "debts": [
@@ -3094,8 +3094,8 @@
       "acceptance": "В текст главы 1 добавлен абзац с обоснованием аддитивности интегральных ширин (свёртка → сумма ширин по Stokes&Wilson 1944) и аддитивности интегральной интенсивности (КРФА); ссылка [180] заменена на Stokes&Wilson 1944 / Mittemeijer&Scardi 2004; гейт citation_trace PASS",
       "area": "research_verification/ДОПОЛНЕНИЕ_ГЛАВА1_В2.md, research_verification/ch1_dom.json (c163-c164, c178-c182, c233, c284), 09_LITERATURE/datasets/РЫБА_ГЛАВА1_ПРОБЛЕМНАЯ.md (секция 1.3.4)",
       "source_status": "open",
-      "notes": "В литобзоре главы 1 (раздел про восстановление перекрывающихся профилей / аддитивность ширин) требуется написать про работы, обосновывающие АДДИТИВНОСТЬ ИНТЕГРАЛЬНЫХ ВЕЛИЧИН — интегральной интенсивности и полуширины (FWHM/интегральной ширины). Ключевой первоисточник: Stokes & Wilson 1944 (аддитивность интегральных ширин при свёртке профилей). Связано: блок [180] в ДОПОЛНЕНИЕ_ГЛАВА1_В2.md — 'аддитивность ИНТЕГРАЛЬНЫХ ширин (не функций распределения)' — операционная модель; замена нестабильной ссылки qwenlm [180] на Stokes&Wilson 1944 + Mittemeijer&Scardi 2004 (подтверждено верификацией B2, TD-158). Дополнительно: аддитивность интегральной интенсивности как суммы фазовых вкладов (КРФА) — см. c163/c164/c178-c182 (Wj, R-факторы).",
-      "progress": "0%"
+      "notes": "Stokes&Wilson 1944 найдено в Scardi&Leoni 2004 (ref 10) + Barrallier 1997; Stokes 1948 (деконволюция) скачан полным PDF (09_LITERATURE/методы/Stokes_1948_fourier_line_widths.pdf). Осталось: вставить абзац про аддитивность интегральных ширин в раздел 1.3.4 рыбы + заменить ссылку [180] (qwenlm) на Stokes&Wilson 1944.",
+      "progress": "50%"
     },
     {
       "id": "TD-161",
@@ -3175,7 +3175,7 @@
       "area": "",
       "source_status": "open",
       "notes": "Из сессии: агент искал книгу Герасимов/Куксенова/Лаптева (ISBN 978-5-7038-3933-1, 2014 2-е изд. 518 стр.), но пользователь дал ISBN 978-5-392-19319-6 — это ДРУГАЯ книга (Материаловедение. Цветные металлы, dokumen.pub). Агент написал ad-hoc: gb_check.py (Google Books API с retry 5x), curl к libgen.is/.rs/.st/.gs/.li/.lc (все timed out), jina reader (451), dokumen.pub (SSL handshake fail). Нужен канонический инструмент: (1) resolve ISBN через Google Books/Open Library (идентификация, не доверять user-input), (2) поиск fulltext по зеркалам (dokumen/vdoc/libgen) с retry/backoff и DNS-bypass (TD-153), (3) честный verdict 'нет открытого fulltext' + TOC/справка, (4) провенанс (URL/дата/источник). Связано: TD-151 (резолвер), TD-152 (каскад), TD-153 (DNS).",
-      "progress": "2026-09-30: РЕШЕНО (частично) + РАСШИРЕНО. book_finder.py: resolve-isbn (Google Books+OpenLibrary кросспроверка, matched flag), search-mirrors (dokumen/vdoc/libgen.is/rs/st/gs/li/lc с md5/direct-download парсингом + annas-archive.org/.se с captcha-маркером), verdict (found|toc_only|not_found + провенанс). Единый skill unified_search в роутере (tool_skill_templates.json #16): тип->каналы по порядку (статья: chroma->arxiv/openalex->searxng->downloader resolve->sci-bot; книга: resolve-isbn->search-mirrors->verdict). dispatch-map обновлён (Шаг 2). Обходы: DNS-bypass (TD-153), зеркала, captcha-маркер (TD-158). Логика проверена мок-тестом (matched True/False). В песочнице внешние API 404/429 (прокси) — на реальной машине работают."
+      "progress": "2026-09-30: РАСШИРЕНО: lib-bkm.ru (Библиотека Машиностроителя) — канал в book_finder (сканирование категорий /load/104 Материаловедение, /load/25 ГОСТы, /load/135 Диссертации; uCoz-поиск пуст -> сканирование постранично + матч по запросу). Внешние зеркала переведены на ThreadPool (параллельно): 6 libgen + 2 annas + 2 dokumen/vdoc за ~10-12с вместо 100с+. Проверено: search-mirrors на книге Герасимова -> 17 кандидатов из lib-bkm (Материаловедение и др.). Единый skill unified_search (шаблон #16) + контракт глубины (TD-170, shared/search-depth-contract.md)."
     },
     {
       "id": "TD-166",
@@ -3240,6 +3240,22 @@
       "priority": "critical",
       "acceptance": "StateMutationProposal(root_cause, target_variable, old/new, expected_effect, risk, reversibility, validation_plan, delta_budget); приём только при I(S')=true и ΔS≤B; отклонённые → legacy",
       "notes": "Фича F1 из legacy-чатов (LEGACY_CHATS_FEATURES_2026-09-30.md). Центральное звено между aar.py, debt_cycle.py, state.py."
+    },
+    {
+      "id": "TD-170",
+      "owner": "research-orchestrator",
+      "presentation_category": "ACTIVE",
+      "sunset_at": "2027-10-01",
+      "title": "Цикл поиска не замыкается: агент, найдя частично что-то, начинает «вспоминать» контекст вместо того, чтобы (1) записать находку, (2) осмотреться какие ещё источники доступны вокруг, (3) оценить глубину поиска (контракт глубины), (4) идти дальше. Нужен skill оценки задачи/контекста",
+      "status_detail": "OPEN_CURRENT",
+      "kind": "process",
+      "status": "open",
+      "severity": "high",
+      "acceptance": "Создан shared/search-depth-contract.md: при поиске агент (1) фиксирует находку в артефакт сразу, (2) перечисляет доступные каналы (список из unified_search), (3) выбирает глубину: поверхностный(1 канал)/средний(3-5)/глубокий(все+mirror-обходы), (4) критерий остановки (достаточно ли для текущей задачи), (5) идёт дальше без «вспоминать». Проверено на поиске книги: завершается verdict + осмотр окрестных источников, без зацикливания",
+      "area": "",
+      "source_status": "open",
+      "notes": "Из сессии поиска книги Герасимова: нашёл TOC на BNTU, затем ушёл в долгие curl-петли (libgen-зеркала, jina-прокси, Google Books 429) вместо: зафиксировать TOC -> осмотреться какие ещё источники (lib-bkm.ru, ГОСТ-каталоги, диссертации) -> оценить глубину (нужен ли полный текст для B1 или хватит TOC) -> идти дальше. Перекликается с TD-126 (перфекционизм), TD-145 (паттерн-аудитор), TD-165 (unified_search).",
+      "progress": "2026-09-30: РЕШЕНО. Создан shared/search-depth-contract.md (зафиксировать->осмотреться->оценить глубину->идти дальше; глубины: поверхностный/средний/глубокий; каналы статьи/книги/окрестность; критерий остановки). dispatch-map: ссылка на контракт в Шаг 2. Дополнительно: book_finder получил lib-bkm канал + параллельные внешние зеркала (11.7с вместо 100с+)."
     },
     {
       "id": "RS-001",
@@ -4128,7 +4144,7 @@
   ],
   "consolidation": {
     "merged_from_work": true,
-    "date": "2026-09-30",
+    "date": "2026-10-01",
     "note": "Единый реестр: work-записи с конфликтующими ID сохранены как RS-*"
   }
 }

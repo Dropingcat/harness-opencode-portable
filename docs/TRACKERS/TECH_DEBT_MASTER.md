@@ -1,7 +1,7 @@
 # Tech Debt Master — единый реестр проекта
 
-Дата: 2026-09-30
-Всего: 219 | open: 162 | closed: 57
+Дата: 2026-10-01
+Всего: 220 | open: 163 | closed: 57
 
 Префиксы: CD-* Coder, WR-* Writer, RS-* Researcher, PL-* plugin, TD-* общий.
 
@@ -148,6 +148,7 @@
 | TD-167 | medium | research-orchestrator | F4: AcademicTextGrammar — шаблоны T1-T16 + claim type-system + переход | - |
 | TD-168 | high | research-orchestrator | F5: ReAct-аудитор как внешняя сила — наблюдения → мутация политики | - |
 | TD-169 | high | research-orchestrator | F1: StateMutationProposal + Candidate-State gate (ошибка не меняет sta | - |
+| TD-170 | high | research-orchestrator | Цикл поиска не замыкается: агент, найдя частично что-то, начинает «всп | - |
 | V1-TD-01 | high | research-orchestrator | Golden Corpus не собран (эталон для сравнения) | - |
 | V1-TD-02 | high | research-orchestrator | Детектор тренда метрик | - |
 | V1-TD-03 | high | research-orchestrator | Физический валидатор (код, не LLM) | - |

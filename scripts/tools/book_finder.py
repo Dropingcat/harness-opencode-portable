@@ -37,6 +37,73 @@ UA = "book-finder/1.0 (research harness; mailto:research@local)"
 TIMEOUT = 25
 BACKOFF = [2, 4, 8]
 LIBGEN_MIRRORS = ["libgen.is", "libgen.rs", "libgen.st", "libgen.gs", "libgen.li", "libgen.lc"]
+LIB_BKM = "https://lib-bkm.ru"  # Библиотека Машиностроителя (uCoz-каталог: ГОСТы/load/25, Материаловедение/load/104, Диссертации/load/135)
+
+
+# Категории lib-bkm.ru (uCoz): id -> ключевые слова для выбора по запросу
+LIB_BKM_CATS = {
+    "104": ["материаловедение", "материал", "сплав", "металл", "сталь", "азотир"],
+    "25": ["гост", "норматив", "стандарт"],
+    "135": ["диссертац", "автореферат"],
+    "105": ["станк", "металлореж"],
+    "125": ["механи", "теоретическ"],
+    "106": ["детал", "конструир", "деталей"],
+}
+
+
+def _lib_bkm_search(query: str, retries: int = 2) -> list[dict]:
+    """Поиск на lib-bkm.ru (uCoz): сканирование релевантной категории по ключевым словам.
+
+    uCoz-поиск (?do=search) пуст — рабочий путь: выбрать категорию (/load/<id>),
+    просканировать выдачу (включая постранично), матчить заголовки по query.
+    Возвращает: {title, file_id, download_url, page_url, category}.
+    """
+    q = query.lower()
+    # выбрать категорию по ключевым словам
+    cat_id = None
+    for cid, kws in LIB_BKM_CATS.items():
+        if any(k in q for k in kws):
+            cat_id = cid
+            break
+    if not cat_id:
+        cat_id = "104"  # Материаловедение по умолчанию
+
+    out = []
+    seen = set()
+    # сканируем до 3 страниц категории (uCoz: /load/<cat>-<page>)
+    for page in (cat_id, f"{cat_id}-2", f"{cat_id}-3"):
+        url = f"{LIB_BKM}/load/{page}"
+        body = _grab(url, retries=retries)
+        if not body:
+            continue
+        txt = body.decode("utf-8", errors="replace")
+        if "captcha" in txt.lower() or "проверка" in txt.lower():
+            break
+        # формы «Скачать (N МБ)» -> file_id + ближайший заголовок выше
+        for fm in re.finditer(r'<form[^>]*action="(/load/0-0-1-(\d+)-20)"[^>]*>.*?Скачать', txt, re.S):
+            fid = fm.group(2)
+            if fid in seen:
+                continue
+            seen.add(fid)
+            # заголовок: ищем ближайший <a> перед формой
+            before = txt[:fm.start()]
+            m = re.findall(r'<a[^>]*href="(/load/[^"]+)"[^>]*>([^<]{3,120})</a>', before)
+            title = ""
+            for href, t in reversed(m):
+                t = re.sub(r"\s+", " ", t).strip()
+                if t and not any(k in t.lower() for k in ("rss", "каталог", "библиотека", "&raquo", "&laquo")):
+                    title = t
+                    break
+            if not title:
+                continue
+            out.append({
+                "title": title,
+                "page_url": LIB_BKM + fm.group(1).replace("0-0-1-", f"{fid}-1-0-", 1),
+                "file_id": fid,
+                "download_url": LIB_BKM + fm.group(1),
+                "category": cat_id,
+            })
+    return out
 
 
 def http_get_json(url, retries=3):
@@ -94,12 +161,12 @@ def resolve_isbn(isbn: str) -> dict:
     return result
 
 
-def _grab(url: str, retries=2) -> bytes | None:
+def _grab(url: str, retries=2, timeout: int = TIMEOUT) -> bytes | None:
     last = None
     for attempt in range(retries + 1):
         try:
             req = urllib.request.Request(url, headers={"User-Agent": UA})
-            with urllib.request.urlopen(req, timeout=TIMEOUT) as r:
+            with urllib.request.urlopen(req, timeout=timeout) as r:
                 return r.read()
         except Exception as e:
             last = e
@@ -108,55 +175,73 @@ def _grab(url: str, retries=2) -> bytes | None:
     return None
 
 
+def _probe_mirror(kind: str, url: str, timeout: int = 8) -> tuple:
+    """Один запрос к зеркалу (для ThreadPool). Возвращает (kind, url, body)."""
+    return kind, url, _grab(url, retries=0, timeout=timeout)
+
+
 def search_mirrors(isbn: str, title: str | None = None) -> dict:
-    """Поиск fulltext по зеркалам. Возвращает найденные кандидаты."""
+    """Поиск fulltext по зеркалам. Внешние зеркала — ПАРАЛЛЕЛЬНО (ThreadPool),
+    lib-bkm.ru — отдельно (быстрый, локальный каталог)."""
+    from concurrent.futures import ThreadPoolExecutor
     isbn = normalize_isbn(isbn)
     found = []
     checked = []
 
-    # dokumen.pub / vdoc.pub по ISBN
+    # 1. lib-bkm.ru (Библиотека Машиностроителя) — быстрый, сканирование категории
+    for q in (title, isbn) if title else (isbn,):
+        if not q:
+            continue
+        ql = q.lower()
+        hits = _lib_bkm_search(q)
+        checked.append({"url": f"{LIB_BKM}/load/", "status": "ok" if hits else "empty/captcha",
+                        "query": q, "hits": len(hits)})
+        for h in hits:
+            tl = h["title"].lower()
+            relevant = (isbn in tl) or any(w in tl for w in re.findall(r"[а-яё]{4,}", ql))
+            if not relevant:
+                continue
+            found.append({**h, "url": h["page_url"], "kind": "lib-bkm",
+                          "note": "найдено на lib-bkm.ru (Библиотека Машиностроителя)"})
+
+    # 2. Внешние зеркала — параллельно
+    jobs = []
     for host in ("https://dokumen.pub", "https://vdoc.pub"):
-        url = f"{host}/download/{isbn}.html"
-        body = _grab(url)
+        jobs.append(("html_page", f"{host}/download/{isbn}.html", 10))
+    for h in LIBGEN_MIRRORS:
+        jobs.append(("libgen_search", f"https://{h}/search.php?req={isbn}", 8))
+    for h in ("https://annas-archive.org", "https://annas-archive.se"):
+        jobs.append(("annas_archive", f"{h}/search?q={urllib.parse.quote(isbn)}", 8))
+
+    with ThreadPoolExecutor(max_workers=min(10, len(jobs))) as ex:
+        results = list(ex.map(lambda j: _probe_mirror(j[0], j[1], j[2]), jobs))
+
+    for kind, url, body in results:
         checked.append({"url": url, "status": "ok" if body else "fail"})
-        if body:
+        if not body:
+            continue
+        if kind == "html_page":
             txt = body.decode("utf-8", errors="replace").lower()
             if b"%pdf" in body[:200] or "application/pdf" in txt or "download" in txt:
-                found.append({"mirror": host, "url": url, "kind": "html_page",
-                              "note": "страница книги; PDF может быть за капчей/ссылкой"})
-
-    # libgen зеркала
-    for h in LIBGEN_MIRRORS:
-        url = f"https://{h}/search.php?req={isbn}"
-        body = _grab(url, retries=1)
-        checked.append({"url": url, "status": "ok" if body else "fail"})
-        if body:
+                found.append({"mirror": urllib.parse.urlparse(url).netloc, "url": url,
+                              "kind": "html_page", "note": "страница книги; PDF может быть за капчей/ссылкой"})
+        elif kind == "libgen_search":
             txt = body.decode("utf-8", errors="replace")
             if "No files found" not in txt and "не найдено" not in txt.lower() and "table" in txt.lower():
-                # попытка извлечь прямую ссылку на скачивание (md5/download)
                 md5s = re.findall(r"md5=([a-f0-9]{32})", txt, re.I)
                 dl_links = re.findall(r'https?://[^"\']+\.(?:pdf|djvu|epub)(?:\?[^"\']*)?', txt, re.I)
-                found.append({"mirror": h, "url": url, "kind": "libgen_search",
+                found.append({"mirror": urllib.parse.urlparse(url).netloc, "url": url, "kind": "libgen_search",
                               "md5": md5s[:3] if md5s else None,
                               "direct_download": dl_links[:3] if dl_links else None,
                               "note": "найдено в выдаче libgen"})
-
-    # Anna's Archive (annas-archive.org) — агрегатор libgen/duxiu/lingzi, обход через зеркала
-    annas_mirrors = ["https://annas-archive.org", "https://annas-archive.se"]
-    for h in annas_mirrors:
-        q = urllib.parse.urlencode({"q": isbn})
-        url = f"{h}/search?{q}"
-        body = _grab(url, retries=1)
-        checked.append({"url": url, "status": "ok" if body else "fail"})
-        if body:
+        elif kind == "annas_archive":
             txt = body.decode("utf-8", errors="replace").lower()
-            # annas-archive отдаёт список файлов; captcha/cloudflare блокируют — маркер
             if "captcha" in txt or "cloudflare" in txt or "challenge" in txt:
                 checked[-1]["status"] = "captcha"
-                found.append({"mirror": h, "url": url, "kind": "annas_archive",
+                found.append({"mirror": urllib.parse.urlparse(url).netloc, "url": url, "kind": "annas_archive",
                               "note": "капча/Cloudflare — обход: cookie-перехват или ручной доступ (TD-158)"})
             elif "no results" not in txt and "не найдено" not in txt:
-                found.append({"mirror": h, "url": url, "kind": "annas_archive",
+                found.append({"mirror": urllib.parse.urlparse(url).netloc, "url": url, "kind": "annas_archive",
                               "note": "найдено в выдаче Anna's Archive"})
 
     return {"isbn": isbn, "title": title, "checked": checked, "found": found,
