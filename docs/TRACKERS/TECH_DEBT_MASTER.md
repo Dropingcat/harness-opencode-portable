@@ -1,7 +1,7 @@
 # Tech Debt Master — единый реестр проекта
 
 Дата: 2026-10-01
-Всего: 221 | open: 164 | closed: 57
+Всего: 223 | open: 165 | closed: 58
 
 Префиксы: CD-* Coder, WR-* Writer, RS-* Researcher, PL-* plugin, TD-* общий.
 
@@ -138,7 +138,6 @@
 | TD-155 | high | research-orchestrator | MCP-tools подключены в .mcp.json (4 сервера), но НЕ инжектированы в те | - |
 | TD-158 | high | research-orchestrator | Обход капчи sci-hub: «проверка на робота» (Cloudflare/анти-бот) блокир | - |
 | TD-159 | high | research-orchestrator | MCP-tools подтянутся ТОЛЬКО после рестарта opencode: mcp-секция в open | - |
-| TD-160 | medium | research-orchestrator | Обзор: аддитивность интегральных величин (Stokes&Wilson 1944) для блок | - |
 | TD-161 | high | research-orchestrator | Агент путается между двумя способами диспатча research-задачи: dispatc | - |
 | TD-162 | high | research-orchestrator | Изучить и внедрить научные методологии структуры текста и аргументации | - |
 | TD-163 | high | code-orchestrator | Внешний агент-валидатор через цикл ReAct с динамическим промптом и кон | - |
@@ -150,6 +149,8 @@
 | TD-169 | high | research-orchestrator | F1: StateMutationProposal + Candidate-State gate (ошибка не меняет sta | - |
 | TD-170 | high | research-orchestrator | Цикл поиска не замыкается: агент, найдя частично что-то, начинает «всп | - |
 | TD-171 | high | research-orchestrator | Извлечение формул из PDF и картинок не работает: субагенты (fact-check | - |
+| TD-172 | high | research-orchestrator | Аудит фракционного состава 2026-10-01: 5 книг Excel сверены с ГОСТ 217 | - |
+| TD-173 | high | code-orchestrator | Headless opencode run обрывает цикл после 1-3 ходов: модели (qwen3-cod | - |
 | V1-TD-01 | high | research-orchestrator | Golden Corpus не собран (эталон для сравнения) | - |
 | V1-TD-02 | high | research-orchestrator | Детектор тренда метрик | - |
 | V1-TD-03 | high | research-orchestrator | Физический валидатор (код, не LLM) | - |
@@ -235,3 +236,4 @@
 | TD-154 | MCP-инструменты не проброшены в сессию субагентов + RESEARCH_WORKSPACE | - |
 | TD-156 | Агент не знает, что sci-bot — это просто API-запрос (sci-bot.ru, WebSo | - |
 | TD-157 | downloader.py resolve: каскад падает, хотя прямой doi-путь (тот же sci | - |
+| TD-160 | Обзор: аддитивность интегральных величин (Stokes&Wilson 1944) для блок | - |

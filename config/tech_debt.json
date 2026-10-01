@@ -3,9 +3,9 @@
   "updated": "2026-10-01",
   "authority_note": "Canonical registry migrated from патчи/миграция в плагин/tech_debt_current.json (65 records). project_context.py counts status=open. CLOSED_REPORTED maps to closed; RECONCILE_REQUIRED stays open until exact-tree verification.",
   "counts": {
-    "total": 221,
-    "open": 164,
-    "closed": 57
+    "total": 223,
+    "open": 165,
+    "closed": 58
   },
   "debts": [
     {
@@ -3084,18 +3084,18 @@
     {
       "id": "TD-160",
       "owner": "research-orchestrator",
-      "presentation_category": "ACTIVE",
+      "presentation_category": "RESOLVED",
       "sunset_at": "2027-09-29",
       "title": "Обзор: аддитивность интегральных величин (Stokes&Wilson 1944) для блока [180] ДОПОЛНЕНИЯ_ГЛАВА1_В2",
-      "status_detail": "OPEN_CURRENT",
+      "status_detail": "CLOSED",
       "kind": "literature",
-      "status": "open",
+      "status": "closed",
       "severity": "medium",
       "acceptance": "В текст главы 1 добавлен абзац с обоснованием аддитивности интегральных ширин (свёртка → сумма ширин по Stokes&Wilson 1944) и аддитивности интегральной интенсивности (КРФА); ссылка [180] заменена на Stokes&Wilson 1944 / Mittemeijer&Scardi 2004; гейт citation_trace PASS",
       "area": "research_verification/ДОПОЛНЕНИЕ_ГЛАВА1_В2.md, research_verification/ch1_dom.json (c163-c164, c178-c182, c233, c284), 09_LITERATURE/datasets/РЫБА_ГЛАВА1_ПРОБЛЕМНАЯ.md (секция 1.3.4)",
       "source_status": "open",
-      "notes": "Stokes&Wilson 1944 найдено в Scardi&Leoni 2004 (ref 10) + Barrallier 1997; Stokes 1948 (деконволюция) скачан полным PDF (09_LITERATURE/методы/Stokes_1948_fourier_line_widths.pdf). Осталось: вставить абзац про аддитивность интегральных ширин в раздел 1.3.4 рыбы + заменить ссылку [180] (qwenlm) на Stokes&Wilson 1944.",
-      "progress": "50%"
+      "notes": "Закрыто: Stokes&Wilson 1944 (Proc.Camb.Phil.Soc. 40,174) найден в Scardi&Leoni 2004 + Barrallier 1997; Stokes 1948 (Фурье-деконволюция) скачан PDF (09_LITERATURE/методы/); аддитивность интегральных ширин подтверждена (Langford 1988 DOI 10.1071/ph880173). Порог 0.5% (c285) НЕ подтверждён литературой — удалён из DOM. Для раздела 1.3.4: вставить абзац про аддитивность с Stokes&Wilson 1944 + Stokes 1948 + van Cittert 1931.",
+      "progress": "100%"
     },
     {
       "id": "TD-161",
@@ -3272,6 +3272,38 @@
       "source_status": "open",
       "notes": "Проблема: (1) pypdf/pdfplumber извлекают текст PDF, но математические формулы (дроби, суммы, индексы, корни) теряются — приходят как плоская каша 'a/b' или вообще пропускаются; (2) если формула — картинка (скан/рендер), text-extract не даёт ничего; (3) субагенты (claim-parser при разборе numeric-claim с формулой, fact-checker при верификации) не могут понять структуру дроби/индекса -> ошибочные клаймы или UNSUPPORTED; (4) внешний аудитор (TD-163 ReAct-валидатор) формул не задействован/не срабатывает. Нужно: OCR формул (LaTeX-OCR pix2tex/nougat), структурирование (MathML/LaTeX), передача формул субагентам в машиночитаемом виде, валидация формул внешним аудитором.",
       "progress": "2026-10-01: создано через tech_debt_cli.py"
+    },
+    {
+      "id": "TD-172",
+      "owner": "research-orchestrator",
+      "presentation_category": "ACTIVE",
+      "sunset_at": "2027-10-01",
+      "title": "Аудит фракционного состава 2026-10-01: 5 книг Excel сверены с ГОСТ 2177-99/ISO 3405/D86/D1160/РМГ",
+      "status_detail": "OPEN_CURRENT",
+      "kind": "research",
+      "status": "open",
+      "severity": "high",
+      "acceptance": "",
+      "area": "",
+      "source_status": "open",
+      "notes": "Аудит фракционного состава 2026-10-01: 5 книг Excel сверены с ГОСТ 2177-99/ISO 3405/D86/D1160/РМГ. 7 критических ошибок (неверные r/R группы 1, битые ссылки D23327 и D47:D51, путаница 1/10 мм в D1160, рассинхрон данных, #DIV/0!, K без коррекции потерь), 8 средних (критерий K=(1/√2)√(R²-r²/2) не подтверждён первоисточниками, 0.84, ГСО, номограмма на глаз), 7 низких. Полный реестр ФР-01..ФР-22 в техдолги_фракционка.md",
+      "progress": "2026-10-01: авто-фиксация через tech_debt_cli.py add --auto"
+    },
+    {
+      "id": "TD-173",
+      "owner": "code-orchestrator",
+      "presentation_category": "ACTIVE",
+      "sunset_at": "2027-10-01",
+      "title": "Headless opencode run обрывает цикл после 1-3 ходов: модели (qwen3-coder-30b, deepseek-v4-flash) выдают финальный ответ без tool-вызовов, не «дожимают» задачу; --session + --model конфликтуют (сессия хранит старую модель); нужен итеративный runner (возобновление сессии до выполнения) + ReAct-цикл",
+      "status_detail": "OPEN_CURRENT",
+      "kind": "architecture",
+      "status": "open",
+      "severity": "high",
+      "acceptance": "Существует итеративный запуск агента: возобновление (--session <id> --model <нужная>) пока задача не выполнена (артефакт/критерий), лимит итераций, честный timeout; --model переопределяет модель сессии; проверено: brick-agent выполняет многоходовый контракт (5+ ходов) без обрыва; паттерн-аудитор фиксирует «обрыв после N ходов»",
+      "area": "",
+      "source_status": "open",
+      "notes": "Симптом 2026-10-01: opencode run --agent brick-agent '<контракт>' — модель делает 1-3 хода (разведка, character_sheet --min) и завершает, т.к. headless заканчивает проход, когда модель отвечает без tool-вызовов. deepseek-v4-flash тоже обрывает. --session <id> берёт модель сессии (конфликт с нужной моделью). Решения: (1) итеративный запуск: opencode run --session <id> --model <нужная> с промптом «продолжи пока не выполнено», с лимитом итераций и проверкой артефакта; (2) промпт, принуждающий модель продолжать (loop-инструкция, ReAct); (3) runner-цикл (как run_research.py BRICKS, но на уровне агента). Связано: TD-163 (ReAct-валидатор), TD-164 (Meta-Cycle), run_research.py.",
+      "progress": "2026-10-01: УТОЧНЕНИЕ. ВНУТРЕННИЙ цикл (task-инструмент с субагентами внутри сессии) НЕ затронут — субагент продолжает вызывать tools сам. Проблема ТОЛЬКО для внешнего opencode run (кросс-контур: brick-agent/оркестраторы через bash). Решение: run_research.py/runner вызывает opencode run --session <id> --model <нужная> итеративно (промпт «продолжи пока не выполнено», лимит итераций, проверка артефакта после каждого шага). Песочница: opencode.exe отсутствует (harness-deploy удалён) — тест на реальной машине. Связано: TD-163 (ReAct-цикл), TD-164 (Meta-Cycle), TD-145 (паттерн-аудитор: фиксировать обрыв после N ходов)."
     },
     {
       "id": "RS-001",
