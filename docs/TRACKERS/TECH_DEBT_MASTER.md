@@ -1,7 +1,7 @@
 # Tech Debt Master — единый реестр проекта
 
 Дата: 2026-10-02
-Всего: 231 | open: 172 | closed: 59
+Всего: 231 | open: 171 | closed: 60
 
 Префиксы: CD-* Coder, WR-* Writer, RS-* Researcher, PL-* plugin, TD-* общий.
 
@@ -154,7 +154,6 @@
 | TD-175 | high | code-orchestrator | Нет разделения памяти L1/L2/L3 по суб-агентам и оркестраторам + роутин | - |
 | TD-176 | medium | code-orchestrator | В роутере нет авто-подсказок для задач: какая задача это, для кого она | - |
 | TD-177 | medium | research-orchestrator | Нет skill-оценки задачи и оценки контекста для поискового агента: конт | - |
-| TD-178 | medium | research-orchestrator | perfectionist.completion_hook не распознаёт TODO как completeness: вер | - |
 | TD-179 | high | research-orchestrator | Разрыв: agent_loop (TD-173) НЕ интегрирован с Meta-Cycle (refactor-v2) | - |
 | TD-180 | high | research-orchestrator | Аудитор (auditor_v2) НЕ бросает урон на текстовые артефакты: _struct_f | - |
 | TD-181 | high | research-orchestrator | Оркестратор не понимает как пользоваться CLI/внешним аудитором: роутер | - |
@@ -245,3 +244,4 @@
 | TD-157 | downloader.py resolve: каскад падает, хотя прямой doi-путь (тот же sci | - |
 | TD-160 | Обзор: аддитивность интегральных величин (Stokes&Wilson 1944) для блок | - |
 | TD-173 | Headless opencode run обрывает цикл после 1-3 ходов: модели (qwen3-cod | - |
+| TD-178 | perfectionist.completion_hook не распознаёт TODO как completeness: вер | - |

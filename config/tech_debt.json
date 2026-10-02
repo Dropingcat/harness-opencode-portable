@@ -4,8 +4,8 @@
   "authority_note": "Canonical registry migrated from патчи/миграция в плагин/tech_debt_current.json (65 records). project_context.py counts status=open. CLOSED_REPORTED maps to closed; RECONCILE_REQUIRED stays open until exact-tree verification.",
   "counts": {
     "total": 231,
-    "open": 172,
-    "closed": 59
+    "open": 171,
+    "closed": 60
   },
   "debts": [
     {
@@ -3372,18 +3372,18 @@
     {
       "id": "TD-178",
       "owner": "research-orchestrator",
-      "presentation_category": "ACTIVE",
+      "presentation_category": "RESOLVED",
       "sunset_at": "2027-10-01",
       "title": "perfectionist.completion_hook не распознаёт TODO как completeness: вердикт good при 'TODO: проверить' (должен needs_improvement), area не содержит 'completeness' (только verification/detail/precision/numbers); test_hook_finds_weaknesses F",
-      "status_detail": "OPEN_CURRENT",
+      "status_detail": "CLOSED",
       "kind": "robustness",
-      "status": "open",
+      "status": "closed",
       "severity": "medium",
       "acceptance": "completion_hook: TODO/FIXME/XXX -> weakness area=completeness; наличие TODO -> verdict=needs_improvement (если не закрыты); test_hook_finds_weaknesses PASS",
       "area": "",
       "source_status": "open",
       "notes": "Из проверки Meta-Cycle (сверка TD-173): completion_hook('Сделал анализ, TODO: проверить, где-то, и т.д.') -> verdict=good, weaknesses=[verification, detail, precision, numbers], НО тест test_hook_finds_weaknesses ожидает verdict=needs_improvement и area содержит 'completeness'. Значит, хук находит слабости, но (1) TODO-маркер не даёт area=completeness, (2) порог вердикта не учитывает TODO. Реальный дефект перфекциониста (смежный TD-126).",
-      "progress": "2026-10-01: создано через tech_debt_cli.py"
+      "progress": "2026-10-02: РЕШЕНО. Причина: баг приоритета .lower() — text = str(artifact) if not dict else json.dumps(...).lower() — для СТРОКИ .lower() не применялся, TODO (UPPER) не находился. Исправлено: raw = ...; text = raw.lower(). completion_hook('Сделал анализ, TODO:...') -> verdict=needs_improvement, area completeness(high). Все 6 тестов test_perfectionist.py PASS."
     },
     {
       "id": "TD-179",
@@ -3399,7 +3399,7 @@
       "area": "",
       "source_status": "open",
       "notes": "Проверка 2026-10-01: (1) Память через роутинг — memory_circulator 5 PASS, memory_injector 4 PASS, research-orchestrator имеет memory_l3; НО agent_loop.py НЕ вызывает bootstrap/инжекцию дашборда (imports: только stdlib). (2) Внешний аудитор — audit_cycle 9 PASS, run_audit_cycle.py работает (аудит->корзина->порог->сон->merge); НО agent_loop не вызывает его. (3) Цикл гит снов — battle_meta stress PASS (HP=100, deaths=0, lives=3), daily_cycle 4 PASS, merge_protocol 6 PASS; НО agent_loop не запускает auto_bootstrap/meta_daemon. Итог: TD-173 решает 'дожать модель', но память/аудит/сон живут на refactor-v2 отдельно. Нужно: agent_loop после каждого прохода -> (а) память (инжекция L1/L2/L3 в контекст), (б) внешний аудитор артефакта (урон->корзина), (в) при пороге урона -> sleep-контракт -> ветки -> merge. Связано: TD-145, TD-163, TD-164, TD-174.",
-      "progress": "2026-10-01: создано через tech_debt_cli.py"
+      "progress": "2026-10-02: ЧАСТИЧНО РЕШЕНО. (1) Память через роутер: resolve_bundle -> memory_context (L1 + 5 L3-уроков), проверено CLI. (2) Внешний аудитор: run_audit_cycle работает, аудитор бросает урон на текст (TD-180). (3) Сон: триггер + SLEEP-PLAN работает. Осталось: agent_loop.py интегрировать (вызов аудита/памяти/сна после каждого прохода)."
     },
     {
       "id": "TD-180",
@@ -3415,7 +3415,7 @@
       "area": "",
       "source_status": "open",
       "notes": "Из проверки цикла сна (2026-10-02): auditor_v2.observe_and_audit('Сделал анализ, TODO: проверить...') -> observations=1, dropped=0, total_damage=0. Причина: _struct_findings возвращает [] если artifact не dict (а строковый текст research-артефактов не проходит), правила контракта для оркестратора 'unknown' пусты. Корзина/триггер/планировщик работают (проверено: 3 CRITICAL -> DAMAGE_THRESHOLD -> план), но аудитор не кормит корзину на тексте. Блокирует автоматический сон (TD-164/179).",
-      "progress": "2026-10-02: создано через tech_debt_cli.py"
+      "progress": "2026-10-02: РЕШЕНО. auditor_v2.observe_and_audit: добавлены текстовые эвристики (2b): TEXT_TODO(CRITICAL), TEXT_NO_NUMBERS(WARNING), TEXT_WATER(WARNING). Проверено: артефакт 'TODO...' -> dropped=3, damage=35, порог 30 -> should_trigger_sleep=True -> SLEEP-PLAN (ветки fix/TEXT_TODO и др.)."
     },
     {
       "id": "TD-181",
