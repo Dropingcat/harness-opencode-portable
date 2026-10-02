@@ -410,10 +410,10 @@
     "task_context_assessment": {
       "kind": "skill",
       "required_input": {
-        "goal": "string",
-        "claim_id": "string (optional)"
+        "goal": "string"
       },
       "optional_input": {
+        "claim_id": "string",
         "need": "fact|fulltext|toc|doi|isbn",
         "channels_hint": "string"
       },

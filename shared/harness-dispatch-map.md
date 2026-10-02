@@ -69,6 +69,7 @@
 - Провенанс (URL/дата/hash/источник) — через `downloader.py save_with_provenance`.
 - Обходы: DNS-bypass (DoH, TD-153), зеркала libgen (is/rs/st/gs/li/lc), annas-archive (org/se), **lib-bkm.ru** (Библиотека Машиностроителя: /load/104 Материаловедение, /load/25 ГОСТы, /load/135 Диссертации).
 - **Глубина поиска** — по контракту `shared/search-depth-contract.md` (TD-170): зафиксировать → осмотреться → оценить глубину → идти дальше. НЕ «вспоминать» контекст, НЕ зацикливаться.
+- **Оценка задачи/контекста** — skill `task-context-assessment` (TD-177): ПЕРЕД поиском ответь на 4 вопроса контракта глубины (что ищем / зачем / сколько нужно / когда достаточно) + оцени контекст (что уже нашли, что вокруг). Шаблон `task_context_assessment` в роутере. Затем иди по каналам с выбранной глубиной.
 
 > SearXNG (`127.0.0.1:8888`) — **восстановлен** (TD-128): `mcp/mini_searxng.py` (arXiv/OpenAlex + DDG, JSON-интерфейс). Если порт мёртв — запусти: `python scripts/tools/start_searxng.py`. Используй `searxng_search` (MCP) или `webfetch` к `http://127.0.0.1:8888/search?q=...&format=json`.
 >

@@ -1,0 +1,38 @@
+{
+  "module": "M4",
+  "verdict": "REQUEST_CHANGES",
+  "comments": [
+    {
+      "comment": "dispatch-map.md не упоминает новый skill task-context-assessment. В scope-in (п.3) заявлено «добавлена строка про skill» — фактически строка отсутствует: diff be3fa02 по shared/harness-dispatch-map.md удаляет старую строку TD-177 (строка 71) и добавляет только раздел TD-181 (строки 157-175). Ни task-context-assessment, ни task_context_assessment, ни TD-177 в файле нет (grep 0 совпадений). Поисковый агент, читающий dispatch-map как канонический роутер, не узнает о существовании skill-оценки задачи перед поиском — цепочка «оценить задачу → unified_search» рвётся.",
+      "falsification": "наличие в shared/harness-dispatch-map.md строки «skill task-context-assessment» или «TD-177» в разделе поиска (около строки 71-73) опровергло бы замечание",
+      "severity": "major",
+      "location": "shared/harness-dispatch-map.md:71"
+    },
+    {
+      "comment": "claim_id указан в required_input, но со значением «string (optional)» — противоречие: required по позиции, optional по смыслу. Skill вызывается ДО начала поиска (запрещено искать), и в этот момент claim_id часто ещё не назначен (задача не дошла до BRICKS-цикла). Если поле действительно требуется — нужно убрать «(optional)» и сделать его обязательным для вызова; если опционально — перенести в optional_input, как сделано для need/channels_hint. Иначе роутер/агент получит неоднозначный контракт вызова.",
+      "falsification": "если роутер или agent-контракт трактует claim_id как обязательный и skill реально вызывается с ним всегда — замечание опровергается",
+      "severity": "minor",
+      "location": "config/tool_skill_templates.json:414"
+    },
+    {
+      "comment": "Примеры «для claim B1» и «книга Герасимова» — внутренние доменные ссылки без пояснения. Для читателя вне текущего research-проекта непонятно, что такое B1 и какая книга имеется в виду; пример должен быть самодостаточным (как example у unified_search с пояснением типа «Герасимов структура азотированных сталей»). Минимально — добавить комментарий или использовать нейтральный пример.",
+      "falsification": "если в проекте B1 и «книга Герасимова» — общепринятые канонические идентификаторы, задокументированные в shared/*.md или tech_debt.json, замечание опровергается",
+      "severity": "minor",
+      "location": "config/tool_skill_templates.json:435"
+    }
+  ],
+  "scope_declared": {
+    "scope_in": [
+      "config/tool_skill_templates.json: шаблон task_context_assessment (kind, required_input, optional_input, forbidden_input, start_with, finish_with, guard_required, example, совместимость формата)",
+      ".opencode/skills/task-context-assessment/SKILL.md: frontmatter, 4 вопроса, оценка контекста, выбор глубины, критерий остановки, запрет поиска, ссылка на контракт",
+      "shared/harness-dispatch-map.md: строка про task-context-assessment в разделе поиска (~строка 73)"
+    ],
+    "scope_out": [
+      "другие шаблоны tool_skill_templates.json (arxiv_search, unified_search и т.д.)",
+      "shared/search-depth-contract.md (не менялся)",
+      "M1/M2/M3 и их артефакты",
+      "расширенный DoD (py_compile/pytest/интеграция)"
+    ]
+  },
+  "out_of_scope_gaps": []
+}
