@@ -13,7 +13,16 @@ if ([string]::IsNullOrWhiteSpace($env:OPENCODE_HARNESS_ROOT)) {
 [Environment]::SetEnvironmentVariable("OPENCODE_HARNESS_ROOT", $HARNESS, "User")
 [Environment]::SetEnvironmentVariable("OPENCODE_RUNS_DIR", (Join-Path $HARNESS ".runs"), "User")
 [Environment]::SetEnvironmentVariable("OPENCODE_CONFIG_DIR", (Join-Path $env:USERPROFILE ".config\opencode"), "User")
-[Environment]::SetEnvironmentVariable("OPENCODE_BIN", "opencode", "User")
+# OPENCODE_BIN: авто-детект CLI (TD-181) — не полагаться на PATH
+$oc = Get-ChildItem "C:\Temp" -Recurse -Filter "opencode.exe" -ErrorAction SilentlyContinue -Depth 6 |
+    Where-Object { $_.FullName -match "node_modules\\.bin" } | Select-Object -First 1
+if ($oc) {
+    [Environment]::SetEnvironmentVariable("OPENCODE_BIN", $oc.FullName, "User")
+} elseif (Test-Path (Join-Path $HARNESS "packages\opencode-harness-plugin\node_modules\.bin\opencode.exe")) {
+    [Environment]::SetEnvironmentVariable("OPENCODE_BIN", (Join-Path $HARNESS "packages\opencode-harness-plugin\node_modules\.bin\opencode.exe"), "User")
+} else {
+    [Environment]::SetEnvironmentVariable("OPENCODE_BIN", "opencode", "User")
+}
 [Environment]::SetEnvironmentVariable("DOC_GUARD_ENTRYPOINT", (Join-Path $HARNESS "guard\src\session_guard.py"), "User")
 [Environment]::SetEnvironmentVariable("DOC_GUARD_RUNNER", (Join-Path $HARNESS "guard\src\guard_runner.py"), "User")
 [Environment]::SetEnvironmentVariable("DOC_GUARD_CONFIG", (Join-Path $env:USERPROFILE ".config\opencode\guard_config.json"), "User")

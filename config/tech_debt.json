@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "updated": "2026-10-01",
+  "updated": "2026-10-02",
   "authority_note": "Canonical registry migrated from патчи/миграция в плагин/tech_debt_current.json (65 records). project_context.py counts status=open. CLOSED_REPORTED maps to closed; RECONCILE_REQUIRED stays open until exact-tree verification.",
   "counts": {
-    "total": 229,
-    "open": 170,
+    "total": 231,
+    "open": 172,
     "closed": 59
   },
   "debts": [
@@ -3402,6 +3402,38 @@
       "progress": "2026-10-01: создано через tech_debt_cli.py"
     },
     {
+      "id": "TD-180",
+      "owner": "research-orchestrator",
+      "presentation_category": "ACTIVE",
+      "sunset_at": "2027-10-02",
+      "title": "Аудитор (auditor_v2) НЕ бросает урон на текстовые артефакты: _struct_findings работает только для dict (схема/слоты), текстовые правила контракта пусты при bind_contract('unknown') — на строке 'TODO...' dropped=0, observations=1, сон не триггерится",
+      "status_detail": "OPEN_CURRENT",
+      "kind": "robustness",
+      "status": "open",
+      "severity": "high",
+      "acceptance": "Аудитор бросает урон на ТЕКСТОВЫЕ артефакты: эвристики (TODO/нет цифр/«который»/завышенные утверждения) -> DamageEntry CRITICAL/WARNING; на строке с TODO dropped>0 и должен_триггерить сон при пороге; полный цикл run_audit_cycle -> sleep-контракт работает",
+      "area": "",
+      "source_status": "open",
+      "notes": "Из проверки цикла сна (2026-10-02): auditor_v2.observe_and_audit('Сделал анализ, TODO: проверить...') -> observations=1, dropped=0, total_damage=0. Причина: _struct_findings возвращает [] если artifact не dict (а строковый текст research-артефактов не проходит), правила контракта для оркестратора 'unknown' пусты. Корзина/триггер/планировщик работают (проверено: 3 CRITICAL -> DAMAGE_THRESHOLD -> план), но аудитор не кормит корзину на тексте. Блокирует автоматический сон (TD-164/179).",
+      "progress": "2026-10-02: создано через tech_debt_cli.py"
+    },
+    {
+      "id": "TD-181",
+      "owner": "research-orchestrator",
+      "presentation_category": "ACTIVE",
+      "sunset_at": "2027-10-02",
+      "title": "Оркестратор не понимает как пользоваться CLI/внешним аудитором: роутер-помощник (dispatch-map) не сработал, аудитор не нанёс демеджа за 'тупку' (не смог найти opencode CLI, путает Electron/CLI, не знает как проверить внешнего аудитора/циклы снов) — нужен мета-скил, который улучшает скилы и инструменты с контрактами (skill-improvement loop)",
+      "status_detail": "OPEN_CURRENT",
+      "kind": "process",
+      "status": "open",
+      "severity": "high",
+      "acceptance": "Оркестратор при задаче: (1) находит opencode CLI (агент_loop/OPENCODE_BIN), (2) использует dispatch-map/роутер, (3) косяк (не нашёл инструмент) -> аудит-корзина получает демедж, (4) мета-скил (skill_master) по повторению тупки обновляет контракты/инструменты; проверено: повторная тупка «не знаю как вызвать CLI» не повторяется (находит через OPENCODE_BIN)",
+      "area": "",
+      "source_status": "open",
+      "notes": "Из сессии 2026-10-02: оркестратор «тупит» — не может найти opencode CLI (ищет Get-Command, npm, portable; не знает что CLI в C:\\Temp\\bunx-...\\opencode.exe), путает десктоп-приложение (Electron) с CLI, не понимает как вызвать внешнего аудитора (TD-163) и проверить циклы снов (TD-164). Роутер-помощник (shared/harness-dispatch-map.md) НЕ сработал — агент не прочитал его или не применил. Аудитор НЕ нанёс демеджа за эти тупки (нет фиксации косяков в корзину). Нужен мета-скил (skill_master/skill_upgrade): (1) чёткая инструкция «как найти/использовать CLI», (2) авто-фиксация косяков в аудит-корзину, (3) улучшение скилов/инструментов с контрактами на основе повторяющихся тупок. Связано: TD-163, TD-164, TD-174, TD-179, TD-180, TD-145.",
+      "progress": "2026-10-02: ЧАСТИЧНО РЕШЕНО. (1) dispatch-map: секция 'Как найти/использовать opencode CLI' — агент НЕ ищет через Get-Command, использует OPENCODE_BIN или путь C:\\Temp\\bunx-*-opencode-ai@latest\\node_modules\\.bin\\opencode.exe. (2) setup_env.ps1: авто-детект CLI (Get-ChildItem C:\\Temp ... node_modules\\.bin\\opencode.exe) вместо голого 'opencode'. (3) Инструкции по проверке аудитора (run_audit_cycle.py) и памяти (resolve_bundle -> memory_context). Осталось: мета-скил улучшения скилов по повторяющимся тупкам (skill_master), авто-демедж за тупку."
+    },
+    {
       "id": "RS-001",
       "title": "Автореферат v20: исправить завышенную плотность дислокаций ρ в литобзоре НКР (глава 1) [было work TD-103]",
       "area": "НКР_Черенков 20-06-25.docx (глава 1, 1.1.1), claims c18, research_verification/",
@@ -4288,7 +4320,7 @@
   ],
   "consolidation": {
     "merged_from_work": true,
-    "date": "2026-10-01",
+    "date": "2026-10-02",
     "note": "Единый реестр: work-записи с конфликтующими ID сохранены как RS-*"
   }
 }

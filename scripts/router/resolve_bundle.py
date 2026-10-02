@@ -8,6 +8,22 @@ def read(rel): return json.loads((root()/rel).read_text(encoding='utf-8'))
 def load_module(path,name):
     spec=importlib.util.spec_from_file_location(name,path); m=importlib.util.module_from_spec(spec); assert spec.loader; spec.loader.exec_module(m); return m
 
+def _inject_memory_context(route:str, task:str)->dict:
+    """Инжекция памяти из Meta-Cycle (memory_circulator) в бандл (TD-179).
+
+    Возвращает {memory: {l1, l3_top, status}} или {} если memory_circulator недоступен.
+    Используется research/writer/code роутами для передачи уроков L1/L3 агенту.
+    """
+    if route not in ('academic-research','web-research','writing-prose','code-implementation','document-extraction','optimization'):
+        return {}
+    try:
+        mc = load_module(str(root()/'scripts'/'meta'/'memory_circulator.py'), 'memory_circulator').MemoryCirculator()
+        l1 = mc.l1_variables(task, {})
+        l3 = mc.circulate_l3_to_l1(task, top=5)
+        return {"memory": {"l1": l1, "l3_top": l3[:5], "status": mc.status()}}
+    except Exception as e:
+        return {"memory": {"error": f"{e.__class__.__name__}: {e}"}}
+
 def choose_stage(route_cfg:dict,text:str,requested:str|None)->str:
     stages=route_cfg['stages']
     if requested:
@@ -82,7 +98,7 @@ def resolve_bundle(task:str,route_id=None,stage=None,profile=None,preflight_path
             'verify_gate': 'scripts/glossary/verify_coder_dom.py',
             'rule': 'work through the capsule; regen + commit DOM with code',
         }
-    return {'ok':state=='READY','bundle_state':state,'route_id':route,'stage':sid,'domains':domains,'profile':base.get('profile'),'execution_mode':base.get('execution_mode'),'skills':skills,'logical_tools':logical,'required_capabilities':req,'required_any_of':scfg.get('required_any_of',[]),'optional_capabilities':list(dict.fromkeys(opt)),'forbidden_capabilities':sorted(forb),'providers':providers,'missing_required':missing,'failed_requirement_groups':failed_groups,'next_stages':scfg.get('next',[]),'escalation':scfg.get('escalation',{}),'base_policy_hash':base.get('policy_hash'),'capability_policy_hash':snap.get('policy_hash'),'bundle_mode':'capability','guard_required':base.get('guard_required',False),'agent':base.get('agent'),'agent_hint':base.get('agent_hint',''),'coder_dom_hint':coder_dom_hint,'templates':_load_templates()}
+    return {'ok':state=='READY','bundle_state':state,'route_id':route,'stage':sid,'domains':domains,'profile':base.get('profile'),'execution_mode':base.get('execution_mode'),'skills':skills,'logical_tools':logical,'required_capabilities':req,'required_any_of':scfg.get('required_any_of',[]),'optional_capabilities':list(dict.fromkeys(opt)),'forbidden_capabilities':sorted(forb),'providers':providers,'missing_required':missing,'failed_requirement_groups':failed_groups,'next_stages':scfg.get('next',[]),'escalation':scfg.get('escalation',{}),'base_policy_hash':base.get('policy_hash'),'capability_policy_hash':snap.get('policy_hash'),'bundle_mode':'capability','guard_required':base.get('guard_required',False),'agent':base.get('agent'),'agent_hint':base.get('agent_hint',''),'coder_dom_hint':coder_dom_hint,'templates':_load_templates(),'memory_context':_inject_memory_context(route,task)}
 
 def _load_templates() -> dict:
     """Шаблоны инструментов (контракты вызова) из tool_skill_templates.json."""
