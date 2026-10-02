@@ -1,0 +1,17 @@
+{
+  "module": "M4",
+  "code": "config/tool_skill_templates.json + .opencode/skills/task-context-assessment/SKILL.md",
+  "description": "TD-177: создан skill оценки задачи/контекста для поискового агента. (1) В config/tool_skill_templates.json добавлен шаблон роутера task_context_assessment (kind=skill, required_input goal+claim_id, optional need/channels_hint, forbidden: запуск поиска/скачивание/запросы к каналам, start_with: 4 вопроса контракта глубины + оценка контекста, finish_with: verdict {goal, need, depth, stop_criterion, context_survey} + передача управления unified_search, guard_required=true, example про книгу Герасимова/TOC). (2) Создан .opencode/skills/task-context-assessment/SKILL.md с frontmatter (name, description с триггерами «оцени задачу/контекст», «что искать», «какая глубина»), содержанием: 4 вопроса контракта глубины (что/зачем/сколько/когда достаточно), оценка контекста (что уже нашли, соседние источники в корпусе/каталогах, доступные каналы), выбор глубины (поверхностный/средний/глубокий по таблице), критерий остановки, явный запрет запускать поиск/скачивать/опрашивать каналы, чеклист перед verdict. Ссылка на shared/search-depth-contract.md (TD-170). (3) shared/harness-dispatch-map.md: в раздел поиска добавлена строка «Перед поиском — skill task-context-assessment (TD-177): оценка задачи (4 вопроса) + контекста» с уточнением, что skill поиск не запускает.",
+  "notes": [
+    "Добавлен шаблон task_context_assessment в config/tool_skill_templates.json (теперь 18 шаблонов, версия файла не менялась).",
+    "Создан .opencode/skills/task-context-assessment/SKILL.md (frontmatter + 4 вопроса + оценка контекста + глубина + критерий остановки + запрет поиска).",
+    "shared/harness-dispatch-map.md: строка про task-context-assessment добавлена в раздел поиска (рядом с существующей строкой TD-177 про оценку задачи).",
+    "search-depth-contract.md не изменён (scope out). Другие шаблоны tool_skill_templates.json не менялись (scope out).",
+    "Acceptance проверен: json.load на tool_skill_templates.json OK, task_context_assessment присутствует (kind=skill, guard_required=true); SKILL.md существует с frontmatter; dispatch-map содержит упоминание task-context-assessment (строка 73)."
+  ],
+  "files": [
+    "config/tool_skill_templates.json",
+    ".opencode/skills/task-context-assessment/SKILL.md",
+    "shared/harness-dispatch-map.md"
+  ]
+}

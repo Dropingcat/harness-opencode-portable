@@ -69,7 +69,6 @@
 - Провенанс (URL/дата/hash/источник) — через `downloader.py save_with_provenance`.
 - Обходы: DNS-bypass (DoH, TD-153), зеркала libgen (is/rs/st/gs/li/lc), annas-archive (org/se), **lib-bkm.ru** (Библиотека Машиностроителя: /load/104 Материаловедение, /load/25 ГОСТы, /load/135 Диссертации).
 - **Глубина поиска** — по контракту `shared/search-depth-contract.md` (TD-170): зафиксировать → осмотреться → оценить глубину → идти дальше. НЕ «вспоминать» контекст, НЕ зацикливаться.
-- **Оценка задачи/контекста перед поиском** (TD-177): ответь на 4 вопроса контракта глубины + оцени контекст (что уже нашли, что вокруг) ДО запуска каналов. Это запись для поискового агента — см. раздел «Запись для поискового агента» в `search-depth-contract.md`.
 
 > SearXNG (`127.0.0.1:8888`) — **восстановлен** (TD-128): `mcp/mini_searxng.py` (arXiv/OpenAlex + DDG, JSON-интерфейс). Если порт мёртв — запусти: `python scripts/tools/start_searxng.py`. Используй `searxng_search` (MCP) или `webfetch` к `http://127.0.0.1:8888/search?q=...&format=json`.
 >
@@ -154,3 +153,23 @@ oc://renderer/server/<server-id>/session/<session-id>
 - Субагентская: при падении субагента (task) его сессия живёт во вложенной ветке; renderer-ссылка на неё открывается из родительской сессии (клик по задаче/ветке) или из лога `storage/session_diff/`.
 
 **Когда использовать (TD-150):** субагент упал → НЕ гадай «ничего не сделал» — открой его сессию через renderer-ссылку, посмотри stdout/stderr/артефакты. Если ссылка не доступна — прочитай сессию через `session_analyzer.py dump <session.json>`.
+
+## Как найти/использовать opencode CLI (TD-181)
+
+**НЕ ищи opencode через Get-Command/where/npm.** CLI-бинарь задан env `OPENCODE_BIN`:
+```powershell
+$env:OPENCODE_BIN   # путь к opencode.exe
+python scripts/tools/agent_loop.py --agent АГЕНТ --contract "ЗАДАЧА"   # итеративный запуск
+```
+**Если OPENCODE_BIN пуст** — ищи в C:\Tempunx-*-opencode-ai@latest
+ode_modules\.bin\opencode.exe
+(или в portable: `packages/opencode-harness-plugin/node_modules/.bin/`).
+
+**Как проверить внешнего аудитора / циклы снов (TD-163/164):**
+```bash
+# внешний аудит артефакта -> урон в корзину -> при пороге сон
+python scripts/meta/run_audit_cycle.py --artifact "ТЕКСТ" --orchestrator research --loop 2
+# проверить память через роутер
+python scripts/router/resolve_bundle.py "ЗАДАЧА"   # -> memory_context (L1 + L3 уроки)
+```
+Аудит бросает урон за косяки (TD-180): TODO/нет цифр/вода -> CRITICAL/WARNING в корзину.

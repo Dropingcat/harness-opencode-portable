@@ -407,6 +407,35 @@
         "isbn": "978-5-7038-3933-1"
       }
     },
+    "task_context_assessment": {
+      "kind": "skill",
+      "required_input": {
+        "goal": "string",
+        "claim_id": "string (optional)"
+      },
+      "optional_input": {
+        "need": "fact|fulltext|toc|doi|isbn",
+        "channels_hint": "string"
+      },
+      "forbidden_input": [
+        "запускать поиск",
+        "скачивать файлы",
+        "выполнять запросы к каналам"
+      ],
+      "start_with": [
+        "ответь на 4 вопроса контракта глубины: что ищем, зачем (для какого claim), сколько нужно, когда достаточно",
+        "оцени контекст: что уже нашли, что лежит вокруг в корпусе/каталогах"
+      ],
+      "finish_with": [
+        "верни verdict: {goal, need, depth: поверхностный|средний|глубокий, stop_criterion, context_survey}",
+        "передай управление поисковому агенту (unified_search) с выбранной глубиной"
+      ],
+      "guard_required": true,
+      "example": {
+        "goal": "найти книгу Герасимова для claim B1",
+        "need": "toc"
+      }
+    },
     "agent_loop": {
       "kind": "script",
       "command": "python scripts/tools/agent_loop.py --agent <агент> --contract \"<контракт>\" [--max-iters N] [--done-file artifact] [--done-regex маркер] [--session id]",
