@@ -1,0 +1,90 @@
+{
+  "module": "B3-T1_setup_env.ps1",
+  "verdict": "APPROVE",
+  "justification": "Процесс B3-T1 соблюдён: бэкап есть (setup_env.ps1.bak байт-в-байт = HEAD), правки только в scripts/setup_env.ps1 (git diff --stat: 1 файл, 95+/28-), синтаксис PS валиден, User env не тронут при прогоне без флага. Воркер НЕ выходил за scope (прочие изменённые файлы — предсуществующие чужие сессии). Воркер нашёл и артефактировал 2 техдолга (TD-B3T1-1/2), но НЕ зарегистрировал их в PROBLEMS_REGISTER — зафиксированы ревьюером и мной (TD-DEV-5/6/7, + мои TD-DEV-8/9/10). Единственный процессный дефект: заявление воркера «DoD 7/7 PASS» неточно — строго 6/7 (DoD B3-T1 требует OPENCODE_BIN=shim, а shim не создан; детект отдаёт реальный bunx-кэш; зафиксировано TD-DEV-7). Это не блокирует: детект корректен и безопаснее, чем мёртвый 'opencode', а shim — отдельная задача B3-T2/W11. Интеграционные зависимости (B3-T2 shim, TD-DEV-3 junction, EXP-1b) разблокированы и проанализированы. Код не оцениваю (роль аудитора — процесс).",
+  "process_analysis": {
+    "contracts_respected": true,
+    "iteration_count": 1,
+    "iteration_limit": 3,
+    "role_violation": false,
+    "reviewer_args_assessment": "Ревью-артефакт reviewer_B3-T1.json ОТСУТСТВУЕТ (зафиксирован TD-DEV-9), но ревьюер параллельно зарегистрировал в PROBLEMS_REGISTER TD-DEV-5/6/7 с теми же фактами, что и мои проверки (мёртвый glob, мёртвый User BIN, DoD 7/7 неточно). Аргументы ревьюера по фактам подтверждены; вывод о «DoD 6/7» принят.",
+    "worker_args_assessment": "Аргументы воркера проверены эмпирически: .bak==HEAD (hash совпал после нормализации кодировки), мёртвый C:\\Temp\\bunx-* подтверждён (0 совпадений), реальный кэш ~\\.bun\\install\\cache\\opencode-ai@1.18.34@@@1\\bin\\opencode.exe существует, User OPENCODE_BIN мёртв (Test-Path=False), User HARNESS_ROOT не изменён. Неточность: заявление «DoD 7/7 PASS» (строго 6/7 — OPENCODE_BIN=shim не выполнен, TD-DEV-7)."
+  },
+  "sections": {
+    "1_process": {
+      "table": [
+        {"requirement": "Бэкап перед правками (B5 шаг 1 / процесс)", "fact": "setup_env.ps1.bak создан, байт-в-байт == HEAD (hash совпал)", "result": "PASS"},
+        {"requirement": "Правки только в scripts/setup_env.ps1 (не выходить за scope)", "fact": "git diff --stat: 1 файл (95+/28-); прочие M/?? — предсуществующие чужие сессии (config/agent_categories, scripts/researcher, docs/glossary — mtime до окна B3-T1)", "result": "PASS"},
+        {"requirement": "Синтаксис валиден", "fact": "Parser.ParseFile → SYNTAX: OK (мой прогон) + validate_setup_env.ps1 (SYNTAX OK)", "result": "PASS"},
+        {"requirement": "Прогон без флага НЕ трогает User env", "fact": "User HARNESS_ROOT=канон (не изменён), User OPENCODE_BIN=мёртвый harness-deploy (не изменён), SETUP_FLAG пуст; process-scope + WARN подтверждены", "result": "PASS"},
+        {"requirement": "DoD B3-T1: HARNESS=portable; OPENCODE_BIN=путь к shim", "fact": "HARNESS_IS_PORTABLE=TRUE (детект-тест); OPENCODE_BIN=реальный bunx-кэш (существует). НО: DoD требует путь к shim, shim не создан (B3-T2/W11) → строго 6/7 DoD, не 7/7 (TD-DEV-7). Детект корректен и безопаснее мёртвого 'opencode'.", "result": "PARTIAL (6/7 DoD; TD-DEV-7)"},
+        {"requirement": "Техдолги TD-B3T1-1/2 зарегистрированы в PROBLEMS_REGISTER (контракт 05)", "fact": "НЕ были зарегистрированы воркером; зафиксированы ревьюером (TD-DEV-5/6/7) и аудитором (TD-DEV-8/9/10) — параллельно; дубли устранены (оставлены версии ревьюера)", "result": "FAIL воркера → ИСПРАВЛЕНО (ревьюер+аудитор)"},
+        {"requirement": "Коммит не делался", "fact": "git log не содержит коммита B3-T1; worker notes: 'Коммит НЕ делался (запрет контракта)'", "result": "PASS"}
+      ],
+      "iteration_count": 1,
+      "iteration_limit": 3,
+      "role_violation": false
+    },
+    "2_integration": {
+      "B3-T2_shim": {
+        "impact": "Воркер подтвердил, что контрактный glob C:\\Temp\\bunx-* мёртв (0 совпадений) — реальный кэш ~\\.bun\\install\\cache\\opencode-ai@*. Shim-кодер обязан: (1) резолвить bunx-кэш по реальному пути (или bunx opencode-ai — имя пакета opencode-ai, НЕ opencode, см. W11); (2) поставить CWD=portable (P-CRIT-1); (3) единый источник OPENCODE_BIN, чтобы setup_env.ps1 (env-детект) и shim (B3-T2) не расходились; (4) не полагаться на мёртвый glob из контракта.",
+        "deadline": "B3-T2 = REQUIRES_USER_DECISION (RUD-2 решён → W11); shim — вход CLI-контура W11"
+      },
+      "TD-DEV-3_junction": {
+        "unblocked": true,
+        "what": "TD-DEV-3 (junction ~/.config/opencode/shared ↔ portable/shared) НЕ создан: live shared = 9 файлов, portable = 4; junction уничтожит 5 live-капсул; бэкап shared_backup_20261005_213446 существует",
+        "b3t1_role": "B3-T1 (env=portable с флагом) — предусловие выполнено (скрипт готов и проверен)",
+        "still_required": "РЕШЕНИЕ ПОЛЬЗОВАТЕЛЯ (REQUIRES_USER_DECISION): судьба 5 live-капсул (B1-T4/B2-T4 — 9 недостающих shared) + подтверждение, что env=portable применяется деплоем (флаг=1). Junction и env-применение — РАЗНЫЕ решения, TD-DEV-3 требует оба.",
+        "blocked_on": "B1-T4 (импорт 9 shared) фактически НЕ выполнен: portable shared = 4 файла, route-preflight.md ОТСУТСТВУЕТ (M1-капсула), несмотря на статус ГОТОВО в плане; проверить при B1-T4/B2-T4"
+      },
+      "EXP-1b": {
+        "ready": "3/4",
+        "deps": {
+          "B1-T2": "✅ (выполнен, ревью REQUEST_CHANGES по DoD 7/8 — процессные, не код; opencode.json переписан на portable)",
+          "M0-a": "✅ (выполнен)",
+          "B3-T1": "✅ (данный блок)",
+          "CONFIG_MERGE.md": "❌ отсутствует (config\\CONFIG_MERGE.md = False) — создаётся В ХОДЕ EXP-1b, не до"
+        },
+        "command": "03_ACCEPTANCE §EXP-1b: после B1-T2 прогнать слияние глобального (~/.config/opencode/opencode.jsonc) + проектного (.opencode/opencode.json), проверить склейку plugin-массивов; исходы A/B/C; результат → config/CONFIG_MERGE.md (B2-T3)",
+        "conclusion": "Блокирующих отсутствий нет, но запуск EXP-1b должен идти на шаге B5-2 (план, критический путь), а не сейчас — до легализации канона. P-CRIT-4 (EXP-3/4/5 не встроены) сохраняется."
+      },
+      "security_flag": {
+        "risks": "Запуск с флагом OPENCODE_HARNESS_SETUP_USER=1 ПЕРЕЗАПИШЕТ User env (канон→portable): (1) OPENCODE_HARNESS_ROOT канон → portable; (2) OPENCODE_BIN мёртвый harness-deploy → bunx-кэш; (3) все RESEARCH_*/WRITER_*/DOC_GUARD_* → portable-пути. Риски: Desktop (Electron) использует session.directory канона (P-MAJ-4) — может не пережить смену env; другие сессии/скрипты, ожидающие канон-пути (хардкоды B4-T6, 14 файлов); live-скрипты (W12 — env RESEARCH_*/WRITER_* не заданы).",
+        "recommendation": "БЕЗОПАСНО запускать с флагом ПОСЛЕ: (1) B4-T6 (хардкоды канона устранены), (2) B2-T2/B2-T4 (судьба live shared/writer решена), (3) B1-T5 (легализация канона) или параллельно с шагом B5-6 — штатное место применения env=portable. ДО этого — только process-scope прогоны без флага (текущий режим)."
+      }
+    },
+    "3_regressions": {
+      "table": [
+        {"check": "Запуск из канона (E:\\opencode_harness\\scripts\\setup_env.ps1): новый код НЕ перетирает чужой HARNESS_ROOT", "fact": "при заданном канон-ROOT печатает WARN и сохраняет значение; без флага User не трогается; с флагом — перезапишет на канон-корень (ожидаемо)", "result": "OK (WARN-семантика корректна; канон-версия скрипта при этом СТАРАЯ — TD-DEV-7)"},
+        {"check": "Все ли переменные старого скрипта сохранены", "fact": "Сверка .bak vs новый: OPENCODE_HARNESS_ROOT/RUNS_DIR/CONFIG_DIR ✅, OPENCODE_BIN ✅ (детект вместо 'opencode'), DOC_GUARD_ENTRYPOINT/RUNNER/CONFIG/PROVIDER ✅, HERMES_ROOT ✅, WRITER_CORE_ROOT/RUNS_DIR/LINGUISTICS_REGISTRY_DIR ✅, PYTHON_VENV/PYTHON/PYTHON_BIN ✅, WRITER_PYTHON ✅, RESEARCH_CORE_ROOT/VERIFY_CLAIMS ✅, OPENCODE_SESSION_DB ✅, RESEARCH_SCRIPTS_ROOT/RUNNER_SH/RULES_PATH/NUMERIC_COMPARATOR/SYNTHESIZER/JUDGE_BRIEF/VERIFICATION_ROOT ✅", "result": "PASS (потери нет)"},
+        {"check": "Новые переменные (не было в старом)", "fact": "нет — состав идентичен", "result": "PASS"},
+        {"check": "PYTHON fallback при отсутствии venv", "fact": "сохранён (venv есть — .venv\\Scripts\\python.exe существует; writer-venv отсутствует → WARN + harness-venv)", "result": "PASS"},
+        {"check": "WRITER_PYTHON логика сохранена без изменений", "fact": "строки 43-60 .bak == новый код (логика идентична)", "result": "PASS"}
+      ]
+    },
+    "4_techdebt": {
+      "registered_by_worker": ["TD-B3T1-1 (мёртвый bunx-glob) — найден, НЕ зарегистрирован; зафиксирован ревьюером как TD-DEV-5", "TD-B3T1-2 (мёртвый User OPENCODE_BIN) — найден, НЕ зарегистрирован; зафиксирован ревьюером как TD-DEV-6"],
+      "registered_by_reviewer": ["TD-DEV-5 (MEDIUM): мёртвый контрактный glob C:\\Temp\\bunx-* + оставлен ПЕРВЫМ в приоритете детекта; закрытие: B3-T2/W11 единый источник + удалить мёртвый glob", "TD-DEV-6 (MEDIUM): User OPENCODE_BIN мёртв; закрытие: решить единый источник BIN до прогона с флагом", "TD-DEV-7 (MEDIUM): DoD B3-T1 «OPENCODE_BIN=shim» формально не закрыт (строго 6/7 DoD); закрытие: shim в W11 или обновить DoD"],
+      "registered_by_auditor": [
+        "TD-DEV-8 (LOW): setup_env.sh (B4-T9) без флага и без детекта OPENCODE_BIN; закрытие: доработка в B4-T9",
+        "TD-DEV-9 (MEDIUM): отсутствует ревью-артефакт reviewer_B3-T1.json; закрытие: ревьюер сохраняет JSON-вердикт",
+        "TD-DEV-10 (MEDIUM): рассинхрон setup_env.ps1 канона и portable (канон без флага, пишет User молча); закрытие: B1-T5/B5"
+      ],
+      "missed_by_worker_reviewer": ["TD-B3T1-1/2 НЕ зарегистрированы воркером в PROBLEMS_REGISTER (контракт 05 §4 — фиксирует нашедший; исправлено ревьюером/аудитором)", "TD-DEV-10 рассинхрон канон/portable (найден аудитором)", "TD-DEV-8 .sh аналог (B4-T9) не синхронизирован (найден аудитором)", "TD-DEV-9 отсутствие ревью-артефакта (найден аудитором)"]
+    },
+    "5_verdict": {
+      "verdict": "APPROVE",
+      "note": "APPROVE процесса B3-T1 (с учётом TD-DEV-7: DoD строго 6/7 — детект реален, shim в B3-T2/W11) + 6 зарегистрированных TD (TD-DEV-5..10). До EXP-1b дополнительно: решение пользователя по TD-DEV-3 (junction + судьба 5 live-капсул), проверка B1-T4 (9 shared + route-preflight.md отсутствуют), применение env=portable строго на шаге B5-6 (после B4-T6/B2/B1-T5)."
+    }
+  },
+  "requirements": [
+    "Деплоер: закоммитить docs/PROBLEMS_REGISTER.md (TD-DEV-5..10) + auditor_B3-T1.json (шаг 3.5 контракта 04); НЕ коммитить setup_env.ps1 самим аудитором",
+    "Ревьюеру B3-T1: сохранить JSON-вердикт (TD-DEV-9) — отсутствует",
+    "До запуска с флагом (env=portable): устранить хардкоды канона (B4-T6), решить судьбу live shared/writer (B2-T2/T4), легализация канона (B1-T5) — см. шаг B5-6",
+    "B3-T2 shim: резолвить реальный bunx-кэш (opencode-ai@*), CWD=portable, единый источник OPENCODE_BIN (TD-DEV-5)",
+    "B4-T9: доработать setup_env.sh (флаг + детект BIN) до B5-6 (TD-DEV-8)",
+    "B1-T4: проверить фактический импорт 9 shared + route-preflight.md (M1-капсула отсутствует) перед junction TD-DEV-3",
+    "EXP-1b: запуск на шаге B5-2 (план), результат → config/CONFIG_MERGE.md; P-CRIT-4 (встройка EXP-3/4/5 в критический путь) сохраняется",
+    "Ревьюеру B3-T1: сохранить JSON-вердикт (TD-DEV-9)"
+  ]
+}

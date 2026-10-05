@@ -75,6 +75,9 @@ git status --porcelain          # сверка: в staged ТОЛЬКО арте�
 ```
 **НЕ добавлять никогда:** `config/`, `scripts/` (чужие задачи), `.runs/`, `.kanban.db`, `*.bak` (в `.gitignore`), `.env`, любые неотносящиеся к блоку изменения.
 
+### Шаг 3.5. Артефакты техдолгов
+Если ревьюер/аудитор зарегистрировали TD-* в `docs/PROBLEMS_REGISTER.md` (см. `05_REVIEWER_AUDITOR_TECHDEBT.md`) — добавить `docs/PROBLEMS_REGISTER.md` в стейдж (и их вердикт-JSON `reviewer_<ID>.json` / `auditor_<ID>.json`).
+
 ### Шаг 4. Коммит
 ```
 git commit -m "<ID>: <краткое описание> (артефакты: <краткий перечень>)"
