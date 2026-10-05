@@ -1,0 +1,24 @@
+{
+  "verdict": "REQUEST_CHANGES",
+  "justification": "Все 6 задач M0-a выполнены корректно и подтверждены фактами (SHA капсул идентичны канону, path_resolution_map валиден, бэкап live shared = 9 файлов, junction корректно НЕ создан). Но до EXP-1b и приёмки M0 не закрыты 3 процессных требования: (1) env OPENCODE_HARNESS_ROOT = канон — плагин index.ts:25 резолвит корень приоритетно из env, поэтому EXP-1b при текущем env нерепрезентативен, а M0-чек матрёшки (echo $env:OPENCODE_HARNESS_ROOT → portable) даёт FAIL до B3-T1; (2) техдолг junction не зарегистрирован (в tech_debt.json записи нет, PROBLEMS_REGISTER отсутствует); (3) .gitignore не содержит runtime-паттернов (git check-ignore .kanban.db/.runs/* → exit 1) — деплоерский `git add -A` закоммитит мусор. Сама работа воркера — APPROVE-качества; требования — процессные, до следующего шага.",
+  "process_analysis": {
+    "contracts_respected": true,
+    "iteration_count": 1,
+    "iteration_limit": 3,
+    "role_violation": false,
+    "reviewer_args_assessment": "Воркер-отчёт корректен и подтверждён проверкой фактов: SHA256 капсул в shared/ и .opencode/shared/ идентичны канону (38AC.../C552...), .opencode/shared — обычная директория (не junction), бэкап shared_backup_20261005_213446 содержит 9 файлов live. Отчёт честно фиксирует junction=NOT_DONE и env=канон как REQUIRES_USER_DECISION/B3-T1.",
+    "worker_args_assessment": "Обоснованно отложил junction: live shared (9 файлов) ≠ portable shared (4 файла) — junction без конвергенции уничтожил бы 5 live-капсул (article-writing, dispatch-retry, orchestration-patterns, research-*, writer-traceability, writing-orchestration). НЕ менял глобальный env — корректно (B3-T1 вне скоупа M0-a, защита пользовательского окружения). Scope не превышен: 6/6 задач, доп. артефакты — только отчёт и временный скрипт в C:\\Temp."
+  },
+  "requirements": [
+    "ДО EXP-1b: выставить OPENCODE_HARNESS_ROOT=portable (B3-T1 setup_env.ps1 или сессионно) — иначе плагин (index.ts:25, приоритет env) резолвит корень в канон и EXP-1b проверяет не portable-самостоятельность; это же закрывает M0-чек матрёшки (echo $env:OPENCODE_HARNESS_ROOT → portable).",
+    "Зарегистрировать техдолг junction в config/tech_debt.json (severity HIGH): условия — REQUIRES_USER_DECISION + конвергенция shared (B2-T4/RUD-5: импорт 7 лишних из live) + после B3-T1; альтернатива — sync_to_live (B2), junction-аудит в W12. PROBLEMS_REGISTER.md не существует — использовать tech_debt.json как канонический реестр.",
+    "Деплоеру: НЕ делать git add -A до обновления .gitignore (B3-T4) — сейчас .kanban.db, .runs/worker_m2.json, .runs/progress/, .runs/verification/ НЕ игнорируются (git check-ignore → exit 1) и попадут в коммит; либо точечный add (HARNESS_ROOT, shared/*.md, .opencode/shared/, config/path_resolution_map.json, worker_M0a_ostatok.json)."
+  ],
+  "integration_notes": {
+    "exp1b_ready": "УСЛОВНО: B1-T2 ✅ (opencode.json: 0 канон-ссылок, plugin+4 mcp → portable), капсулы ✅, якорь ✅, map ✅. Блокер репрезентативности — env=канон (см. requirements). B3-T1 НЕ блокер запуска merge-конфигов, но блокер M0-приёмки.",
+    "m0_check_matryoshka": "FAIL до B3-T1: echo $env:OPENCODE_HARNESS_ROOT → канон (не portable). Test-Path '$env:OPENCODE_HARNESS_ROOT\\shared\\orchestration-thread-process.md' → True, но проверяет КАНОН (файл там есть), а не portable.",
+    "path_resolution_map": "Запись portable корректна (pattern E:\\opencode_harness_portable → ${OPENCODE_HARNESS_ROOT}, 8 mappings). Конфликта нет: канон-записи (E:\\Documents) в map НЕ существует.",
+    "live_prompts": "Ожили: code-orchestrator.md:38 и code-auditor.md:31 (`.opencode/shared/code-factory-process.md` существует), всего 7 агентов ссылаются на капсулы — все пути разрешимы (portable shared + .opencode/shared + live fallback).",
+    "matryoshka_scripts": "test_e2e_orchestration.py, tribunal_trigger.py, test_e2e_matryoshka.py в portable ОТСУТСТВУЮТ (scripts/ci = 3 файла). Ожидаемо для Транша A (приёмка C2), не скоуп M0-a."
+  }
+}

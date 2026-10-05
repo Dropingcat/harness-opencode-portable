@@ -35,11 +35,34 @@
       "pattern": "/home/orangepi/.opencode/bin/opencode",
       "replacement": "${OPENCODE_BIN}",
       "description": "OpenCode binary"
+    },
+    {
+      "pattern": "E:\\opencode_harness_portable",
+      "replacement": "${OPENCODE_HARNESS_ROOT}",
+      "description": "Portable harness root (portable)"
     }
   ],
   "scan": {
-    "include_extensions": [".md", ".py", ".json", ".jsonc", ".ts", ".js", ".yaml", ".yml", ".txt"],
-    "exclude_dirs": [".git", "__pycache__", "node_modules", ".venv", "venv", "dist", "build"],
+    "include_extensions": [
+      ".md",
+      ".py",
+      ".json",
+      ".jsonc",
+      ".ts",
+      ".js",
+      ".yaml",
+      ".yml",
+      ".txt"
+    ],
+    "exclude_dirs": [
+      ".git",
+      "__pycache__",
+      "node_modules",
+      ".venv",
+      "venv",
+      "dist",
+      "build"
+    ],
     "max_file_size_mb": 10
   },
   "replacement": {

@@ -65,3 +65,4 @@
 |----|----------|------|------------|--------|--------------|
 | TD-DEV-1 | PowerShell 5.1 `.Replace` искажает кириллицу в путях | `.Replace()` в PS 5.1 обрабатывает строки не как UTF-8 → кириллические пути (`doc_Opencode_agern-new`) повреждаются. | B1/B4 | OPEN | Править файлы с кириллицей Python-скриптом (utf-8). Влияет: B1-T2 механика, B4-T6 (хардкоды), setup_env. |
 | TD-DEV-2 | `mcp/coder_router_server.py` не имеет CLI-парсера | `--help` молча игнорируется, exit 0 с пустым stdout — нет argparse. | W11/W12 | OPEN | Добавить argparse или stderr-справку. Влияет: API-контур (W11/W12). |
+| TD-DEV-3 (HIGH, OPEN) | Junction `~/.config/opencode/shared` ↔ `E:\opencode_harness_portable\shared` НЕ создан | live shared = 9 файлов, portable = 4; junction уничтожит 5 live-капсул. Бэкап: `shared_backup_20261005_213446`. | M0-a/B3 | OPEN | Требует: B3-T1 (env=portable) + решение пользователя (REQUIRES_USER_DECISION). |
