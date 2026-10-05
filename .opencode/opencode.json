@@ -3,13 +3,13 @@
   "model": "polza/deepseek/deepseek-v4-flash-0731",
   "small_model": "polza/deepseek/deepseek-v4-flash-0731",
   "plugin": [
-    "file:///E:/Documents/Документы/doc_Opencode_agern-new/packages/opencode-harness-plugin/dist/index.js"
+    "file:///E:/opencode_harness_portable/packages/opencode-harness-plugin/dist/index.js"
   ],
   "mcp": {
     "coder_router": {
       "type": "local",
       "command": [
-        "E:\\Documents\\Документы\\doc_Opencode_agern-new\\.venv\\Scripts\\python.exe",
+        "E:\\opencode_harness_portable\\.venv\\Scripts\\python.exe",
         "E:\\opencode_harness_portable\\mcp\\coder_router_server.py"
       ],
       "enabled": true
@@ -17,7 +17,7 @@
     "academic_search": {
       "type": "local",
       "command": [
-        "E:\\Documents\\Документы\\doc_Opencode_agern-new\\.venv\\Scripts\\python.exe",
+        "E:\\opencode_harness_portable\\.venv\\Scripts\\python.exe",
         "E:\\opencode_harness_portable\\mcp\\academic_search_server.py"
       ],
       "enabled": true
@@ -25,7 +25,7 @@
     "doc_extract": {
       "type": "local",
       "command": [
-        "E:\\Documents\\Документы\\doc_Opencode_agern-new\\.venv\\Scripts\\python.exe",
+        "E:\\opencode_harness_portable\\.venv\\Scripts\\python.exe",
         "E:\\opencode_harness_portable\\mcp\\doc_extract_server.py"
       ],
       "enabled": true
@@ -33,7 +33,7 @@
     "searxng_search": {
       "type": "local",
       "command": [
-        "E:\\Documents\\Документы\\doc_Opencode_agern-new\\.venv\\Scripts\\python.exe",
+        "E:\\opencode_harness_portable\\.venv\\Scripts\\python.exe",
         "E:\\opencode_harness_portable\\mcp\\searxng_search_server.py"
       ],
       "enabled": true

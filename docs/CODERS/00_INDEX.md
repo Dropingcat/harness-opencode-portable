@@ -1,0 +1,137 @@
+# КОДЕРУ: Индекс исполнительного пакета — миграция E:\opencode_harness_portable → LIVE
+
+**Дата:** 2026-10-05
+**Назначение:** этот пакет — единственная точка входа для кодера. **Кодер только кодит, не думает.** Все решения предрешены: что делать, какими командами, каким файлом, какие DoD, какие роллбэки. Никакой философии — только исполнимые спецификации.
+
+**Правило чтения:** начни с этого файла. Затем читай файлы в порядке критического пути (раздел «Критический путь»). Каждый файл самодостаточен для исполнения.
+
+---
+
+## 1. Цель пакета
+
+Довести `E:\opencode_harness_portable` до состояния **работающей фабрики агентов** и мигрировать на него как на канонический (source of truth) дерево. Старый `E:\opencode_harness` легализуется в `_LEGACY_ARCHIVE`. Итоговая проверка — раздел «Критерии готовности фабрики» в `03_ACCEPTANCE.md`.
+
+**Принципы (предрешены, не обсуждаются):**
+1. `portable = source of truth`. Канон `E:\Documents\Документы\doc_Opencode_agern-new` — легализуется в архив.
+2. `live = зеркало` через `sync_to_live.py`, не редактируется вручную.
+3. CWD-контракт: запуск только из корня portable.
+4. Рантайм (`.runs/`, `.meta_state/`, `.l2_memory/`, `.kanban.db`, `agents-data/`, `.tmp_l2.json`) — в `.gitignore`, НЕ в git.
+5. Никаких ссылок на канон в исполняемых файлах (устраняются 14 хардкодов).
+6. Детерминированность: все проверки — команды без LLM.
+7. Рантайм-изоляция: Python — `.venv\Scripts\python.exe` (портабельный venv).
+
+---
+
+## 2. Карта документации пакета
+
+| Файл | Что содержит | Когда читать |
+|------|--------------|--------------|
+| **`00_INDEX.md`** (этот) | Индекс: карта, критические блоки, критический путь, правила работы, таблица индексации | Первым, всегда |
+| **`01_BLOCKS_B1_B5.md`** | Блоки B1–B5: целевая структура, live-зеркало, сессии/env, точечные правки, миграция 8 шагов с роллбэком | Транш A: весь файл перед работой |
+| **`02_BRANCHES_W1_W13.md`** | Ветки W1–W13 с полными спеками (для W9/W10/W11/W12/W13 — полные тексты), разметка параллельности | Транш A/B: перед каждым блоком веток |
+| **`03_ACCEPTANCE.md`** | Матрёшка M0–M6, EXP-0..5, E2E-приёмка 6 команд, критерии готовности фабрики | Транш C: приёмка каждого слоя |
+
+**Источники вне пакета** (только как справочные, не как руководство к действию):
+- `docs/PLAN_MASTER_MIGRATION.md` — сводный план (сверка фактов).
+- `docs/PLAN_W1_GIT_HOOKS.md` — детальный план W1 (корень portable).
+- `docs/PLAN_E2E_MATRYOSHKA.md` — детальный план матрёшки.
+- `E:\Documents\Документы\doc_Opencode_agern-new\docs\PLAN_W7_B1T3_META_CYCLE_PORTING_2026-10-04.md` — детальный план W7/B1-T3 (канон docs).
+- `docs/PLAN_TD174-177_FACTORY.md`, `docs/AUDIT_RUD2_UNIVERSAL_AGENT_2026-10-04.json` — факты TD/W11.
+
+---
+
+## 3. Критические архитектурные блоки
+
+| # | Блок | Кратко | Файл с деталями | Ключевые подзадачи |
+|---|------|--------|------------------|---------------------|
+| **1** | **Ядро конфигурации** | `opencode.json` → portable `dist`+`venv` (5 правок), M0-a (якорь HARNESS_ROOT, junction shared), venv-whitelist 17 пакетов | `01_BLOCKS_B1_B5.md` §B1 | B1-T1, B1-T2, M0-a |
+| **2** | **Контуры агента** | CLI shim `opencode.cmd` → `bunx opencode-ai` (имя пакета — `opencode-ai`, НЕ `opencode`); API = `opencode serve --port 4099` (401 basic-auth = жив, REST-обёртка НЕ нужна); GUI = Desktop (та же БД opencode.db) | `02_BRANCHES_W1_W13.md` §W11 | W11-T1..T6 |
+| **3** | **Фабрика** | `factory_ctl submit`, guard finalize (exit 5 `TRIBUNAL_REQUIRED`), `tribunal_trigger.py`, штраф solo через `self_edit`/`XP_SELF_EDIT` | `01_BLOCKS_B1_B5.md` §B4, `02_BRANCHES_W1_W13.md` §W4, `03_ACCEPTANCE.md` §M2/M3 | B4-T4, W4, M2, M3 |
+| **4** | **Роутер** | `harness_run` → `resolve_route` → bundle → `runtime_snapshot.json`; имя тула `coder_run` (НЕ `coder_router_coder_run`); route preflight в ритуале старта | `02_BRANCHES_W1_W13.md` §W5, `03_ACCEPTANCE.md` §M1 | W5, M1, EXP-4 |
+| **5** | **Циклы** | git-хуки (pre-commit/post-commit/pre-push, `core.hooksPath`), мета-цикл V1–V8 (ночной прогон), sleep-цикл M5-M10, самообучение W10 | `01_BLOCKS_B1_B5.md` §B1-T3/B4-T5, `02_BRANCHES_W1_W13.md` §W1/W7/W10/W13 | W1, W7, W10, W13 |
+| **6** | **Память и канон** | `memory_router` (L2/L3), `canon_search` (SQLite FTS5, docs/canon 45 файлов), `memory_circulator` L2→L3 | `02_BRANCHES_W1_W13.md` §W6/W8/W10 | B4-T10, W6, W8, W10-T4 |
+| **7** | **Координация** | `peer_coordinator.py` (deliberation, max_rounds=2), `sync_to_live.py` (live-зеркало, 8+2 групп), сессии/env (CWD-валидация, agents-data) | `01_BLOCKS_B1_B5.md` §B2/B3, `02_BRANCHES_W1_W13.md` §W9 | B2, B3, W9 |
+
+---
+
+## 4. Критический путь (порядок передачи кодеру)
+
+> **Формат:** Транш — шаг — блок — что делаешь — где подробности. Каждый шаг завершается проверками DoD из указанного файла. При FAIL — стоп, исправление до перехода дальше.
+
+### Транш A — ФУНДАМЕНТ (без него ничего не работает)
+
+| # | Блок | Что | Детали |
+|---|------|-----|--------|
+| A1 | **B1-T1** | venv: whitelist 17 пакетов в `.venv` (pytest, rich, pymorphy3, pymorphy3-dicts-ru, pypdf, DAWG2-Python, razdel, typer, colorama, Pygments, markdown-it-py, mdurl, annotated-doc, pluggy, iniconfig, shellingham, websockets; searXNG — по требованию). НЕ бинарное копирование. | `01_BLOCKS_B1_B5.md` §B1-T1 |
+| A2 | **B1-T2 + M0-a** | Ядро `opencode.json` (строки 6/12/20/28/36 → portable `dist`+`venv`; `.Replace()` НЕ regex; UTF-8 без BOM; 8 DoD). M0-a: якорь `HARNESS_ROOT`, junction shared, env guard, перенос 2 капсул (`orchestration-thread-process.md`, `code-factory-process.md`), `path_resolution_map`, project-scope `opencode.json`. **Предусловие: живой движок opencode 1.18.30 (`compatibility/opencode/1.18.30.json`).** | `01_BLOCKS_B1_B5.md` §B1-T2, `03_ACCEPTANCE.md` §M0 |
+| A3 | **B1-T3** | Мета-комплект: 27 py + `templates/orchestrator_templates.json` из канона `scripts/meta` (список в `01_BLOCKS_B1_B5.md`); граф импортов без циклов; единственная внешняя зависимость pydantic. `.meta_state/` канона НЕ переносить. | `01_BLOCKS_B1_B5.md` §B1-T3, `02_BRANCHES_W1_W13.md` §W7 |
+| A4 | **B1-T4** | shared: 9 недостающих файлов + новый `route-preflight.md`. | `01_BLOCKS_B1_B5.md` §B1-T4 |
+| A5 | **B1-T5** | Легализация `E:\opencode_harness` → `_LEGACY_ARCHIVE` (reparse point). Учесть Desktop-контур (P-MAJ-4). | `01_BLOCKS_B1_B5.md` §B1-T5 |
+| A6 | **B4** | Точечные правки: B4-T2 (пути в агентах), B4-T4 (guard exit 5), B4-T5 (agent_loop fallback), B4-T6 (14 хардкодов), B4-T7 (compile_agents 26/26), B4-T8 (idle_tasks→.tmp_l2.json), B4-T9 (setup_env.sh), B4-T11 (test_e2e_orchestration). **B4-T10 (canon) — POST-миграция, Транш B.** | `01_BLOCKS_B1_B5.md` §B4 |
+| A7 | **B3** | Сессии/env: B3-T1 (setup_env.ps1, User scope только при `OPENCODE_HARNESS_SETUP_USER=1`), B3-T2 (shim `opencode.cmd` → `bunx opencode-ai`, PATH), B3-T3 (CWD-валидация в 3 оркестраторах + preflight), B3-T4 (agents-data, `.gitignore`), B3-T5 (архив-политика). | `01_BLOCKS_B1_B5.md` §B3 |
+| A8 | **EXP-3/4/5** | Прогон экспериментов ДО W11/W5: EXP-3 (writer-core на portable venv), EXP-4 (harness_run route), EXP-5 (MCP на portable venv). Протоколы — `03_ACCEPTANCE.md` §EXP. | `03_ACCEPTANCE.md` §EXP-3/4/5 |
+| A9 | **W11** | Harness = универсальный агент (после B3-T2): shim→`opencode-ai`, `mcp/harness_control_server.py`, `agent_loop --attach`, serve-лаунчер (порт 4099, `OPENCODE_SERVER_PASSWORD`). Приоритет HIGH. | `02_BRANCHES_W1_W13.md` §W11 |
+
+### Транш B — АВТОМАТИКА (после Транша A)
+
+| # | Блок | Что | Детали |
+|---|------|-----|--------|
+| B1 | **W1 → W2 → W3 → W4 → W5 → W6** | Хуки → оркестраторы → субагенты/runner → аудит/трибунал → роутер → координаторы. Порядок строгий (зависимости). | `02_BRANCHES_W1_W13.md` §W1..W6 |
+| B2 | **W9** | Peer-координация (W9-T4 BLOCKED — Слой 2 матрёшки, каркас ставить). | `02_BRANCHES_W1_W13.md` §W9 |
+| B3 | **W7** | Мета-цикл: ночной прогон (`meta_nightly.cmd` + XML), L2→L3. | `02_BRANCHES_W1_W13.md` §W7 |
+| B4 | **W8** | canon-поиск: `canon_loader`+`canon_search` (B4-T10, SQLite FTS5, docs/canon **45** файлов). POST-миграция. | `02_BRANCHES_W1_W13.md` §W8 |
+| B5 | **W12** | Аудит интеграции цепочек (после импорта shared B1-T4/B2-T4): реестр 18 пустых интеграций, NEW-1..7. Приоритет HIGH. | `02_BRANCHES_W1_W13.md` §W12 |
+| B6 | **W13** | Глубокий git-аудит снов (ПОСЛЕ M4): sleep_git-расширение, sleep_report_check, meta_nightly, check_sleep_after. Приоритет MEDIUM. | `02_BRANCHES_W1_W13.md` §W13 |
+| B7 | **B2** | live-зеркало: `sync_to_live.py` (8+2 групп, **добавить группу `mcp/`**), CONFIG_MERGE, writer-импорт, судьба live (junction plugins). | `01_BLOCKS_B1_B5.md` §B2 |
+
+### Транш C — ПРИЁМКА
+
+| # | Блок | Что | Детали |
+|---|------|-----|--------|
+| C1 | **B5** | Миграция 8 шагов с роллбэком (бэкап → EXP → Блок1 → Блок4 → Блок2 → Блок3 → ветки → E2E → легализация). | `01_BLOCKS_B1_B5.md` §B5 |
+| C2 | **Матрёшка M0–M6** | Прогон `test_e2e_matryoshka.py`, слои по цепочке, стоп на FAIL. M0–M5 ГОТОВО, **M6: снять BLOCKED** (EXP-2 выполнен, steps 60→120). | `03_ACCEPTANCE.md` §Матрёшка |
+| C3 | **E2E-приёмка** | 6 команд + шаг 7 (API-проверка serve). | `03_ACCEPTANCE.md` §E2E |
+| C4 | **EXP-0/1a/2** | Подтверждены (статусы ВЫПОЛНЕН). Протоколы EXP-1b/3/4/5 — в критическом пути. | `03_ACCEPTANCE.md` §EXP |
+| C5 | **Критерии готовности фабрики** | Итоговая проверка (раздел «работающая фабрика агентов»). | `03_ACCEPTANCE.md` §Готовность |
+
+> **Порядок в мастер-плане:** B1 → B4 → B3 → W11 → W1→W2→W3→W4→W5→W6→W9→W7→W8 → W12 → B5 → матрёшка → W13 → W10. Пакет группирует это в Транши A/B/C с приоритетами; **порядок внутри каждого Транша — строго по таблицам выше**.
+
+---
+
+## 5. Правила работы
+
+1. **CWD=portable:** все команды запускать из `E:\opencode_harness_portable` (или передавать `--harness-root`/`--repo` явно). Из чужого CWD роутер не сработает.
+2. **Python:** всегда `.venv\Scripts\python.exe` (портабельный venv). Никогда канонский `python.exe`.
+3. **Git-ветки:** каждая ветка/блок — на своей git-ветке от `feature/m11-daemon-integration` (или текущей HEAD). Именование — как в `02_BRANCHES_W1_W13.md`. Merge-порядок матрёшки — `03_ACCEPTANCE.md`.
+4. **Проверки DoD:** после каждого блока прогнать все проверки из его DoD (фальсифицируемые команды). Ни один блок не считается сделанным без PASS всех его проверок.
+5. **Роллбэк:** любой блок имеет задокументированный роллбэк (см. `01_BLOCKS_B1_B5.md` §B5, таблицы рисков в `02_BRANCHES_W1_W13.md`). При непрохождении проверки — сначала роллбэк, потом разбор.
+6. **git-хуки W1:** до установки хуков `git config core.hooksPath` не трогать; после — `W1_SKIP_HOOKS=1` для CI/ночных прогонов.
+7. **Хардкоды канона запрещены:** любые новые строки с `doc_Opencode_agern|E:\Documents|agern-new` — ошибка (проверка grep).
+8. **`.gitignore`:** рантайм-артефакты не коммитить (паттерны в `01_BLOCKS_B1_B5.md` §B3-T4, §W1).
+9. **Секреты:** только в `.env`, не в git. `OPENCODE_SERVER_PASSWORD` — только env.
+10. **Не перерегистрировать E2E-01..07:** уже в `config/tech_debt.json` (строки 4288-4455, status open, sunset 2026-10-16). RUD-8 выполнен.
+
+---
+
+## 6. Таблица индексации (критический блок → файл → подзадача → статус)
+
+| Критический блок | Файл пакета | Подзадачи | Статус на 2026-10-05 |
+|------------------|-------------|-----------|----------------------|
+| 1. Ядро конфигурации | `01_BLOCKS_B1_B5.md` §B1, `03_ACCEPTANCE.md` §M0 | B1-T1..T5, M0-a | СПЕЦИФИКАЦИИ ГОТОВЫ, ИСПОЛНЕНИЕ НЕ НАЧАТО |
+| 2. Контуры агента | `02_BRANCHES_W1_W13.md` §W11 | W11-T1..T6 | СПЕЦИФИКАЦИЯ ГОТОВА (HIGH) |
+| 3. Фабрика | `01_BLOCKS_B1_B5.md` §B4, `02_BRANCHES_W1_W13.md` §W4, `03_ACCEPTANCE.md` §M2/M3 | B4-T4, W4, M2, M3 | СПЕЦИФИКАЦИИ ГОТОВЫ |
+| 4. Роутер | `02_BRANCHES_W1_W13.md` §W5, `03_ACCEPTANCE.md` §M1 | W5, M1 | СПЕЦИФИКАЦИИ ГОТОВЫ |
+| 5. Циклы | `01_BLOCKS_B1_B5.md` §B1-T3/B4-T5, `02_BRANCHES_W1_W13.md` §W1/W7/W10/W13 | W1, W7, W10, W13, B4-T5 | СПЕЦИФИКАЦИИ ГОТОВЫ (W10 — ПОСЛЕ W8) |
+| 6. Память и канон | `02_BRANCHES_W1_W13.md` §W6/W8/W10 | B4-T10, W6, W8, W10-T4 | СПЕЦИФИКАЦИИ ГОТОВЫ (W8 — POST-миграция) |
+| 7. Координация | `01_BLOCKS_B1_B5.md` §B2/B3, `02_BRANCHES_W1_W13.md` §W9 | B2, B3, W9 | СПЕЦИФИКАЦИИ ГОТОВЫ (B2 — частично REQUIRES_USER_DECISION) |
+
+**Матрёшка:** M0–M5 ГОТОВО, **M6 — снять BLOCKED** (EXP-2 выполнен: 394 сессии по БД, p50=16/p90=61/p95=147/max=1732; ≥60: 40 сессий, ≥100: 28; E2E-сессия=73 шага → steps=120 обоснован). См. `03_ACCEPTANCE.md`.
+
+---
+
+## 7. Ближайшие действия (первое задание кодера)
+
+1. Прочитать `01_BLOCKS_B1_B5.md` полностью (Транш A).
+2. Начать с **B1-T1** (venv whitelist) — фундамент без зависимостей.
+3. Зафиксировать срез: `git add -A && git commit -m "coders: pre-tranche-A snapshot"`.
+4. Работать строго по таблицам Транша A; после каждого блока — DoD.

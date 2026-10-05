@@ -93,3 +93,7 @@ htmlcov/
 
 # TypeScript
 *.tsbuildinfo
+
+# Backups (opencode.json)
+.opencode/opencode.json.bak
+.opencode/*.bak
