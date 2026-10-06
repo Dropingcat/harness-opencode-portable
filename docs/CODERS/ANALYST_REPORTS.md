@@ -14,3 +14,4 @@
 |---|---|---|---|---|
 | 2026-10-06 | B1-T1 | .runs/artifacts/B1-T1/analyst_*.json (или сводка в сессии) | TD-DEV-14..19 классифицированы; 7 приоритетов для ресерчера; рекомендации (freeze→.runs, конвенция имён, Test-Path фактически) | APPROVE, закрыт ccac1f0 |
 | 2026-10-06 | B1-T3 | .runs/artifacts/B1-T3/analyst_B1-T3.json | Мета-комплект APPROVE; TD-DEV-22 HIGH (liveness) + N1 (saved_at) → W7 обязателен; закоммитить канон (TD-DEV-25); спека 27→28 | APPROVE, коммит 32ab90b |
+| 2026-10-06 | W7 | .runs/artifacts/W7/analyst_W7.json | Мета-цикл APPROVE; TD-DEV-22/26 FIXED, +27/28/29; ресерчер: EXP-1b раньше W1, лог nightly перезаписывается (N4) | APPROVE, коммит 7542ca7 |
