@@ -1,0 +1,15 @@
+{
+  "module": "B1-T1_venv_whitelist",
+  "code": "pip install --no-warn-script-location pytest rich pymorphy3 pymorphy3-dicts-ru pypdf DAWG2-Python razdel typer colorama Pygments markdown-it-py mdurl annotated-doc pluggy iniconfig shellingham websockets",
+  "description": "Доустановка whitelist (17 пакетов) в portable .venv через pip (не бинарное копирование). До: canon 76 / port 62, дельта 18 (17 whitelist + searxng). После: port 79, канон-уникальных осталось 1 (searxng — по требованию, не ставился).",
+  "notes": [
+    "SECTION1_DELTA: do=18 (annotated-doc,colorama,dawg2-python,iniconfig,markdown-it-py,mdurl,pluggy,pygments,pymorphy3,pymorphy3-dicts-ru,pypdf,pytest,razdel,rich,searxng,shellingham,typer,websockets); posle=1 (searxng only, by-requirement).",
+    "SECTION2_INSTALLED: pytest==9.1.1, rich==15.0.0, pymorphy3==2.0.6, pymorphy3-dicts-ru==2.4.417150.4580142, pypdf==6.19.0, DAWG2-Python==0.9.0, razdel==0.5.0, typer==0.27.2, colorama==0.4.6, Pygments==2.21.0, markdown-it-py==4.2.0, mdurl==0.1.2, annotated-doc==0.0.5, pluggy==1.6.0, iniconfig==2.3.0, shellingham==1.5.4, websockets==17.2. Все в E:\\opencode_harness_portable\\.venv\\Lib\\site-packages.",
+    "SECTION3_CHECKS: (1) freeze do: canon 76 / port 62 = PASS; (2) delta=18/whitelist match 17+searxng = PASS; (3) pip install 17 whitelist = PASS (Successfully installed); (4) import 22/22 modules OK (pymorphy3,pypdf,razdel,markdown_it,typer,rich,dawg_python,colorama,pygments,mdurl,annotated_doc,pluggy,iniconfig,shellingham,websockets,pytest,mcp,pydantic,numpy,uvicorn,starlette,requests) = PASS; (5) pip show 7 DoD-packages -> Location portable site-packages = PASS; (6) pymorphy3.MorphAnalyzer.parse('стали') работает = PASS; (7) freeze posle: port 79, canon-unique=1 (searxng) = PASS.",
+    "SECTION4_DOD: (1) whitelist installed = DONE; (2) mcp/pydantic/numpy + новые импорты работают = PASS; (3) canon-unique сведён к 1 задокументированному остатку (searxng) = PASS; (4) canon venv не тронут (только read-only freeze + import) = PASS; (5) установка шла в portable (Location подтверждён) = PASS.",
+    "SECTION5_TECHDOLGS: (a) websockets 17.2 в portable vs 17.1 в canon (версионный дифф, 17.2 свежее, совместимо); (b) mcp 1.30.0 portable vs 1.26.0 canon (portable НОВЕЕ канона — вне scope B1-T1, требует решения по согласованию версий); (c) pre-existing версионные диффы не трогали: idna 3.19 vs 3.20, matplotlib 3.11.2 vs 3.11.1, fonttools 4.65.0 vs 4.64.0, urllib3 2.8.0 vs 2.7.0; (d) в portable есть 4 пакета, отсутствующих в каноне (beautifulsoup4, markdownify, pypdfium2, soupsieve) — не удалялись (вне scope, не конфликтуют); (e) searxng не установлен (по требованию).",
+    "IMPORT_NOTE: DAWG2-Python импортируется как dawg_python (не dawg2/dawg2) — подтверждено и в каноне; pymorphy3 кириллица в PowerShell-консоли отображается кракозябрами (артефакт кодировки консоли Windows, не ошибка).",
+    "ARTIFACTS: C:\\Temp\\opencode\\freeze_canon.txt, freeze_port.txt, freeze_port2.txt, venv_delta.txt",
+    "NO_COMMIT: не коммитил (деплоер после ревью/аудита)."
+  ]
+}

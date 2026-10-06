@@ -97,3 +97,6 @@ htmlcov/
 # Backups (opencode.json)
 .opencode/opencode.json.bak
 .opencode/*.bak
+
+# Runtime artifacts (development temp)
+.runs/
