@@ -1,0 +1,55 @@
+{
+  "module": "B1-T4",
+  "verdict": "APPROVE",
+  "summary": "B1-T4 выполнен полностью. Перенесены 7 shared-документов из канона в portable (SHA256-идентичны), создан route-preflight.md (контракт M1/Слой 1). Все 12 файлов на месте, все shared/* ссылки из промптов агентов резолвятся. Канон не изменён. Один техдолг TD-B1T4-1 зарегистрирован как TD-DEV-11 в docs/PROBLEMS_REGISTER.md (формат контракта 05).",
+  "sections": {
+    "1_Результаты": {
+      "скопировано_7_файлов": [
+        "article-writing-process.md",
+        "dispatch-retry.md",
+        "orchestration-patterns.md",
+        "research-orchestration-process.md",
+        "research-process.md",
+        "writer-traceability-contract.md",
+        "writing-orchestration-process.md"
+      ],
+      "создан_1_файл": "shared/route-preflight.md (16 строк, UTF-8, кириллица корректна; контент = спецификации 01_BLOCKS_B1_B5.md)",
+      "итого_в_shared": "12 файлов (11 канон + route-preflight)",
+      "канон": "не изменён (LastWriteTime всех 11 файлов канона не менялись)"
+    },
+    "2_Проверки": [
+      {"проверка": "Присутствие 12 файлов", "команда": "Get-ChildItem shared + Test-Path x12", "ожидание": "12 файлов", "факт": "12 файлов, все Test-Path True", "вердикт": "PASS"},
+      {"проверка": "SHA256 7 скопированных = канону", "команда": "Get-FileHash -Algorithm SHA256", "ожидание": "7/7 True", "факт": "7/7 True", "вердикт": "PASS"},
+      {"проверка": "route-preflight.md корректен", "команда": "Read (UTF-8)", "ожидание": "16 строк, кириллица корректна, контент = спека", "факт": "16 строк, контент полностью соответствует спецификации (заголовок, порядок, критерий PASS, привязка)", "вердикт": "PASS"},
+      {"проверка": "Резолв shared/* из промптов", "команда": "Select-String agents/*.md", "ожидание": "каждый ref существует в shared/", "факт": "9 уникальных ссылок, все True, UNRESOLVED=0", "вердикт": "PASS"},
+      {"проверка": "Полный diff portable vs канон", "команда": "SHA256 по всем 11 файлам канона", "ожидание": "только известные отличия + route-preflight", "факт": "9 SAME; 2 DIFF (harness-dispatch-map.md, search-depth-contract.md) — pre-existing portable-версии, вне scope B1-T4; route-preflight.md — единственный файл, отсутствующий в каноне", "вердикт": "PASS (известные отличия — зарегистрированы TD-DEV-11)"},
+      {"проверка": "Канон не изменён", "команда": "LastWriteTime канона", "ожидание": "без изменений", "факт": "LastWriteTime идентичны зафиксированным ранее", "вердикт": "PASS"},
+      {"проверка": "Существующие 4 файла не тронуты", "команда": "git status --short -- shared", "ожидание": "нет M для 4 существующих", "факт": "только ?? для 8 новых; 4 существующих без модификаций", "вердикт": "PASS"},
+      {"проверка": "Техдолг зарегистрирован", "команда": "grep TD-DEV-11", "ожидание": "запись в PROBLEMS_REGISTER.md формата 05", "факт": "строка 83, формат TD-ID/Severity/Что/Комментарий/Блок/Статус", "вердикт": "PASS"}
+    ],
+    "3_DoD_B1-T4": {
+      "1_7_файлов_скопированы_SHA256_канону": "DONE (7/7 True)",
+      "2_route_preflight_создан": "DONE",
+      "3_12_файлов_в_shared": "DONE (11 канон + route-preflight)",
+      "4_промпты_резолвятся": "DONE (9/9 ссылок, UNRESOLVED=0)",
+      "5_канон_не_изменён": "DONE"
+    },
+    "4_Техдолги_зарегистрированные": [
+      "TD-DEV-11 (MEDIUM, OPEN): Рассинхрон portable ↔ канон: harness-dispatch-map.md и search-depth-contract.md. Закрытие: консолидация 2 файлов (решить каноничность) или легализация канона B1-T5/B5. Записан в docs/PROBLEMS_REGISTER.md стр. 83. Прочие TD (TD-B1T4-x) не выявлены — кроме единственного найденного, подтверждённого и зарегистрированного."
+    ],
+    "5_Вердикт": "APPROVE"
+  },
+  "registered_tds": ["TD-DEV-11"],
+  "files_changed": [
+    "shared/article-writing-process.md (new)",
+    "shared/dispatch-retry.md (new)",
+    "shared/orchestration-patterns.md (new)",
+    "shared/research-orchestration-process.md (new)",
+    "shared/research-process.md (new)",
+    "shared/writer-traceability-contract.md (new)",
+    "shared/writing-orchestration-process.md (new)",
+    "shared/route-preflight.md (new)",
+    "docs/PROBLEMS_REGISTER.md (modified: +TD-DEV-11)"
+  ],
+  "note": "Коммит НЕ выполнялся — деплоер выполнит после ревью/аудита (контракт 04, шаг 3.5)."
+}

@@ -1,0 +1,52 @@
+{
+  "module": "B1-T4",
+  "role": "code-auditor (process/integration)",
+  "verdict": "APPROVE",
+  "justification": "Процесс B1-T4 соблюдён полностью: 7 файлов скопированы из канона с SHA256-идентичностью (подтверждено повторной сверкой 9 SAME + 2 известных DIFF), route-preflight.md создан (16 строк, UTF-8, контент = спецификации M1/B3-T3), 4 существующих файла не тронуты (git status: только ?? для 8 новых), канон не изменён (LastWriteTime канона не менялись), артефакты worker_B1-T4.json и reviewer_B1-T4.json на месте. TD-DEV-11 корректно зарегистрирован ревьюером (строка 83, формат 05). Однако процессная интеграция вскрыла 2 непокрытых техдолга: route-preflight.md НЕ подключён к промптам оркестраторов (M1-чек «Роутер в промптах» не выполнен), и существует двойной источник правды промптов (agents/ vs .opencode/agent/, SHA256 различаются для всех 26 файлов) — зарегистрированы как TD-DEV-12 и TD-DEV-13. Оба не блокируют B1-T4 (вне scope задачи), но обязательны для M1/W5.",
+  "process_analysis": {
+    "contracts_respected": true,
+    "iteration_count": 1,
+    "iteration_limit": 3,
+    "role_violation": false,
+    "reviewer_args_assessment": "Корректен: 8 проверок PASS, SHA256-сверка выполнена, TD-DEV-11 зарегистрирован по формату 05 (строка 83). Слабое место: резолв shared/* проверялся по agents/, но runtime-копия .opencode/agent/ отличается (26/26 файлов DIFF) — раздвоение источника правды не замечено.",
+    "worker_args_assessment": "Корректен: 7 копий SHA256-идентичны канону, route-preflight создан, 4 существующих не тронуты. Формулировка «контракт M1/Слой 1» применительно к route-preflight вводит в заблуждение: создание файла ≠ подключение preflight к промптам (это B3-T3/M1)."
+  },
+  "sections": {
+    "1_Процесс": [
+      {"требование": "7 файлов скопированы из канона", "факт": "7 файлов в portable/shared, SHA256 = канону (повторная сверка 9 SAME)", "вердикт": "PASS"},
+      {"требование": "route-preflight.md создан (спека M1/B3-T3)", "факт": "16 строк, UTF-8, контент: harness_status → ROUTE/BUNDLE → PROGRESS, STOP CWD_ERROR", "вердикт": "PASS"},
+      {"требование": "4 существующих файла не тронуты", "факт": "git status --short -- shared: только ?? для 8 новых; 4 существующих без M", "вердикт": "PASS"},
+      {"требование": "Канон не изменён", "факт": "LastWriteTime канона (18.09/01.10/02.10) идентичны; канон-путь E:\\Documents\\Документы\\doc_Opencode_agern-new\\shared", "вердикт": "PASS"},
+      {"требование": "DoD: нет хардкодов канона в shared/*", "факт": "grep doc_Opencode_agern-new|E:\\opencode_harness\\ в shared/*.md → 0 хитов", "вердикт": "PASS"},
+      {"требование": "Ревьюер зарегистрировал TD-DEV-11", "факт": "PROBLEMS_REGISTER.md строка 83, формат 05 (TD-ID/Severity/Что/Комментарий/Блок/Статус)", "вердикт": "PASS"},
+      {"требование": "Артефакты на месте", "факт": "worker_B1-T4.json, reviewer_B1-T4.json в корне portable", "вердикт": "PASS"}
+    ],
+    "2_Интеграция": {
+      "EXP-1b_готовность": "Не достигнута. B1-T2 + M0-a + B3-T1 + B1-T4 дали 12 файлов shared (11 канон + route-preflight), но EXP-1b (merge плагинов) НЕ выполнен: CONFIG_MERGE.md отсутствует (glob = 0). EXP-1b — протокол Транша A / шаг B5-2, подтверждает B2-T3. До EXP-1b: прогнать merge глобал+проект opencode.json → исходы A/B/C → config/CONFIG_MERGE.md.",
+      "M1_матрёшка": "route-preflight.md создан, но НЕ подключён: grep 'route-preflight' в agents/*.md и .opencode/agent/*.md = 0 хитов. В 'Что у тебя есть' .opencode/agent/code-orchestrator.md нет harness_run/harness_status/coder_run. Чек 03_ACCEPTANCE §4.4 «Роутер в промптах (M1): системный промпт code-orchestrator содержит все 3 тула» → НЕ выполнен. Задача M1/B3-T3: вставить preflight в ритуал старта 3 оркестраторов + добавить 3 тула.",
+      "TD-DEV-11_влияние": "Подтверждён (строка 83, факт: канон dispatch-map 175 стр. / portable 156; канон содержит TD-181, portable — TD-177). НЕ блокирует W5: канон-версия и portable содержат одинаковую Шаг-1-таблицу роутера (строка 31 в обеих: harness_run/resolve_bundle → templates 13 шт.), роутер-правки W5 (coder_run, resolve_route.py, resolve_bundle.py, compile_runtime.py — спека W5 §строки 110-122) в dispatch-map не встроены ни в одной версии. НЕ блокирует W12: обе версии — маршрутная карта, а не реестр интеграций. Закрытие TD-DEV-11 — B1-T5/B5 или консолидация, до этого рассинхрон остаётся источником двусмысленности.",
+      "W12_прогресс": "Интеграция #1 «9 shared отсутствуют в portable» — ЗАКРЫТА (B1-T4; осталась scripts/writer/ → B2-T4). Из 18 пустых интеграций закрыта 1; остальные 17: #2 B2-T4, #3 B4-T2, #4 NEW-1, #5 M1, #6 W6/M6, #7 B1-T3/W7, #8 W1/M4, #9 NEW-6/7, #10 NEW-5, #11-12 B2-T1, #13 B1/W6, #14 W1, #15 B1/W7, #16 W12, #17 NEW, #18 B5/B1-T5. Плюс NEW-1..7 и токен-бюджет.",
+      "ожившие_промпты": "9 shared-файлов на месте → резолв ${OPENCODE_HARNESS_ROOT}/shared/*.md в agents/ = 9/9 (article-writer, dispatch-retry, orchestration-thread-process, research-orchestration-process, research-process, writer-traceability-contract, writing-orchestration-process, harness-dispatch-map, code-factory-process). Работоспособны: code-orchestrator, research-orchestrator, writing-orchestrator, article-writer, researcher, fact-checker, source-fetcher, synthesizer, claim-parser, tribunal-judge, code-reviewer, code-tester, coder-worker, code-auditor (методологические shared-контракты резолвятся). ВАЖНО: runtime opencode читает .opencode/agent/ (26/26 файлов SHA DIFF от agents/), где shared-резолв тоже работает через ${OPENCODE_HARNESS_ROOT}/shared (7 refs) и .opencode/shared (1 ref: code-factory-process.md — файл есть). Исключение: .opencode/agent/code-orchestrator.md line 38 ссылается на `.opencode/shared/code-factory-process.md` — файл ЕСТЬ в .opencode/shared, но отсутствует в git-tracked (только 2 файла в .opencode/shared, git ls-files = 0)."
+    },
+    "3_Регрессии": [
+      {"проверка": "Дубли/конфликты при переносе", "факт": "Дублей нет; 4 существующих (code-factory-process, orchestration-thread-process, harness-dispatch-map, search-depth-contract) не тронуты", "вердикт": "PASS"},
+      {"проверка": "Live shared (9 файлов) vs portable (12)", "факт": "live=9, portable=12 (11 канон + route-preflight); рассинхрон известен. Junction НЕ создан (TD-DEV-3); бэкап shared_backup_20261005_213446 существует", "вердикт": "PASS (известный TD-DEV-3)"},
+      {"проверка": "Junction по-прежнему опасен", "факт": "Да: junction live↔portable уничтожит 5 live-капсул (live имеет orchestration-thread-process.md, которого в 9 live-файлах нет? live=9: article-writing, code-factory, dispatch-retry, orchestration-patterns, orchestration-thread, research-orchestration, research-process, writer-traceability, writing-orchestration; portable=12). Различие portable 12 ≠ live 9 сохраняется", "вердикт": "PASS (TD-DEV-3, требует решения пользователя)"},
+      {"проверка": "Резолв промптов после переноса", "факт": "agents/ 9/9 UNRESOLVED=0; .opencode/agent/ shared-refs резолвятся (7 через HARNESS_ROOT, 1 через .opencode/shared — файл есть)", "вердикт": "PASS"}
+    ],
+    "4_Техдолги": [
+      "TD-DEV-11 (MEDIUM, OPEN) — подтверждён (рассинхрон dispatch-map/search-depth-contract); зарегистрирован ревьюером, строка 83",
+      "TD-DEV-12 (MEDIUM, OPEN) — НОВЫЙ, найден аудитором: route-preflight.md не подключён к промптам, тулы роутера отсутствуют в code-orchestrator → M1/чек 4.4 не выполнен. Закрытие: B3-T3/M1",
+      "TD-DEV-13 (MEDIUM, OPEN) — НОВЫЙ, найден аудитором: двойной источник правды промптов agents/ vs .opencode/agent/ (26/26 DIFF). Закрытие: W5/M1 (решить источник + синхронизация GENERATED ROUTE HINTS)"
+    ],
+    "5_Вердикт": "APPROVE — B1-T4 выполнен корректно и полностью в рамках своего контракта. До EXP-1b осталось: (1) EXP-1b прогон + CONFIG_MERGE.md (B2-T3); (2) M1/B3-T3: подключить route-preflight + 3 тула роутера в промпты (TD-DEV-12) и решить двойной источник правды промптов (TD-DEV-13); (3) W12: остальные 17 пустых интеграций + NEW-1..7; (4) TD-DEV-11: консолидация 2 файлов до/в B1-T5/B5. Коммит НЕ выполнялся (деплоер после аудита)."
+  },
+  "registered_tds": ["TD-DEV-11 (подтверждён)", "TD-DEV-12 (новый)", "TD-DEV-13 (новый)"],
+  "requirements": [
+    "M1/B3-T3: вставить ссылку на shared/route-preflight.md в ритуал старта 3 оркестраторов + добавить harness_run/harness_status/coder_run в «Что у тебя есть» (закрыть TD-DEV-12)",
+    "W5/M1: решить источник правды промптов agents/ vs .opencode/agent/ + синхронизация GENERATED ROUTE HINTS (закрыть TD-DEV-13)",
+    "EXP-1b: прогнать merge плагинов → config/CONFIG_MERGE.md (B2-T3)",
+    "W12: закрыть оставшиеся 17 пустых интеграций + NEW-1..7",
+    "B1-T5/B5: консолидировать harness-dispatch-map.md и search-depth-contract.md (закрыть TD-DEV-11)"
+  ]
+}
