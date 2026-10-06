@@ -77,12 +77,20 @@ def _now_iso() -> str:
 
 
 def _parse_iso(value: str) -> Optional[datetime]:
-    """ISO-строка -> datetime (UTC). 'Z' нормализуется в '+00:00'."""
+    """ISO-строка -> datetime (UTC). 'Z' нормализуется в '+00:00'.
+
+    W7 TD-DEV-22: naive datetime (tzinfo=None) интерпретируется как UTC —
+    иначе сравнение с aware `now` в liveness_check падает TypeError
+    ("can't subtract offset-naive and offset-aware datetimes"). Aware — как есть.
+    """
     try:
         s = value.strip()
         if s.endswith("Z"):
             s = s[:-1] + "+00:00"
-        return datetime.fromisoformat(s)
+        dt = datetime.fromisoformat(s)
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=timezone.utc)
+        return dt
     except (ValueError, TypeError, AttributeError):
         return None
 

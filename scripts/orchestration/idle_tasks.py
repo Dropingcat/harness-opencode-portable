@@ -21,6 +21,7 @@ import argparse
 import json
 import os
 import sqlite3
+import sys
 from datetime import datetime, timedelta
 from pathlib import Path
 
@@ -179,6 +180,11 @@ def to_markdown(d: dict) -> str:
 
 
 def main() -> int:
+    # W7: иначе cp1251-консоль падает UnicodeEncodeError на '\u2192' (→) в заголовках.
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    if hasattr(sys.stderr, "reconfigure"):
+        sys.stderr.reconfigure(encoding="utf-8", errors="replace")
     parser = argparse.ArgumentParser(prog="idle_tasks", description="Агенда полезного простоя (B)")
     parser.add_argument("--json", action="store_true")
     parser.add_argument("--check", action="store_true", help="только факты без команд")

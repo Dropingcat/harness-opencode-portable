@@ -109,6 +109,10 @@ class MetaDaemon:
                         json.dumps(contract, ensure_ascii=False, indent=2), encoding='utf-8')
                     return {'sleep': True, 'merged': True, 'branches': plan.branches,
                             'hp': self.meta.health.health_points}
+        # W7 TD-DEV-26: фиксируем свежий saved_at при каждом такте (--once и --daemon).
+        # Раньше --once завершался БЕЗ вызова _save_state → saved_at оставался старым →
+        # liveness (гл.29) считал демона мёртвым. _save_state — существующий механизм.
+        self.meta._save_state()
         return {'sleep': False, 'hp': self.meta.health.health_points,
                 'damage': self.basket.total_damage(), 'dropped': total_dropped}
 

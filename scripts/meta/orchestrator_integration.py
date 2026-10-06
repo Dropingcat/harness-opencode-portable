@@ -15,7 +15,7 @@ from __future__ import annotations
 import os
 import sys
 import json
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
@@ -191,7 +191,10 @@ class OrchestratorIntegration:
             'recoveries': self.recoveries,
             'damage_log': self.damage_log[-50:],
             'sleep_state': self.sleep_state,
-            'saved_at': datetime.now().isoformat(),
+            # W7 TD-DEV-22 (комплементарно к _parse_iso): saved_at пишем aware (UTC),
+            # чтобы liveness_check (гл.29) сравнивал aware с aware даже без
+            # нормализации на стороне чтения.
+            'saved_at': datetime.now(timezone.utc).isoformat(),
         }
         self.state_file.write_text(json.dumps(data, ensure_ascii=False, indent=2),
                                    encoding='utf-8')
