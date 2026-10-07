@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# W1 post-commit (E2E-03, Слой 4): compile_agents --check + health_check + git_session_sync --no-commit.
+# Warning-only (post-commit не может блокировать). НИКОГДА не коммитит и не делает checkout.
+source "$(dirname "${BASH_SOURCE[0]}")/hook_utils.sh"
+
+log_hook "post-commit: compile_agents --check (warning)"
+if ! run_with_timeout 30 "$PYTHON_BIN" "$REPO_ROOT/scripts/agent_gen/compile_agents.py" --check 2>&1; then
+  log_hook "WARN: .opencode/agent/ рассинхронизирован (26/26 DIFF). Запусти: $PYTHON_BIN $REPO_ROOT/scripts/agent_gen/compile_agents.py"
+fi
+
+log_hook "post-commit: health_check (warning)"
+run_with_timeout 30 "$PYTHON_BIN" "$REPO_ROOT/scripts/health_check.py" 2>&1 \
+  || log_hook "WARN: health_check UNHEALTHY"
+
+log_hook "post-commit: git_session_sync --no-commit (только запись дельт)"
+# --no-commit: файлы .runs/session_deltas/*.txt пишутся, git add/commit НЕ выполняются (нет рекурсии).
+run_with_timeout 30 "$PYTHON_BIN" "$REPO_ROOT/scripts/tools/git_session_sync.py" sync \
+  --no-commit --since-minutes 120 2>&1 \
+  || log_hook "WARN: git_session_sync failed (non-blocking)"
+
+exit 0

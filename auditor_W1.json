@@ -1,0 +1,140 @@
+{
+  "module": "W1-GIT-HOOKS",
+  "verdict": "APPROVE",
+  "date": "2026-10-07",
+  "auditor": "code-auditor",
+  "contracts": ["05 (TD v PROBLEMS_REGISTER)", "06 (poryadok worker->reviewer->auditor)", "07 (vnJedlivost + sekciya 0)", "09 (eskap-hatch)"],
+  "reviewer_verdict_input": "APPROVE (reviewer_W1.json, 7 TD zaregistrirovano)",
+
+  "section0_doubtful_checked": [
+    {
+      "question": "Reyuer zayavil 'TD-DEV-30..36 zaregistrirovany v PROBLEMS_REGISTER.md' — a vorker ostavil ih tolko v worker_W1.json. Est li ih na samom dele v registry?",
+      "proof": "grep TD-DEV-3[0-9] docs/PROBLEMS_REGISTER.md -> stroki 111-117: TD-DEV-30 (CRITICAL), 31 (MEDIUM), 32 (MEDIUM), 33 (MEDIUM), 34 (LOW), 35 (LOW), 36 (LOW) — vse 7 s opisaniami, dokazatelstvami, rekomendatsiyami, statusom OPEN. Konflikt reyuer-vorker: vorker ostavil TD tolko v worker_W1.json, reyuer perenes ih v reestr (kontrakt 05).",
+      "result": "OK — TD zaregistrirovany polnostyu, reyuer vypolnil obyazannost 05"
+    },
+    {
+      "question": "hooksPath=hooks realno aktivirovan? (reyuer skazal — nado proverit sam)",
+      "proof": "git config --get core.hooksPath -> 'hooks'. Fail .git/config:7 soderzhit [core] hooksPath=hooks. Huki: Test-Path hooks/{pre-commit,post-commit,pre-push,hook_utils.sh} -> 4 True + coder-dom-verify.sh.",
+      "result": "OK — podtverzhdeno auditorom nezavisimo"
+    },
+    {
+      "question": "Perenos m5/m6 deystvitelno chistyy (blob-heshi sovpadayut)?",
+      "proof": "git hash-object scripts/tools/sleep_git.py = 30fc714649da97504c49f02ed66a8f9c7f1c12f6 = git rev-parse feature/m6-sleep-git:scripts/tools/sleep_git.py. git_session_sync: 546f6a0c29f71c59eebf31b386e658152213c00e == feature/m5. Staging: rovno 2 fayla, 769 insertions, musora net.",
+      "result": "OK — identichno istochnikam vetok, perenos bez merge"
+    },
+    {
+      "question": "post-commit ne modifitsiruet git? (ris-2: rekurсия cherez git_session_sync checkout -b main)",
+      "proof": "HEAD do: 109372c91fc42c08aae7a2b4da11dd7db4554411. Zapusk bash hooks/post-commit: compile_agents --check (read-only) + health_check (read-only) + git_session_sync sync --no-commit (pishet .runs/session_deltas, NO git add/commit za 'if not delta.get(\"no_commit\")' — git_session_sync.py:227). HEAD posle: 109372c91fc42c08aae7a2b4da11dd7db4554411 — NE sdvinulsya. Rekursii net.",
+      "result": "OK — post-commit ne kommitit, ne delaet checkout, ne dvigaet HEAD"
+    },
+    {
+      "question": "TD-DEV-30 (CRITICAL): sleep_git vs .gitignore — podtverdit prakticheski i uTochNit rekomendatsiyu (reyuer dal 3 varianta, no (b) v forme '.runs/' + '!.runs/sleep_markers/' NE rabotaet — git ne mozhet re-inklyudit pri isklyuchennom roditele)",
+      "proof": "sleep_git.py:42 MARKERS_REL = Path('.runs')/'sleep_markers'; :166 self._git(['add', '--', marker]) (check=True). .gitignore:102 '.runs/' (ot B1-T3). git check-ignore -v .runs/sleep_markers/w1/A -> '.gitignore:102:.runs/' rc=0. git add -- .runs/sleep_markers/test/tok -> 'paths are ignored by one of your .gitignore files: .runs' rc=1 -> GitSleepError. EKSPERIMENT auditora (vremenny repo): (a) '.runs/' + '!.runs/sleep_markers/' + '!.runs/sleep_markers/**' -> ADD_RC=1 (NE rabotaet — roditel isklyuchen); (b) '.runs/*' + '!.runs/sleep_markers/' + '!.runs/sleep_markers/**' -> ADD_RC=0 (RABOTAET). Vyvod: whitelist vozmojen TOLKO v forme '.runs/*' (isklyuchit soderzhimoe, ne sam katalog). Alernativa (a) git add -f (rabocha, no obhodit ignorirovanie — marker stanet trekaemym pri commit), (c) perenos MARKERS_REL vne .runs/ (napr. .sleep_markers/ — chistyy variant). Rekomendatsiya auditora: (c) ili (b-v-forme-.runs/*); reshenie arhitektora do W13.",
+      "result": "PROBLEMA PODTVERZhDENA + rekomendatsiya uToCHNENA (variant (b) rabotaet tolko kak '.runs/*' + re-include, ne kak '.runs/')"
+    },
+    {
+      "question": "pre-push blokiruet deploy? Chto delat deployeru?",
+      "proof": "bash hooks/pre-push -> FAIL: .opencode/agent/ rassinhronizirovan (compile_agents --check stale: code-orchestrator.md, _registry_index.json) EXIT=1. bash hooks/coder-dom-verify.sh -> STALE coder_dom.yaml EXIT=1. Oba — by-design (02 §W1: pre-push edinstvenny blokiruyushchiy huk, risk-6). Deployeru pered push: (1) python scripts/glossary/coder_dom_build.py --root E:/opencode_harness_portable (sushchestvuet — Test-Path True), (2) python scripts/agent_gen/compile_agents.py (sushchestvuet — True), (3) git add .opencode/agent + docs/glossary/coder_dom.yaml. Esli nuzhno srochno bez regeneracii: git push --no-verify ILI git config --unset core.hooksPath (rollback po speke) — NE rekomenduetsya, tolko avariyno.",
+      "result": "OK (by-design) — deployer imeet tochnuyu instruktsiyu (TD-DEV-31/32 zakryvayutsya regeneratsiey)"
+    },
+    {
+      "question": "sleep_integration vidit realny SleepGit (ne _Fallback)? Reyuer skazal DoD-7 DONE.",
+      "proof": "python -c 'sys.path.insert(0, scripts/tools); import sleep_git; print(sleep_git.__file__)' -> E:/opencode_harness_portable/scripts/tools/sleep_git.py; hasattr SleepGit=True. sleep_integration.py:339 mods['M6'].SleepGit(...) — mods['M6'] = _load_module('sleep_git', [TOOLS_DIR]) = ne None (simulate=False). V worker_W1.json: cikl bez --simulate zashol v SleepGit.create_sleep_branches (realny git add), a ne _FallbackSleepGit.",
+      "result": "OK — DoD-7 podtverzhden auditorom"
+    },
+    {
+      "question": "TD-DEV-34 (LOW): live-vyzov hukov gitom ne proveren. Falsifitsiruemost?",
+      "proof": "Zapret commit-a v kontrakte W1 sohranen (deployer kommitit posle tsepochki). Ruchnye zapuski bash hooks/* korrektny, exit-kody sovpadayut so spekoy 02. Git 2.46 sam rezolvit sh.exe (C:/Program Files/Git/bin/sh.exe — Test-Path True). Proverka live — deployeru posle commit-a (git commit --allow-empty -m 'w1 smoke' -> [w1] v vyvode).",
+      "result": "OK — zaregistrirovano TD-DEV-34, deployer zakryvaet"
+    },
+    {
+      "question": "TD-DEV-36 (LOW): pre-push:15 'bash' po imeni — PATH-zavisimost. Opasno?",
+      "proof": "where bash v PowerShell -> pusto (PATH sessii). Git pri vypolnenii hukov dobavlyaet svoy bin (C:/Program Files/Git/bin) v PATH dlya doчернего protsessa — pre-push:15 'bash hooks/coder-dom-verify.sh' razreshitsya. Risok nizkiy. Esli sboy — zamenit na polny put sh.exe. Zaregistrirovano TD-DEV-36.",
+      "result": "OK (nizkiy risk) — zaregistrirovano, fallback opisan"
+    },
+    {
+      "question": "EXP-1b svyazan s W1? (analyst report upominal 'EXP-1b ranshe W1')",
+      "proof": "03_ACCEPTANCE.md:60 EXP-1b = merge plaginov (posle B1-T2), protokol — v kriticheskiy put (shag B5-2), podtverzhdaet B2-T3. 02 §0: W1 ↔ W13 parallelno (W13 ne ranshe M4). W1 NE blokiruet EXP-1b (raznye podсистемы: git-hooks vs opencode.json plugin-merge). ANALYST_REPORTS.md:17 — kommentariy analitika o poryadke, ne svyaz s W1.",
+      "result": "OK — W1 i EXP-1b nezavisimy"
+    },
+    {
+      "question": "meta_nightly.cmd derzhit --simulate — ne protivorechit li W1?",
+      "proof": "scripts/meta/meta_nightly.cmd:6-7 REM: 'ubrat --simulate iz cycle, kogda poyavitsya sleep_git (W1). Seychas sleep_git NET -> bez --simulate cycle upadet. Derzhim --simulate'. NO sleep_git TEPER EST (W1 perenes!). Kommentariy USTAREL: cycle bez --simulate uzhe ne upadet na zagruzke, no upadet na git add markera (TD-DEV-30). T.e. nochnoy progOn vse eshche dolzhen derzhat --simulate, no PO DRUGOY prichine (TD-DEV-30, ne otsutstvie modulya). Kommentariy nuzhno obnovit v W7/W13.",
+      "result": "OK s zamechaniem — kommentariy meta_nightly.cmd ustarel (prichina --simulate izmenilas: TD-DEV-30 vmesto otsutstviya sleep_git). Zafiksirovano v techdolgah."
+    }
+  ],
+
+  "section1_pereproverka_revyuera": [
+    {"check": "hooksPath=hooks", "verdict": "PASS", "fact": "git config --get -> hooks"},
+    {"check": "pre-commit exit 0 (ne blokiruet)", "verdict": "PASS", "fact": "bash hooks/pre-commit -> EXIT=0, perfectionist verdict=good, sleep_git dry-run OK"},
+    {"check": "sleep_integration vidit realny SleepGit", "verdict": "PASS", "fact": "_load_module('sleep_git', [TOOLS_DIR]) -> tools/sleep_git.py, SleepGit class est"},
+    {"check": "TD-DEV-30..36 v registry", "verdict": "PASS", "fact": "PROBLEMS_REGISTER.md:111-117 — vse 7 TD s polnymi zapisyami"},
+    {"check": "post-commit ne modifitsiruet git", "verdict": "PASS", "fact": "HEAD 109372c do i posle, git_session_sync --no-commit"},
+    {"check": "blob-heshi perenosa sovpadayut", "verdict": "PASS", "fact": "30fc71==m6, 546f6a==m5"},
+    {"check": "staging chist (2 fayla)", "verdict": "PASS", "fact": "git diff --cached --stat -> 769 insertions, tolko tools/*"}
+  ],
+
+  "section2_vnedlivaya_proverka": [
+    {
+      "topic": "TD-DEV-30 (CRITICAL): sleep_git vs .gitignore",
+      "confirmed": true,
+      "evidence": "git add -- .runs/sleep_markers/test/tok -> rc=1 'paths are ignored: .runs'; sleep_git.py:166 check=True -> GitSleepError; .gitignore:102 '.runs/'",
+      "recommendation": "3 varianta resheniya (do W13): (a) git add -f v sleep_git.py:166 — rabotaet, no marker stanet trekaemym (razduvaet istoriyu marker-kommitami — sootvetstvuet dizaynu m6, gde marker kommititsya v fix/*-vetku; no .gitignore obhoditsya — marker NE v indekse main, tolko v fix/*-vetke — OK); (b) whitelist — TOLKO v forme '.runs/*' + '!.runs/sleep_markers/' + '!.runs/sleep_markers/**' (PROVERENO auditorom: '.runs/' + re-include NE rabotaet, git ne re-inklyudit pri isklyuchennom roditele); (c) perenos MARKERS_REL vne .runs/ (napr. .sleep_markers/) — chistyy variant, minimalnoe izmenenie sleep_git.py:42. Rekomendatsiya auditora: (c) ili (b-v-forme-.runs/*), reshenie — arhitektoru/orkestratoru do W13.",
+      "bloker_w13": "DA — bez resheniya polny sleep_git run (W13, nochnoy W7 bez --simulate) upadet"
+    },
+    {
+      "topic": "pre-push blokiruet deploy",
+      "confirmed": true,
+      "evidence": "bash hooks/pre-push -> EXIT=1 (compile_agents stale); bash hooks/coder-dom-verify.sh -> EXIT=1 (coder_dom.yaml STALE)",
+      "recommendation": "Deployeru pered push (TD-DEV-31/32): 1) python scripts/glossary/coder_dom_build.py --root E:/opencode_harness_portable; 2) python scripts/agent_gen/compile_agents.py; 3) git add .opencode/agent docs/glossary/coder_dom.yaml; 4) povtorny push. Avariyno: git push --no-verify (NE rekomenduetsya).",
+      "by_design": "DA — 02 §W1: pre-push edinstvenny blokiruyushchiy huk"
+    },
+    {
+      "topic": "post-commit ne modifitsiruet git",
+      "confirmed": "PASS",
+      "evidence": "HEAD ne sdvinulsya (109372c do/posle); git_session_sync s --no-commit; net rekurSii (ris-2 speki snat)"
+    },
+    {
+      "topic": "whitelist .runs/sleep_markers — eksperiment auditora",
+      "confirmed": "NAHODKA",
+      "evidence": "vremenny repo: '.runs/' + re-include -> ADD_RC=1 (NE rabotaet); '.runs/*' + re-include -> ADD_RC=0 (rabotaet). Git pravilo: nelzya re-inklyudit fail esli roditel isklyuchen.",
+      "recommendation": "Utochnit TD-DEV-30 (variant (b) tolko kak '.runs/*' + '!.runs/sleep_markers/**'). Zafiksirovano v otchete."
+    },
+    {
+      "topic": "meta_nightly.cmd kommentariy ustarel",
+      "confirmed": "NAHODKA",
+      "evidence": "meta_nightly.cmd:6-7 govorit 'sleep_git NET -> derzhim --simulate'. Sleep_git TEPER EST (W1), no --simulate vse ravno nuzhen do resheniya TD-DEV-30 (inache cycle upadet na git add markera).",
+      "recommendation": "W7/W13: obnovit kommentariy (prichina --simulate: TD-DEV-30, ne otsutstvie modulya)."
+    }
+  ],
+
+  "section3_integratsiya": [
+    {"element": "W13 (glubokiy git-audit snov)", "svyaz": "TD-DEV-30 BLOKIRUET W13-T1 (sleep_git run s realnym git). W13 po speke 02: 'ne ranshe M4'. Reshenie TD-DEV-30 — preduslovie W13-T1."},
+    {"element": "Nochnoy progon W7", "svyaz": "meta_nightly.cmd derzhit --simulate; posle resheniya TD-DEV-30 — snat --simulate (W13-T3 po speke). Kommentariy v cmd obnovit."},
+    {"element": "EXP-1b (merge plaginov)", "svyaz": "NE svyazan s W1 — raznye podсистемы; W1 ne blokiruet. EXP-1b — posle B1-T2, shag B5-2 (03_ACCEPTANCE.md:60)."},
+    {"element": "M4 (matryoshka Sloy 4)", "svyaz": "W1 = matryoshka Sloy 4 (E2E-03). Huki postavleny; live-proverka (git commit --allow-empty) — deployer posle commit-a (TD-DEV-34)."},
+    {"element": "B4-T7 (compile_agents regeneratsiya)", "svyaz": "zakryvaet TD-DEV-32 (pre-push blok snat posle regeneratsii)."},
+    {"element": "W7 kommentariy meta_nightly", "svyaz": "ustarel — obnovit prichinu --simulate (TD-DEV-30)."}
+  ],
+
+  "section4_techdolgi": [
+    "TD-DEV-30 (CRITICAL, OPEN): sleep_git vs .gitignore .runs/ — bloker W13. Rekomendatsiya uToCHNENA auditorom: variant (b) whitelist rabotaet TOLKO v forme '.runs/*' + '!.runs/sleep_markers/' + '!.runs/sleep_markers/**' (provereno); ili (a) git add -f; ili (c) perenos MARKERS_REL vne .runs/. Reshenie arhitektora do W13.",
+    "TD-DEV-31 (MEDIUM, OPEN): coder_dom.yaml STALE -> pre-push blokiruet. Deployer: coder_dom_build.py --root.",
+    "TD-DEV-32 (MEDIUM, OPEN): compile_agents stale -> pre-push blokiruet. Deployer: compile_agents.py + git add .opencode/agent.",
+    "TD-DEV-33 (MEDIUM, OPEN): .gitignore sect4.2 primenen chastichno. Primenit ostalnye patterny (krome .runs/sleep_markers/ — do resheniya TD-DEV-30).",
+    "TD-DEV-34 (LOW, OPEN): live-vyzov hukov ne proveren. Deployer: git commit --allow-empty -m 'w1 smoke' -> [w1] v vyvode.",
+    "TD-DEV-35 (LOW, OPEN): W1_SKIP_HOOKS ne v env-kontrakte. Dobavit v setup_env.ps1 (B4-T9/W11).",
+    "TD-DEV-36 (LOW, OPEN): 'bash' po imeni v pre-push (PATH-zavisimost). Fallback: polny put sh.exe.",
+    "OUT_OF_SCOPE_FINDING (nova, auditor): kommentariy meta_nightly.cmd:6-7 ustarel — 'sleep_git NET' nepravda (W1 perenes), realnaya prichina --simulate = TD-DEV-30. Obnovit kommentariy v W7/W13."
+  ],
+
+  "section5_verdict": "APPROVE",
+  "justification": "W1 vypolnen polnostyu po speke (perenos m5/m6 bez merge, hooksPath=hooks, 3 huka + hook_utils.sh s win32-fiksom pwd -W, semantika exit-kodov sootvetstvuet 02 §W1: pre-commit NIKOGDA ne blokiruet, pre-push blokiruet po design). Vse 7 DoD-punktov zakryty (podtverzhdeny auditorom nezavisimo: blob-heshi, hooksPath, pre-commit exit 0, realny SleepGit). Reyuer dal APPROVE i zaregistriroval TD-DEV-30..36 v PROBLEMS_REGISTER.md (kontrakt 05). Naydennye defekty — ne v skoupe W1, zaregistrirovany, ne blokiruyut priemku: TD-DEV-30 (CRITICAL) — bloker W13, no NE W1 (W1 = hooks + perenos, chto sdelano); TD-DEV-31/32 — by-design blok pre-push, deployer imeet instruktsiyu. Auditor provel eksperiment s whitelist (nashyol: '.runs/*' + re-include rabotaet, '.runs/' + re-include — net) — utochnil TD-DEV-30. Odin OUT_OF_SCOPE_FINDING (ustarevshiy kommentariy meta_nightly.cmd) — zafiksirovan, ne blokiruet.",
+  "deployer_instructions": [
+    "1. PERED PUSH (obyazatelno, inache pre-push otklonit): python scripts/glossary/coder_dom_build.py --root E:/opencode_harness_portable; python scripts/agent_gen/compile_agents.py; git add .opencode/agent docs/glossary/coder_dom.yaml",
+    "2. Posle commit-a tsepochki: proverit live-vyzov hukov — git commit --allow-empty -m 'w1 smoke' -> v vyvode [w1] pre-commit/post-commit (TD-DEV-34); git commit --allow-empty --no-verify -m 'w1 noverify' -> NET [w1] (huki vyzyvayutsya gitom, ne ekho)",
+    "3. Esli pre-push upal na 'bash' (TD-DEV-36) — zamenit v pre-push:15 'bash' na polny put C:/Program Files/Git/bin/sh.exe",
+    "4. Do W13 (obyazatelno): reshit TD-DEV-30 (variant (c) perenos MARKERS_REL vne .runs/ ili (b) whitelist '.runs/*' + re-include, ili (a) git add -f) — inache nochnoy son s realnym git upadet",
+    "5. Avariynyy obhod pre-push (NE rekomenduetsya): git push --no-verify ili git config --unset core.hooksPath (rollback po speke 02)"
+  ]
+}

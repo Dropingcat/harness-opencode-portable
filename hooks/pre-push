@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# W1 pre-push (E2E-03, Слой 4): compile_agents --check (БЛОК) + coder-dom-verify.sh (БЛОК).
+# Единственный блокирующий хук. При fail — push отклоняется с инструкцией.
+source "$(dirname "${BASH_SOURCE[0]}")/hook_utils.sh"
+
+log_hook "pre-push: compile_agents --check (BLOCKING)"
+if ! run_with_timeout 60 "$PYTHON_BIN" "$REPO_ROOT/scripts/agent_gen/compile_agents.py" --check 2>&1; then
+  log_hook "FAIL: .opencode/agent/ рассинхронизирован. Регенерация:"
+  log_hook "  $PYTHON_BIN $REPO_ROOT/scripts/agent_gen/compile_agents.py"
+  log_hook "  git add .opencode/agent && git commit"
+  exit 1
+fi
+
+log_hook "pre-push: coder-dom-verify (BLOCKING)"
+if ! run_with_timeout 60 bash "$REPO_ROOT/hooks/coder-dom-verify.sh" 2>&1; then
+  log_hook "FAIL: coder_dom.yaml устарел. Исправь: python scripts/glossary/coder_dom_build.py --root $REPO_ROOT"
+  exit 1
+fi
+
+log_hook "pre-push: OK"
+exit 0
