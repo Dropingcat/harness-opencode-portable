@@ -1,0 +1,19 @@
+{
+  "verdict": "REQUEST_CHANGES",
+  "justification": "Ревьюер EXP-1b прав: D-вывод воркера «глобальный model > portable» фальсифицирован — в глобальном opencode.jsonc поле model отсутствует (проверено), claude-opus-4-5 это дефолт monarch-агента плагина @bluelovers/opencode-arise (проверено по dist/index.js:109941 и README:199). Точный механизм: arise ставит default_agent=monarch и его model=claude-opus-4-5 побеждает проектный polza (который лишь fallback в getEffectiveModelWithFallback), а без ANTHROPIC_API_KEY (отсутствует в env) без -m сессия неработоспособна. Доказательства A/B/C в CONFIG_MERGE.md декларативны, артефактов EXP-1b с выводами команд нет. TD-DEV-38/39 зарегистрированы корректно и подтверждены практически (harness_status core_root=канон; оба .mcp.json с конфликтом имён sequential-thinking/grep_app). CONFIG_MERGE.md требует переписывания D с точным механизмом; B2-T3 закрывать только после правки.",
+  "process_analysis": {
+    "contracts_respected": true,
+    "iteration_count": 1,
+    "iteration_limit": 3,
+    "role_violation": false,
+    "reviewer_args_assessment": "Обоснованы и подтверждены фактами: глобальный model отсутствует, claude-opus-4-5 — arise-дефолт monarch (не из глобального конфига), A/B/C декларативны (нет выводов команд, артефакты EXP-1b отсутствуют), TD-DEV-38/39 в реестре с корректной severity.",
+    "worker_args_assessment": "Наблюдение «без -m прогон не проходит» верно по результату, но причина неверна: не «глобальный model побеждает», а arise default_agent=monarch с дефолтной claude-opus-4-5 (провайдер anthropic не сконфигурирован, ключа нет). Вывод «глобальный > portable» фальсифицирован."
+  },
+  "requirements": [
+    "Переписать config/CONFIG_MERGE.md строку D: убрать «ГЛОБАЛЬНЫЙ > portable»; указать точный механизм — arise ставит default_agent=monarch, его дефолтная модель anthropic/claude-opus-4-5 (SHADOW_AGENTS.monarch.model) выигрывает у проектного polza (fallback); глобальный конфиг model НЕ содержит; без -m сессия не стартует из-за отсутствия anthropic-провайдера/ANTHROPIC_API_KEY.",
+    "Зарегистрировать TD (контракт 05): EXP-артефакты должны хранить выводы команд (opencode mcp list, resolved-config дамп) — декларативность доказательств A/B/C; паттерн TD-DEV-18.",
+    "Сохранённая рекомендация «всегда -m polza/...» — НЕ избыточна, оставить с обоснованием (проектный polza не побеждает arise-дефолт; fallback-механизм).",
+    "B2-T3 закрыть только после правки CONFIG_MERGE.md и дополнения доказательствами (выводы команд); полный перепрогон не обязателен — факты подтверждены.",
+    "EXP-1b-followup (TD-DEV-39): определить политику приоритета MCP-ключей при merge — кто побеждает при совпадающих именах sequential-thinking/grep_app (node-раннер глобального vs npx проектного)."
+  ]
+}

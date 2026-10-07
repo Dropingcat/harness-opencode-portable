@@ -1,0 +1,47 @@
+{
+  "module": "EXP-1b",
+  "verdict": "REQUEST_CHANGES",
+  "date": "2026-10-07",
+  "comments": [
+    {
+      "file": "config/CONFIG_MERGE.md",
+      "line": 10,
+      "severity": "critical",
+      "problem": "Вывод D фальсифицирован фактическими конфигами. Отчёт утверждает «resolved model = claude-opus-4-5 (глобал), НЕ polza» и «глобальный config побеждает портабл». Но: (1) глобальный C:\\Users\\Arhys\\.config\\opencode\\opencode.jsonc НЕ содержит ключа `model` вообще (только plugin/provider/compaction/tool_output); (2) проектный .opencode/opencode.json СОДЕРЖИТ \"model\": \"polza/deepseek/deepseek-v4-flash-0731\" (+small_model) — единственный model-ключ из двух конфигов; (3) строка claude-opus-4-5 в глобальном дереве встречается ТОЛЬКО внутри node_modules/@bluelovers/opencode-arise (dist/index.js:109941, cli/index.js:41416) — это дефолт модели плагина arise, а не глобальный config; (4) плагин arise НЕ устанавливает model в конфиг (opencode-arise.json содержит только show_banner/disabled_shadows/output_shaping/compaction, без model). Значит по данным конфигов resolved model = polza (проектный), а НЕ claude-opus. Вывод D «глобальный > portable» не подтверждён ни одним артефактом в отчёте (нет вывода resolved config, нет inventory, нет команды).",
+      "suggestion": "Повторить прогон EXP-1b с фиксацией ДОКАЗАТЕЛЬСТВА resolved model: команда (например `opencode debug` / `--print-config` / логи старта сессии с печатью загруженного model) и её вывод вставить в CONFIG_MERGE.md. Либо, если источник — плагин arise (дефолт monarch = anthropic/claude-opus-4-5) — зафиксировать это явно: «модель приходит из плагина arise при отсутствии явного model в конфиге» и перепроверить гипотезу D в чистом окружении без arise.",
+      "falsification": "Если в выводе реального прогона (resolved config/логи старта) присутствует model=claude-opus-4-5 при отсутствии этого ключа в обоих конфигах и отсутствии registry-custom в arise — замечание опровергнуто. Если model=polza (из проектного конфига) — D-вывод отчёта опровергнут фактически."
+    },
+    {
+      "file": "config/CONFIG_MERGE.md",
+      "line": 7,
+      "severity": "major",
+      "problem": "Доказательства A/B/C декларативны, без воспроизводимых артефактов: «resolved config: глобал+portable в одном массиве; harness 22 тула + MCP 39 + встроенные 14», «6 connected: 4 portable + 2 глобальных» — нет ни вывода команды, ни файла-инвентаря. Нельзя проверить, что 6 MCP реально поднялись (проектные 4 из .opencode/opencode.json + какие именно 2 глобальных: в глобальном .opencode/.mcp.json 2 сервера — sequential-thinking, grep_app).",
+      "suggestion": "Приложить фактические артефакты: вывод harness_status / inventory тулов / /mcp list (или эквивалент) в config/ или .runs/artifacts/EXP-1b/, сослаться на них из таблицы. Указать имена 2 глобальных MCP.",
+      "falsification": "Если артефакты-доказательства (лог/вывод) добавлены и подтверждают числа 22/39/14 и 6 connected — замечание снято."
+    },
+    {
+      "file": "config/CONFIG_MERGE.md",
+      "line": 21,
+      "severity": "major",
+      "problem": "Рекомендация «при всех headless-прогонах указывать -m polza/... явно» мотивирована фальсифицированным выводом D. Если на деле resolved model = polza (проектный конфиг, единственный model-ключ), то рекомендация о claude-opus (дорого/другой) не имеет основания; если источник — плагин arise — рекомендация должна быть иной (отключить/настроить arise, а не -m).",
+      "suggestion": "Переформулировать рекомендацию после перепроверки D: либо «resolved model = polza из проектного конфига, -m не обязателен, но для детерминизма при изменении конфигов фиксировать явно», либо «плагин arise внедряет дефолт monarch=claude-opus-4-5 при отсутствии model — решить политику плагинов личных в headless».",
+      "falsification": "Если после перепроверки подтверждено, что без -m стартует claude-opus-4-5 (и это воспроизводимо) — рекомендация про -m обоснована, замечание снято."
+    },
+    {
+      "file": "config/CONFIG_MERGE.md",
+      "line": 13,
+      "severity": "minor",
+      "problem": "Наблюдение HARNESS_ROOT подтверждено (harness_status из CWD=portable → core_root=канон при env OPENCODE_HARNESS_ROOT=канон; host_version=1.18.31). Но: (1) версия в отчёте не зафиксирована (host_version 1.18.31, а заявленная в реестре TD-DEV-5 1.18.34 — битый кэш, postinstall не выполнен) — версия рантайма часть доказательств; (2) блокер НЕ зарегистрирован в PROBLEMS_REGISTER — нарушение контракта 05 §1 «каждый TD фиксирует тот, кто нашёл».",
+      "suggestion": "Зафиксировать host_version в отчёте; блокер зарегистрирован ревьюером как TD-DEV-38 (OPEN) — воркеру подтвердить/дополнить.",
+      "falsification": "Если в контексте EXP-1b воркером был зарегистрирован TD по HARNESS_ROOT до ревью (grep по реестру до правки ревьюером = 0 хитов) — замечание снято."
+    },
+    {
+      "file": "config/CONFIG_MERGE.md",
+      "line": 19,
+      "severity": "minor",
+      "problem": "«Закрыть B2-T3: merge работает» — на основе отчёта преждевременно: вывод D требует перепроверки, конфликт имён MCP-ключей при склейке не исследован (въедливость 07: оба .mcp.json — глобальный и проектный — содержат sequential-thinking/grep_app с разными командами: node+npm-package-runner vs npx -y). Зарегистрировано как TD-DEV-39.",
+      "suggestion": "Закрывать B2-T3 только после перепроверки D (реальный resolved model) и доп. проверки merge при конфликте ключей MCP (кто побеждает, не дублируется ли сервер).",
+      "falsification": "Если в EXP-1b-followup конфликт имён MCP проверен и политика приоритета зафиксирована, а D перепроверен с артефактами — замечание снято."
+    }
+  ]
+}
