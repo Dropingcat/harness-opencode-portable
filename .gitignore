@@ -99,7 +99,9 @@ htmlcov/
 .opencode/*.bak
 
 # Runtime artifacts (development temp)
-.runs/
+.runs/*
+!.runs/sleep_markers/
+!.runs/sleep_markers/**
 
 # meta-cycle runtime state
 .meta_state/

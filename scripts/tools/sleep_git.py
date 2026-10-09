@@ -329,7 +329,8 @@ def _ensure_clean(sg: SleepGit) -> None:
     # НЕ считаются грязной рабочей копией — иначе повторный run блокируется своим же состоянием.
     ignore = (str(STATE_REL), str(MARKERS_REL))
     dirty_lines = [
-        ln for ln in sg._git_ro(["status", "--porcelain"]).stdout.splitlines()
+        ln for ln in sg._git_ro(
+            ["status", "--porcelain", "--untracked-files=all"]).stdout.splitlines()
         if not any(ig in ln for ig in ignore)
     ]
     if dirty_lines:
