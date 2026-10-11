@@ -54,6 +54,8 @@ worker → reviewer → auditor → analyst → researcher → deployer
 ### Выход
 Вердикт `APPROVE` / `REQUEST_CHANGES` / `REJECT` + TD-* (по 05) + «обзор выполненного» + `reviewer_<ID>.json`.
 
+**Секция `verified_by_commands` ОБЯЗАТЕЛЬНА** в `reviewer_<ID>.json`: список команд/файлов, которыми ревьюер проверял (P4). Нет секции = вердикт невалиден.
+
 ---
 
 ## 3. АУДИТОР (входные данные)
@@ -83,6 +85,8 @@ worker → reviewer → auditor → analyst → researcher → deployer
 
 ### Выход
 Вердикт `APPROVE` / `REQUEST_CHANGES` / `REJECT` + TD-* + **секция 0 «Сомнительное, что я проверил»** (обязательна, перед вердиктом — 07 §6) + `auditor_<ID>.json`.
+
+**Секция `verified_by_commands` ОБЯЗАТЕЛЬНА** в `auditor_<ID>.json`: список команд/файлов, которыми аудитор проверял (P4). Нет секции = вердикт невалиден.
 
 ---
 
