@@ -22,7 +22,7 @@ import coder_dom_build as cdb
 
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description="Verify coder_dom.yaml is in sync with code.")
-    ap.add_argument("--root", default=r"E:\Documents\Документы\doc_Opencode_agern-new")
+    ap.add_argument("--root", default=str(Path(__file__).resolve().parents[2]))
     ap.add_argument("--out", default=None, help="path to coder_dom.yaml (default <root>/docs/glossary/coder_dom.yaml)")
     ap.add_argument("--fix", action="store_true", help="write the regenerated file (generator mode)")
     args = ap.parse_args(argv)

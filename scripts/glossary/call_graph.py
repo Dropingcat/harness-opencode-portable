@@ -157,7 +157,7 @@ def scan_call_graph(root: str | Path, include_tests: bool = False) -> dict[str, 
 if __name__ == "__main__":
     import argparse
     ap = argparse.ArgumentParser(description="Build CALLS call-graph (stdlib ast).")
-    ap.add_argument("--root", default=r"E:\Documents\Документы\doc_Opencode_agern-new")
+    ap.add_argument("--root", default=str(Path(__file__).resolve().parents[2]))
     ap.add_argument("--out", default=None)
     args = ap.parse_args()
     data = scan_call_graph(args.root)

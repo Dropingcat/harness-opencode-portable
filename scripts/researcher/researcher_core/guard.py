@@ -1,11 +1,11 @@
-"""Leak-protection guard block — vendored P0 from E:\\Documents\\Документы\\doc_guard.
+"""Leak-protection guard block — vendored P0 from the bundled guard.
 
 Wraps trust-boundary guard (session_guard.py P0) as deterministic, stdlib-only
 block for researcher and opencode sessions. No network, no API keys, fail-closed.
 
-Provenance: E:\\Documents\\Документы\\doc_guard\\src\\session_guard.py
+Provenance: portable guard/src/session_guard.py
   STRONG_EN / WEAK_RU / _normalize / _suspicion / _classify
-  Bypass-rate: baseline 72% → P0 50% → P2 ~10% (doc_guard README)
+  Bypass-rate: baseline 72% → P0 50% → P2 ~10% (guard README)
   7 threats closed by P0+P2, 7 insurmountable require taint tracker (THREAT_MODEL.md)
 
 Usage as block:
@@ -21,15 +21,11 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Mapping
 
-# Vendor P0/P2 logic by importing from doc_guard src if available, else fallback.
-# Portable: prefer the bundled guard/src (this module), then the legacy external path.
+# Portable: prefer the bundled guard/src (this module), no legacy external path.
 _HARNESS_ROOT = Path(__file__).resolve().parents[3]
 _BUNDLED_GUARD_SRC = _HARNESS_ROOT / "guard" / "src"
-_DOC_GUARD_SRC = Path(r"E:\Documents\Документы\doc_guard\src")
 if str(_BUNDLED_GUARD_SRC) not in sys.path:
     sys.path.insert(0, str(_BUNDLED_GUARD_SRC))
-if str(_DOC_GUARD_SRC) not in sys.path:
-    sys.path.insert(0, str(_DOC_GUARD_SRC))
 
 try:
     from session_guard import (  # type: ignore[import-not-found]
@@ -57,7 +53,7 @@ except Exception:
     _HAS_P2 = False
     _p2_load_config = None  # type: ignore[assignment]
     _P2Chain = None  # type: ignore[assignment]
-    # Fallback local copy (minimal, keeps block functional if doc_guard not mounted)
+    # Fallback local copy (minimal, keeps block functional if bundled guard not mounted)
     _STRONG_EN = [
         "ignore previous",
         "disregard the above",
@@ -188,7 +184,7 @@ def scan_state(state: Mapping[str, Any], provenance: str = "untrusted", tool: st
 
 
 def scan_opencode_db(db_path: str | Path, session_id: str | None = None) -> GuardReport:
-    """Scan opencode.db via doc_guard P0 analyze (if available)."""
+    """Scan opencode.db via bundled guard P0 analyze (if available)."""
 
     try:
         result = _doc_analyze(str(db_path), session_id)
@@ -245,14 +241,14 @@ def scan_text_with_p2(
     if not _HAS_P2 or _p2_load_config is None:
         return p0_report
     # Try to load guard config (polza provider + budget)
-    cfg_path = Path(config_path) if config_path else _DOC_GUARD_SRC / "guard_config.json"
+    cfg_path = Path(config_path) if config_path else _BUNDLED_GUARD_SRC.parent / "configs" / "guard_config.json"
     # Also check researcher project guard config if exists
     if not cfg_path.exists():
-        alt = Path(r"E:\Documents\Документы\doc_guard\configs\guard_config.json")
+        alt = _HARNESS_ROOT / "guard" / "configs" / "guard_config.json"
         if alt.exists():
             cfg_path = alt
         else:
-            alt2 = Path("E:/Documents/Документы/doc_guard/configs/guard_config.json.example")
+            alt2 = _HARNESS_ROOT / "guard" / "configs" / "guard_config.json.example"
             if alt2.exists():
                 cfg_path = alt2
             else:

@@ -370,7 +370,7 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument(
         "--root",
-        default=r"E:\Documents\Документы\doc_Opencode_agern-new",
+        default=str(Path(__file__).resolve().parents[2]),
         help="root of the harness tree (default: the workspace root)",
     )
     parser.add_argument("--out", default=None, help="output JSON path (default: <root>/docs/glossary/function_index.json)")

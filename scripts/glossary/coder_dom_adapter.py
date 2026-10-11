@@ -132,7 +132,7 @@ if __name__ == "__main__":
     import argparse
 
     ap = argparse.ArgumentParser(description="Coder DOM adapter (lookup/context/verify).")
-    ap.add_argument("--root", default=r"E:\Documents\Документы\doc_Opencode_agern-new")
+    ap.add_argument("--root", default=str(Path(__file__).resolve().parents[2]))
     ap.add_argument("--function", required=True)
     ap.add_argument("--task", default="")
     ap.add_argument("--verify", action="store_true")

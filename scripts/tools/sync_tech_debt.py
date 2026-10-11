@@ -32,7 +32,7 @@ if hasattr(sys.stderr, "reconfigure"):
     sys.stderr.reconfigure(encoding="utf-8", errors="replace")
 
 DEFAULT_PORTABLE = Path(r"E:\opencode_harness_portable\config\tech_debt.json")
-DEFAULT_WORK = Path(r"E:\Documents\Документы\doc_Opencode_agern-new\config\tech_debt.json")
+DEFAULT_WORK = Path(r"E:\opencode_harness_portable\config\tech_debt.json")
 BACKUP_DIR = Path(r"C:\Temp\opencode\backup_debts")
 
 

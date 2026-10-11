@@ -16,7 +16,7 @@ import stub_detect
 
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description="Fail on unconcious code stubs.")
-    ap.add_argument("--root", default=r"E:\Documents\Документы\doc_Opencode_agern-new")
+    ap.add_argument("--root", default=str(Path(__file__).resolve().parents[2]))
     args = ap.parse_args(argv)
 
     report = stub_detect.scan_stubs(args.root)

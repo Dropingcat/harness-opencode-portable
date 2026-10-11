@@ -232,7 +232,7 @@ def build_coder_dom(root: str | Path, include_tests: bool = False) -> dict[str, 
 
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description="Build coder_dom.yaml.")
-    ap.add_argument("--root", default=r"E:\Documents\Документы\doc_Opencode_agern-new")
+    ap.add_argument("--root", default=str(Path(__file__).resolve().parents[2]))
     ap.add_argument("--out", default=None)
     args = ap.parse_args(argv)
 

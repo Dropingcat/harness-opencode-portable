@@ -189,7 +189,7 @@ def scan_stubs(root: str | Path, include_tests: bool = False) -> dict[str, Any]:
 if __name__ == "__main__":
     import argparse
     ap = argparse.ArgumentParser(description="Detect stubs vs interfaces (stdlib ast).")
-    ap.add_argument("--root", default=r"E:\Documents\Документы\doc_Opencode_agern-new")
+    ap.add_argument("--root", default=str(Path(__file__).resolve().parents[2]))
     ap.add_argument("--out", default=None)
     args = ap.parse_args()
     data = scan_stubs(args.root)
