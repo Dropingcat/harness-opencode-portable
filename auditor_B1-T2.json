@@ -1,0 +1,100 @@
+{
+  "module": "B1-T2",
+  "verdict": "REQUEST_CHANGES",
+  "audit_type": "process_and_integration",
+  "reviewer_verdict": "REQUEST_CHANGES (DoD 7, DoD 8)",
+  "justification": "Правки воркера безупречны по scope: git diff показывает ровно 5 строк (plugin + 4×python), бэкап .bak валиден, JSON_OK, без BOM, 0 канон-ссылок, регрессий MCP нет (все зависимости portable venv на месте). Однако процессный ритуал 00_INDEX §5.4 требует PASS всех DoD: DoD 8 FAIL (грязное дерево ~70 файлов — отсутствует pre-tranche-A snapshot-коммит, предписанный 00_INDEX §7.3) и DoD 7 FAIL по букве (расхождение пути в спецификации: файл есть в compatibility\\opencode\\1.18.30.json, а контракт требует compatibility\\1.18.30.json). REQUEST_CHANGES адресован ПРОЦЕССУ (оркестратору/спецификации), а не коду воркера: закоммитить срез, поправить путь DoD 7 или зафиксировать PASS по фактическому пути, зарегистрировать 2 техдолга. После этого B1-T2 APPROVE и можно переходить к M0-a-остатку и EXP-1b.",
+  "process_analysis": {
+    "contracts_respected": true,
+    "scope_respected": true,
+    "diff_scope": "ровно 5 строк (plugin:6, mcp python:12/20/28/36), лишних изменений в opencode.json нет",
+    "backup_exists": true,
+    "backup_valid": true,
+    "iteration_count": 1,
+    "iteration_limit": 3,
+    "role_violation": false,
+    "reviewer_args_assessment": "Ревьюер корректно зафиксировал 6/8 DoD PASS и 2 FAIL (DoD 7 путь, DoD 8 дерево), проверил BOM/FFFD/CRLF/.bak/MCP-importlib. Его DoD 7 FAIL по букве справедлив, но источник — ошибка пути в спеке, а не дефект воркера (файл-предусловие существует, движок 1.18.30 сертифицирован LIVE_CERTIFIED). DoD 8 FAIL — реальный процессный дефект, но предсуществующий (не вызван правками B1-T2).",
+    "worker_args_assessment": "Аргументы воркера (кириллица ломает PowerShell .Replace → решено Python-скриптом; coder_router_server.py --help без вывода) — валидные техдолги, подтверждены: PS 5.1 .Replace с кириллицей ненадёжен, CLI-парсер отсутствует. Оба НЕ зарегистрированы в tech_debt.json/PROBLEMS_REGISTER — процессный пробел.",
+    "dod_results": {
+      "dod_1_no_canon_refs": "PASS (0)",
+      "dod_2_portable_refs": "PASS (9: plugin 1 + python 4 + server paths 4 — допустимо по примечанию контракта)",
+      "dod_3_python_paths_12_20_28_36": "PASS",
+      "dod_4_json_valid": "PASS (JSON_OK)",
+      "dod_5_utf8_no_bom": "PASS (первый байт 123 = '{', не EF; ревьюер: no BOM, no FFFD)",
+      "dod_6_plugin_dist": "PASS (Test-Path True)",
+      "dod_7_compatibility": "FAIL по букве / PASS по сути: файл есть в compatibility\\opencode\\1.18.30.json, контракт ждёт compatibility\\1.18.30.json — дефект спецификации",
+      "dod_8_git_status": "FAIL: ~70 изменённых/untracked файлов (config/agent_categories/*, scripts/researcher/*, docs/glossary/*, .runs/*, docs/CODERS/, .kanban.db, scripts/memory/, config/session_tracker.json — от M2 и ранее); дерево было грязным до B1-T2"
+    },
+    "precondition_engine_11830": "PASS (compatibility\\opencode\\1.18.30.json существует, schema harness-opencode-compatibility/2.0, LIVE_CERTIFIED для PLUGIN_LOADED/CUSTOM_TOOL_VISIBLE)"
+  },
+  "integration": {
+    "EXP-1b": {
+      "status": "РАЗБЛОКИРОВАН формально (EXP-1b 'ОЖИДАЕТ B1-T2' → B1-T2 выполнен)",
+      "what_is_needed": "запуск opencode из CWD=portable + наблюдение склейки plugin-массивов (глобал 5 × проект 1). Shim/B3-T2 НЕ обязателен — достаточно прямого вызова движка из корня portable (CWD-контракт это допускает). Грязное дерево и HARNESS_ROOT=канон не блокируют наблюдение merge. Блокеров для запуска EXP-1b НЕТ.",
+      "recommendation": "прогнать EXP-1b сразу после фиксации среза и M0-a-остатка (HARNESS_ROOT→portable), исходы A/B/C → config/CONFIG_MERGE.md (B2-T3)"
+    },
+    "B2-T3_CONGIF_MERGE": {
+      "conflict_keys": "только plugin (глобал 5 × проект 1) — ожидаемая склейка; model/small_model только в проекте (нет конфликта); mcp только в проекте (нет конфликта); provider/disabled_providers/compaction/tool_output/subagent_depth только в глобале (нет конфликта)",
+      "risk": "низкий. Главный вопрос — семантика склейки plugin-массивов (исходы A/B/C EXP-1b) и жизнеспособность глобальных arise/hiai из CWD=portable (их node_modules в ~/.config) — предмет B2-T5/W12, не B1-T2",
+      "model_provider_compat": "совместимо: проектный model=polza/deepseek/deepseek-v4-flash-0731 разрешается глобальным provider.polza"
+    },
+    "W11-T6_MCP_python_to_portable": {
+      "status": "КОНФИГ-ЧАСТЬ ВЫПОЛНЕНА (4 сервера переключены на portable python — это и были правки 12/20/28/36)",
+      "what_remains": "формальный прогон EXP-5: поднять opencode из CWD=portable, убедиться в логе 'mcp coder_router/academic_search/doc_extract/searxng_search — connected (portable python)'. Ручная проверка: mcp+pydantic+Server/stdio/types импортируются, все lazy-зависимости doc_extract (pypdfium2, docx, pythoncom, win32com, markdownify, openpyxl) присутствуют → прогон EXP-5 ожидаемо PASS",
+      "note": "W11 в целом (shim, harness_control_server, agent_loop --attach, serve) НЕ выполнен — это отдельные подзадачи W11-T1..T5"
+    },
+    "M0-a_core": {
+      "closed_by_B1-T2": "пункт 'канон-пути в opencode.json' — ДА (0 canon-refs, project-scope конфиг)",
+      "what_remains": "OPENCODE_HARNESS_ROOT указывает на КАНОН (не portable) — M0 чек 1 FAIL; капсулы orchestration-thread-process.md + code-factory-process.md ОТСУТСТВУЮТ в portable shared (только 2 файла) — M0/E2E-2 чек FAIL; junction ~/.config/opencode/shared НЕ создан (обычная папка, fsutil: не репараспоинт); path_resolution_map не содержит 'portable' — M0 чек 3 FAIL",
+      "conclusion": "статус 'M0-a ГОТОВО' в 01_BLOCKS/03_ACCEPTANCE противоречит фактам — M0-a НЕ выполнен, это следующий шаг A2 после B1-T2"
+    }
+  },
+  "regressions": [
+    {
+      "risk": "portable .venv без mcp-пакета → все 4 MCP-сервера падают после переключения",
+      "check": "import mcp; from mcp.server import Server; from mcp.server.stdio import stdio_server; from mcp.types import TextContent, Tool",
+      "fact": "MCP_SERVER_OK (модуль установлен; атрибута __version__ нет — это норма, не ошибка)",
+      "verdict": "PASS — регрессии нет"
+    },
+    {
+      "risk": "отсутствие зависимостей MCP-серверов в portable venv",
+      "check": "imports всех 4 серверов: coder_router/academic/searxng = только stdlib+mcp; doc_extract = mcp + lazy (pypdfium2, docx, pythoncom, win32com.client, markdownify, openpyxl)",
+      "fact": "все lazy-зависимости doc_extract присутствуют (pypdfium2 OK, docx OK, pythoncom OK, win32com OK, markdownify OK, openpyxl OK); pypdf НЕ установлен, но сервер использует pypdfium2 — не нужен",
+      "verdict": "PASS — регрессии нет"
+    },
+    {
+      "risk": "OPENCODE_HARNESS_ROOT указывает на канон → роутер/фабрика продолжат ходить в канон",
+      "check": "echo $env:OPENCODE_HARNESS_ROOT",
+      "fact": "E:\\Documents\\...\\doc_Opencode_agern-new (канон)",
+      "verdict": "ПРЕДСУЩЕСТВУЮЩИЙ РИСК для M0-a/W11, НЕ регрессия B1-T2; блокирует только шаги, зависящие от HARNESS_ROOT-якоря (M0 чек 1, EXP-4/5 в части путей)"
+    },
+    {
+      "risk": ".bak не в .gitignore → мусор в git",
+      "check": "git ls-files .opencode/opencode.json.bak → пусто; .gitignore не содержит bak",
+      "fact": "untracked .bak, не в .gitignore",
+      "verdict": "MINOR — добавить .opencode/opencode.json.bak в .gitignore (B3-T4/tech_debt)"
+    }
+  ],
+  "tech_debt": [
+    {
+      "debt": "PowerShell 5.1 .Replace() ненадёжен с кириллицей (пути doc_Opencode_agern) — решено Python-скриптом",
+      "severity": "low-medium (обходное решение есть, но контракт вводит в заблуждение)",
+      "where_to_register": "config/tech_debt.json + правка 01_BLOCKS_B1_B5.md §B1-T2 'Механика' (заменить требование .Replace() на Python-скрипт, чтобы следующий воркер не повторил грабли)",
+      "recommendation": "зарегистрировать TD с acceptance 'B1-T2 механика через Python, не PS .Replace'; синхронизировать спецификацию"
+    },
+    {
+      "debt": "mcp/coder_router_server.py --help не даёт вывода (нет CLI-парсера)",
+      "severity": "low (MCP-сервер не обязан иметь CLI, но молчаливый --help = плохая диагностика)",
+      "where_to_register": "config/tech_debt.json (или PROBLEMS_REGISTER, ветка W11/W12 при аудите цепочек)",
+      "recommendation": "добавить argparse с --help/--version или явный вывод справки в stderr; включить в W11-T2/W12 реестр"
+    }
+  ],
+  "requirements": [
+    "1. ПРОЦЕСС/оркестратор: закоммитить pre-tranche-A snapshot (00_INDEX §7.3) → git status чистый → DoD 8 PASS; дерево было грязным ДО B1-T2 (diff воркера ровно 5 строк — воркер не виноват).",
+    "2. СПЕЦИФИКАЦИЯ: поправить DoD 7 в 01_BLOCKS_B1_B5.md §B1-T2 и 03_ACCEPTANCE.md (путь compatibility\\opencode\\1.18.30.json) ИЛИ явно зафиксировать PASS по фактическому пути (предусловие выполнено, движок 1.18.30 сертифицирован). Не требовать от воркера создавать/переносить файлы вне scope 5 правок.",
+    "3. ТЕХДОЛГИ: зарегистрировать (а) кириллица/.Replace в PS 5.1 и (б) --help без вывода в config/tech_debt.json + PROBLEMS_REGISTER; синхронизировать §B1-T2 'Механика'.",
+    "4. ДО EXP-1b: доделать M0-a-остаток (HARNESS_ROOT→portable, 2 капсулы в shared, junction ~/.config/opencode/shared, path_resolution_map c 'portable'). После этого EXP-1b запускается прямым вызовом opencode из CWD=portable (shim/B3-T2 не блокер).",
+    "5. W11-T6: после фиксации среза прогнать EXP-5 (поднять opencode, проверить MCP connected на portable python) — конфиг готов, ожидаемо PASS."
+  ],
+  "verdict_next_step_ready": "B1-T2 готов к APPROVE после пунктов 1-3 (процессные, не код). EXP-1b и W11-T6/EXP-5 разблокированы; блокирующий для них только M0-a-остаток (HARNESS_ROOT якорь) — п.4."
+}

@@ -14,6 +14,18 @@
 | 5 | Управлять техдолгами/реестром | **coder** | `code-orchestrator` | `tech_debt_cli.py` (не ad-hoc скрипты!) |
 | 6 | Семпоиск по локальному корпусу | **research** | research-orchestrator | `chroma_indexer.py search` |
 
+## Приоритет диспатча research-задачи (TD-161)
+
+Агент НЕ должен путаться между способами запуска research-цикла. Правило однозначное:
+
+| Способ | Когда | Команда |
+|---|---|---|
+| **1. `task` внутри сессии** (ПЕРВЫЙ) | Задача принадлежит текущему контуру (research-агент внутри research-сессии, верификация/поиск/сбор) | `task(subagent_type="general" или "research-orchestrator", prompt=<контракт>)` |
+| **2. Внешний `opencode run --agent research-orchestrator`** | ТОЛЬКО кросс-контур: ты — writer/coder/другой агент и НЕ можешь вызвать research через task (нет такого subagent в своей сессии) | `opencode run --agent research-orchestrator "<contract>"` |
+
+**Почему:** `task` внутри сессии быстрее, безопаснее (нет внешнего процесса), сохраняет контекст и уже проверен (верификация B2 через `task general` сработала). Внешний `opencode run` — тяжёлый и рискованный (новый процесс, без общего контекста) — только для чужих контуров.
+**Если `research-orchestrator` не в списке task-subagents твоей сессии** — используй `general` с полным контрактом research-задачи (он диспатчит BRICKS-скрипты детерминированно).
+
 ## Шаг 1: Инструменты (канонические, из `scripts/tools/`)
 
 **Шаблоны контрактов — в роутере.** `harness_run`/`resolve_bundle` возвращает `templates` (13 шт.): `arxiv_search`, `openalex_search`, `extract_document`, `searxng_search`, `sci_bot`, `downloader_doi`, `downloader_resolve`, `downloader_dns`, `gost_collector`, `code_work`, `literature-review`, `profile_config`, `customize-opencode`. Каждый шаблон содержит: команду, required_input, forbidden_input, start_with/finish_with, guard. **Не выдумывай вызов — возьми шаблон из bundle.**
@@ -31,13 +43,33 @@
 | `gost_collector.py` | сбор ГОСТов/ТУ по маппингу марок (TD-122..125) | `gost_collector.py registry` / `collect --mark ВКС-10` / `backfill` / `provenance --gost 5632-2014` |
 | `downloader.py url` | универсальный загрузчик: PDF с проверкой типа, retry, провенанс | `downloader.py url --url ... --out ... --name f.pdf --expect pdf` |
 | `downloader.py resolve` | каскадный DOI→PDF: локальный корпус→CrossRef/OpenAlex→openAccessPdf→Sci-Hub→wayback (TD-152) | `downloader.py resolve --doi "10.1007/..." --out ...` |
+| `book_finder.py` | поиск книги по ISBN: resolve-isbn (Google Books+OpenLibrary кросспроверка), search-mirrors (dokumen/vdoc/libgen/annas), verdict (TD-165) | `book_finder.py verdict --isbn 978-5-7038-3933-1 [--title "..."] [--out prov.json]` |
+| **`unified_search`** (skill) | **ЕДИНАЯ точка входа поиска** через роутер: тип→каналы по порядку (TD-165) | `search "<запрос>" --type article\|book\|doi\|any [--isbn ...]` |
+| **`agent_loop.py`** | итеративный запуск агента (TD-173): opencode как framework, runner рулит продолжением через --session | `agent_loop.py --agent <агент> --contract "<...>" [--done-file артефакт] [--max-iters N]` |
 
-## Шаг 2: Поиск источников — порядок (жёсткий)
+## Шаг 2: Поиск источников — ЕДИНЫЙ СКИЛЛ (TD-165)
 
+**Используй `unified_search` (skill в роутере) — единую точку входа.** Он сам выбирает каналы по типу:
+
+### Статья (DOI/научный текст) — порядок каналов
 1. **Локальный корпус** (ChromaDB): `chroma_indexer.py search --query "<claim/термин>"`
-2. **arXiv/OpenAlex** (research_papers MCP / source-fetcher)
-3. **Веб** (browser-MCP / webfetch / SearXNG **если поднят**)
-4. DOI → **CrossRef-gate** → `downloader.py doi` (Sci-Hub)
+2. **arXiv/OpenAlex**: `arxiv_search` / `openalex_search` (MCP) или webfetch fallback
+3. **Веб**: `searxng_search` (mini-searxng на 8888) / webfetch
+4. DOI → **CrossRef-gate** → `downloader.py resolve --doi` (каскад: локальный→OA→Sci-Hub→wayback)
+5. **Sci-Bot** (если нужна статья за капчей): `sci_bot_client.py ask`
+
+### Книга (ISBN) — порядок каналов
+1. **`book_finder.py resolve-isbn`** — кросспроверка ISBN (Google Books+OpenLibrary). **Всегда сверяй resolved.title** — user-input ISBN может быть подменой (TD-165)
+2. **`book_finder.py search-mirrors`** — dokumen.pub / vdoc.pub / **libgen.*** / **annas-archive.org** (с retry/backoff/DNS-bypass)
+3. **`book_finder.py verdict`** — честный итог: `found` (pdf_url) | `toc_only` | `not_found`
+4. При капче/Cloudflare на annas/libgen — отметь `captcha`, предложи cookie-обход/ручной доступ (TD-158)
+
+### Ключевые правила
+- ISBN проверяется, НЕ доверяется user-input.
+- Провенанс (URL/дата/hash/источник) — через `downloader.py save_with_provenance`.
+- Обходы: DNS-bypass (DoH, TD-153), зеркала libgen (is/rs/st/gs/li/lc), annas-archive (org/se), **lib-bkm.ru** (Библиотека Машиностроителя: /load/104 Материаловедение, /load/25 ГОСТы, /load/135 Диссертации).
+- **Глубина поиска** — по контракту `shared/search-depth-contract.md` (TD-170): зафиксировать → осмотреться → оценить глубину → идти дальше. НЕ «вспоминать» контекст, НЕ зацикливаться.
+- **Оценка задачи/контекста перед поиском** (TD-177): ответь на 4 вопроса контракта глубины + оцени контекст (что уже нашли, что вокруг) ДО запуска каналов. Это запись для поискового агента — см. раздел «Запись для поискового агента» в `search-depth-contract.md`.
 
 > SearXNG (`127.0.0.1:8888`) — **восстановлен** (TD-128): `mcp/mini_searxng.py` (arXiv/OpenAlex + DDG, JSON-интерфейс). Если порт мёртв — запусти: `python scripts/tools/start_searxng.py`. Используй `searxng_search` (MCP) или `webfetch` к `http://127.0.0.1:8888/search?q=...&format=json`.
 >

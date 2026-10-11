@@ -1,0 +1,49 @@
+{
+  "module": "B1-T1",
+  "role": "code-reviewer",
+  "contracts": ["05_REVIEWER_AUDITOR_TECHDEBT.md", "07_AUDITOR_DILIGENCE.md"],
+  "reviewed_worker_artifact": "worker_b1_t1.json",
+  "verdict": "APPROVE_WITH_TECHDOLGS",
+  "falsification": "Вердикт APPROVE опроверг бы факт: canon-only строк по Compare-Object > 1 (searxng) ИЛИ любой whitelist-пакет отсутствует ИЛИ установка прошла в канон. Фактически: canon-only = 1 по именам (searxng, by-requirement), все 17 whitelist на месте в portable, канон не тронут (mtime не изменился). Расхождения (6 версионных диффов, 4 пакета-сироты) — зафиксированы как техдолги TD-DEV-15/16/17, а не как фейл DoD.",
+  "sections": {
+    "1_checks": [
+      {"check": "Freeze-сравнение: canon vs portable", "command": "Compare-Object (pip freeze canon) (pip freeze portable)", "expected": "canon-unique = 1 (searxng)", "fact": "canon-unique по ИМЕНАМ = 1 (searxng); по СТРОКАМ = 7 (searxng + 6 версионных диффов)", "result": "PASS (с оговоркой: по строкам не 0, заявленный '0 различий или задокументированный остаток' — остаток = searxng + 6 версионных диффов, зафиксированы TD-DEV-15)"},
+      {"check": "Счётчик пакетов", "command": "pip freeze | Measure-Object", "expected": "portable >= 62; после установки ~79", "fact": "canon=76, portable=79 (freeze_port.txt до=62)", "result": "PASS (79 = 76 - searxng + 4 сироты; счёт сходится)"},
+      {"check": "17 whitelist установлены", "command": "pip show <17 пакетов>; import-проверка", "expected": "все 17 на месте в portable", "fact": "все 17 SAME версий с каноном, кроме websockets (17.2 vs 17.1); импорты 22/22 OK (вкл. dawg_python, pymorphy3, razdel)", "result": "PASS (websockets — дифф, TD-DEV-15)"},
+      {"check": "Версии whitelist vs канон", "command": "pip show pytest/rich/pymorphy3/... canon vs portable", "expected": "совпадение версий", "fact": "16/17 SAME (pytest 9.1.1, rich 15.0.0, pymorphy3 2.0.6 и т.д.); websockets DIFF 17.1 vs 17.2 (portable СВЕЖЕЕ)", "result": "FAIL (websockets) → TD-DEV-15 (не критично для рантайма)"},
+      {"check": "Импорты критичных", "command": "portable python -c 'import mcp,pydantic,numpy,requests,uvicorn,starlette'", "expected": "OK", "fact": "ALL OK; pydantic 2.13.5", "result": "PASS"},
+      {"check": "Канон не тронут", "command": "Get-Item mtime .venv canon; pip freeze canon", "expected": "mtime не изменился, freeze стабилен 76", "fact": "mtime canon .venv = 08.09.2026 (старое); freeze_canon.txt = 76; pip.exe mtime 06.09.2026", "result": "PASS"},
+      {"check": "Установка в portable", "command": "pip show <pkg> Location", "expected": "E:\\opencode_harness_portable\\.venv\\Lib\\site-packages", "fact": "Location подтверждён для mcp/pytest/pymorphy3/websockets", "result": "PASS"},
+      {"check": "DoD спеки B1-T1 (7 пакетов pip show + import pydantic/starlette/uvicorn)", "command": "pip show pymorphy3,pypdf,DAWG2-Python,razdel,typer,websockets; import pydantic,starlette,uvicorn", "expected": "все есть; import OK", "fact": "все 6 show OK; import OK; pydantic 2.13.5", "result": "PASS"},
+      {"check": "DAWG2-Python импорт как dawg_python", "command": "import dawg_python", "expected": "OK", "fact": "OK (подтверждено и в каноне)", "result": "PASS"},
+      {"check": "pymorphy3-dicts-ru", "command": "pip show + размер", "expected": "установлен, разумный размер", "fact": "установлен 2.4.417150.4580142; 15.3 MB (нормально для словарей)", "result": "PASS"},
+      {"check": "4 пакета-сироты (beautifulsoup4/markdownify/pypdfium2/soupsieve)", "command": "grep использования; import", "expected": "объяснение", "fact": "все 4 используются mcp/doc_extract_server.py (PDF/HTML ветки) и отсутствуют В КАНОНЕ (ModuleNotFoundError) — это рабочие зависимости, portable полнее канона", "result": "PASS (с техдолгом TD-DEV-16)"},
+      {"check": "searxng остаток", "command": "pip show searxng canon/portable; grep import searxng", "expected": "нет в portable (по требованию)", "fact": "в portable НЕТ (верно по спеке); в каноне 0.1.2, НО пакет не импортируется ни одним скриптом (mcp-сервер — HTTP-клиент, реальный поиск mini_searxng/Docker)", "result": "PASS (остаток легитимен; пакет канона — кандидат на удаление, TD-DEV-17)"},
+      {"check": "MCP-серверы на portable python (smoke import)", "command": "importlib exec 4 серверов", "expected": "все OK", "fact": "coder_router OK, doc_extract OK, searxng_search OK, academic_search OK (после повторного запуска — первый flaky traceback не воспроизвёлся, 3/3 OK)", "result": "PASS (флаки не воспроизведён; отмечено в секции 0)"},
+      {"check": "Артефакты ревью/аудита B1-T1", "command": "Test-Path reviewer_B1-T1.json/auditor_B1-T1.json", "expected": "существуют (контракт 05/04)", "fact": "ДО ревью: отсутствовали (только worker_b1_t1.json); reviewer создан этим ревью; auditor — не мой scope", "result": "PARTIAL (worker назван worker_b1_t1.json — нижний регистр, вне конвенции worker_B1-T1.json; TD-DEV-9 прецедент)"},
+      {"check": "Артефакты freeze воркера", "command": "Test-Path C:\\Temp\\opencode\\freeze_*", "expected": "существуют (заявлены)", "fact": "freeze_canon.txt(76), freeze_port.txt(62), freeze_port2.txt(79), freeze_canon_err/freeze_port_err есть; venv_delta.txt есть (18 WHITELIST + searxng DEFERRED + 6 version-diff)", "result": "PASS"}
+    ],
+    "2_dod_B1T1": [
+      {"dod": "Установлены ровно 17 whitelist-пакетов (не бинарное копирование)", "fact": "ВЫПОЛНЕНО — pip install 17; freeze порта 62→79; канон не тронут", "status": "PASS"},
+      {"dod": "searXNG — по требованию, НЕ установлен", "fact": "не установлен; остаток canon-only = searxng", "status": "PASS"},
+      {"dod": "Compare-Object freeze канон vs portable → 0 различий (или задокументированный whitelist-остаток)", "fact": "по именам: остаток = searxng (задокументирован); по строкам: + 6 версионных диффов — НЕ были задокументированы воркером в реестре (только в notes JSON)", "status": "PASS с оговоркой (TD-DEV-14/15)"},
+      {"dod": "Критичные импорты работают (mcp/pydantic/starlette/uvicorn + 17 новых)", "fact": "22/22 OK", "status": "PASS"},
+      {"dod": "Канон не тронут, установка в portable", "fact": "mtime канона не изменился; Location = portable site-packages", "status": "PASS"}
+    ],
+    "3_problems": [
+      {"problem": "Версии не совпадают: websockets 17.2 portable vs 17.1 canon (поставлен свежее), mcp 1.30.0 vs 1.26.0, fonttools, matplotlib, urllib3, idna", "severity": "major (процессный, не рантайм-блокер)", "evidence": "pip show/Compare-Object", "recommendation": "пинить whitelist-пакеты на версии канона (websockets==17.1) или задокументировать допуск минорных диффов; зарегистрировано TD-DEV-15"},
+      {"problem": "Воркер нашёл 10 техдолгов, но НЕ записал их в PROBLEMS_REGISTER (нарушение контракта 05 §1)", "severity": "major (процессный)", "evidence": "grep B1-T1/websockets/mcp 1.30 в реестре = 0 до правки", "recommendation": "зарегистрировано ревьюером TD-DEV-14..17; наладить процедуру фиксации воркером"},
+      {"problem": "4 пакета-сироты (beautifulsoup4/markdownify/pypdfium2/soupsieve) — отсутствуют в каноне, но нужны doc_extract; канон-venv неполон как эталон", "severity": "minor (вне scope B1-T1, но влияет на эталонность)", "evidence": "ModuleNotFoundError в каноне; doc_extract_server.py стр.25/90", "recommendation": "актуализировать канон-venv или зафиксировать эталон; TD-DEV-16"},
+      {"problem": "Пакет searxng 0.1.2 в каноне не импортируется ничем — мёртвый груз", "severity": "minor", "evidence": "grep import searxng вне site-packages = 0", "recommendation": "решить судьбу при легализации канона; TD-DEV-17"},
+      {"problem": "Артефакт worker назван worker_b1_t1.json (нижний регистр) — вне конвенции worker_B1-T1.json; reviewer/auditor артефакты B1-T1 отсутствовали", "severity": "minor", "evidence": "Get-ChildItem *.json", "recommendation": "унифицировать именование артефактов (прецедент TD-DEV-9)"}
+    ],
+    "4_registered_techdolgs": [
+      {"id": "TD-DEV-14", "severity": "MEDIUM", "what": "B1-T1: техдолги воркера не зарегистрированы в PROBLEMS_REGISTER (нарушение 05 §1)"},
+      {"id": "TD-DEV-15", "severity": "MEDIUM", "what": "6 версионных рассинхронов venv (mcp/fonttools/matplotlib/urllib3/idna/websockets), websockets поставлен свежее канона"},
+      {"id": "TD-DEV-16", "severity": "LOW", "what": "Канон-venv неполон: doc_extract в каноне не имеет pypdfium2/markdownify/bs4 (ModuleNotFoundError)"},
+      {"id": "TD-DEV-17", "severity": "LOW", "what": "Пакет searxng в каноне не используется ни одним скриптом — мёртвый груз, кандидат на удаление"}
+    ],
+    "5_verdict": "APPROVE_WITH_TECHDOLGS — DoD B1-T1 выполнен (17 whitelist установлены, канон не тронут, установка в portable, остаток = searxng по требованию + задокументированные техдолги TD-DEV-14..17). Рекомендация оркестратору: пропустить к аудитору; аудитору перепроверить флаки academic_search_server при холодном запуске (1 неповторившийся traceback) и консистентность venv_delta.txt."
+  },
+  "output_path": "E:\\opencode_harness_portable\\reviewer_B1-T1.json"
+}

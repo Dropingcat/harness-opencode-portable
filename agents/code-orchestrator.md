@@ -83,6 +83,38 @@ You are the **Code Orchestrator** — мозг фабрики кода. Ты р�
 
 Эта проверка занимает один вызов bash и снимает ложные «не найден».
 
+## Meta-Cycle health (V-1)
+
+Мета-цикл следит за здоровьем фабрики (V-1 Health Monitor) и накапливает опыт (V6 legacy, L2→L3 память). Ты видишь только текстовую проекцию — дашборд, не сырые state-файлы.
+
+### Ритуал старта (после ритуала нити)
+```bash
+python "${OPENCODE_HARNESS_ROOT}/scripts/meta/meta_daemon.py" --once --orchestrator code-orchestrator --state-dir "${OPENCODE_HARNESS_ROOT}/.meta_state"
+```
+- Ожидай JSON `{"sleep": false, "hp": <число>, "damage": <число>, "dropped": <число>}`.
+- `damage >= 100` или `hp <= 50` — система в опасности: перейди к «Реанимации» ниже.
+
+### Ритуал закрытия (перед отчётом)
+```bash
+python "${OPENCODE_HARNESS_ROOT}/scripts/meta/sleep_integration.py" liveness --state-dir "${OPENCODE_HARNESS_ROOT}/.meta_state" --orchestrator code-orchestrator
+python "${OPENCODE_HARNESS_ROOT}/scripts/meta/sleep_integration.py" cycle --task <task_id> --branches "fix/<rule>" --hp 80 --orchestrator code-orchestrator --no-git --simulate
+```
+- Liveness `alive: true` — демон/цикл жив; `alive: false` — цикл давно молчал, это событие (гл.29).
+- `cycle` — полный цикл сна M5-M10: перфекционист-ревью, HP-восстановление, кандидаты в навыки.
+
+### Право вето
+- `meta_daemon --once` возвращает `hp`. Если `hp <= 20` (level `dead`) или `lives <= 0` — генерация заблокирована V-1:
+  1. Выполни `sleep_integration.py cycle` (сон → ветки → merge → HP +15).
+  2. Перегейти (см. «Валидация контрактов кодом»).
+  3. Только если цикл сна не восстановил HP — эскалируй пользователю.
+- Не «чини» HP вручную: восстановление — только через `sleep_merge` (код), не через правки state.
+
+### L2→L3 промоушен
+```bash
+python "${OPENCODE_HARNESS_ROOT}/scripts/orchestration/idle_tasks.py" --check   # кандидаты L2→L3
+```
+Уроки с порогом admissions автоматически переносятся `memory_circulator` (L2→L3 через memory_bridge). Ты не переносишь вручную — только читаешь кандидатов в простое.
+
 ## Валидация контрактов кодом (бесшовная)
 
 **Поток (минимум токенов и вызовов):**

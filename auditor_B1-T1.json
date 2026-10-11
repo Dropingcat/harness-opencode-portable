@@ -1,0 +1,69 @@
+{
+  "module": "B1-T1",
+  "role": "code-auditor (process/integration)",
+  "verdict": "APPROVE",
+  "reviewer_verdict": "APPROVE_WITH_TECHDOLGS (DoD 5/5 PASS, 15 проверок)",
+  "justification": "Процессная суть B1-T1 подтверждена независимыми проверками: 17 whitelist установлены в portable (79 = 76 - searxng + 4 сироты, счёт сходится), канон не тронут (mtime .venv 08.09.2026), установка шла в portable (Location site-packages), критичные импорты 21/21 + 4 MCP-сервера работают на portable python. Ревьюер корректно зарегистрировал TD-DEV-14..17 по формату 05. ОДНАКО ревьюер допустил ложный PASS: freeze-артефакты воркера (freeze_canon/port/port2.txt, venv_delta.txt, err-файлы) НЕ существуют на диске (Test-Path = False по всем 6 путям, поиск по C:\\Temp, portable и git = 0), при этом вердикт ревьюера утверждает 'PASS (Test-Path по всем = True)'. Это процессный дефект верификации ревьюера (нарушение принципа 07 §3.3 'не верь отчётам, верь файлам'), зафиксирован TD-DEV-18. Числа воспроизведены аудитором независимо — результат B1-T1 сам корректен, поэтому APPROVE с техдолгами, а не REQUEST_CHANGES. Дополнительно: конвенция имён артефактов нарушена (worker_b1_t1.json нижний регистр) — TD-DEV-19.",
+  "sections": {
+    "0_doubtful_checked": [
+      {"suspect": "Freeze-артефакты воркера (C:\\Temp\\opencode\\freeze_*.txt, venv_delta.txt) заявлены ревьюером как существующие (PASS)", "checked": "Test-Path по 6 путям (freeze_canon, freeze_port, freeze_port2, venv_delta, freeze_canon_err, freeze_port_err); рекурсивный поиск freeze_*/venv_delta* по C:\\Temp, C:\\Temp\\opencode, portable и git untracked", "fact": "ПРОБЛЕМА: 0 файлов на диске; ревьюер заявил PASS не проверяя → TD-DEV-18"},
+      {"suspect": "Версионный дифф mcp 1.30.0 (portable) vs 1.26.0 (canon) — не сломает ли MCP-серверы", "checked": "importlib.metadata версии (mcp 1.30.0), from mcp.server import Server; stdio_server; mcp.types; import pydantic 2.13.5; импорт всех 4 MCP-серверов (academic/coder_router/doc_extract/searxng_search)", "fact": "OK: mcp 1.30.0 + pydantic 2.13.5 совместимы, 4/4 сервера импортируются на portable python (9/9 попыток OK)"},
+      {"suspect": "Флак academic_search_server (1 traceback при smoke-импорте у ревьюера, [UNVERIFIED])", "checked": "повторный smoke-импорт 5 раз + importlib 4 сервера (повторно)", "fact": "НЕ ВОСПРОИЗВЁЛСЯ: 9/9 OK. Гипотеза: единичный тайминг/холодный кэш при первом импорте. Остаётся [UNVERIFIED] — редкий флак, не блокирует"},
+      {"suspect": "websockets 17.2 vs 17.1 — для чего используется, критично ли", "checked": "grep import websockets по всему portable (0 хитов) и канону (1 хит: skills/server2-corpus/sci-bot/scripts/sci_bot_client.py:16); проверено наличие sci-bot в portable", "fact": "ПОРТАБИЛ ВООБЩЕ НЕ ИМПОРТИРУЕТ websockets (0 хитов); в каноне используется только sci_bot_client.py, которого в portable НЕТ (skills = coder-dom/coder-techdebt/opencode-current). Дифф 17.2 vs 17.1 некритичен; websockets в whitelist — часть набора канона, поставлена свежее — ок"},
+      {"suspect": "Freeze-счёт 79 vs 76: расхождение только searxng + 4 сироты?", "checked": "Compare-Object canon(76) vs portable(79) по именам и по строкам", "fact": "OK: canon-only по именам = 1 (searxng); по строкам = 7 (searxng + 6 версионных диффов: mcp/fonttools/matplotlib/urllib3/idna/websockets); port-only по именам = ровно 4 сироты (beautifulsoup4/markdownify/pypdfium2/soupsieve). Счёт сходится с заявленным"},
+      {"suspect": "TD-DEV-16: канон-venv неполон, doc_extract падает без pypdfium2?", "checked": "canon python: import pypdfium2/markdownify/bs4 → ModuleNotFoundError (все 3); portable python: OK (все 3). grep doc_extract_server.py: стр.25 'import pypdfium2', стр.90 'from markdownify import' — ленивые импорты", "fact": "ПОДТВЕРЖДЁН: в каноне pypdfium2/markdownify/bs4 отсутствуют (ModuleNotFoundError); portable содержит все 4 (pypdfium2 5.13.0, markdownify 1.2.3 → bs4 4.15.0 → soupsieve 2.9.2 — цепочка транзитивных зависимостей). Канон как эталон неполон"},
+      {"suspect": "pymupdf в portable (1.28.2) — не пятая ли сирота?", "checked": "canon pip freeze: pymupdf 1.28.2 — присутствует в КАНОНЕ", "fact": "НЕ сирота: pymupdf есть в каноне (1.28.2 = 1.28.2), совпадает. Исключён из диффа корректно"},
+      {"suspect": "bs4/soupsieve импортируются где-то прямо?", "checked": "grep 'import bs4|from bs4|import soupsieve' по portable", "fact": "0 прямых хитов — транзитивные зависимости markdownify (m.requires: bs4<5,>=4.9; bs4.requires: soupsieve>=1.6.1). Не мёртвый груз, а рабочие транзитивы"},
+      {"suspect": "M0-a/B3-T1/B1-T4 закрыты для EXP-1b?", "checked": "Чтение auditor_M0a_ostatok.json (REQUEST_CHANGES), auditor_B3-T1.json (APPROVE, но TD-DEV-7 DoD 6/7), auditor_B1-T4.json (APPROVE)", "fact": "Частично: B1-T2 REQUEST_CHANGES (процессные DoD 7/8 — snapshot-коммит, путь DoD7), M0-a REQUEST_CHANGES (env=канон, junction TD, .gitignore), B3-T1 APPROVE (6/7 DoD, shim в B3-T2/W11). Экспертно: EXP-1b можно запускать прямым вызовом opencode из CWD=portable (B3-T2 shim НЕ блокер); CONFIG_MERGE.md создаётся В ХОДЕ EXP-1b (отсутствие = норма)"},
+      {"suspect": "B1-T3 мета-комплект: venv хватит на 28 py-файлов?", "checked": "Импорт typer/pydantic/плюс 19 пакетов (21/21 OK); scripts/meta сейчас = 2 файла (perfectionist, sleep_integration); канон scripts/meta = 28 py", "fact": "OK: все зависимости мета-комплекта (typer 0.27.2, pydantic 2.13.5, rich, Pygments, mcp и др.) на месте в portable. B1-T3 не выполнен (2 из 28 файлов), но venv-готовность подтверждена"}
+    ],
+    "1_process": [
+      {"requirement": "Воркер следовал контракту B1-T1 (17 whitelist, searxng по требованию, НЕ бинарное копирование)", "fact": "pip install 17 пакетов; searxng не установлен (canon-only=1); канон не тронут (mtime .venv 08.09.2026); установка в portable (Location)", "result": "PASS"},
+      {"requirement": "Счёт freeze: Compare-Object → 0 различий или задокументированный остаток", "fact": "По именам: остаток = searxng (задокументирован, по спеке). По строкам: +6 версионных диффов — воркер описал их в notes JSON (SECTION5), НО не зарегистрировал в PROBLEMS_REGISTER (TD-DEV-14)", "result": "PARTIAL (остаток задокументирован воркером в JSON; регистрация в реестре — ревьюером, TD-DEV-14..17)"},
+      {"requirement": "DoD спеки B1-T1: freeze ≥62, pip show 7 пакетов, import pydantic/starlette/uvicorn", "fact": "freeze=79 ≥62; pip show 6 DoD-пакетов OK; import pydantic 2.13.5/starlette/uvicorn OK", "result": "PASS"},
+      {"requirement": "Ревьюер корректно зарегистрировал TD-DEV-14..17 в PROBLEMS_REGISTER", "fact": "Все 4 записи на месте (строки 86-89), формат 05 соблюдён (TD-ID/Severity/Что/Комментарий/Блок/Статус), комментарии содержат условия закрытия", "result": "PASS"},
+      {"requirement": "Артефакты: worker + reviewer B1-T1 существуют", "fact": "worker_b1_t1.json (нижний регистр — вне конвенции, TD-DEV-19) = True; reviewer_B1-T1.json = True; auditor_B1-T1.json = создан этим аудитом", "result": "PARTIAL (TD-DEV-19 — конвенция имён)"},
+      {"requirement": "Freeze-артефакты воркера существуют (заявлены в ARTIFACTS и подтверждены ревьюером)", "fact": "0 из 6 файлов на диске (C:\\Temp\\opencode, C:\\Temp, portable, git). Ревьюер заявил PASS по Test-Path, но файлов нет", "result": "FAIL (TD-DEV-18 — ложный PASS ревьюера)"},
+      {"requirement": "Коммит не делался", "fact": "Артефакт воркера: 'NO_COMMIT: не коммитил (деплоер после ревью/аудита)'; git log не содержит коммита B1-T1", "result": "PASS"}
+    ],
+    "2_vedlivaya_proverka": {
+      "flak_academic_search": {"status": "NOT_REPRODUCED (9/9 OK: 5 холодных + 4 importlib)", "conclusion": "Единичный флак ревьюера не воспроизведён. Стабильность MCP-серверов на portable python подтверждена. Рекомендация: при следующем холодном старте EXP-5 обратить внимание, но TD не требуется"},
+      "mcp_130_vs_126": {"status": "OK", "fact": "mcp 1.30.0 (portable) vs 1.26.0 (canon): Server/stdio_server/types + pydantic 2.13.5 совместимы; 4/4 MCP-сервера импортируются. portable НОВЕЕ канона — обратный дифф (canon устарел), зафиксирован TD-DEV-15"},
+      "websockets_172": {"status": "NON_CRITICAL", "fact": "portable НЕ импортирует websockets (grep=0); в каноне только sci_bot_client.py (нет в portable). Дифф 17.2 vs 17.1 косметический. TD-DEV-15 covers"},
+      "freeze_schet": {"status": "CONFIRMED", "fact": "79 = 76 - searxng + 4 сироты. canon-only по именам = 1 (searxng), по строкам = 7 (searxng + 6 диффов); port-only = ровно 4. Расхождение объяснено полностью"},
+      "td_dev16_canon_ne_polne": {"status": "CONFIRMED", "fact": "canon python: ModuleNotFoundError pypdfium2/markdownify/bs4; portable: все OK. doc_extract_server.py стр.25/90 (ленивые импорты) — PDF/HTML-ветки в каноне неработоспособны"},
+      "pymupdf": {"status": "NOT_SIROTA", "fact": "pymupdf 1.28.2 есть и в каноне — не входит в port-only дифф корректно"},
+      "bs4_chain": {"status": "OK", "fact": "bs4/soupsieve — транзитивные зависимости markdownify (проверено через importlib.metadata.requires), не мёртвый груз"}
+    },
+    "3_integration": {
+      "EXP1b_ready": {
+        "status": "УСЛОВНО ГОТОВ",
+        "venv": "✅ B1-T1 (этот блок): полный набор зависимостей в portable (79)",
+        "config": "✅ B1-T2: opencode.json → portable (0 канон-ссылок, plugin+4 mcp). ВНИМАНИЕ: аудитор B1-T2 вынес REQUEST_CHANGES (процессные DoD 7/8: snapshot-коммит отсутствует, путь DoD7) — код готов, процессные пункты на оркестраторе",
+        "m0a": "⚠️ M0-a: 6/6 задач выполнены, но REQUEST_CHANGES (env OPENCODE_HARNESS_ROOT=канон — блокер репрезентативности EXP-1b; junction TD; .gitignore)",
+        "b3t1": "✅ B3-T1 APPROVE (DoD строго 6/7, shim в B3-T2/W11)",
+        "b1t4": "✅ B1-T4 APPROVE (route-preflight.md создан; TD-DEV-12/13 для M1/W5)",
+        "what_remains": "(1) env OPENCODE_HARNESS_ROOT=portable (сессионно или B3-T1 флагом) — иначе EXP-1b проверяет канон; (2) прогнать merge глобал+проект opencode.json → исходы A/B/C → config/CONFIG_MERGE.md (B2-T3; файл создаётся В ХОДЕ EXP-1b — отсутствие сейчас НЕ дефект); (3) B3-T3/M1: подключить route-preflight + 3 тула роутера в промпты (TD-DEV-12) — до M1, не до EXP-1b",
+        "conclusion": "venv-часть EXP-1b полностью обеспечена B1-T1. Запуск EXP-1b возможен прямым вызовом opencode из CWD=portable; обязателен env=portable для репрезентативности"
+      },
+      "B1T3_meta": {
+        "venv_deps": "OK: typer 0.27.2, pydantic 2.13.5, rich, pygments, mcp и др. — 21/21 импортов; мета-комплект (28 py) не требует дополнительных установок",
+        "current_state": "scripts/meta в portable = 2 файла (perfectionist.py, sleep_integration.py); канон = 28 py. B1-T3 (копирование 27 файлов + templates) НЕ выполнен — не в скоупе B1-T1, но venv-готовность подтверждена",
+        "note": "perfectionist.py уже в portable (входит в 27-копируемых по спеке B1-T3 — при копировании будет перезаписан идентичным, безвредно)"
+      }
+    },
+    "4_techdolgs": {
+      "confirmed": ["TD-DEV-14 (MEDIUM): техдолги воркера не зарегистрированы в реестре — подтверждён", "TD-DEV-15 (MEDIUM): 6 версионных диффов — подтверждён (mcp/fonttools/matplotlib/urllib3/idna/websockets)", "TD-DEV-16 (LOW): канон-venv неполон (ModuleNotFoundError pypdfium2/markdownify/bs4) — подтверждён запуском", "TD-DEV-17 (LOW): searxng мёртвый груз — подтверждён (0 импортов)","TD-DEV-18 (MEDIUM) НОВЫЙ: freeze-артефакты воркера отсутствуют, ревьюер дал ложный PASS", "TD-DEV-19 (LOW) НОВЫЙ: worker_b1_t1.json вне конвенции worker_B1-T1.json"],
+      "registered_in_problems_register": "TD-DEV-18 и TD-DEV-19 добавлены аудитором в docs/PROBLEMS_REGISTER.md (формат 05, строка за строкой после TD-DEV-17). TD-DEV-14..17 уже были зарегистрированы ревьюером"
+    },
+    "5_verdict": "APPROVE (с 6 зарегистрированными техдолгами TD-DEV-14..19). Суть B1-T1 выполнена корректно: venv portable = канон + searxng-остаток по требованию + 4 сироты (рабочие зависимости), канон не тронут. Процессные дефекты: (1) ложный PASS ревьюера по несуществующим freeze-артефактам (TD-DEV-18) — ревьюер должен верифицировать Test-Path фактически, а не по заявлению воркера; (2) конвенция имён артефактов (TD-DEV-19). До EXP-1b: env=portable (M0-a остаток), прогнать EXP-1b → CONFIG_MERGE.md, snapshot-коммит (B1-T2 DoD 8). Ничего из этого не блокируется B1-T1."
+  },
+  "requirements": [
+    "Деплоер: закоммитить docs/PROBLEMS_REGISTER.md (TD-DEV-14..19) + auditor_B1-T1.json + reviewer_B1-T1.json (шаг 3.5 контракта 04); НЕ коммитить freeze-артефакты (их нет)",
+    "Ревьюеру: при подтверждении артефактов воркера запускать Test-Path фактически (TD-DEV-18); не подтверждать существование файлов по заявлению",
+    "Оркестратору: унифицировать конвенцию имён артефактов worker_<ID>.json (TD-DEV-19) в контракте 04/воркер-промпте",
+    "До EXP-1b: выставить OPENCODE_HARNESS_ROOT=portable (сессионно или B3-T1 с флагом на шаге B5-6), прогнать merge → config/CONFIG_MERGE.md, закрыть процессные пункты B1-T2 (snapshot-коммит, DoD 7 путь)",
+    "B1-T3: venv готов (21/21 импортов), копирование 27 py из канона — без дополнительных установок"
+  ],
+  "output_path": "E:\\opencode_harness_portable\\auditor_B1-T1.json"
+}

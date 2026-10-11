@@ -341,6 +341,104 @@
       "example": {
         "check": true
       }
+    },
+    "book_finder": {
+      "kind": "script",
+      "command": "python scripts/tools/book_finder.py verdict --isbn <ISBN> [--title <заголовок>] [--out prov.json]",
+      "required_input": {
+        "isbn": "string"
+      },
+      "optional_input": {
+        "title": "string",
+        "out": "path"
+      },
+      "forbidden_input": [
+        "полные тексты книг (только поиск/идентификация)"
+      ],
+      "start_with": [
+        "resolve-isbn (Google Books+OpenLibrary кросспроверка) — user-input ISBN может быть подменой"
+      ],
+      "finish_with": [
+        "verdict: found | toc_only | not_found",
+        "при matched=False — ISBN подозрителен, сверь title"
+      ],
+      "guard_required": false,
+      "example": {
+        "isbn": "978-5-7038-3933-1"
+      }
+    },
+    "unified_search": {
+      "kind": "skill",
+      "command": "search <запрос> [--type article|book|doi|any] [--isbn <ISBN>]",
+      "required_input": {
+        "query": "string"
+      },
+      "optional_input": {
+        "type": "article|book|doi|any",
+        "isbn": "string"
+      },
+      "forbidden_input": [
+        "полные тексты книг (только поиск/идентификация/скачивание PDF)"
+      ],
+      "start_with": [
+        "ОПРЕДЕЛИ тип: статья(DOI) / книга(ISBN) / веб / любой",
+        "Для статьи: локальный корпус (chroma_indexer) -> arxiv_search -> openalex_search -> searxng/webfetch -> downloader resolve",
+        "Для книги: book_finder resolve-isbn (кросспроверка ISBN!) -> search-mirrors (dokumen/vdoc/libgen/annas) -> verdict"
+      ],
+      "finish_with": [
+        "Всегда сверяй ISBN с resolved.title (подмена — TD-165)",
+        "При капче/Cloudflare — отметь captcha, предложи cookie-обход/ручной доступ (TD-158)",
+        "Провенанс: URL, дата, hash, источник (downloader save_with_provenance)"
+      ],
+      "guard_required": false,
+      "channels_ordered": [
+        "chroma_indexer",
+        "arxiv_search",
+        "openalex_search",
+        "searxng_search",
+        "webfetch",
+        "downloader_resolve",
+        "book_finder",
+        "sci_bot"
+      ],
+      "example": {
+        "query": "Герасимов структура азотированных сталей",
+        "type": "book",
+        "isbn": "978-5-7038-3933-1"
+      }
+    },
+    "agent_loop": {
+      "kind": "script",
+      "command": "python scripts/tools/agent_loop.py --agent <агент> --contract \"<контракт>\" [--max-iters N] [--done-file artifact] [--done-regex маркер] [--session id]",
+      "required_input": {
+        "agent": "string",
+        "contract": "string"
+      },
+      "optional_input": {
+        "model": "provider/model",
+        "max_iters": "int (default 5)",
+        "timeout": "int (default 900)",
+        "done_file": "path",
+        "done_regex": "regex",
+        "done_tool": "tool-name",
+        "session": "session-id"
+      },
+      "forbidden_input": [],
+      "start_with": [
+        "Для ВНЕШНЕГО запуска агента (кросс-контур) — это итеративный цикл (TD-173)",
+        "ВНУТРЕННИЙ цикл: task-инструмент с субагентами (НЕ нужен agent_loop)"
+      ],
+      "finish_with": [
+        "Критерий завершения: done-file (артефакт) | done-regex (ответ) | done-tool (tool)",
+        "При reason=stop без критерия — цикл продолжает ту же сессию (-s)",
+        "Лимит итераций + честный timeout (иначе 124)"
+      ],
+      "guard_required": false,
+      "example": {
+        "agent": "research-orchestrator",
+        "contract": "верифицируй текст и запиши claims.json",
+        "done_file": "claims.json"
+      }
     }
   }
 }

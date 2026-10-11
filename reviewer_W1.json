@@ -1,0 +1,109 @@
+{
+  "module": "W1-GIT-HOOKS",
+  "verdict": "APPROVE",
+  "date": "2026-10-07",
+  "reviewer": "code-reviewer",
+  "contracts": ["05 (TD v PROBLEMS_REGISTER)", "07 (vnJedlivost + sekciya 0)", "10 sect2 (vhodnye: speka + bylo->stalo)"],
+  "section0_doubtful_checked": [
+    {
+      "question": "pwd -W fix v hook_utils.sh korrekten?",
+      "fact": "hook_utils.sh:8-9 'pwd -W' daet Windows-put E:/...; PYTHON_BIN=.venv/Scripts/python.exe (suschestvuet). Realny zapusk hooks/pre-commit: perfectionist nashel modul, sleep_git --dry-run otrabotal (git -C E:/opencode_harness_portable) - python PONYAL Windows-put. Git-Bash pwd bez -W dal by /e/..., kotory python na win32 ne ponimaet. Fix korrekten i neobhodim.",
+      "falsification": "pre-commit upal by s ModuleNotFoundError ili 'git: cannot change to /e/...' - ne upal, otchet polny."
+    },
+    {
+      "question": "post-commit ne zatsiklivactsya (compile_agents/git_session_sync sozdayut commit-y)?",
+      "fact": "post-commit vyzyvaet: compile_agents --check (read-only), health_check (read-only), git_session_sync sync --no-commit (pishet .runs/session_deltas, NO git add/commit za 'if not delta.get(\"no_commit\")' - git_session_sync.py:227; ne vypolnyaetsya). git log --oneline -1 DO i POSLE zapuska: 109372c (bez izmeneniy). Novyh commit-ov net. Zatsiklivaniya net.",
+      "falsification": "HEAD sdvinulsya by posle hooks/post-commit ili git status pokazal by novye staged-fayly - HEAD ne sdvinulsya."
+    },
+    {
+      "question": "Huki bez .cmd na chistom Windows (bez Git-Bash v PATH) upadut?",
+      "fact": "Git for Windows 2.46.0 ustanovlen (C:/Program Files/Git). Git sam vyzyvaet huki cherez svoy sh.exe (C:/Program Files/Git/bin/sh.exe, usr/bin/sh.exe - suschestvuyut). 'where bash' v PowerShell pust (PATH sessii ne soderzhit Git\\bin), NO dlya git-hukov eto ne vazhno - git rezolvit sh otnositelno svoego kornya. Risk tolko pre-push:15 'bash hooks/coder-dom-verify.sh' po imeni - Git pri vypolnenii huka dobavlyaet svoy bin v PATH; nizkiy risk, zafiksirovan TD-DEV-36.",
+      "falsification": "git commit sozdal by commit bez vyvoda [w1] (huki ne vyzvany) - ne proveryalos live (zapret commit-a), TD-DEV-34."
+    },
+    {
+      "question": "sleep_integration vidit realny SleepGit (ne _Fallback)?",
+      "fact": "sleep_integration.py:339 mods['M6'].SleepGit(...); _load_module('sleep_git', [TOOLS_DIR]) vernul modul E:/opencode_harness_portable/scripts/tools/sleep_git.py (ne None). Flag simulated_any = any(m is None) = False. DoD-7 vypolnen.",
+      "falsification": "mods['M6'] byl by None i sg = _FallbackSleepGit - provereno importom: modul rezolvitsya."
+    },
+    {
+      "question": "Perenos cherez git checkout <branch> -- <path>, NE merge?",
+      "fact": "git log --oneline -1 -- scripts/tools/sleep_git.py -> 5697339 (commit m6); blob local == blob vetki feature/m6-sleep-git (30fc714649da97504c49f02ed66a8f9c7f1c12f6). git_session_sync: 1601a21, blob == feature/m5-git-session-sync (546f6a0c29f71c59eebf31b386e658152213c00e). V staging rovno 2 fayla (769 insertions), merge-commit-a net - perenos chistyy, bez musora.",
+      "falsification": "git log pokazal by drugoy commit ili blob-heshi razlichalis by."
+    }
+  ],
+  "section1_checks": [
+    {"check": "sleep_git.py suschestvuet", "command": "Test-Path scripts\\tools\\sleep_git.py", "expected": "True", "fact": "True", "result": "PASS"},
+    {"check": "git_session_sync.py suschestvuet", "command": "Test-Path scripts\\tools\\git_session_sync.py", "expected": "True", "fact": "True", "result": "PASS"},
+    {"check": "sleep_git identichen vetke m6", "command": "git hash-object scripts/tools/sleep_git.py vs git rev-parse feature/m6-sleep-git:...", "expected": "30fc714649da97504c49f02ed66a8f9c7f1c12f6", "fact": "30fc714649da97504c49f02ed66a8f9c7f1c12f6 (sovpadaet)", "result": "PASS"},
+    {"check": "git_session_sync identichen vetke m5", "command": "git hash-object vs feature/m5-git-session-sync:...", "expected": "546f6a0c29f71c59eebf31b386e658152213c00e", "fact": "546f6a0c29f71c59eebf31b386e658152213c00e (sovpadaet)", "result": "PASS"},
+    {"check": "Istochnik perenosa - commit m6/m5", "command": "git log --all --oneline -1 -- scripts/tools/sleep_git.py", "expected": "5697339", "fact": "5697339 feat(m6): sleep_git.py", "result": "PASS"},
+    {"check": "hooksPath = hooks", "command": "git config --get core.hooksPath", "expected": "hooks", "fact": "hooks (v .git/config:7)", "result": "PASS"},
+    {"check": "Huki suschestvuyut", "command": "Test-Path hooks/{pre-commit,post-commit,pre-push,hook_utils.sh}", "expected": "4 True", "fact": "Vse 4 True (plyus coder-dom-verify.sh)", "result": "PASS"},
+    {"check": "pre-commit ne blokiruet", "command": "bash hooks/pre-commit", "expected": "exit 0", "fact": "[w1] perfectionist verdict=good + [w1] sleep_git dry-run; EXIT=0", "result": "PASS"},
+    {"check": "pre-commit non-blocking pri sboe", "command": "analiz pre-commit:30 exit 0 + || log_hook", "expected": "exit 0 vsegda", "fact": "exit 0 (poslednyaya stroka)", "result": "PASS"},
+    {"check": "post-commit exit 0 + warning-only", "command": "bash hooks/post-commit", "expected": "exit 0, 3 WARN-proverki", "fact": "compile_agents WARN + health HEALTHY + sync noop; EXIT=0; HEAD ne sdvinulsya (109372c)", "result": "PASS"},
+    {"check": "pre-push blokiruet pri rassinhrome", "command": "bash hooks/pre-push", "expected": "exit 1 (BLOK, by-design)", "fact": "FAIL: .opencode/agent/ rassinhronizirovan; EXIT=1", "result": "PASS (ozhidaemy blok)"},
+    {"check": "coder-dom-verify STALE -> blok", "command": "bash hooks/coder-dom-verify.sh", "expected": "exit 1 do regeneracii", "fact": "STALE coder_dom.yaml; EXIT=1", "result": "PASS (ozhidaemy blok)"},
+    {"check": "sleep_integration vidit realny SleepGit", "command": "_load_module('sleep_git', [TOOLS_DIR])", "expected": "ne None, fayl tools/sleep_git.py", "fact": "True, E:/opencode_harness_portable/scripts/tools/sleep_git.py", "result": "PASS"},
+    {"check": "pwd -W fix rabotaet pri realnom vyzove", "command": "bash hooks/pre-commit (venv python + git)", "expected": "python ponimaet put, git -C E:/...", "fact": "perfectionist otrabotal; sleep_git vypolnil git -C E:/opencode_harness_portable", "result": "PASS"},
+    {"check": "TD-1: git add ignoriruemogo markera", "command": "git add -- .runs/sleep_markers/test/tok", "expected": "otklonenie (rc!=0)", "fact": "'The following paths are ignored... .runs'; add_rc!=0 -> GitSleepError na sleep_git.py:166", "result": "CONFIRMED (TD-1)"},
+    {"check": "TD-5: .gitignore primenen chastichno", "command": "git check-ignore .kanban.db; git status untracked", "expected": "kanban ignoriruetsya (po PLAN_W1 sect4.2)", "fact": "rc=1; .kanban.db, .opencode/.mcp.json, config/session_tracker.json untracked (146 faylov)", "result": "CONFIRMED (TD-5)"},
+    {"check": "Musor v staging", "command": "git diff --cached --stat", "expected": "tolko tools/*", "fact": "rovno scripts/tools/{git_session_sync,sleep_git}.py (769 insertions)", "result": "PASS"}
+  ],
+  "section2_dod_w1": [
+    {"punkt": 1, "check": "sleep_git.py v scripts/tools/ (iz m6)", "status": "DONE", "evidence": "blob 30fc71 == feature/m6-sleep-git; git log -> 5697339"},
+    {"punkt": 2, "check": "git_session_sync.py v scripts/tools/ (iz m5)", "status": "DONE", "evidence": "blob 546f6a == feature/m5-git-session-sync; git log -> 1601a21"},
+    {"punkt": 3, "check": "Oba zapuskayutsya", "status": "DONE", "evidence": "snapshot --dry-run -> JSON exit 0; sync --no-commit -> noop exit 0"},
+    {"punkt": 4, "check": "core.hooksPath = hooks", "status": "DONE", "evidence": "git config -> hooks"},
+    {"punkt": 5, "check": "pre-commit/post-commit/pre-push sozdany", "status": "DONE", "evidence": "hooks/ 4 fayla + coder-dom-verify.sh"},
+    {"punkt": 6, "check": "pre-commit ne blokiruet (warning-only)", "status": "DONE", "evidence": "EXIT=0 pri verdict=good; exit 0 zhardkoden"},
+    {"punkt": 7, "check": "sleep_integration vidit realny sleep_git (ne _Fallback)", "status": "DONE", "evidence": "_load_module -> tools/sleep_git.py; simulated_any=False"}
+  ],
+  "section3_problems": [
+    {
+      "problem": "TD-DEV-30 (CRITICAL): .gitignore '.runs/' (stroka 102) lomaet sleep_git - git add markera otklonyaetsya -> GitSleepError na sleep_git.py:166 -> polny sleep_git run (W13/nochnoy W7) upadet",
+      "severity": "CRITICAL",
+      "proof": "sleep_git.py:42 MARKERS_REL=.runs/sleep_markers, :166 git add; .gitignore:102 .runs/; git check-ignore -v -> '.gitignore:102:.runs/'; git add markera -> 'paths are ignored by one of your .gitignore files' rc!=0",
+      "recommendation": "Do W13: (a) git add -f v sleep_git.py:166 ILI (b) whitelist '!.runs/sleep_markers/' + '!.runs/sleep_markers/**' (sporno: markery stanut trekaemymi) ILI (c) perenos MARKERS_REL vne .runs/. Reshenie arhitektora. Zaregistrirovano TD-DEV-30."
+    },
+    {
+      "problem": "TD-DEV-33 (MEDIUM): .gitignore iz PLAN_W1 sect4.2 primenen chastichno - .kanban.db, .opencode/.mcp.json, config/session_tracker.json untracked",
+      "severity": "MEDIUM",
+      "proof": "git check-ignore .kanban.db -> rc=1; untracked 146 faylov vklyuchaya .kanban.db",
+      "recommendation": "Primenit ostalnye patterny sect4.2 (krome .runs/sleep_markers/ - sm. TD-DEV-30). Zaregistrirovano TD-DEV-33."
+    },
+    {
+      "problem": "TD-DEV-31/32 (MEDIUM): pre-push seychas BLOKIRUET pervy push deployera (coder_dom.yaml STALE + compile_agents rassinhron) - by-design, no trebuet regeneracii",
+      "severity": "MEDIUM",
+      "proof": "bash hooks/coder-dom-verify.sh -> STALE EXIT=1; bash hooks/pre-push -> FAIL compile_agents EXIT=1",
+      "recommendation": "Deployeru pered push: python scripts/glossary/coder_dom_build.py --root E:/opencode_harness_portable + python scripts/agent_gen/compile_agents.py + git add .opencode/agent. Zaregistrirovano TD-DEV-31/32."
+    },
+    {
+      "problem": "TD-DEV-34 (LOW): live-vyzov hukov gitom ne proveren (zapret commit-a)",
+      "severity": "LOW",
+      "proof": "DoD 02 sectW1 p.8 trebuet git commit --allow-empty; ne vypolnyalos (pravilo NE kommitit)",
+      "recommendation": "Deployer posle commit-a: git commit --allow-empty -m 'w1 smoke' -> [w1] v vyvode. Zaregistrirovano TD-DEV-34."
+    },
+    {
+      "problem": "TD-DEV-36 (LOW): pre-push:15 vyzyvaet 'bash' po imeni - zavisit ot PATH v srede huka (where bash v PowerShell pust)",
+      "severity": "LOW",
+      "proof": "where bash -> pusto; C:/Program Files/Git/bin/sh.exe suschestvuet; Git rezolvit sh pri hukah sam",
+      "recommendation": "Pri sboe live-commit-a zamenit 'bash' na polny put sh.exe v pre-push. Zaregistrirovano TD-DEV-36."
+    }
+  ],
+  "section4_registered_td": [
+    "TD-DEV-30 (CRITICAL): sleep_git vs .gitignore .runs/ - GitSleepError na marker-commite; bloker W13",
+    "TD-DEV-31 (MEDIUM): coder_dom.yaml STALE -> pre-push blokiruet push",
+    "TD-DEV-32 (MEDIUM): compile_agents --check FAIL -> pre-push blokiruet",
+    "TD-DEV-33 (MEDIUM): .gitignore sect4.2 primenen chastichno",
+    "TD-DEV-34 (LOW): live-vyzov hukov gitom ne proveren",
+    "TD-DEV-35 (LOW): W1_SKIP_HOOKS ne v env-kontrakte",
+    "TD-DEV-36 (LOW): bash po imeni v pre-push (PATH-zavisimost)"
+  ],
+  "section5_verdict": "APPROVE",
+  "notes": [
+    "TD-1..7 vorkera zaregistrirovany revyuerom kak TD-DEV-30..36 v docs/PROBLEMS_REGISTER.md (kontrakt 05 sect1; vorker ostavil ih tolko v worker_W1.json - povtor patterna TD-DEV-14/24/26).",
+    "Verdikt APPROVE, t.k.: speka W1 vypolnena polnostyu (perenos bez merge, hooksPath, 3 huka + utils, semantika exit-kodov po speke 02: pre-commit NIKOGDA ne blokiruet, pre-push BLOK po design), vse DoD-punkty zakryty, naydennye defekty ne v skoupe W1 i zaregistrirovany kak TD.",
+    "Kritichnoe preduprezhdenie deployeru: (1) pered push - regeneraciya coder_dom.yaml + compile_agents (TD-DEV-31/32); (2) do W13 - reshit TD-DEV-30 (inache nochnoy son s realnym git upadet)."
+  ]
+}

@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+# W1 pre-commit (E2E-03, Слой 4): perfectionist completion_hook + sleep_git --dry-run.
+# Быстрые детерминированные проверки. НЕ блокирует коммит (warning-only),
+# полный sleep-цикл — в ночном W7.
+# Выход: 0 всегда (кроме явного W1_SKIP_HOOKS не влияет — см. utils).
+source "$(dirname "${BASH_SOURCE[0]}")/hook_utils.sh"
+
+log_hook "pre-commit: perfectionist completion_hook (быстрый)"
+# commit message (или заглушка) — артефакт для перфекциониста.
+MSG_FILE="${1:-}"
+ARTIFACT="commit"
+if [ -n "$MSG_FILE" ] && [ -f "$MSG_FILE" ]; then
+  ARTIFACT="$(cat "$MSG_FILE")"
+fi
+run_with_timeout 15 "$PYTHON_BIN" -c "
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(r'$REPO_ROOT') / 'scripts' / 'meta'))
+from perfectionist import PerfectionistSkill
+art = sys.argv[1] if len(sys.argv) > 1 else 'commit'
+rep = PerfectionistSkill().completion_hook(art)
+print(f'[w1] perfectionist verdict={rep.verdict} weaknesses={len(rep.weaknesses)}')
+" "$ARTIFACT" || log_hook "perfectionist skipped/failed (non-blocking)"
+
+log_hook "pre-commit: sleep_git --dry-run (валидация цикла без мутаций)"
+# snapshot в dry-run: read-only rev-parse выполняется, tag НЕ создаётся.
+run_with_timeout 15 "$PYTHON_BIN" "$REPO_ROOT/scripts/tools/sleep_git.py" --dry-run snapshot --task w1-precommit \
+  || log_hook "sleep_git --dry-run failed (non-blocking)"
+
+exit 0

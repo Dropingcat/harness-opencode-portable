@@ -1,0 +1,56 @@
+{
+  "verdict": "APPROVE",
+  "justification": "Контракт B1-T3 выполнен: все 28 канонских py + templates перенесены, sleep_integration.py жив (live == backup, SHA256 SAME), ALL_IMPORT_OK 29/29 FAIL [], скрытых импортов вне scripts/meta нет. FAIL ревьюера (liveness TypeError naive/aware) независимо воспроизведён — это канонский дефект orchestrator_integration._save_state (перенесён 'как есть'), осознанно зафиксирован как TD-DEV-22 HIGH и адресован в W7, что корректно для переноса. TD-DEV-22..25 подтверждены в PROBLEMS_REGISTER (05 соблюдён ревьюером). Ревьюер перепроверен по 10 §3 — его факты подтверждаются; единственная неточность: 'W1 разблокирован' преждевременно (pre-commit hook в portable не установлен, только .sample).",
+  "process_analysis": {
+    "contracts_respected": true,
+    "iteration_count": 1,
+    "iteration_limit": 3,
+    "role_violation": false,
+    "reviewer_args_assessment": "Ревьюер честен и въедлив: выявил liveness FAIL, зарегистрировал TD-DEV-22..25 в реестре (исправив нарушение 05 воркером), подтвердил канонский корень бага. Единственная неточность — заявление о разблокировке W1-хуков: perfectionist рабочий (completion_hook есть), но pre-commit hook в portable НЕ установлен (только .sample в .git/hooks, .githooks/ отсутствует).",
+    "worker_args_assessment": "Воркер корректно перенёс 28 py (спека '27' неверна — TD-DEV-23), сохранил sleep_integration с бэкапом, выполнил DoD 'import -> 0 ImportError'. Нарушил контракт 05 §1: найденные TD-1..4 оставил только в своём JSON, не зарегистрировав в реестре (зафиксировано как TD-DEV-24, повтор паттерна TD-DEV-14)."
+  },
+  "requirements": [
+    "W7 обязан начать с фикса TD-DEV-22 (нормализация tz: _parse_iso добавить timezone.utc к naive ИЛИ _save_state писать datetime.now(timezone.utc)) — иначе W7 Check 9 и meta_nightly упадут с TypeError",
+    "До легализации канона (B1-T5/B5) закоммитить канонские правки meta_core.py/skill_master.py (L2→L3 циркулятор) или задокументировать 'portable-эталон = рабочая копия канона на 06.10' (TD-DEV-25)",
+    "Воркер обязан фиксировать найденные TD сразу в PROBLEMS_REGISTER (05 §1), а не только в своём JSON — повторное нарушение (TD-DEV-14 → TD-DEV-24)",
+    "W1: установить фактический pre-commit hook (perfectionist), а не только перенести код completion_hook",
+    "Удалить __pycache__ из scripts/meta на диске (gitignored, но мусор в рабочей копии, включая sleep_integration.cpython-311.pyc от 06.10)"
+  ],
+  "sections": {
+    "0_doubt_checked": [
+      "Канон = 28 py (не 27 из спеки) — подтверждено Get-ChildItem",
+      "sleep_integration.py НЕТ в каноне вообще (ни в рабочей копии, ни в HEAD, ни в истории git) — portable-only, бэкап в .runs/artifacts/B1-T3 SAME",
+      "HEAD канона в scripts/meta = 29 строк ls-tree = 28 py + 1 template json (не расхождение счётчиков)",
+      "git log --all по sleep_integration дал коммит b91f39d 'feat(m11)' — файл жив в истории portable",
+      "Venv — .venv (не venv): ревьюер писал 'venv', фактический путь .venv\\Scripts\\python.exe"
+    ],
+    "1_reviewer_recheck": [
+      {"claim": "28 py перенесены, portable=29", "fact": "portable 29 py (28 канонских + sleep_integration), канон 28", "result": "PASS"},
+      {"claim": "SHA256 SAME канону", "fact": "skill_master/meta_daemon/meta_core/templates SAME рабочей копии канона (не HEAD)", "result": "PASS"},
+      {"claim": "ALL_IMPORT_OK 29 FAIL []", "fact": "import skill_master, meta_daemon, sleep_controller, perfectionist, orchestrator_integration -> OK", "result": "PASS"},
+      {"claim": "sleep_integration жив, бэкап SAME", "fact": "live SHA256 CE5A25... == backup CE5A25...", "result": "PASS"},
+      {"claim": ".gitignore: .runs/, .meta_state/", "fact": "оба паттерна присутствуют + _trace_store.json", "result": "PASS"},
+      {"claim": "perfectionist рабочий", "fact": "completion_hook существует; import OK", "result": "PASS"},
+      {"claim": "meta_daemon --once JSON OK", "fact": "воспроизведено: {\"sleep\": true, \"merged\": true, \"hp\": 100.0}", "result": "PASS"},
+      {"claim": "FAIL liveness TypeError", "fact": "ВОСПРОИЗВЕДЁН: 'can't subtract offset-naive and offset-aware datetimes', строка 522, корень orchestrator_integration.py:194 naive saved_at", "result": "PASS (подтверждён)"},
+      {"claim": "TD-DEV-22..25 зарегистрированы", "fact": "все 4 записи в PROBLEMS_REGISTER (строки 94-97)", "result": "PASS"},
+      {"claim": "W1 разблокирован", "fact": "pre-commit hook НЕ установлен (только .sample), .githooks/ отсутствует", "result": "PARTIAL/FAIL"}
+    ],
+    "2_deep_dive": {
+      "liveness": "TypeError воспроизведён фактическим запуском. Вызывается из meta_daemon.py:746 (--liveness) — W7 Check 9 упадёт. Фикс: tz-нормализация в _parse_iso (строка 85) или _save_state (строка 194). Блокер W7, не B1-T3.",
+      "td_dev_25": "Подтверждён: незакоммиченные правки канона meta_core.py (+16 строк, MemoryCirculator L2→L3) и skill_master.py (+44: get_contract/get_template/level_name/ранги/гейты), mtime 01.10 pre-existing. Portable = рабочая копия, НЕ HEAD. git show HEAD не содержит circulator/get_contract. Риск 'версии-призрака' при откате канона к HEAD подтверждён.",
+      "pycache": "__pycache__ на диске есть (включая sleep_integration.cpython-311.pyc от 06.10 — сгенерирован прогонами), gitignored, в git НЕ попадёт. Косметика.",
+      "hidden_imports": "Сканированы все 29 файлов: только stdlib + pydantic (contracts.py, validation_engines.py). Импортов вне scripts/meta (code-factory/orchestration) НЕТ."
+    },
+    "3_integration": {
+      "w7_readiness": "0.5/1. Мета-комплект (29 py + templates) на месте, venv .venv готов. Осталось: фикс TD-DEV-22 (блокер — без него W7 Check 9 и nightly упадут), meta_nightly.cmd (отсутствует), секция Meta-Cycle health в оркестраторе.",
+      "exp_1b": "НЕ блокируется B1-T3 — мета-цикл не в критическом пути EXP-1b. Подтверждено.",
+      "w1_hooks": "Частично: зависимость skill_master снята (import OK), perfectionist рабочий, НО pre-commit hook не установлен — установка остаётся работой W1."
+    },
+    "4_tech_debt": {
+      "confirmed": ["TD-DEV-22 HIGH liveness — воспроизведён", "TD-DEV-23 MEDIUM 27vs28 — подтверждён", "TD-DEV-24 MEDIUM воркер не пишет TD — подтверждён", "TD-DEV-25 MEDIUM рабочая копия vs HEAD — подтверждён"],
+      "new": ["Нет новых TD сверх зарегистрированных. Уточнение к TD-DEV-25: риск усугубляется тем, что meta_core.py рабочей копии импортирует MemoryCirculator, которого нет в HEAD канона — при откате канона portable останется с версией-призраком (уже покрыто TD-DEV-25)"]
+    },
+    "5_verdict": "APPROVE — контракт B1-T3 выполнен, TD зарегистрированы по 05, liveness-блокер корректно вынесен в W7 как TD-DEV-22 HIGH."
+  }
+}

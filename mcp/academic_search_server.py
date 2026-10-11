@@ -31,9 +31,24 @@ _OPENER = urllib.request.build_opener(urllib.request.ProxyHandler({}))
 def _arxiv_search(query: str, max_results: int = 5) -> list[dict]:
     params = urllib.parse.urlencode({"search_query": f"all:{query}", "max_results": str(max_results)})
     url = f"{ARXIV_BASE}?{params}"
-    req = urllib.request.Request(url, headers={"User-Agent": "hermes-academic-mcp/1.0"})
-    with _OPENER.open(req, timeout=TIMEOUT) as resp:
-        xml_data = resp.read().decode("utf-8")
+    # TD-118-style: retry на временные 4xx/5xx (arXiv иногда отдаёт 406 при нагрузке)
+    last_err = None
+    for attempt in range(2):
+        try:
+            req = urllib.request.Request(
+                url,
+                headers={"User-Agent": "hermes-academic-mcp/1.0", "Accept": "application/atom+xml"},
+            )
+            with _OPENER.open(req, timeout=TIMEOUT) as resp:
+                xml_data = resp.read().decode("utf-8")
+            break
+        except Exception as e:
+            last_err = e
+            if attempt == 0:
+                import time as _time
+                _time.sleep(1.0)
+    else:
+        raise last_err  # type: ignore[misc]
     root = ET.fromstring(xml_data)
     results = []
     for entry in root.findall("atom:entry", ARXIV_NS):
@@ -62,9 +77,23 @@ def _arxiv_search(query: str, max_results: int = 5) -> list[dict]:
 def _openalex_search(query: str, per_page: int = 5) -> list[dict]:
     params = urllib.parse.urlencode({"search": query, "per-page": str(per_page)})
     url = f"{OPENALEX_BASE}?{params}"
-    req = urllib.request.Request(url, headers={"User-Agent": "hermes-academic-mcp/1.0"})
-    with _OPENER.open(req, timeout=TIMEOUT) as resp:
-        data = json.loads(resp.read().decode("utf-8"))
+    last_err = None
+    for attempt in range(2):
+        try:
+            req = urllib.request.Request(
+                url,
+                headers={"User-Agent": "hermes-academic-mcp/1.0", "Accept": "application/json"},
+            )
+            with _OPENER.open(req, timeout=TIMEOUT) as resp:
+                data = json.loads(resp.read().decode("utf-8"))
+            break
+        except Exception as e:
+            last_err = e
+            if attempt == 0:
+                import time as _time
+                _time.sleep(1.0)
+    else:
+        raise last_err  # type: ignore[misc]
     results = []
     for w in data.get("results", []):
         authorships = w.get("authorships", [])

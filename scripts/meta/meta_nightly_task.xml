@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- W7: ночная задача HarnessMetaNightly (02:30, ежедневно).
+  Импорт: schtasks /create /tn "HarnessMetaNightly" /xml "E:\opencode_harness_portable\scripts\meta\meta_nightly_task.xml"
+  Альтернатива: schtasks /create /tn HarnessMetaNightly /tr "\"E:\opencode_harness_portable\scripts\meta\meta_nightly.cmd\"" /sc daily /st 02:30
+  Команда: одна cmd-обёртка (meta_nightly.cmd): cycle -> daemon once -> liveness. -->
+<Task version="1.2" xmlns="http://schemas.microsoft.com/windows/2004/02/mit/task">
+  <RegistrationInfo>
+    <Date>2026-10-06T00:00:00</Date>
+    <Author>Harness</Author>
+    <Description>Meta-cycle nightly: sleep cycle (M5-M10) + meta_daemon --once + liveness check. Log: .meta_state\meta_nightly.log</Description>
+  </RegistrationInfo>
+  <Triggers>
+    <CalendarTrigger>
+      <StartBoundary>2026-10-06T02:30:00</StartBoundary>
+      <Enabled>true</Enabled>
+      <ScheduleByDay>
+        <DaysInterval>1</DaysInterval>
+      </ScheduleByDay>
+    </CalendarTrigger>
+  </Triggers>
+  <Principals>
+    <Principal id="Author">
+      <LogonType>InteractiveToken</LogonType>
+      <RunLevel>LeastPrivilege</RunLevel>
+    </Principal>
+  </Principals>
+  <Settings>
+    <MultipleInstancesPolicy>IgnoreNew</MultipleInstancesPolicy>
+    <DisallowStartIfOnBatteries>false</DisallowStartIfOnBatteries>
+    <StopIfGoingOnBatteries>false</StopIfGoingOnBatteries>
+    <AllowHardTerminate>true</AllowHardTerminate>
+    <StartWhenAvailable>false</StartWhenAvailable>
+    <RunOnlyIfNetworkAvailable>false</RunOnlyIfNetworkAvailable>
+    <IdleSettings>
+      <StopOnIdleEnd>false</StopOnIdleEnd>
+      <RestartOnIdle>false</RestartOnIdle>
+    </IdleSettings>
+    <AllowStartOnDemand>true</AllowStartOnDemand>
+    <Enabled>true</Enabled>
+    <Hidden>false</Hidden>
+    <RunOnlyIfIdle>false</RunOnlyIfIdle>
+    <WakeToRun>false</WakeToRun>
+    <ExecutionTimeLimit>PT2H</ExecutionTimeLimit>
+    <Priority>7</Priority>
+  </Settings>
+  <Actions Context="Author">
+    <Exec>
+      <Command>"E:\opencode_harness_portable\scripts\meta\meta_nightly.cmd"</Command>
+    </Exec>
+  </Actions>
+</Task>

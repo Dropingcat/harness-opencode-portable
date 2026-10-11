@@ -1,0 +1,178 @@
+name: CI
+
+on:
+  push:
+    branches: [ master, develop, 'feature/**', 'fix/**' ]
+  pull_request:
+    branches: [ master, develop ]
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: Test Suite
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11' 
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt 2>/dev/null || true
+          pip install -r requirements-core.txt 2>/dev/null || true
+          pip install -r requirements-mcp-doc.txt 2>/dev/null || true
+          # mcp 1.26.0 required (2.x breaks @server.list_tools)
+          pip install mcp==1.26.0
+          pip install pytest pytest-asyncio pyyaml
+
+      - name: Set up environment
+        run: |
+          echo "PYTHONIOENCODING=utf-8" >> $GITHUB_ENV
+          echo "PYTHONPATH=${{ github.workspace }}/scripts/research" >> $GITHUB_ENV
+          echo "OPENCODE_HARNESS_ROOT=${{ github.workspace }}" >> $GITHUB_ENV
+
+      - name: Generate MCP config
+        run: python scripts/router/gen_mcp_config.py --root "${{ github.workspace }}"
+
+      - name: Run core tests
+        run: |
+          cd scripts/research
+          python -m pytest test_units.py test_formulas.py test_uncertainty.py test_verdict_schemas.py test_evidence_contract.py test_judge_brief.py test_merge_numeric.py test_fix_p0p3.py test_rivulet.py test_rivulet_numeric.py test_rivulet_synthesizer.py test_numeric_layer_fix.py -q
+
+      - name: Run architecture tests
+        run: |
+          cd scripts/research
+          python -m pytest test_architecture.py -q
+
+  downloader-test:
+    name: Downloader Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: test
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pytest pytest-asyncio pyyaml requests
+
+      - name: Test downloader components (smoke)
+        run: |
+          cd scripts/tools
+          python downloader.py dns --host arxiv.org
+          python downloader.py crossref --doi "10.1016/j.surfcoat.2012.05.081"
+          python downloader.py dns --host nonexistent.invalid || true
+
+  mcp-test:
+    name: MCP Servers Test
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: test
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11' 
+
+      - name: Install MCP
+        run: |
+          python -m pip install --upgrade pip
+          pip install mcp==1.26.0
+          pip install pytest pytest-asyncio
+
+      - name: Generate MCP config
+        run: python scripts/router/gen_mcp_config.py
+
+      - name: Test MCP servers
+        run: python scripts/ci/test_mcp_servers.py
+
+  chroma-test:
+    name: ChromaDB Index Test
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: test
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install chromadb pytest pytest-asyncio
+
+      - name: Test ChromaDB
+        run: python scripts/ci/test_chromadb.py
+
+  integration-test:
+    name: Integration Test (Full Pipeline)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    needs: [test, downloader-test, mcp-test, chroma-test]
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install all dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt 2>/dev/null || true
+          pip install -r requirements-core.txt 2>/dev/null || true
+          pip install mcp==1.26.0 pytest pytest-asyncio pyyaml requests
+
+      - name: Set up environment
+        run: |
+          echo "PYTHONIOENCODING=utf-8" >> $GITHUB_ENV
+          echo "OPENCODE_HARNESS_ROOT=${{ github.workspace }}" >> $GITHUB_ENV
+          echo "LOCAL_TEST_DATA=${{ env.LOCAL_TEST_DATA }}" >> $GITHUB_ENV
+          echo "TEMP_DIR=/tmp/opencode/ci_test" >> $GITHUB_ENV
+
+      - name: Full pipeline test (conditional on LOCAL_TEST_DATA)
+        run: python scripts/ci/test_integration.py
+
+  mcp-injection-check:
+    name: MCP Injection Check (Manual)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    if: false  # Manual trigger only
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check MCP tools in session
+        run: opencode mcp list

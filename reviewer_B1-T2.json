@@ -1,0 +1,175 @@
+{
+  "module": "B1-T2 (ядро конфигурации opencode.json → portable)",
+  "verdict": "REQUEST_CHANGES",
+  "reviewed_file": "E:\\opencode_harness_portable\\.opencode\\opencode.json",
+  "summary": "Сам файл opencode.json переключён на portable корректно и безопасно (5 правок, JSON валиден, UTF-8 без BOM/FFFD, CRLF сохранён, 0 канон-ссылок, .bak валиден и содержит старый канонский конфиг). Однако отчёт воркера «Все 8 DoD PASS» НЕ соответствует действительности: DoD 7 (compatibility\\1.18.30.json) и DoD 8 (git status → только opencode.json) фактически FAIL.",
+  "sections": {
+    "1_checks": [
+      {
+        "check": "Строка 6 plugin → portable",
+        "command": "read + git diff",
+        "expected": "file:///E:/opencode_harness_portable/packages/opencode-harness-plugin/dist/index.js",
+        "actual": "file:///E:/opencode_harness_portable/packages/opencode-harness-plugin/dist/index.js",
+        "result": "PASS"
+      },
+      {
+        "check": "Строки 12/20/28/36 python → portable",
+        "command": "read",
+        "expected": "E:\\opencode_harness_portable\\.venv\\Scripts\\python.exe ×4",
+        "actual": "E:\\opencode_harness_portable\\.venv\\Scripts\\python.exe ×4",
+        "result": "PASS"
+      },
+      {
+        "check": "Валидность JSON",
+        "command": ".venv\\Scripts\\python.exe -c \"json.load(...)\"",
+        "expected": "OK",
+        "actual": "OK",
+        "result": "PASS"
+      },
+      {
+        "check": "Канон-ссылки в opencode.json",
+        "command": "Select-String -Pattern doc_Opencode_agern-new",
+        "expected": "0",
+        "actual": "0",
+        "result": "PASS"
+      },
+      {
+        "check": "UTF-8 без BOM / без U+FFFD",
+        "command": "python -c \"data[:3], b'\\xef\\xbf\\xbd'\"",
+        "expected": "no BOM, no FFFD",
+        "actual": "no BOM, no FFFD",
+        "result": "PASS"
+      },
+      {
+        "check": "CRLF/LF формат",
+        "command": "python -c \"data.count(b'\\r\\n')\"",
+        "expected": "CRLF сохранён (не критично)",
+        "actual": "CRLF count: 42, LF count: 42 (совпадает с .bak: 42/42)",
+        "result": "PASS"
+      },
+      {
+        "check": "model/small_model не тронуты",
+        "command": "read строки 3-4",
+        "expected": "polza/deepseek/deepseek-v4-flash-0731",
+        "actual": "polza/deepseek/deepseek-v4-flash-0731 (не изменены, git diff подтверждает)",
+        "result": "PASS"
+      },
+      {
+        "check": "Пути mcp/*_server.py остались portable",
+        "command": "read",
+        "expected": "E:\\opencode_harness_portable\\mcp\\*.py",
+        "actual": "E:\\opencode_harness_portable\\mcp\\coder_router_server.py, academic_search_server.py, doc_extract_server.py, searxng_search_server.py",
+        "result": "PASS"
+      },
+      {
+        "check": "Предусловие: plugin dist собран",
+        "command": "Test-Path packages\\opencode-harness-plugin\\dist\\index.js",
+        "expected": "True",
+        "actual": "True",
+        "result": "PASS"
+      },
+      {
+        "check": "Предусловие: .venv python существует",
+        "command": "Test-Path .venv\\Scripts\\python.exe",
+        "expected": "True",
+        "actual": "True",
+        "result": "PASS"
+      },
+      {
+        "check": "MCP-сервер стартует на portable venv",
+        "command": "python mcp\\coder_router_server.py (таймаут 15s) + importlib exec_module",
+        "expected": "нет ImportError",
+        "actual": "importlib: spec=True, IMPORT_OK: m; запуск процесса: нет мгновенного падения (ожидает MCP stdio-handshake)",
+        "result": "PASS (с оговоркой: полный handshake не проверен)"
+      },
+      {
+        "check": "DoD 7: compatibility\\1.18.30.json существует",
+        "command": "Test-Path compatibility\\1.18.30.json",
+        "expected": "True",
+        "actual": "False (существует только compatibility\\opencode\\1.18.30.json)",
+        "result": "FAIL"
+      },
+      {
+        "check": "DoD 8: git status → только opencode.json",
+        "command": "git status --porcelain",
+        "expected": "только M .opencode/opencode.json",
+        "actual": "M .opencode/opencode.json + ~70 изменённых/untracked файлов (config/, scripts/researcher/, docs/, .runs/, etc.)",
+        "result": "FAIL"
+      },
+      {
+        "check": "Бэкап .bak корректен",
+        "command": "python: json.load(.bak) + байты",
+        "expected": "валидный JSON, старые канонские пути, no FFFD",
+        "actual": "BAK_JSON_OK; FFFD count: 0; canon refs: 5; CRLF 42/42",
+        "result": "PASS"
+      }
+    ],
+    "2_dod_compliance": [
+      { "dod": "DoD 1: канон-ссылок нет", "result": "PASS (0 совпадений)" },
+      { "dod": "DoD 2: opencode_harness_portable ≥6 совпадений", "result": "PASS (9 совпадений: plugin 1 + python 4 + mcp-серверные пути 4; спека допускает серверные пути)" },
+      { "dod": "DoD 3: строки 12/20/28/36 → portable python", "result": "PASS" },
+      { "dod": "DoD 4: файл существует + JSON валиден", "result": "PASS (JSON_OK)" },
+      { "dod": "DoD 5: UTF-8 без BOM", "result": "PASS (no BOM, no FFFD)" },
+      { "dod": "DoD 6: plugin dist собран", "result": "PASS (True)" },
+      { "dod": "DoD 7: compatibility\\1.18.30.json → True", "result": "FAIL — Test-Path False; файл по другому пути (compatibility\\opencode\\1.18.30.json)" },
+      { "dod": "DoD 8: git status → только opencode.json", "result": "FAIL — дерево грязное (~70 файлов)" }
+    ],
+    "3_problems": [
+      {
+        "problem": "Отчёт воркера «Все 8 DoD PASS» ложный: DoD 7 фактически FAIL",
+        "severity": "major",
+        "evidence": "Test-Path E:\\opencode_harness_portable\\compatibility\\1.18.30.json → False. Существует только E:\\opencode_harness_portable\\compatibility\\opencode\\1.18.30.json (glob подтверждает).",
+        "suggestion": "Скорректировать отчёт: DoD 7 = FAIL (либо проверялся вложенный путь — тогда указать фактический путь явно и согласовать со спекой B1-T2, где путь записан как compatibility\\1.18.30.json). Это предусловие задачи — его статус должен быть зафиксирован честно.",
+        "falsification": "Замечание опровергается, если существует файл compatibility\\1.18.30.json (ровно такой путь) или воркер предъявит вывод своей команды Test-Path = True."
+      },
+      {
+        "problem": "Отчёт воркера «Все 8 DoD PASS» ложный: DoD 8 фактически FAIL",
+        "severity": "major",
+        "evidence": "git status --porcelain: помимо 'M .opencode/opencode.json' — ~70 записей (M config/agent_categories/*, M scripts/researcher/researcher_core/*, M docs/glossary/*, ?? .runs/*, ?? docs/CODERS/, ?? .kanban.db и др.).",
+        "suggestion": "Зафиксировать в отчёте, что DoD 8 не выполнен (дерево грязное из-за параллельной работы/других подзадач), а не декларировать 8/8 PASS. Для чистого DoD 8 необходимо дерево до правки; воркер должен был зафиксировать baseline.",
+        "falsification": "Замечание опровергается, если git status --porcelain до/после правки показывал только '.opencode/opencode.json' — в текущем дереве это не так."
+      },
+      {
+        "problem": ".bak не исключён из git (untracked) и не описан в спеке B1-T2",
+        "severity": "minor",
+        "evidence": "git status --porcelain: '?? .opencode/opencode.json.bak'; git ls-files .opencode/opencode.json.bak → пусто; спека B1-T2 предусматривает роллбэк только через 'git checkout -- .opencode/opencode.json'.",
+        "suggestion": "Добавить .opencode/opencode.json.bak в .gitignore или удалить после подтверждения работоспособности. Сам .bak корректен (валидный JSON, канонские пути, no FFFD) — роллбэк им обеспечен.",
+        "falsification": "Замечание опровергается, если .bak будет удалён или добавлен в .gitignore."
+      },
+      {
+        "problem": "MCP-сервер проверен только на отсутствие ImportError, полный старт/handshake не подтверждён",
+        "severity": "minor",
+        "evidence": "Запуск coder_router_server.py с таймаутом 15s: вывод пуст (процесс стартовал и ждёт MCP stdio). importlib.exec_module → IMPORT_OK. Это подтверждает отсутствие ImportError, но не полную работоспособность сервера.",
+        "suggestion": "Для полного подтверждения — штатный MCP-handshake (например, отправка initialize-сообщения) или тест из scripts/ci/test_mcp_servers.py (есть в регрессионной базе B5).",
+        "falsification": "Замечание опровергается, если проведён полный MCP-handshake initialize и сервер ответил корректно."
+      }
+    ],
+    "4_verdict": {
+      "verdict": "REQUEST_CHANGES",
+      "rationale": "Ядро задачи выполнено корректно: opencode.json переключён на portable (5 правок точно по спеке B1-T2), JSON валиден, UTF-8 без BOM/FFFD, CRLF сохранён, 0 канон-ссылок, model/small_model не тронуты, .bak валиден (гарантия роллбэка), MCP-сервер импортируется на portable venv. НО контракт отчётности нарушен: заявленные «8/8 DoD PASS» опровергнуты фактами — DoD 7 (compatibility\\1.18.30.json не существует) и DoD 8 (дерево грязное, ~70 файлов). REQUEST_CHANGES требуется для исправления отчёта и фиксации реального статуса DoD 7/8; сам файл менять не нужно."
+    }
+  },
+  "comments": [
+    {
+      "file": "E:\\opencode_harness_portable\\.opencode\\opencode.json",
+      "line": 1,
+      "problem": "Сам конфиг корректен. Проблема в отчёте: DoD 7 FAIL (compatibility\\1.18.30.json не существует, есть только compatibility\\opencode\\1.18.30.json).",
+      "suggestion": "Скорректировать отчёт воркера: 6/8 DoD PASS реально, DoD 7 и DoD 8 — FAIL с указанием фактических выводов команд.",
+      "falsification": "Существует файл compatibility\\1.18.30.json — тогда DoD 7 PASS и замечание снимается."
+    },
+    {
+      "file": "E:\\opencode_harness_portable\\.opencode\\opencode.json",
+      "line": 1,
+      "problem": "DoD 8 FAIL: git status --porcelain показывает ~70 изменённых/untracked файлов, а не только .opencode/opencode.json.",
+      "suggestion": "Зафиксировать baseline дерева до правки; при грязном дереве — явно пометить DoD 8 как невыполнимый/FAIL, а не PASS.",
+      "falsification": "Предъявление вывода git status --porcelain, сделанного сразу после правки, где единственная запись — 'M .opencode/opencode.json'."
+    },
+    {
+      "file": "E:\\opencode_harness_portable\\.opencode\\opencode.json.bak",
+      "line": 1,
+      "problem": ".bak untracked, не в .gitignore, не описан в спеке (роллбэк там — только git checkout).",
+      "suggestion": "Добавить .bak в .gitignore или удалить после подтверждения. Сам файл валиден (BAK_JSON_OK, 0 FFFD, 5 канон-ссылок) — роллбэк обеспечен.",
+      "falsification": ".bak удалён или добавлен в .gitignore."
+    }
+  ]
+}

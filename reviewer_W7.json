@@ -1,0 +1,41 @@
+{
+  "module": "W7_META_CYCLE",
+  "verdict": "APPROVE",
+  "comments": [
+    {
+      "file": "docs/PROBLEMS_REGISTER.md",
+      "line": 94,
+      "problem": "TD-DEV-22 (HIGH) и TD-DEV-26 (HIGH) зафиксированы как OPEN, но W7 их фактически закрыл — статус в реестре не обновлён на FIXED. Контракт 05 требует вести статусы; без обновления аналитики/деплоер не увидят закрытие.",
+      "suggestion": "Обновить статус TD-DEV-22 и TD-DEV-26 на FIXED с пометкой 'закрыто W7 (meta-nightly прогон end-to-end, saved_at aware, liveness alive:true)'.",
+      "falsification": "Наблюдаемое событие, опровергающее замечание: в PROBLEMS_REGISTER.md строка 94/98 содержит статус FIXED для TD-DEV-22/26 (тогда замечание невалидно). Проверено: обе строки имеют '| OPEN |' — замечание подтверждено."
+    },
+    {
+      "file": "scripts/meta/meta_daemon.py",
+      "line": 110,
+      "problem": "run_once в sleep-ветке возвращает результат на строке 110-111 ДО вызова _save_state (строка 115). Свежий saved_at в этом пути пишется косвенно через sleep_merge → _save_state (orchestrator_integration.py:308), а не строкой 115. Формально комментарий воркера «run_once вызывает _save_state в конце такта» точен только для не-sleep-ветки.",
+      "suggestion": "Уточнить комментарий: для sleep-ветки saved_at обновляет sleep_merge (уже существующий механизм), строка 115 покрывает только не-sleep-путь. Либо перенести _save_state до обоих return для единообразия.",
+      "falsification": "Событие, опровергающее замечание: если в sleep-ветке saved_at НЕ обновляется при прогоне --once с sleep:true (т.е. фактическое время saved_at < времени прогона). Проверено реальным прогоном: saved_at=2026-10-06T20:39:05+00:00 при прогоне ~20:39 — обновляется (через sleep_merge). Замечание о косвенности подтверждено чтением кода (строка 103 + 308)."
+    },
+    {
+      "file": "scripts/meta/meta_nightly_task.xml",
+      "line": 23,
+      "problem": "LogonType=InteractiveToken — задача Task Scheduler запустится только при активной пользовательской сессии; на заблокированном/без-сессионном рабочем столе (ночной прогон 02:30 — типичный случай) задача НЕ выполнится. Воркер сам пометил это в §6 techdebt — осознанно, но для автозапуска это ограничение.",
+      "suggestion": "Задокументировать в meta_nightly_task.xml/README: для запуска без сессии заменить LogonType на S4U (run-as-user при логине) или указать пароль при импорте; до W13 (реальный sleep_git) ночной прогон всё равно не прод — ограничение приемлемо.",
+      "falsification": "Событие, опровергающее замечание: если задача выполняется без активной сессии (например, Test-Path запущенного процесса nightly при заблокированной сессии). Не тестируемо здесь, но XML-атрибут InteractiveToken — документированное поведение Windows Task Scheduler. Замечание остаётся как MINOR/условие."
+    },
+    {
+      "file": "scripts/meta/meta_nightly.cmd",
+      "line": 6,
+      "problem": "--simulate в cycle оставлен — ночной прогон НЕ делает реального git-слияния (все шаги simulated:true в логе). Это осознанная зависимость от W1 (sleep_git), зафиксированная комментарием. НЕ блокер W7, но фактически ночной прогон сейчас — smoke-прогон, не реальный сон.",
+      "suggestion": "Принять как осознанный долг (зависимость W1/W13); проверить, что после W1 флаг будет снят (гарантия через TD-DEV-* в W13). Зафиксировать в PROBLEMS_REGISTER как отдельный TD, если ещё нет.",
+      "falsification": "Событие, опровергающее замечание: если meta_nightly.log содержит шаги с simulated:false/реальный git merge. Проверено: все steps имеют 'simulated': true — замечание подтверждено."
+    },
+    {
+      "file": "scripts/meta/orchestrator_integration.py",
+      "line": 194,
+      "problem": "Канонский файл изменён (datetime.now → datetime.now(timezone.utc)) — формально контракт W7 говорил «не трогать канон». Проверено: файл является portable-версией (E:\\opencode_harness_portable\\scripts\\meta\\), канон (E:\\Documents\\...\\doc_Opencode_agern-new) НЕ тронут: git diff HEAD канона по этому файлу пуст, HEAD содержит naive datetime.now(). Решение корректно — это комплементарный фикс к _parse_iso, не нарушение скоупа.",
+      "suggestion": "Подтвердить зафиксированным TD: при следующем портировании канонского файла поверх фикс будет затёрт. Воркер уже пометил это в §6 techdebt — зарегистрировать в PROBLEMS_REGISTER как TD (portable-only фикс, защита от перезаписи).",
+      "falsification": "Событие, опровергающее замечание: если git diff HEAD канона по scripts/meta/orchestrator_integration.py непуст (канон изменён). Проверено: пуст, HEAD содержит 'saved_at': datetime.now().isoformat() — канон не тронут, замечание о корректности подтверждено."
+    }
+  ]
+}

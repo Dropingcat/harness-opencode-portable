@@ -1,39 +1,102 @@
 ﻿# Runtime environment bootstrap for OpenCode unified module (Windows PowerShell)
 # Invoke this script through the preferred harness path (an ASCII junction is fine).
+#
+# SCOPE POLICY (B3-T1):
+#   By default this script applies runtime variables to the CURRENT PROCESS ONLY and
+#   prints a WARN for every variable that is not persisted. Nothing is written to the
+#   User scope (registry) unless the flag OPENCODE_HARNESS_SETUP_USER=1 is set:
+#       $env:OPENCODE_HARNESS_SETUP_USER = "1"
+#   and the script is re-run. Use the flag ONLY when you intentionally want to
+#   persist runtime variables machine/user-wide (deployment).
 
 # Run: powershell -ExecutionPolicy Bypass -File scripts/setup_env.ps1
 # or:  . .\scripts\setup_env.ps1
 
+$setupUser = ($env:OPENCODE_HARNESS_SETUP_USER -eq "1")
+
+# Set a harness runtime variable in the User scope (persisted registry) when the
+# setup flag is set; otherwise apply it to the current process only and warn that
+# it was not persisted.
+function Set-HarnessEnvVar {
+    param(
+        [Parameter(Mandatory = $true)][string]$Name,
+        [Parameter(Mandatory = $true)][string]$Value
+    )
+    if ($setupUser) {
+        [Environment]::SetEnvironmentVariable($Name, $Value, "User")
+    } else {
+        Set-Item -Path "Env:$Name" -Value $Value
+        Write-Host "WARN: $Name not persisted (process scope only). Set OPENCODE_HARNESS_SETUP_USER=1 for User scope."
+    }
+}
+
+# --- Harness root (portable-first) -------------------------------------
+# If OPENCODE_HARNESS_ROOT is unset, resolve it from $PSScriptRoot (this is the
+# portable root). A pre-set value (e.g. the canon root) is deliberately kept and
+# never silently overwritten - a WARN is printed instead.
 if ([string]::IsNullOrWhiteSpace($env:OPENCODE_HARNESS_ROOT)) {
     $HARNESS = [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot ".."))
 } else {
     $HARNESS = $env:OPENCODE_HARNESS_ROOT
+    $portableRoot = [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot ".."))
+    if ([System.IO.Path]::GetFullPath($HARNESS) -ne $portableRoot) {
+        Write-Host "WARN: OPENCODE_HARNESS_ROOT is '$HARNESS'; run from portable or set manually."
+    }
 }
 
-[Environment]::SetEnvironmentVariable("OPENCODE_HARNESS_ROOT", $HARNESS, "User")
-[Environment]::SetEnvironmentVariable("OPENCODE_RUNS_DIR", (Join-Path $HARNESS ".runs"), "User")
-[Environment]::SetEnvironmentVariable("OPENCODE_CONFIG_DIR", (Join-Path $env:USERPROFILE ".config\opencode"), "User")
-[Environment]::SetEnvironmentVariable("OPENCODE_BIN", "opencode", "User")
-[Environment]::SetEnvironmentVariable("DOC_GUARD_ENTRYPOINT", (Join-Path $HARNESS "guard\src\session_guard.py"), "User")
-[Environment]::SetEnvironmentVariable("DOC_GUARD_RUNNER", (Join-Path $HARNESS "guard\src\guard_runner.py"), "User")
-[Environment]::SetEnvironmentVariable("DOC_GUARD_CONFIG", (Join-Path $env:USERPROFILE ".config\opencode\guard_config.json"), "User")
-[Environment]::SetEnvironmentVariable("DOC_GUARD_PROVIDER", "cloud", "User")
-[Environment]::SetEnvironmentVariable("HERMES_ROOT", $HARNESS, "User")
+Set-HarnessEnvVar "OPENCODE_HARNESS_ROOT" $HARNESS
+Set-HarnessEnvVar "OPENCODE_RUNS_DIR" (Join-Path $HARNESS ".runs")
+Set-HarnessEnvVar "OPENCODE_CONFIG_DIR" (Join-Path $env:USERPROFILE ".config\opencode")
+# OPENCODE_BIN is set after detection below (real binary, never a bare name).
+
+# --- OPENCODE_BIN resolution -------------------------------------------
+# Priority: env OPENCODE_BIN (validated) -> PATH `opencode` -> bunx cache globs.
+$opencodeBin = $env:OPENCODE_BIN
+if (-not [string]::IsNullOrWhiteSpace($opencodeBin) -and -not (Test-Path -LiteralPath $opencodeBin)) {
+    Write-Host "WARN: OPENCODE_BIN '$opencodeBin' does not exist; re-detecting."
+    $opencodeBin = $null
+}
+if ([string]::IsNullOrWhiteSpace($opencodeBin)) {
+    $cmd = Get-Command opencode -ErrorAction SilentlyContinue
+    if ($cmd) {
+        $opencodeBin = $cmd.Source
+    } else {
+        $bunxHits = @(Get-ChildItem -Path "C:\Temp\bunx-*\node_modules\.bin\opencode.exe" -ErrorAction SilentlyContinue)
+        if ($bunxHits.Count -eq 0) {
+            # Fallback: bun install cache (the real bunx cache location).
+            $bunxHits = @(Get-ChildItem -Path (Join-Path $env:USERPROFILE ".bun\install\cache\opencode-ai@*\bin\opencode.exe") -ErrorAction SilentlyContinue)
+        }
+        if ($bunxHits.Count -gt 0) {
+            $opencodeBin = $bunxHits | Sort-Object LastWriteTime -Descending | Select-Object -First 1 -ExpandProperty FullName
+        }
+    }
+}
+if ([string]::IsNullOrWhiteSpace($opencodeBin)) {
+    Write-Host "WARN: opencode binary not found; set OPENCODE_BIN manually."
+} else {
+    Set-HarnessEnvVar "OPENCODE_BIN" $opencodeBin
+}
+
+Set-HarnessEnvVar "DOC_GUARD_ENTRYPOINT" (Join-Path $HARNESS "guard\src\session_guard.py")
+Set-HarnessEnvVar "DOC_GUARD_RUNNER" (Join-Path $HARNESS "guard\src\guard_runner.py")
+Set-HarnessEnvVar "DOC_GUARD_CONFIG" (Join-Path $env:USERPROFILE ".config\opencode\guard_config.json")
+Set-HarnessEnvVar "DOC_GUARD_PROVIDER" "cloud"
+Set-HarnessEnvVar "HERMES_ROOT" $HARNESS
 
 # Native Writer Core. Runtime artifacts stay outside the source tree.
-[Environment]::SetEnvironmentVariable("WRITER_CORE_ROOT", (Join-Path $HARNESS "scripts\writer-core"), "User")
-[Environment]::SetEnvironmentVariable("WRITER_RUNS_DIR", (Join-Path $HARNESS ".runs\writer-core"), "User")
-[Environment]::SetEnvironmentVariable("WRITER_LINGUISTICS_REGISTRY_DIR", (Join-Path $HARNESS "scripts\writer-core\linguistic_assets"), "User")
+Set-HarnessEnvVar "WRITER_CORE_ROOT" (Join-Path $HARNESS "scripts\writer-core")
+Set-HarnessEnvVar "WRITER_RUNS_DIR" (Join-Path $HARNESS ".runs\writer-core")
+Set-HarnessEnvVar "WRITER_LINGUISTICS_REGISTRY_DIR" (Join-Path $HARNESS "scripts\writer-core\linguistic_assets")
 
 # Изолированный Python-venv фабрики (только stdlib; см. requirements-core.txt)
 $venvDir = Join-Path $HARNESS ".venv"
 $venvPython = Join-Path $venvDir "Scripts\python.exe"
 if (Test-Path $venvPython) {
-    [Environment]::SetEnvironmentVariable("PYTHON_VENV", $venvPython, "User")
-    [Environment]::SetEnvironmentVariable("PYTHON", $venvPython, "User")
-    [Environment]::SetEnvironmentVariable("PYTHON_BIN", $venvPython, "User")
+    Set-HarnessEnvVar "PYTHON_VENV" $venvPython
+    Set-HarnessEnvVar "PYTHON" $venvPython
+    Set-HarnessEnvVar "PYTHON_BIN" $venvPython
 } else {
-    [Environment]::SetEnvironmentVariable("PYTHON", "python", "User")
+    Set-HarnessEnvVar "PYTHON" "python"
     Write-Host "WARN: venv not found at $venvPython; falling back to PATH 'python'"
 }
 
@@ -57,11 +120,11 @@ if (-not [string]::IsNullOrWhiteSpace($configuredWriterPython)) {
     Write-Host "WARN: no Writer Core venv found; falling back to PATH 'python' and relying on preflight dependency checks"
 }
 $env:WRITER_PYTHON = $writerPython
-[Environment]::SetEnvironmentVariable("WRITER_PYTHON", $writerPython, "User")
+Set-HarnessEnvVar "WRITER_PYTHON" $writerPython
 
 # Researcher Core (WS-19): детерминированное ядро верификации (numeric/guard/formula)
-[Environment]::SetEnvironmentVariable("RESEARCH_CORE_ROOT", (Join-Path $HARNESS "scripts\researcher"), "User")
-[Environment]::SetEnvironmentVariable("RESEARCH_VERIFY_CLAIMS", (Join-Path $HARNESS "scripts\researcher\verify_claims.py"), "User")
+Set-HarnessEnvVar "RESEARCH_CORE_ROOT" (Join-Path $HARNESS "scripts\researcher")
+Set-HarnessEnvVar "RESEARCH_VERIFY_CLAIMS" (Join-Path $HARNESS "scripts\researcher\verify_claims.py")
 
 # P2 semantic guard key (хранится вне HARNESS, в переменной окружения, не в репо).
 # Ты сказал, что есть отдельный ключ для guard. Задай его здесь ОДИН раз:
@@ -70,15 +133,19 @@ $env:WRITER_PYTHON = $writerPython
 # НЕ коммить фактический ключ; в HARNESS ключа нет и не будет.
 
 # OPENCODE_SESSION_DB: real path to OpenCode session DB (SQLite, ~/.local/share/opencode/opencode.db)
-[Environment]::SetEnvironmentVariable("OPENCODE_SESSION_DB", (Join-Path $env:USERPROFILE ".local\share\opencode\opencode.db"), "User")
+Set-HarnessEnvVar "OPENCODE_SESSION_DB" (Join-Path $env:USERPROFILE ".local\share\opencode\opencode.db")
 
 $researchRoot = Join-Path $HARNESS "scripts\research"
-[Environment]::SetEnvironmentVariable("RESEARCH_SCRIPTS_ROOT", $researchRoot, "User")
-[Environment]::SetEnvironmentVariable("RESEARCH_RUNNER_SH", (Join-Path $researchRoot "run_research.sh"), "User")
-[Environment]::SetEnvironmentVariable("RESEARCH_RULES_PATH", (Join-Path $researchRoot "rules_balanced.yaml"), "User")
-[Environment]::SetEnvironmentVariable("RESEARCH_NUMERIC_COMPARATOR", (Join-Path $researchRoot "numeric_comparator.py"), "User")
-[Environment]::SetEnvironmentVariable("RESEARCH_SYNTHESIZER", (Join-Path $researchRoot "synthesizer.py"), "User")
-[Environment]::SetEnvironmentVariable("RESEARCH_JUDGE_BRIEF", (Join-Path $researchRoot "judge_brief.py"), "User")
-[Environment]::SetEnvironmentVariable("RESEARCH_VERIFICATION_ROOT", (Join-Path $HARNESS ".runs\verification"), "User")
+Set-HarnessEnvVar "RESEARCH_SCRIPTS_ROOT" $researchRoot
+Set-HarnessEnvVar "RESEARCH_RUNNER_SH" (Join-Path $researchRoot "run_research.sh")
+Set-HarnessEnvVar "RESEARCH_RULES_PATH" (Join-Path $researchRoot "rules_balanced.yaml")
+Set-HarnessEnvVar "RESEARCH_NUMERIC_COMPARATOR" (Join-Path $researchRoot "numeric_comparator.py")
+Set-HarnessEnvVar "RESEARCH_SYNTHESIZER" (Join-Path $researchRoot "synthesizer.py")
+Set-HarnessEnvVar "RESEARCH_JUDGE_BRIEF" (Join-Path $researchRoot "judge_brief.py")
+Set-HarnessEnvVar "RESEARCH_VERIFICATION_ROOT" (Join-Path $HARNESS ".runs\verification")
 
-Write-Host "Runtime env applied (User scope). Restart OpenCode to load."
+if ($setupUser) {
+    Write-Host "Runtime env applied (User scope). Restart OpenCode to load."
+} else {
+    Write-Host "Runtime env applied (process scope). Set OPENCODE_HARNESS_SETUP_USER=1 for User scope."
+}

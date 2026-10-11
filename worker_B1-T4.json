@@ -1,0 +1,46 @@
+{
+  "module": "B1-T4",
+  "code": null,
+  "description": "Перенос shared-документов из канона в portable + создание route-preflight.md. Скопированы 7 файлов (SHA256 = канону), создан 1 новый файл route-preflight.md (UTF-8, контракт M1/Слой 1). Все 12 файлов на месте, все shared/* ссылки из промптов агентов резолвятся.",
+  "notes": [
+    "Copied 7 files (SHA256 identical to canon): article-writing-process.md, dispatch-retry.md, orchestration-patterns.md, research-orchestration-process.md, research-process.md, writer-traceability-contract.md, writing-orchestration-process.md",
+    "Created: shared/route-preflight.md (UTF-8, 16 строк, контракт M1/E2E-02 — харнесс-статус, ROUTE/BUNDLE в PROGRESS, STOP с CWD_ERROR при недоступности роутера)",
+    "Portable shared/: 12 файлов (11 канон + route-preflight). Существующие 4 файла НЕ тронуты (git: они tracked, только новые 8 файлов untracked)",
+    "Все shared/* ссылки из agents/*.md (9 шт) и .opencode/** (9 шт) резолвятся — UNRESOLVED COUNT = 0",
+    "Канон не изменён (только чтение, LastWriteTime канона не менялись в ходе задачи)"
+  ],
+  "sections": {
+    "1_Результаты": {
+      "скопировано_7": [
+        "article-writing-process.md",
+        "dispatch-retry.md",
+        "orchestration-patterns.md",
+        "research-orchestration-process.md",
+        "research-process.md",
+        "writer-traceability-contract.md",
+        "writing-orchestration-process.md"
+      ],
+      "создан_1": "shared/route-preflight.md",
+      "итого_файлов": "12 (11 канон + route-preflight)"
+    },
+    "2_Проверки": [
+      {"проверка": "Присутствие 12 файлов", "команда": "Test-Path x 12", "ожидание": "все True", "факт": "12/12 True", "вердикт": "PASS"},
+      {"проверка": "SHA256 7 скопированных = канону", "команда": "Get-FileHash SHA256", "ожидание": "7/7 True", "факт": "7/7 True", "вердикт": "PASS"},
+      {"проверка": "route-preflight.md создан и UTF-8 корректен", "команда": "Get-Content / Read", "ожидание": "16 строк, кириллица", "факт": "16 строк, кириллица корректна (консольные кракозябры — артефакт PS5.1, Read подтверждает UTF-8)", "вердикт": "PASS"},
+      {"проверка": "Промпты резолвят shared/*", "команда": "Select-String agents/*.md + .opencode/**", "ожидание": "каждый ref существует", "факт": "9/9 (agents) и 9/9 (.opencode), UNRESOLVED=0", "вердикт": "PASS"},
+      {"проверка": "Полный diff portable vs канон", "команда": "SHA256 по всем 11", "ожидание": "только известные отличия", "факт": "9 SAME; DIFF: harness-dispatch-map.md (канон 175 стр / portable 156), search-depth-contract.md (канон 53 / portable 84) — pre-existing portable-версии, не в scope копирования", "вердикт": "PASS (известные отличия, см. TD-B1T4-1)"},
+      {"проверка": "Канон не изменён", "команда": "git status + LastWriteTime", "ожидание": "только чтение канона", "факт": "канон вне git portable; копирование read-only; только новые untracked файлы в portable/shared", "вердикт": "PASS"},
+      {"проверка": "Не затронуты существующие 4 файла", "команда": "git status --short -- shared", "ожидание": "нет M для 4 существующих", "факт": "только ?? новые 8; 4 существующих не модифицированы", "вердикт": "PASS"}
+    ],
+    "3_DoD_B1-T4": [
+      "7 файлов скопированы, SHA256 = канону — DONE",
+      "route-preflight.md создан — DONE",
+      "12 файлов в shared/ (11 канон + route-preflight) — DONE",
+      "Промпты резолвятся (каждый shared/*.md существует) — DONE",
+      "Канон не изменён — DONE"
+    ],
+    "4_Техдолги": [
+      "TD-B1T4-1: harness-dispatch-map.md (канон LastWriteTime 02.10.2026) и search-depth-contract.md (канон 01.10.2026) имеют в каноне более новые версии, чем pre-existing portable-копии. Контракт B1-T4 запрещал трогать существующие 4 файла, поэтому рассинхрон НЕ устранён. Условие снятия: отдельная задача (обновление 2 файлов из канона в portable, SHA256-сверка). Ревьюеру/аудитору решить, является ли это известным/допустимым отличием."
+    ]
+  }
+}

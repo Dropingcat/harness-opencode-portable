@@ -1,0 +1,60 @@
+{
+  "module": "B1-T3",
+  "verdict": "APPROVE",
+  "reviewed_at": "2026-10-06",
+  "summary": "Перенос мета-комплекта (28 py + templates) из канона в portable выполнен корректно. Все заявления воркера подтверждены независимыми проверками (состав, SHA256, импорт 29/29, compileall, хардкоды, sleep_integration, .gitignore, perfectionist, meta_daemon, sleep dry-run, guard, V-1 veto). Единственный FAIL — liveness_check (TypeError naive vs aware) — воспроизведён, честно заявлен воркером, зарегистрирован как TD-DEV-22 (HIGH). Правка sleep_integration.py запрещена спекой («НЕ трогать»), поэтому FAIL не мог быть устранён в рамках B1-T3 без нарушения спеки — это техдолг на W7. Дополнительно зарегистрированы: TD-DEV-23 (27 vs 28 в спеке), TD-DEV-24 (TD воркера не в реестре), TD-DEV-25 (portable = рабочая копия канона, не HEAD).",
+  "sections": {
+    "1_checks": [
+      {"check": "Состав portable scripts/meta: py-файлы = 29 (28 канонских + sleep_integration)", "command": "Get-ChildItem scripts\\meta -Filter *.py -File | Measure-Object", "expected": "29 (28 перенесённых + sleep_integration); portable-only = только sleep_integration", "fact": "29; portable-only = sleep_integration.py; canon-only = пусто", "result": "PASS"},
+      {"check": "Состав канона scripts/meta: py-файлы = 28 (спека «27» неверна)", "command": "Get-ChildItem canon\\scripts\\meta -Filter *.py -File | Measure-Object", "expected": "28", "fact": "28; список спеки содержит ровно 28 имён; только в canon = пусто", "result": "PASS (TD-DEV-23)"},
+      {"check": "SHA256 перенесённых файлов == канону (выборочно 9)", "command": "Get-FileHash -Algorithm SHA256 (skill_master, meta_daemon, sleep_controller, orchestrator_integration, auditor_v2, perfectionist, state, meta_core, skill_master)", "expected": "SAME 9/9", "fact": "SAME 9/9 (включая meta_core/skill_master == рабочей копии канона)", "result": "PASS"},
+      {"check": "templates/orchestrator_templates.json == канону", "command": "Get-FileHash canon vs portable", "expected": "SAME", "fact": "SAME", "result": "PASS"},
+      {"check": "Импорт всех 29 модулей на portable venv", "command": ".venv\\Scripts\\python.exe -c \"importlib...\" (29 модулей)", "expected": "ALL_IMPORT_OK 29 FAIL []", "fact": "OK 29, FAIL []", "result": "PASS"},
+      {"check": "compileall scripts/meta", "command": "python -m compileall -q scripts\\meta", "expected": "exit 0", "fact": "exit 0", "result": "PASS"},
+      {"check": "Хардкоды канона в scripts/meta/*.py", "command": "Select-String doc_Opencode_agern|agern-new|E:\\Documents", "expected": "0 хитов", "fact": "NO_CANON_HARDCODES", "result": "PASS"},
+      {"check": "sleep_integration.py существует (не потерян)", "command": "Test-Path scripts\\meta\\sleep_integration.py", "expected": "True", "fact": "True; tracked в git (коммит b91f39d)", "result": "PASS"},
+      {"check": "Бэкап sleep_integration в артефактах", "command": "Test-Path .runs\\artifacts\\B1-T3\\sleep_integration_portable_backup.py + Get-FileHash", "expected": "True; SAME с live", "fact": "True; SAME", "result": "PASS"},
+      {"check": "Бэкап perfectionist в артефактах", "command": "Test-Path .runs\\artifacts\\B1-T3\\perfectionist_portable_backup.py", "expected": "True", "fact": "True; SAME с live и canon (perfectionist был идентичен канону ещё до переноса)", "result": "PASS"},
+      {"check": ".gitignore: 8 runtime-паттернов", "command": "Select-String .gitignore (.meta_state/ .damage_basket/ .auditor_state/ .auditor_v2_state/ .planner_state/ .skills_state/ .l2_memory/ scripts/meta/_trace_store.json)", "expected": "8 паттернов (строки 105-112)", "fact": "Все 8 на месте, .runs/ уже был (строка 102)", "result": "PASS"},
+      {"check": ".meta_state создан и не утекает в git", "command": "Test-Path .meta_state + git check-ignore", "expected": "True; ignored", "fact": "True; check-ignore exit 0; содержимое: 2 state-файла (созданы демоном)", "result": "PASS"},
+      {"check": "perfectionist теперь рабочий", "command": "python -c \"from perfectionist import PerfectionistSkill; completion_hook('# TODO')", "expected": "needs_improvement", "fact": "verdict=needs_improvement", "result": "PASS"},
+      {"check": "meta_daemon --once", "command": "meta_daemon.py --once --orchestrator code-orchestrator --state-dir .meta_state", "expected": "JSON {sleep,hp,damage,dropped}", "fact": "{\"sleep\":false,\"hp\":100.0,\"damage\":75,\"dropped\":3}", "result": "PASS"},
+      {"check": "Sleep cycle dry-run", "command": "sleep_integration.py cycle --task dry-run --branches fix/A --simulate --no-git", "expected": "simulated:true, merged:[fix/A], exit 0", "fact": "simulated:true, merged:[fix/A], exit 0", "result": "PASS"},
+      {"check": "Guard (6 отказов автономности)", "command": "guard_check.py (autonomy_guard с events)", "expected": "[{\"id\":\"circle\",...}], exit 1", "fact": "[{\"id\":\"circle\",\"severity\":\"major\"}], exit 1", "result": "PASS"},
+      {"check": "V-1 veto", "command": "python -c \"...health=SystemHealth(health_points=5,lives_remaining=0); veto()\"", "expected": "True (dead)", "fact": "True при level=dead, lives=0", "result": "PASS"},
+      {"check": "Liveness после meta_daemon --once", "command": "sleep_integration.py liveness --state-dir .meta_state --orchestrator code-orchestrator", "expected": "alive: true", "fact": "TypeError: can't subtract offset-naive and offset-aware datetimes (строка 522)", "result": "FAIL (заявлен воркером, TD-DEV-22)"},
+      {"check": "Канон не изменён B1-T3", "command": "git -C canon status --porcelain -- scripts/meta", "expected": "пусто", "fact": "M meta_core.py + M skill_master.py — pre-existing (mtime 01.10, до B1-T3 06.10); копирование их не модифицировало (SHA256 portable == рабочей копии)", "result": "PASS (копирование read-only), но TD-DEV-25"},
+      {"check": "Мусор в git status (только meta/.gitignore/.meta_state)", "command": "git status --porcelain", "expected": "только B1-T3-скоуп", "fact": "В scripts/meta: 26 untracked py + templates/ (perfectionist/sleep_integration tracked); .gitignore modified; .meta_state ignored; __pycache__ 0 в status; прочие M/?? (config/, researcher_core/, docs/, .kanban.db и др.) — НЕ из B1-T3 (pre-existing рабочее дерево)", "result": "PASS с оговоркой"}
+    ],
+    "2_dod": [
+      {"criterion": "Все 28 py канона перенесены в portable scripts/meta/", "status": "PASS", "evidence": "canon-only = пусто; portable = 29 (28 + sleep_integration)"},
+      {"criterion": "templates/ перенесены", "status": "PASS", "evidence": "templates/orchestrator_templates.json SAME"},
+      {"criterion": "Все модули импортируются на portable venv (0 ImportError)", "status": "PASS", "evidence": "ALL_IMPORT_OK 29 FAIL []"},
+      {"criterion": "0 canon-хардкодов в перенесённых файлах", "status": "PASS", "evidence": "NO_CANON_HARDCODES"},
+      {"criterion": "sleep_integration.py не потерян", "status": "PASS", "evidence": "live SAME + бэкап SAME + tracked"},
+      {"criterion": "Канон не изменён (read-only копирование)", "status": "PASS (копирование не модифицировало канон; pre-existing правки рабочей копии канона — вне B1-T3, TD-DEV-25)", "evidence": "SHA256 28/28 == рабочей копии канона"}
+    ],
+    "3_problems": [
+      {"problem": "liveness_check TypeError (naive vs aware datetime)", "severity": "critical", "evidence": "воспроизведён traceback: sleep_integration.py:522 (now - last_ts); root: orchestrator_integration.py:194 _save_state пишет naive saved_at", "recommendation": "не блокирует B1-T3 (правка sleep_integration запрещена спекой); зарегистрирован TD-DEV-22 HIGH, фикс в W7 (нормализация tz в _parse_iso или _save_state)"},
+      {"problem": "Спека B1-T3 «27 py» vs факт 28", "severity": "major", "evidence": "01_BLOCKS_B1_B5.md §B1-T3 «27», список содержит 28 имён; канон = 28", "recommendation": "TD-DEV-23: исправить текст спеки на 28"},
+      {"problem": "TD воркера (TD-1..4) не в PROBLEMS_REGISTER", "severity": "major", "evidence": "grep реестра = 0 хитов до правки ревьюером", "recommendation": "TD-DEV-24: зарегистрированы ревьюером; процедурная правка (воркер фиксирует TD сразу в реестре)"},
+      {"problem": "portable = рабочая копия канона, не HEAD (L2→L3 circulator)", "severity": "major", "evidence": "git show HEAD:meta_core.py = 0 хитов circulator; рабочая копия канона = SAME с portable", "recommendation": "TD-DEV-25: закоммитить L2→L3 в канон до B1-T5 или задокументировать эталон"}
+    ],
+    "4_td_registered": [
+      {"id": "TD-DEV-22", "severity": "HIGH", "what": "liveness_check TypeError (naive vs aware)", "block": "B1-T3/W7", "status": "OPEN"},
+      {"id": "TD-DEV-23", "severity": "MEDIUM", "what": "Спека 27 vs 28 py", "block": "B1-T3/docs", "status": "OPEN"},
+      {"id": "TD-DEV-24", "severity": "MEDIUM", "what": "TD воркера не в реестре (нарушение 05 §1)", "block": "B1-T3", "status": "OPEN"},
+      {"id": "TD-DEV-25", "severity": "MEDIUM", "what": "portable = рабочая копия канона, не HEAD", "block": "B1-T3/B1-T5", "status": "OPEN"}
+    ],
+    "5_verdict": "APPROVE",
+    "0_suspicious_checked": [
+      {"trigger": "«28 vs 27» — спека неверна или воркер перенёс лишнее?", "checked": "Get-ChildItem канона = 28; список спеки = 28 имён; только в portable = sleep_integration", "fact": "Спека внутренне противоречива; воркер перенёс РОВНО канонские файлы, без мусора (__pycache__ в git = 0)", "result": "ОК, TD-DEV-23"},
+      {"trigger": "SHA256 = канону для ВСЕХ 28?", "checked": "Get-FileHash выборка 9 (включая meta_core/skill_master)", "fact": "SAME 9/9", "result": "ОК"},
+      {"trigger": "sleep_integration — канонский под другим именем?", "checked": "канон: sleep_controller.py, sleep_planner.py есть; sleep_integration.py — только portable (git log b91f39d)", "fact": "В каноне нет sleep_integration; portable-файл уникален", "result": "ОК"},
+      {"trigger": ".meta_state не мешает (пустой рантайм)?", "checked": "Test-Path True; содержимое 2 state-файла (демон создал); git check-ignore exit 0", "fact": "Не мешает; ignored", "result": "ОК"},
+      {"trigger": "liveness FAIL — почему воркер не исправил?", "checked": "спека: «sleep_integration.py в portable — НЕ трогать»; корень — канонский orchestrator_integration._save_state", "fact": "Правка вне скоупа B1-T3; FAIL честно заявлен; TD-DEV-22 на W7", "result": "ОК (корректное поведение воркера)"},
+      {"trigger": "Канон «не изменён» — а git status канона показывает M meta_core/skill_master", "checked": "mtime 01.10 (до B1-T3 06.10); SHA256 portable == рабочей копии", "fact": "Pre-existing правки рабочей копии канона; B1-T3 их не создавал и не менял; но portable-эталон = рабочая копия, не HEAD", "result": "TD-DEV-25"},
+      {"trigger": "git status содержит много M/?? вне meta/", "checked": "config/, researcher_core/, docs/, .kanban.db и др.", "fact": "Pre-existing рабочее дерево (не B1-T3); B1-T3-скоуп: scripts/meta + .gitignore + .meta_state", "result": "ОК (вне скоупа B1-T3)"}
+    ]
+  }
+}

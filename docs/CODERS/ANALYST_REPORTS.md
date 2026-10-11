@@ -1,0 +1,21 @@
+# ANALYST_REPORTS.md — Журнал отчётов аналитика (единый baseline разработки)
+
+**Дата:** 2026-10-06 · **Назначение:** фиксация отчётов аналитика по каждому блоку для следующего цикла — без потерь открытий и исследований.
+
+## Правило
+
+- После каждого блока (после аналитика/ресерчера, перед деплоером) оркестратор/деплоер добавляет строку в журнал.
+- Отчёт аналитика хранится в `.runs/artifacts/<ID>/` (рантайм), в журнале — указатель + ключевые решения.
+- Добавление строки — шаг 3.6 контракта 04 (`04_DEPLOYER_CONTRACT.md`): деплоер после коммита сверяет TD аналитика с `docs/PROBLEMS_REGISTER.md` и фиксирует отчёт в журнале (круг замыкается).
+
+## Журнал
+
+| Дата | Блок | Отчёт (путь) | Ключевые решения/рекомендации | Статус в baseline |
+|---|---|---|---|---|
+| 2026-10-06 | B1-T1 | .runs/artifacts/B1-T1/analyst_*.json (или сводка в сессии) | TD-DEV-14..19 классифицированы; 7 приоритетов для ресерчера; рекомендации (freeze→.runs, конвенция имён, Test-Path фактически) | APPROVE, закрыт ccac1f0 |
+| 2026-10-06 | B1-T3 | .runs/artifacts/B1-T3/analyst_B1-T3.json | Мета-комплект APPROVE; TD-DEV-22 HIGH (liveness) + N1 (saved_at) → W7 обязателен; закоммитить канон (TD-DEV-25); спека 27→28 | APPROVE, коммит 32ab90b |
+| 2026-10-06 | W7 | .runs/artifacts/W7/analyst_W7.json | Мета-цикл APPROVE; TD-DEV-22/26 FIXED, +27/28/29; ресерчер: EXP-1b раньше W1, лог nightly перезаписывается (N4) | APPROVE, коммит 7542ca7 |
+| 2026-10-07 | W1 | .runs/artifacts/W1/analyst_W1.json | Хуки APPROVE; TD-DEV-30 CRITICAL (sleep_git vs .gitignore) — решить до W13 (вариант (c)/(b-.runs/*), решение архитектора); +TD-DEV-37 MEDIUM (stub-gate блокирует push на 2 pre-existing stubs в чужих файлах, найдено деплоером); хуки версионированы; EXP-1b следующий | APPROVE, коммит 045e26d |
+| 2026-10-07 | EXP-1b | config/CONFIG_MERGE.md | Merge плагинов РАБОТАЕТ; D: модель=пользовательский выбор (arise monarch не хардкод); контракты 11/12/13; ревью/аудит=REQUEST_CHANGES → TD-DEV-38/39 follow-up; отчёт аналитика EXP-1b отсутствует в .runs/artifacts | DEPLOYED по команде оркестратора, коммит c4fe8ff |
+| 2026-10-09 | Контракты 14/15 | docs/CODERS/14,15 | Двурежимный аудитор (режим A in-cycle / B standalone, мандат режима первой строкой) + general = руки оркестратора (шаблон с переменными); TD-DEV-42/43 зарегистрированы; обновлены 13 (режим аудитора + general) и 00_INDEX; отчёт аналитика блока отсутствует в .runs/artifacts | APPROVE, коммит c9e7c3a |
+| 2026-10-10 | Контракт 16 + TD-DEV-30 | docs/CODERS/16_RESEARCH_MINI_FACTORY.md | Мини-фабрика исследований: DEEP (research-orchestrator BRICKS-runner + внешний аудитор B по 14 + ТРИЗ) vs LIGHT (general-ядро); ResearchTask с mode deep|light; TD-DEV-30 CRITICAL FIXED (.runs/* + !sleep_markers + _ensure_clean --untracked-files=all) — блокер W13 снят | DEPLOYED, контракт 16 + TD-DEV-30 FIXED |
