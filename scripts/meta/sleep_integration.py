@@ -23,12 +23,14 @@ Scope out:
     в текущем checkout — lazy-импорт + fallback-имитация с пометкой simulated: true.
 
 API:
-    run_sleep_cycle(task_id, branches, baseline=True, hp=100.0, ...) -> dict
+    run_sleep_cycle(task_id, branches, baseline=True, hp=100.0, ...,
+                    target=None, check_clean=True) -> dict
     liveness_check(state_dir=None, max_silence_minutes=30, orchestrator="research") -> dict
     autonomy_guard(events) -> list
 
 CLI:
     python sleep_integration.py cycle --task <id> --branches fix/A,fix/B [--hp 80] [--usage '{"x":3}']
+    python sleep_integration.py cycle --task-id nightly --branches fix/A,fix/B [--target master]
     python sleep_integration.py liveness [--state-dir <dir>] [--max-silence 30]
     python sleep_integration.py guard --events '[{"tool":"arxiv_search","repeat":3}]'
 """
@@ -309,15 +311,50 @@ def run_sleep_cycle(task_id: str, branches: List[str], baseline: bool = True,
                     artifact_path: Optional[str] = None,
                     no_git: bool = False, session_dir: Optional[str] = None,
                     since_minutes: int = 60, run_monte_carlo: bool = False,
-                    simulate: bool = False) -> dict:
+                    simulate: bool = False, target: Optional[str] = None,
+                    check_clean: bool = True) -> dict:
     """Полный цикл сна M5-M10. Возвращает JSON-отчёт.
 
     baseline=False — пропускает M7-трекер (register/open_sleep/close_sleep),
     M6-цикл (snapshot/merge/restore) выполняется всегда.
+
+    W13-r2 (TD-W13-3/4):
+      target      — ветка merge снов. None -> стабильная ветка репо
+                    (resolve_default_target: master > develop > main).
+                    Явный target передаётся в merge_branches и в M5-дельты.
+      check_clean — P-CRIT-5 guard «сон только при чистом дереве»: перед
+                    snapshot вызывается _ensure_clean (аналог sleep_git CLI).
+                    Грязное дерево -> GitSleepError, цикл НЕ начинается.
     """
     branches = [b.strip() for b in branches if b and b.strip()]
     steps: List[dict] = []
     perf_findings: List[dict] = []
+
+    # --- guard чистоты дерева ПЕРЕД snapshot (W13-r2, TD-W13-4: P-CRIT-5) ---
+    # Импорт sleep_git здесь обязателен: snapshot_baseline/create_sleep_branches
+    # работают с РЕАЛЬНЫМ репозиторием, guard — их обязательная предпосылка.
+    if str(_TOOLS_DIR) not in sys.path:
+        sys.path.insert(0, str(_TOOLS_DIR))
+    import sleep_git  # noqa: PLC0415 — недоступность модуля = жёсткая ошибка
+    sg_real = sleep_git.SleepGit(repo_root=str(REPO_ROOT), dry_run=False)
+    if check_clean:
+        try:
+            sleep_git._ensure_clean(sg_real)
+        except sleep_git.GitSleepError as exc:
+            steps.append({"step": "preflight_clean", "module": "GUARD",
+                          "simulated": False, "ok": False,
+                          "error": "P-CRIT-5: дерево не чистое, сон не начат",
+                          "detail": str(exc)})
+            return {
+                "task_id": task_id,
+                "status": "blocked",
+                "blocked_reason": "dirty_worktree",
+                "blocked_detail": str(exc),
+                "steps": steps,
+                "simulated": False,
+                "ts": _now_iso(),
+            }
+    sleep_target = target or sleep_git.resolve_default_target(str(REPO_ROOT))
 
     # --- lazy-подключение M5-M10 (fallback при недоступности в checkout) ---
     mods = {
@@ -333,10 +370,14 @@ def run_sleep_cycle(task_id: str, branches: List[str], baseline: bool = True,
     bt = mods["M7"].register_task if mods["M7"] else _FallbackBaselineTracker()
     if mods["M7"]:
         bt = mods["M7"]
+    # W13-r2 (TD-W13-2): M6 теперь НЕ lazy-фолбэчится при наличии модуля —
+    # sleep_git есть в checkout всегда; снапшот/цикл идут через НЕГО (реальный
+    # git), а не через fallback-имитацию. Фолбэк на _FallbackSleepGit остаётся
+    # только при --simulate или если модуль физически отсутствует (не бывает).
     if not mods["M6"]:
-        sg = _FallbackSleepGit(repo_root=str(REPO_ROOT))
+        sg = _FallbackSleepGit(repo_root=str(REPO_ROOT), target=sleep_target)
     else:
-        sg = mods["M6"].SleepGit(repo_root=str(REPO_ROOT), dry_run=False)
+        sg = sg_real  # реальный SleepGit (уже создан для guard)
     hp_reg = mods["M9"] if mods["M9"] else None
     enh = mods["M10"] if mods["M10"] else _FallbackEnhancers()
     ss = mods["M5"] if mods["M5"] else _FallbackSessionSync()
@@ -350,15 +391,13 @@ def run_sleep_cycle(task_id: str, branches: List[str], baseline: bool = True,
                       "simulated": mods["M7"] is None, "ok": True,
                       "task_id": task_id, "branches": len(branches)})
 
-    # --- 2. M6: полный git-цикл сна ----------------------------------------
-    if mods["M6"]:
-        sg.snapshot_baseline(task_id)
-    else:
-        sg.snapshot_baseline(task_id)
+    # --- 2. M6: полный git-цикл сна (realный SleepGit, guard уже пройден) ---
+    sg.snapshot_baseline(task_id)
     created = sg.create_sleep_branches(branches, task_id)
     steps.append({"step": "m6_snapshot_branches", "module": "M6",
                   "simulated": mods["M6"] is None, "ok": True,
-                  "branches": [c["branch"] for c in created]})
+                  "branches": [c["branch"] for c in created],
+                  "target": sleep_target})
 
     executed: List[dict] = []
     for c in created:
@@ -369,16 +408,28 @@ def run_sleep_cycle(task_id: str, branches: List[str], baseline: bool = True,
         executed.append(res)
 
     ok_branches = [e["branch"] for e in executed if e["status"] == "ok"]
-    merged = sg.merge_branches(ok_branches, target="main") if ok_branches else []
+    # W13-r2 (TD-W13-3): target больше НЕ хардкод "main" — стабильная ветка
+    # репо (master > develop > main) либо явный --target.
+    merged = (sg.merge_branches(ok_branches, target=sleep_target)
+              if ok_branches else [])
     merged_ok = [m["branch"] for m in merged if m["status"] == "ok"]
     try:
         restored = sg.restore_baseline(task_id, keep_failed=True)
     except Exception as exc:  # noqa: BLE001 — restore не блокирует отчёт
         restored = {"restored_to": None, "error": str(exc)}
     report = sg.report()
+    # W13-T3: отчёт сна -> .runs/sleep_reports/<task>.json (+ уроки конфликтов
+    # в .l2_memory и .runs/sleep_reports/conflicts_<date>.json)
+    try:
+        report_path = sg.write_report(task_id)
+    except Exception as exc:  # noqa: BLE001 — запись отчёта не роняет цикл
+        report_path = None
+        steps.append({"step": "m6_report_write_error", "module": "M6",
+                      "simulated": False, "ok": False, "error": str(exc)})
     steps.append({"step": "m6_merge_restore", "module": "M6",
                   "simulated": mods["M6"] is None, "ok": True,
-                  "merged": merged_ok, "restored": restored.get("restored_to")})
+                  "merged": merged_ok, "restored": restored.get("restored_to"),
+                  "report_path": report_path})
 
     # --- 3. M7: mark_branch + close_sleep ------------------------------------
     if baseline:
@@ -429,7 +480,7 @@ def run_sleep_cycle(task_id: str, branches: List[str], baseline: bool = True,
             for d in deltas:
                 payload = dict(d)
                 payload["no_commit"] = no_git
-                res = ss.commit_delta(payload, branch="main")
+                res = ss.commit_delta(payload, branch=sleep_target)
                 audit = (ss.audit_delta(res["delta_path"])
                          if res.get("delta_path") else {"findings": [], "count": 0})
                 results.append({"session_id": d["session_id"],
@@ -471,6 +522,11 @@ def run_sleep_cycle(task_id: str, branches: List[str], baseline: bool = True,
                       "status": monte_carlo.get("status")})
 
     # --- отчёт -----------------------------------------------------------------
+    # W13-r2 (TD-W13-2): честное разделение симуляции. git-цикл реальный
+    # (simulated_git=False — модуль sleep_git в checkout, сон гитируется);
+    # модули M7/M8/M9/M10 могут быть simulated (simulated_modules=True) при
+    # недоступности в checkout. Топ-левел simulated=False, т.к. фактические
+    # git-операции реальны; sleep_report_check требует const False.
     return {
         "task_id": task_id,
         "baseline": (tracker_reg or {}).get("baseline_commit") if baseline else None,
@@ -483,7 +539,13 @@ def run_sleep_cycle(task_id: str, branches: List[str], baseline: bool = True,
         "session_sync": session_sync,
         "monte_carlo": monte_carlo,
         "steps": steps,
-        "simulated": simulated_any,
+        "target": sleep_target,
+        "simulated_git": mods["M6"] is None,
+        "simulated_modules": any(m is None for m in
+                                 (mods["M7"], mods["M8"], mods["M9"],
+                                  mods["M10"], mods["M5"])),
+        "simulated": False,
+        "report_path": report_path,
         "ts": _now_iso(),
     }
 
@@ -738,6 +800,8 @@ def _parse_stats(raw: Optional[str]) -> Dict[str, int]:
 
 
 def _cmd_cycle(args: argparse.Namespace) -> int:
+    if not args.task:
+        raise SystemExit("cycle: требуется --task <id> или --task-id <id>")
     branches = [b.strip() for b in args.branches.split(",") if b.strip()]
     result = run_sleep_cycle(
         task_id=args.task, branches=branches, baseline=not args.no_baseline,
@@ -745,7 +809,8 @@ def _cmd_cycle(args: argparse.Namespace) -> int:
         orchestrator=args.orchestrator, artifact_path=args.artifact,
         no_git=args.no_git, session_dir=args.session_dir,
         since_minutes=args.since_minutes, run_monte_carlo=args.monte_carlo,
-        simulate=args.simulate)
+        simulate=args.simulate, target=args.target,
+        check_clean=not args.no_clean_check)
     print(json.dumps(result, ensure_ascii=False, indent=2))
     return 0
 
@@ -783,7 +848,11 @@ def main(argv: Optional[List[str]] = None) -> int:
     sub = parser.add_subparsers(dest="command", required=True)
 
     p_cycle = sub.add_parser("cycle", help="полный цикл сна M5-M10")
-    p_cycle.add_argument("--task", required=True, help="task_id")
+    p_cycle.add_argument("--task", dest="task", default=None,
+                         help="task_id (== --task-id, совместимость с миграцией "
+                              "meta_nightly.cmd на --task-id)")
+    p_cycle.add_argument("--task-id", dest="task", default=None,
+                         help="task_id ночного сна (напр. nightly-20261011)")
     p_cycle.add_argument("--branches", required=True,
                          help="ветки через запятую: fix/A,fix/B")
     p_cycle.add_argument("--hp", type=float, default=100.0, help="HP до сна")
@@ -802,6 +871,12 @@ def main(argv: Optional[List[str]] = None) -> int:
                          help="M5: окно свежести сессий")
     p_cycle.add_argument("--monte-carlo", action="store_true",
                          help="добавить M8 Monte-Carlo прогноз в отчёт")
+    p_cycle.add_argument("--target", default=None,
+                         help="ветка merge снов (по умолчанию стабильная: "
+                              "master/develop/main, НЕ feature)")
+    p_cycle.add_argument("--no-clean-check", action="store_true",
+                         help="отключить P-CRIT-5 guard чистоты дерева "
+                              "(не рекомендуется)")
     p_cycle.add_argument("--simulate", action="store_true",
                          help="принудительно имитировать все модули M5-M10")
     p_cycle.set_defaults(fn=_cmd_cycle)
