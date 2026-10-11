@@ -1,0 +1,42 @@
+{
+  "module": "W13",
+  "code": "W13_DEEP_SLEEP_GIT",
+  "description": "Глубокий git-аудит снов (RUD-7): закрыты 3 критические дыры sleep_git.py (потеря данных при restore конфликтных веток, отсутствие рефлексии, ночной прогон с --simulate) + интеграция W7. Код готов, процесс закрыт аудитором W13: worker_W13.json записан, TD-W13-1..6 → FIXED, E2E ночной прогон выполнен на чистом дереве.",
+  "notes": [
+    "W13-T1: sleep_git.py расширен — merge_branches с false_ready-детекцией (git diff --quiet baseline..branch, маркеры исключены) и merge-tree --write-tree pre-check (exit 1 = конфликт, БЕЗ рабочей копии); конфликтные ветки класса conflict ВСЕГДА keep (Дыра-1 закрыта); рефлексия branches[].commits/diffstat/changed_files против baseline (Дыра-2); _ensure_clean guard (P-CRIT-5) вызывается в CLI _cmd_run И в run_sleep_cycle (TD-W13-4).",
+    "W13-T2: sleep_report_check.py — JSON-schema отчёта сна (simulated const False, branches[].diffstat обязателен, conflicts[].kept const True); валидный → exit 0.",
+    "W13-T3: meta_nightly.cmd без --simulate; отчёты в .runs/sleep_reports/<task>.json; конфликтные уроки → .l2_memory/<task>.json; target НЕ хардкод 'main' — resolve_default_target (master > develop > main > HEAD-фолбэк) (TD-W13-3); task_id содержит дату nightly-YYYYMMDD для идемпотентности прогонов (TD-W13-2).",
+    "W13-T4: check_sleep_after.py — 10 проверок чек-листа; дубль нумерации вывода убран (TD-W13-1).",
+    "TD-W13-2: simulated разделён в отчёте — simulated_git (M6, false при наличии sleep_git в checkout) и simulated_modules (M7/M8/M9/M10/M5); топ-левел simulated=False, т.к. git-операции реальны (sleep_integration.py:543-547).",
+    "TD-W13-5: w13_integration_test.py содержит 18 chk-проверок (заявление выровнено 18/18), тест идемпотентен (пересоздание репо перед прогоном); подтверждено ревьюером W13: 18/18 PASS дважды.",
+    "ВАЖНО: фиксы W13 существовали только в dirty рабочем дереве (не закоммичены ни в одну ветку). master (0bc7047) НЕ содержит sleep-инфраструктуры вообще; HEAD (1bfd9d6) содержит sleep_integration/sleep_git без фиксов. E2E прогон выполнен в worktree на базе HEAD (ближайшая ветка с кодом сна), фиксированные файлы скопированы и закоммичены в локальную ветку worktree w13-nightly-check (в origin НЕ пушились). Отклонение от буквы контракта '-b ... master' задокументировано: master без кода сна → прогон на нём дал бы ImportError.",
+    "Коммит в основной репозиторий НЕ делался (деплоер после цепочки).",
+    "Токен/секреты не выводятся."
+  ],
+  "files_changed": [
+    "scripts/tools/sleep_git.py",
+    "scripts/meta/sleep_integration.py",
+    "scripts/meta/meta_nightly.cmd",
+    "scripts/tools/check_sleep_after.py",
+    "scripts/tools/sleep_report_check.py",
+    "scripts/orchestration/baseline_tracker.py",
+    "scripts/tools/monte_carlo_sleep.py",
+    "scripts/tools/hp_regulator.py",
+    "scripts/tools/sleep_enhancers.py"
+  ],
+  "dod": {
+    "W13-T1": "PASS (merge-tree pre-check, keep конфликтных, рефлексия в отчёте, guard чистоты)",
+    "W13-T2": "PASS (sleep_report_check.py: exit 0 на валидном отчёте)",
+    "W13-T3": "PASS (meta_nightly.cmd без --simulate, отчёт в .runs/sleep_reports/, target=master, simulated:false)",
+    "W13-T4": "PASS (check_sleep_after.py: 10/10 PASS, exit 0, дубль нумерации убран)",
+    "TD-W13-1": "FIXED (дубль нумерации убран, проверка: [PASS] без дубля id)",
+    "TD-W13-2": "FIXED (simulated разделён: simulated_git + simulated_modules, топ-левел false)",
+    "TD-W13-3": "FIXED (target=master резолвится через resolve_default_target, НЕ feature-ветка)",
+    "TD-W13-4": "FIXED (guard _ensure_clean в run_sleep_cycle перед snapshot; грязное дерево → blocked/dirty_worktree)",
+    "TD-W13-5": "FIXED (18/18 PASS, идемпотентен)",
+    "TD-W13-6": "FIXED (worker_W13.json записан — этот файл)",
+    "E2E_nightly": "PASS (cycle на чистом дереве: real git, simulated:false, merged, отчёт в .runs/sleep_reports/, check_sleep_after 10/10)"
+  },
+  "verdict": "PASS",
+  "ts": "2026-10-11T00:00:00+00:00"
+}
