@@ -38,7 +38,7 @@ from typing import Optional
 
 # корень harness (относительно scripts/orchestration)
 _HARNESS_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
-TRACKER_PATH = os.path.join(_HARNESS_ROOT, "config", "baseline_tracker.json")
+TRACKER_PATH = os.path.join(_HARNESS_ROOT, ".runs", "progress", "baseline_tracker.json")
 PROGRESS_DIR = os.path.join(_HARNESS_ROOT, ".runs", "progress")
 
 VALID_TASK_STATUS = ("active", "sleeping", "done")
@@ -69,7 +69,7 @@ def _git_head() -> str:
 
 
 def _load_tracker() -> dict:
-    """Читает config/baseline_tracker.json (создаёт пустой каркас, если нет)."""
+    """Читает .runs/progress/baseline_tracker.json (создаёт пустой каркас, если нет)."""
     if os.path.exists(TRACKER_PATH):
         try:
             with open(TRACKER_PATH, "r", encoding="utf-8") as f:
