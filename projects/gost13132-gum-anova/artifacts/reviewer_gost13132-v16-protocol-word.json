@@ -1,0 +1,102 @@
+{
+  "module": "gost13132-v16-protocol-word",
+  "version": 2,
+  "iteration": 2,
+  "verdict": "APPROVE",
+  "summary": "Итерация 2 после REQUEST_CHANGES: все 3 находки 1-й итерации закрыты фактически. LIVE-книга восстановлена (chart3 s2 xVal/yVal на одном листе), check_live_recalc.py исправлен и даёт ИТОГ PASS, Word-отчёт открывается и числа совпадают с ядром. verify PASS=113/FAIL=0, pytest 20 passed.",
+  "findings_closed": [
+    {
+      "id": 1,
+      "severity": "critical",
+      "description": "chart3 s2 xVal/yVal на разных листах",
+      "status": "CLOSED",
+      "evidence": "openpyxl data_only=False: chart3 ser2 xVal.f='02_Регрессия'!$A$39:$A$50, yVal.f='02_Регрессия'!$G$39:$G$50 — оба на листе 02_Регрессия. Также проверены все 9 серий 3 диаграмм: все xVal/yVal на одном листе (chart1 ser1-4: A/B, A/C, A/F, A/E; chart2 ser1-3: B/E, B/H, K/L на 04_Профиль; chart3 ser1-2: A/D, A/G). Verify V7/V8c PASS."
+    },
+    {
+      "id": 2,
+      "severity": "major",
+      "description": "check_live_recalc.py устаревшие REF и float(Array) TypeError",
+      "status": "CLOSED",
+      "evidence": "REF обновлены: B19=X0, B20=w, B25=U, 02_Регрессия!B10=a(SLOPE), B15=R²(RSQ). float(np.asarray(val).reshape(-1)[0]) — корректно. Запуск: ИТОГ PASS (5/5), EXIT=0."
+    },
+    {
+      "id": 3,
+      "severity": "minor",
+      "description": "docx заблокирован открытым Word (PermissionError)",
+      "status": "CLOSED",
+      "evidence": "python-docx открыл EN13132_v16_Отчёт.docx (22 параграфа, 8 таблиц, разделы 1-9). Файл 41609 б, mtime 12.10.2026 20:00:55. Word не держит файл."
+    }
+  ],
+  "checks": [
+    {
+      "check": "LIVE chart3 s2 (линия нуля): xVal и yVal на одном листе",
+      "command": "python -c openpyxl parse numRef.f",
+      "expected": "chart3 ser2: xVal='02_Регрессия'!$A$39:$A$50, yVal='02_Регрессия'!$G$39:$G$50 (один лист)",
+      "fact": "xVal.f='02_Регрессия'!$A$39:$A$50, yVal.f='02_Регрессия'!$G$39:$G$50",
+      "result": "PASS"
+    },
+    {
+      "check": "LIVE все серии всех 3 ScatterChart на одном листе",
+      "command": "python -c openpyxl ws['Графики']._charts",
+      "expected": "3 ScatterChart, все серии консистентны",
+      "fact": "chart1: 4 сер (A/B,A/C,A/F,A/E); chart2: 3 сер (B/E,B/H,K/L); chart3: 2 сер (A/D,A/G) — все xVal/yVal на одном листе",
+      "result": "PASS"
+    },
+    {
+      "check": "06_Итог B19/X0, B20/w, B22/u_c, B25/U — формулы (не числа)",
+      "command": "python -c openpyxl data_only=False",
+      "expected": "B19=IF(...'01_Ввод'!$B$23...), B20=B19*B3, B22='05_Бюджет'!$B$11, B25='05_Бюджет'!$B$14",
+      "fact": "B19='=IF(ISNUMBER('02_Регрессия'!$B$10),('01_Ввод'!$B$23-'02_Регрессия'!$B$11)/'02_Регрессия'!$B$10,NA())'; B20='=IF(ISNUMBER(B19),B19*$B$3,\"\")'; B22='=05_Бюджет!$B$11'; B25='=05_Бюджет!$B$14'; B15='=01_Ввод!$B$27'. 05_Бюджет!B11='=SQRT(SUMSQ(B4:B8))', B14='=B13*B11'",
+      "result": "PASS"
+    },
+    {
+      "check": "04_Профиль: 200 формул =G*E в столбце H",
+      "command": "python -c openpyxl iter_rows H5:H204",
+      "expected": "200 формул '=G*E'",
+      "fact": "200 формул =G5*E5 ... =G204*E204 (примеры H5='=G5*E5', H6='=G6*E6')",
+      "result": "PASS"
+    },
+    {
+      "check": "check_live_recalc.py — ИТОГ PASS",
+      "command": "python check_live_recalc.py",
+      "expected": "ИТОГ: PASS, EXIT=0",
+      "fact": "[PASS] B19=0.9966249517, B20=3.966567308, B25=0.08619684584, B10=0.9609977574, B15=0.9997401717; ИТОГ: PASS; EXIT=0",
+      "result": "PASS"
+    },
+    {
+      "check": "verify_en13132_v16_charts.py",
+      "command": "python verify_en13132_v16_charts.py",
+      "expected": "PASS=113, FAIL=0",
+      "fact": "PASS=113, FAIL=0; EXIT=0 (включая V7, V8a-d, V8c 9 серий на одном листе, V2j H=G*E живые формулы)",
+      "result": "PASS"
+    },
+    {
+      "check": "pytest test_anova_gum.py",
+      "command": "python -m pytest test_anova_gum.py -q",
+      "expected": "20 passed",
+      "fact": "20 passed in 1.59s; EXIT=0",
+      "result": "PASS"
+    },
+    {
+      "check": "Word-отчёт открывается python-docx",
+      "command": "python -c from docx import Document",
+      "expected": "документ открывается, разделы 1-10",
+      "fact": "OK: 22 параграфа, 8 таблиц; разделы: 1.Идентификация, 2.Параметры калибровки, 3.Таблица калибровки, 4.ANOVA, 5.Бюджет, 6.Результат, 7.Профиль, 8.Примечания, 9.Подписи (нумерация контента 1-9, раздел 10=подписи под номером 9)",
+      "result": "PASS"
+    },
+    {
+      "check": "Word-отчёт: числа == ядро (a,b,R²,σr,σL,u_repr,u_c,ν_eff,k,U,w)",
+      "command": "python-docx извлечение текста + сверка с REFS ядра",
+      "expected": "совпадение rtol=1e-3",
+      "fact": "a=0,960998; b=0,036203; R²=0,999740; σr=0,020596; σR=0,160117; σL=0,154306; u_repr=0,155674; u_c=0,0435316 (этал. 0,043532); ν_eff=119,04; k=1,9801; U=0,0861966 (этал. 0,086197); U_pct=0,3431; w0=3,967; X0=0,996625. Отклонение u_c/U — только из-за форматирования fnum(n=7): 0,0435316 vs 0,043532 и 0,0861966 vs 0,086197 — в пределах rtol=1e-3",
+      "result": "PASS"
+    }
+  ],
+  "tech_debt": [
+    "ПРИМЕЧАНИЕ (не новый TD): форматирование u_c и U(г/г) в Word с точностью 7 знаков даёт 0,0435316 и 0,0861966 — визуально отличается от эталонов 0,043532/0,086197, хотя численно в rtol. Существующий артефакт форматирования, не требует регистрации."
+  ],
+  "comments": [],
+  "escape_hatch": [
+    "Расхождений, требующих REQUEST_CHANGES/REJECT, не обнаружено. Все 3 находки итерации 1 закрыты. Признак ложного APPROVE: если бы chart3 s2 снова ссылался на 'Графики'!H4:H15 (разные листы) или check_live_recalc давал FAIL — вердикт был бы REQUEST_CHANGES. Указанных наблюдаемых событий не произошло."
+  ]
+}

@@ -1,0 +1,91 @@
+{
+  "role": "observer-tester",
+  "project_id": "harness-metaview-test",
+  "base_task_anchor": "разработка harness (контракты 00-20)",
+  "test_material": "gost13132-gum-anova (артефакты цикла)",
+  "chain_of_actions": [
+    "прочитал якорь base-task-capsule.md (отдельная сессия: я тестирую фабрику, задача ГОСТ — материал)",
+    "прочитал README/config.env проекта gost13132-gum-anova (шаблон 10 §9, PROJECT_ARTIFACTS)",
+    "прочитал мета-аудит: reviewer_gost13132-E2E-test.json (гейты P1-P6, TD-FACTORY-1..6, REQUEST_CHANGES)",
+    "прочитал auditor_gost13132-E2E-test.json (перепроверка ревьюера, verified_by_commands есть, REQUEST_CHANGES)",
+    "прочитал deployer_gost13132-E2E.json (DEPLOYED, commit cd6a6e7) — НОВОЕ с момента мета-аудита",
+    "проверил факты git: ls-files/status/log — проект закоммичен (2 коммита), P2 закрыт ремедиацией",
+    "проверил grep audit_mode по всем auditor_*.json — только у E2E-аудитора; блоковые 1-4 без поля (P3 не закрыт)",
+    "проверил grep verified_by_commands по всем JSON — только у E2E-аудитора (P4 не закрыт)",
+    "прочитал diff reviewer блока 4 (re-медиация: version 3, 11 what_was_checked, отметка об оркестраторе удалена)",
+    "прочитал worker блока 6 (protocol-word, APPROVE-READY) — блок 6 начат, цикл не замкнут (untracked)",
+    "прочитал planner-discovery (input_level: по-прежнему 'level', не 'input_level' — P5 не закрыт)",
+    "прочитал auditor/reviewer/worker блока 3 (образцовый цикл: RC->фикс->APPROVE, iteration 2<=3)",
+    "прочитал auditor блока 4 (3 итерации=лимит 3, TD-DEV-206/207 CLOSED, 208 OPEN, 209 новый)",
+    "прочитал verify_en13132_v16_charts.py (V7/V8c same-sheet, V8d numeric; value-level X-check ОТСУТСТВУЕТ — TD-FACTORY-1 не закрыт)",
+    "проверил регистрацию TD-FACTORY-1..6 в docs/PROBLEMS_REGISTER.md (присутствуют, OPEN)",
+    "проверил tech_debt.md проекта (пустая заглушка сохранена — TD проблема не решена)"
+  ],
+  "leakage_detectors_fired": [
+    "D1 (пути каллибровки в контексте): читал C:\\Users\\Arhys\\Desktop\\каллибровка\\ГОСТ EN 13132\\v16\\verify_en13132_v16_charts.py и Desktop-реестр — read-only, не изменял",
+    "D5 (числа ГОСТ в контексте): u_c, ν_eff, k, U, X0 подцепились как СВИДЕТЕЛЬСТВА согласованности цикла (я читал их в артефактах), но НЕ пересчитывал и не проверял методологию",
+    "нет дрейфа в задачу: ни одного расчёта/правки файлов каллибровки/оценки ANOVA НЕ выполнял"
+  ],
+  "verdict": "ON_BASE_TASK",
+  "observations": [
+    {
+      "block": "мета-уровень E2E",
+      "how_factory_used": "Контракт 10 §3 (аудитор перепроверяет ревьюера), гейты P1-P6 (06/10/14/18), adversarial-critic-checklist, findings_escape_hatch уровни 1-3, no_false_reports. Мета-аудит (reviewer+auditor E2E) поймал системные разрывы и зарегистрировал TD-FACTORY-1..6 по 05 §1.",
+      "correct": true,
+      "works": true,
+      "issue": "Мета-аудит реален и фальсифицируем (каждое замечание с командой проверки), но его собственный verdict REQUEST_CHANGES остался без докрутки: аудитор E2E сам содержит audit_mode+verified_by_commands, которые требовал от остальных — двойной стандарт гейтов."
+    },
+    {
+      "block": "цикл блок 3 (ядро anova_gum)",
+      "how_factory_used": "P1 полностью: worker v1 -> reviewer v1 REQUEST_CHANGES (TD-DEV-200/201/202) -> worker v2 -> reviewer v2 APPROVE (перезапуск 16/16 тестов) -> auditor APPROVE (повторные фальсификации). Iteration 2<=3 (13 §2 эскалация не нужна). TD закрытие по 05: нашедший (ревьюер) регистрирует, закрытие за аудитором.",
+      "correct": true,
+      "works": true,
+      "issue": "Образцовый цикл. Мелкая придирка: воркер в артефакте v2 заявлял 'TD ЗАКРЫТЫ' преждевременно (закрытие — за аудитором/деплоером); замечание зафиксировано аудитором как level 1 — процесс сам себя поправил."
+    },
+    {
+      "block": "цикл блок 4 (книга+профиль+графики)",
+      "how_factory_used": "P1 с полным пере-ревью: worker v1 -> RC v1 (графики) -> v2 -> RC v2 (TD-DEV-206/207) -> v3 -> reviewer v3 APPROVE (11 what_was_checked, независимый пересчёт из книги) -> auditor APPROVE (iter.3=лимит 3). TD-DEV-206/207 CLOSED, 208 OPEN (REQUIRES_USER_DECISION), 209 новый. Ремедиация подмены звена: reviewer перезаписан как подлинное ревью (отметка 'записан оркестратором' удалена).",
+      "correct": true,
+      "works": true,
+      "issue": "Цикл работает, но закрытие блока наступило ровно на лимите итераций (3/3) — следующее замечание потребовало бы эскалации. TD воркера (TD-1..6) НЕ попали в реестр от воркера/reviewer; только аудитор зафиксировал новое (TD-DEV-209). 05 §1 на уровне проекта не enforced."
+    },
+    {
+      "block": "цикл блок 6 (Word-отчёт)",
+      "how_factory_used": "worker блока 6 начат (APPROVE-READY, 18/18 selfcheck, C1-C6, findings 1-3): фабрика продвинула PILOT. Word-файл построен, но reviewer/auditor/deployer для блока 6 НЕ созданы, файл untracked (M-дерево).",
+      "correct": true,
+      "works": false,
+      "issue": "Блок 6 начат вне полного цикла: артефакт воркера не закоммичен, цепочка ревью/аудит/деплой отсутствует — тот же паттерн, что мета-аудит ловил как P2/CYCLE-1 (APPROVE-READY без деплоя). Цикл снова не замыкается на текущем шаге."
+    },
+    {
+      "block": "гейты P2/P3/P4/P5 (формальные)",
+      "how_factory_used": "P2 закрыт ремедиацией: 2 коммита (cd6a6e7 деплой, 6c20952 фиксация хеша), deployer DEPLOYED в git — контракт 06 §4.14 начал работать. P3: audit_mode добавлен ТОЛЬКО в E2E-аудитора; 4 блоковых аудитора (1-4) по-прежнему без контрактного поля (mode/audit_type неконтрактны). P4: verified_by_commands — только у E2E-аудитора, ни у одного reviewer/auditor блоков. P5: planner по-прежнему level:'L4' внутри section_1, top-level input_level отсутствует.",
+      "correct": false,
+      "works": false,
+      "issue": "Гейты описаны в контрактах (00-20, коммит b77c0ae), но НЕ enforced кодом: contract_validator не проверяет audit_mode/verified_by_commands/input_level на уровне factory_ctl. P2 закрыт постфактум (только после catch мета-аудитом), P3/P4/P5 живут дальше без поля. TD-FACTORY-2/3/6 остаются OPEN."
+    },
+    {
+      "block": "верификатор (value-level X-check)",
+      "how_factory_used": "verify_en13132_v16_charts.py проверяет V7/V8c (xVal/yVal на одном листе), V8d (числовые диапазоны), V3q/V3r (200 точек, U(Итог)==D4) — структурные проверки ссылок. Value-level сверки ЧИСЛОВЫХ значений X-серий с эталонной сеткой (X≠1..N, шаг сетки) как был нет — так и осталось.",
+      "correct": true,
+      "works": false,
+      "issue": "TD-FACTORY-1 (HIGH) НЕ закрыт: превентивного гейта 'X-категории оси != 1..N' в верификаторе нет. Excel-баг X→1..N проскочил бы и сейчас. Зарегистрирован в docs реестре OPEN, но не исправлен — ждёт блока 5."
+    }
+  ],
+  "findings_escape_hatch": [
+    {"level": 1, "what": "Записал только observer_metaview-test.json. Числа ГОСТ читал как свидетельства цикла, НЕ пересчитывал. Файлы каллибровки не правил. Ничего не коммитил.", "action": "артефакт observer записан; иных изменений нет"},
+    {"level": 2, "what": "Зафиксированы незакрытые TD-FACTORY: TD-FACTORY-1 (value-level X-check, OPEN), TD-FACTORY-2 (audit_mode не enforced, OPEN), TD-FACTORY-3 (verified_by_commands не enforced, OPEN), TD-FACTORY-6 (input_level, OPEN). Закрыты практикой: TD-FACTORY-4 (P2 деплой сделан, но стоп-критерий кодом не введён), TD-FACTORY-5 (подмена звена ремедиирована перезаписью reviewer, но written_by/код-сверка не введены).", "action": "передать оркестратору: запрет блоков вне цикла (блок 6 не замкнут), код-валидатор контрактных полей, value-level X-check, запрет двойного стандарта гейтов"},
+    {"level": 3, "what": "ESCALATED: (1) цикл снова не замыкается текущим шагом — worker блока 6 APPROVE-READY без reviewer/auditor/deployer/коммита; (2) контрактные поля P3/P4/P5 не enforced кодом — гейты формальны; (3) TD-FACTORY-1 (value-level X-check) не исправлен до сих пор; (4) двойной реестр (TD-DEV-184) не решён — проектные TD-1..6 воркера блока 4 не в docs-реестре.", "action": "эскалация на оркестратора фабрики: приоритет — код-эnforcement гейтов и замыкание блока 6"}
+  ],
+  "self_check_log": [
+    {"step": 1, "state": "ON_BASE_TASK", "note": "прочитал якорь; роль ясна: тестирую фабрику, не ГОСТ"},
+    {"step": 10, "state": "ON_BASE_TASK", "note": "self-check: числа u_c/k/U в контексте — как факты цикла, не пересчитывал; дрейфа нет"},
+    {"step": 14, "state": "ON_BASE_TASK", "note": "self-check: проверил P2/P3/P4 ремедиацию — начал тянуться к подробностям ГОСТ-методики (smooth vs step u_repr); вернулся к якорю: интересуюсь только как гейты работают"},
+    {"step": 20, "state": "ON_BASE_TASK", "note": "self-check: снова прочитал TD-1..6/уrepr — это материал цикла; фиксирую как наблюдение 'TD не в реестре', не как методологию"},
+    {"step": 26, "state": "ON_BASE_TASK", "note": "финал: вывод по фабрике готов (гейты частично не enforced, блок 6 не замкнут); писал только observer"}
+  ],
+  "what_leaked_into_context": [
+    "пути и содержимое каллибровки (Desktop/ГОСТ EN 13132/v16) — из мета-аудита и чтения domain-файлов: u_c=0.04353, ν_eff=119.04, k=1.9801, U=0.0862 г/г, X0=0.9966 — прочитаны как артефакты, НЕ пересчитаны и не проверены",
+    "методология GUM/ANOVA (smooth vs step u_repr, анти-двойной счёт, Welch-Satterthwaite) — присутствует в контексте как материал цикла, НЕ оценивалась",
+    "дрейф НЕ зафиксирован: ни один артефакт ГОСТ не создан, файлы каллибровки read-only, отчёт = только проверка фабрики"
+  ]
+}
