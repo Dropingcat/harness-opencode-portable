@@ -1,0 +1,262 @@
+{
+  "version": "E2E-тест отработки фабрики",
+  "module": "gost13132-E2E-test",
+  "role": "code-reviewer",
+  "project_id": "gost13132-gum-anova",
+  "review_type": "МЕТА-АУДИТ ОТРАБОТКИ ЦИКЛА (уточняющий курс; ревьюится E2E-тест фабрики, НЕ ГОСТ-методика)",
+  "date": "2026-10-12",
+  "verdict": "REQUEST_CHANGES",
+
+  "baseline_note": "Ревьюится КАК отработал цикл фабрики (контракты 05/06/10/13/14/17/18/19, gates P1-P6), НЕ ЧТО в задаче. Числа ГОСТ EN 13132/GUM/ANOVA не пересчитываются — они за детерминированным numeric_comparator (код-арбитр, 19 §5). Параллельная сессия gost13132-gum-anova = E2E-тест фабрики; её результат = состояние цикла.",
+
+  "section_0_checked_doubtful": [
+    {
+      "what": "Гейт P2 (деплой после APPROVE) — реально ли закоммичены артефакты цикла",
+      "how": "git status --short projects/gost13132-gum-anova; git ls-files projects/gost13132-gum-anova; git log -- projects/gost13132-gum-anova; Get-ChildItem -Recurse -Filter deployer_*.json",
+      "result": "FAIL. Каталог проекта = '?? projects/gost13132-gum-anova/' (untracked), git ls-files = пусто, git log по пути = пусто. deployer_*.json в дереве НЕ найдено НИ ОДНОГО. 3×APPROVE (блоки 2/3/4) при 0 коммитах проекта."
+    },
+    {
+      "what": "Гейт P3 — наличие поля audit_mode в auditor_*.json (контракт 14 §3)",
+      "how": "Select-String -Path artifacts/*.json -Pattern audit_mode",
+      "result": "FAIL. 0 совпадений во всех 4 auditor-артефактах. Есть 'mode':'A (in-cycle)' (блок 3), 'audit_type':'in-cycle, iteration 3' (блок 4), у блока 2 поля режима нет вовсе. Контрактного поля audit_mode нет."
+    },
+    {
+      "what": "Гейт P4 — наличие секции verified_by_commands в reviewer_*/auditor_*.json (контракт 10 §2/§3)",
+      "how": "Select-String -Path artifacts/*.json -Pattern verified_by_commands",
+      "result": "FAIL. 0 совпадений. Содержательно команды есть (reviewer блока 3 'tests_executed.command', auditor блока 4 'section_0_07_vyedlivost'), но контрактного поля verified_by_commands нет ни у одного звена."
+    },
+    {
+      "what": "Гейт P5 — поле input_level в planner-discovery (контракт 18)",
+      "how": "read planner_gost13132-discovery.json",
+      "result": "PARTIAL. Уровень зафиксирован ('section_1_input_level_and_pipeline' → 'level':'L4' + level_evidence), но под ключом 'level', а не контрактным 'input_level'. Значение L4 корректно, имя поля не соответствует P5."
+    },
+    {
+      "what": "Гейт P1 — пере-ревью фиксов после REQUEST_CHANGES и подлинность вердиктов",
+      "how": "read reviewer-артефактов блоков 3/4",
+      "result": "PARTIAL. Блок 3: reviewer v2 APPROVE после REQUEST_CHANGES v1 — пере-ревью выполнено (16/16 pytest перезапущен). Блок 4: reviewer 'version 2, ПОВТОРНОЕ ревью' APPROVE, НО в notes (стр.51) прямо: 'артефакт записан оркестратором после лимита шагов ревьюера' — вердикт синтезирован НЕ ревьюером."
+    },
+    {
+      "what": "Гейт P6 — стадии DISCOVERY→PLANNING→PILOT→PRODUCTION",
+      "how": "read planner_gost13132-discovery.json section_3_stages_17_plan",
+      "result": "PARTIAL. DISCOVERY=ВЫПОЛНЕНА, PLANNING=ВЫПОЛНЕНА, PILOT=В ПРОЦЕССЕ, PRODUCTION=НЕ НАЧАТА. Переход PILOT→PRODUCTION не пройден (блоки 5/6 не начаты, деплоя нет)."
+    },
+    {
+      "what": "Наличие аудитора A блока 4 (мета-аудит утверждал: отсутствует)",
+      "how": "read auditor_gost13132-v16-xlsx-profile-uc.json",
+      "result": "PASS (ремедиация). Аудитор блока 4 существует, date 2026-10-12, iteration 3, APPROVE. В planner (2026-10-11) зафиксировано 'аудитор A блока 4 ОТСУТСТВУЕТ' — между мета-аудитом и сейчас аудитор добавлен. Гейт закрыт."
+    },
+    {
+      "what": "Верификатор ловит ли рассинхрон X/Y серий диаграмм (Excel-баг X→1..N)",
+      "how": "read verify_en13132_v16_charts.py; фактический разбор ссылок серий книги",
+      "result": "ЧАСТИЧНО. V7 (стр.132-153) проверяет, что xVal и yVal КАЖДОЙ серии на ОДНОМ листе — это структурная защита от X→1..N. НО value-level проверки X-серий нет: ни одна проверка не сверяет, что числовые значения X-серии равны ожидаемой сетке (не последовательности 1..N) и что шаг сетки корректен. V2d/V2h/V2m проверяют только min_col/min_row/max_row."
+    },
+    {
+      "what": "TD-дисциплина (05): статусы TD-DEV-206/207/208 и TD воркера блока 4",
+      "how": "Select-String по docs/PROBLEMS_REGISTER.md и Desktop PROBLEMS_REGISTER.md; read worker-артефакта блока 4",
+      "result": "206/207 CLOSED (Desktop-реестр, стр.232-233, основание: код+тесты+ревью+аудит iter.3); 208 OPEN (REQUIRES_USER_DECISION). НО: TD-DEV-206/207/208 отсутствуют в docs/PROBLEMS_REGISTER.md (0 хитов) — только в Desktop-реестре; TD-1..TD-6 воркера блока 4 (Word v16, σL смешение шкал, u_rel эталонов и пр.) в реестр НЕ внесены (grep TD-1:..TD-6: = 0 хитов)."
+    }
+  ],
+
+  "section_1_cycle_gates": {
+    "P1_re_review_and_auditor_per_block": {
+      "fact": "Блок 1: worker→reviewer→auditor ✅. Блок 2: analyst→researcher→reviewer→auditor ✅ (пере-ревью 6 правок R-01..R-06). Блок 3: worker v1→reviewer v1 REQUEST_CHANGES→worker v2→reviewer v2 APPROVE→auditor ✅. Блок 4: worker iter.1/2→reviewer REQUEST_CHANGES→worker v3→reviewer APPROVE→auditor ✅. НО reviewer блока 4 записан оркестратором (notes стр.51).",
+      "verdict": "PARTIAL"
+    },
+    "P2_deploy_after_approve": {
+      "fact": "0 коммитов проекта (git ls-files пусто), каталог untracked, deployer_*.json отсутствует для всех блоков. 3×APPROVE → 0 деплоев.",
+      "verdict": "FAIL"
+    },
+    "P3_audit_mode": {
+      "fact": "audit_mode отсутствует во всех auditor_*.json (0 совпадений grep).",
+      "verdict": "FAIL"
+    },
+    "P4_verified_by_commands": {
+      "fact": "verified_by_commands отсутствует во всех reviewer_*/auditor_*.json (0 совпадений grep).",
+      "verdict": "FAIL"
+    },
+    "P5_input_level_in_planner": {
+      "fact": "Уровень L4 зафиксирован, но под ключом 'level', не 'input_level'.",
+      "verdict": "PARTIAL"
+    },
+    "P6_stage_gates": {
+      "fact": "DISCOVERY=ВЫПОЛНЕНА, PLANNING=ВЫПОЛНЕНА, PILOT=В ПРОЦЕССЕ (не закрыт: нет деплоя), PRODUCTION=НЕ НАЧАТА. Gate перехода PILOT→PRODUCTION не пройден.",
+      "verdict": "PARTIAL"
+    },
+    "summary": "P1 PARTIAL, P2 FAIL, P3 FAIL, P4 FAIL, P5 PARTIAL, P6 PARTIAL. Из 6 гейтов мета-аудита — 0 PASS, 4 PARTIAL, 2 (P3/P4 — формальные) не выполнены; P2 (деплой) провален полностью."
+  },
+
+  "section_2_artifacts_discipline": {
+    "artifacts_present": [
+      "planner_gost13132-discovery.json (стадии 17, L4)",
+      "analyst/researcher/reviewer/auditor блока 2 (метод-контракт)",
+      "worker/reviewer/auditor блока 3 (ядро anova_gum)",
+      "worker/reviewer/auditor блока 4 (книга+профиль)",
+      "reviewer/auditor блока 1 (v15 problems-register)"
+    ],
+    "artifacts_missing": [
+      "worker_gost13132-v15-problems-register.json — НЕ в projects/.../artifacts/ (лежит в корне Desktop, нарушение шаблона 10 §9/12 §2; = TD-DEV-38/175)",
+      "deployer_*.json — отсутствует для КАЖДОГО блока (деплой не оставил артефактов)",
+      "worker_/reviewer_/auditor_ для блоков 5 (e2e-verify) и 6 (Word v16) — блоки не начаты"
+    ],
+    "role_integrity": "НАРУШЕНА: reviewer_gost13132-v16-xlsx-profile-uc.json (блок 4) записан оркестратором после исчерпания шагов ревьюера (самопризнание, notes стр.51). Ревьюер не был независимым судьёй своей же проверки — риск само-судейства.",
+    "section_0_07": "ПРИСУТСТВУЕТ у всех аудиторов (section_0_checked / section_0_07_vyedlivost / section_0_diligence).",
+    "escape_hatch_09": "ПРИСУТСТВУЕТ у большинства звеньев; отсутствует у worker_gost13132-v15-problems-register.json (зафиксировано TD-DEV-186).",
+    "audit_mode_field": "ОТСУТСТВУЕТ (P3).",
+    "verified_by_commands_field": "ОТСУТСТВУЕТ (P4).",
+    "td_register": "TD-DEV-206/207 CLOSED, 208 OPEN — но только в Desktop-реестре; в docs/PROBLEMS_REGISTER.md их нет (двойной реестр, TD-DEV-184 OPEN). Проектный tech_debt.md = пустая заглушка ('Проектные TD: (пусто)') при активных TD 206/207/208."
+  },
+
+  "section_3_e2e_test_results": {
+    "what_test_caught": [
+      "Формальный провал P3/P4: фабрика принимала вердикты без audit_mode и verified_by_commands (гейты, введённые контрактами 14/10, не были enforced на реальном прогоне).",
+      "Провал P2: 3×APPROVE без деплоя — цикл не замыкается (артефакты проекта untracked).",
+      "Нарушение разделения ролей: оркестратор подменил ревьюера блока 4 (синтез вердикта после лимита шагов) — цикл не эскалировал, а имитировал звено.",
+      "Excel-X-баг (X→1..6 на графиках) = ДЕФЕКТ ВЕРИФИКАТОРА фабрики: до итер.3 верификатор не проверял рассинхрон X/Y серий; V7 (same-sheet) добавлен РЕАКТИВНО (в составе TD-DEV-207/P1), а не существовал как превентивный гейт. Value-level проверки X-серий (X ≠ 1..N, шаг сетки) нет до сих пор.",
+      "TD воркера блока 4 (TD-1..TD-6) не попали в реестр — нарушение 05 §1 (регистрирует тот, кто нашёл) на уровне проекта."
+    ],
+    "what_test_did_not_catch": [
+      "Числа ГОСТ/GUM — вне зоны (за numeric_comparator, 19 §5); фабрика их не пересчитывает по дизайну — это корректно.",
+      "Отсутствие value-level X-check у верификатора — не было гейта, который бы потребовал проверку X-категорий оси.",
+      "Пустой проектный tech_debt.md при непустом наборе TD проекта — нет гейта полноты проектного реестра."
+    ],
+    "excel_x_bug_classification": "РЕЗУЛЬТАТ ТЕСТА (не замечание к методике): верификатор фабрики структурно проверял ссылки серий, но не значения X-серий → рассинхрон X/Y (рендер 1..N) проскочил. Регистрируется как TD для верификатора фабрики (см. section_5)."
+  },
+
+  "comments": [
+    {
+      "file": "projects/gost13132-gum-anova/ (git)",
+      "line": "n/a",
+      "severity": "critical",
+      "problem": "Гейт P2 провален: 0 коммитов проекта при 3×APPROVE (блоки 2/3/4). git status: '?? projects/gost13132-gum-anova/'; git ls-files пусто; deployer_*.json отсутствует для всех блоков. Контракт 06 §4.14: '3×APPROVE без коммита = не закрыто'. Блоки фактически НЕ закрыты.",
+      "suggestion": "Запустить деплоер (контракт 04) на блоки 2/3/4: закоммитить ролевые JSON + PROBLEMS_REGISTER; записать deployer_<ID>.json; журнал ANALYST_REPORTS. До этого считать PILOT не закрытым.",
+      "falsification": "Опровергнуто, если git log -- projects/gost13132-gum-anova непуст ИЛИ существует deployer_*.json с вердиктом DEPLOYED. Факт: git ls-files = пусто, deployer_*.json = 0."
+    },
+    {
+      "file": "projects/gost13132-gum-anova/artifacts/auditor_gost13132-v16-anova-gum-engine.json",
+      "line": 5,
+      "severity": "major",
+      "problem": "Гейт P3 провален: контрактное поле audit_mode:'A'|'B' (контракт 14 §3: 'Нет поля — вердикт невалиден') отсутствует во ВСЕХ auditor_*.json (grep=0). Есть неконтрактные 'mode':'A (in-cycle)' (блок 3) и 'audit_type' (блок 4); у блока 2 поля режима нет.",
+      "suggestion": "Внедрить audit_mode первой строкой/полем во всех auditor_*.json; перезаписать существующие 4 артефакта с добавлением поля. Ввести код-валидатор, отклоняющий auditor JSON без audit_mode.",
+      "falsification": "Опровергнуто, если Select-String 'audit_mode' по artifacts/*.json даст >=1 совпадение на каждый auditor-артефакт. Факт: 0 совпадений."
+    },
+    {
+      "file": "projects/gost13132-gum-anova/artifacts/reviewer_gost13132-v16-anova-gum-engine.json",
+      "line": "n/a (весь файл)",
+      "severity": "major",
+      "problem": "Гейт P4 провален: секция verified_by_commands обязательна в reviewer_*/auditor_*.json (контракт 10 §2/§3: 'Нет секции = вердикт невалиден'), но grep=0 во всех артефактах. Содержательные команды есть (tests_executed/falsification_manual/section_0), но контрактное поле отсутствует.",
+      "suggestion": "Добавить секцию verified_by_commands (список команд/файлов) во все reviewer/auditor JSON; ввести код-валидацию обязательности поля.",
+      "falsification": "Опровергнуто, если Select-String 'verified_by_commands' по artifacts/*.json даст >=1 совпадение на каждый reviewer/auditor-артефакт. Факт: 0."
+    },
+    {
+      "file": "projects/gost13132-gum-anova/artifacts/reviewer_gost13132-v16-xlsx-profile-uc.json",
+      "line": 51,
+      "severity": "critical",
+      "problem": "Нарушение разделения ролей (06 §2/§4.7): notes гласит 'артефакт записан оркестратором после лимита шагов ревьюера'. Вердикт APPROVE блока 4 синтезирован оркестратором, а не независимым ревьюером. Это подмена звена вместо эскалации (13 §2 при исчерпании лимита — эскалация, а не имитация).",
+      "suggestion": "Перезапустить ревьюера блока 4 отдельным контрактом (достаточный бюджет шагов) для подлинного вердикта; оркестратору — при лимите шагов эскалировать, а не писать вердикт за звено. Ввести правило: артефакт звена может писать только само звено.",
+      "falsification": "Опровергнуто, если reviewer блока 4 перезаписан самим ревьюером (без пометки 'записан оркестратором') И содержит verified_by_commands/no_false_reports. Факт: стр.51 содержит самопризнание оркестратора."
+    },
+    {
+      "file": "verify_en13132_v16_charts.py",
+      "line": 132,
+      "severity": "major",
+      "problem": "Дефект ВЕРИФИКАТОРА фабрики (результат E2E-теста): V7 (стр.132-153) проверяет лишь, что xVal/yVal серии на ОДНОМ листе (структура), но НЕТ value-level проверки X-серий — что значения X равны ожидаемой сетке (не 1..N) и что шаг сетки корректен. Проверки V2d/V2h/V2m сверяют только min_col/min_row/max_row. Excel-баг 'X→1..6 на графиках' проскочил до реактивного добавления V7 в итер.3; превентивного гейта не было.",
+      "suggestion": "Добавить value-level проверку: для каждой серии диаграммы считать числовые значения xVal и сверить с эталонной сеткой X (argmin/шаг (max-min)/199); отдельный тест 'X-категории оси != 1..N'. Ввести гейт фабрики: блок с диаграммами не закрывается без value-level проверки осей.",
+      "falsification": "Опровергнуто, если в verify_en13132_v16_charts.py появится проверка, сравнивающая значения X-серии с эталонной сеткой (а не только лист/колонки), и она PASS при подмене X на 1..N. Факт: такой проверки нет."
+    },
+    {
+      "file": "projects/gost13132-gum-anova/artifacts/worker_gost13132-v16-xlsx-profile-uc.json",
+      "line": 59,
+      "severity": "major",
+      "problem": "Нарушение 05 §1 (TD фиксирует тот, кто нашёл): tech_debts воркера блока 4 (TD-1..TD-6: Word v16, смешение шкал σL, u_rel эталонов, привязка маркера, живые формулы, пересборка 4/5/8) остались только в JSON воркера и НЕ внесены в PROBLEMS_REGISTER (grep TD-1:..TD-6: = 0 хитов в обоих реестрах).",
+      "suggestion": "Регистрировать TD воркера блока 4 в реестре с TD-DEV-ID (по 05), либо явно пометить маппинг на существующие TD-DEV-*. Ввести гейт: блок не закрывается, если tech_debts воркера не отражены в реестре.",
+      "falsification": "Опровергнуто, если TD-1..TD-6 блока 4 появятся в PROBLEMS_REGISTER.md под TD-DEV-ID или с явным маппингом. Факт: 0 хитов."
+    },
+    {
+      "file": "projects/gost13132-gum-anova/tech_debt.md",
+      "line": 11,
+      "severity": "minor",
+      "problem": "Проектный реестр TD пуст ('Проектные TD: (пусто)') при активных проектных TD-DEV-206/207/208. Контракт 12 §2 предполагает проектный TD-реестр; проект ведёт TD только во внешнем Desktop-реестре, что разрывает единый источник.",
+      "suggestion": "Заполнить проектный tech_debt.md ссылками на TD-DEV-206/207/208 или синхронизировать с каноническим реестром; зафиксировать канонический путь (TD-DEV-184).",
+      "falsification": "Опровергнуто, если tech_debt.md содержит записи проектных TD (не '(пусто)') ИЛИ явную ссылку на канонический реестр с TD-DEV-206..208. Факт: стр.11 = '(пусто)'."
+    },
+    {
+      "file": "projects/gost13132-gum-anova/artifacts/planner_gost13132-discovery.json",
+      "line": 22,
+      "severity": "minor",
+      "problem": "Гейт P5 частично: уровень зафиксирован как 'level':'L4' внутри section_1, а контракт 18 требует поле input_level. Значение корректно (L4 + level_evidence), но имя поля неконтрактное — код-валидатор P5 не найдёт его.",
+      "suggestion": "Добавить top-level поле 'input_level':'L4' (сохранив доказательства); ввести код-проверку наличия input_level в planner_<ID>-discovery.json.",
+      "falsification": "Опровергнуто, если planner-discovery содержит ключ 'input_level' со значением L*. Факт: ключ отсутствует, есть только 'level'."
+    },
+    {
+      "file": "docs/PROBLEMS_REGISTER.md",
+      "line": 1,
+      "severity": "minor",
+      "problem": "Двойной реестр (TD-DEV-184 OPEN): проектные TD-DEV-206/207/208 присутствуют ТОЛЬКО в Desktop-реестре (C:\\...\\ГОСТ EN 13132\\PROBLEMS_REGISTER.md, стр.232-234) и отсутствуют в docs/PROBLEMS_REGISTER.md (grep=0). 'Единый источник' размыт.",
+      "suggestion": "Определить канонический путь реестра (TD-DEV-184) и свести проектные TD в него; либо явно задокументировать назначение каждого реестра и запретить дублирование TD-ID.",
+      "falsification": "Опровергнуто, если TD-DEV-206/207/208 присутствуют в docs/PROBLEMS_REGISTER.md ИЛИ зафиксирован канонический путь с явным разделением назначений. Факт: в docs/ их нет."
+    },
+    {
+      "file": "projects/gost13132-gum-anova/artifacts/",
+      "line": "n/a",
+      "severity": "minor",
+      "problem": "Неполнота артефактов цикла: worker блока 1 лежит вне projects/.../artifacts/ (шаблон 10 §9/12 §2 нарушен, = TD-DEV-38/175); deployer_*.json отсутствует для всех блоков; блоки 5/6 не начаты.",
+      "suggestion": "Перенести worker блока 1 в artifacts/ по шаблону; обязать деплоер писать deployer_<ID>.json; зафиксировать незавершённость блоков 5/6 в статусе PILOT.",
+      "falsification": "Опровергнуто, если worker блока 1 присутствует в artifacts/ И существуют deployer_*.json. Факт: worker блока 1 в artifacts/ отсутствует, deployer_*.json = 0."
+    }
+  ],
+
+  "section_4_cycle_problems": [
+    {"id": "CYCLE-1", "severity": "critical", "problem": "P2: цикл не замыкается деплоем — 3×APPROVE при 0 коммитах проекта, каталог untracked.", "evidence": "git status '?? projects/gost13132-gum-anova/'; deployer_*.json = 0; 06 §4.14."},
+    {"id": "CYCLE-2", "severity": "critical", "problem": "Подмена звена: оркестратор записал вердикт ревьюера блока 4 (самопризнание notes стр.51) вместо эскалации при лимите шагов.", "evidence": "reviewer_gost13132-v16-xlsx-profile-uc.json стр.51."},
+    {"id": "CYCLE-3", "severity": "major", "problem": "P3 не enforced: audit_mode отсутствует во всех auditor JSON (контракт 14 говорит: вердикт невалиден).", "evidence": "grep audit_mode = 0."},
+    {"id": "CYCLE-4", "severity": "major", "problem": "P4 не enforced: verified_by_commands отсутствует во всех reviewer/auditor JSON (контракт 10: вердикт невалиден).", "evidence": "grep verified_by_commands = 0."},
+    {"id": "CYCLE-5", "severity": "major", "problem": "Дефект верификатора фабрики: нет value-level проверки X-серий диаграмм; V7 добавлен реактивно (X→1..N проскочил).", "evidence": "verify_en13132_v16_charts.py V7 стр.132-153; отсутствие сверки значений X."},
+    {"id": "CYCLE-6", "severity": "major", "problem": "05 §1 нарушен на уровне проекта: TD воркера блока 4 (TD-1..6) не в реестре.", "evidence": "worker JSON tech_debts стр.59-66; grep = 0."},
+    {"id": "CYCLE-7", "severity": "minor", "problem": "P5 не полностью: input_level под неконтрактным ключом 'level'.", "evidence": "planner-discovery стр.22."},
+    {"id": "CYCLE-8", "severity": "minor", "problem": "P6: PILOT не закрыт (нет деплоя, блоки 5/6 не начаты), PRODUCTION не начат.", "evidence": "planner-discovery section_3_stages_17_plan."},
+    {"id": "CYCLE-9", "severity": "minor", "problem": "Двойной реестр (TD-DEV-184): проектные TD только в Desktop-реестре.", "evidence": "docs/PROBLEMS_REGISTER.md grep 206/207/208 = 0."},
+    {"id": "CYCLE-10", "severity": "minor", "problem": "Проектный tech_debt.md — пустая заглушка при активных TD проекта; артефакты неполны (worker блока 1 вне шаблона, deployer_* нет).", "evidence": "tech_debt.md стр.11; artifacts/ листинг."}
+  ],
+
+  "section_5_tech_debts_to_register": [
+    "TD-FACTORY-1 (HIGH): верификатор фабрики не проверяет значения X-серий диаграмм (только ссылки/лист) — Excel-баг X→1..N проскочил; нужен value-level тест 'X-оси != 1..N' + гейт для блоков с диаграммами.",
+    "TD-FACTORY-2 (HIGH): гейты P3 (audit_mode) и P4 (verified_by_commands) не enforced кодом — вердикты принимаются без обязательных полей; нужен код-валидатор контрактов аудитора/ревьюера.",
+    "TD-FACTORY-3 (HIGH): гейт P2 (деплой) не enforced — 3×APPROVE без коммитов проходит; нужен стоп-критерий 'APPROVE без deployer_*.json = блок не закрыт'.",
+    "TD-FACTORY-4 (HIGH): нет защиты от подмены звена оркестратором (запись reviewer/auditor JSON не тем звеном) — нужен маркер авторства артефакта + запрет синтеза вердикта оркестратором.",
+    "TD-FACTORY-5 (MEDIUM): 05 §1 не enforced на уровне проекта — tech_debts воркера не попадают в реестр; нужен гейт полноты реестра перед деплоем.",
+    "TD-FACTORY-6 (LOW): planner-discovery не использует контрактное поле input_level (P5); проектный tech_debt.md не заполняется."
+  ],
+
+  "section_6_verdict_and_fixes": {
+    "verdict": "REQUEST_CHANGES",
+    "rationale": "Содержательная часть цикла (блоки 2/3/4: код ядра, книга, пере-ревью фиксов, независимый аудитор) отработана на высоком уровне — APPROVE блоков 2/3/4 обоснованы фактами. НО механизм фабрики имеет системные разрывы: P2 (деплой) провален полностью, P3/P4 не enforced, зафиксирована подмена звена оркестратором, верификатор не ловит value-level рассинхрон X-серий. По правилам adversarial-critic-checklist: 2 critical (P2, подмена звена) + 4 major → REQUEST_CHANGES.",
+    "what_to_fix_in_our_contracts": [
+      "06 §4.14: сделать P2 код-проверяемым — блок не переходит в DONE без deployer_<ID>.json (DEPLOYED) в git; оркестратор обязан вызвать деплоер.",
+      "10 §2/§3 + 14 §3: ввести код-валидатор контрактов — reviewer/auditor JSON без verified_by_commands / audit_mode отклоняется (INVALID) на уровне factory_ctl.",
+      "06/13: запретить оркестратору записывать артефакты звеньев; при лимите шагов — эскалация (13 §2), а не синтез вердикта. Добавить поле автора артефакта (written_by) и код-сверку с ролью.",
+      "Новый гейт верификации: для любого блока с визуализациями — обязательна value-level проверка осей (X-серии != 1..N, шаг сетки); верификатор фабрики расширяется проверкой значений, а не только ссылок.",
+      "05 §1: гейт полноты реестра перед деплоем — tech_debts воркера должны иметь TD-DEV-ID или явный маппинг; проектный tech_debt.md синхронизируется с каноническим реестром (закрыть TD-DEV-184).",
+      "18: ввести код-проверку наличия input_level в planner_<ID>-discovery.json (P5)."
+    ],
+    "positive_notes": [
+      "Блок 3: полный конвейер worker v1→REQUEST_CHANGES→v2→APPROVE с независимым перезапуском тестов (16/16) — образец корректного цикла.",
+      "Аудитор блока 4 присутствует (ремедиация мета-аудита), секция 0 (07) — у всех аудиторов, эскап-хэтч (09) — у большинства.",
+      "Числа за кодом (numeric_comparator, 19 §5) — корректный дизайн: фабрика не пересчитывает ГОСТ, а арбитрирует кодом.",
+      "TD-DEV-206/207 закрыты по фактам (код+тесты+ревью+аудит iter.3), TD-DEV-208 корректно оставлен OPEN (REQUIRES_USER_DECISION)."
+    ]
+  },
+
+  "findings_escape_hatch": [
+    {"level": 1, "what": "Записан артефакт ревью E2E-теста; иных файлов не изменял (числа/код не трогал).", "action": "артефакт reviewer_gost13132-E2E-test.json создан"},
+    {"level": 2, "what": "Зафиксированы TD-FACTORY-1..6 (дефекты верификатора и гейтов фабрики) — подлежат регистрации в PROBLEMS_REGISTER по 05.", "action": "передать оркестратору/деплоеру для регистрации (НЕ коммичу — правило)"},
+    {"level": 3, "what": "ESCALATED: (1) P2-деплой проекта не выполнен — оркестратору запустить деплоер; (2) подмена ревьюера блока 4 оркестратором — перезапустить звено; (3) канонический путь реестра (TD-DEV-184) не решён.", "action": "эскалация на оркестратора фабрики"}
+  ],
+
+  "no_false_reports": {
+    "checked": "Все утверждения проверены фактами (git, grep, read, факт-разбор ссылок диаграмм). Ложных PASS не защищал.",
+    "p2_evidence": "git ls-files projects/gost13132-gum-anova = пусто; deployer_*.json = 0",
+    "p3_evidence": "grep audit_mode = 0",
+    "p4_evidence": "grep verified_by_commands = 0",
+    "role_substitution_evidence": "reviewer блока 4, notes стр.51: 'артефакт записан оркестратором после лимита шагов ревьюера'"
+  }
+}

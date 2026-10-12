@@ -1,0 +1,166 @@
+{
+ "module": "gost13132-methodic-anova-gum-contract",
+ "role": "researcher",
+ "block": 2,
+ "predecessor_blocks": [
+  {
+   "block": 2,
+   "name": "gost13132-methodic-anova-gum-contract",
+   "role": "analyst",
+   "artifact": "E:\\opencode_harness_portable\\projects\\gost13132-gum-anova\\artifacts\\analyst_gost13132-methodic-anova-gum-contract.json"
+  }
+ ],
+ "summary": "Researcher block 2: answered Q1..Q12 with evidence (GUM H.5, GOST R ISO 5725-6 4.1.2/4.1.4/4.2.3/7, RMG61 5.2/5.5/6.5, RMG76 5.13, GOST 34100.3.1 7.9.2/7.9.4/8, 17025 7.6, GUIDE 33 10/11, GOST EN 13132 tabl.1/2, appendix A densities). Fixed methodic decisions R1..R6. Created METHODIC_CONTRACT_ANOVA_GUM.md. Closed U3 (X g/g -> %mass conversion via m_sample; range map; densities from appendix A: MTBE 745.3 kg/m3). Registered TD-DEV-187..193 in PROBLEMS_REGISTER.md (contract 05). Chart findings v4 (requirement 7): profile = U(x)=k*u_c (200 pt), nu_eff/k by GUM G.4, u_c includes etalons - v15 lacks k/etalons/backward-calibration.",
+ "answers_Q1_Q12": [
+  {
+   "id": "Q1",
+   "verdict": "pass",
+   "answer": "GUM H.5 (GOST 34100.3-2017) prescribes ANOVA to identify random effects (sigma_r within level, sigma_L between days) and to include them in u_c via hierarchy; H.5.3.3 explicitly: 'ANOVA allows to estimate only SOME components'. For v15 (6 levels x 2 injections, single day, J=1) full two-level balanced hierarchical ANOVA (H.5.2) is NOT reproducible: only intra-level sigma_r (df=6) is estimable. Inter-laboratory sigma_L is taken from tabl.1/2 GOST EN 13132 (sigma_R=R/2.8, sigma_L=sqrt(max(0,sigma_R^2-sigma_r^2))). This is the 'grubiy uchet' boundary (RMG61 5.5, 5725-6 section 7).",
+   "evidence": "GOST_34100_3_2017.txt lines 4424-4431, 4612-4657 (H.5.3.1/3.3); 5725-6 KEY 4.1.4; RMG61 KEY 5.2.2",
+   "notes": ""
+  },
+  {
+   "id": "Q2",
+   "verdict": "pass",
+   "answer": "Tabl.1 (8 ranges 0.1..15 %mass, %vol): [0.1;1.0]:r=0.05,R=0.1; (1.0;3.0]:r=0.1,R=0.3; (3.0;5.0]:r=0.1,R=0.4; (5.0;7.0]:r=0.2,R=0.5; (7.0;9.0]:r=0.2,R=0.6; (9.0;11.0]:r=0.2,R=0.8; (11.0;13.0]:r=0.3,R=0.9; (13.0;15.0]:r=0.3,R=1.0. Tabl.2 (total O, %mass) [1.5;3.0]: r=0.08,R=0.3. Divider 2.8 (5725-6 4.1.2/4.1.4): sigma_r=r/2.8, sigma_R=R/2.8. For result = mean of 2 (as GOST EN 13132 10.1, two results): u_repr=sqrt(sigma_R^2-sigma_r^2*(1-1/2))=sqrt(R^2-r^2/2)/2.8 (5725-6 4.2.3 CD). Example range (1;3]: R=0.3: u_repr(R/2.8)=0.1071; u_repr(mean2)=0.1041. Not r/2.77: RMG61 5.2.1.5 Q(0.95,2)=2.77 relates to parameter of method with n parallel; RMG76 5.13.4 R_l=2.77*sigma_Rl is intra-laboratory.",
+   "evidence": "GOST_EN_13132_2012.txt lines 344-405; KEY_5725-6 4.1.2/4.1.4/4.2.3; KEY_RMG61 5.2.1.5; KEY_RMG76 5.13.4",
+   "notes": "PLAN_FACTORY_CYCLE.md test 'b' value 0.0357 = r/2.8 is WRONG (registered TD-DEV-193); correct 0.1071/0.1041."
+  },
+  {
+   "id": "Q3",
+   "verdict": "pass",
+   "answer": "Anti-double-count rules: (1) u_model (OLS on means) already contains averaged injection repeatability -> sigma_r is NOT added as separate budget row; (2) sigma_r is used only for sigma_L decomposition (sigma_L=sqrt(sigma_R^2-sigma_r^2)) and for u_repr form sqrt(R^2-r^2/2)/2.8; (3) u_repr enters as sqrt(sigma_R^2-sigma_r^2*(1-1/n)) so local repeatability is subtracted, not duplicated; (4) if sample u(Y0) measured, subtract local repeatability per rule; (5) LoF F-test is adequacy criterion, NOT a budget contribution; (6) etalons and purity are independent; with shared stock - correlation matrix (v15 04_Kovariaciya), not component-wise sum. Final: u_c^2 = u_model^2 + u_etalon^2 + u_purity^2 + u_mass^2 + u_repr^2 (+ u_sample^2 with subtraction rule).",
+   "evidence": "5725-6 4.2.3; GUM 5.1.2; v15 06_Otchet (5 contributors); v15 04_Kovariaciya",
+   "notes": ""
+  },
+  {
+   "id": "Q4",
+   "verdict": "pass",
+   "answer": "Protocol-correct profile is U(x)=k*u_c(x) (GUM 6.2.1/7.2.4; 17025 7.6.3 note 1: method sets limits and form of representation -> laboratory satisfies; reference v4 uses U=k*u_c). v15 profile is u_c without k -> C4/TD-DEV-24. v16: profile U(x) on 200-point grid + marker x_pred + U at x_pred in report.",
+   "evidence": "GUM 6.2.1/7.2.4; v4 'Профиль U(x)'!F4='Неопределенность'!$B$12*E4; v15 05_Профиль!G6=SQRT(D6^2+E6^2+F6^2)",
+   "notes": ""
+  },
+  {
+   "id": "Q5",
+   "verdict": "pass",
+   "answer": "Use nu_eff by Welch-Satterthwaite (GUM G.4 formula G.2b): nu_eff = u_c^4 / sum(u_i^4/nu_i). k=t_{0.975}(nu_eff); k=2 (RMG61 6.5.2) is a simplification valid at nu_eff>=30 (GUM 6.3.3). v4 implements nu_eff/k (TINV). With df_regression=4, k is notably >2 (t(4)=2.776, t(6)=2.447).",
+   "evidence": "GOST_34100_3_2017.txt lines 3367-3391 (G.4, G.2b); RMG61 KEY 6.5.2; v4 'Неопределенность'!B10..B13",
+   "notes": ""
+  },
+  {
+   "id": "Q6",
+   "verdict": "pass",
+   "answer": "Variance sources: level (systematic calibration, not random effect), injections (sigma_r - estimable, df=6), series (sigma_L intra-lab - NOT estimable from 1 day; needs QC/BUD-17), laboratories (sigma_L inter-lab - from tabl.1/2). Only some components estimable from 6x2 single-day (GUM H.5.3.3).",
+   "evidence": "GOST_34100_3_2017.txt lines 4612-4657; v15 01_Vvod (6 levels x 2 injections, one day)",
+   "notes": ""
+  },
+  {
+   "id": "Q7",
+   "verdict": "pass",
+   "answer": "U3 closed. X(g/g)=mA*pA/(mIS*pIS) is analyte/IS mass ratio (NOT %mass in petrol). Conversion: w_MTBE[%mass] = X * (mIS*pIS/m_sample) * 100; inverse X = w% * m_sample/(mIS*pIS)/100. Range map tabl.1 -> X (at m_sample=100 g, mIS~4.0-4.7 g) in METHODIC_CONTRACT section 9.3. IMPORTANT ASSUMPTION: m_sample=100 g is NOT documented in v15 - requires input field 'sample mass' (registered TD-DEV-190). Densities (appendix A): MTBE 745.3 kg/m3, ETBE 745.6, TAME 775.2.",
+   "evidence": "v15 01_Vvod!H7=G7*'02_Модель'!B7/'02_Модель'!B12, G7=mA/mIS; GOST_EN_13132_2012.txt lines 883-887 (MTBE 745.3); 8.2 (w=m_i/m_s*100)",
+   "notes": "m_sample=100 g assumption; density list appendix A"
+  },
+  {
+   "id": "Q8",
+   "verdict": "pass",
+   "answer": "Grubiy uchet (tabl.1/2 sigma_R) is admissible when: no inter-lab data of lab, no QC series (single day), LoF not significant, and assumption documented (RMG61 5.5 splitting by ranges; 5725-6 section 7 using method precision for uncertainty; 17025 7.6.3 note 1). Document: contribution list, type A/B, nu_i, nu_eff, k, assumption sigma_R from tabl.1/2.",
+   "evidence": "RMG61 KEY 5.5/7.4; 5725-6 KEY section 7; 17025 7.6.3",
+   "notes": ""
+  },
+  {
+   "id": "Q9",
+   "verdict": "pass",
+   "answer": "Inverse calibration X0=(Y0-b)/a; u^2(X0) = [u^2(Y0) + X0^2*u^2(a) + u^2(b) + 2*X0*cov(a,b)]/a^2. Interval form in v4 'Неопределенность'!B2: s^2*(1/p+1/n+(x-xbar)^2/Sxx)/a^2. Sample u(Y0) from replicate injections. Add u_repr per anti-double-count rule.",
+   "evidence": "GUM 5.1.2 (LPU, formula 10); v4 'Неопределенность'!B1/B2; v15 03_Статистика B11/B12/B15-17",
+   "notes": "BUD-11/BUD-14"
+  },
+  {
+   "id": "Q10",
+   "verdict": "pass",
+   "answer": "Full hierarchical ANOVA (GUM H.5.2) impossible (single day). v16 algorithm: sigma_r from replicate injections (df=6); sigma_R from tabl.1/2 (R/2.8); sigma_L=sqrt(max(0,sigma_R^2-sigma_r^2)). REML only with multiple series (needs QC data). Negative variance -> MAX(0,..) per GUM.",
+   "evidence": "GOST_34100_3_2017.txt lines 4650-4657 (H.5.3.3); 5725-6 4.1.4",
+   "notes": ""
+  },
+  {
+   "id": "Q11",
+   "verdict": "pass",
+   "answer": "MC-verification per GOST 34100.3.1 section 8: adaptive M (7.9.4, M0=max(J,10^4), J=100/(1-p)); delta per 7.9.2 (delta=0.5*10^l with l from ndig); criterion |y_low,GUM-y_low,MC|<=delta and |y_high,GUM-y_high,MC|<=delta; at section 8.2 check use delta/5. Distributions: response ~ N, purity ~ U(99;100), masses ~ U(pm Delta_m/2) or N, etalons ~ N; correlation rho(pA,pIS) modeled. Report Delta (GUM vs MC).",
+   "evidence": "GOST_34100_3_1_2017.txt lines 1750-1806 (8.1-8.2), 1657-1709 (7.9.2/7.9.4)",
+   "notes": ""
+  },
+  {
+   "id": "Q12",
+   "verdict": "pass",
+   "answer": "Canonical budget v16: (1) model/calibration, (2) etalons u(x_cal), (3) purity (pA,pIS), (4) masses (scales), (5) sample u(Y0) (for result), (6) u_repr tabl.1/2. EXCLUDE: Recovery/dilution/volume/inhomogeneity (gravimetric method without them - 'bez izlishestv' plan 6.2), sigma_r as separate row (double count), LoF. v4 budget has 7 incl. Recovery/dilution/volume/H - NOT applicable to GOST EN 13132.",
+   "evidence": "v4 'Бюджет'!B15..B21; v15 06_Otchet!C19..C26; C3/TD-DEV-23",
+   "notes": ""
+  }
+ ],
+ "methodic_decisions_R1_R6": {
+  "R1": "Divider 2.8 (5725-6 4.1.2/4.1.4); protocol form mean-of-2: u_repr=sqrt(R^2-r^2/2)/2.8 (5725-6 4.2.3); single result: R/2.8. Example (1;3]: R=0.3 -> 0.1071 / 0.1041.",
+  "R2": "ANOVA components from 6x2: sigma_r from injections (df=6); sigma_R from tabl.1/2; sigma_L=sqrt(max(0,sigma_R^2-sigma_r^2)); full GUM H.5 not reproducible (single day).",
+  "R3": "Anti-double-count: OLS residual (21% variance) = local repeatability + line components; sigma_r NOT separate row; u_repr=sqrt(R^2-r^2/2)/2.8 subtracts local repeatability; LoF/Recovery/volume/inhomogeneity excluded; u_c^2=u_model^2+u_etalon^2+u_purity^2+u_mass^2+u_repr^2 (+u_sample^2 with subtraction).",
+  "R4": "Profile = U(x)=k*u_c(x) (as v4), 200 points, marker x_pred; NOT u_c as v15.",
+  "R5": "nu_eff by Welch-Satterthwaite (GUM G.2b); df: regression n-2=4, sample replicates p-1, levels sigma_r sum(n_i-1)=6, tabl.1/2 nu=inf (type B). k=t_{0.975}(nu_eff); k=2 at nu_eff>=30.",
+  "R6": "Budget 5+1: model, etalons, purity, masses, sample (for result), u_repr tabl.1/2; exclusions per R3."
+ },
+ "u3_closure": {
+  "status": "closed",
+  "conversion": "w_MTBE[%mass] = X * (mIS*pIS/m_sample) * 100; X = w% * m_sample/(mIS*pIS)/100",
+  "range_map": "see METHODIC_CONTRACT_ANOVA_GUM.md section 9.3 (tabl.1 ranges -> X g/g at m_sample=100g, mIS~4.0-4.7g)",
+  "assumption": "m_sample=100 g NOT in v15 - needs input field 'sample mass' (TD-DEV-190)",
+  "densities": "MTBE 745.3 kg/m3 (appendix A GOST EN 13132), ETBE 745.6, TAME 775.2"
+ },
+ "chart_findings_v4": {
+  "profile_form": "U(x)=k*u_c(x), 200 pt, grid (MAX-MIN)/199, marker x_pred (v4 'Профиль U(x)'!F4='Неопределенность'!$B$12*E4, G4 marker)",
+  "k_and_nu_eff": "nu_eff Welch-Satterthwaite, k=TINV(1-P,ROUND(nu_eff,0),1) (v4 'Неопределенность'!B10..B13)",
+  "u_c_includes_etalons": "E=SQRT(D^2+(x*u_rel_etalons)^2) - v15 lacks it",
+  "v15_gap": "v15 profile = u_c (61 pt, no k, no etalons, no backward calibration) -> C4/TD-DEV-24, TD-DEV-187/188/189",
+  "charts": "sheet 'Графики' notes data from Vvod/Profile/WLS; XML-formula check passed; visual acceptance in Excel = U1/TD-DEV-178",
+  "not_applicable_in_v4_budget": "Recovery/dilution/volume/inhomogeneity NOT for GOST EN 13132 (gravimetric)"
+ },
+ "register": {
+  "updated": "PROBLEMS_REGISTER.md TD-DEV-187..193 added by researcher (contract 05: finder registers); counter section 5 updated to 173",
+  "list": [
+   "TD-DEV-187 profile v15 vs v4",
+   "TD-DEV-188 budget v15 vs v4",
+   "TD-DEV-189 inverse calibration absent",
+   "TD-DEV-190 X units g/g vs %mass + m_sample needed",
+   "TD-DEV-191 v4 charts acceptance U1",
+   "TD-DEV-192 divider 2.8 vs 2.77",
+   "TD-DEV-193 PLAN test 'b' value 0.0357 wrong (should be 0.1071/0.1041)"
+  ]
+ },
+ "findings_escape_hatch": {
+  "level_1": "No files corrupted by this artifact. METHODIC_CONTRACT_ANOVA_GUM.md created; PROBLEMS_REGISTER.md appended TD-DEV-187..193; counter updated.",
+  "level_2": "Observations: (1) v15 lacks 'sample mass' field - U3 conversion uses assumption m_sample=100 g; (2) PLAN_FACTORY_CYCLE.md test 'b' value 0.0357 = r/2.8 wrong, correct 0.1071 (R/2.8) or 0.1041 (mean-of-2) - registered TD-DEV-193; (3) v4 budget contains Recovery/dilution/volume/inhomogeneity not applicable to GOST EN 13132 gravimetric method - v16 must not copy; (4) full hierarchical ANOVA impossible on single-day 6x2 data (GUM H.5.3.3) - use combined scheme (R2).",
+  "level_3": "[ESCALATED] (1) REQUIRES_USER_DECISION: confirm 'sample mass' input field semantics for v16 (needed for tabl.1 range mapping); (2) REQUIRES_USER_DECISION: confirm protocol form mean-of-2 (u_repr=sqrt(R^2-r^2/2)/2.8) vs single result (R/2.8) - this changes U and tabl.1 interpolation; (3) REQUIRES_USER_DECISION: divider 2.8 (5725-6) adopted over 2.77 (RMG61) - confirm with metrologist."
+ },
+ "ledger_of_sources": [
+  "GOST_EN_13132_2012.txt lines 115-119 (scope), 327-329 (rounding), 344-405 (tabl.1/2), 883-887 (MTBE density 745.3), 296-319 (8.1-8.3 formulas)",
+  "GOST_34100_3_2017.txt lines 4424-4657 (H.5 ANOVA), 3367-3539 (G.4 Welch-Satterthwaite G.2b, k), 1384-1444 (6.2/6.3)",
+  "GOST_34100_3_1_2017.txt lines 1657-1709 (7.9.2 delta, 7.9.4 adaptive M), 1750-1806 (8.1-8.2 MC check)",
+  "GOST_ISO_IEC_17025_2019.txt (7.6.1-7.6.3, 7.7)",
+  "GOST_ISO_GUIDE_33_2019.txt (10.1.3, 11.1.4)",
+  "GOST_R_ISO_17034_2021.txt (7.15)",
+  "KEY_5725-6.md (4.1.2/4.1.4/4.2.3, section 7), full text GOST_Р_ИСО_5725-6-2002_полный_текст.txt",
+  "KEY_RMG61.md (3.1.14/3.1.18, 5.2.1.5, 5.2.2, 5.5, 6.5.2, 7.4)",
+  "KEY_RMG76.md (5.5, 5.12, 5.13.4)",
+  "KEY_GOST_ISO_3405.md (precedent of r/R use in fraction book)",
+  "Metrology_Core_EURACHEM_v4.xlsx (openpyxl): Профиль U(x), Неопределенность, Бюджет, Ввод, Стандарты, Графики",
+  "EN13132_v15_MTBE.xlsx (openpyxl): 01_Ввод, 02_Модель, 03_Статистика, 05_Профиль, 06_Отчёт, 08_Прослеживаемость, 09_Весы, 10_Выбор_Xзв, 14_Контроль",
+  "PLAN_FACTORY_CYCLE.md (blocks, criteria, test b value)",
+  "analyst_gost13132-methodic-anova-gum-contract.json (Q1..Q12, facts, priorities)"
+ ],
+ "recommendations": [
+  "Block 3: implement anova_gum.py - sigma_r from injections (df=6), sigma_R from tabl.1/2 (interpolation in %mass->X), sigma_L=sqrt(max(0,..)), u_repr=sqrt(R^2-r^2/2)/2.8 (mean-2) or R/2.8 (single); test (a) synthetic reproduces sigma_R to 0.5%; test (b) fix to 0.1071/0.1041 (TD-DEV-193).",
+  "Block 4: profile U(x)=k*u_c(x) 200 pt + marker x_pred + u_etalons + nu_eff/k (v4 pattern); budget 5+1 rows with 'Precision GOST EN 13132 tabl.1/2' (TD-DEV-29) + anti-double-count comments.",
+  "Block 5: MC-verification per 34100.3.1 section 8 with delta/5 at 8.2; report Delta.",
+  "Block 2 revision: PLAN_FACTORY_CYCLE.md test 'b' value correction (TD-DEV-193); add 'sample mass' field decision (TD-DEV-190).",
+  "Defer: QC-series for sigma_L (BUD-17), full hierarchical ANOVA (needs multi-day), v4 Recovery/dilution/volume/H (not applicable).",
+  "Requires user decision: (1) m_sample semantics; (2) mean-of-2 vs single result protocol form; (3) divider 2.8 vs 2.77."
+ ],
+ "next_step": "reviewer (block 2): verify METHODIC_CONTRACT_ANOVA_GUM.md against Q1..Q12, R1..R6, U3 closure, TD-DEV-187..193 registration; then auditor.",
+ "artifact_path": "E:\\opencode_harness_portable\\projects\\gost13132-gum-anova\\artifacts\\researcher_gost13132-methodic-anova-gum-contract.json"
+}

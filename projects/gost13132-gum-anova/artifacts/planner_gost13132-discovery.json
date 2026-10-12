@@ -1,0 +1,121 @@
+{
+  "module": "gost13132-planner-discovery",
+  "role": "planner",
+  "project_id": "gost13132-gum-anova",
+  "stage": "DISCOVERY (стадия 17)",
+  "contracts": ["17_FACTORY_CORPORATION.md", "18_INPUT_SCENARIOS.md", "19_QUANT_ANALYST_RESEARCHER.md"],
+  "date": "2026-10-11",
+  "predecessor_artifacts_read": [
+    "artifacts/auditor_gost13132-v16-anova-gum-engine.json (APPROVE, блок 3)",
+    "artifacts/reviewer_gost13132-v16-anova-gum-engine.json (APPROVE v2, блок 3)",
+    "artifacts/worker_gost13132-v16-anova-gum-engine.json (DONE v2, блок 3)",
+    "artifacts/worker_gost13132-v16-xlsx-profile-uc.json (DONE v3, блок 4)",
+    "artifacts/reviewer_gost13132-v16-xlsx-profile-uc.json (REQUEST_CHANGES it.2, блок 4, TD-DEV-206/207)",
+    "artifacts/analyst_gost13132-methodic-anova-gum-contract.json (APPROVE, блок 2)",
+    "artifacts/researcher_gost13132-methodic-anova-gum-contract.json (pass Q1-Q12, блок 2)",
+    "artifacts/auditor_gost13132-methodic-anova-gum-contract.json (APPROVE, блок 2)",
+    "README.md, config.env, tech_debt.md",
+    "C:\\Users\\Arhys\\Desktop\\каллибровка\\ГОСТ EN 13132\\PROBLEMS_REGISTER.md (TD-DEV-200..207, 187 TD)"
+  ],
+
+  "section_1_input_level_and_pipeline": {
+    "level": "L4",
+    "level_evidence": [
+      "Тест 1 (текст->файлы): НЕТ — артефакты проекта есть (JSON 11 шт, код, книги, контракты)",
+      "Тест 2 (файлы без ТЗ): НЕТ — ТЗ есть: METHODIC_CONTRACT_ANOVA_GUM.md (решения R1-R6, карта 9.3)",
+      "Тест 3 (ТЗ без кода): НЕТ — код есть: anova_gum.py (ядро), test_anova_gum.py (20 PASS), build/verify_en13132_v16_*.py",
+      "Тест 4 (код без доков): НЕТ — доки есть: контракт методики, README, PROBLEMS_REGISTER (187 TD), книги-выходы"
+    ],
+    "pipeline": "P4 (корпоративный, стадии 17) + P1 (классический цикл) для незавершённых блоков 4/5/6",
+    "pipeline_rationale": "Полный проект заказчика с метод-решениями методиста и внешним приёмкой по DoD -> контур P4. Текущая позиция: DISCOVERY и PLANNING выполнены, PILOT в процессе (блок 4 не закрыт по циклу) -> продолжение через P1 (worker->reviewer->auditor->deployer) на открытых блоках.",
+    "quant_mode": "T1 (численная проверка) уже применялся в блоках 3/4; блок 5 e2e = T2/T7; блок 6 Word = код, вне 19."
+  },
+
+  "section_2_audit_input_state": {
+    "done_v15_v16": [
+      "Блок 1 (v15 problems-register): APPROVE x3; аудит входа v15, C1-C4/M1-M6/m1-m4/U1-U4, 166 TD по каталожным категориям (Q1-Q12)",
+      "Блок 2 (метод-контракт): analyst APPROVE, researcher pass Q1..Q12 (свидетельства GUM H.5, 5725-6 4.1.2/4.1.4/4.2.3, РМГ 61 5.2/5.5/6.5, РМГ 76 5.13, 34100.3.1, 17025 7.6, GUIDE 33, ГОСТ EN 13132 табл.1/2), auditor APPROVE; METHODIC_CONTRACT_ANOVA_GUM.md с R1-R6; TD-DEV-187..193",
+      "Блок 3 (ядро anova_gum.py): worker v1 REQUEST_CHANGES -> v2 DONE; reviewer v2 APPROVE (TD-DEV-200/201/202 закрыты кодом, 16/16 PASS перезапущены); auditor A APPROVE (анти-двойной счёт u_c=0.1041, честный k(1)=12.7062, extrapolated=True; TД-DEV-203/204/205 OPEN); ядро чистое (numpy+scipy, без xlsx-зависимостей)",
+      "Блок 4 (книга+профиль+графики): worker v3 DONE - TD-DEV-206 исправлен (u_repr по ФАКТИЧЕСКОМУ w0=3.967, smooth-аппроксимация, U(06_Итог)=U(x_pred)=0.0862 г/г), TD-DEV-207 исправлен (V2j паттерн =G*E, V3q все 200 точек, тест U_итог==U_xpred, V5 генерация 4/5/8 уровней); verify PASS=89, ядро 20 тестов"
+    ],
+    "not_closed": [
+      "Блок 4 не завершён по циклу: последний вердикт ревьюера = REQUEST_CHANGES it.2 (TD-DEV-206 HIGH, TD-DEV-207 LOW); фикс v3 НЕ перепроверен ревьюером; аудитор A блока 4 ОТСУТСТВУЕТ",
+      "TD-DEV-206/207 исправлены кодом в v3, но в реестре статус OPEN (закрытие за аудитором/деплоером)",
+      "Блок 5 (e2e-verify) НЕ начат: полная сверка ядра+книги+профиля, согласованность U(Итог)~U(x_pred) на всех наборах, пересборка 4/5/8 уровней",
+      "Блок 6 (Word-отчёт v16) НЕ начат: 06_Итог приведён к структуре Word v15, но .docx v16 не генерируется (TD-5, F-4)",
+      "Визуальная приёмка графиков в Excel НЕ выполнена (нет офисного приложения) - F-3",
+      "Метод-решения методиста (REQUIRES_USER_DECISION): TD-DEV-203 (u_y0: sigma_r/sqrt2 vs s(Y0)/sqrt2), TD-DEV-204 (экстраполяция w<0.1 %мас не аттестована), TD-DEV-190 (m_sample=100 г не задокументирован - нужно входное поле), F-1/F-2 воркера блока 4 (smooth vs step u_repr на w0=3.967: 0.1557 vs 0.1406, результат +34% консервативнее)",
+      "TD-DEV-205 (LOW): докстринг k_coverage обещает RuntimeWarning при отсутствии scipy для nu<3 - не выполняется; аппроксимация при nu=1 -11% анти-консервативна (подтверждено аудитором блока 3)"
+    ]
+  },
+
+  "section_3_stages_17_plan": {
+    "DISCOVERY": {
+      "status": "ВЫПОЛНЕНА (блок 1)",
+      "input": "потребность: аудит методики определения MTBE/аналитов по ГОСТ EN 13132; v15 книга/Word; PROBLEMS_REGISTER (290 строк), AUDIT_FINDINGS, PLAN_FACTORY_CYCLE",
+      "pipeline_links": "analyst (систематизация входа, каталог 166 TD) -> auditor B (аудит черновика)",
+      "output": "черновик ТЗ = AUDIT_FINDINGS v15 (C1-C4 критич., M1-M6, m1-m4, U1-U4) + задача-план",
+      "dod": "критические находки идентифицированы и связаны с TD (C1->21, C2->22, C3->23/70/73, C4->24/75); APPROVE x3"
+    },
+    "PLANNING": {
+      "status": "ВЫПОЛНЕНА (блок 2)",
+      "input": "черновик ТЗ (аудит-находки v15)",
+      "pipeline_links": "analyst -> researcher DEEP (Q1..Q12, факты НД) -> auditor B (аудит плана) -> PLAN принят",
+      "output": "METHODIC_CONTRACT_ANOVA_GUM.md: решения R1-R6, карта диапазонов 9.3 (вход X->%мас при m_sample=100), формулы u_c/nu_eff/k/U, anti-double-count правила 1-6, разбиение на блоки 1-6",
+      "dod": "12 вопросов закрыты фактами НД; под-решения методиста зафиксированы; APPROVE"
+    },
+    "PILOT": {
+      "status": "В ПРОЦЕССЕ (блоки 3-4)",
+      "input": "план (метод-контракт)",
+      "pipeline_links": "worker->reviewer->auditor A->deployer на под-блоках (P1)",
+      "output": "работающий пилот: ядро anova_gum.py + книга EN13132_v16_CALC.xlsx (профиль U(x) 200 pts smooth, маркер x_pred, верификатор PASS=89) + демо заказчику (ожидает)",
+      "dod": "блоки 3-4 APPROVE по полному циклу; демо книги заказчику; метод-решения методиста по TD-DEV-203/204/190/F-1 приняты с дефолтами",
+      "remaining": "(а) ревью v3 блока 4 -> (б) аудитор A блока 4 -> (в) деплойер + закрытие TD-DEV-206/207 -> (г) метод-решения (203/204/190, smooth/step) -> (д) демо"
+    },
+    "PRODUCTION": {
+      "status": "НЕ НАЧАТА",
+      "input": "пилот APPROVE (блоки 3-4 закрыты)",
+      "pipeline_links": "P1: блок 5 (e2e-verify) -> блок 6 (Word-отчёт v16) -> ревью/аудит/деплой -> матрёшка 03 (M0-M6) + документация + поддержка (W7/W13)",
+      "output": "прод-релиз: ядро + книга + Word-отчёт v16 + верификатор, принятые заказчиком",
+      "dod": "все TD проекта закрыты/приняты методистом; Word-отчёт v16 сгенерирован и сверен с книгой (U_итог==U(x_pred)); приёмка заказчика по фальсифицируемым критериям; 03-матрёшка пройдена"
+    }
+  },
+
+  "section_4_scope_resources_current_cycle": {
+    "doable_now": [
+      "Замкнуть PILOT: повторное ревью v3 блока 4 (подтвердить фикс TD-DEV-206/207) -> аудитор A -> деплой (закрытие 206/207 в реестре, 05). Роли: reviewer + auditor + deployer",
+      "Зафиксировать 4 метод-решения с ДЕФОЛТАМИ (17 §3 REQUIRES_USER_DECISION): (1) u_y0=sigma_r/sqrt(2) консервативнее, дефолт; (2) экстраполяция w<0.1 -> предупреждение + ограничение протокола; (3) smooth-режим u_repr как рекомендуемый (9.3), step - консервативная альтернатива; (4) m_sample=100 г - входное поле с пометкой UNVERIFIED_INPUT. Роль: PM/методист",
+      "Блок 5 (e2e-verify): прогон verify_en13132_v16_charts.py (89 PASS), полная сверка ядра<->книга<->профиль на всех наборах, тест U(Итог)==U(x_pred) уже в верификаторе (V3r), генерация 4/5/8 уровней (V5). Роли: worker (LIGHT) + reviewer + auditor A",
+      "TD-DEV-205 (микрофикс, LOW): выдача RuntimeWarning при fallback nu<3. P1/P5, 1 правка ядра + тест"
+    ],
+    "deferred": [
+      "Блок 6 (Word-отчёт v16): требует python-docx (проверить в .venv); вне объёма до закрытия 4/5. При наличии - генерация docx по структуре 06_Итог (секции 1-5) и сверка чисел",
+      "Визуальная приёмка графиков в Excel: требует GUI/офиса - руками заказчика",
+      "Полный цикл W7/W13 (матрёшка 03) - на уровне фабрики, вне проекта"
+    ],
+    "boundaries": [
+      "Доменные артефакты (код v16, книги) остаются в C:\\Users\\Arhys\\Desktop\\каллибровка\\ГОСТ EN 13132\\v16\\ - выходы домена, НЕ вердикт-JSON (подтверждено аудитором блока 3 req4); в projects/ только ролевые JSON",
+      "P1 не запускать до вердикта ревьюера/аудитора по блоку 4 (18 §5 P1 требование)",
+      "Эскаляция: если ревью v3 снова REQUEST_CHANGES -> повторить цикл; при 3 итерациях - эскалация (13 §2)"
+    ]
+  },
+
+  "section_5_recommendation": {
+    "start_with": [
+      "1. ПЕРЕ-РЕВЬЮ v3 блока 4 + АУДИТОР A + закрытие TD-DEV-206/207 в реестре (первый незакрытый пункт цепочки: ревьюера last=REQUEST_CHANGES it.2, аудитора нет)",
+      "2. ПАРАЛЛЕЛЬНО: фиксация метод-решений с дефолтами (TD-DEV-203/204/190 + smooth F-1) - разблокирует блок 5 без блокировки цикла",
+      "3. БЛОК 5 e2e-verify (P1, LIGHT): сверка ядра/книги/профиля, U_итог==U(x_pred), 4/5/8 уровней; вход u_repr(mean2) зафиксирован (решение аудитора блока 3)",
+      "4. БЛОК 6 Word-отчёт v16 + демо заказчику + PRODUCTION-приёмка по DoD",
+      "5. Пройти 03-матрёшку (M0-M6) - финальная приёмка"
+    ],
+    "pipeline_order": "P1 (классический цикл) для блоков 4-finish/5/6 в контуре P4 (стадии 17); квант-режим 19: T1/T7 для e2e-чисел, T8 не нужен отдельно (GUM уже в ядре)"
+  },
+
+  "open_user_decisions_required": [
+    {"id": "TD-DEV-203", "severity": "MEDIUM", "what": "способ оценки u_y0 пробы: sigma_r/sqrt(2) (консервативнее, 0.0178) vs s(Y0)/sqrt(2) (0.0209)", "default": "sigma_r/sqrt(2)", "blocker_for": "блок 5"},
+    {"id": "TD-DEV-204", "severity": "LOW", "what": "экстраполяция вниз w<0.1 %мас не аттестована (РМГ 61 5.5)", "default": "предупреждение + ограничение протокола", "blocker_for": "блок 5"},
+    {"id": "TD-DEV-190", "severity": "MEDIUM", "what": "m_sample=100 г не задокументирован - входное поле массы пробы", "default": "поле ввода, дефолт 100 г, пометка UNVERIFIED_INPUT", "blocker_for": "метод-контракт 9.3"},
+    {"id": "F-1/F-2", "severity": "MEDIUM", "what": "u_repr smooth (0.1557, recommends 9.3) vs step (0.1406, консервативно) для w0=3.967; smooth даёт U=0.0862 (+34% к v16-it.2)", "default": "smooth (рекомендован в 9.3), step - альтернатива", "blocker_for": "протокольная запись w=4.0±0.3 %мас"},
+    {"id": "TD-DEV-205", "severity": "LOW", "what": "RuntimeWarning при fallback nu<3 в k_coverage (докстринг не выполняется)", "default": "микрофикс (выдавать warning)", "blocker_for": "нет"}
+  ]
+}

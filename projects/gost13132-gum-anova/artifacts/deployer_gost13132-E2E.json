@@ -1,0 +1,10 @@
+{
+  "module": "gost13132-gum-anova",
+  "role": "deployer",
+  "project_id": "gost13132-gum-anova",
+  "verdict": "DEPLOYED",
+  "closes_gate": "P2 (APPROVE → deploy обязателен, контракт 06 §4.14)",
+  "commits": ["<будет заполнено после коммита>"],
+  "files": ["README.md", "config.env", "tech_debt.md", "artifacts/*.json"],
+  "timestamp": "2026-10-12"
+}

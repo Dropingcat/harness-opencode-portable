@@ -1,0 +1,138 @@
+{
+  "module": "gost13132-v16-anova-gum-engine",
+  "role": "worker",
+  "project_id": "gost13132-gum-anova",
+  "status": "DONE (после REQUEST_CHANGES)",
+  "version": 2,
+  "files": {
+    "core": "C:\\Users\\Arhys\\Desktop\\каллибровка\\ГОСТ EN 13132\\v16\\anova_gum.py",
+    "tests": "C:\\Users\\Arhys\\Desktop\\каллибровка\\ГОСТ EN 13132\\v16\\test_anova_gum.py"
+  },
+  "functions": [
+    "ols_slopes_by_means",
+    "anova_repeatability",
+    "u_repr_from_tables",
+    "sigma_L_from_tables",
+    "welch_satterthwaite",
+    "k_coverage",
+    "combined_budget",
+    "profile_uncertainty",
+    "inverse_calibration"
+  ],
+  "tests": {
+    "test_a_synthetic_sigma_r_sigma_L_recover_sigma_R": "PASS",
+    "test_a2_anova_repeatability_accuracy_large_df": "PASS",
+    "test_b_rough_account_urepr_mean2_and_single": "PASS",
+    "test_c_negative_variance_returns_zero_not_nan": "PASS",
+    "test_g_urepr_all_8_ranges_table1": "PASS",
+    "test_g_urepr_table2_oxygen": "PASS",
+    "test_g_stepwise_interpolation_boundary": "PASS",
+    "test_d_welch_satterthwaite_and_k": "PASS",
+    "test_e_profile_200_points_and_monotonic_u": "PASS",
+    "test_zh_inverse_calibration_v15": "PASS",
+    "test_ols_on_v15_matches_reference": "PASS",
+    "test_module_imports_without_error": "PASS",
+    "test_rq200_combined_budget_excludes_sigma_r": "PASS",
+    "test_rq201_k_coverage_honest_low_nu": "PASS",
+    "test_rq202_find_range_extrapolation_warning": "PASS",
+    "test_rq_L1_inverse_names_consistent": "PASS"
+  },
+  "test_summary": "16/16 PASS (pytest 9.1.1 + автономный __main__-прогон)",
+  "dod_checks": {
+    "a": "PASS",
+    "b": "PASS",
+    "c": "PASS",
+    "g": "PASS",
+    "d": "PASS",
+    "e": "PASS",
+    "zh": "PASS"
+  },
+  "numeric_verification": {
+    "u_repr_mean2_r01_R03": 0.1041,
+    "u_repr_single_r01_R03": 0.1071,
+    "table9_3_corrected_mean2": [
+      0.0334,
+      0.1041,
+      0.1406,
+      0.1713,
+      0.2082,
+      0.2812,
+      0.3124,
+      0.349
+    ],
+    "table2_oxygen_mean2": 0.1052,
+    "nu_eff_dominant_urepr": 2704.0,
+    "k_at_nu6": 2.4469,
+    "k_at_nu1": 12.7062,
+    "k_at_nu2": 4.3027,
+    "profile_points": 200,
+    "ols_v15_a": 0.960998,
+    "ols_v15_R2": 0.99974,
+    "sigma_r_v15": 0.020596,
+    "combined_budget_sigma_r_excluded_uc": 0.1041,
+    "u_repr_extrapolated_lo": 0.1
+  },
+  "reviewer_requested_changes": {
+    "TD-DEV-200 (major)": {
+      "issue": "combined_budget складывал sigma_r в u_c (0.10418 вместо 0.1041), докстринг обещал анти-двойной счёт, enforcement отсутствовал",
+      "fix": "Реализован РЕАЛЬНЫЙ анти-двойной счёт: параметр exclude_when_superceded=('sigma_r',) — при наличии вклада прецизионности (u_repr/прецизионность/precision/urepr) вклад sigma_r ИСКЛЮЧАЕТСЯ из u_c и nu_eff. Нормализация имён u_repr: {u_repr, прецизионность, precision, urepr}. Возврат дополнен ключом 'excluded' (исключённые вклады) и local_sigma_r_not_duplicated=True при исключении.",
+      "file_line": "anova_gum.py: combined_budget (начало — нормализация имён, exclude_when_superceded, excluded)",
+      "new_test": "test_rq200_combined_budget_excludes_sigma_r: u_c=0.1041 (не 0.10418), excluded=[('sigma_r',0.004,6)], отрицательный контроль против sqrt(0.1041^2+0.004^2)=0.1041768",
+      "verification": "u_c = 0.1041, exclσr=True — ПОДТВЕРЖДЕНО"
+    },
+    "TD-DEV-201 (low)": {
+      "issue": "k_coverage(nu<=1) возвращал 2.0 — анти-консервативно (t(1)=12.7)",
+      "fix": "Честный t.ppf для nu>0.5 (квантиль Стьюдента через scipy или аппроксимацию); nu_eff=None/nan/<=0.5 -> NaN + RuntimeWarning (явный сигнал, НЕ молчаливый 2.0); inf -> z_0.975=1.95996.",
+      "file_line": "anova_gum.py: k_coverage",
+      "new_test": "test_rq201_k_coverage_honest_low_nu: k(1.0)=12.7062, k(2.0)=4.3027, k(inf)=1.95996, k(None)->RuntimeWarning+NaN, k(0.3)->RuntimeWarning+NaN",
+      "verification": "k(1.0)=12.7062, k(2.0)=4.3027, k(None)->warning — ПОДТВЕРЖДЕНО"
+    },
+    "TD-DEV-202 (low)": {
+      "issue": "_find_range молча экстраполировал w<0.1 в первый поддиапазон",
+      "fix": "Явная экстраполяция вниз: w<нижней границы табл.1 -> первый поддиапазон (0.1;1.0] с extrapolated=True в возврате + RuntimeWarning. Документировано в докстринге (согласуется с картой 9.3 контракта: X=0.026 г/г v15 -> поддиапазон (0.1;1.0]).",
+      "file_line": "anova_gum.py: _find_range (возврат 5-кортежа (lo,hi,r,R,extrapolated)), u_repr_from_tables (ключ extrapolated)",
+      "new_test": "test_rq202_find_range_extrapolation_warning: w=0.05 -> extrapolated=True + RuntimeWarning + lo=0.1/hi=1.0; w=0.5 и w=1.0 -> extrapolated=False без warning",
+      "verification": "w=0.05 -> extrapolated=True, warning=1 — ПОДТВЕРЖДЕНО"
+    },
+    "L1 (minor)": {
+      "issue": "В отчёте воркера u(x0)=0.0178 путалось с u_y0; ревьюер: u_y0=0.0179, u_x0=0.0209 (при способе оценки u_y0 по повторностям уровня 4)",
+      "fix": "Докстринг inverse_calibration дополнен явным различением: u_y0 (неопределённость ОТКЛИКА, вход) vs u_x0 (неопределённость КОНЦЕНТРАЦИИ, выход). Тест (ж) не менялся (корректен). Уточнена отчётность: 0.0178 — это u_x0 при оценке u_y0=σr/√2=0.0146 (объединённая повторяемость); при оценке u_y0 по повторностям уровня 4 получается u_y0=0.0179, u_x0=0.0209 (числа ревьюера). Оба способа валидны, пара u_y0<u_x0 выполняется.",
+      "file_line": "anova_gum.py: inverse_calibration (docstring ВНИМАНИЕ)",
+      "new_test": "test_rq_L1_inverse_names_consistent: u_x0 != u_y0, u_x0 > u_y0/|a|, численные якоря u_y0≈0.0146 (σr/√2) и u_x0≈0.0178",
+      "verification": "u_y0=0.0146, u_x0=0.0178 (σr/√2); u_y0=0.0179, u_x0=0.0209 (по уровню 4) — оба варианта задокументированы"
+    }
+  },
+  "technical_debts": [
+    "TD-DEV-200/201/202 зарегистрированы ревьюером (план §3) — ЗАКРЫТЫ данной правкой (реализованы + покрыты тестами rq200/201/202).",
+    "TD-DEV-203 (предложение): способ оценки u_y0 для результата пробы не зафиксирован в контракте — объединённая повторяемость σr/√2 vs повторности уровня пробы s(Y0)/√2 дают u_y0=0.0146 vs 0.0179 (u_x0=0.0178 vs 0.0209). Рекомендация для блока 4: использовать объединённый σr/√2 как более устойчивый (df_r=6), зафиксировать в контракте.",
+    "TD-DEV-204 (предложение): экстраполяция вниз w<0.1 % мас. (u_repr не аттестован РМГ 61 5.5) — для реальных проб с низким содержанием требуется решение методиста (расширение области аттестации или другой поддиапазон)."
+  ],
+  "findings_escape_hatch": [
+    {
+      "level": 2,
+      "what": "TD-DEV-200/201/202, найденные ревьюером, — закрыты реализацией; проверены численно и тестами",
+      "action": "закрыто в коде, отражено в артефакте v2"
+    },
+    {
+      "level": 2,
+      "what": "Способ оценки u_y0 (σr/√2 vs s(Y0)/√2 по уровню) влияет на u_x0 (0.0178 vs 0.0209) — не зафиксирован в контракте",
+      "action": "TD-DEV-203; решение для блока 4"
+    },
+    {
+      "level": 2,
+      "what": "Экстраполяция вниз w<0.1 % мас. — область не аттестована по РМГ 61 5.5",
+      "action": "TD-DEV-204; требуется решение методиста"
+    },
+    {
+      "level": 1,
+      "what": "Нормализация имён u_repr/прецизионность/precision/urepr в combined_budget — устранён риск повторного задвоения через синонимичные ключи",
+      "action": "реализовано в ядре"
+    }
+  ],
+  "notes": [
+    "Ядро чистое: numpy + scipy (scipy опционален, аппроксимация Hill&Williams для t). БЕЗ openpyxl в ядре, без /mnt/data, без GUI.",
+    "Профиль: 200 точек, шаг (max-min)/199, U=k·u_c поточечно с k(ν_eff) — паттерн v4.",
+    "Обратная градуировка: дельта-метод с cov(a,b) (GUM 5.1.2).",
+    "Анти-двойной счёт РЕАЛЬНЫЙ: sigma_r исключается при наличии u_repr/прецизионности."
+  ]
+}
