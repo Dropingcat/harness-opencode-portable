@@ -38,18 +38,26 @@ import re
 import sqlite3
 import sys
 import urllib.request
+import importlib.util
+from pathlib import Path
 
 # Переиспользуем детерминированную логику P0 из session_guard.py.
-from session_guard import (
-    OpenDBError,
-    STRONG_EN,
-    WEAK_RU,
-    _classify,
-    _extract_url,
-    _iter_state_strings,
-    _normalize,
-    _suspicion,
-)
+_spec = importlib.util.spec_from_file_location("_guard_p0_bundled", Path(__file__).resolve().with_name("session_guard.py"))
+_p0 = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(_p0)
+for _name in ("OpenDBError", "STRONG_EN", "WEAK_RU", "_classify", "_extract_url", "_normalize", "_suspicion"):
+    globals()[_name] = getattr(_p0, _name)
+
+
+def _iter_state_strings(state, prefix="state"):
+    if isinstance(state, str):
+        yield prefix, state
+    elif isinstance(state, dict):
+        for key, value in state.items():
+            yield from _iter_state_strings(value, f"{prefix}.{key}")
+    elif isinstance(state, list):
+        for index, value in enumerate(state):
+            yield from _iter_state_strings(value, f"{prefix}[{index}]")
 
 # ---------------------------------------------------------------------------
 # Путь к конфигу по умолчанию (рядом со скриптом).
@@ -74,7 +82,7 @@ def load_config(path):
     try:
         with open(path, "r", encoding="utf-8") as f:
             cfg = json.load(f)
-    except (OSError, json.JSONDecodeError) as e:
+    except (OSError, ValueError) as e:
         raise ConfigError(f"cannot read config {path}: {e}") from e
     if not isinstance(cfg, dict):
         raise ConfigError(f"config {path}: expected JSON object")
@@ -159,13 +167,11 @@ def _parse_verdict(raw):
 
 
 def _p2_text(pool):
-    """Собирает текст для P2 из строковых полей state (head+tail)."""
+    """Bounded input, never silently discard the middle."""
     text = "\n".join(t for _, t in pool)
     if len(text) <= P2_MAX_TEXT:
         return text
-    head = text[:1500]
-    tail = text[-1500:]
-    return head + "\n...[truncated middle]...\n" + tail
+    raise ValueError("semantic input exceeds bound")
 
 
 # ---------------------------------------------------------------------------
@@ -484,7 +490,7 @@ def _emit_alarm(alarm_info):
 def _part_text_pool(data):
     """Возвращает список (field, text) строковых полей state для part."""
     state = data.get("state")
-    if not isinstance(state, dict):
+    if not isinstance(state, (dict, list, str)):
         return []
     pool = []
     for field, text in _iter_state_strings(state):
@@ -523,6 +529,16 @@ def _p0_high_for_part(pool, prov, tool):
 
 def analyze(db_path, session_id=None, provider="cloud", model=None, limit=50,
             budget=None, config=None, api_key=None):
+    """Structured fail-closed public boundary, including config/DB/provider errors."""
+    try:
+        return _analyze(db_path, session_id, provider, model, limit, budget, config, api_key)
+    except Exception:
+        return {"verdict": "ERROR", "reason": "semantic_scan_error",
+                "coverage": {"complete": False}}
+
+
+def _analyze(db_path, session_id=None, provider="cloud", model=None, limit=50,
+             budget=None, config=None, api_key=None):
     """
     Гибридный P0+P2 анализ. Возвращает dict-результат.
     budget: override руб (None -> из конфига). config: dict (уже загружен).
@@ -544,14 +560,36 @@ def analyze(db_path, session_id=None, provider="cloud", model=None, limit=50,
     conn.row_factory = sqlite3.Row
     cur = conn.cursor()
 
-    if session_id:
-        rows = cur.execute(
-            "SELECT id, session_id, data FROM part WHERE session_id = ?",
-            (session_id,),
-        ).fetchall()
-    else:
-        rows = cur.execute("SELECT id, session_id, data FROM part").fetchall()
-    conn.close()
+    try:
+        if session_id:
+            rows = cur.execute(
+                "SELECT id, session_id, data FROM part WHERE session_id = ?",
+                (session_id,),
+            ).fetchall()
+        else:
+            rows = cur.execute("SELECT id, session_id, data FROM part").fetchall()
+    finally:
+        conn.close()
+
+    # Preflight every P0 input before constructing/calling any P2 provider.
+    # This also prevents a late malformed row from hiding incomplete coverage.
+    for row in rows:
+        data = json.loads(row["data"])
+        if not isinstance(data, dict):
+            raise ValueError("invalid part")
+        prov = _classify(data.get("type"), data.get("tool"))
+        if prov == "trusted":
+            if not isinstance(data.get("text"), str) or not data["text"]:
+                raise ValueError("missing text")
+            continue
+        if prov not in ("untrusted", "internal"):
+            raise ValueError("unknown provenance")
+        pool = _part_text_pool(data)
+        if not pool:
+            raise ValueError("missing state text")
+        if _p0_high_for_part(pool, prov, data.get("tool"))[0]:
+            return {"verdict": "FAIL", "reason": "p0_signature_hit",
+                    "coverage": {"complete": False}}
 
     chain = ClassifierChain(config, budget_t)
 
@@ -564,13 +602,17 @@ def analyze(db_path, session_id=None, provider="cloud", model=None, limit=50,
     alarm_seen = None
     alarm_emitted = False
     total = trusted = untrusted = internal = 0
+    incomplete = not rows
+    covered = required = 0
     for row in rows:
         total += 1
         try:
             data = json.loads(row["data"])
         except (json.JSONDecodeError, TypeError):
+            incomplete = True
             continue
         if not isinstance(data, dict):
+            incomplete = True
             continue
 
         part_type = data.get("type")
@@ -579,16 +621,19 @@ def analyze(db_path, session_id=None, provider="cloud", model=None, limit=50,
 
         if prov == "trusted":
             trusted += 1
+            covered += 1
             continue
         if prov == "untrusted":
             untrusted += 1
         elif prov == "internal":
             internal += 1
         else:  # other
+            incomplete = True
             continue
 
         pool = _part_text_pool(data)
         if not pool:
+            incomplete = True
             continue
 
         # P0
@@ -600,23 +645,37 @@ def analyze(db_path, session_id=None, provider="cloud", model=None, limit=50,
                 "part_id": row["id"],
                 "provenance": prov,
                 "tool": tool,
-                "url": _extract_url(data.get("state")),
+                "url": None,
                 "layer": "P0",
                 "signature": p0_f["signature"],
                 "p2_verdict": None,
-                "excerpt": p0_f["excerpt"],
+                "excerpt": "signature detected",
             })
-            continue
+            break  # P0 high stops before any further P2 work.
 
         # P2: только для untrusted (не internal) — по контракту.
         if prov != "untrusted":
+            covered += 1
             continue
+        required += 1
         if p2_classified >= limit:
+            incomplete = True
             continue
 
-        text = _p2_text(pool)
+        try:
+            text = _p2_text(pool)
+        except ValueError:
+            incomplete = True
+            continue
         res = chain.run(text)
         p2_classified += 1
+        if not isinstance(res, dict) or res.get("verdict") not in ("YES", "NO", None):
+            incomplete = True
+            continue
+        if res.get("verdict") in ("YES", "NO"):
+            covered += 1
+        else:
+            incomplete = True
 
         if res["alarm_level"]:
             alarm_seen = res["alarm_level"]
@@ -646,7 +705,7 @@ def analyze(db_path, session_id=None, provider="cloud", model=None, limit=50,
             "part_id": row["id"],
             "provenance": prov,
             "tool": tool,
-            "url": _extract_url(data.get("state")),
+            "url": None,
             "layer": "P2",
             "signature": None,
             "p2_verdict": p2_verdict,
@@ -654,10 +713,13 @@ def analyze(db_path, session_id=None, provider="cloud", model=None, limit=50,
             "p2_suspicion": p2_suspicion,
             "p2_provider": res["provider"],
             "p2_alarm": res["alarm_level"],
-            "excerpt": text[:60].replace("\n", " ").strip(),
+            "excerpt": "semantic classification completed",
         })
 
     verdict = "FAIL" if (p0_high > 0 or p2_yes > 0) else "PASS"
+    complete = not incomplete and covered == len(rows) and required == p2_classified
+    if verdict == "PASS" and not complete:
+        verdict = "ERROR"
 
     # ALARM-секция в финальном JSON.
     alarm = None
@@ -682,6 +744,9 @@ def analyze(db_path, session_id=None, provider="cloud", model=None, limit=50,
 
     return {
         "verdict": verdict,
+        "coverage": {"complete": complete, "total_parts": len(rows),
+                     "covered_parts": covered, "required_parts": required,
+                     "classified_parts": p2_classified},
         "session_id": session_id or "all",
         "provider": provider,
         "model": model,
@@ -785,7 +850,7 @@ def main():
     try:
         config = load_config(cfg_path)
     except ConfigError as e:
-        print(f"ERROR: {e}", file=sys.stderr)
+        print(json.dumps({"verdict": "ERROR", "reason": "configuration_error"}))
         return 1
 
     if args.list_models:
@@ -826,7 +891,7 @@ def main():
     if args.json:
         print(json.dumps(result, ensure_ascii=True, indent=2))
     else:
-        print(human_report(result))
+        print(human_report(result) if "stats" in result else "ERROR: semantic_scan_error")
 
     return 0 if result["verdict"] == "PASS" else 1
 

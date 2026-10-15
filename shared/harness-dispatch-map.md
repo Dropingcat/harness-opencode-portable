@@ -154,3 +154,22 @@ oc://renderer/server/<server-id>/session/<session-id>
 - Субагентская: при падении субагента (task) его сессия живёт во вложенной ветке; renderer-ссылка на неё открывается из родительской сессии (клик по задаче/ветке) или из лога `storage/session_diff/`.
 
 **Когда использовать (TD-150):** субагент упал → НЕ гадай «ничего не сделал» — открой его сессию через renderer-ссылку, посмотри stdout/stderr/артефакты. Если ссылка не доступна — прочитай сессию через `session_analyzer.py dump <session.json>`.
+# Stage 1 guard discovery (operator contract, not host enforcement)
+
+Logical `doc_guard` is registered in `config/tool_runtime_bindings.json` with
+provider `doc_guard` at `scripts/tools/doc_guard.py`.
+Discovery: `python "<ROOT>/scripts/tools/doc_guard.py" preflight --json` is readiness,
+never PASS. Admission: `python "<ROOT>/scripts/tools/doc_guard.py" scan --artifact FILE --config CONFIG --json`.
+Root precedence is `--harness-root`, `OPENCODE_HARNESS_ROOT`, then scanner-owned root;
+bad explicit roots block without fallback. Use an absolute script path from other CWDs.
+Before gathered-context handoff require an actual zero-exit successful complete P0+P2
+scan and hash-bound receipt for exact bounded UTF-8 artifacts, without a session DB.
+Rescan or validate against trusted current artifact/config/policy/code identities;
+editable receipt JSON alone is not authorization. Missing guard/config/provider,
+timeout, invalid results and incomplete coverage block; no degraded PASS.
+Legacy `guard/src/session_guard.py` is session DB P0-only, not combined admission.
+Legacy `guard/src/guard_runner.py` is the distinct combined DB scanner, requiring
+actual complete P0+P2 execution. No session_guard script under scripts is required.
+The trusted isolated local-only policy exception is unchanged.
+Native host binding/enforcement remains outstanding. Prompts and registered paths
+are not automatic runtime guarantees; fixture evidence is not host certification.

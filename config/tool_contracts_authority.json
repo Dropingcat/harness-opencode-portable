@@ -3,6 +3,31 @@
   "authority": "tool_contracts",
   "invariant": "Tool usage contracts are authored here. Runtime bindings remain authoritative in tool_runtime_bindings.json.",
   "contracts": {
+    "doc_guard": {
+      "skills_before_use": [],
+      "required_input": ["command"],
+      "optional_input": ["harness_root", "artifact", "config", "json"],
+      "commands": {
+        "preflight": {
+          "invocation": "python scripts/tools/doc_guard.py preflight --json",
+          "required_input": [],
+          "admission": false,
+          "meaning": "Readiness metadata only; never PASS; live provider availability is not verified"
+        },
+        "scan": {
+          "invocation": "python scripts/tools/doc_guard.py scan --artifact FILE --config CONFIG --json",
+          "required_input": ["artifact", "config"],
+          "meaning": "Exact bounded UTF-8 artifact scan without session DB; complete required P0+P2 only"
+        }
+      },
+      "root_precedence": ["--harness-root", "OPENCODE_HARNESS_ROOT", "owned_root"],
+      "required_stages": ["P0", "P2"],
+      "output_expectation": "JSON readiness metadata or scan receipt with ok/verdict, artifact sha256 and byte count, config/policy/code identity, required/executed stages and complete coverage. Only zero-exit successful complete required scans are admission evidence.",
+      "failures": "BLOCK on nonzero exit even with PASS, malformed/empty JSON or unknown verdict, invalid explicit root (no fallback), missing executable/import/config/provider, invalid/empty/oversized/non-UTF-8 artifact, timeout, stage failure or incomplete coverage, changed artifact or stale identities. No degraded PASS.",
+      "guard": "Before gathered-context handoff require actual scan and hash-bound receipt. Rescan or validate against trusted current artifact/config/policy/code inputs; editable receipt JSON alone is not authorization. P0-only session_guard is distinct; guard_runner is legacy session DB combined scanning.",
+      "safety": "Use trusted config paths; no secrets in argv/output. Fixture classification is testing evidence, not host certification. Prompts and discovery metadata are not automatic runtime enforcement.",
+      "host_enforcement_implemented": false
+    },
     "coder_run": {
       "skills_before_use": [
         "verification-planning"

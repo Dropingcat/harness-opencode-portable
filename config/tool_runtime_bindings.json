@@ -61,10 +61,20 @@
       "entrypoint": "scripts/router/resolve_route.py",
       "provider": "router_core"
     },
+    "doc_guard": {
+      "kind": "script",
+      "entrypoint": "scripts/tools/doc_guard.py",
+      "provider": "doc_guard"
+    },
+    "guard_runner": {
+      "kind": "script",
+      "entrypoint": "guard/src/guard_runner.py",
+      "provider": "guard_runner"
+    },
     "session_guard": {
       "kind": "script",
       "entrypoint": "guard/src/session_guard.py",
-      "provider": "doc_guard"
+      "provider": "session_guard"
     },
     "tribunal_role": {
       "kind": "launcher",
