@@ -1,0 +1,21 @@
+{
+  "budget": {
+    "max_cost_rub": 5.0,
+    "warn_threshold_rub": 0.5,
+    "alarm_threshold_rub": 1.0
+  },
+  "providers": {
+    "cloud": {
+      "enabled": false,
+      "transport": "unavailable"
+    },
+    "fallback": {
+      "enabled": false,
+      "transport": "unavailable"
+    },
+    "local": {
+      "enabled": false,
+      "transport": "unavailable"
+    }
+  }
+}
