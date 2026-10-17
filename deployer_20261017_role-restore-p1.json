@@ -1,0 +1,72 @@
+{
+  "deployer_report": {
+    "block_id": "role-restore-p1",
+    "role": "deployer",
+    "project_id": "harness-portable",
+    "verdict": "DEPLOYED",
+    "date": "2026-10-17",
+    "branch": "feature/b1-t2-core-config"
+  },
+  "section1_commit": {
+    "git_hash": "385652c2525c5fea3338dbb358c602667554ecc9",
+    "short_hash": "385652c",
+    "commit_message": "P1+restore: hidden-fix agent roles (TD-DEV-57), xval_check (TD-FACTORY-1), contract_validator P3-P5 (TD-FACTORY-2..6), docs+TD+AUD consolidation, blockers (TD-DEV-58..61)",
+    "files_committed": [
+      ".opencode/agent/_registry_index.json",
+      ".opencode/agent/code-auditor.md",
+      ".opencode/agent/code-reviewer.md",
+      ".opencode/agent/code-tester.md",
+      ".opencode/agent/coder-worker.md",
+      ".opencode/agent/glossary-maintainer.md",
+      "agents/code-auditor.md",
+      "agents/code-reviewer.md",
+      "agents/code-tester.md",
+      "agents/coder-worker.md",
+      "agents/glossary-maintainer.md",
+      "docs/BLOCKERS-2026-10-17.md",
+      "docs/CODERS/00_INDEX.md",
+      "docs/CODERS/ANALYST_REPORTS.md",
+      "docs/CODERS/ORCHESTRATOR_NOTES.md",
+      "docs/PROBLEMS_REGISTER.md",
+      "scripts/code-factory/contract_validator.py",
+      "scripts/code-factory/test_contract_validator_p1.py",
+      "scripts/verify/test_xval_check.py",
+      "scripts/verify/xval_check.py",
+      "tmp/cleanup-candidates-20261016/(2)-DUP-OF-1-deep-research-report.md",
+      "tmp/cleanup-candidates-20261016/(3)-DUP-OF-1-deep-research-report.md",
+      "tmp/cleanup-candidates-20261016/(6)-NOT-AUDIT-writer-styles.md",
+      "tmp/cleanup-candidates-20261016/AUDIT-14-10-26.lnk",
+      "tmp/cleanup-candidates-20261016/e2e_marker-w13-e2e-20261011.txt (rename из docs/e2e_marker.txt)"
+    ],
+    "push_status": "NOT_PUSHED (по заданию деплоя: push только по отдельному подтверждению владельца; рекомендация — W1_SKIP_HOOKS=1 при возможном блоке pre-push хуками)"
+  },
+  "section2_checks": [
+    { "check": "git status --short: выделены только наши пути (target-список)", "result": "PASS (27 записей в staged, чужое config/*, TRACKERS, researcher/*, tools/* НЕ тронуто)" },
+    { "check": "git diff --cached --name-status == только наши файлы", "result": "PASS (25 файлов + rename e2e_marker)" },
+    { "check": "py_compile 4 py-файлов (xval_check, test_xval_check, contract_validator, test_contract_validator_p1)", "result": "PASS (все exit 0)" },
+    { "check": "hidden-fix: agents/*.md 4 роли hidden:false, glossary-maintainer hidden удалён", "result": "PASS" },
+    { "check": ".opencode/agent/*.md перегенерирован (compile_agents.py, 26 agents), _registry_index.json обновлён", "result": "PASS (post-commit hook compile_agents --check = ok, content_hash 0f0f5a813...)" },
+    { "check": "git commit", "result": "PASS (385652c)" },
+    { "check": "pre-commit/perfectionist + health_check после коммита", "result": "PASS (verdict=good; Overall HEALTHY)" },
+    { "check": "git push", "result": "SKIPPED — по инструкции без отдельного подтверждения" },
+    { "check": "deployer_20261017_role-restore-p1.json создан", "result": "PASS" },
+    { "check": "docs/DEPLOYMENT_GUIDE_SERVER.md создан", "result": "PASS" },
+    { "check": "scripts/tools/relocate_paths.py создан + py_compile", "result": "PASS (--check отработал: LIVE-дерево содержит 59 файлов / 516 вхождений E:\\opencode_harness_portable)" }
+  ],
+  "section3_deployment_notes": [
+    "Коммит 385652c задеплоен в локальную ветку feature/b1-t2-core-config. НЕ ПУШЕН.",
+    "Для активации hidden-fix на этой машине (LIVE): python scripts\\sync_to_live.py --apply --only agents + синхронизация .opencode\\agent\\ -> .opencode\\agents\\ (5 файлов) + перезапуск OpenCode/Desktop (TD-DEV-60).",
+    "НЕ активен до sync_to_live + рестарта (TD-DEV-60).",
+    "gen_runners write сломан (TD-DEV-58): TypeError 'dict' object is not callable (reg.records()) — вне скоупа сессии.",
+    "glossary runner — решение за пользователем (TD-DEV-61): (а) вернуть hidden:true glossary-maintainer, либо (б) сгенерировать primary-обёртку после фикса TD-DEV-58.",
+    "Инструкция развёртывания на новом сервере (относительные пути): docs\\DEPLOYMENT_GUIDE_SERVER.md",
+    "Помощник относительности путей: scripts/tools/relocate_paths.py (--check / --apply с бэкапом)."
+  ],
+  "section4_next": {
+    "next_block": "TD-DEV-58 (gen_runners write) и/или TD-DEV-60 (sync_to_live+рестарт) — по приоритету владельца; после деплоя role-restore-p1."
+  },
+  "recommendation": [
+    "Push: рекомендуется выполнить отдельно (git push -u origin feature/b1-t2-core-config), при блокировке хуками — W1_SKIP_HOOKS=1 (известный TD-DEV-37).",
+    "После push — создать синхронизацию агентов на LIVE согласно TD-DEV-60 и перезапустить OpenCode."
+  ]
+}
