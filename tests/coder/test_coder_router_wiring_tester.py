@@ -210,7 +210,7 @@ class TesterCoderRouterWiringTests(unittest.TestCase):
     # --- 4. Legacy command shape via captured mock ------------------------
 
     def test_legacy_command_shape_captured(self) -> None:
-        """Legacy CLI command must be [BIN run --pure --model M --dir D task]."""
+        """Desktop OpenCode 2.x command uses cwd, not retired --pure/--dir flags."""
         _clean_env()
         router = _load_router()
         os.environ.pop("HARNESS_SEMANTIC_ENABLED", None)
@@ -236,11 +236,7 @@ class TesterCoderRouterWiringTests(unittest.TestCase):
         # create_subprocess_exec(*cmd, ...) forwards each cmd element as a
         # separate positional argument, so args == tuple(cmd).
         cmd = list(args)
-        expected = [
-            router.OPENCODE_BIN,
-            "run", "--pure", "--model", router.MODEL_BY_CLASS["polza"],
-            "--dir", str(_ROOT), "my task",
-        ]
+        expected = [router.OPENCODE_BIN, "run", "--model", router.MODEL_BY_CLASS["polza"], "my task"]
         self.assertEqual(cmd, expected)
         self.assertEqual(kwargs["cwd"], str(_ROOT))
         self.assertEqual(payload["exit_code"], 0)

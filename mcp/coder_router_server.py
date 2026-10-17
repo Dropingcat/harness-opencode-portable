@@ -4,6 +4,7 @@
 import asyncio
 import json
 import os
+import re
 import shutil
 import signal
 import subprocess
@@ -41,7 +42,59 @@ except ImportError:  # pragma: no cover - exercised by tests/coder/test_coder_ro
     _LEGACY_ONLY = True
 
 
-OPENCODE_BIN = os.environ.get("CODER_ROUTER_OPENCODE") or os.environ.get("OPENCODE_BIN") or shutil.which("opencode") or str(Path.home() / ".opencode" / "bin" / "opencode")
+def _desktop_cli_candidates(appdata: str | None = None) -> list[Path]:
+    """Return installed Desktop CLI candidates, newest semantic version first.
+
+    OpenCode Desktop on Windows installs ``opencode-cli.exe`` below APPDATA; it
+    does not have to be on PATH. This is discovery only: no process is started.
+    """
+    root = Path(appdata or os.environ.get("APPDATA", "")) / "ai.opencode.desktop" / "cli"
+    if not root.is_dir():
+        return []
+
+    def version_key(candidate: Path) -> tuple[int, ...]:
+        numbers = re.findall(r"\d+", candidate.parent.name)
+        return tuple(int(value) for value in numbers)
+
+    return sorted(
+        (candidate for candidate in root.glob("*/opencode-cli.exe") if candidate.is_file()),
+        key=version_key,
+        reverse=True,
+    )
+
+
+def _resolve_opencode_bin(
+    *,
+    environment: dict[str, str] | None = None,
+    which: Any = shutil.which,
+) -> str:
+    """Resolve the supported 2.x CLI without a hidden provider/model fallback."""
+    env = os.environ if environment is None else environment
+    # Evaluate both overrides in precedence order. A stale higher-priority value
+    # must not suppress a valid lower-priority executable.
+    for configured in (env.get("CODER_ROUTER_OPENCODE"), env.get("OPENCODE_BIN")):
+        # A stale inherited override is not an executable capability. Ignore it
+        # during discovery so it cannot mask the Desktop CLI installed for this user.
+        if configured and Path(configured).is_file():
+            return configured
+    for name in ("opencode", "opencode-cli"):
+        found = which(name)
+        # Windows PATH/Bun shims may retain a stale executable entry. Do not
+        # let a non-file candidate suppress Desktop CLI discovery.
+        if found and Path(found).is_file():
+            return found
+    candidates = _desktop_cli_candidates(env.get("APPDATA"))
+    if candidates:
+        return str(candidates[0])
+    return str(Path.home() / ".opencode" / "bin" / "opencode")
+
+
+def _cli_command(binary: str, model: str, task: str) -> list[str]:
+    """Build the installed OpenCode 2.x command; cwd supplies the workspace."""
+    return [binary, "run", "--model", model, task]
+
+
+OPENCODE_BIN = _resolve_opencode_bin()
 DEFAULT_WORKDIR = os.environ.get("OPENCODE_HARNESS_ROOT") or str(Path.cwd())
 TIMEOUT_SECONDS = int(os.environ.get("CODER_ROUTER_TIMEOUT", "300"))
 MODEL_BY_CLASS = {
@@ -162,7 +215,9 @@ async def handle_coder_run(arguments: dict[str, Any]) -> list[TextContent]:
             })
 
     # Legacy CLI transport: allowed ONLY as an explicit (flagged) fallback.
-    cmd = [OPENCODE_BIN, "run", "--pure", "--model", model, "--dir", str(workdir), task]
+    # OpenCode 2.x has no --pure/--dir flags. The already-validated workdir is
+    # supplied as cwd, and the model is always explicit.
+    cmd = _cli_command(OPENCODE_BIN, model, task)
     try:
         proc = await asyncio.create_subprocess_exec(
             *cmd,
@@ -214,7 +269,7 @@ async def list_tools() -> list[Tool]:
     return [
         Tool(
             name="coder_run",
-            description="Run OpenCode once with --pure for delegated coding, analysis, or smoke checks.",
+            description="Run OpenCode once with an explicit model for delegated coding, analysis, or smoke checks.",
             inputSchema={
                 "type": "object",
                 "properties": {
