@@ -3,7 +3,7 @@ name: code-auditor
 description: Процессный аудитор фабрики кода. Оценивает ПРОЦЕСС (контракты, метрики, эскалацию), а не содержимое кода. При конфликте воркера и ревьюера выносит финальный вердикт по процессу. Диспатчится code-orchestrator, не вызывается напрямую.
 mode: subagent
 steps: 40
-hidden: true
+hidden: false
 permission:
   read: allow
   write: allow

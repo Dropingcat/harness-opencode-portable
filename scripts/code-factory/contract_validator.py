@@ -5,23 +5,71 @@ import json
 import sys
 from pathlib import Path
 
-WORKER_SCHEMA = {"required": ["module", "code", "description"]}
+WORKER_SCHEMA = {"required": ["module", "code", "description", "written_by"]}
 REVIEWER_SCHEMA = {
-    "required": ["module", "verdict", "comments"],
+    "required": ["module", "verdict", "comments", "written_by", "verified_by_commands"],
     "verdict_enum": ["APPROVE", "REQUEST_CHANGES"],
     "comments_require": ["file", "line", "problem", "suggestion", "falsification"],
 }
-TESTER_SCHEMA = {"required": ["module", "result", "passed", "failed", "coverage"]}
+TESTER_SCHEMA = {"required": ["module", "result", "passed", "failed", "coverage", "written_by"]}
 AUDITOR_SCHEMA = {
-    "required": ["verdict", "justification", "process_analysis"],
+    "required": ["verdict", "justification", "process_analysis", "audit_mode", "written_by", "verified_by_commands"],
     "verdict_enum": ["APPROVE", "REJECT", "REQUEST_CHANGES", "INVALID_INPUT"],
     "process_analysis_require": ["contracts_respected", "iteration_count", "iteration_limit", "role_violation"],
+    "audit_mode_enum": ["A", "B"],
 }
-EXPERIMENTER_SCHEMA = {"required": ["metric", "baseline", "best_result", "experiments"]}
+EXPERIMENTER_SCHEMA = {"required": ["metric", "baseline", "best_result", "experiments", "written_by"]}
+PLANNER_SCHEMA = {
+    "required": [
+        "role", "project_id", "level", "input_level", "pipeline", "sections", "written_by",
+    ],
+    "input_level_enum": ["L0", "L1", "L2", "L3", "L4"],
+    "pipeline_enum": ["P1", "P2", "P3", "P4", "P5"],
+    "sections_require": [
+        "section_1_input_level_and_pipeline",
+        "section_2_input_audit",
+        "section_3_stages",
+        "section_4_resources",
+        "section_5_recommendation",
+    ],
+}
+DEPLOYER_SCHEMA = {
+    "required": ["role", "project_id", "verdict", "written_by"],
+    "verdict_enum": ["DEPLOYED", "BLOCKED"],
+}
 
 
 def _is_number(v) -> bool:
     return isinstance(v, (int, float)) and not isinstance(v, bool)
+
+
+def _check_written_by(data: dict, agent_type: str, errors: list[str]) -> None:
+    """Защита подмены звена (TD-FACTORY-5): written_by обязан совпадать с agent_type.
+
+    Проверка вызывается из validate() для ВСЕХ agent_type, поэтому required-поля
+    `written_by` есть во всех схемах.
+    """
+    wb = data.get("written_by")
+    if wb != agent_type:
+        errors.append(f"role substitution: written_by={wb!r} != agent_type={agent_type!r}")
+
+
+def _check_verified_by_commands(data: dict, agent_type: str, errors: list[str]) -> None:
+    """TD-FACTORY-3 (P4): verified_by_commands — непустой список непустых строк.
+
+    Отсутствие поля уже покрывается required-проверкой в validate(), здесь —
+    только контентная валидация.
+    """
+    field = "verified_by_commands"
+    v = data.get(field)
+    if v is None:
+        return
+    if not isinstance(v, list) or not v:
+        errors.append(f"{agent_type}.{field}: must be non-empty list of strings (P4)")
+        return
+    for i, cmd in enumerate(v):
+        if not isinstance(cmd, str) or not cmd.strip():
+            errors.append(f"{agent_type}.{field}[{i}]: must be non-empty string (P4)")
 
 
 def validate_worker(data: dict) -> list[str]:
@@ -75,6 +123,7 @@ def validate_reviewer(data: dict) -> list[str]:
     scope = data.get("scope_declared")
     if scope is not None and not isinstance(scope, dict):
         errors.append("reviewer.scope_declared: must be an object {scope_in, scope_out}")
+    _check_verified_by_commands(data, "reviewer", errors)
     return errors
 
 
@@ -100,6 +149,12 @@ def validate_auditor(data: dict) -> list[str]:
     verdict = data.get("verdict")
     if verdict not in AUDITOR_SCHEMA["verdict_enum"]:
         errors.append(f"auditor.verdict: must be one of {AUDITOR_SCHEMA['verdict_enum']}, got {verdict!r}")
+    # TD-FACTORY-2 (P3): audit_mode обязателен и ∈ {A, B}
+    am = data.get("audit_mode")
+    if am not in AUDITOR_SCHEMA["audit_mode_enum"]:
+        errors.append(
+            f"auditor.audit_mode: must be 'A' or 'B' (P3), got {am!r}"
+        )
     just = data.get("justification")
     if not just or len(str(just).strip()) < 20:
         errors.append("auditor.justification: too short (<20 chars)")
@@ -118,6 +173,7 @@ def validate_auditor(data: dict) -> list[str]:
             errors.append("auditor.process_analysis.iteration_limit: must be number")
         if not isinstance(pa.get("role_violation"), bool):
             errors.append("auditor.process_analysis.role_violation: must be bool")
+    _check_verified_by_commands(data, "auditor", errors)
     return errors
 
 
@@ -135,12 +191,68 @@ def validate_experimenter(data: dict) -> list[str]:
     return errors
 
 
+def validate_planner(data: dict) -> list[str]:
+    """TD-FACTORY-6 (P5): planner — входы L0-L4 → pipeline P1-P5 (контракт 18)."""
+    errors = []
+    if not data.get("role"):
+        errors.append("planner.role: missing/empty")
+    if not data.get("project_id"):
+        errors.append("planner.project_id: missing/empty")
+    if not data.get("level"):
+        errors.append("planner.level: missing/empty")
+    il = data.get("input_level")
+    if il not in PLANNER_SCHEMA["input_level_enum"]:
+        errors.append(f"planner.input_level: must be one of {PLANNER_SCHEMA['input_level_enum']}, got {il!r}")
+    pipe = data.get("pipeline")
+    if pipe not in PLANNER_SCHEMA["pipeline_enum"]:
+        errors.append(f"planner.pipeline: must be one of {PLANNER_SCHEMA['pipeline_enum']}, got {pipe!r}")
+    sections = data.get("sections")
+    if not isinstance(sections, dict) or not sections:
+        errors.append("planner.sections: must be non-empty object")
+    else:
+        for name in PLANNER_SCHEMA["sections_require"]:
+            if name not in sections:
+                errors.append(f"planner.sections.{name}: missing required section")
+        # связность: section_1 обязан содержать level и input_level
+        s1 = sections.get("section_1_input_level_and_pipeline")
+        if isinstance(s1, dict):
+            if s1.get("level") != data.get("level"):
+                errors.append("planner.sections.section_1_input_level_and_pipeline.level: must match top-level level")
+            if s1.get("input_level") != il:
+                errors.append("planner.sections.section_1_input_level_and_pipeline.input_level: must match top-level input_level")
+        elif "section_1_input_level_and_pipeline" in data.get("sections", {}):
+            errors.append("planner.sections.section_1_input_level_and_pipeline: must be object")
+    return errors
+
+
+def validate_deployer(data: dict) -> list[str]:
+    """TD-FACTORY-4 (P2): deployer — verdict DEPLOYED|BLOCKED; при DEPLOYED — commits/files."""
+    errors = []
+    if not data.get("role"):
+        errors.append("deployer.role: missing/empty")
+    if not data.get("project_id"):
+        errors.append("deployer.project_id: missing/empty")
+    verdict = data.get("verdict")
+    if verdict not in DEPLOYER_SCHEMA["verdict_enum"]:
+        errors.append(f"deployer.verdict: must be one of {DEPLOYER_SCHEMA['verdict_enum']}, got {verdict!r}")
+    if verdict == "DEPLOYED":
+        commits = data.get("commits")
+        if not isinstance(commits, list) or not commits:
+            errors.append("deployer.commits: must be non-empty list when verdict=DEPLOYED")
+        files = data.get("files")
+        if not isinstance(files, list):
+            errors.append("deployer.files: must be list when verdict=DEPLOYED")
+    return errors
+
+
 VALIDATORS = {
     "worker": validate_worker,
     "reviewer": validate_reviewer,
     "tester": validate_tester,
     "auditor": validate_auditor,
     "experimenter": validate_experimenter,
+    "planner": validate_planner,
+    "deployer": validate_deployer,
 }
 
 SCHEMAS = {
@@ -149,6 +261,8 @@ SCHEMAS = {
     "tester": TESTER_SCHEMA,
     "auditor": AUDITOR_SCHEMA,
     "experimenter": EXPERIMENTER_SCHEMA,
+    "planner": PLANNER_SCHEMA,
+    "deployer": DEPLOYER_SCHEMA,
 }
 
 
@@ -162,6 +276,8 @@ def validate(agent_type: str, data: dict) -> list[str]:
         if field not in data:
             errors.append(f"{agent_type}.{field}: missing required field")
     errors.extend(VALIDATORS[agent_type](data))
+    # TD-FACTORY-5: защита подмены звена — для всех agent_type
+    _check_written_by(data, agent_type, errors)
     return errors
 
 

@@ -45,6 +45,8 @@
 | **`17_FACTORY_CORPORATION.md`** | Масштабирование фабрики до «корпорации разработки ПО»: заказчик (внешний интерфейс) ↔ PM/директор (оркестратор) ↔ отделы (субагенты); контракт PM с заказчиком, стадийные циклы черновик→план→пилот→прод (SDLC), приёмка по DoD, обратная связь → в следующий цикл | Оркестратору (=PM): при задаче с заказчиком — вести по стадиям 17 §3/§4, каждая стадия = цикл фабрики (13); приёмка только по DoD (03) |
 | **`18_INPUT_SCENARIOS.md`** | Карта входных сценариев → динамические пайплайны: уровни входа L0–L4 (концепт→готовый код), пайплайны P1–P5 (композиции существующих звеньев, НЕ новые агенты), триггеры выбора для оркестратора (glob/Test-Path → L* → P*), шаблоны динамических контрактов по 15 §2 | Оркестратору (=PM, 17): при каждом входе — классифицировать уровень L0–L4, выбрать пайплайн P1–P5 по триггерам (18 §4), сформировать контракт по шаблону (18 §5); входные сценарии на входе стадии 17 (DISCOVERY→P3/PLANNING) |
 | **`19_QUANT_ANALYST_RESEARCHER.md`** | Количественный аналитик-исследователь — РЕЖИМ ресерчера (НЕ новый агент): типы задач T1–T8 (численная проверка, статистика, модели/МС, A/B, регрессии/ML, визуализация, аудит расчётов, метрология GUM), вложенные/параллельные циклы (суб-циклы внутри диспатча ресерчера, 06 §4.1), динамический контракт quantitative-ResearchTask по 15 §2, детерминированный слой numeric_comparator → merge_numeric → post_processor | Оркестратору: при количественном/числовом/статистическом вопросе в сводке аналитика — классифицировать задачу T1–T8 (19 §2), использовать quantitative-ResearchTask (19 §4), завернуть в детерм. слой (BRICK 4-5) — Принцип №0; внедрение в промпты ресерчера — TD-DEV-49 |
+| **`20_METAVIEW.md`** | Мета-взгляд агента (анти-просачивание контекста): якорь базовой задачи (base-task-capsule), взгляд со стороны (self-check + observer_<ID>.json), роутер-наблюдатель (observer-режим W5), активная сессия сна, детекторы D1-D9 | Оркестратору: при E2E-тестах и длинных цепочках (≥120 шагов) — подключать observer-режим (20 §3.3); внедрение в промпты тестировщиков — TD-DEV-51 |
+| **`21_ENTROPY_CONTOUR.md`** | Энтропийный контур (полукольцо + геймификация + детерминизм): смотритель (ExternalAuditorV2, режим B) → корзина (`.runs/entropy/bucket.json`) → обновитель (td_updater) → TD (05) → исправление → верификация; детекторы косяков исполнения E1-E10 (расширение D1-D9 из 20); монетки/уровни/ачивки (scoreboard+ledger+recidivism, начисления ТОЛЬКО кодом); правило `[LIMIT]` — анти-деградация агента (верни `[LIMIT]` + partial, не генерируй бесконечно) | Оркестратору: после цикла — прогон E-детекторов (21 §7, 06/13); при исчерпании бюджета звена — требовать `[LIMIT]` + partial; смотритель = аудитор режим B (07/14); находки уровня 2/3 → bucket (09); внедрение критерия `[LIMIT]` — TD-DEV-56 |
 | **`ANALYST_REPORTS.md`** | Журнал отчётов аналитика (единый baseline разработки): блок → дата → ссылка на отчёт → ключевые решения; круг цикла замыкает деплоер (04 §3.6, 06 §4.12) | Деплоеру: строка после каждого блока; оркестратору: baseline следующего цикла |
 
 **Источники вне пакета** (только как справочные, не как руководство к действию):
@@ -148,6 +150,8 @@
 | 13. Фабрика как корпорация | `17_FACTORY_CORPORATION.md` | контракт 17 (заказчик ↔ PM/оркестратор ↔ команды; стадии черновик→план→пилот→прод; приёмка по DoD; обратная связь → в следующий цикл), внедрение стадийных циклов + контракт PM с заказчиком — TD-DEV-47 | КОНТРАКТ АКТИВЕН (внедрение — TD-DEV-47, тест на 1 проекте: черновик→план) |
 | 14. Карта входных сценариев | `18_INPUT_SCENARIOS.md` | контракт 18 (уровни входа L0–L4 → пайплайны P1–P5; триггеры выбора для оркестратора §4; динамические контракты по 15 §2 §5; R1–R9), внедрение триггеров выбора в промпты оркестраторов — TD-DEV-48 | КОНТРАКТ АКТИВЕН (внедрение — TD-DEV-48, тест на 2 входах: L0→P3, L4→P1) |
 | 15. Количественный аналитик-исследователь | `19_QUANT_ANALYST_RESEARCHER.md` | контракт 19 (РЕЖИМ ресерчера, НЕ новый агент; типы задач T1–T8; вложенные/параллельные суб-циклы внутри диспатча; quantitative-ResearchTask по 15 §2; детерм. слой numeric_comparator → merge_numeric → post_processor — Принцип №0), внедрение режима quantitative в промпты ресерчера — TD-DEV-49 | КОНТРАКТ АКТИВЕН (внедрение — TD-DEV-49, тест на T1 (численная проверка) и T8 (метрология)) |
+| 16. Мета-взгляд агента | `20_METAVIEW.md` | контракт 20 (анти-просачивание контекста: якорь базовой задачи base-task-capsule, self-check + observer_<ID>.json, observer-режим роутера W5, активная сессия сна, детекторы D1-D9), внедрение в промпты тестировщиков — TD-DEV-51 | КОНТРАКТ АКТИВЕН (внедрение — TD-DEV-51, тест на E2E: агент НЕ выполняет задачу тестера) |
+| 17. Энтропийный контур | `21_ENTROPY_CONTOUR.md` | контракт 21 (полукольцо смотритель→bucket→td_updater→TD→фикс→верификация; детекторы E1-E10, расширение D1-D9 из 20; геймификация scoreboard/ledger/recidivism — начисления ТОЛЬКО кодом; правило `[LIMIT]` — верни `[LIMIT]` + partial при неспособности завершить, анти-деградация), рантайм `scripts/router/entropy_ctl.py`; зависимые TD-DEV-52 (observer_router), TD-DEV-54 (gen_base_task_capsule); формализация критерия `[LIMIT]` — TD-DEV-56 | КОНТРАКТ АКТИВЕН (полукольцо = DamageBasket/ExternalAuditorV2; геймификация + E1-E10 замыкают; критерий `[LIMIT]` — TD-DEV-56 OPEN) |
 
 **Матрёшка:** M0–M5 ГОТОВО, **M6 — снять BLOCKED** (EXP-2 выполнен: 394 сессии по БД, p50=16/p90=61/p95=147/max=1732; ≥60: 40 сессий, ≥100: 28; E2E-сессия=73 шага → steps=120 обоснован). См. `03_ACCEPTANCE.md`.
 
@@ -159,3 +163,39 @@
 2. Начать с **B1-T1** (venv whitelist) — фундамент без зависимостей.
 3. Зафиксировать срез: `git add -A && git commit -m "coders: pre-tranche-A snapshot"`.
 4. Работать строго по таблицам Транша A; после каждого блока — DoD.
+
+---
+
+## 8. Работы вне наших контрактов (14-16.10) — инвентарь чужих доков
+
+> Внешние/чужие документы второй волны (14-16.10.2026), НЕ входящие в контракты 00-21. Перенос фактов в наш реестр — серия TD-AUD-0..17 + TD-AUD-CLEAN в `docs/PROBLEMS_REGISTER.md` (добавлено 2026-10-16). Статус: CONSOLIDATED (факты перенесены в наш реестр) / AUDIT-PENDING (перенос только зарегистрирован, анализ позже) / USER-DECISION (удаление/архив — за пользователем). НИЧЕГО из перечисленного не удалять и не переименовывать без решения пользователя.
+
+| Файл | Описание (1 строка) | Наш статус |
+|------|---------------------|------------|
+| `docs/AUDIT 14-10-26/deep-research-report.md` | Внешний deep-research аудит 14-10-26 (main): оценка 7.5→4/10 по 6 областям, C1-C5/H1-H8/M1-M6/L1-L3, проект = «framework, не готовая агентная система» | CONSOLIDATED (TD-AUD-1..17) |
+| `docs/AUDIT 14-10-26/deep-research-report(1..3).md` | (1)=(2)=(3) — ИДЕНТИЧНЫЕ копии (MD5 A3CB4F7C): аудит интеграции Harness↔OpenCode, таблица F1-F14 P0-P2 | CONSOLIDATED (TD-AUD-1..17); дубли — TD-AUD-CLEAN |
+| `docs/AUDIT 14-10-26/deep-research-report(4).md` | Аудит «замена OpenCode собственным CLI»: A→B→C, P0/P1-таблица (semantic_execute schema, tools:{} security, bridge), решение A+B hybrid | CONSOLIDATED (TD-AUD-2/3/9/11/12/14) |
+| `docs/AUDIT 14-10-26/deep-research-report(5).md` | Резюме с CVE-2026-64651 (авторизация инструментов в песочнице) + Deep-пайплайны (Research/Audit/Skill/Analytical) — предложение, не список дефектов | CONSOLIDATED (TD-AUD-15); пайплайны — AUDIT-PENDING |
+| `docs/AUDIT 14-10-26/deep-research-report(6).md` | Посторонний текст «Шаблоны и эталонные стили для различных жанров» (писательство/ClaimWriter) — НЕ аудит | USER-DECISION (TD-AUD-CLEAN) |
+| `docs/AUDIT 14-10-26/AUDIT 14-10-26.lnk` | Windows-ярлык в git-папке | USER-DECISION (TD-AUD-CLEAN) |
+| `docs/A2_REAL_TRANSFER_ACCEPTANCE_2026-10-16.md` | A2: приёмка реальных сценариев передачи находок (TD-185/BLOCKED nested-dispatch), R1-R8 | CONSOLIDATED (live-базлайн A2 code-only, host-E2E OPEN per TD-185) |
+| `docs/A3_IMPLEMENTATION_DEPLOYMENT_PLAN_2026-10-16.md` | A3: единый критерий сна и безопасная публикация состояния (план, не реализация) | CONSOLIDATED (A3 = план) |
+| `docs/ARCHITECTURE_FOUNDATION_PLAN_2026-10-15.md` | План траншей A1-A6 (TraceStore→DamageBasket→обеспечение сна→updater→observability→обучение) | CONSOLIDATED (факты закрытия A1/A2) |
+| `docs/DEVELOPMENT_STAGE0_2026-10-15.md` | Stage 0: source-bound baseline, матрица развития (241/182/59 per json), сверка DEV/WS | CONSOLIDATED (факт рассинхрона json vs MASTER) |
+| `docs/FACTORY_DISPATCH_BLOCKER_2026-10-15.md` | TD-184: блокер вложенного диспатча (nested child agents, parentID=null) | CONSOLIDATED (TD-AUD-1 разрез; TD-184 OPEN) |
+| `docs/GUARD_DISCOVERY_*.md` (DISCOVERY_STAGE1, FOLLOWUP) | Discovery guard: регистрация doc_guard, приёмочные критерии stage1 (не фикс enforcement) | CONSOLIDATED (TD-AUD-5/8: guard остаётся) |
+| `docs/GUARD_STAGE1_CONTRACT_2026-10-15.md` | Stage 1 guard: контракт, модули guard-core/artifact/integration, release gates | CONSOLIDATED (TD-AUD-5/8: guard остаётся) |
+| `docs/GUARD_STAGE1_HOST_BOUNDARY.md` | Stage 1 host boundary: источник-наблюдение, не сертификация live enforcement | CONSOLIDATED (TD-AUD-8) |
+| `docs/GUARD_ARTIFACT_CLI.md` | CLI артефакт-guard (`doc_guard.py preflight/scan`) | CONSOLIDATED (discovery; enforcement не закрыт) |
+| `docs/PLAN_TD174-177_FACTORY.md` | План реализации чужих TD-174..177 через фабрику (ветки M0-M4) | CONSOLIDATED (темы TD-174..177 в MASTER.md) |
+| `docs/PLAN_E2E_MATRYOSHKA.md` | План матрёшки E2E (слои 0-6 ↔ E2E-01..07) | CONSOLIDATED (в MASTER.md E2E-хвост) |
+| `docs/DEVELOPMENT_TRACKER_RECONCILIATION_2026-10-14.md` | Сверка трекеров DEV/WS, hash-bound Evidence, V2 readiness | CONSOLIDATED (факт baseline: V2 autonomy BLOCKED) |
+| `docs/REVIEW_PORTABLE_VS_CANON.md` | Ревью portable vs канон (главы 1-35): статусы и нарушения → исправления | CONSOLIDATED (факты второй волны, TD-DEV-45/25 смежны) |
+| `docs/CANONS_AGENT_SYSTEM.md` | Блокнот канонов «Агенты и вайб-кодинг» | AUDIT-PENDING |
+| `docs/ARCHITECTURE_NOTES.md` | Notes on Architecture (v1): плагин-регистрация, module porting reconciliation | AUDIT-PENDING |
+| `docs/DAMAGE_BASKET_DURABILITY.md` | DamageBasket (A2): идемпотентность, ack-записи, атомарные замены | CONSOLIDATED (A2 code-only) |
+| `docs/TRACE_STORE_DURABILITY.md` | TraceStore (A1): атомарные append/transition с блокировкой FileLease | CONSOLIDATED (A1) |
+| `docs/AUDIT_RUD2_UNIVERSAL_AGENT_2026-10-04.json` | Аудит RUD-2: conтуры API/GUI/CLI, venv/MCP факты | AUDIT-PENDING (датирован до аудита 14-10; факты W11) |
+| `docs/AUDIT_MASTER_PLAN_COMPLETENESS_2026-10-04.md` | Аудит полноты мастер-плана (P0/P1/P2, «ДА с условиями») | AUDIT-PENDING (источник нашего реестра) |
+| `docs/MODULE_PORTING_EXCLUSIONS.json` | Реестр исключений переноса модулей (TD-D1/AG-D1 closure) | AUDIT-PENDING |
+| `docs/e2e_marker.txt` | Маркер E2E («w13-e2e-20261011») — след ночного прогона | USER-DECISION (архив/оставить) |

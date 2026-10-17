@@ -3,7 +3,6 @@ name: glossary-maintainer
 description: "Поддерживает docs/glossary harness: генерирует function_index.json, рендерит GLOSSARY.md, ведёт PORTABLE_DELTA и IMPLEMENTATION_STATUS, синхронизирует оба дерева. Диспатчится code-orchestrator по маршруту glossary-maintenance."
 mode: subagent
 steps: 40
-hidden: true
 permission:
   edit: allow
   write: allow

@@ -3,7 +3,7 @@ name: code-tester
 description: Тестер фабрики кода. Пишет и запускает тесты для модулей воркера, проверяет корректность. Диспатчится code-orchestrator, не вызывается напрямую.
 mode: subagent
 steps: 40
-hidden: true
+hidden: false
 permission:
   edit: allow
   write: allow

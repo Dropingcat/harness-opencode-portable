@@ -2,7 +2,7 @@
 name: code-reviewer
 description: Критик фабрики кода. Проверяет качество, стиль, безопасность кода воркера, находит слабые места. Диспатчится code-orchestrator, не вызывается напрямую.
 mode: subagent
-hidden: true
+hidden: false
 steps: 40
 permission:
   read: allow

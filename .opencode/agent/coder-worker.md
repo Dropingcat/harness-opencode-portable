@@ -3,7 +3,7 @@ name: coder-worker
 description: Воркер фабрики кода. Пишет конкретный модуль/функцию по контракту от оркестратора. Диспатчится code-orchestrator, не вызывается напрямую.
 mode: subagent
 steps: 40
-hidden: true
+hidden: false
 permission:
   edit: allow
   write: allow
