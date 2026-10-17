@@ -1,0 +1,10 @@
+{
+  "bun": "1.4.0",
+  "configuredFileRejected": true,
+  "proposedDirectory": true,
+  "resolved": "file:///E:/opencode_harness_portable/packages/opencode-harness-plugin/dist-v2/v2/index.js",
+  "contained": true,
+  "id": "harness.native.v2.deterministic",
+  "setupType": "function",
+  "setupInvoked": false
+}

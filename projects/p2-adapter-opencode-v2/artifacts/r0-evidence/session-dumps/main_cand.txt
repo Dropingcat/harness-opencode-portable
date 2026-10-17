@@ -1,0 +1,41 @@
+### crisp-island ses_ec9b6a7aeffeA34R9Kz1Kx354m
+ created=10-13 20:22 title=Аудит цепочки фабрики и версия 4.2 для всех фракционок, кроме 1160
+ session.agent=code-orchestrator session.model={"id":"gpt-6-luna","providerID":"openai"}
+ parent=None first_switched=code-orchestrator directory=C:/Users/Arhys/Desktop/каллибровка
+ project_id=b230697aab7c1aae7378f238f59e1ae41b088892
+
+### lucky-circuit ses_ec99e5741ffeCQRBqwJn7eKelA
+ created=10-13 20:48 title=Почему отключились агенты в OpenCode
+ session.agent=code-orchestrator session.model={"id":"gpt-6-luna","providerID":"openai"}
+ parent=None first_switched=code-orchestrator directory=C:/Users/Arhys/.local/share/opencode/worktree/62047a/clever-squid
+ project_id=62047a75a169c9577e5825eaf54140b2bd752057
+
+### kind-falcon ses_ec97fd4a0ffeADWw7BggYf2qaC
+ created=10-13 21:22 title=Проверка связи
+ session.agent=code-orchestrator session.model={"id":"gpt-6.1-sol","providerID":"openai"}
+ parent=None first_switched=code-auditor-runner directory=C:/Users/Arhys/.local/share/opencode/worktree/62047a/clever-squid
+ project_id=62047a75a169c9577e5825eaf54140b2bd752057
+
+### happy-tiger ses_ec9583d8cffdJEJiIm6AAXcl3h
+ created=10-13 22:05 title=Проверка работы циклов в харнесс
+ session.agent=build session.model={"id":"deepseek/deepseek-v4-flash-0731","providerID":"polza"
+ parent=None first_switched=None directory=C:/Users/Arhys/.local/share/opencode/worktree/62047a/silent-falcon
+ project_id=62047a75a169c9577e5825eaf54140b2bd752057
+
+### glowing-eagle ses_ec95c7efeffeLecFm9jvzkDIMT
+ created=10-13 22:00 title=None
+ session.agent=code-auditor-runner session.model=None
+ parent=None first_switched=code-auditor-runner directory=E:/opencode_harness_portable
+ project_id=62047a75a169c9577e5825eaf54140b2bd752057
+
+### quiet-cactus ses_ec495ad44ffe53wj4aL32oMYUu
+ created=10-14 20:16 title=Диагностика сбоев агентов в opencode desctop
+ session.agent=code-orchestrator session.model={"id":"deepseek/deepseek-v4-flash-0731","providerID":"polza"
+ parent=None first_switched=code-orchestrator directory=C:/Users/Arhys/.local/share/opencode/worktree/62047a/clever-squid
+ project_id=62047a75a169c9577e5825eaf54140b2bd752057
+
+### mighty-river ses_ec23ec7a9ffeDmzogCR14rqIED
+ created=10-15 07:10 title=Доработка new_versions_v4.2 по базлайну и контрактам CODERS
+ session.agent=code-orchestrator session.model={"id":"gpt-6-luna","providerID":"openai"}
+ parent=None first_switched=None directory=C:/Users/Arhys/.local/share/opencode/worktree/b23069/hidden-mountain
+ project_id=b230697aab7c1aae7378f238f59e1ae41b088892

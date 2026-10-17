@@ -112,3 +112,10 @@ htmlcov/
 .skills_state/
 .l2_memory/
 scripts/meta/_trace_store.json
+# Session/temp artifacts (never tracked)
+.kanban.db
+tmp/
+*.msix
+ses_*.json
+C:/Temp/
+

@@ -1,0 +1,9 @@
+id=ses_ef2f6384cffeZgT5uEOUw56jOU
+title=Пакет исполнительной документации для кодеров
+agent=build model={"id": "deepseek/deepseek-v4-flash-0731", "providerID": "polza", "variant": "default"}
+created=2026-10-05 20:08:27 updated=2026-10-16 21:01:00
+dir=E:\opencode_harness_portable
+messages=15
+user_msgs=0
+
+== assistant final/summary texts (first 30 chars of each) ==

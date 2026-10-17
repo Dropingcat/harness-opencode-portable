@@ -1,0 +1,12 @@
+{
+  "source": "C:\\Users\\Arhys\\.local\\share\\opencode\\tool-output\\tool_13b823523001W7qkUoBV3ROpc6",
+  "url": "https://opencode.ai/v2/docs/build/plugins",
+  "sha256": "1ee1f2c6ed5d950b28dc7640092f5c23a5ada92e2e41407db95ec50136fdc22f",
+  "guard": {
+    "verdict": "PASS",
+    "high_count": 0,
+    "low_count": 0,
+    "findings": [],
+    "scanned_fields": 1
+  }
+}

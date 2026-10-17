@@ -1,0 +1,40 @@
+{
+  "task_id": "r1-p2-adapter-20261017",
+  "parent_task_id": "p2-r0-20261017",
+  "status": "R1_IN_PROGRESS",
+  "meaning": "component recovery implementation; NOT P2 route ready; host not tested",
+  "base_head": "fd4c39b8f128dbf99883ea7a9f8cd73490e9dd64",
+  "branch": "r1/p2-adapter-20261017",
+  "isolated_worktree": "C:/Temp/opencode/r1-p2-adapter",
+  "canonical_run_dir": "E:/opencode_harness_portable/.runs/r1-p2-adapter-20261017",
+  "worker_commit": "19afcfb",
+  "modules": [
+    "guard/src/opencode_transport.py",
+    "guard/src/execution_tracker.py",
+    "guard/src/lifecycle.py",
+    "guard/src/native_semantic_transport.py"
+  ],
+  "factory_state": "RUNNING (awaiting reviewer,tester,auditor)",
+  "gates": {
+    "worker": "PASSED",
+    "tester": "PENDING",
+    "reviewer": "PENDING",
+    "auditor": "PENDING"
+  },
+  "host_calls_made": 0,
+  "model_calls_made": 0,
+  "session_mutations": 0,
+  "credentials_read": false,
+  "known_incidents": [
+    "factory_ctl auto-commit landed in canonical worktree (90a0bef), reverted via reset --mixed HEAD~1; prevention: run factory_ctl with CWD in isolated worktree"
+  ],
+  "docs": [
+    "handoff/p2-r1-2026-10-17/BASELINE.md",
+    "handoff/p2-r1-2026-10-17/ARCHITECTURE_DELTA.md",
+    "handoff/p2-r1-2026-10-17/CHANGES.md",
+    "handoff/p2-r1-2026-10-17/KNOWN_LIMITATIONS.md",
+    "handoff/p2-r1-2026-10-17/NEXT_STAGE.md",
+    "handoff/p2-r1-2026-10-17/R2_HOST_CANARY_PLAN.md"
+  ],
+  "self_hash": "excluded"
+}

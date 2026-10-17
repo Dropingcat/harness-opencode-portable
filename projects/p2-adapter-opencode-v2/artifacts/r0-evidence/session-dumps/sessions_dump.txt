@@ -1,0 +1,722 @@
+2026-10-13 22:05 | upd 2026-10-16 21:12 | ses_ec9583d8cffdJEJiIm6AAXcl3h | happy-tiger | parent=None | agent=build | Проверка работы циклов в харнесс
+2026-10-14 20:16 | upd 2026-10-16 21:10 | ses_ec495ad44ffe53wj4aL32oMYUu | quiet-cactus | parent=None | agent=code-orchestrator | Диагностика сбоев агентов в opencode desctop
+2026-10-02 18:37 | upd 2026-10-16 21:08 | ses_f02bc2825ffeN4EZCL59aQwRJV | gentle-garden | parent=None | agent=build | Мониторинг хуков, аудитора и циклов агентов
+2026-09-22 07:37 | upd 2026-10-16 21:06 | ses_f389815a4ffec4GCXzHKREUYr0 | quick-moon | parent=None | agent=claim-parser-runner | Извлечение клаймов по контракту Claim
+2026-10-15 07:10 | upd 2026-10-16 21:05 | ses_ec23ec7a9ffeDmzogCR14rqIED | mighty-river | parent=None | agent=code-orchestrator | Доработка new_versions_v4.2 по базлайну и контрактам CODERS
+2026-10-13 20:22 | upd 2026-10-16 21:05 | ses_ec9b6a7aeffeA34R9Kz1Kx354m | crisp-island | parent=None | agent=code-orchestrator | Аудит цепочки фабрики и версия 4.2 для всех фракционок, кроме 1160
+2026-10-13 21:22 | upd 2026-10-16 21:04 | ses_ec97fd4a0ffeADWw7BggYf2qaC | kind-falcon | parent=None | agent=code-orchestrator | Проверка связи
+2026-10-13 20:48 | upd 2026-10-16 21:04 | ses_ec99e5741ffeCQRBqwJn7eKelA | lucky-circuit | parent=None | agent=code-orchestrator | Почему отключились агенты в OpenCode
+2026-10-01 22:27 | upd 2026-10-16 21:04 | ses_f07100248ffeVaY6PiXzizQdwK | proud-eagle | parent=None | agent=code-auditor-runner | Тех долг: память агентов и роутер
+2026-10-05 20:08 | upd 2026-10-16 21:01 | ses_ef2f6384cffeZgT5uEOUw56jOU | gentle-meadow | parent=None | agent=build | Пакет исполнительной документации для кодеров
+2026-10-16 20:50 | upd 2026-10-16 21:00 | ses_eba2a14e0ffemknM3SB2nDA12Q | calm-rocket | parent=ses_ec495ad44ffe53wj4aL32oMYUu | agent=general | Reviewer: guard-sync critique
+2026-10-16 20:56 | upd 2026-10-16 20:59 | ses_eba24511affekIwia8HJ3i35UI | shiny-squid | parent=ses_ec495ad44ffe53wj4aL32oMYUu | agent=general | Worker round2: config gap fix
+2026-10-14 20:01 | upd 2026-10-16 20:56 | ses_ec4a2ecb7ffe7poFQ83kVQEXOY | stellar-forest | parent=None | agent=build | Ревизия OpenCode: проблемы переключения агентов
+2026-10-16 20:50 | upd 2026-10-16 20:52 | ses_eba2a1510ffeToGx4zTH4JhoSA | witty-garden | parent=ses_ec495ad44ffe53wj4aL32oMYUu | agent=general | Worker: guard-sync analysis
+2026-10-16 20:50 | upd 2026-10-16 20:51 | ses_eba2a14ddffer6CPa1cqeMrS09 | tidy-moon | parent=ses_ec495ad44ffe53wj4aL32oMYUu | agent=general | Tester: guard-sync criteria
+2026-10-09 07:13 | upd 2026-10-16 20:25 | ses_ee122a03effeCjW9uoK3zYehC9 | happy-squid | parent=None | agent=code-orchestrator | Аудит неопределенности калибровки по ГОСТ EN 13132
+2026-10-16 20:20 | upd 2026-10-16 20:21 | ses_eba453899ffegVbstiOhQZiiKs | witty-wizard | parent=ses_ec495ad44ffe53wj4aL32oMYUu | agent=general | Review consolidated prompt safety
+2026-10-16 19:36 | upd 2026-10-16 19:56 | ses_eba6d3bb6ffeKHFVfmg06W1e3Q | gentle-squid | parent=ses_ec495ad44ffe53wj4aL32oMYUu | agent=general | Review prompt LLM safety gates
+2026-10-16 19:36 | upd 2026-10-16 19:56 | ses_eba6d7f9affeBTxEzGYP0iGKLi | shiny-forest | parent=ses_ec495ad44ffe53wj4aL32oMYUu | agent=general | Review integration control boundaries
+2026-10-16 19:36 | upd 2026-10-16 19:41 | ses_eba6de4c3ffeoWekSMFIqePitq | quiet-wolf | parent=ses_ec495ad44ffe53wj4aL32oMYUu | agent=general | Design skills prompt compilation
+2026-10-16 19:35 | upd 2026-10-16 19:41 | ses_eba6e1b03ffeU1sOGW7iF3SD5G | crisp-falcon | parent=ses_ec495ad44ffe53wj4aL32oMYUu | agent=general | Design tracker transaction stitching
+2026-10-16 19:36 | upd 2026-10-16 19:41 | ses_eba6dac3dffeTABMPkk5H0RZ42 | proud-wolf | parent=ses_ec495ad44ffe53wj4aL32oMYUu | agent=general | Design LLM audit lifecycle
+2026-10-16 18:45 | upd 2026-10-16 19:30 | ses_eba9c1012ffe4VFZ07kZ697Fvc | tidy-squid | parent=None | agent=code-tester | A2 predeployment testing and release report
+2026-10-16 19:28 | upd 2026-10-16 19:29 | ses_eba747749ffeK4GrBB3qc5Iz12 | playful-engine | parent=ses_ec495ad44ffe53wj4aL32oMYUu | agent=general | Review unified integration reconciliation
+2026-10-16 19:21 | upd 2026-10-16 19:26 | ses_eba7b33b3ffeph4Y5oTnhtro9m | gentle-island | parent=ses_ec495ad44ffe53wj4aL32oMYUu | agent=general | Map existing Harness script modules
+2026-10-16 19:19 | upd 2026-10-16 19:22 | ses_eba7cc0e0ffeW5qj4v3kflQNHL | playful-engine | parent=ses_ec495ad44ffe53wj4aL32oMYUu | agent=general | Reconcile global Harness tracker
+2026-10-16 19:19 | upd 2026-10-16 19:21 | ses_eba7d1a4affeB1Apb3HCDhpDJ0 | neon-wizard | parent=ses_ec495ad44ffe53wj4aL32oMYUu | agent=general | Reconcile main architecture audits
+2026-10-16 19:19 | upd 2026-10-16 19:21 | ses_eba7cf372ffeI67bSzihilXG1A | glowing-planet | parent=ses_ec495ad44ffe53wj4aL32oMYUu | agent=general | Reconcile supplementary audit advice
+2026-10-16 19:12 | upd 2026-10-16 19:13 | ses_eba8329c2ffeY9Ps2nLE9SYZaj | misty-garden | parent=ses_ec495ad44ffe53wj4aL32oMYUu | agent=general | Review architecture-grounded A3 plan
+2026-10-16 19:06 | upd 2026-10-16 19:10 | ses_eba896b7dffezE8EtPeigZUURO | quick-otter | parent=ses_ec495ad44ffe53wj4aL32oMYUu | agent=general | Map A3 execution boundaries
+2026-10-16 19:06 | upd 2026-10-16 19:08 | ses_eba893f6cffe2wYy45Wt997vMe | brave-nebula | parent=ses_ec495ad44ffe53wj4aL32oMYUu | agent=general | Extract A3 canon constraints
+2026-10-16 18:52 | upd 2026-10-16 18:56 | ses_eba960b69ffexnBAEXDRjS6Lbk | jolly-rocket | parent=ses_ec495ad44ffe53wj4aL32oMYUu | agent=general | Deploy verified A2 package
+2026-10-16 18:45 | upd 2026-10-16 18:47 | ses_eba9bde79ffePE8DmSx101VYbe | lucky-harbor | parent=ses_ec495ad44ffe53wj4aL32oMYUu | agent=general | Check A2 maintenance feasibility
+2026-10-16 18:43 | upd 2026-10-16 18:44 | ses_eba9d99aaffejynDHP7mdEwTGD | proud-wolf | parent=ses_ec495ad44ffe53wj4aL32oMYUu | agent=general | Review safe release plan
+2026-10-16 18:24 | upd 2026-10-16 18:28 | ses_ebaaf1321ffeUmAH0ttfmwd6i5 | neon-engine | parent=ses_ec495ad44ffe53wj4aL32oMYUu | agent=general | A2 read-only writer preflight
+2026-10-16 08:17 | upd 2026-10-16 08:18 | ses_ebcdb8950ffevhOhxeNXvz2L3Z | brave-canyon | parent=ses_ec495ad44ffe53wj4aL32oMYUu | agent=general | A2 bounded LIGHT verification
+2026-10-16 08:15 | upd 2026-10-16 08:16 | ses_ebcdd690bffeiK6NXaNm4lBZU0 | clever-nebula | parent=ses_ec495ad44ffe53wj4aL32oMYUu | agent=general | A2 release risk synthesis
+2026-10-16 08:13 | upd 2026-10-16 08:14 | ses_ebcded9f9ffeX2UKT0tIM4mLkV | curious-falcon | parent=None | agent=code-auditor | Reissue A2 audit receipt in ASCII English
+2026-10-16 08:11 | upd 2026-10-16 08:12 | ses_ebce074c0ffeOM6qvIPLnCwnZM | clever-sailor | parent=None | agent=code-auditor | A2 process-only audit with release blocked
+2026-10-16 08:08 | upd 2026-10-16 08:10 | ses_ebce3d8c9ffepMAqH5lkdFEhR2 | proud-sailor | parent=None | agent=code-reviewer | A2 delta re-review cf58843..ff88258
+2026-10-16 08:08 | upd 2026-10-16 08:10 | ses_ebce3bea4ffeB67Bs7LfUh07V7 | swift-otter | parent=None | agent=code-tester | A2 rework negative controls and regression tests
+2026-10-16 08:04 | upd 2026-10-16 08:07 | ses_ebce75573ffe3yGOs60HpMBRJe | clever-otter | parent=None | agent=coder-worker | A2 captured-plan admission validation fix
+2026-10-16 07:58 | upd 2026-10-16 08:01 | ses_ebceca760ffeFpKTVGXo71QKQT | lucky-knight | parent=None | agent=code-tester | A2-basket independent negative-control testing
+2026-10-16 07:58 | upd 2026-10-16 08:00 | ses_ebceccbbaffeQ7J8TY0aNrOysL | hidden-falcon | parent=None | agent=code-reviewer | A2-basket review: cf58843 versus 30a469e
+2026-10-16 07:51 | upd 2026-10-16 07:57 | ses_ebcf2aa5cffecXQyq2DYbhCnW8 | witty-eagle | parent=None | agent=coder-worker | A2 basket durability implementation
+2026-10-16 07:30 | upd 2026-10-16 07:35 | ses_ebd062a27ffe0IgEOduUsui62D | crisp-planet | parent=ses_ee122a03effeCjW9uoK3zYehC9 | agent=general | Анализ и план v18
+2026-10-15 21:51 | upd 2026-10-16 07:26 | ses_ebf186771ffe69PA1DcJOCQHgl | hidden-tiger | parent=ses_ee122a03effeCjW9uoK3zYehC9 | agent=general | Анализ и план v18
+2026-10-15 21:45 | upd 2026-10-16 07:26 | ses_ebf1e3159ffeCVbyQzQDEAoBTF | jolly-moon | parent=ses_ee122a03effeCjW9uoK3zYehC9 | agent=general | Планер v18 через runner
+2026-10-15 21:07 | upd 2026-10-16 07:26 | ses_ebf4035dfffeEJPeXbsCGogfYH | cosmic-mountain | parent=ses_ec495ad44ffe53wj4aL32oMYUu | agent=general | Контролируемый выпуск A1
+2026-10-15 20:57 | upd 2026-10-16 07:26 | ses_ebf497603ffedRN3078eWmlx9V | mighty-nebula | parent=ses_ec495ad44ffe53wj4aL32oMYUu | agent=general | Сводка аналитика A1
+2026-10-15 21:00 | upd 2026-10-16 07:26 | ses_ebf474e22ffeYEtEwAYbS0yeux | calm-tiger | parent=ses_ec495ad44ffe53wj4aL32oMYUu | agent=general | Локальная проверка выпуска A1
+2026-10-15 19:47 | upd 2026-10-16 07:26 | ses_ebf8a3c61ffeujqdFCRa64tUfD | misty-cabin | parent=ses_ec495ad44ffe53wj4aL32oMYUu | agent=general | Канон и архитектурные ограничения
+2026-10-15 19:46 | upd 2026-10-16 07:26 | ses_ebf8aa091ffeN19iXoQ3mYfEff | hidden-garden | parent=ses_ec495ad44ffe53wj4aL32oMYUu | agent=general | Ревью роутера снов обучения
+2026-10-15 19:46 | upd 2026-10-16 07:26 | ses_ebf8b2033ffeWPJzDz9h1QQCsw | lucky-star | parent=ses_ec495ad44ffe53wj4aL32oMYUu | agent=general | Ревью аудитор корзина трекер
+2026-10-15 07:44 | upd 2026-10-16 07:26 | ses_ec21f7656ffePU9e9a6bmDafo0 | sunny-meadow | parent=ses_ec495ad44ffe53wj4aL32oMYUu | agent=general | Аудит повторного сигнала ревью
+2026-10-15 21:39 | upd 2026-10-15 21:42 | ses_ebf239e35ffe5kHDiSKJqVXcq3 | jolly-harbor | parent=ses_ee122a03effeCjW9uoK3zYehC9 | agent=general | Анализ и графики v18
+2026-10-15 20:54 | upd 2026-10-15 20:55 | ses_ebf4c539fffeDb4YFQojO505YX | shiny-knight | parent=None | agent=code-auditor | A1-trace process reconciliation and budget audit
+2026-10-15 20:47 | upd 2026-10-15 20:49 | ses_ebf53288effeL2XLzyuEluOvxM | proud-lagoon | parent=None | agent=code-reviewer | Independent final A1 compliance review
+2026-10-15 20:47 | upd 2026-10-15 20:48 | ses_ebf52b9beffef6exMfqbvYZkJ5 | hidden-garden | parent=None | agent=coder-worker | Finalize A1 worker JSON artifact package
+2026-10-15 20:41 | upd 2026-10-15 20:43 | ses_ebf58150fffe4wcLfV61VklB3l | gentle-forest | parent=None | agent=code-auditor | Аудит процесса A1-trace по метаданным
+2026-10-15 20:38 | upd 2026-10-15 20:39 | ses_ebf5ad48bffe9ZkjeSb7aFDuBG | gentle-cabin | parent=None | agent=code-reviewer | A1-trace final test-only review
+2026-10-15 20:34 | upd 2026-10-15 20:36 | ses_ebf5f11c3ffeMoaY3XUoaRiZmu | lucky-cactus | parent=None | agent=code-reviewer | A1-trace bounded delta re-review
+2026-10-15 20:34 | upd 2026-10-15 20:36 | ses_ebf5e97abffeLxDvOmyQB1wk8h | proud-river | parent=None | agent=code-tester | A1 trace rework independent retest
+2026-10-15 20:29 | upd 2026-10-15 20:32 | ses_ebf63ce7fffeV6LWLsPWhpnXwG | misty-planet | parent=None | agent=coder-worker | A1-trace alias identity and FileLease cleanup
+2026-10-15 20:22 | upd 2026-10-15 20:25 | ses_ebf695b82ffexlp4wOS0raUYiy | glowing-otter | parent=None | agent=code-reviewer | A1-trace durability and concurrency review
+2026-10-15 20:23 | upd 2026-10-15 20:25 | ses_ebf68ea7affetZmAxhbdOwoe9s | swift-lagoon | parent=None | agent=code-tester | A1-trace independent durability testing
+2026-10-15 20:16 | upd 2026-10-15 20:20 | ses_ebf6f8143ffeAguG5zvgdbDAcc | playful-falcon | parent=None | agent=coder-worker | A1 TraceStore durability implementation
+2026-10-15 20:14 | upd 2026-10-15 20:14 | ses_ebf70f314ffenx01XnlhcGx1kg | eager-cabin | parent=None | agent=coder-worker | Read-only agent role and fallback check
+2026-10-15 20:12 | upd 2026-10-15 20:12 | ses_ebf72da7bffexX593tm6DLLe41 | tidy-cactus | parent=None | agent=coder-worker-runner | A1-trace durability implementation and tests
+2026-10-15 19:53 | upd 2026-10-15 19:55 | ses_ebf843235ffeQ7Bkr7sNL545eb | eager-planet | parent=ses_ec495ad44ffe53wj4aL32oMYUu | agent=general | Проверка спорных выводов ревью
+2026-10-15 07:41 | upd 2026-10-15 07:44 | ses_ec2222a90ffeAQqAhPSp55UdTk | brave-eagle | parent=ses_ec495ad44ffe53wj4aL32oMYUu | agent=general | Ревью ядра fail-closed
+2026-10-15 07:41 | upd 2026-10-15 07:44 | ses_ec222762effekFGeLUtKjf6QiI | hidden-comet | parent=ses_ec495ad44ffe53wj4aL32oMYUu | agent=general | P2 через OpenAI OpenCode
+2026-10-15 07:42 | upd 2026-10-15 07:44 | ses_ec2219dd0ffekSuBLB7q3mb6kW | eager-island | parent=ses_ec495ad44ffe53wj4aL32oMYUu | agent=general | Ревью файлового guard
+2026-10-15 07:42 | upd 2026-10-15 07:43 | ses_ec221ece0ffeQw8BTc57qVg44K | glowing-island | parent=ses_ec495ad44ffe53wj4aL32oMYUu | agent=general | Ревью discovery и политик
+2026-10-15 07:41 | upd 2026-10-15 07:42 | ses_ec2220ea8ffealb9fKhrlGyxhb | witty-cabin | parent=ses_ec495ad44ffe53wj4aL32oMYUu | agent=general | Тестирование отказов ядра guard
+2026-10-15 07:30 | upd 2026-10-15 07:33 | ses_ec22cdfcaffedZVb6T62d4KiRL | swift-mountain | parent=ses_ec495ad44ffe53wj4aL32oMYUu | agent=general | Исправление ядра guard
+2026-10-15 07:31 | upd 2026-10-15 07:33 | ses_ec22be248ffe8uq1GhY3GrACRa | crisp-canyon | parent=ses_ec495ad44ffe53wj4aL32oMYUu | agent=general | Интеграция discovery контракта
+2026-10-15 07:30 | upd 2026-10-15 07:33 | ses_ec22ca2f5ffePlVt9dNUgkcrT7 | swift-planet | parent=ses_ec495ad44ffe53wj4aL32oMYUu | agent=general | Файловый guard и обнаружение
+2026-10-15 07:15 | upd 2026-10-15 07:15 | ses_ec23aae97ffe4B66S6KMc1gAWa | curious-forest | parent=ses_ec495ad44ffe53wj4aL32oMYUu | agent=general | Финальный процессный аудит этапа ноль
+2026-10-15 07:09 | upd 2026-10-15 07:12 | ses_ec2401a9cffevRIEW6iGc9D1sa | brave-meadow | parent=ses_ec495ad44ffe53wj4aL32oMYUu | agent=general | Ревью матрицы этапа ноль
+2026-10-15 07:03 | upd 2026-10-15 07:12 | ses_ec244ec7fffeuWNEZOsjfSnntC | hidden-mountain | parent=ses_ec495ad44ffe53wj4aL32oMYUu | agent=general | Воркер матрицы этапа ноль
+2026-10-15 07:09 | upd 2026-10-15 07:10 | ses_ec23ffabdffezXoIfdlAkun3da | kind-lagoon | parent=ses_ec495ad44ffe53wj4aL32oMYUu | agent=general | Независимые тесты матрицы
+2026-10-01 20:04 | upd 2026-10-15 07:10 | ses_f079394f1ffeY5ON06C6r1So8O | eager-garden | parent=None | agent=code-auditor-runner | Проверка файлов фракционного состава по ГОСТ/АСТМ
+2026-10-15 07:07 | upd 2026-10-15 07:08 | ses_ec241e279ffecHnK6mHF4bSIlT | nimble-knight | parent=ses_ec495ad44ffe53wj4aL32oMYUu | agent=general | Ревью отчёта контекста
+2026-10-15 07:07 | upd 2026-10-15 07:08 | ses_ec241c3b2ffe6oj6mVQVsVEc28 | mighty-cactus | parent=ses_ec495ad44ffe53wj4aL32oMYUu | agent=general | Тесты отчёта глобальных задач
+2026-10-15 07:04 | upd 2026-10-15 07:06 | ses_ec244bbf1ffeOGzV4N1lTTb3sp | misty-moon | parent=ses_ec495ad44ffe53wj4aL32oMYUu | agent=general | Воркер отчёта глобального трекера
+2026-10-15 06:57 | upd 2026-10-15 07:02 | ses_ec24b0d58ffeCfknwRkWRYv8BK | stellar-planet | parent=ses_ec495ad44ffe53wj4aL32oMYUu | agent=general | Аудит процесса сверки трекера
+2026-10-15 06:49 | upd 2026-10-15 07:01 | ses_ec251c33fffeUVAcWl1lY7qZul | mighty-harbor | parent=ses_ec495ad44ffe53wj4aL32oMYUu | agent=general | Ревью сверки трекера
+2026-10-14 21:52 | upd 2026-10-15 07:01 | ses_ec43dacebffeQ8I9MMiVUaLrXx | glowing-circuit | parent=ses_ec495ad44ffe53wj4aL32oMYUu | agent=general | Воркер сверки глобального трекера
+2026-10-15 06:50 | upd 2026-10-15 06:57 | ses_ec25199cbffec8kms22yL9Be6u | quick-engine | parent=ses_ec495ad44ffe53wj4aL32oMYUu | agent=general | Тесты и сохранность истории
+2026-10-14 21:34 | upd 2026-10-14 21:38 | ses_ec44de31bffei02WdvCoEDeJsu | jolly-orchid | parent=ses_ec495ad44ffe53wj4aL32oMYUu | agent=general | Сверка памяти и подмешивания
+2026-10-14 21:35 | upd 2026-10-14 21:37 | ses_ec44db02cffeUGUkejWA1ZSJ84 | sunny-pixel | parent=ses_ec495ad44ffe53wj4aL32oMYUu | agent=general | Сверка защиты от инъекций
+2026-10-14 20:51 | upd 2026-10-14 21:29 | ses_ec4754ba7ffeXhI0BgvELefNJ5 | crisp-comet | parent=ses_ec495ad44ffe53wj4aL32oMYUu | agent=general | Независимые тесты адаптера V2
+2026-10-14 20:46 | upd 2026-10-14 21:26 | ses_ec47a7d95ffeaYVCdIe2c87Bjg | happy-comet | parent=ses_ec495ad44ffe53wj4aL32oMYUu | agent=general | Независимые тесты демона
+2026-10-14 20:42 | upd 2026-10-14 21:26 | ses_ec47e0343ffe1lJv3GIHzWVTl7 | gentle-meadow | parent=ses_ec495ad44ffe53wj4aL32oMYUu | agent=general | Проверка подключения Harness V2
+2026-10-14 20:52 | upd 2026-10-14 20:53 | ses_ec4744a89ffeQtSwLIxGYRPRxh | crisp-circuit | parent=ses_ec495ad44ffe53wj4aL32oMYUu | agent=general | Процессный аудит восстановления
+2026-10-14 20:51 | upd 2026-10-14 20:53 | ses_ec47577fcffe5MSSAtqdHiaKuy | happy-rocket | parent=ses_ec495ad44ffe53wj4aL32oMYUu | agent=general | Независимое ревью адаптера V2
+2026-10-14 20:50 | upd 2026-10-14 20:50 | ses_ec476d699ffeqlkrkRxSFLdZDe | neon-wizard | parent=ses_ec495ad44ffe53wj4aL32oMYUu | agent=general | Ревью подписочного маршрута
+2026-10-14 20:45 | upd 2026-10-14 20:49 | ses_ec47ab5adffeBwAPR4HZT8HIF5 | proud-comet | parent=ses_ec495ad44ffe53wj4aL32oMYUu | agent=general | Независимое ревью демона
+2026-10-14 20:41 | upd 2026-10-14 20:48 | ses_ec47e71c9ffeLU4LqdS3BMuJVP | hidden-panda | parent=ses_ec495ad44ffe53wj4aL32oMYUu | agent=general | Сверка аудита и восстановления
+2026-10-14 20:42 | upd 2026-10-14 20:48 | ses_ec47e360fffefUcHsWubjPkQhA | quiet-river | parent=ses_ec495ad44ffe53wj4aL32oMYUu | agent=general | Исправление честности демона
+2026-10-13 22:26 | upd 2026-10-13 22:31 | ses_ec944c1cdffe9NP7ZWht4YkD5B | crisp-canyon | parent=ses_ec97fd4a0ffeADWw7BggYf2qaC | agent=general | Воспроизвести шесть уровней EN13132
+2026-10-13 22:26 | upd 2026-10-13 22:28 | ses_ec9450c8fffekU6F5evo67d6Mm | neon-circuit | parent=ses_ec97fd4a0ffeADWw7BggYf2qaC | agent=explore | Карта EN13132 и исходных данных
+2026-10-13 22:10 | upd 2026-10-13 22:11 | ses_ec953c0e1ffeJDvym3hFpZ0V1Z | brave-harbor | parent=ses_ec97fd4a0ffeADWw7BggYf2qaC | agent=general | Итоговый аудит границ приёмки
+2026-10-13 21:40 | upd 2026-10-13 22:09 | ses_ec96f2e2bffeNqdyn5GV0SoBpg | curious-rocket | parent=ses_ec97fd4a0ffeADWw7BggYf2qaC | agent=general | Создать проверку целевого комплекта
+2026-10-13 22:00 | upd 2026-10-13 22:06 | ses_ec95c7efeffeLecFm9jvzkDIMT | glowing-eagle | parent=None | agent=code-auditor-runner | 
+2026-10-13 21:48 | upd 2026-10-13 22:05 | ses_ec967f28cffewIe21dwCJuVUrf | jolly-circuit | parent=ses_ec97fd4a0ffeADWw7BggYf2qaC | agent=general | Проверить исправленные пять книг
+2026-10-13 21:47 | upd 2026-10-13 21:59 | ses_ec9687ec7ffeZ7RJ5QXp5IRMGb | cosmic-planet | parent=ses_ec97fd4a0ffeADWw7BggYf2qaC | agent=general | Ревью ремонта Excel книг
+2026-10-13 21:40 | upd 2026-10-13 21:57 | ses_ec96f7ca5ffeJtD4nQ41lFKOoj | gentle-orchid | parent=ses_ec97fd4a0ffeADWw7BggYf2qaC | agent=general | Исправить генерацию пяти книг
+2026-10-13 21:51 | upd 2026-10-13 21:53 | ses_ec9652925ffeQ8oJ8pgC06HENh | curious-orchid | parent=ses_ec97fd4a0ffeADWw7BggYf2qaC | agent=general | Ревью исправлений расчётного ядра
+2026-10-13 21:46 | upd 2026-10-13 21:53 | ses_ec9697d85ffeKbZ68DM59nsa7B | crisp-knight | parent=ses_ec97fd4a0ffeADWw7BggYf2qaC | agent=general | Ревью проверочного модуля
+2026-10-13 21:46 | upd 2026-10-13 21:53 | ses_ec96943bdffesBB7G1hR6BjarG | lucky-planet | parent=ses_ec97fd4a0ffeADWw7BggYf2qaC | agent=general | Тесты проверочного модуля
+2026-10-13 21:44 | upd 2026-10-13 21:52 | ses_ec96bcc13ffeZEHRrMZd7o0TrC | glowing-panda | parent=ses_ec97fd4a0ffeADWw7BggYf2qaC | agent=general | Тестер независимых расчётов
+2026-10-13 21:47 | upd 2026-10-13 21:50 | ses_ec96838edffeVmIbVuBT9ldKT5 | clever-garden | parent=ses_ec97fd4a0ffeADWw7BggYf2qaC | agent=general | Исправить расчётное ядро
+2026-10-13 21:44 | upd 2026-10-13 21:45 | ses_ec96b7836ffeZCo6lmxC9q9wU8 | hidden-falcon | parent=ses_ec97fd4a0ffeADWw7BggYf2qaC | agent=general | Аудитор процесса разработки
+2026-10-13 21:32 | upd 2026-10-13 21:38 | ses_ec97653d3ffe5WP8wb611KzWdK | hidden-lagoon | parent=ses_ec97fd4a0ffeADWw7BggYf2qaC | agent=general | Проверить пять Excel книг
+2026-10-13 21:30 | upd 2026-10-13 21:32 | ses_ec977f4e0ffe7JYGIROxkuFIPL | stellar-lagoon | parent=ses_ec97fd4a0ffeADWw7BggYf2qaC | agent=explore | Найти конвейер фракционок
+2026-10-12 23:25 | upd 2026-10-12 23:31 | ses_ece356e96ffeB5tgZ45s5ac6Oc | tidy-tiger | parent=ses_ee122a03effeCjW9uoK3zYehC9 | agent=general | Ветка v17 + PR (@general subagent)
+2026-10-12 23:21 | upd 2026-10-12 23:22 | ses_ece39574bffeHGDBKDUSmQCoDb | tidy-cactus | parent=ses_ee122a03effeCjW9uoK3zYehC9 | agent=general | Коммит реестра+RELEASE (@general subagent)
+2026-10-12 23:18 | upd 2026-10-12 23:20 | ses_ece3b6d82ffekpfgykNHrQ4u1k | clever-wizard | parent=ses_ee122a03effeCjW9uoK3zYehC9 | agent=general | Реестр: закрыть TD 208/213 (@general subagent)
+2026-10-12 23:13 | upd 2026-10-12 23:17 | ses_ece406616ffeYACrVBuBpyB1Me | curious-wolf | parent=ses_ee122a03effeCjW9uoK3zYehC9 | agent=general | Коммит релиза v17 (@general subagent)
+2026-10-12 22:44 | upd 2026-10-12 23:11 | ses_ece5a8b28ffejYnzSN97nz4cxz | misty-tiger | parent=ses_ee122a03effeCjW9uoK3zYehC9 | agent=coder-worker | Фикс точек: ось X 1..6 (@coder-worker subagent)
+2026-10-12 22:27 | upd 2026-10-12 22:43 | ses_ece6a4687ffeGbPQs8MXR3Nxbu | glowing-falcon | parent=ses_ee122a03effeCjW9uoK3zYehC9 | agent=coder-worker | Фикс v17: сеткаX+локали+деление (@coder-worker subagent)
+2026-10-12 22:22 | upd 2026-10-12 22:25 | ses_ece6ea397ffeky3ZjTkcMtSbzc | eager-tiger | parent=ses_ee122a03effeCjW9uoK3zYehC9 | agent=general | Перенос v16-диагностики из Temp (@general subagent)
+2026-10-12 22:20 | upd 2026-10-12 22:22 | ses_ece713a61ffesa2r1JS69WW9Yu | proud-circuit | parent=ses_ee122a03effeCjW9uoK3zYehC9 | agent=general | Перенос Temp→проект + TD-фикс (@general subagent)
+2026-10-12 22:11 | upd 2026-10-12 22:18 | ses_ece794494ffeBo2fsGxQnjzAEe | hidden-forest | parent=ses_ee122a03effeCjW9uoK3zYehC9 | agent=general | Диагностика v17: Excel-пересчёт (@general subagent)
+2026-10-12 22:03 | upd 2026-10-12 22:08 | ses_ece80027fffewCoe0z03mb5xjR | nimble-meadow | parent=ses_ee122a03effeCjW9uoK3zYehC9 | agent=general | Деплой v17 + git (@general subagent)
+2026-10-12 21:59 | upd 2026-10-12 22:03 | ses_ece840b28ffegQpz3cYquUka5R | gentle-planet | parent=ses_ee122a03effeCjW9uoK3zYehC9 | agent=code-reviewer | Ревьюер v17: финал (@code-reviewer subagent)
+2026-10-12 21:14 | upd 2026-10-12 21:58 | ses_eceaccfa6ffe9Cc5YI50JZblhZ | proud-sailor | parent=ses_ee122a03effeCjW9uoK3zYehC9 | agent=coder-worker | Воркер: создать v17 (@coder-worker subagent)
+2026-10-02 19:20 | upd 2026-10-12 21:31 | ses_f0294cab8ffeiilqEQoNaVMezk | misty-lagoon | parent=None | agent=code-auditor-runner | Ревью и план E2E-техдолгов
+2026-10-12 21:18 | upd 2026-10-12 21:21 | ses_ecea939ceffe9yIPNGKemD76mV | proud-circuit | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=coder-worker | coder P1 validators xval (@coder-worker subagent)
+2026-10-12 21:13 | upd 2026-10-12 21:17 | ses_eceae9238ffefbLok3Wab2Xhq8 | tidy-river | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | researcher P1a xval check (@general subagent)
+2026-10-12 21:05 | upd 2026-10-12 21:14 | ses_eceb5e34dffeY97stN3WAFCffk | misty-nebula | parent=ses_ee122a03effeCjW9uoK3zYehC9 | agent=general | Ресерчер TD-208 (компактный) (@general subagent)
+2026-10-12 21:09 | upd 2026-10-12 21:12 | ses_eceb214c5ffen85pKn5lUm2q2m | hidden-nebula | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | create contract 21 + limit TD (@general subagent)
+2026-10-12 21:05 | upd 2026-10-12 21:05 | ses_eceb57461ffe0zQc3japJqkivJ | proud-squid | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | write entropy contour contract (@general subagent)
+2026-10-12 20:56 | upd 2026-10-12 21:04 | ses_ecebdb321ffe5CeAcfPtg4n5sw | shiny-pixel | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | researcher entropy gamification (@general subagent)
+2026-10-12 21:00 | upd 2026-10-12 21:03 | ses_eceb9b58cffeGMzZXHUQkYXU8K | happy-orchid | parent=ses_ee122a03effeCjW9uoK3zYehC9 | agent=general | Ресерчер TD-DEV-208: smooth vs step (@general subagent)
+2026-10-12 20:56 | upd 2026-10-12 20:59 | ses_ecebdb75bffeCUrVPaW15OHmGb | mighty-panda | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | analyst P1 remediation (@general subagent)
+2026-10-12 20:40 | upd 2026-10-12 20:54 | ses_ececc321bffeiuCVWHKMmzuroe | kind-lagoon | parent=ses_ee122a03effeCjW9uoK3zYehC9 | agent=general | Деплой: коммит + отчёт (@general subagent)
+2026-10-12 20:39 | upd 2026-10-12 20:48 | ses_ececd2daeffeCCAgcPckv9lzsZ | mighty-otter | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | P0 register TD + commit + canon rename (@general subagent)
+2026-10-12 20:33 | upd 2026-10-12 20:40 | ses_eced2f28cffeXKRkNFA3qYbqVi | swift-garden | parent=ses_ee122a03effeCjW9uoK3zYehC9 | agent=code-auditor | Аудитор блока6 + готовность деплоя (@code-auditor subagent)
+2026-10-12 20:35 | upd 2026-10-12 20:38 | ses_eced0a882ffeR04Y5ppaUK8Zt9 | quiet-moon | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | dynamic capsule + roles fix (@general subagent)
+2026-10-12 20:30 | upd 2026-10-12 20:32 | ses_eced57d3fffeoAp2XaxglzpyLu | swift-circuit | parent=ses_ee122a03effeCjW9uoK3zYehC9 | agent=code-reviewer | Сохранить reviewer JSON + ревью2 (@code-reviewer subagent)
+2026-10-12 20:27 | upd 2026-10-12 20:30 | ses_eced881d0ffexRTKJJkSrC92Vb | silent-harbor | parent=ses_ee122a03effeCjW9uoK3zYehC9 | agent=general | Восстановить LIVE в проект (@general subagent)
+2026-10-12 20:08 | upd 2026-10-12 20:26 | ses_ecee9e172ffeCkYz8ofWjig2gr | stellar-eagle | parent=ses_ee122a03effeCjW9uoK3zYehC9 | agent=code-reviewer | Ревьюер блока6 Word+Live (@code-reviewer subagent)
+2026-10-12 20:23 | upd 2026-10-12 20:26 | ses_ecedbb8c9ffemEIKUlB31L9PzF | playful-squid | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | metaview test dispatch (@general subagent)
+2026-10-12 20:22 | upd 2026-10-12 20:23 | ses_ecedcd274ffeezBumf1GJ7P1Us | brave-knight | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | create base-task capsule (@general subagent)
+2026-10-12 20:15 | upd 2026-10-12 20:21 | ses_ecee35749ffe943tkj7ZbNB7eg | clever-orchid | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | write metaview contract 20 (@general subagent)
+2026-10-12 20:04 | upd 2026-10-12 20:14 | ses_eceed4a63ffeQVJcobt1PfwlPh | brave-squid | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | researcher meta-view mechanisms (@general subagent)
+2026-10-12 19:49 | upd 2026-10-12 20:07 | ses_ecefb6b98ffeSQZ4NCrVFin3Ja | kind-star | parent=ses_ee122a03effeCjW9uoK3zYehC9 | agent=coder-worker | Блок6 worker: Word-протокол (@coder-worker subagent)
+2026-10-12 19:49 | upd 2026-10-12 19:52 | ses_ecefb171dffeMRUuXMGtUpP4lb | playful-island | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | planner full session summary (@general subagent)
+2026-10-12 19:44 | upd 2026-10-12 19:48 | ses_eceffd50dffev6xgsGpbhQXn42 | eager-squid | parent=ses_ee122a03effeCjW9uoK3zYehC9 | agent=code-auditor | Аудитор финал блока4 (2 отчёта) (@code-auditor subagent)
+2026-10-12 19:32 | upd 2026-10-12 19:43 | ses_ecf0b08cfffedf1AkTHONkuhOx | curious-cactus | parent=ses_ee122a03effeCjW9uoK3zYehC9 | agent=code-reviewer | Блок4 reviewer финал (итер3) (@code-reviewer subagent)
+2026-10-12 19:37 | upd 2026-10-12 19:42 | ses_ecf061bb2ffeybXxMSEozNPIf4 | clever-mountain | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | deployer project P2 close (@general subagent)
+2026-10-12 19:31 | upd 2026-10-12 19:36 | ses_ecf0ba7e6ffeFPPDXb0adCePto | swift-planet | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=code-auditor | auditor E2E test process (@code-auditor subagent)
+2026-10-12 19:25 | upd 2026-10-12 19:31 | ses_ecf10f6a6ffeA1mXR7mgEHG9VU | playful-circuit | parent=ses_ee122a03effeCjW9uoK3zYehC9 | agent=coder-worker | Воркер v16-CALC: 3 диаграммы (resume) (@coder-worker subagent)
+2026-10-12 19:22 | upd 2026-10-12 19:30 | ses_ecf139692ffeC0z1BDDmizp38S | clever-planet | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=code-reviewer | reviewer E2E test conformance (@code-reviewer subagent)
+2026-10-12 07:39 | upd 2026-10-12 07:44 | ses_ed197a5b4ffeQfwyQgSDqAf3t1 | eager-sailor | parent=ses_ee122a03effeCjW9uoK3zYehC9 | agent=general | Блок5 финал: verify+артефакт (@general subagent)
+2026-10-11 23:47 | upd 2026-10-12 07:41 | ses_ed3474578ffe3gsmOFsgVHO0La | clever-river | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=code-reviewer | meta-audit cycle conformance (@code-auditor subagent)
+2026-10-12 07:29 | upd 2026-10-12 07:38 | ses_ed1a0832effeyE1dSe5Q2XqK1O | kind-tiger | parent=ses_ee122a03effeCjW9uoK3zYehC9 | agent=coder-worker | Блок5 worker: фикс осей X (@coder-worker subagent)
+2026-10-12 00:16 | upd 2026-10-12 01:49 | ses_ed32d2d56ffe9ekWfS06HLJNBi | swift-falcon | parent=ses_ee122a03effeCjW9uoK3zYehC9 | agent=coder-worker | Блок5 worker: живые формулы (@coder-worker subagent)
+2026-10-12 00:08 | upd 2026-10-12 00:15 | ses_ed334bf29ffe4FOeSFl8CUKcVD | eager-island | parent=ses_ee122a03effeCjW9uoK3zYehC9 | agent=code-auditor | Блок4 auditor: режим A (@code-auditor subagent)
+2026-10-12 00:13 | upd 2026-10-12 00:14 | ses_ed32f51deffeixvnkotm6vGbOr | brave-orchid | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=code-reviewer | reviewer block4 re-review (@code-reviewer subagent)
+2026-10-12 00:10 | upd 2026-10-12 00:12 | ses_ed33208cfffePzJhTEdnhCzhVG | misty-river | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | deploy meta-audit fixes (@general subagent)
+2026-10-12 00:04 | upd 2026-10-12 00:10 | ses_ed33846f4ffeJC4ULEHoVOuBu9 | crisp-wolf | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | apply meta-physical audit states (@general subagent)
+2026-10-12 00:02 | upd 2026-10-12 00:07 | ses_ed339e8acffeU65u7RtW4hmykN | jolly-forest | parent=ses_ee122a03effeCjW9uoK3zYehC9 | agent=general | Сохранить reviewer JSON + реестр (@general subagent)
+2026-10-11 23:37 | upd 2026-10-12 00:02 | ses_ed350af24ffea3LDhWsfzjB5cJ | witty-garden | parent=ses_ee122a03effeCjW9uoK3zYehC9 | agent=code-reviewer | Блок4 reviewer (retry) (@code-reviewer subagent)
+2026-10-11 23:10 | upd 2026-10-11 23:46 | ses_ed369af28ffeGmX6vqqa3ZtX88 | crisp-river | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | deploy contracts 17-19 (@general subagent)
+2026-10-11 23:27 | upd 2026-10-11 23:35 | ses_ed35a1027ffeT6z3JIawdCjr22 | brave-sailor | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | discovery stage planning (@general subagent)
+2026-10-11 23:28 | upd 2026-10-11 23:35 | ses_ed3591eb5ffeOBlloN2cb5yXRv | misty-wolf | parent=ses_ee122a03effeCjW9uoK3zYehC9 | agent=code-reviewer | Блок4 reviewer: повторный (@code-reviewer subagent)
+2026-10-11 23:02 | upd 2026-10-11 23:26 | ses_ed3704d48ffe2RMoZxvvfwNDXV | hidden-canyon | parent=ses_ee122a03effeCjW9uoK3zYehC9 | agent=coder-worker | Блок4 worker: фикс TD206/207+хардкод (@coder-worker subagent)
+2026-10-11 23:06 | upd 2026-10-11 23:09 | ses_ed36cf162ffe9wM1rTqGchBpZt | witty-river | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | write quant researcher contract (@general subagent)
+2026-10-11 23:02 | upd 2026-10-11 23:05 | ses_ed370adb0ffekVn0ygaTvQai1I | glowing-canyon | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | researcher quant analyst deep (@general subagent)
+2026-10-11 22:48 | upd 2026-10-11 23:02 | ses_ed37d3552ffewax3wDH4c9FPWC | quick-wolf | parent=ses_ee122a03effeCjW9uoK3zYehC9 | agent=code-reviewer | Блок4 reviewer: книга+графики (@code-reviewer subagent)
+2026-10-11 22:48 | upd 2026-10-11 22:48 | ses_ed37ddb99ffes3nquI37Z90GNE | neon-comet | parent=ses_ee122a03effeCjW9uoK3zYehC9 | agent=general | Сохранить артефакт worker v2 (@general subagent)
+2026-10-11 21:32 | upd 2026-10-11 22:47 | ses_ed3c30d5effetX3gZ7fGimZ1YX | kind-panda | parent=ses_ee122a03effeCjW9uoK3zYehC9 | agent=coder-worker | Блок4 worker: фикс графиков (@coder-worker subagent)
+2026-10-11 20:53 | upd 2026-10-11 21:31 | ses_ed3e69578ffeDWI6Oq267pa2Ri | brave-planet | parent=ses_ee122a03effeCjW9uoK3zYehC9 | agent=code-auditor | Блок3 auditor: режим A (@code-auditor subagent)
+2026-10-11 20:30 | upd 2026-10-11 20:53 | ses_ed3fc4d08ffeqQUsmdrpYzY75S | lucky-cactus | parent=ses_ee122a03effeCjW9uoK3zYehC9 | agent=code-reviewer | Блок3 reviewer: повторный (@code-reviewer subagent)
+2026-10-11 20:22 | upd 2026-10-11 20:29 | ses_ed4035c3fffeBQfEzS7VgwTXxH | silent-star | parent=ses_ee122a03effeCjW9uoK3zYehC9 | agent=general | Регистрация TD 203-204 (@general subagent)
+2026-10-11 17:12 | upd 2026-10-11 20:22 | ses_ed4b120abffez9ZgAxP0Mg52Hk | quiet-sailor | parent=ses_ee122a03effeCjW9uoK3zYehC9 | agent=coder-worker | Блок3 worker: anova_gum.py (@coder-worker subagent)
+2026-10-11 18:51 | upd 2026-10-11 19:25 | ses_ed4566a8cffed7UiYa3aOGt9Nl | silent-star | parent=ses_ee122a03effeCjW9uoK3zYehC9 | agent=code-reviewer | Блок3 reviewer: anova_gum.py (@code-reviewer subagent)
+2026-10-11 18:59 | upd 2026-10-11 19:02 | ses_ed44ebe23ffekAsJn5WwMXFmH6 | clever-pixel | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | write input scenarios contract (@general subagent)
+2026-10-11 18:53 | upd 2026-10-11 18:58 | ses_ed454772fffefbilYuEmSPI6VG | tidy-mountain | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | researcher input scenarios (@general subagent)
+2026-10-11 18:47 | upd 2026-10-11 18:51 | ses_ed459fd42ffevdm2hJ5dSM90rz | nimble-harbor | parent=ses_ee122a03effeCjW9uoK3zYehC9 | agent=general | Регистрация TD 197-199 (@general subagent)
+2026-10-11 17:54 | upd 2026-10-11 17:56 | ses_ed48b10d2ffe84tCmh3a4UpIV3 | curious-falcon | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | write factory corporation contract (@general subagent)
+2026-10-11 17:41 | upd 2026-10-11 17:52 | ses_ed49633f0ffehS8bmTRJa58yLT | proud-circuit | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | deployer B1-T5 legacy (@general subagent)
+2026-10-11 14:12 | upd 2026-10-11 17:40 | ses_ed5559c96ffe5F5j5zsXkR10h3 | mighty-engine | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | coder B1-T5 canon legacy (@general subagent)
+2026-10-11 13:52 | upd 2026-10-11 17:11 | ses_ed568aa16ffeLXcLun8KG9PFZ6 | playful-forest | parent=ses_ee122a03effeCjW9uoK3zYehC9 | agent=code-auditor | Блок2 auditor (retry) (@code-auditor subagent)
+2026-10-11 12:01 | upd 2026-10-11 14:09 | ses_ed5cdee39ffeo36XEWJTgYfRsh | curious-squid | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | deployer W13 merge master (@general subagent)
+2026-10-11 12:13 | upd 2026-10-11 12:15 | ses_ed5c2c680ffeo1b61tk9EYxjms | gentle-circuit | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | close TD-38 env portable (@general subagent)
+2026-10-11 11:53 | upd 2026-10-11 12:00 | ses_ed5d4de30ffeTkiVyQmq0dCU4P | quiet-wolf | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | researcher W13 deep-dive (@general subagent)
+2026-10-11 11:41 | upd 2026-10-11 11:52 | ses_ed5e00cb3ffeD3NbrJNccDECYW | jolly-mountain | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | analyst W13 synthesis (@general subagent)
+2026-10-11 11:16 | upd 2026-10-11 11:40 | ses_ed5f6c87affeIxUtzWhT6LmPBZ | sunny-otter | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | close W13 auditor requirements (@general subagent)
+2026-10-11 11:22 | upd 2026-10-11 11:22 | ses_ed5f1ab8affeLDwhwhqUaHkzPU | gentle-cabin | parent=ses_ee122a03effeCjW9uoK3zYehC9 | agent=code-auditor | Блок2 auditor: режим A (@code-auditor subagent)
+2026-10-11 11:18 | upd 2026-10-11 11:22 | ses_ed5f5378bffeujTSALYyTVrM3p | silent-river | parent=ses_ee122a03effeCjW9uoK3zYehC9 | agent=general | Правка контракта по ревью (@general subagent)
+2026-10-11 11:06 | upd 2026-10-11 11:18 | ses_ed5fffaabffeaFE8kYPK8S8GzJ | brave-knight | parent=ses_ee122a03effeCjW9uoK3zYehC9 | agent=code-reviewer | Блок2 reviewer: метод-контракт (@code-reviewer subagent)
+2026-10-11 11:12 | upd 2026-10-11 11:15 | ses_ed5fa4e0fffegrBXxIDQ32Qdvx | quick-harbor | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=code-auditor | auditor W13 verify fixes (@code-auditor subagent)
+2026-10-11 11:03 | upd 2026-10-11 11:11 | ses_ed6029efcffey65cZpSZflYcM9 | hidden-knight | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=coder-worker | coder W13 fix round (@coder-worker subagent)
+2026-10-10 06:04 | upd 2026-10-11 11:06 | ses_edc3b7217ffeMn9dvFBnFhXqpD | glowing-pixel | parent=ses_ee122a03effeCjW9uoK3zYehC9 | agent=general | Блок2 researcher: метод-контракт (@general subagent)
+2026-10-10 06:18 | upd 2026-10-11 11:01 | ses_edc2e156fffeJTt6OKOxs68J3R | jolly-comet | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=code-reviewer | reviewer W13 sleep audit (@code-reviewer subagent)
+2026-10-10 01:05 | upd 2026-10-10 06:16 | ses_edd4c9c16ffeq8lxthZO6cPD1P | nimble-canyon | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=coder-worker | coder W13 sleep git audit (@coder-worker subagent)
+2026-10-10 05:52 | upd 2026-10-10 06:03 | ses_edc466f97ffeccLpk64KeOx7z0 | mighty-circuit | parent=ses_ee122a03effeCjW9uoK3zYehC9 | agent=general | Блок2 analyst: метод-контракт (@general subagent)
+2026-10-10 00:51 | upd 2026-10-10 05:51 | ses_edd59d6afffeg2Ye23ATwAaWbe | calm-wizard | parent=ses_ee122a03effeCjW9uoK3zYehC9 | agent=code-auditor | Блок1 auditor: режим A (@code-auditor subagent)
+2026-10-10 01:00 | upd 2026-10-10 01:03 | ses_edd51a8eeffe9WzOX4NSmSDqDs | neon-tiger | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | deploy contract16 + gaps + TD-30 (@general subagent)
+2026-10-10 00:57 | upd 2026-10-10 00:59 | ses_edd546822ffe7eM61El0wTnnFM | shiny-circuit | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | write research mini-factory contract (@general subagent)
+2026-10-10 00:45 | upd 2026-10-10 00:50 | ses_edd5f7b77ffe84kKpBV9j24m1r | quick-pixel | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | close baseline gaps + TD-30 (@general subagent)
+2026-10-10 00:35 | upd 2026-10-10 00:50 | ses_edd683e30ffevyHwU53kJ15faB | gentle-cabin | parent=ses_ee122a03effeCjW9uoK3zYehC9 | agent=code-reviewer | Блок1 reviewer: PROBLEMS_REGISTER (@code-reviewer subagent)
+2026-10-10 00:38 | upd 2026-10-10 00:44 | ses_edd65a0b0ffe6Tn4sgL1hwfU0y | hidden-sailor | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=code-auditor | baseline check round 2 (@code-auditor subagent)
+2026-10-10 00:13 | upd 2026-10-10 00:35 | ses_edd7ccd62ffeBr75h7rB4snH0a | curious-tiger | parent=ses_ee122a03effeCjW9uoK3zYehC9 | agent=general | Создать артефакт-директорию проекта (@general subagent)
+2026-10-09 23:52 | upd 2026-10-10 00:12 | ses_edd8fa702ffe52tHfHlFNVIWZx | quiet-cactus | parent=ses_ee122a03effeCjW9uoK3zYehC9 | agent=coder-worker | Блок1 worker: PROBLEMS_REGISTER (@coder-worker subagent)
+2026-10-09 22:36 | upd 2026-10-09 23:16 | ses_eddd55606ffe3qe9LqXfdVrn7z | quiet-panda | parent=ses_ee122a03effeCjW9uoK3zYehC9 | agent=general | Аудит v15 + план цикла (@general subagent)
+2026-10-09 23:10 | upd 2026-10-09 23:13 | ses_eddb649dbffeFy64oTF3AxXGOQ | gentle-lagoon | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | deploy contracts 14 15 (@general subagent)
+2026-10-09 23:05 | upd 2026-10-09 23:09 | ses_eddbb0f5affezNDb8Vn94BxHvr | tidy-moon | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | write general hands contract (@general subagent)
+2026-10-07 20:17 | upd 2026-10-09 23:07 | ses_ee8a187a0ffeolrFX1zHVjgXbt | gentle-garden | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | add baseline check to contract 13 (@general subagent)
+2026-10-09 07:29 | upd 2026-10-09 07:31 | ses_ee113eb4bffe7ZhNjrLEkNdxBN | happy-knight | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | write auditor modes contract (@general subagent)
+2026-10-09 07:14 | upd 2026-10-09 07:23 | ses_ee12197dcffe1h8dsIAhkMJuUf | proud-garden | parent=ses_ee122a03effeCjW9uoK3zYehC9 | agent=code-auditor | code-auditor dispatch (@code-auditor subagent)
+2026-10-07 18:27 | upd 2026-10-07 20:16 | ses_ee905fe84ffehYcwecwnKooup3 | kind-island | parent=None | agent=plan | Реструктуризация расчёта кривых дистилляции
+2026-10-07 20:01 | upd 2026-10-07 20:16 | ses_ee8af6edfffe5jOPHdLuTHfV2K | gentle-comet | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | deployer baseline fixes push (@general subagent)
+2026-10-07 19:56 | upd 2026-10-07 19:59 | ses_ee8b4892cffeWynYy9xiHFvv0Y | clever-rocket | parent=ses_ee905fe84ffehYcwecwnKooup3 | agent=coder-worker | coder-worker run verify (@coder-worker subagent)
+2026-10-07 19:44 | upd 2026-10-07 19:58 | ses_ee8bf9053ffeyt8ciRTWdYN9GI | misty-panda | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=code-auditor | baseline sync check (@code-auditor subagent)
+2026-10-07 19:47 | upd 2026-10-07 19:55 | ses_ee8bc4206ffeZbKTohCbN5BQoZ | shiny-meadow | parent=ses_ee905fe84ffehYcwecwnKooup3 | agent=coder-worker | coder-worker branch2 execute (@coder-worker subagent)
+2026-10-07 19:41 | upd 2026-10-07 19:47 | ses_ee8c1de00ffeB4yLCEtyn7yeZC | hidden-harbor | parent=ses_ee905fe84ffehYcwecwnKooup3 | agent=coder-worker | coder-worker branch2 redo (@coder-worker subagent)
+2026-10-07 19:44 | upd 2026-10-07 19:47 | ses_ee8bf8f0cffeDzIo5JpUxl3Cdf | quiet-comet | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | write factory cycle contract (@general subagent)
+2026-10-07 19:38 | upd 2026-10-07 19:42 | ses_ee8c5276effesKFOX6x6h4IIdh | gentle-knight | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | apply project artifacts contract (@general subagent)
+2026-10-07 19:33 | upd 2026-10-07 19:40 | ses_ee8c93c75ffeMgV2eAp3no5DDZ | mighty-squid | parent=ses_ee905fe84ffehYcwecwnKooup3 | agent=coder-worker | coder-worker fix branch2 input (@coder-worker subagent)
+2026-10-07 19:33 | upd 2026-10-07 19:37 | ses_ee8c9d456ffeu34vW5XpqNVvdz | nimble-eagle | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | apply contract fixes model+paths (@general subagent)
+2026-10-07 19:03 | upd 2026-10-07 19:26 | ses_ee8e4a1cfffeDgw29TuR2Xr28K | brave-rocket | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=code-auditor | auditor EXP-1b process (@code-auditor subagent)
+2026-10-07 18:28 | upd 2026-10-07 19:24 | ses_ee9057700ffecUNY0d2KlzqEJw | kind-circuit | parent=ses_ee905fe84ffehYcwecwnKooup3 | agent=coder-worker | coder-worker dispatch (@coder-worker subagent)
+2026-10-07 18:50 | upd 2026-10-07 19:01 | ses_ee8f08f1fffej2w7lgkFUuNjJ7 | silent-lagoon | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=code-reviewer | reviewer EXP-1b conformance (@code-reviewer subagent)
+2026-10-07 18:43 | upd 2026-10-07 18:50 | ses_ee8f73a33ffeh2tvjl3jKMfpXb | quiet-orchid | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | write agent roles contract (@general subagent)
+2026-10-07 18:34 | upd 2026-10-07 18:42 | ses_ee8ff872affeuBGtbq0UKZXnN2 | swift-panda | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | research all agents stack (@general subagent)
+2026-10-07 18:34 | upd 2026-10-07 18:35 | ses_ee8ff88e9ffegUXcF4f8hC4Psj | jolly-cactus | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | finalize EXP-1b config (@general subagent)
+2026-10-07 07:53 | upd 2026-10-07 18:28 | ses_eeb4a27e8ffebBXAwo45R51vi0 | neon-river | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=coder-worker | deployer W1 commit push (@general subagent)
+2026-10-07 18:20 | upd 2026-10-07 18:22 | ses_ee90be18dffeL66lfWpFqYCUUq | hidden-falcon | parent=None | agent=coder-worker-runner | Перечень всех инструментов harness/MCP
+2026-10-07 18:18 | upd 2026-10-07 18:19 | ses_ee90e72c6ffeo6IaE30hCMjmdV | swift-meadow | parent=None | agent=coder-worker-runner | harness_status: вывод JSON готовности
+2026-10-07 10:03 | upd 2026-10-07 10:03 | ses_eead37eecffeVdp4LgL54TYCIb | cosmic-orchid | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=coder-worker | coder EXP-1b plugin merge (@coder-worker subagent)
+2026-10-07 07:31 | upd 2026-10-07 07:52 | ses_eeb5e4fd6ffep2kF7PsLWJMn4P | shiny-panda | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | researcher W1 deep-dive (@general subagent)
+2026-10-07 07:23 | upd 2026-10-07 07:30 | ses_eeb65f9a4ffele3iJEpspKyFrA | swift-moon | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | analyst W1 synthesis (@general subagent)
+2026-10-07 00:19 | upd 2026-10-07 07:22 | ses_eece99481ffeyWDOXAgDOpY7jb | sunny-garden | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=code-auditor | coder W1 git-hooks (@coder-worker subagent)
+2026-10-07 01:01 | upd 2026-10-07 01:02 | ses_eecc3b2f0ffeN9Wo6tvg2sh2Nm | cosmic-pixel | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=code-auditor | auditor W1 git-hooks (@code-auditor subagent)
+2026-10-07 00:36 | upd 2026-10-07 01:00 | ses_eecda6345ffed1zMoPgN7NeETx | quick-pixel | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=code-reviewer | reviewer W1 git-hooks (@code-reviewer subagent)
+2026-10-07 00:16 | upd 2026-10-07 00:19 | ses_eecec802effetKZZaMlkqILxpo | silent-star | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | deployer W7 commit push (@general subagent)
+2026-10-07 00:09 | upd 2026-10-07 00:16 | ses_eecf31823ffescp7QibqevhVra | sunny-cabin | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | researcher W7 deep-dive (@general subagent)
+2026-10-07 00:09 | upd 2026-10-07 00:11 | ses_eecf317f8ffe3jAnQMGG6ez8NS | glowing-otter | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | create orchestrator notes (@general subagent)
+2026-10-06 23:50 | upd 2026-10-06 23:55 | ses_eed0482ffffez8Ocgv76g4Zwz7 | hidden-star | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | analyst W7 synthesis (@general subagent)
+2026-10-06 23:43 | upd 2026-10-06 23:50 | ses_eed0ad9ebffehI7g8Hfj40eYNf | swift-moon | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=code-auditor | auditor W7 meta-cycle (@code-auditor subagent)
+2026-10-06 23:37 | upd 2026-10-06 23:43 | ses_eed1042b9ffeiI7yvDSvCkfERt | brave-knight | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=code-reviewer | reviewer W7 meta-cycle (@code-reviewer subagent)
+2026-10-06 23:24 | upd 2026-10-06 23:36 | ses_eed1c283bffeRHPiqfjn7zg2AC | shiny-wizard | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=coder-worker | coder W7 meta-cycle (@coder-worker subagent)
+2026-10-06 23:18 | upd 2026-10-06 23:23 | ses_eed222155ffeHJF9ntRrYHjX2i | brave-star | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | deployer B1-T3 commit push (@general subagent)
+2026-10-06 23:09 | upd 2026-10-06 23:17 | ses_eed29d995ffeXB2uXgJ07WhSXW | cosmic-rocket | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | researcher B1-T3 deep-dive (@general subagent)
+2026-10-06 23:06 | upd 2026-10-06 23:09 | ses_eed2d0b42ffe3OrO2WZef5eQqY | glowing-harbor | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | analyst B1-T3 synthesis (@general subagent)
+2026-10-06 22:47 | upd 2026-10-06 23:05 | ses_eed3de28fffecNXBIEydEA8xLX | hidden-engine | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=code-auditor | auditor B1-T3 meta process (@code-auditor subagent)
+2026-10-06 22:38 | upd 2026-10-06 22:47 | ses_eed46282effesNAFruYxsjJKWl | happy-river | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=code-reviewer | reviewer B1-T3 meta (@code-reviewer subagent)
+2026-10-06 22:31 | upd 2026-10-06 22:38 | ses_eed4d0813ffetfCldlsCidacJJ | misty-engine | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=coder-worker | coder B1-T3 meta-cycle (@coder-worker subagent)
+2026-10-06 22:21 | upd 2026-10-06 22:29 | ses_eed564ec8ffe9pSjBG1pHvl6S3 | mighty-canyon | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | update contracts deployer TD loop (@general subagent)
+2026-10-06 22:18 | upd 2026-10-06 22:20 | ses_eed592d9affeCq8yZZFd18nYBp | playful-meadow | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | close TD-DEV-20/21 escalation (@general subagent)
+2026-10-06 22:12 | upd 2026-10-06 22:16 | ses_eed5ea93fffewIQOnP2eY5KdiB | shiny-engine | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | deployer B1-T1 commit push (@general subagent)
+2026-10-06 21:27 | upd 2026-10-06 22:11 | ses_eed87c5d1ffe45oScFyYGP7ZQ5 | playful-falcon | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | write chain contracts + temp (@general subagent)
+2026-10-06 21:14 | upd 2026-10-06 21:22 | ses_eed93578bffe3nw2ul7DlTUnbL | clever-wolf | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | researcher B1-T1 deep-dive (@general subagent)
+2026-10-06 21:12 | upd 2026-10-06 21:14 | ses_eed94d767ffefhQBE7qkFtqSdI | sunny-knight | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | analyst B1-T1 synthesis (@general subagent)
+2026-10-06 21:10 | upd 2026-10-06 21:12 | ses_eed96e7fbffeeqoZWsDmqz1C7e | gentle-cabin | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | write escape hatch contract (@general subagent)
+2026-10-06 20:54 | upd 2026-10-06 21:08 | ses_eeda56e38fferjM65bSJnV5wKx | neon-falcon | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=code-auditor | auditor B1-T1 venv process (@code-auditor subagent)
+2026-10-06 20:49 | upd 2026-10-06 20:54 | ses_eedaa3636ffep53e0tG7kIRs3S | quick-cabin | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | update contracts analyst researcher skills (@general subagent)
+2026-10-06 20:07 | upd 2026-10-06 20:48 | ses_eedd07f94ffeWX7DFA21BNKtSy | tidy-planet | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=code-reviewer | reviewer B1-T1 venv (@code-reviewer subagent)
+2026-10-06 19:40 | upd 2026-10-06 20:18 | ses_eede9a098ffegOuUvxfjIPCC9F | kind-circuit | parent=ses_f079394f1ffeY5ON06C6r1So8O | agent=code-reviewer | Ревью v3.11 на соответствие ГОСТ (@code-reviewer subagent)
+2026-10-06 20:04 | upd 2026-10-06 20:07 | ses_eedd3c2a1ffeZWru8G7v98Vmx1 | curious-river | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=coder-worker | coder B1-T1 venv whitelist (@coder-worker subagent)
+2026-10-06 20:01 | upd 2026-10-06 20:03 | ses_eedd6945cffe7q1HWAU3J2jnU2 | silent-garden | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | deployer B1-T4 commit push (@general subagent)
+2026-10-06 20:01 | upd 2026-10-06 20:03 | ses_eedd694d1ffeOO27Dam0XhTwmJ | kind-canyon | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | write auditor diligence contract (@general subagent)
+2026-10-06 19:37 | upd 2026-10-06 19:59 | ses_eedebc7ddffeAW1a702Pbg4G3L | stellar-orchid | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=code-auditor | auditor B1-T4 process (@code-auditor subagent)
+2026-10-05 22:43 | upd 2026-10-06 19:37 | ses_ef268b24dffe1EsubMC7UHqo1a | shiny-squid | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=code-reviewer | coder B1-T4 shared files (@coder-worker subagent)
+2026-10-05 22:46 | upd 2026-10-05 22:48 | ses_ef2654474ffeeGQc9xYc2N9QES | quick-harbor | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=code-reviewer | reviewer B1-T4 conformance (@code-reviewer subagent)
+2026-10-05 22:40 | upd 2026-10-05 22:42 | ses_ef26b6637ffeD4n4nDocJFqv5E | quiet-cabin | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | write pipeline order contract (@general subagent)
+2026-10-05 22:38 | upd 2026-10-05 22:39 | ses_ef26ce0f3ffed1iDTPHus1Jd0X | neon-moon | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | deployer B3-T1 commit push (@general subagent)
+2026-10-05 22:13 | upd 2026-10-05 22:37 | ses_ef2840ea0ffenr7utQENXmoqN8 | sunny-falcon | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=code-auditor | auditor B3-T1 process (@code-auditor subagent)
+2026-10-05 22:13 | upd 2026-10-05 22:29 | ses_ef2840f43ffeSNr9AtpL6beRas | jolly-orchid | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=code-reviewer | reviewer B3-T1 conformance (@code-reviewer subagent)
+2026-10-05 22:02 | upd 2026-10-05 22:12 | ses_ef28e41abffe8J7GDcznV0DFA3 | hidden-engine | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=coder-worker | coder B3-T1 setup_env (@coder-worker subagent)
+2026-10-05 22:02 | upd 2026-10-05 22:05 | ses_ef28e42d6ffebSSnESiqXDSOaz | clever-cabin | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | update reviewer auditor contracts (@general subagent)
+2026-10-05 21:53 | upd 2026-10-05 21:55 | ses_ef2963645ffeBCeklVHPR6Je3C | brave-meadow | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | deployer M0-a commit push (@general subagent)
+2026-10-05 21:37 | upd 2026-10-05 21:52 | ses_ef2a445acffe9VfkyY9oqID4xE | playful-wizard | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=code-reviewer | reviewer M0-a conformance (@code-reviewer subagent)
+2026-10-05 21:37 | upd 2026-10-05 21:52 | ses_ef2a44509ffeTHlOiXIoAD1zDz | proud-otter | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=code-auditor | auditor M0-a process (@code-auditor subagent)
+2026-10-05 21:33 | upd 2026-10-05 21:37 | ses_ef2a850a2ffeYiQVEutSZ7E23e | proud-forest | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=coder-worker | coder M0-a remainder (@coder-worker subagent)
+2026-10-05 21:33 | upd 2026-10-05 21:36 | ses_ef2a8515bffepJTROt5hz2tI4i | lucky-moon | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | write deployer contract (@general subagent)
+2026-10-05 21:31 | upd 2026-10-05 21:32 | ses_ef2a9cb6cffe8VSOC3ISR2d5oM | playful-river | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | git push with write token (@general subagent)
+2026-10-05 21:22 | upd 2026-10-05 21:28 | ses_ef2b209a1ffe0pvG1aPrYZeFWa | gentle-star | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | fix process + git commit B1-T2 (@general subagent)
+2026-10-05 21:03 | upd 2026-10-05 21:22 | ses_ef2c3988dffelNRWHRsk8dAQX2 | silent-planet | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=code-auditor | auditor B1-T2 process (@code-auditor subagent)
+2026-10-05 21:03 | upd 2026-10-05 21:10 | ses_ef2c39926ffeKx5DXRUz6NfuDq | neon-squid | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=code-reviewer | reviewer B1-T2 conformance (@code-reviewer subagent)
+2026-10-05 20:52 | upd 2026-10-05 21:03 | ses_ef2cdfa62ffeRIOkI8FHM1v6nK | stellar-mountain | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=coder-worker | coder B1-T2 core config (@coder-worker subagent)
+2026-10-05 20:37 | upd 2026-10-05 20:54 | ses_ef2dbfcb0ffeszg9JXrEj66lKr | jolly-comet | parent=ses_f079394f1ffeY5ON06C6r1So8O | agent=code-reviewer | Ревью v3.6 (продолжение) (@code-reviewer subagent)
+2026-10-05 20:37 | upd 2026-10-05 20:43 | ses_ef2db88edffeyo49hHp2NStpv1 | proud-knight | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | build coder docs package (@general subagent)
+2026-10-05 20:16 | upd 2026-10-05 20:18 | ses_ef2ee8357ffecHxven1pSpzN5d | clever-wolf | parent=ses_f079394f1ffeY5ON06C6r1So8O | agent=code-reviewer | Независимое ревью v3.6 (@code-reviewer subagent)
+2026-10-05 20:03 | upd 2026-10-05 20:04 | ses_ef2faf247ffeq0PHPgtjnPjrNo | curious-pixel | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | build coder docs package (@general subagent)
+2026-10-05 07:59 | upd 2026-10-05 08:12 | ses_ef5914357ffeEUPLn6NNm1UolM | eager-engine | parent=ses_f079394f1ffeY5ON06C6r1So8O | agent=code-reviewer | Независимое ревью v3.6 (@code-reviewer subagent)
+2026-10-05 07:43 | upd 2026-10-05 07:51 | ses_ef5a0a125ffeO3xWKQmNsbzvYi | glowing-lagoon | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=code-reviewer | reviewer read session DB v2 (@code-reviewer subagent)
+2026-10-05 07:33 | upd 2026-10-05 07:37 | ses_ef5a95a34ffemmdXITqARzUmKm | misty-otter | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=code-reviewer | reviewer read session DB (@code-reviewer subagent)
+2026-10-05 07:20 | upd 2026-10-05 07:28 | ses_ef5b4e72effeGTFvlVy60hjr7J | cosmic-otter | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=code-reviewer | reviewer session delta (@code-reviewer subagent)
+2026-10-05 07:20 | upd 2026-10-05 07:27 | ses_ef5b4e87effegtcoeP6Qld1k33 | proud-sailor | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | researcher session delta (@general subagent)
+2026-10-05 07:18 | upd 2026-10-05 07:19 | ses_ef5b6ee5bffe4kV00Uv3stADGD | eager-meadow | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | persist problems register (@general subagent)
+2026-10-04 22:55 | upd 2026-10-04 23:15 | ses_ef783fa4cffeT8ZlMDOEYCEEnm | silent-sailor | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | W15 review plan criticism (@general subagent)
+2026-10-04 22:40 | upd 2026-10-04 22:52 | ses_ef7918251ffeqGMd7fladcbT1y | quiet-meadow | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=code-auditor | W14 audit plan completeness (@code-auditor subagent)
+2026-10-04 22:40 | upd 2026-10-04 22:48 | ses_ef791817fffePLiMXVRCnes4tD | neon-pixel | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=code-reviewer | W15 review plan criticism (@code-reviewer subagent)
+2026-10-04 22:15 | upd 2026-10-04 22:24 | ses_ef7a87d59ffe1ovIiRhg4neXOR | eager-rocket | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | update master plan W10-W13 (@general subagent)
+2026-10-04 21:16 | upd 2026-10-04 22:15 | ses_ef7de49d1ffevGpPWwL3IYrl3w | swift-squid | parent=ses_f079394f1ffeY5ON06C6r1So8O | agent=code-reviewer | Ревью легаси-файлов фракционки (@code-reviewer subagent)
+2026-10-04 21:45 | upd 2026-10-04 22:13 | ses_ef7c3843dffeEZnLgsJIEWOljC | cosmic-pixel | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=code-auditor | audit W12 chain integration (@code-auditor subagent)
+2026-10-04 21:45 | upd 2026-10-04 22:05 | ses_ef7c3818dffekCsqSTaosh03ve | crisp-star | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=code-auditor | audit W13 sleep git-depth (@code-auditor subagent)
+2026-10-04 21:16 | upd 2026-10-04 21:59 | ses_ef7de491affeMdQO5rwMKUBj68 | crisp-harbor | parent=ses_f079394f1ffeY5ON06C6r1So8O | agent=code-auditor | Аудит процесса правок фракционки (@code-auditor subagent)
+2026-10-04 21:45 | upd 2026-10-04 21:58 | ses_ef7c3826cffeDYTlxWRt01PAu8 | sunny-planet | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=code-auditor | audit W10 self-learning module (@code-auditor subagent)
+2026-10-04 21:45 | upd 2026-10-04 21:55 | ses_ef7c38360ffe0GREpQku8NJWMA | clever-rocket | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=code-auditor | audit W11 universal agent (@code-auditor subagent)
+2026-10-04 20:50 | upd 2026-10-04 20:55 | ses_ef7f64b69ffedLTLvkOWvvLkrQ | hidden-mountain | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | update master plan findings (@general subagent)
+2026-10-04 20:27 | upd 2026-10-04 20:48 | ses_ef80b2c39ffe3tJVxFxIaOf7ix | mighty-pixel | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | planner Block6 matryoshka (@general subagent)
+2026-10-04 20:27 | upd 2026-10-04 20:38 | ses_ef80b2b30ffe92ZRmeF9AIFjhI | curious-orchid | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | coder EXP-2 step-finish (@general subagent)
+2026-10-04 20:27 | upd 2026-10-04 20:33 | ses_ef80b2a2affeasaX6avFsDPW7v | witty-planet | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=code-auditor | RUD questionaire compiler (@code-auditor subagent)
+2026-10-04 20:28 | upd 2026-10-04 20:29 | ses_ef80a8a01ffebNrCJbD2YpWp6h | eager-star | parent=None | agent=coder-worker-runner | Вычисление 2+2
+2026-10-04 20:28 | upd 2026-10-04 20:29 | ses_ef809e2adffeykw4hpFXCY2Ojd | glowing-knight | parent=ses_ef80a8a01ffebNrCJbD2YpWp6h | agent=coder-worker | coder-worker dispatch (@coder-worker subagent)
+2026-10-04 20:12 | upd 2026-10-04 20:17 | ses_ef8188677ffeDK4BsNhb4O0LfR | eager-engine | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | create master migration plan (@general subagent)
+2026-10-04 19:29 | upd 2026-10-04 19:47 | ses_ef8400757ffe3g1AxfH2cLqWUl | witty-island | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | planner B4-T5 agent-loop (@general subagent)
+2026-10-04 19:29 | upd 2026-10-04 19:39 | ses_ef8400836ffe15G6EDuZQnTvmR | swift-star | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | planner W7 meta-cycle (@general subagent)
+2026-10-04 19:29 | upd 2026-10-04 19:37 | ses_ef840091cffe9owYnvcVC3oW55 | jolly-river | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | planner W1 git-hooks (@general subagent)
+2026-10-02 22:35 | upd 2026-10-02 23:24 | ses_f01e29655ffeGXX054T5id72or | stellar-engine | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=code-auditor | auditor W9 peer-deliberation (@code-auditor subagent)
+2026-10-02 22:12 | upd 2026-10-02 22:34 | ses_f01f783c6ffepXzaVsnh6Eqe2p | misty-panda | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=code-auditor | auditor Block2 deep-dive (@code-auditor subagent)
+2026-10-02 22:12 | upd 2026-10-02 22:25 | ses_f01f785a1ffesDCDiegIvsUgvd | glowing-garden | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=general | planner B1-T2 deep-dive (@general subagent)
+2026-10-02 21:36 | upd 2026-10-02 22:05 | ses_f0218b15fffeZrYJYUakouat0l | quiet-eagle | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=code-auditor | code-auditor dispatch (@code-auditor subagent)
+2026-10-02 20:43 | upd 2026-10-02 21:24 | ses_f02491d9affeYnX3xF6F3fJZWJ | calm-canyon | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=code-auditor | code-auditor dispatch (@code-auditor subagent)
+2026-10-02 20:57 | upd 2026-10-02 20:57 | ses_f023cd44dffevloDnrR9zWwa3W | nimble-circuit | parent=None | agent=monarch | New session - 2026-10-02T17:57:01.490Z
+2026-10-02 19:59 | upd 2026-10-02 20:22 | ses_f0271c431ffeNTxH0zOUEqvtoI | cosmic-garden | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=code-auditor | code-auditor dispatch (@code-auditor subagent)
+2026-10-02 20:10 | upd 2026-10-02 20:17 | ses_f0266fbe5ffesJjH1R3oeAD0p0 | jolly-circuit | parent=ses_f07100248ffeVaY6PiXzizQdwK | agent=coder-worker | Выкачать главы книги-канона (@coder-worker subagent)
+2026-10-02 19:26 | upd 2026-10-02 19:41 | ses_f028f6283ffeFpvw6MvhRFFbsu | calm-moon | parent=ses_f07100248ffeVaY6PiXzizQdwK | agent=coder-worker | M11: интеграция в meta_daemon (@coder-worker subagent)
+2026-10-02 19:30 | upd 2026-10-02 19:41 | ses_f028c18ebffeQxd0Rv65eA210j | quiet-planet | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=code-auditor | code-auditor dispatch (@code-auditor subagent)
+2026-10-02 19:21 | upd 2026-10-02 19:26 | ses_f029466aeffe3Xuh9Azeee0Cva | quick-otter | parent=ses_f0294cab8ffeiilqEQoNaVMezk | agent=code-reviewer | code-reviewer dispatch (@code-reviewer subagent)
+2026-10-02 19:21 | upd 2026-10-02 19:26 | ses_f02946c28ffe0k9uTYpK3ZI3EK | curious-garden | parent=ses_f07100248ffeVaY6PiXzizQdwK | agent=coder-worker | M10: perfectionist+skill-master в сон (@coder-worker subagent)
+2026-10-02 19:12 | upd 2026-10-02 19:20 | ses_f029cb44affeI1hGQdXySI8qRF | glowing-cabin | parent=ses_f07100248ffeVaY6PiXzizQdwK | agent=coder-worker | M9: hp_regulator.py (@coder-worker subagent)
+2026-10-02 19:12 | upd 2026-10-02 19:16 | ses_f029cb503ffe3SLKkoKW3TymRE | mighty-cabin | parent=ses_f07100248ffeVaY6PiXzizQdwK | agent=coder-worker | M8: monte_carlo_sleep.py (@coder-worker subagent)
+2026-10-02 18:40 | upd 2026-10-02 19:08 | ses_f02b9d067ffegzv1u5XM2VES3z | eager-moon | parent=ses_f07100248ffeVaY6PiXzizQdwK | agent=coder-worker | M6: sleep_git.py (@coder-worker subagent)
+2026-10-02 16:35 | upd 2026-10-02 18:59 | ses_f032c5656ffegUekYXBkUFPVtm | kind-pixel | parent=None | agent=monarch | Выполнение контракта рефакторинга fraction_lib
+2026-10-02 18:34 | upd 2026-10-02 18:39 | ses_f02bf0cfaffeU6HLpptLYIMRwx | eager-river | parent=ses_f07100248ffeVaY6PiXzizQdwK | agent=coder-worker | M5: git_session_sync.py (@coder-worker subagent)
+2026-09-21 21:02 | upd 2026-10-02 17:35 | ses_f3addcd7bffemXBBT6NS4R67Ze | mighty-rocket | parent=None | agent=build | Тест
+2026-10-02 16:40 | upd 2026-10-02 17:29 | ses_f0327f785ffeYuXYtAXVqfMBh4 | crisp-lagoon | parent=ses_f07100248ffeVaY6PiXzizQdwK | agent=coder-worker | M7: baseline_tracker.py (@coder-worker subagent)
+2026-10-02 16:40 | upd 2026-10-02 17:28 | ses_f0327f832ffeGh8y4RzohCs5yg | nimble-wolf | parent=ses_f07100248ffeVaY6PiXzizQdwK | agent=coder-worker | M6: sleep_git.py (@coder-worker subagent)
+2026-10-02 16:40 | upd 2026-10-02 16:41 | ses_f0327f90cffeW6vkHgEzfYDGtT | playful-planet | parent=ses_f07100248ffeVaY6PiXzizQdwK | agent=coder-worker | M5: git_session_sync.py (@coder-worker subagent)
+2026-10-02 16:19 | upd 2026-10-02 16:27 | ses_f033add30ffeZca126MQeuxtBa | glowing-eagle | parent=ses_f07100248ffeVaY6PiXzizQdwK | agent=code-reviewer | Ревью M0+M1 (повторно) (@code-reviewer subagent)
+2026-10-02 15:39 | upd 2026-10-02 15:57 | ses_f035f18c8ffeOMPFIVmYzTou6c | calm-sailor | parent=ses_f07100248ffeVaY6PiXzizQdwK | agent=code-reviewer | Ревью M4: context-skill (@code-reviewer subagent)
+2026-10-02 15:39 | upd 2026-10-02 15:56 | ses_f035fb13effeSZpv3yFCl4T1sq | brave-island | parent=None | agent=code-orchestrator | Реализация fraction_lib с тройной валидацией
+2026-10-02 15:39 | upd 2026-10-02 15:55 | ses_f035f1a55ffeEutsG1wPxM3Uaj | nimble-star | parent=ses_f07100248ffeVaY6PiXzizQdwK | agent=code-reviewer | Ревью M0+M1: meta-слой + supervisor (@code-reviewer subagent)
+2026-10-02 15:39 | upd 2026-10-02 15:52 | ses_f035f192dffeywJXWAW43hUXcj | stellar-lagoon | parent=ses_f07100248ffeVaY6PiXzizQdwK | agent=code-reviewer | Ревью M3: task_hint (@code-reviewer subagent)
+2026-10-02 15:39 | upd 2026-10-02 15:50 | ses_f035f19d3ffeE6rCwuimlG9Sz4 | gentle-harbor | parent=ses_f07100248ffeVaY6PiXzizQdwK | agent=code-reviewer | Ревью M2: memory_router (@code-reviewer subagent)
+2026-10-02 15:19 | upd 2026-10-02 15:33 | ses_f0371af58ffeNE6IVt5O2rZmic | silent-cactus | parent=ses_f07100248ffeVaY6PiXzizQdwK | agent=coder-worker | M2: memory namespace + session tracker (@coder-worker subagent)
+2026-10-02 15:19 | upd 2026-10-02 15:23 | ses_f0371ae95ffe1Dlk7l7qDtO9bt | glowing-falcon | parent=ses_f07100248ffeVaY6PiXzizQdwK | agent=coder-worker | M3: router hints + dashboard (@coder-worker subagent)
+2026-10-02 15:19 | upd 2026-10-02 15:22 | ses_f0371add2ffe7MqYZRWwwBRmzo | quick-engine | parent=ses_f07100248ffeVaY6PiXzizQdwK | agent=coder-worker | M4: task-context-assessment skill (@coder-worker subagent)
+2026-10-02 15:00 | upd 2026-10-02 15:11 | ses_f038386afffesO1OMyys7WJYbC | shiny-orchid | parent=ses_f07100248ffeVaY6PiXzizQdwK | agent=coder-worker | M1: agent_supervisor.py (@coder-worker subagent)
+2026-10-02 15:00 | upd 2026-10-02 15:08 | ses_f0383872fffegBOvlQCG4pDrNa | silent-sailor | parent=ses_f07100248ffeVaY6PiXzizQdwK | agent=coder-worker | M0: перенос meta-слоя в portable (@coder-worker subagent)
+2026-10-02 07:37 | upd 2026-10-02 07:40 | ses_f051889b5ffezIR3j7II4XOTpC | happy-nebula | parent=ses_f07100248ffeVaY6PiXzizQdwK | agent=coder-worker | M0: перенос meta-слоя в portable (@coder-worker subagent)
+2026-10-02 07:37 | upd 2026-10-02 07:39 | ses_f051888ccffeCchklQXGAJGbVq | mighty-canyon | parent=ses_f07100248ffeVaY6PiXzizQdwK | agent=coder-worker | M1: agent_supervisor.py (@coder-worker subagent)
+2026-10-01 22:20 | upd 2026-10-02 07:24 | ses_f0716937bffeSTaEsKxzNw2brS | glowing-forest | parent=None | agent=code-orchestrator | Исправление 5 книг Excel по контракту
+2026-10-02 07:17 | upd 2026-10-02 07:21 | ses_f052b29a9ffeJ1v0ipnXGMmqdH | curious-wizard | parent=ses_f0716937bffeSTaEsKxzNw2brS | agent=code-reviewer | Ревью ФР-13 ГОСТ 2177 (@code-reviewer subagent)
+2026-10-01 23:34 | upd 2026-10-01 23:37 | ses_f06d2d664ffeN24W1fo0yRRntf | jolly-circuit | parent=ses_f386e8cf6ffe6PvSHof3e1w3Ro | agent=general | Углублённый проход 2 (@general subagent)
+2026-09-22 08:23 | upd 2026-10-01 23:34 | ses_f386e8cf6ffe6PvSHof3e1w3Ro | shiny-panda | parent=None | agent=writing-orchestrator | Начало работы в F:\1\_STRUCTURED: сверка с гитами
+2026-10-01 22:39 | upd 2026-10-01 23:24 | ses_f0704f8a4ffee1kyqPhpXzt0wl | misty-forest | parent=ses_f386e8cf6ffe6PvSHof3e1w3Ro | agent=general | Закрыть 6 пробелов (@general subagent)
+2026-10-01 22:38 | upd 2026-10-01 22:50 | ses_f070621bbffe9DLvYXE19XVVJo | quick-otter | parent=ses_f0716937bffeSTaEsKxzNw2brS | agent=code-reviewer | Ревью правок фракционки (@code-reviewer subagent)
+2026-10-01 22:39 | upd 2026-10-01 22:40 | ses_f0705b13affemSKS7z79XMtqn3 | eager-moon | parent=None | agent=monarch | Выполнить ls в scripts/tools и ждать продолжения
+2026-10-01 22:37 | upd 2026-10-01 22:38 | ses_f0706ef94ffewr1VdvqSgkNxgM | misty-wizard | parent=None | agent=monarch | Последовательное выполнение и проверка файла
+2026-10-01 22:36 | upd 2026-10-01 22:36 | ses_f0708736dffenuF0TiUaOMLwFX | nimble-squid | parent=None | agent=monarch | ls и запись DONE в loop_test.txt
+2026-10-01 22:33 | upd 2026-10-01 22:34 | ses_f070a896bffeMHJpC1EaYifhKM | kind-knight | parent=None | agent=monarch | Список файлов в текущей директории
+2026-10-01 22:33 | upd 2026-10-01 22:33 | ses_f070b2d39ffev90IJbixaqRrd7 | playful-eagle | parent=None | agent=monarch | Просто привет
+2026-10-01 22:18 | upd 2026-10-01 22:23 | ses_f0718a28cffenVN9WaGx7WQ6Ij | quiet-moon | parent=ses_f386e8cf6ffe6PvSHof3e1w3Ro | agent=general | Аудит покрытия тем (@general subagent)
+2026-10-01 22:19 | upd 2026-10-01 22:19 | ses_f0717adc7ffeUulqNDgMmAeqCn | curious-falcon | parent=None | agent=code-orchestrator | Исполнение контракта по фабрике кода с тестированием и отчётом
+2026-10-01 22:08 | upd 2026-10-01 22:19 | ses_f0721791affeuxV0cCvTQvVV0V | curious-rocket | parent=None | agent=code-orchestrator | Исправление 5 книг Excel расчёта фракционного состава по реестру ФР-01..ФР-06,16
+2026-10-01 21:41 | upd 2026-10-01 22:17 | ses_f073a49a6ffe9yhTm9v3S8JMOG | glowing-engine | parent=None | agent=build | Проверка сессии: ошибка Некорректный запрос
+2026-10-01 21:57 | upd 2026-10-01 22:14 | ses_f072b6b13ffeZPZLkjMc8O27GC | gentle-planet | parent=ses_f386e8cf6ffe6PvSHof3e1w3Ro | agent=general | Ревью автореферата и темы (@general subagent)
+2026-10-01 22:07 | upd 2026-10-01 22:07 | ses_f0722ab7effeHZOsOkes5LOP20 | stellar-engine | parent=None | agent=code-orchestrator | Исправление фракционного состава по контракту ФР-01..ФР-06,16
+2026-10-01 22:06 | upd 2026-10-01 22:07 | ses_f072360e9ffeFHy0nbGqlj4V5I | sunny-rocket | parent=None | agent=code-orchestrator | Исправление 5 книг Excel расчёта фракционного состава по реестру ФР-01..ФР-06,16
+2026-10-01 22:06 | upd 2026-10-01 22:06 | ses_f072360c7ffeGqs2ocYbxUn9g1 | jolly-wizard | parent=None | agent=dream-consolidator | Auto Dream
+2026-10-01 21:26 | upd 2026-10-01 21:38 | ses_f0747dc6affeO2LRS92dlerFyw | witty-orchid | parent=ses_f386e8cf6ffe6PvSHof3e1w3Ro | agent=general | Проверка A=2.4 и порога 0.5% (@general subagent)
+2026-10-01 21:09 | upd 2026-10-01 21:36 | ses_f075837a6ffe3SVEBMY3DXBn02 | kind-garden | parent=ses_f079394f1ffeY5ON06C6r1So8O | agent=general | Поиск нормативок фракционного состава (@general subagent)
+2026-10-01 21:10 | upd 2026-10-01 21:22 | ses_f0756ab40ffe5RVtyxfNgrTue2 | crisp-cactus | parent=ses_f386e8cf6ffe6PvSHof3e1w3Ro | agent=general | Извлечение физики из PDF (@general subagent)
+2026-09-22 11:19 | upd 2026-10-01 21:10 | ses_f37cd44a0ffe5vlOQMarL4Cew1 | silent-falcon | parent=None | agent=build | Настройка ассистента для диссертации
+2026-10-01 20:21 | upd 2026-10-01 20:53 | ses_f07835f66ffeJZRrIHd1ZPkwN7 | stellar-wolf | parent=ses_f079394f1ffeY5ON06C6r1So8O | agent=general | Поиск нормативок фракционного состава (@general subagent)
+2026-10-01 07:37 | upd 2026-10-01 07:39 | ses_f0a3f164cffeWRX7I6oorIiRNg | calm-panda | parent=None | agent=build | Тест сессии: ошибка BAD_REQUEST
+2026-09-30 23:50 | upd 2026-09-30 23:57 | ses_f0beaa024ffeIXaK4sihZdFJh7 | neon-pixel | parent=ses_f386e8cf6ffe6PvSHof3e1w3Ro | agent=general | Поиск по материалам/объектам (@general subagent)
+2026-09-30 22:39 | upd 2026-09-30 23:41 | ses_f0c2b4d49ffer1yj56nf030deU | cosmic-orchid | parent=ses_f386e8cf6ffe6PvSHof3e1w3Ro | agent=general | Глубокий поиск первоисточников (@general subagent)
+2026-09-30 21:11 | upd 2026-09-30 22:01 | ses_f0c7bf84bffe7DudPgN1yD3OJq | misty-eagle | parent=ses_f386e8cf6ffe6PvSHof3e1w3Ro | agent=general | Глубокий поиск по 8 пробелам (@general subagent)
+2026-09-29 23:08 | upd 2026-09-30 21:03 | ses_f11377805ffeVcD5kdBlPQVe8z | cosmic-star | parent=ses_f386e8cf6ffe6PvSHof3e1w3Ro | agent=article-writer | DebtResolver разделов 1.1/1.5 (@article-writer subagent)
+2026-09-30 20:27 | upd 2026-09-30 20:54 | ses_f0ca4d04dffeE1iHOZ9oAkkSiM | curious-wolf | parent=ses_f386e8cf6ffe6PvSHof3e1w3Ro | agent=general | Скачать Герасимова/Куксенову (@general subagent)
+2026-09-30 20:40 | upd 2026-09-30 20:50 | ses_f0c98a057ffeHSe60v8zMMBCBu | lucky-cabin | parent=ses_f37cd44a0ffe5vlOQMarL4Cew1 | agent=general | Анализ legacy-чатов для фич (@general subagent)
+2026-09-30 19:57 | upd 2026-09-30 20:21 | ses_f0cc02195ffeWzfSWi48pFdSSU | lucky-forest | parent=ses_f386e8cf6ffe6PvSHof3e1w3Ro | agent=general | Верификация деbt-фраз в литературе (@general subagent)
+2026-09-29 22:56 | upd 2026-09-29 23:22 | ses_f11428f4dffe3Its0c6el2BN6h | hidden-lagoon | parent=ses_f386e8cf6ffe6PvSHof3e1w3Ro | agent=article-writer | SectionCritic разделов 1.1/1.5 (@article-writer subagent)
+2026-09-29 22:05 | upd 2026-09-29 22:51 | ses_f11714f99ffepzKPyKv0fS3GLa | hidden-planet | parent=ses_f386e8cf6ffe6PvSHof3e1w3Ro | agent=article-writer | Разделы 1.1/1.5 по MEAL-контракту (@article-writer subagent)
+2026-09-29 21:07 | upd 2026-09-29 21:27 | ses_f11a633c2ffeeIk2dm0creKQWU | hidden-island | parent=ses_f386e8cf6ffe6PvSHof3e1w3Ro | agent=article-writer | Обзор проблематики главы 1 (@article-writer subagent)
+2026-09-28 22:07 | upd 2026-09-28 22:12 | ses_f169550dcffeIT9GkXagCIRIiS | calm-meadow | parent=ses_f386e8cf6ffe6PvSHof3e1w3Ro | agent=article-writer | Обзор проблематики главы 1 (@article-writer subagent)
+2026-09-28 21:09 | upd 2026-09-28 21:48 | ses_f16ca94c4ffecvS2J5Zj5Io6jH | witty-cactus | parent=ses_f386e8cf6ffe6PvSHof3e1w3Ro | agent=general | Верификация B2 главы 1 (@general subagent)
+2026-09-26 19:04 | upd 2026-09-28 19:58 | ses_f2189d49affeypKuh09PeCr05d | misty-orchid | parent=None | agent=build | New session - 2026-09-26T16:04:41.446Z
+2026-09-25 18:18 | upd 2026-09-26 19:47 | ses_f26dac2ceffexBjrjjx57IwAhW | happy-river | parent=None | agent=code-orchestrator | Доработка калибровки в Excel: расчёт неопределенностей
+2026-09-23 07:15 | upd 2026-09-23 07:31 | ses_f33866202ffeVTRU7v3RuTZW9H | shiny-river | parent=ses_f3addcd7bffemXBBT6NS4R67Ze | agent=source-fetcher | Тест отказоустойчивости модулей (@source-fetcher subagent)
+2026-09-22 22:22 | upd 2026-09-22 22:32 | ses_f356e5387ffegiw1c3Srmqz3kb | proud-harbor | parent=ses_f3addcd7bffemXBBT6NS4R67Ze | agent=source-fetcher | Повторный тест инструментов (@source-fetcher subagent)
+2026-09-22 22:04 | upd 2026-09-22 22:08 | ses_f357efd5affe55XJ93cEoda1o4 | quick-cabin | parent=ses_f3addcd7bffemXBBT6NS4R67Ze | agent=source-fetcher | Повторный тест инструментов (@source-fetcher subagent)
+2026-09-22 21:52 | upd 2026-09-22 21:57 | ses_f35898680ffe8RYPdUIM9BtAhJ | brave-knight | parent=ses_f3addcd7bffemXBBT6NS4R67Ze | agent=source-fetcher | Тест инструментов source-fetcher (@source-fetcher subagent)
+2026-09-22 21:15 | upd 2026-09-22 21:27 | ses_f35abc097ffesy4c9pyCE8nT8a | quick-wolf | parent=ses_f3addcd7bffemXBBT6NS4R67Ze | agent=source-fetcher | Тест source-fetcher (@source-fetcher subagent)
+2026-09-22 20:27 | upd 2026-09-22 21:18 | ses_f35d789d1ffeerjnBq3Mzs4vmg | hidden-otter | parent=ses_f37cd44a0ffe5vlOQMarL4Cew1 | agent=source-fetcher | Поиск 12 источников TD-157 (@source-fetcher subagent)
+2026-09-22 19:50 | upd 2026-09-22 19:55 | ses_f35f99c6fffejkSsEWYTD2FT7f | tidy-engine | parent=ses_f37cd44a0ffe5vlOQMarL4Cew1 | agent=general | Привязка первоисточников к клаймам (Этап A) (@general subagent)
+2026-09-22 17:36 | upd 2026-09-22 19:12 | ses_f3673f284ffevaJnZO7YH0PRo1 | tidy-engine | parent=ses_f37cd44a0ffe5vlOQMarL4Cew1 | agent=source-fetcher | Поиск методологических источников TD-157 (@source-fetcher subagent)
+2026-09-22 11:26 | upd 2026-09-22 11:28 | ses_f37c64e9bffey5Q34PZBHPig1d | kind-engine | parent=ses_f37c8061cffe53i42MKEU1xPU1 | agent=source-fetcher | source-fetcher dispatch (@source-fetcher subagent)
+2026-09-22 11:25 | upd 2026-09-22 11:26 | ses_f37c8061cffe53i42MKEU1xPU1 | calm-comet | parent=None | agent=source-fetcher-runner | Поиск веб-источников: азотирование 540°C
+2026-09-22 11:17 | upd 2026-09-22 11:24 | ses_f37cede0affe4ABqTBQMEvbmZs | glowing-garden | parent=None | agent=source-fetcher-runner | Поиск веб-источников по азотированию
+2026-09-22 11:18 | upd 2026-09-22 11:23 | ses_f37ce028fffeUFnFglnbgFduqp | crisp-forest | parent=ses_f37cede0affe4ABqTBQMEvbmZs | agent=source-fetcher | source-fetcher dispatch (@source-fetcher subagent)
+2026-09-22 11:08 | upd 2026-09-22 11:16 | ses_f37d6dc19ffe3KWRMYT6R4NT7P | swift-sailor | parent=ses_f37d80843ffeUE9dlZJEfOTlTU | agent=source-fetcher | source-fetcher dispatch (@source-fetcher subagent)
+2026-09-22 11:07 | upd 2026-09-22 11:08 | ses_f37d80843ffeUE9dlZJEfOTlTU | eager-canyon | parent=None | agent=source-fetcher-runner | Поиск веб-источников по азотированию
+2026-09-22 10:58 | upd 2026-09-22 11:04 | ses_f37dff76fffeWJ4hiq68myxs4K | cosmic-planet | parent=None | agent=claim-parser-runner | Извлечение клаймов по контракту Claim
+2026-09-22 11:00 | upd 2026-09-22 11:03 | ses_f37de74b5ffe9uWt0XI9VRv32B | nimble-river | parent=ses_f37dff76fffeWJ4hiq68myxs4K | agent=claim-parser | claim-parser dispatch (@claim-parser subagent)
+2026-09-22 10:51 | upd 2026-09-22 10:58 | ses_f37e6efa1ffe3IsV6FwVox1TyU | quiet-circuit | parent=None | agent=claim-parser-runner | Extract claims to JSON
+2026-09-22 10:52 | upd 2026-09-22 10:55 | ses_f37e5c4fdffeFy4byHubMEqoOO | misty-meadow | parent=ses_f37e6efa1ffe3IsV6FwVox1TyU | agent=claim-parser | claim-parser dispatch (@claim-parser subagent)
+2026-09-22 10:47 | upd 2026-09-22 10:48 | ses_f37ea17eeffe3IpbXsTpzNm0A2 | swift-squid | parent=ses_f37eb64caffewP1BRk4u5uxXz7 | agent=claim-parser | claim-parser dispatch (@claim-parser subagent)
+2026-09-18 21:19 | upd 2026-09-22 10:48 | ses_f4a410048ffeD8I3qUoTa7eNNc | stellar-orchid | parent=None | agent=research-orchestrator | тех
+2026-09-22 10:46 | upd 2026-09-22 10:47 | ses_f37eb64caffewP1BRk4u5uxXz7 | misty-tiger | parent=None | agent=claim-parser-runner | Extract claims to JSON
+2026-09-22 09:34 | upd 2026-09-22 09:34 | ses_f382d264bffeLr7va2o9XHQH4q | cosmic-forest | parent=None | agent=claim-parser-runner | New session - 2026-09-22T06:34:39.413Z
+2026-09-22 09:32 | upd 2026-09-22 09:32 | ses_f382f442affeDP34g3ww2Mgkbg | shiny-mountain | parent=None | agent=fact-checker-runner | New session - 2026-09-22T06:32:20.694Z
+2026-09-22 09:32 | upd 2026-09-22 09:32 | ses_f382f5c77ffe3EuZM03o3S4KoX | witty-star | parent=None | agent=claim-parser-runner | New session - 2026-09-22T06:32:14.473Z
+2026-09-22 08:26 | upd 2026-09-22 08:26 | ses_f386b842fffe639vRU05Nq4DoZ | quick-lagoon | parent=None | agent=claim-parser-runner | New session - 2026-09-22T05:26:32.144Z
+2026-09-22 08:25 | upd 2026-09-22 08:25 | ses_f386ca504ffechRU15Z9zDo7A8 | glowing-comet | parent=None | agent=claim-parser-runner | New session - 2026-09-22T05:25:18.203Z
+2026-09-22 08:14 | upd 2026-09-22 08:14 | ses_f3876fd7bffehfFcqvnyyNJm08 | brave-otter | parent=None | agent=claim-parser-runner | New session - 2026-09-22T05:14:00.196Z
+2026-09-22 08:13 | upd 2026-09-22 08:13 | ses_f387784c2ffewaFlKY5jiLDfgt | shiny-canyon | parent=None | agent=claim-parser-runner | New session - 2026-09-22T05:13:25.565Z
+2026-09-22 08:12 | upd 2026-09-22 08:12 | ses_f3877ef1bffeR4KzeAmaec1y4B | eager-lagoon | parent=None | agent=claim-parser-runner | New session - 2026-09-22T05:12:58.341Z
+2026-09-22 08:12 | upd 2026-09-22 08:12 | ses_f38786585ffe64mFxorgXKLcUc | calm-sailor | parent=None | agent=claim-parser-runner | New session - 2026-09-22T05:12:28.026Z
+2026-09-22 08:11 | upd 2026-09-22 08:12 | ses_f3878d5b7ffeg2fOkswHXZ5YYK | cosmic-sailor | parent=None | agent=claim-parser-runner | New session - 2026-09-22T05:11:59.304Z
+2026-09-22 08:11 | upd 2026-09-22 08:11 | ses_f38793b28ffePDHtjGBV181uz4 | misty-squid | parent=None | agent=claim-parser-runner | New session - 2026-09-22T05:11:33.335Z
+2026-09-22 08:10 | upd 2026-09-22 08:10 | ses_f3879f05affeqn3qWrRTp4eZCU | quiet-cabin | parent=None | agent=fact-checker-runner | New session - 2026-09-22T05:10:46.949Z
+2026-09-22 08:10 | upd 2026-09-22 08:10 | ses_f387a0a5fffeh254enmVjNxGGQ | jolly-tiger | parent=None | agent=claim-parser-runner | New session - 2026-09-22T05:10:40.288Z
+2026-09-22 08:08 | upd 2026-09-22 08:09 | ses_f387bc306ffey22NSZDPRoOhBk | lucky-forest | parent=None | agent=claim-parser-runner | Извлечение атомарных клаймов в JSON
+2026-09-22 08:09 | upd 2026-09-22 08:09 | ses_f387b368dffeQQklh6C30spea5 | clever-pixel | parent=ses_f387bc306ffey22NSZDPRoOhBk | agent=claim-parser | claim-parser dispatch (@claim-parser subagent)
+2026-09-22 07:39 | upd 2026-09-22 07:39 | ses_f3896a145ffejs2d0c9uqLywdd | happy-engine | parent=None | agent=claim-parser-runner | New session - 2026-09-22T04:39:26.651Z
+2026-09-22 07:38 | upd 2026-09-22 07:38 | ses_f3897c8b9ffeUC4lzD5QFaClpk | gentle-harbor | parent=ses_f389815a4ffec4GCXzHKREUYr0 | agent=claim-parser | claim-parser dispatch (@claim-parser subagent)
+2026-09-22 07:37 | upd 2026-09-22 07:37 | ses_f389892f4ffefgydtvthyDjrqR | lucky-eagle | parent=None | agent=fact-checker-runner | New session - 2026-09-22T04:37:19.244Z
+2026-09-22 07:36 | upd 2026-09-22 07:36 | ses_f3898e6d2ffegYl0H3Se3Ck5X3 | brave-panda | parent=None | agent=claim-parser-runner | New session - 2026-09-22T04:36:57.773Z
+2026-09-22 07:34 | upd 2026-09-22 07:35 | ses_f389ad0a1ffexj2Ac6fuJYrXh1 | stellar-lagoon | parent=None | agent=claim-parser-runner | Извлечение клаймов: азотирование
+2026-09-22 07:35 | upd 2026-09-22 07:35 | ses_f389a9f3effevTLBLRftWym5Ey | brave-squid | parent=ses_f389ad0a1ffexj2Ac6fuJYrXh1 | agent=claim-parser | claim-parser dispatch (@claim-parser subagent)
+2026-09-22 07:25 | upd 2026-09-22 07:26 | ses_f38a344b8ffeUvVBHzqOvWveVo | nimble-meadow | parent=None | agent=brick-agent | Извлечение атомарных клаймов из текста
+2026-09-22 07:26 | upd 2026-09-22 07:26 | ses_f38a2ed8dffeuNMVVQ3ZAWuuEA | swift-pixel | parent=ses_f38a344b8ffeUvVBHzqOvWveVo | agent=claim-parser | claim-parser dispatch from brick-agent (@claim-parser subagent)
+2026-09-22 07:22 | upd 2026-09-22 07:22 | ses_f38a61b12ffeV2HUo7asSRA1xs | clever-sailor | parent=None | agent=research-orchestrator | Запрос JSON через --format
+2026-09-22 07:21 | upd 2026-09-22 07:21 | ses_f38a701f1ffeGznNXCfQ9VXaC0 | misty-wizard | parent=None | agent=dream-consolidator | Auto Dream
+2026-09-22 07:21 | upd 2026-09-22 07:21 | ses_f38a7027affevujMeikWf47Fxb | swift-cabin | parent=None | agent=monarch | New session - 2026-09-22T04:21:33.189Z
+2026-09-21 23:16 | upd 2026-09-21 23:27 | ses_f3a63229cffeSrm1vYdBhEptsD | quiet-moon | parent=ses_f4a410048ffeD8I3qUoTa7eNNc | agent=tribunal-judge | Трибунал: валидация результатов НКР (@tribunal-judge subagent)
+2026-09-21 20:59 | upd 2026-09-21 20:59 | ses_f3ae09d0dffekaz0o0lsOjq98Q | hidden-forest | parent=None | agent=None | New session - 2026-09-21T17:59:23.634Z
+2026-09-13 21:29 | upd 2026-09-21 20:54 | ses_f63f7daf9ffep3WZW55MIuWMi6 | shiny-sailor | parent=None | agent=code-orchestrator | Ревизия патчей модуля harness для opencode
+2026-09-12 22:43 | upd 2026-09-20 22:57 | ses_f68dabc1bffenN4RV25IOj5YCq | quick-rocket | parent=None | agent=writing-orchestrator | Общие принципы разработки ИИ-агентов
+2026-09-19 21:51 | upd 2026-09-19 22:04 | ses_f44fd74a4ffeW0kGa2xE0RkPfI | neon-wolf | parent=None | agent=build | Поиск скилла sci-bot: файл не найден
+2026-09-19 20:43 | upd 2026-09-19 20:55 | ses_f453bd617ffeCA5fD3EY5SVO6G | glowing-squid | parent=ses_f4a410048ffeD8I3qUoTa7eNNc | agent=coder-worker | Починка локального SearXNG (@coder-worker subagent)
+2026-09-18 10:21 | upd 2026-09-19 06:35 | ses_f4c9bd5bcffeL1GIYCA5drW3Pu | calm-knight | parent=None | agent=code-orchestrator | Сбор недостающих функций в глоссарий
+2026-09-18 22:07 | upd 2026-09-18 22:27 | ses_f4a15580affeuA7iXHhbTkrFNx | lucky-cactus | parent=ses_f4a410048ffeD8I3qUoTa7eNNc | agent=fact-checker | Факт-чекинг числовых клаймов литобзора (@fact-checker subagent)
+2026-09-18 22:07 | upd 2026-09-18 22:22 | ses_f4a1558d6ffeMX2CcigRPRepiD | lucky-pixel | parent=ses_f4a410048ffeD8I3qUoTa7eNNc | agent=claim-parser | Атомарные клаймы литобзора главы 1 (@claim-parser subagent)
+2026-09-07 18:30 | upd 2026-09-18 22:09 | ses_f8381fe16ffebYIJopigdNxg2g | quiet-pixel | parent=None | agent=writing-orchestrator | Проверка связи
+2026-09-18 21:44 | upd 2026-09-18 22:06 | ses_f4a2ad8a4ffebwe6jx7lXxsCMO | quick-nebula | parent=ses_f4a410048ffeD8I3qUoTa7eNNc | agent=claim-parser | Агрегация атомарных клаймов литобзора (@claim-parser subagent)
+2026-09-18 21:40 | upd 2026-09-18 21:44 | ses_f4a2dd957ffebpD29FuG6SuSqy | playful-orchid | parent=ses_f4c9bd5bcffeL1GIYCA5drW3Pu | agent=code-auditor | Аудит процесса citations (@code-auditor subagent)
+2026-09-18 21:27 | upd 2026-09-18 21:33 | ses_f4a398febffeUDHlZBYMc0eNb2 | playful-lagoon | parent=ses_f4c9bd5bcffeL1GIYCA5drW3Pu | agent=code-reviewer | Финальное ре-ревью G8 guard (@code-reviewer subagent)
+2026-09-18 21:11 | upd 2026-09-18 21:22 | ses_f4a484c99ffeZDO7M3kzDN60sW | sunny-otter | parent=ses_f4c9bd5bcffeL1GIYCA5drW3Pu | agent=code-reviewer | Финальное ре-ревью G8 guard (@code-reviewer subagent)
+2026-09-18 21:04 | upd 2026-09-18 21:15 | ses_f4a4f755affeTfJdwjao1YrMdJ | kind-comet | parent=ses_f8381fe16ffebYIJopigdNxg2g | agent=general | ВАК-оформление диссертации (@general subagent)
+2026-09-18 19:31 | upd 2026-09-18 21:09 | ses_f4aa3b511ffeMqb7Hh5xDBnGf8 | calm-falcon | parent=ses_f4c9bd5bcffeL1GIYCA5drW3Pu | agent=coder-worker | TD-083 + G7/G8/G9 builders (@coder-worker subagent)
+2026-09-18 20:40 | upd 2026-09-18 20:54 | ses_f4a65358effevIQkJTCbOvk30B | kind-lagoon | parent=ses_f4c9bd5bcffeL1GIYCA5drW3Pu | agent=code-tester | Ре-тест фиксов G7/G8/G9 (@code-tester subagent)
+2026-09-18 20:40 | upd 2026-09-18 20:50 | ses_f4a653606ffe53iZNgWpaeJ8gf | tidy-harbor | parent=ses_f4c9bd5bcffeL1GIYCA5drW3Pu | agent=code-reviewer | Ре-ревью фиксов G7/G8/G9 (@code-reviewer subagent)
+2026-09-18 20:03 | upd 2026-09-18 20:21 | ses_f4a86d408ffey7QrA8eu21Peyf | misty-garden | parent=ses_f4c9bd5bcffeL1GIYCA5drW3Pu | agent=code-tester | Тест citations G7/G8/G9 (@code-tester subagent)
+2026-09-18 20:03 | upd 2026-09-18 20:14 | ses_f4a86d423ffeVV3pGeFJylouly | neon-mountain | parent=ses_f4c9bd5bcffeL1GIYCA5drW3Pu | agent=code-reviewer | Ревью citations G7/G8/G9 (@code-reviewer subagent)
+2026-09-18 20:11 | upd 2026-09-18 20:14 | ses_f4a7fa7b5ffe9wJUJ8YWNheQ4W | kind-mountain | parent=ses_f63f7daf9ffep3WZW55MIuWMi6 | agent=coder-worker | Fix verify_claim non-dict guard (@coder-worker subagent)
+2026-09-18 19:35 | upd 2026-09-18 19:38 | ses_f4aa0ef7affevuY73zZREUomVb | happy-cactus | parent=ses_f63f7daf9ffep3WZW55MIuWMi6 | agent=coder-worker | E2E: worker via coder DOM capsule (@coder-worker subagent)
+2026-09-18 18:40 | upd 2026-09-18 18:48 | ses_f4ad2ab2fffeGHhxua6jKle6o2 | swift-falcon | parent=ses_f4c9bd5bcffeL1GIYCA5drW3Pu | agent=code-auditor | Аудит процесса фиксов (@code-auditor subagent)
+2026-09-18 18:23 | upd 2026-09-18 18:39 | ses_f4ae2788cfferPZaxuHHUaCGe3 | shiny-wizard | parent=ses_f4c9bd5bcffeL1GIYCA5drW3Pu | agent=code-tester | Тест фиксов TD-087/088/085 (@code-tester subagent)
+2026-09-18 18:23 | upd 2026-09-18 18:37 | ses_f4ae278dfffeqhZGl5TKBsvJnt | shiny-planet | parent=ses_f4c9bd5bcffeL1GIYCA5drW3Pu | agent=code-reviewer | Ревью фиксов TD-087/088/085 (@code-reviewer subagent)
+2026-09-18 17:35 | upd 2026-09-18 18:20 | ses_f4b0e0819ffeaduywiEZ201u4x | brave-wizard | parent=ses_f4c9bd5bcffeL1GIYCA5drW3Pu | agent=coder-worker | Фиксы TD-087/088/085 (@coder-worker subagent)
+2026-09-18 15:17 | upd 2026-09-18 15:23 | ses_f4b8cecf5ffe5T1PwCm6SRGYYR | cosmic-cactus | parent=ses_f4c9bd5bcffeL1GIYCA5drW3Pu | agent=glossary-maintainer | Глоссарий: полный цикл (@glossary-maintainer subagent)
+2026-09-18 14:32 | upd 2026-09-18 14:47 | ses_f4bb5c1ecfferwAItad07hizAs | stellar-rocket | parent=ses_f4c9bd5bcffeL1GIYCA5drW3Pu | agent=code-auditor | Аудит процесса сшивки (@code-auditor subagent)
+2026-09-18 14:19 | upd 2026-09-18 14:29 | ses_f4bc1ca21ffe07qpniBBV70Vx1 | silent-garden | parent=ses_f4c9bd5bcffeL1GIYCA5drW3Pu | agent=code-reviewer | Ревью W1+W2 сшивки (@code-reviewer subagent)
+2026-09-18 14:19 | upd 2026-09-18 14:26 | ses_f4bc1c9c6ffe2E5vDHiPUFbqo0 | crisp-cactus | parent=ses_f4c9bd5bcffeL1GIYCA5drW3Pu | agent=code-tester | Тест сшивки W1+W2 (@code-tester subagent)
+2026-09-18 14:16 | upd 2026-09-18 14:24 | ses_f4bc41821ffe9xQe3mjhLWMkXT | brave-orchid | parent=ses_f63f7daf9ffep3WZW55MIuWMi6 | agent=general | Research: coder DOM weak spots (@general subagent)
+2026-09-18 14:02 | upd 2026-09-18 14:17 | ses_f4bd194a5ffe6MqxDXBWet9F0E | crisp-otter | parent=ses_f4c9bd5bcffeL1GIYCA5drW3Pu | agent=coder-worker | W1: сшивка роутер+агент+скилл (@coder-worker subagent)
+2026-09-18 14:02 | upd 2026-09-18 14:11 | ses_f4bd193cfffesw7KTua4K4w2az | quick-harbor | parent=ses_f4c9bd5bcffeL1GIYCA5drW3Pu | agent=coder-worker | W2: скилл + агент glossary (@coder-worker subagent)
+2026-09-18 13:38 | upd 2026-09-18 13:58 | ses_f4be7b23dffe71HDwqUTiLHTUL | quick-mountain | parent=ses_f4c9bd5bcffeL1GIYCA5drW3Pu | agent=explore | Исследование сшивки роутера (@explore subagent)
+2026-09-18 12:32 | upd 2026-09-18 12:55 | ses_f4c23886bffedMGbEE2Hj2kajY | eager-garden | parent=None | agent=build | Установка gh CLI
+2026-09-18 12:51 | upd 2026-09-18 12:53 | ses_f4c129290ffeCn1EJ7Z8CGqsQF | proud-garden | parent=ses_f4c9bd5bcffeL1GIYCA5drW3Pu | agent=code-auditor | Аудит процесса glossary (@code-auditor subagent)
+2026-09-18 12:40 | upd 2026-09-18 12:49 | ses_f4c1c4f28ffe4kf112mnILUVKU | gentle-circuit | parent=ses_f4c9bd5bcffeL1GIYCA5drW3Pu | agent=code-tester | Повторный тест финальных артефактов (@code-tester subagent)
+2026-09-18 12:30 | upd 2026-09-18 12:43 | ses_f4c253cfcffekNVBTBHJr8GeqG | kind-cabin | parent=ses_f63f7daf9ffep3WZW55MIuWMi6 | agent=general | Research: code DOM / function registry (@general subagent)
+2026-09-18 12:25 | upd 2026-09-18 12:35 | ses_f4c2a1550ffeEvsemQYzOFmnV4 | silent-comet | parent=ses_f4c9bd5bcffeL1GIYCA5drW3Pu | agent=code-reviewer | Ре-ревью фиксов R1-R6 (@code-reviewer subagent)
+2026-09-18 10:51 | upd 2026-09-18 12:19 | ses_f4c8036bcffeVdabWlNLIoVgMV | neon-eagle | parent=ses_f4c9bd5bcffeL1GIYCA5drW3Pu | agent=coder-worker | M1: генератор реестра функций (@coder-worker subagent)
+2026-09-18 11:48 | upd 2026-09-18 12:05 | ses_f4c4bd0deffe4f2a82dFP5re7W | jolly-tiger | parent=ses_f4c9bd5bcffeL1GIYCA5drW3Pu | agent=code-tester | Тесты генераторов glossary (@code-tester subagent)
+2026-09-18 11:48 | upd 2026-09-18 12:00 | ses_f4c4bd18fffeWs04wS03PgrKig | shiny-otter | parent=ses_f4c9bd5bcffeL1GIYCA5drW3Pu | agent=code-reviewer | Ревью генераторов glossary (@code-reviewer subagent)
+2026-09-18 11:17 | upd 2026-09-18 11:38 | ses_f4c683672ffeji3TWh5IcPt7uY | swift-moon | parent=ses_f4c9bd5bcffeL1GIYCA5drW3Pu | agent=coder-worker | M3+M4: сравнение и рендер (@coder-worker subagent)
+2026-09-17 22:32 | upd 2026-09-17 22:35 | ses_f4f24d601ffeIpTY2ihZObAqam | stellar-rocket | parent=ses_f63f7daf9ffep3WZW55MIuWMi6 | agent=general | Full researcher pipeline run (@general subagent)
+2026-09-17 21:58 | upd 2026-09-17 21:58 | ses_f4f43f663ffeARrA8ghM564bot | mighty-cabin | parent=None | agent=monarch | Проверка литературы: route_id и state
+2026-09-17 21:56 | upd 2026-09-17 21:56 | ses_f4f45c6cdffelR6P5Hb4SKZqU0 | proud-circuit | parent=None | agent=monarch | New session - 2026-09-17T18:56:29.491Z
+2026-09-17 21:55 | upd 2026-09-17 21:55 | ses_f4f466dfcffekFHWXZh2gZPF8h | mighty-tiger | parent=None | agent=monarch | New session - 2026-09-17T18:55:46.691Z
+2026-09-17 21:49 | upd 2026-09-17 21:49 | ses_f4f4c1e55ffeNyg2HT11m1yLXc | quick-lagoon | parent=None | agent=build | Калибровка научной верификационной системы
+2026-09-17 21:38 | upd 2026-09-17 21:38 | ses_f4f563613ffelDJuXXtyYll3k1 | swift-forest | parent=None | agent=build | Калибровка научной верификационной системы
+2026-09-17 20:34 | upd 2026-09-17 20:40 | ses_f4f90f1afffe8K7DkECqm2N1YE | silent-rocket | parent=None | agent=research-orchestrator | Калибровка научной верификационной системы
+2026-09-17 20:34 | upd 2026-09-17 20:35 | ses_f4f911a1dffeLPidJRO1udUtZy | glowing-star | parent=None | agent=experimenter | Калибровка научной верификационной системы
+2026-09-17 20:33 | upd 2026-09-17 20:34 | ses_f4f91bc5cffes9s2mb0RPDzyk8 | nimble-garden | parent=None | agent=build | {
+2026-09-17 20:19 | upd 2026-09-17 20:21 | ses_f4f9e95ebffewSsXoSqLWcPLCC | silent-canyon | parent=None | agent=writing-orchestrator | Калибровка научной верификационной системы
+2026-09-16 21:35 | upd 2026-09-17 07:02 | ses_f547f7dceffekVI2G1KS461pQ6 | glowing-knight | parent=None | agent=research-orchestrator | Запутанность, улитки, артефакты и лагранжиан
+2026-09-17 06:59 | upd 2026-09-17 07:00 | ses_f527b6f9dffeqN02CSbXINgLjj | mighty-sailor | parent=ses_f547f7dceffekVI2G1KS461pQ6 | agent=general | T-02 ролевой прогон (@general subagent)
+2026-09-17 06:59 | upd 2026-09-17 06:59 | ses_f527b6f4dffep9DW32HD936h3w | gentle-mountain | parent=ses_f547f7dceffekVI2G1KS461pQ6 | agent=general | T-03 ролевой прогон (@general subagent)
+2026-09-17 06:59 | upd 2026-09-17 06:59 | ses_f527b6ef1ffeS0DeXJ8fI4Gwf7 | crisp-squid | parent=ses_f547f7dceffekVI2G1KS461pQ6 | agent=general | T-04 ролевой прогон (@general subagent)
+2026-09-17 06:59 | upd 2026-09-17 06:59 | ses_f527b6ea3ffevVrDboy62Lz4IT | mighty-falcon | parent=ses_f547f7dceffekVI2G1KS461pQ6 | agent=general | T-05 ролевой прогон (@general subagent)
+2026-09-17 06:59 | upd 2026-09-17 06:59 | ses_f527b7025ffeyHi30JrQdXRokU | swift-squid | parent=ses_f547f7dceffekVI2G1KS461pQ6 | agent=general | T-01 ролевой прогон (@general subagent)
+2026-09-16 22:09 | upd 2026-09-16 22:20 | ses_f54605484ffeDzBuzIhORxlVR4 | quiet-pixel | parent=ses_f547f7dceffekVI2G1KS461pQ6 | agent=fact-checker | Факт-чекинг 22 клаймов (@fact-checker subagent)
+2026-09-16 21:45 | upd 2026-09-16 22:04 | ses_f5475c67dffelZuNnx40iEIFak | tidy-sailor | parent=ses_f547f7dceffekVI2G1KS461pQ6 | agent=source-fetcher | Поиск источников по клаймам (@source-fetcher subagent)
+2026-09-16 17:48 | upd 2026-09-16 21:59 | ses_f554f82d0ffepiur3IjGf6o7WA | clever-squid | parent=None | agent=build | Найти папку плагинов opencode с harness
+2026-09-16 21:24 | upd 2026-09-16 21:45 | ses_f5489bdeaffe5Jh0y0jfmy2ftC | eager-falcon | parent=ses_f63f7daf9ffep3WZW55MIuWMi6 | agent=code-tester | Expand coder auto-tests coverage (@code-tester subagent)
+2026-09-16 21:39 | upd 2026-09-16 21:43 | ses_f547b7e66ffepcQsYC3L7Wazw5 | glowing-tiger | parent=ses_f547f7dceffekVI2G1KS461pQ6 | agent=claim-parser | Извлечение атомарных клаймов (@claim-parser subagent)
+2026-09-16 21:19 | upd 2026-09-16 21:20 | ses_f548e12f8ffehPtLpw5EwjoOMy | quiet-river | parent=ses_f63f7daf9ffep3WZW55MIuWMi6 | agent=code-auditor | Audit M3b closure process (@code-auditor subagent)
+2026-09-16 20:58 | upd 2026-09-16 21:14 | ses_f54a0d86cffelb885S3wctvnx1 | swift-comet | parent=ses_f63f7daf9ffep3WZW55MIuWMi6 | agent=code-tester | Re-test M3b bridge fixes (@code-tester subagent)
+2026-09-16 20:58 | upd 2026-09-16 21:06 | ses_f54a0d93affea8Bta1h6sVao6d | playful-wizard | parent=ses_f63f7daf9ffep3WZW55MIuWMi6 | agent=code-reviewer | Re-review M3b bridge fixes (@code-reviewer subagent)
+2026-09-16 20:24 | upd 2026-09-16 20:56 | ses_f54c0bfc6ffeDdcRFKgGDSX971 | kind-forest | parent=ses_f63f7daf9ffep3WZW55MIuWMi6 | agent=coder-worker | Fix M3b bridge channel defects (@coder-worker subagent)
+2026-09-16 19:27 | upd 2026-09-16 20:26 | ses_f54f42c63ffeNMEtqttp0TwQ0Y | swift-wizard | parent=None | agent=build | Установка hermes-agent через WSL2
+2026-09-16 20:14 | upd 2026-09-16 20:20 | ses_f54c9b372ffeLVRz0G424gYDPT | silent-knight | parent=ses_f63f7daf9ffep3WZW55MIuWMi6 | agent=code-reviewer | Review M3b bridge channel (@code-reviewer subagent)
+2026-09-16 19:52 | upd 2026-09-16 20:06 | ses_f54ddf893ffe9ghOppoCssbG41 | hidden-circuit | parent=ses_f63f7daf9ffep3WZW55MIuWMi6 | agent=code-reviewer | Review M3b bridge channel (@code-reviewer subagent)
+2026-09-16 19:52 | upd 2026-09-16 20:05 | ses_f54ddf7dcffeRoJdkEQE65jI7p | playful-lagoon | parent=ses_f63f7daf9ffep3WZW55MIuWMi6 | agent=code-tester | Test M3b bridge channel (@code-tester subagent)
+2026-09-16 18:23 | upd 2026-09-16 19:28 | ses_f552ed92bffeKEco4TeJnwXEZQ | jolly-comet | parent=ses_f63f7daf9ffep3WZW55MIuWMi6 | agent=coder-worker | M3b wire real bridge channel (@coder-worker subagent)
+2026-09-16 17:36 | upd 2026-09-16 18:32 | ses_f5559dbf8ffe5rrPoKjGBA33Aq | stellar-island | parent=None | agent=experimenter | Развитие пунктов: корреляционная матрица решений
+2026-09-16 17:25 | upd 2026-09-16 17:30 | ses_f5563ddc6ffeG896dZ1Zox0qvW | neon-harbor | parent=ses_f63f7daf9ffep3WZW55MIuWMi6 | agent=code-auditor | Audit M3a closure process (@code-auditor subagent)
+2026-09-16 16:50 | upd 2026-09-16 17:17 | ses_f5584319dffecLWqjzJqm7j9nM | silent-circuit | parent=ses_f63f7daf9ffep3WZW55MIuWMi6 | agent=code-reviewer | Review M3a transport selection (@code-reviewer subagent)
+2026-09-16 16:50 | upd 2026-09-16 17:15 | ses_f5584280effe13LiDl00Pr66mW | eager-harbor | parent=ses_f63f7daf9ffep3WZW55MIuWMi6 | agent=code-tester | Test M3a transport selection (@code-tester subagent)
+2026-09-16 16:04 | upd 2026-09-16 16:46 | ses_f55ae1175ffeJt7dqcqzvdxUA8 | shiny-forest | parent=ses_f63f7daf9ffep3WZW55MIuWMi6 | agent=coder-worker | M3a explicit transport selection (@coder-worker subagent)
+2026-09-16 16:30 | upd 2026-09-16 16:33 | ses_f5596c4c6ffeisc891w9VUO110 | misty-falcon | parent=None | agent=build | Work request
+2026-09-16 16:27 | upd 2026-09-16 16:29 | ses_f55990c5fffeTDuSaWuoQemCfZ | crisp-circuit | parent=None | agent=build | Work request
+2026-09-16 15:29 | upd 2026-09-16 15:31 | ses_f55ced62fffenTPmgHU22XxNgt | jolly-otter | parent=ses_f63f7daf9ffep3WZW55MIuWMi6 | agent=code-auditor | Audit M2 closure process (@code-auditor subagent)
+2026-09-16 07:25 | upd 2026-09-16 15:26 | ses_f5789e6dcffe9pHIitom9S5NEX | happy-tiger | parent=ses_f63f7daf9ffep3WZW55MIuWMi6 | agent=code-reviewer | Review coder router wiring (@code-reviewer subagent)
+2026-09-16 14:43 | upd 2026-09-16 14:50 | ses_f55f83a7fffecCp4wX27du24zN | witty-planet | parent=ses_f63f7daf9ffep3WZW55MIuWMi6 | agent=code-tester | Test coder router wiring retry (@code-tester subagent)
+2026-09-16 07:25 | upd 2026-09-16 07:30 | ses_f5789e670ffeSIYLBbe5hRpeyf | clever-sailor | parent=ses_f63f7daf9ffep3WZW55MIuWMi6 | agent=code-tester | Test coder router wiring (@code-tester subagent)
+2026-09-16 07:13 | upd 2026-09-16 07:23 | ses_f57949318ffeVpQkwgAioghxU3 | lucky-mountain | parent=ses_f63f7daf9ffep3WZW55MIuWMi6 | agent=coder-worker | Wire semantic transport into coder router (@coder-worker subagent)
+2026-09-16 07:09 | upd 2026-09-16 07:10 | ses_f579812e8ffeX5x6YhuBWPEeL3 | happy-circuit | parent=ses_f63f7daf9ffep3WZW55MIuWMi6 | agent=code-auditor | Process audit M1 semantic transport (@code-auditor subagent)
+2026-09-16 06:44 | upd 2026-09-16 06:51 | ses_f57af34e3ffeBSrR1opVwJyJhb | lucky-wizard | parent=ses_f63f7daf9ffep3WZW55MIuWMi6 | agent=code-reviewer | Resume semantic adapter review (@code-reviewer subagent)
+2026-09-16 06:44 | upd 2026-09-16 06:51 | ses_f57af3457ffeNp7LPg0u91Rc51 | happy-garden | parent=ses_f63f7daf9ffep3WZW55MIuWMi6 | agent=code-tester | Resume semantic adapter testing (@code-tester subagent)
+2026-09-15 22:53 | upd 2026-09-15 22:54 | ses_f595e0a1bffeEzR8wuuNxKEWWl | sunny-panda | parent=ses_f63f7daf9ffep3WZW55MIuWMi6 | agent=code-tester | Re-test semantic_transport fix (@code-tester subagent)
+2026-09-15 22:53 | upd 2026-09-15 22:53 | ses_f595e0bccffePNKlZyVmycnv0W | neon-canyon | parent=ses_f63f7daf9ffep3WZW55MIuWMi6 | agent=code-reviewer | Re-review semantic_transport fix (@code-reviewer subagent)
+2026-09-15 22:38 | upd 2026-09-15 22:52 | ses_f596bcfabffe36Xnsogp1rqVKS | misty-mountain | parent=ses_f63f7daf9ffep3WZW55MIuWMi6 | agent=coder-worker | Fix semantic_transport schema defects (@coder-worker subagent)
+2026-09-15 22:35 | upd 2026-09-15 22:37 | ses_f596ec7dcffeG3FSSCQdr4m7AM | lucky-pixel | parent=ses_f63f7daf9ffep3WZW55MIuWMi6 | agent=coder-worker | Fix semantic_transport schema defects (@coder-worker subagent)
+2026-09-15 22:20 | upd 2026-09-15 22:31 | ses_f597c8982ffecvO4PAh1Gtw2ed | gentle-pixel | parent=ses_f63f7daf9ffep3WZW55MIuWMi6 | agent=code-tester | Test semantic_transport module (@code-tester subagent)
+2026-09-15 22:20 | upd 2026-09-15 22:28 | ses_f597c89c6ffeWCYujcYS1pinOF | playful-squid | parent=ses_f63f7daf9ffep3WZW55MIuWMi6 | agent=code-reviewer | Review semantic_transport module (@code-reviewer subagent)
+2026-09-15 22:06 | upd 2026-09-15 22:18 | ses_f5989ad97ffeqPrGH6I2BJgPMP | playful-garden | parent=ses_f63f7daf9ffep3WZW55MIuWMi6 | agent=coder-worker | Coder semantic transport adapter (@coder-worker subagent)
+2026-09-15 21:05 | upd 2026-09-15 21:06 | ses_f59c11997ffeLs6KEm05Lwz75R | crisp-planet | parent=None | agent=build | Доступ к сессии ChatGPT по ссылке
+2026-09-14 22:35 | upd 2026-09-14 22:35 | ses_f5e953b52ffe5VLXZV4skC5JB0 | neon-cabin | parent=None | agent=monarch | Semantic execution status and output
+2026-09-14 22:35 | upd 2026-09-14 22:35 | ses_f5e950358ffe4ExWxy1pAflcMn | clever-forest | parent=ses_f5e953b52ffe5VLXZV4skC5JB0 | agent=monarch | harness-semantic:TRIBUNAL_ROLE:live-1
+2026-09-14 22:21 | upd 2026-09-14 22:21 | ses_f5ea253cfffeM7qhtT9wHnjh5R | jolly-cactus | parent=None | agent=monarch | Call harness_status, display host_version
+2026-09-14 21:50 | upd 2026-09-14 22:16 | ses_f5ebe1fbdffe4WCmzIeA0KYubn | happy-orchid | parent=None | agent=build | Вызов harness_status
+2026-09-14 22:13 | upd 2026-09-14 22:13 | ses_f5ea9bc94ffeiyd5rb3VsV5WxP | quick-rocket | parent=None | agent=monarch | New session - 2026-09-14T19:13:00.268Z
+2026-09-14 22:09 | upd 2026-09-14 22:10 | ses_f5eac823dffecm7weY5UzztcWq | cosmic-squid | parent=None | agent=monarch | Call harness_status and report output
+2026-09-14 21:24 | upd 2026-09-14 21:24 | ses_f5ed66d60ffetv606sP1StSDkk | lucky-eagle | parent=None | agent=monarch | New session - 2026-09-14T18:24:11.423Z
+2026-09-14 21:23 | upd 2026-09-14 21:23 | ses_f5ed700b2ffe5o8dY56K5dbb0w | nimble-tiger | parent=None | agent=monarch | Checking harness status
+2026-09-14 21:15 | upd 2026-09-14 21:16 | ses_f5ede124bffeFcVOc1Slyk364Y | curious-river | parent=None | agent=monarch | Say OK
+2026-09-14 21:13 | upd 2026-09-14 21:13 | ses_f5ee04609ffe7M4l98l61OGxRu | nimble-harbor | parent=None | agent=monarch | New session - 2026-09-14T18:13:26.135Z
+2026-09-14 21:09 | upd 2026-09-14 21:10 | ses_f5ee37709ffeB6Q90yjy2DaLGb | stellar-circuit | parent=None | agent=monarch | Quick acknowledgment
+2026-09-14 21:08 | upd 2026-09-14 21:09 | ses_f5ee480c0ffeBk9EsjHNQ6N8Qj | clever-meadow | parent=None | agent=monarch | New session - 2026-09-14T18:08:48.959Z
+2026-09-14 21:05 | upd 2026-09-14 21:05 | ses_f5ee7b1c3ffebjqjxMjRgVre3v | nimble-wizard | parent=None | agent=monarch | Request to say OK
+2026-09-14 21:05 | upd 2026-09-14 21:05 | ses_f5ee74205ffeUoCWQO8657UUQ0 | stellar-knight | parent=None | agent=distill-packager | Auto Distill
+2026-09-14 21:05 | upd 2026-09-14 21:05 | ses_f5ee7b1a2ffeBTo0aMsSYMCjVk | shiny-cabin | parent=None | agent=dream-consolidator | Auto Dream
+2026-09-14 07:36 | upd 2026-09-14 07:36 | ses_f61cc3ca1ffeLBTcVghExemDxs | clever-knight | parent=None | agent=build | Формирование вопроса Tribunal без evidence
+2026-09-14 07:35 | upd 2026-09-14 07:36 | ses_f61cd49f5ffegTuw58Doon76B7 | sunny-wolf | parent=None | agent=build | Защита интерпретации параметра решётки
+2026-09-14 07:34 | upd 2026-09-14 07:35 | ses_f61ce51deffes7VAl1gJmcf2Eu | witty-squid | parent=None | agent=build | Оценка влияния состава и остаточных напряжений
+2026-09-14 07:33 | upd 2026-09-14 07:34 | ses_f61cec911ffeR3cxd5F2HuGzVq | quick-comet | parent=None | agent=build | Формирование вопроса Tribunal по XRD
+2026-09-13 22:10 | upd 2026-09-13 22:25 | ses_f63d20cc8ffe5N2t3HNrGDrcmV | kind-island | parent=ses_f63f7daf9ffep3WZW55MIuWMi6 | agent=general | Review integration patch (@general subagent)
+2026-09-13 21:48 | upd 2026-09-13 22:22 | ses_f63e6d5b1ffeCsVZDsrsspcJn5 | nimble-garden | parent=None | agent=build | Подключение GitHub
+2026-09-13 21:49 | upd 2026-09-13 21:55 | ses_f63e5dfb0ffedqFiM9ygi5IimJ | lucky-rocket | parent=ses_f63f7daf9ffep3WZW55MIuWMi6 | agent=general | Review harness patch (@general subagent)
+2026-09-13 00:03 | upd 2026-09-13 00:08 | ses_f6891b950ffewGqoCsHTg3Lg1E | clever-canyon | parent=ses_f68dabc1bffenN4RV25IOj5YCq | agent=article-writer | Написать статью о control plane (@article-writer subagent)
+2026-09-12 23:44 | upd 2026-09-12 23:58 | ses_f68a2e5afffexHI4530Z2CY4HO | swift-tiger | parent=ses_f68dabc1bffenN4RV25IOj5YCq | agent=general | Исследовать циклы оркестрации (@general subagent)
+2026-09-12 23:19 | upd 2026-09-12 23:26 | ses_f68b9e995ffex4ZHJOVK2MuCkj | playful-forest | parent=ses_f68dabc1bffenN4RV25IOj5YCq | agent=article-writer | Написать статью об агентах (@article-writer subagent)
+2026-09-12 23:13 | upd 2026-09-12 23:15 | ses_f68bf3d8fffewkjKQi1Iby56Cx | silent-planet | parent=ses_f68dabc1bffenN4RV25IOj5YCq | agent=explore | Извлечь JSON артефакты (@explore subagent)
+2026-09-12 23:06 | upd 2026-09-12 23:13 | ses_f68c5d1d3ffeo2QIGszLndFGbD | nimble-island | parent=ses_f68dabc1bffenN4RV25IOj5YCq | agent=general | Повтор исследования агентов (@general subagent)
+2026-09-12 22:49 | upd 2026-09-12 22:52 | ses_f68d51384ffeXgNkKomKdPLMDX | quick-canyon | parent=ses_f68dabc1bffenN4RV25IOj5YCq | agent=general | Исследовать архитектуру агентов (@general subagent)
+2026-09-07 23:05 | upd 2026-09-10 20:37 | ses_f8285e1aeffe51rXITNc8i20mI | shiny-rocket | parent=None | agent=build | New session - 2026-09-07T20:05:50.289Z
+2026-09-10 20:27 | upd 2026-09-10 20:35 | ses_f73a428eafferwuzbRCNdM46a8 | stellar-rocket | parent=ses_f8285e1aeffe51rXITNc8i20mI | agent=coder-worker | Build writer migration map (@coder-worker subagent)
+2026-09-10 20:31 | upd 2026-09-10 20:34 | ses_f73a04ca4ffeZYXEwcHw56oEPy | jolly-mountain | parent=ses_f8381fe16ffebYIJopigdNxg2g | agent=general | Упаковать SEM результаты в DOM (@general subagent)
+2026-09-10 20:02 | upd 2026-09-10 20:13 | ses_f73baedbbffeXK42iFDZ1czgCf | quick-orchid | parent=ses_f8285e1aeffe51rXITNc8i20mI | agent=explore | Trace writer dependencies (@explore subagent)
+2026-09-10 20:02 | upd 2026-09-10 20:12 | ses_f73baeda9ffelCOJmXfAreJyj2 | witty-garden | parent=ses_f8285e1aeffe51rXITNc8i20mI | agent=explore | Classify legacy candidates (@explore subagent)
+2026-09-10 20:02 | upd 2026-09-10 20:11 | ses_f73baee68ffexIdlCxQ6fjB9XB | brave-nebula | parent=ses_f8285e1aeffe51rXITNc8i20mI | agent=explore | Map writer scripts (@explore subagent)
+2026-09-10 19:47 | upd 2026-09-10 20:05 | ses_f73c855eeffeaWCgC39W1sZI6Z | proud-orchid | parent=ses_f8381fe16ffebYIJopigdNxg2g | agent=general | Завершить анализ ценности SEM (@general subagent)
+2026-09-10 09:59 | upd 2026-09-10 19:50 | ses_f75e293f4ffe480gSQBohsNnWK | swift-cabin | parent=ses_f8285e1aeffe51rXITNc8i20mI | agent=code-reviewer | Review final writer delta (@code-reviewer subagent)
+2026-09-10 09:59 | upd 2026-09-10 19:48 | ses_f75e29391ffeKq3vxbsG1cX7fA | eager-garden | parent=ses_f8285e1aeffe51rXITNc8i20mI | agent=code-tester | Test final writer delta (@code-tester subagent)
+2026-09-10 19:41 | upd 2026-09-10 19:44 | ses_f73cdc66cffepTqYCjwPrQN8Mf | swift-eagle | parent=ses_f8285e1aeffe51rXITNc8i20mI | agent=coder-worker | Restart final correction (@coder-worker subagent)
+2026-09-10 10:12 | upd 2026-09-10 10:18 | ses_f75d73542ffe8BIuAu2EsCfoZW | cosmic-garden | parent=ses_f8285e1aeffe51rXITNc8i20mI | agent=coder-worker | Close final review gaps (@coder-worker subagent)
+2026-09-08 22:16 | upd 2026-09-10 09:58 | ses_f7d8cbcf5ffelGSIoR78f6HLgr | jolly-otter | parent=None | agent=build | Деплой обновлений в E:\opencode_harness
+2026-09-10 09:44 | upd 2026-09-10 09:57 | ses_f75f09f3fffecRBdHkpW7lARHh | eager-lagoon | parent=ses_f8285e1aeffe51rXITNc8i20mI | agent=coder-worker | Consolidate rework release (@coder-worker subagent)
+2026-09-09 21:34 | upd 2026-09-10 09:44 | ses_f788cf63cffeDhFSwKwXFIFTX1 | kind-pixel | parent=ses_f8285e1aeffe51rXITNc8i20mI | agent=code-reviewer | Review provider wiring (@code-reviewer subagent)
+2026-09-10 09:13 | upd 2026-09-10 09:37 | ses_f760ce20bffeePjAX3DJr6LCfi | brave-moon | parent=ses_f8285e1aeffe51rXITNc8i20mI | agent=coder-worker | Integrate runtime contracts (@coder-worker subagent)
+2026-09-10 09:13 | upd 2026-09-10 09:29 | ses_f760ce278ffepHenZC3XZwdp37 | misty-moon | parent=ses_f8285e1aeffe51rXITNc8i20mI | agent=coder-worker | Fix agent artifact flow (@coder-worker subagent)
+2026-09-10 09:13 | upd 2026-09-10 09:28 | ses_f760ce29bffef6ez8o7xM39VX8 | hidden-island | parent=ses_f8285e1aeffe51rXITNc8i20mI | agent=coder-worker | Fix provider semantics (@coder-worker subagent)
+2026-09-09 21:34 | upd 2026-09-10 09:10 | ses_f788cf557ffe2oMJeIQuC5oC4L | playful-panda | parent=ses_f8285e1aeffe51rXITNc8i20mI | agent=code-tester | Test router and env (@code-tester subagent)
+2026-09-09 21:34 | upd 2026-09-09 21:40 | ses_f788cf578ffejM3XknZrjPhsdD | tidy-wizard | parent=ses_f8285e1aeffe51rXITNc8i20mI | agent=code-tester | Test writer runtime (@code-tester subagent)
+2026-09-09 21:34 | upd 2026-09-09 21:39 | ses_f788cf5cfffesUM002G2RoYAOd | clever-otter | parent=ses_f8285e1aeffe51rXITNc8i20mI | agent=code-reviewer | Review agent wiring (@code-reviewer subagent)
+2026-09-09 21:34 | upd 2026-09-09 21:39 | ses_f788cf5b4ffeQETuj0Q0RqesCI | silent-circuit | parent=ses_f8285e1aeffe51rXITNc8i20mI | agent=code-reviewer | Review handoff reconciliation (@code-reviewer subagent)
+2026-09-09 21:34 | upd 2026-09-09 21:38 | ses_f788cf52cffecYh4hFbxm7wECK | hidden-mountain | parent=ses_f8285e1aeffe51rXITNc8i20mI | agent=code-tester | Test handoff assets (@code-tester subagent)
+2026-09-09 21:18 | upd 2026-09-09 21:30 | ses_f789b19d1ffeSWo2gbdbiGAgh2 | gentle-wizard | parent=ses_f8285e1aeffe51rXITNc8i20mI | agent=coder-worker | Wire writer agents (@coder-worker subagent)
+2026-09-09 21:18 | upd 2026-09-09 21:28 | ses_f789b19b0ffeWjn57YI5v7qoI7 | hidden-planet | parent=ses_f8285e1aeffe51rXITNc8i20mI | agent=coder-worker | Reconcile writer handoff (@coder-worker subagent)
+2026-09-09 21:18 | upd 2026-09-09 21:25 | ses_f789b1bacffeFiLAy4GJIqBo1L | misty-orchid | parent=ses_f8285e1aeffe51rXITNc8i20mI | agent=coder-worker | Wire writer provider (@coder-worker subagent)
+2026-09-08 20:49 | upd 2026-09-08 20:58 | ses_f7ddcb898ffeJc3MwARpmV3yUQ | stellar-tiger | parent=ses_f8285e1aeffe51rXITNc8i20mI | agent=explore | Audit harness researcher (@explore subagent)
+2026-09-08 20:49 | upd 2026-09-08 20:58 | ses_f7ddcb91dffeLcK18hjVbYFYIz | playful-cabin | parent=ses_f8285e1aeffe51rXITNc8i20mI | agent=explore | Map source researcher (@explore subagent)
+2026-09-08 20:42 | upd 2026-09-08 20:54 | ses_f7de24bbbffeaVyNETrWagSoiG | quick-comet | parent=ses_f8381fe16ffebYIJopigdNxg2g | agent=general | Оценить ценность SEM для диссертации (@general subagent)
+2026-09-08 19:26 | upd 2026-09-08 20:22 | ses_f7e287456fferglN1rFps9s22H | witty-planet | parent=ses_f8381fe16ffebYIJopigdNxg2g | agent=general | Исследовать весь SEM корпус (@general subagent)
+2026-09-08 19:32 | upd 2026-09-08 19:57 | ses_f7e22991fffeCu2G9jkRvZgIUZ | brave-orchid | parent=None | agent=build | Инструмент conducting-science-research
+2026-09-08 16:14 | upd 2026-09-08 18:57 | ses_f7ed7afb3ffeslIrSm4ZowKD5V | playful-moon | parent=ses_f8381fe16ffebYIJopigdNxg2g | agent=explore | Разобрать СЭМ audit (@explore subagent)
+2026-09-08 18:46 | upd 2026-09-08 18:51 | ses_f7e4cefd8ffebqEaIeeQJXnZNh | curious-meadow | parent=ses_f8381fe16ffebYIJopigdNxg2g | agent=explore | Повторить анализ k14,4 (@explore subagent)
+2026-09-08 16:14 | upd 2026-09-08 16:18 | ses_f7ed7af8cffech4JfXk2Gm3apa | nimble-cabin | parent=ses_f8381fe16ffebYIJopigdNxg2g | agent=explore | Разобрать provenance k14,4 (@explore subagent)
+2026-09-08 15:33 | upd 2026-09-08 15:50 | ses_f7efdf8ebffet9CY54sacm4oDW | swift-planet | parent=ses_f8381fe16ffebYIJopigdNxg2g | agent=general | Исследовать СЭМ и k=14,4 (@general subagent)
+2026-09-08 11:55 | upd 2026-09-08 12:16 | ses_f7fc4d282ffeO2QWhvsjpUFjff | kind-star | parent=ses_f8381fe16ffebYIJopigdNxg2g | agent=general | Последний retry СЭМ (@general subagent)
+2026-09-08 07:13 | upd 2026-09-08 11:50 | ses_f80c78949ffe9PvSsDhLo03c0H | clever-engine | parent=ses_f8381fe16ffebYIJopigdNxg2g | agent=general | Разобрать СЭМ и k=14,4 (@general subagent)
+2026-09-07 23:43 | upd 2026-09-08 00:29 | ses_f8263c0efffeJ1DjsWS0qEwLH8 | tidy-lagoon | parent=ses_f8381fe16ffebYIJopigdNxg2g | agent=article-writer | Переписать восемь рискованных клаймов (@article-writer subagent)
+2026-09-07 23:52 | upd 2026-09-08 00:26 | ses_f825b2599ffe3EDkg5T2yPqgmB | quick-planet | parent=ses_f8381fe16ffebYIJopigdNxg2g | agent=general | Собрать raw evidence неопределённостей (@general subagent)
+2026-09-07 23:37 | upd 2026-09-07 23:40 | ses_f826921beffeZXDIUJXdJm4BVl | tidy-falcon | parent=ses_f8381fe16ffebYIJopigdNxg2g | agent=explore | Сжать полный research report (@explore subagent)
+2026-09-07 23:17 | upd 2026-09-07 23:30 | ses_f827b27a5ffeC9l4rZnbDPTjOS | gentle-eagle | parent=ses_f8381fe16ffebYIJopigdNxg2g | agent=general | Проверить очередь главы 1 (@general subagent)
+2026-09-07 22:33 | upd 2026-09-07 22:57 | ses_f82a32697ffea5vfkVAU9crnb1 | quiet-engine | parent=ses_f8381fe16ffebYIJopigdNxg2g | agent=coder-worker | Фикс деструктивного --apply verify_claims (@coder-worker subagent)
+2026-09-07 22:12 | upd 2026-09-07 22:22 | ses_f82b7277bffeqsixQ8c3mbKCtg | curious-nebula | parent=ses_f8381fe16ffebYIJopigdNxg2g | agent=coder-worker | Фикс матчинга draft_loop (@coder-worker subagent)
+2026-09-07 21:29 | upd 2026-09-07 21:41 | ses_f82ddbf1dffe5xG3Dn4CWtYwhq | gentle-cabin | parent=ses_f8381fe16ffebYIJopigdNxg2g | agent=coder-worker | Фикс сегментатора и словаря хеджей (@coder-worker subagent)
+2026-09-06 13:26 | upd 2026-09-07 21:26 | ses_f89be84a3ffejjW4mtz74QtGES | proud-meadow | parent=None | agent=code-orchestrator | Проверка рефакторинга writer-core на авторефератах
+2026-09-07 20:40 | upd 2026-09-07 21:15 | ses_f830aeffaffeM7yKrWub2UPXtg | swift-rocket | parent=ses_f8381fe16ffebYIJopigdNxg2g | agent=article-writer | Черновик главы 1 (retry) (@article-writer subagent)
+2026-09-07 21:12 | upd 2026-09-07 21:13 | ses_f82ed371bffeRq71X4O4ujMFSz | brave-nebula | parent=ses_f89be84a3ffejjW4mtz74QtGES | agent=article-writer | article-writer черновик главы 1 (@article-writer subagent)
+2026-09-07 20:32 | upd 2026-09-07 20:39 | ses_f831208d0ffes2h30BjmjAZf5k | neon-circuit | parent=ses_f8381fe16ffebYIJopigdNxg2g | agent=article-writer | Черновик главы 1 с правками (@article-writer subagent)
+2026-09-06 17:11 | upd 2026-09-07 17:53 | ses_f88f10257ffeQp5v9o7yXr5D8c | swift-meadow | parent=None | agent=build | New session - 2026-09-06T14:11:06.281Z
+2026-09-07 17:26 | upd 2026-09-07 17:42 | ses_f83bcd3ceffegAJuFbyjxjsHac | witty-lagoon | parent=ses_f89be84a3ffejjW4mtz74QtGES | agent=coder-worker | Воркер M_SKILL обновление (@coder-worker subagent)
+2026-09-07 11:12 | upd 2026-09-07 17:25 | ses_f851291abffevX8mBq8BBbbuOX | quiet-planet | parent=ses_f89be84a3ffejjW4mtz74QtGES | agent=coder-worker | Воркер M_REVIEW структура (@coder-worker subagent)
+2026-09-07 11:12 | upd 2026-09-07 11:28 | ses_f8512bc08ffemgSHzndUx1y7Oh | sunny-tiger | parent=ses_f89be84a3ffejjW4mtz74QtGES | agent=coder-worker | Воркер M_INTEGRATE DOM (@coder-worker subagent)
+2026-09-06 22:48 | upd 2026-09-06 22:58 | ses_f87bc8e66ffeRNPNheWjdcVZ0r | playful-forest | parent=ses_f89be84a3ffejjW4mtz74QtGES | agent=coder-worker | Воркер M_LIVE_CYCLE модуль (@coder-worker subagent)
+2026-09-06 22:16 | upd 2026-09-06 22:34 | ses_f87d9ab49ffeyLDNH4mj9jPSCf | witty-lagoon | parent=ses_f89be84a3ffejjW4mtz74QtGES | agent=coder-worker | Воркер writer-harness пакет (@coder-worker subagent)
+2026-09-06 21:52 | upd 2026-09-06 22:08 | ses_f87ef4de9ffe65DYj52QodjgFH | glowing-wolf | parent=ses_f89be84a3ffejjW4mtz74QtGES | agent=coder-worker | Пилот polza лёгкий парсинг (@coder-worker subagent)
+2026-09-06 21:52 | upd 2026-09-06 22:02 | ses_f87ef6a2dffeRAX77L0wweG0XO | playful-sailor | parent=ses_f89be84a3ffejjW4mtz74QtGES | agent=code-reviewer | Ревьюер консолидации (@code-reviewer subagent)
+2026-09-06 21:31 | upd 2026-09-06 21:46 | ses_f8802aeabffeIk2rmjSLtYDTRp | misty-eagle | parent=ses_f89be84a3ffejjW4mtz74QtGES | agent=coder-worker | Воркер M_CONSOLIDATE v1-v12 (@coder-worker subagent)
+2026-09-06 21:31 | upd 2026-09-06 21:39 | ses_f8802d4a9ffee2Epd4LA6MuxMZ | crisp-cabin | parent=ses_f89be84a3ffejjW4mtz74QtGES | agent=code-reviewer | Ревьюер nn_embed компактный (@code-reviewer subagent)
+2026-09-06 21:23 | upd 2026-09-06 21:24 | ses_f880a2b0bffecmE767xcFReECq | quiet-squid | parent=ses_f89be84a3ffejjW4mtz74QtGES | agent=code-reviewer | Ревьюер M_NN_EMBED (@code-reviewer subagent)
+2026-09-06 21:23 | upd 2026-09-06 21:23 | ses_f880a1891ffeRIz7Xy6QsvLM7H | happy-meadow | parent=ses_f89be84a3ffejjW4mtz74QtGES | agent=code-tester | Тестер M_NN_EMBED (@code-tester subagent)
+2026-09-06 21:00 | upd 2026-09-06 21:18 | ses_f881e8b2dffeHX20ozfNP6CrZ2 | playful-orchid | parent=ses_f89be84a3ffejjW4mtz74QtGES | agent=coder-worker | Воркер M_NN_EMBED PyTorch (@coder-worker subagent)
+2026-09-06 20:58 | upd 2026-09-06 21:00 | ses_f88207fb1ffebuSbn5dYKXcKKG | misty-knight | parent=ses_f89be84a3ffejjW4mtz74QtGES | agent=code-auditor | Аудитор ран аннотатора (@code-auditor subagent)
+2026-09-06 20:42 | upd 2026-09-06 20:55 | ses_f882f0f93ffeH1e72LAEohhE7m | shiny-nebula | parent=ses_f89be84a3ffejjW4mtz74QtGES | agent=code-tester | Тестер M_GRAPH_VECTOR (@code-tester subagent)
+2026-09-06 20:43 | upd 2026-09-06 20:54 | ses_f882efd14ffeGrfoINeHb9GWzu | mighty-garden | parent=ses_f89be84a3ffejjW4mtz74QtGES | agent=code-tester | Тестер M_STRUCT_ANNOTATOR (@code-tester subagent)
+2026-09-06 20:34 | upd 2026-09-06 20:42 | ses_f8836d91affe8s2tG9nqOZI59K | cosmic-wolf | parent=ses_f89be84a3ffejjW4mtz74QtGES | agent=code-reviewer | Ре-ревью M_STRUCT_ANNOTATOR (@code-reviewer subagent)
+2026-09-06 20:34 | upd 2026-09-06 20:38 | ses_f8836e554ffe1jVKFLTOA6g1B3 | kind-island | parent=ses_f89be84a3ffejjW4mtz74QtGES | agent=code-reviewer | Ре-ревью M_GRAPH_VECTOR (@code-reviewer subagent)
+2026-09-06 20:16 | upd 2026-09-06 20:33 | ses_f88477e55ffeKOTidb2KfVx3QB | crisp-rocket | parent=ses_f89be84a3ffejjW4mtz74QtGES | agent=coder-worker | Фикс M_GRAPH_VECTOR по ревью (@coder-worker subagent)
+2026-09-06 20:16 | upd 2026-09-06 20:32 | ses_f8846de40ffeCk4sN90JxJ6Vxe | eager-river | parent=ses_f89be84a3ffejjW4mtz74QtGES | agent=coder-worker | Фикс M_STRUCT_ANNOTATOR по ревью (@coder-worker subagent)
+2026-09-06 20:08 | upd 2026-09-06 20:14 | ses_f884f0affffeUIUbpaUKer72ti | eager-rocket | parent=ses_f89be84a3ffejjW4mtz74QtGES | agent=code-reviewer | Ревьюер M_STRUCT_ANNOTATOR (@code-reviewer subagent)
+2026-09-06 20:07 | upd 2026-09-06 20:12 | ses_f884f21b4ffefo3jGn9olbnfcW | playful-orchid | parent=ses_f89be84a3ffejjW4mtz74QtGES | agent=code-reviewer | Ревьюер M_GRAPH_VECTOR (@code-reviewer subagent)
+2026-09-06 19:56 | upd 2026-09-06 20:07 | ses_f885994c2ffeqIUkxxHHYJaXET | curious-wizard | parent=ses_f89be84a3ffejjW4mtz74QtGES | agent=coder-worker | Воркер M_STRUCT_ANNOTATOR (@coder-worker subagent)
+2026-09-06 19:56 | upd 2026-09-06 20:03 | ses_f8859d368fferUYx0zirqlHmmv | silent-sailor | parent=ses_f89be84a3ffejjW4mtz74QtGES | agent=coder-worker | Воркер M_GRAPH_VECTOR (@coder-worker subagent)
+2026-09-06 19:44 | upd 2026-09-06 19:51 | ses_f8864e035ffeXvnzX0yLzVzz5A | calm-cactus | parent=ses_f89be84a3ffejjW4mtz74QtGES | agent=coder-worker | Воркер M_GEMMA_CALIB автокалибровка (@coder-worker subagent)
+2026-09-06 19:43 | upd 2026-09-06 19:50 | ses_f88650b38ffeGZqan6vMsO5o2c | quick-sailor | parent=ses_f89be84a3ffejjW4mtz74QtGES | agent=coder-worker | Воркер M_MD_CLEAN парсер (@coder-worker subagent)
+2026-09-06 19:44 | upd 2026-09-06 19:47 | ses_f8864b988ffeQBrdvydsKMMt2r | witty-falcon | parent=ses_f89be84a3ffejjW4mtz74QtGES | agent=coder-worker | Воркер M_SESSION_MEMORY (@coder-worker subagent)
+2026-09-06 19:36 | upd 2026-09-06 19:37 | ses_f886bd575fferHaDMkHJ6tmGjk | curious-wizard | parent=ses_f89be84a3ffejjW4mtz74QtGES | agent=code-auditor | Аудитор процесса гибрида (@code-auditor subagent)
+2026-09-06 19:28 | upd 2026-09-06 19:35 | ses_f8873396effeSspigNIzlMZYsw | curious-canyon | parent=ses_f89be84a3ffejjW4mtz74QtGES | agent=code-tester | Тестер M_HYBRID_EXTRACT (@code-tester subagent)
+2026-09-06 19:28 | upd 2026-09-06 19:31 | ses_f88732a5bffeMpElHc1H6Rpxfn | brave-island | parent=ses_f89be84a3ffejjW4mtz74QtGES | agent=code-tester | Тестер M_GRAPH_BRIDGE (@code-tester subagent)
+2026-09-06 19:20 | upd 2026-09-06 19:28 | ses_f887afef4ffeKy77W9anIRa2Ot | silent-panda | parent=ses_f89be84a3ffejjW4mtz74QtGES | agent=code-reviewer | Ре-ревью M_GRAPH_BRIDGE (@code-reviewer subagent)
+2026-09-06 19:19 | upd 2026-09-06 19:22 | ses_f887b0f9cffehNO9XSZqi6QmJv | lucky-knight | parent=ses_f89be84a3ffejjW4mtz74QtGES | agent=code-reviewer | Ре-ревью M_HYBRID_EXTRACT (@code-reviewer subagent)
+2026-09-06 19:06 | upd 2026-09-06 19:19 | ses_f8887b793ffeGyRou5DkUEF6sH | happy-island | parent=ses_f89be84a3ffejjW4mtz74QtGES | agent=coder-worker | Фикс M_HYBRID_EXTRACT по ревью (@coder-worker subagent)
+2026-09-06 19:06 | upd 2026-09-06 19:11 | ses_f88879e67ffecjKzGFO5nY3FtR | mighty-rocket | parent=ses_f89be84a3ffejjW4mtz74QtGES | agent=coder-worker | Фикс M_GRAPH_BRIDGE по ревью (@coder-worker subagent)
+2026-09-06 18:48 | upd 2026-09-06 19:05 | ses_f88983882ffeZoSwmTeGVjzZ6I | cosmic-planet | parent=ses_f89be84a3ffejjW4mtz74QtGES | agent=code-reviewer | Ревьюер M_HYBRID_EXTRACT (@code-reviewer subagent)
+2026-09-06 18:48 | upd 2026-09-06 18:52 | ses_f889821fcffefQS1chOhPA1c9H | playful-planet | parent=ses_f89be84a3ffejjW4mtz74QtGES | agent=code-reviewer | Ревьюер M_GRAPH_BRIDGE (@code-reviewer subagent)
+2026-09-06 18:24 | upd 2026-09-06 18:46 | ses_f88ada391ffeT2DAl32QWAJJ32 | eager-rocket | parent=ses_f89be84a3ffejjW4mtz74QtGES | agent=coder-worker | Воркер M_GRAPH_BRIDGE (@coder-worker subagent)
+2026-09-06 18:24 | upd 2026-09-06 18:42 | ses_f88add209ffeh7Wn48nJ1RUwUB | stellar-panda | parent=ses_f89be84a3ffejjW4mtz74QtGES | agent=coder-worker | Воркер M_HYBRID_EXTRACT (@coder-worker subagent)
+2026-09-06 13:46 | upd 2026-09-06 14:02 | ses_f89ac2279ffevUgGxUhMmVURai | hidden-tiger | parent=ses_f89be84a3ffejjW4mtz74QtGES | agent=coder-worker | Воркер M4_LLM слабый тир (@coder-worker subagent)
+2026-09-06 13:46 | upd 2026-09-06 13:54 | ses_f89ac547fffegIlj0MDFED2UIz | sunny-wolf | parent=ses_f89be84a3ffejjW4mtz74QtGES | agent=coder-worker | Воркер M2_T0 лингвослой (@coder-worker subagent)
+2026-09-06 13:46 | upd 2026-09-06 13:49 | ses_f89ac0942ffekYIT5ZuT41n97i | brave-harbor | parent=ses_f89be84a3ffejjW4mtz74QtGES | agent=coder-worker | Воркер M5_RUN корпусный прогон (@coder-worker subagent)
+2026-09-06 13:46 | upd 2026-09-06 13:49 | ses_f89ac32fbffeAzd9K8T4u7aWwU | lucky-star | parent=ses_f89be84a3ffejjW4mtz74QtGES | agent=coder-worker | Воркер M3_RTT компаратор (@coder-worker subagent)
+2026-08-24 20:37 | upd 2026-09-06 13:26 | ses_fcb265a13ffeRnxnHsZNe15SeP | hidden-wolf | parent=None | agent=build | Связь между устройствами в сети
+2026-08-24 21:39 | upd 2026-09-06 13:26 | ses_fcaed8a15ffeExRlkJZUx1gDW7 | eager-canyon | parent=None | agent=build | Плагины OpenCode для разработки и анализа данных
+2026-08-24 23:00 | upd 2026-09-06 13:26 | ses_fcaa366fdffeoDktXnwaQxkxH4 | hidden-engine | parent=None | agent=build | Проверка FTP 192.168.1.102
+2026-08-24 23:07 | upd 2026-09-06 13:26 | ses_fca9daf49ffesLExPBSAUAuffm | quick-nebula | parent=None | agent=build | Ревизия модели социально-экономической информации
+2026-08-24 23:13 | upd 2026-09-06 13:26 | ses_fca97d0cdffeCbqrwEqU9EDf9G | clever-rocket | parent=None | agent=build | Плагин для научных работ и анализа данных
+2026-08-25 07:31 | upd 2026-09-06 13:26 | ses_fc8d03e05ffeiD6QoBzfxh8fdW | cosmic-island | parent=None | agent=build | Ревизия диска C и исходников софта
+2026-08-27 19:27 | upd 2026-09-06 13:26 | ses_fbbf3548dffeqsE8aqh1hY6K07 | crisp-sailor | parent=None | agent=code-orchestrator | Изучение opencode-portable для развертывания
+2026-08-27 20:51 | upd 2026-09-06 13:26 | ses_fbba7287affejSxcj6za9K5ifx | swift-star | parent=None | agent=article-writer | Подготовка препринта PDF для ResearchGate
+2026-08-27 21:47 | upd 2026-09-06 13:26 | ses_fbb73c4a3ffe0ffJGVmcwylBgM | stellar-wolf | parent=ses_fbbf3548dffeqsE8aqh1hY6K07 | agent=code-reviewer | Check code reviewer (@code-reviewer subagent)
+2026-08-27 21:47 | upd 2026-09-06 13:26 | ses_fbb73c421ffecYTMhNEtZcSaSP | neon-engine | parent=ses_fbbf3548dffeqsE8aqh1hY6K07 | agent=coder-worker | Check coder worker (@coder-worker subagent)
+2026-08-27 21:47 | upd 2026-09-06 13:26 | ses_fbb73c3f1ffeNdPopzr5YSB5Iw | cosmic-river | parent=ses_fbbf3548dffeqsE8aqh1hY6K07 | agent=code-tester | Check code tester (@code-tester subagent)
+2026-08-29 13:03 | upd 2026-09-06 13:26 | ses_fb30631f1ffe4IeXd9KqVzPKpw | nimble-wolf | parent=ses_fbbf3548dffeqsE8aqh1hY6K07 | agent=general | Debt doc watchdog (@general subagent)
+2026-08-29 13:03 | upd 2026-09-06 13:26 | ses_fb30630e2ffeVuT1UYIqv0BM1R | happy-circuit | parent=ses_fbbf3548dffeqsE8aqh1hY6K07 | agent=coder-worker | Implement R0 contracts (@coder-worker subagent)
+2026-08-29 13:18 | upd 2026-09-06 13:26 | ses_fb2f92514ffe5W4vKvt0X6AiJf | shiny-falcon | parent=ses_fbbf3548dffeqsE8aqh1hY6K07 | agent=code-reviewer | Review R0 contracts (@code-reviewer subagent)
+2026-08-29 13:18 | upd 2026-09-06 13:26 | ses_fb2f924beffe7k8T1w3IyYhOOj | swift-orchid | parent=ses_fbbf3548dffeqsE8aqh1hY6K07 | agent=code-tester | Test R0 contracts (@code-tester subagent)
+2026-08-29 13:58 | upd 2026-09-06 13:26 | ses_fb2d3f2f3ffe4dgXQxTUGez7vp | shiny-river | parent=ses_fbbf3548dffeqsE8aqh1hY6K07 | agent=code-reviewer | Re-review R0 (@code-reviewer subagent)
+2026-08-29 13:58 | upd 2026-09-06 13:26 | ses_fb2d3f2c9ffep0fG4OKb3EvfFm | cosmic-canyon | parent=ses_fbbf3548dffeqsE8aqh1hY6K07 | agent=code-tester | Re-test R0 (@code-tester subagent)
+2026-08-29 14:14 | upd 2026-09-06 13:26 | ses_fb2c5f165ffek7cilwXqTrrwxW | cosmic-garden | parent=ses_fbbf3548dffeqsE8aqh1hY6K07 | agent=code-reviewer | Final R0 review (@code-reviewer subagent)
+2026-08-29 14:14 | upd 2026-09-06 13:26 | ses_fb2c5f109ffeF7grRfB8P1lp6W | witty-river | parent=ses_fbbf3548dffeqsE8aqh1hY6K07 | agent=code-tester | Final R0 tests (@code-tester subagent)
+2026-08-29 14:28 | upd 2026-09-06 13:26 | ses_fb2b8a32cffem6u8P3uqaujxCI | playful-star | parent=ses_fbbf3548dffeqsE8aqh1hY6K07 | agent=code-tester | Rerun code tester (@code-tester subagent)
+2026-08-29 14:28 | upd 2026-09-06 13:26 | ses_fb2b8a24cffeh3PCIayY4Rva2J | silent-meadow | parent=ses_fbbf3548dffeqsE8aqh1hY6K07 | agent=code-reviewer | R0 process review (@code-reviewer subagent)
+2026-08-29 14:43 | upd 2026-09-06 13:26 | ses_fb2aa9c75ffeaT6cj5yluyG8H1 | nimble-river | parent=ses_fbbf3548dffeqsE8aqh1hY6K07 | agent=code-tester | Rerun expanded tester (@code-tester subagent)
+2026-08-29 14:43 | upd 2026-09-06 13:26 | ses_fb2aa9c04ffe3wepPE536V7os5 | quiet-engine | parent=ses_fbbf3548dffeqsE8aqh1hY6K07 | agent=code-reviewer | Review expanded R0 (@code-reviewer subagent)
+2026-08-29 14:53 | upd 2026-09-06 13:26 | ses_fb2a21b0cffedMBfmidJEUwCWU | misty-pixel | parent=ses_fbbf3548dffeqsE8aqh1hY6K07 | agent=code-tester | Final expanded tester (@code-tester subagent)
+2026-08-29 14:53 | upd 2026-09-06 13:26 | ses_fb2a21a96ffeFApiqxhszVMCKn | kind-engine | parent=ses_fbbf3548dffeqsE8aqh1hY6K07 | agent=code-reviewer | Final expanded review (@code-reviewer subagent)
+2026-08-29 17:01 | upd 2026-09-06 13:26 | ses_fb22cd555ffeTIct2stScNPc8m | hidden-meadow | parent=ses_fbbf3548dffeqsE8aqh1hY6K07 | agent=code-reviewer | Soft factory review (@code-reviewer subagent)
+2026-08-29 17:01 | upd 2026-09-06 13:26 | ses_fb22cd534ffeUsxMzX6F6A8rZp | witty-planet | parent=ses_fbbf3548dffeqsE8aqh1hY6K07 | agent=code-tester | Soft factory tests (@code-tester subagent)
+2026-08-29 17:16 | upd 2026-09-06 13:26 | ses_fb21f0342ffeKd2Jh2zb6p157L | quick-tiger | parent=ses_fbbf3548dffeqsE8aqh1hY6K07 | agent=coder-worker | Implement doc capsule (@coder-worker subagent)
+2026-08-29 17:29 | upd 2026-09-06 13:26 | ses_fb212ca99ffeJwguGI2oyHtH7t | kind-lagoon | parent=ses_fbbf3548dffeqsE8aqh1hY6K07 | agent=coder-worker | Remove R0-S014 (@coder-worker subagent)
+2026-08-29 17:32 | upd 2026-09-06 13:26 | ses_fb20ffc7affe1rsBhrDsIsoBdG | cosmic-wizard | parent=ses_fbbf3548dffeqsE8aqh1hY6K07 | agent=experimenter | Find simplifications (@experimenter subagent)
+2026-08-29 17:42 | upd 2026-09-06 13:26 | ses_fb2075071ffeS8eg5bFZprsvC2 | eager-otter | parent=ses_fbbf3548dffeqsE8aqh1hY6K07 | agent=coder-worker | Close R0-S003 (@coder-worker subagent)
+2026-08-29 17:44 | upd 2026-09-06 13:26 | ses_fb205af3fffeBY8sxmw69iH9Pt | lucky-cactus | parent=ses_fbbf3548dffeqsE8aqh1hY6K07 | agent=coder-worker | Close R0-S012 (@coder-worker subagent)
+2026-08-29 17:46 | upd 2026-09-06 13:26 | ses_fb20352fbffebLdT1Q69j33vhI | hidden-nebula | parent=ses_fbbf3548dffeqsE8aqh1hY6K07 | agent=coder-worker | Close R0-S007 phase1 (@coder-worker subagent)
+2026-08-29 17:50 | upd 2026-09-06 13:26 | ses_fb1fff821ffetJeDOsjMBKnjfL | crisp-falcon | parent=ses_fbbf3548dffeqsE8aqh1hY6K07 | agent=coder-worker | Harden R0-S011 (@coder-worker subagent)
+2026-08-30 22:37 | upd 2026-09-06 13:26 | ses_fabd2ce28ffeOZ7cB1uGvuyzEk | neon-canyon | parent=None | agent=experimenter | Проверка модели мультискейл-корреляции атомов
+2026-08-30 22:44 | upd 2026-09-06 13:26 | ses_fabcca5ceffens165Zuj4apX2b | swift-rocket | parent=ses_fabd2ce28ffeOZ7cB1uGvuyzEk | agent=general | verify physics references (@general subagent)
+2026-08-30 23:28 | upd 2026-09-06 13:26 | ses_faba3a743ffe8sNnbwrFSiPAJu | neon-panda | parent=ses_fbbf3548dffeqsE8aqh1hY6K07 | agent=coder-worker | Implement RegistryValidator (@coder-worker subagent)
+2026-08-31 10:17 | upd 2026-09-06 13:26 | ses_fa951ceafffe7jX9nlXnKz6Sx0 | misty-falcon | parent=ses_fbbf3548dffeqsE8aqh1hY6K07 | agent=coder-worker | Implement numeric adapter (@coder-worker subagent)
+2026-08-31 10:44 | upd 2026-09-06 13:26 | ses_fa939705fffe6VMh1t44rot8wc | proud-rocket | parent=ses_fbbf3548dffeqsE8aqh1hY6K07 | agent=explore | Compare architecture (@explore subagent)
+2026-08-31 10:44 | upd 2026-09-06 13:26 | ses_fa9396ff9ffe3BXIm6T2okGcP4 | neon-otter | parent=ses_fbbf3548dffeqsE8aqh1hY6K07 | agent=explore | Compare tools adapters (@explore subagent)
+2026-08-31 10:44 | upd 2026-09-06 13:26 | ses_fa9396fe1ffeOlvNyA3jW30LJR | swift-orchid | parent=ses_fbbf3548dffeqsE8aqh1hY6K07 | agent=explore | Compare artifacts policies (@explore subagent)
+2026-08-31 16:35 | upd 2026-09-06 13:26 | ses_fa7f80791ffe8Hq97FGhv5k876 | playful-squid | parent=None | agent=code-orchestrator | Проверка связи
+2026-08-31 21:35 | upd 2026-09-06 13:26 | ses_fa6e4f4bfffe4Ritp6X1e3SH4P | eager-wolf | parent=None | agent=build | Статус разработки alisa-assistant_clean
+2026-09-01 10:20 | upd 2026-09-06 13:26 | ses_fa4285a0affecPFHF7V2FflGa8 | witty-nebula | parent=ses_fa7f80791ffe8Hq97FGhv5k876 | agent=general | scaffold audit_graph files (@general subagent)
+2026-09-01 10:39 | upd 2026-09-06 13:26 | ses_fa4179b9cffetQLdNpJ4scfXtt | eager-planet | parent=ses_fa7f80791ffe8Hq97FGhv5k876 | agent=general | draft memory capsule files (@general subagent)
+2026-09-01 23:30 | upd 2026-09-06 13:26 | ses_fa155743dffeWuETC9G1J1LwpR | shiny-star | parent=None | agent=code-orchestrator | Тест
+2026-09-02 00:38 | upd 2026-09-06 13:26 | ses_fa1170fa2ffe21uZQVfa6CC23R | brave-forest | parent=ses_fa155743dffeWuETC9G1J1LwpR | agent=coder-worker | R1 entities расширение (@coder-worker subagent)
+2026-09-02 00:44 | upd 2026-09-06 13:26 | ses_fa111e41cffeaLRxt9DOgw7dCq | shiny-mountain | parent=ses_fa155743dffeWuETC9G1J1LwpR | agent=code-reviewer | Ревью r1_entities (@code-reviewer subagent)
+2026-09-02 00:44 | upd 2026-09-06 13:26 | ses_fa111e3afffeCdduIVOpzaBT7i | playful-planet | parent=ses_fa155743dffeWuETC9G1J1LwpR | agent=code-tester | Тесты r1_entities (@code-tester subagent)
+2026-09-02 00:46 | upd 2026-09-06 13:26 | ses_fa10f6e96ffeuna0Nw7z23hEDC | curious-canyon | parent=ses_fa155743dffeWuETC9G1J1LwpR | agent=coder-worker | R3 validators (@coder-worker subagent)
+2026-09-02 00:50 | upd 2026-09-06 13:26 | ses_fa10c4b2effezYwpZ3G3EmLBde | crisp-cabin | parent=ses_fa155743dffeWuETC9G1J1LwpR | agent=coder-worker | R3 validators повторно (@coder-worker subagent)
+2026-09-02 00:51 | upd 2026-09-06 13:26 | ses_fa10ae206ffeQtW6lojMTlSx7j | silent-cabin | parent=ses_fa155743dffeWuETC9G1J1LwpR | agent=coder-worker | Validators admission+atomicity (@coder-worker subagent)
+2026-09-02 00:54 | upd 2026-09-06 13:26 | ses_fa108f907ffeYQWOHspm3ZJuWY | hidden-harbor | parent=ses_fa155743dffeWuETC9G1J1LwpR | agent=coder-worker | Validators admission+atomicity retry (@coder-worker subagent)
+2026-09-02 00:57 | upd 2026-09-06 13:26 | ses_fa105a403ffeG2u3AbtRxdKqRG | swift-engine | parent=ses_fa155743dffeWuETC9G1J1LwpR | agent=code-tester | Тесты r3_validators (@code-tester subagent)
+2026-09-02 08:32 | upd 2026-09-06 13:26 | ses_f9f652824ffeYR06E4DmlsaDMH | brave-garden | parent=None | agent=code-orchestrator | New session - 2026-09-02T05:32:35.676Z
+2026-09-02 08:56 | upd 2026-09-06 13:26 | ses_f9f4ed26cffeVRnzFEsLa9snar | glowing-island | parent=ses_f9f652824ffeYR06E4DmlsaDMH | agent=code-reviewer | Review r3 validators (@code-reviewer subagent)
+2026-09-02 17:28 | upd 2026-09-06 13:26 | ses_f9d7af2b3ffeO1uuouQvbbl15s | neon-cabin | parent=ses_f9f652824ffeYR06E4DmlsaDMH | agent=code-tester | Test r3 validators (@code-tester subagent)
+2026-09-02 17:35 | upd 2026-09-06 13:26 | ses_f9d746766ffeTCksv4KyOV4G7Q | hidden-otter | parent=ses_f9f652824ffeYR06E4DmlsaDMH | agent=code-reviewer | Re-review r3 validators (@code-reviewer subagent)
+2026-09-02 17:45 | upd 2026-09-06 13:26 | ses_f9d6b0e86ffe4wPJAHZoV5h2kk | glowing-river | parent=ses_f9f652824ffeYR06E4DmlsaDMH | agent=code-reviewer | Re-review r3 validators (@code-reviewer subagent)
+2026-09-03 14:56 | upd 2026-09-06 13:26 | ses_f98df75c9ffeK9JQvVEO6cgZph | glowing-panda | parent=ses_f9f652824ffeYR06E4DmlsaDMH | agent=code-reviewer | Re-review r3 validators (@code-reviewer subagent)
+2026-09-03 15:06 | upd 2026-09-06 13:26 | ses_f98d63141ffeQvHqYHPNzwEKxZ | witty-lagoon | parent=ses_fa155743dffeWuETC9G1J1LwpR | agent=code-reviewer | Повторное ревью r3_validators (@code-reviewer subagent)
+2026-09-03 15:16 | upd 2026-09-06 13:26 | ses_f98ccfa44ffet8omhfJMTVsL5C | sunny-nebula | parent=ses_f9f652824ffeYR06E4DmlsaDMH | agent=code-reviewer | Re-review r3 validators 2 (@code-reviewer subagent)
+2026-09-03 15:42 | upd 2026-09-06 13:26 | ses_f98b4d022ffeHX8gAMFdCXdN4l | glowing-cabin | parent=ses_f9f652824ffeYR06E4DmlsaDMH | agent=code-reviewer | Re-review r3 validators 3 (@code-reviewer subagent)
+2026-09-03 23:12 | upd 2026-09-06 13:26 | ses_f97198907ffe25HJ4qOqA9QOIx | misty-eagle | parent=None | agent=plan | User in READ-ONLY phase - No file edits allowed
+2026-09-04 20:42 | upd 2026-09-06 13:26 | ses_f927c0ee3fferEyq6n4gu9IO5w | jolly-planet | parent=None | agent=research-orchestrator | Диссертации по физике конденсированного состояния
+2026-09-05 04:44 | upd 2026-09-06 13:26 | ses_f90c29206ffeRZTMorl74SE64l | silent-lagoon | parent=ses_fa155743dffeWuETC9G1J1LwpR | agent=code-reviewer | Ревью лингвослоя (@code-reviewer subagent)
+2026-09-05 04:44 | upd 2026-09-06 13:26 | ses_f90c28582ffelaZSQWPjdKll5f | neon-squid | parent=ses_fa155743dffeWuETC9G1J1LwpR | agent=experimenter | Эксперимент: лингво recall (@experimenter subagent)
+2026-09-05 05:27 | upd 2026-09-06 13:26 | ses_f909b2c27ffe5pmUZaHgN165Wg | kind-cactus | parent=ses_fa155743dffeWuETC9G1J1LwpR | agent=code-reviewer | Ревью большой выборки (@code-reviewer subagent)
+2026-09-05 05:27 | upd 2026-09-06 13:26 | ses_f909b1e93ffe2y1cZj5cGSTyMR | neon-river | parent=ses_fa155743dffeWuETC9G1J1LwpR | agent=experimenter | Эксперимент: глава 1 масштаб (@experimenter subagent)
+2026-09-05 06:17 | upd 2026-09-06 13:26 | ses_f906e35f3ffe4SAp8Hl8kkO2xN | swift-cabin | parent=ses_fa155743dffeWuETC9G1J1LwpR | agent=code-reviewer | Ревью context-анализа (@code-reviewer subagent)
+2026-09-05 06:17 | upd 2026-09-06 13:26 | ses_f906e288fffeCmSD3JVOgqbUpf | curious-harbor | parent=ses_fa155743dffeWuETC9G1J1LwpR | agent=experimenter | Эксперимент: контекст vs отруб (@experimenter subagent)
+2026-08-12 21:18 | upd 2026-09-06 13:26 | ses_008cdd1c1ffeqXLFZgJBp5ehzO | quiet-canyon | parent=None | agent=build | New session - 2026-08-12T18:18:08.830Z

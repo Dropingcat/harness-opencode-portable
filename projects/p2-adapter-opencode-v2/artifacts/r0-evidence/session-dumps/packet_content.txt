@@ -1,0 +1,177 @@
+===== M0 FULL CONTRACT =====
+Ты — АНАЛИТИК-СБОРЩИК документации для кодеров. Создай ПАКЕТ ИСПОЛНИТЕЛЬНОЙ ДОКУМЕНТАЦИИ в `E:\opencode_harness_portable\docs\CODERS\` — такую, чтобы кодеру осталось ТОЛЬКО КОДИТЬ (без философии, без решений, всё предрешено). Фабрика агентов должна заработать по итогу.
+## КОНТРАКТ ВХОДА: что сводить
+
+Прочитай источники (обязательно, не по памяти):
+1. `E:\opencode_harness_portable\docs\PLAN_MASTER_MIGRATION.md` (266 строк) — главный план
+2. `E:\opencode_harness_portable\docs\AUDIT_MASTER_PLAN_COMPLETENESS_2026-10-04.md` (297) — аудит полноты
+3. `E:\opencode_harness_portable\docs\PROBLEMS_REGISTER.md` (58) — реестр проблем
+4. `E:\opencode_harness_portable\docs\PLAN_E2E_MATRYOSHKA.md` (231) — матрёшка
+5. `E:\opencode_harness_portable\PLAN_W1_GIT_HOOKS.md` (438) — хуки
+6. `E:\Documents\Документы\doc_Opencode_agern-new\docs\PLAN_W7_B1T3_META_CYCLE_PORTING_2026-10-04.md` (489) — мета-цикл
+7. `E:\opencode_harness_portable\docs\PLAN_TD174-177_FACTORY.md` (40)
+8. `E:\opencode_harness_portable\docs\AUDIT_RUD2_UNIVERSAL_AGENT_2026-10-04.json` (W11)
+9. `E:\opencode_harness_portable\tests\fixtures\exp2_stepfinish.json` + `exp2_stepfinish.ndjson` (EXP-2)
+10. `C:\Temp\opencode\exp2_result.md` (EXP-2 результат)
+11. `E:\opencode_harness_portable\config\tech_debt.json` (E2E-01..07 строки 4288-4455, sunset_at 2026-10-16)
+
+Дополнительные входы из сессии (спеки W10/W12/W13 — их полные тексты НЕ на диске, ты должен их РЕКОНСТРУИРОВАТЬ из фактов ниже как полноценные спеки):
+
+### W10 — Модуль самообучения (полная спека из аудита):
+- W10-T1 session_analyzer.py: SQL-метрики (сессии по контуру, шаги part, finish reasons message, todo-ratio, tool-ошибки), выход sessions_metrics_<date>.json в .runs/selftrain/, классификация success/fail. Файлы: scripts/self-learning/session_analyzer.py + test.
+- W10-T2 lesson_extractor.py: правила (успешные vs провальные, кластеризация tool-пар без ML, навыки использованные/неиспользованные, паттерн «застрял→что помогло»), выход lessons_candidates_<date>.json.
+- W10-T3 skill_promoter.py: гейты промоушена (memory_l3_policy: evidence_refs, reason_codes, admissions>=2 или evidence_count>=3), генерация SKILL.md-шаблона, вызов add_skill.py --dry-run (по умолчанию) / --apply. Выход promoted_/rejected_<date>.json.
+- W10-T4 memory_integration.py: уроки в L2 (.l2_memory/<agent>.json формат S5 + .tmp_l2.json), L3 через memory_router add, canon_fragment через W8 canon_search, тег source=matryoshka.
+- W10-T5 legacy_bootstrap.py: однократный прогон по канону (29 .runs json, .kanban.db, .meta_state, .l2_memory, старые сессии opencode.db), выход legacy_lessons_<date>.json, флаг --applied для идемпотентности.
+- Формат урока JSON: {lesson_id, kind (interaction_principle/skill_used/skill_missing/stuck_escape), source_session, source_ref, task_type, contour, pattern, success_metric, skill_candidate{name,evidence_count,route,capsule}, skill_missing[], canon_fragment{chapter,quote}, lesson_text, reason_codes[], evidence_refs[], admissions, status}.
+- Промоушен через add_skill.py (официальный путь, SKILL_MIN_COUNT=3, memory_l3_policy min_recurring 2).
+- OQ-1..5 (путь БД, ревьюер кандидатов, tuning-предложения не авто, canon_index, deliberation).
+
+### W12 — Аудит интеграции цепочек (полная спека):
+- Реестр 18 пустых интеграций (shared 9 отсутствуют, scripts/writer только в каноне, doc_guard→session_guard, unified_search не существует, harness_run/coder_run не в промптах, agent_loop не вызывается, meta_daemon НЕТ, хуков нет, env RESEARCH_*/WRITER_* не заданы, gk.report устаревшая сигнатура code-orch:116/research-orch:137, mcp/launchers вне sync-групп).
+- NEW-1..7: NEW-1 unified_search skill, NEW-2 memory L3 в writing-закрытии, NEW-3 writer→tribunal-judge, NEW-4 writer-редьюсер (state machine), NEW-5 убрать gk.report, NEW-6 env-контракт research, NEW-7 env-контракт writer.
+- Расхождения циклов оркестратор vs писатель (память L3, state machine, трибунал).
+- Токен-бюджет (max_tokens=40000, cache>10, calls/claim<0.7).
+- Роли субагентов (когда аудитор vs ревьюер vs планировщик).
+
+### W13 — Глубокий git-аудит снов (полная спека):
+- W13-T1 расширение sleep_git.py: диффы веток против baseline (commits[], diffstat, changed_files[]), false_ready детекция (git diff --quiet baseline..branch), merge-tree --write-tree pre-check (exit 1=конфликт), keep conflicted веток (класс conflict в restore), отчёт с changes/conflicts/lessons.
+- W13-T2 sleep_report_check.py: json-schema отчёта сна (baseline_tag, branches[].diffstat, conflicts[].files/reason, restored_to), exit 1 при невалидном.
+- W13-T3 интеграция с W7: убрать --simulate из meta_nightly.cmd, отчёты в .runs/sleep_reports/, уроки конфликтов→L2 (memory_circulator).
+- W13-T4 check_sleep_after.py: 10 проверок чек-листа (baseline создан, ветки только failed/conflict/keep, sleep-коммиты влиты, изменения не пусты, копия чистая, отчёт валиден, конфликты задокументированы, инвариант потери данных, dry-run в хуке, simulated:false).
+- Формат отчёта сна JSON (пример дан в аудите).
+- O1..O6 (куда писать уроки, чистота дерева, GC тегов, keep_failed семантика, --keep-branches, судьба simulated).
+
+### W11 — универсальный агент (полная спека из AUDIT_RUD2):
+- W11-T1 shim opencode.cmd → bunx opencode-ai (имя пакета opencode-ai НЕ opencode!), PATH.
+- W11-T2 mcp/harness_control_server.py (run_agent/get_status/submit).
+- W11-T3 agent_loop --attach (API-контур поверх serve).
+- W11-T4 serve-лаунчер (OPENCODE_SERVER_PASSWORD, порт 4099, lifecycle).
+- W11-T5 E2E-шаг 7 API-проверка.
+- W11-T6 MCP python→portable .venv (входит в EXP-5).
+- Операции×контур матрица (запуск/статус/сабмит/чтение/конфиг/БД).
+- open_questions: Desktop CWD, OPENCODE_SERVER_PASSWORD, serve lifecycle, bunx vs локальный.
+
+### W9 — peer-координация (полная спека):
+- W9-T1..T4: peer_coordinator.py (detect/zone/claim/check), .runs/deliberation/<task>/<agent>.claim.json, стадии claim→review→resolve/escalate, max_rounds=2, timeout=10, эскалация оркестратору→question→AMBIGUOUS, conflict НЕ блокирует finalize (дефолт required:true), arise/hiai НЕ движки (референс). W9-T4 BLOCKED (Слой 2 матрёшки).
+
+## ЗАДАЧА: создай 4 файла
+
+### `docs/CODERS/00_INDEX.md` — ТОЛЬКО индекс (кодер читает первым)
+- Цель пакета: «кодер только кодит, не думает».
+- Карта документации (таблица: файл → что содержит → когда читать).
+- **Критические архитектурные блоки** (нумерованные, для работы): 
+  1. Ядро конфигурации (opencode.json → portable, venv, M0-a)
+  2. Контуры агента (CLI shim/API serve/GUI Desktop)
+  3. Фабрика (factory_ctl, guard, tribunal)
+  4. Роутер (harness_run/resolve_route/runtime_snapshot)
+  5. Циклы (git-хуки, мета-цикл, sleep, самообучение)
+  6. Память и канон (memory_router, canon_search)
+  7. Координация (peer, sync_to_live, сессии)
+- **Критический путь** (порядок передачи кодеру, Транш A → B → C).
+- **Правила работы** (CWD=portable, .venv, git-ветки, проверки).
+- Индексация: таблица «критический блок → файл → подзадача → статус».
+
+### `docs/CODERS/01_BLOCKS_B1_B5.md` — миграция
+- B1-T1..T5 (venv whitelist 17 пакетов, opencode.json ядро 5 правок+8 DoD, мета 27 файлов, shared 9+route-preflight, легализация).
+- B2-T1..T5 (sync_to_live 8+2 групп [mcp/ добавить!], junction плагинов, CONFIG_MERGE, writer импорт, судьба live).
+- B3-T1..T5 (setup_env, shim, CWD-валидация, agents-data, архив-политика).
+- B4-T1..T11 (пути в агентах, guard finalize exit 5, agent_loop, хардкоды, compile_agents, idle_tasks, setup_env.sh, canon_search FTS5, test_e2e_orchestration).
+- B5: **8 шагов миграции с роллбэком** (бэкап → EXP → Блок1 → Блок4 → Блок2 → Блок3 → ветки → E2E → легализация; роллбэк reparse→восстановление, git revert, backup).
+
+### `docs/CODERS/02_BRANCHES_W1_W13.md` — все ветки
+- W1..W13 с полными спеками (для W9/W10/W11/W12/W13 — РЕКОНСТРУИРУЙ полные спеки из входов выше, с подзадачами T1..Tn, файлами, командами, DoD).
+- Для каждой: ID, файлы, что, зависимости, проверка (команда→результат), сложность/риск, статус.
+- **Разметка параллельности** (критично!): W1↔W13 (sleep_git), W12↔W9 (shared), B2↔W7 (scripts/meta) — какие ветки можно вести параллельно, какие НЕТ, порядок.
+
+### `docs/CODERS/03_ACCEPTANCE.md` — приёмка
+- Матрёшка M0-M6 (слои, детерминированные чеки, статусы: M0-M5 ГОТОВО, M6 снять BLOCKED — EXP-2 выполнен).
+- test_e2e_matryoshka.py (CLI, exit 0/1/2, JSON-отчёт).
+- EXP-0..5 (все протоколы, статусы: 0/1a/2 выполнены, 1b/3/4/5 — протоколы, встроить в критический путь!).
+- E2E-приёмка 6 команд (шаг 7).
+- Критерии готовности фабрики (итоговая проверка «работающая фабрика агентов»).
+
+## КОНТРАКТ ВЫХОДА
+
+1. Создай директорию `docs/CODERS/` и 4 файла (UTF-8).
+2. Каждый файл — самодостаточен для исполнения (команды, пути, DoD, роллбэки).
+3. НЕ включай философию/обсуждения — только предрешённые технические решения.
+4. Для всех «спецификаций из сессии» (W10/W12/W13, B1-T2 DoD, 8 шагов) — дай ПОЛНЫЕ тексты так, будто они всегда были в файлах (кодер не должен знать, что они реконструированы).
+5. Проверь: каждый критический блок 00_INDEX ссылается на файл с деталями.
+6. Верни подтверждение: пути, размеры, первые 3 строки каждого.
+Let me start by reading all the source files as required by the contract. Let me read them in parallel batches.
+
+Sources:
+
+E:\opencode_harness_portable\docs\PLAN_MASTER_MIGRATION.md (266 строк)
+E:\opencode_harness_portable\docs\AUDIT_MASTER_PLAN_COMPLETENESS_2026-10-04.md (297)
+E:\opencode_harness_portable\docs\PROBLEMS_REGISTER.md (58)
+E:\opencode_harness_portable\docs\PLAN_E2E_MATRYOSHKA.md (231)
+E:\opencode_harness_portable\PLAN_W1_GIT_HOOKS.md (438)
+E:\Documents\Документы\doc_Opencode_agern-new\docs\PLAN_W7_B1T3_META_CYCLE_PORTING_2026-10-04.md (489)
+E:\opencode_harness_portable\docs\PLAN_TD174-177_FACTORY.md (40)
+E:\opencode_harness_portable\docs\AUDIT_RUD2_UNIVERSAL_AGENT_2026-10-04.json (W11)
+E:\opencode_harness_portable\tests\fixtures\exp2_stepfinish.json + exp2_stepfinish.ndjson (EXP-2)
+C:\Temp\opencode\exp2_result.md (EXP-2 результат)
+E:\opencode_harness_portable\config\tech_debt.json (E2E-01..07 строки 4288-4455, sunset_at 2026-10-16)
+Let me read all of these.
+
+===== M1 (assistant) =====
+[text] Начинаю с чтения всех источников, как требует контракт.
+[tool] name=read input=null
+[tool] name=read input=null
+[tool] name=read input=null
+[tool] name=read input=null
+
+===== M2 (assistant) =====
+[text] Читаю оставшиеся источники.
+[tool] name=read input=null
+[tool] name=read input=null
+[tool] name=read input=null
+
+===== M3 (assistant) =====
+[text] Читаю оставшиеся источники: аудит RUD-2, фикстуры EXP-2, результат, tech_debt.json.
+[tool] name=read input=null
+[tool] name=read input=null
+[tool] name=read input=null
+[tool] name=read input=null
+
+===== M4 (assistant) =====
+[text] Читаю tech_debt.json (E2E-01..07).  
+[tool] name=read input=null
+
+===== M5 (assistant) =====
+[text] Все источники прочитаны. Быстро верифицирую ключевые факты на ФС для точности документации.
+[tool] name=bash input=null
+[tool] name=bash input=null
+[tool] name=bash input=null
+
+===== M6 (assistant) =====
+[text] Проверю фактический `opencode.json` для точных 5 правок B1-T2.
+[tool] name=bash input=null
+[tool] name=glob input=null
+
+===== M7 (assistant) =====
+[tool] name=read input=null
+
+===== M8 (assistant) =====
+[text] Проверяю ещё несколько путей для точности.
+[tool] name=bash input=null
+
+===== M9 (assistant) =====
+[tool] name=bash input=null
+
+===== M10 (assistant) =====
+[text] Все факты верифицированы. Создаю директорию и 4 файла документации.
+[tool] name=bash input=null
+
+===== M11 (assistant) =====
+
+===== M12-M14 =====
+M12: похоже сессия упала возобнови свою работу
+M13: 
+M14: The available tools have changed.
+
+The `bash` tool is now `shell` and must be called by that name.
+
+The following tools now take `path` instead of `filePath`: `read`, `write`.

@@ -1,0 +1,7 @@
+== all sub-sessions: 568
+[09-09 21:18] ses_f789b19b0ffeWjn57YI5v7qoI7 slug=hidden-planet agent=coder-worker parent=ses_f8285e1aeffe51rXITNc8i20mI dir=E:/барахло/Documents/Default Project
+    title: Reconcile writer handoff (@coder-worker subagent)
+[09-09 21:34] ses_f788cf5b4ffeQETuj0Q0RqesCI slug=silent-circuit agent=code-reviewer parent=ses_f8285e1aeffe51rXITNc8i20mI dir=E:/барахло/Documents/Default Project
+    title: Review handoff reconciliation (@code-reviewer subagent)
+[09-09 21:34] ses_f788cf52cffecYh4hFbxm7wECK slug=hidden-mountain agent=code-tester parent=ses_f8285e1aeffe51rXITNc8i20mI dir=E:/барахло/Documents/Default Project
+    title: Test handoff assets (@code-tester subagent)

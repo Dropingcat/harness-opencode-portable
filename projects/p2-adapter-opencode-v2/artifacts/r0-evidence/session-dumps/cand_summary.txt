@@ -1,0 +1,76 @@
+### crisp-island (ses_ec9b6a7aeffeA34R9Kz1Kx354m) created=10-13 20:22 msgs=127
+  first_agent=code-orchestrator
+  switches: ['code-orchestrator(prev=build)']
+  kw: ['harness']
+  user0: проведи аудит  через цепочку фабрики.  и подготовь итоговую версию 4.2 для всех фракционок кроме 1160 C:\Users\Arhys\Desktop\каллибровка\new_versions_v4.2
+  users: 17
+
+### lucky-circuit (ses_ec99e5741ffeCQRBqwJn7eKelA) created=10-13 20:48 msgs=187
+  first_agent=code-orchestrator
+  switches: ['code-orchestrator(prev=build)', 'code-orchestrator(prev=code-orchestrator)']
+  kw: ['harness']
+  user0: посмотри почему отвалились агенты в opencode
+  users: 28
+
+### kind-falcon (ses_ec97fd4a0ffeADWw7BggYf2qaC) created=10-13 21:22 msgs=220
+  first_agent=code-auditor-runner
+  switches: ['code-auditor-runner(prev=None)', 'code-auditor-runner(prev=code-auditor-runner)', 'code-auditor-runner(prev=code-auditor-runner)', 'code-auditor-runner(prev=code-auditor-runner)', 'code-orchestrator(prev=code-auditor-runner)', 'code-orchestrator(prev=code-orchestrator)', 'code-orchestrator(prev=code-orchestrator)', 'code-orchestrator(prev=code-orchestrator)', 'code-orchestrator(prev=code-orchestrator)', 'code-orchestrator(prev=code-orchestrator)', 'code-orchestrator(prev=code-orchestrator)', 'code-orchestrator(prev=code-orchestrator)']
+  kw: ['harness']
+  user0: ты тут?
+  users: 14
+
+### happy-tiger (ses_ec9583d8cffdJEJiIm6AAXcl3h) created=10-13 22:05 msgs=245
+  first_agent=None
+  switches: []
+  kw: ['harness']
+  user0: проверь работу циклов в харнесс
+  users: 19
+
+### glowing-eagle (ses_ec95c7efeffeLecFm9jvzkDIMT) created=10-13 22:00 msgs=4
+  first_agent=code-auditor-runner
+  switches: ['code-auditor-runner(prev=code-auditor-runner)']
+  kw: ['code-auditor']
+  user0: "goal: Проверить процессный контракт передачи через профильный code-auditor. context: Это ограниченный транспортный smoke-check, не финальная приёмка проекта. П
+  users: 1
+
+### quiet-cactus (ses_ec495ad44ffe53wj4aL32oMYUu) created=10-14 20:17 msgs=1003
+  first_agent=code-orchestrator
+  switches: ['code-orchestrator(prev=code-orchestrator)', 'code-orchestrator(prev=code-orchestrator)', 'code-orchestrator(prev=code-orchestrator)', 'code-orchestrator(prev=code-orchestrator)', 'code-orchestrator(prev=code-orchestrator)', 'code-orchestrator(prev=code-orchestrator)', 'code-orchestrator(prev=code-orchestrator)', 'code-orchestrator(prev=code-orchestrator)', 'code-orchestrator(prev=code-orchestrator)', 'code-orchestrator(prev=code-orchestrator)']
+  kw: ['harness']
+  user0: привет- проведи самодиагностику-  на работу окестратора и причин почему отвалились агент все в opencode desctop
+  users: 36
+
+### mighty-river (ses_ec23ec7a9ffeDmzogCR14rqIED) created=10-15 07:10 msgs=11
+  first_agent=None
+  switches: []
+  kw: ['harness']
+  user0: используй фабрику с диспатчем coder-**-runer  агентов как суб агентов-  используй  контракты из какнона  E:\opencode_harness_portable\docs\CODERS  изучи сделанн
+  users: 1
+
+### proud-eagle (ses_f07100248ffeVaY6PiXzizQdwK) created=10-01 22:27 msgs=277
+  first_agent=None
+  switches: []
+  kw: ['harness', 'code-reviewer']
+  user0: ses_f37cd44a0ffe5vlOQMarL4Cew1.json сессия в E:\opencode_harness\docs нужно просмотреть посление сообщения подцепить в память и продолжить разработку - задачи -
+  users: 13
+
+### misty-lagoon (ses_f0294cab8ffeiilqEQoNaVMezk) created=10-02 19:20 msgs=361
+  first_agent=None
+  switches: []
+  kw: ['harness', 'code-reviewer', 'code-auditor']
+  user0: проведи глубокое ревью проблем и составь рекомендации по разработке Сформирую план. Дам структурированный план с приоритетами, зависимостями и рекомендациями по
+  users: 74
+
+### eager-garden (ses_f079394f1ffeY5ON06C6r1So8O) created=10-01 20:04 msgs=1588
+  first_agent=None
+  switches: []
+  kw: ['harness']
+  user0: привет, нужно проверить C:\Users\Arhys\Desktop\каллибровка\фракционный состав  коректность файлов для рассчта фракционого состава- свериться с гостами и астм и 
+  users: 47
+
+### happy-squid (ses_ee122a03effeCjW9uoK3zYehC9) created=10-09 07:13 msgs=176
+  first_agent=None
+  switches: []
+  kw: ['harness']
+  user0: привет  просмотри подробно C:\Users\Arhys\Desktop\каллибровка\ГОСТ EN 13132  проведи аудит с   Metrology_Core_EURACHEM_v4.xlsx -  графики сделаны тут коректно- 
+  users: 36

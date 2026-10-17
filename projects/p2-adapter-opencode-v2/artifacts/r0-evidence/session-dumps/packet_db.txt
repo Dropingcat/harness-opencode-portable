@@ -1,0 +1,8 @@
+[session_v2] id=ses_ef2f6384cffeZgT5uEOUw56jOU slug=gentle-meadow agent=build parent=None
+   dir=E:/opencode_harness_portable
+   created=2026-10-05 20:08:27 updated=2026-10-16 21:01:00
+   title=Пакет исполнительной документации для кодеров
+[session] id=ses_ef2f6384cffeZgT5uEOUw56jOU slug=gentle-meadow agent=build parent=None
+   dir=E:/opencode_harness_portable
+   created=2026-10-05 20:08:27 updated=2026-10-05 20:19:37
+   title=Пакет исполнительной документации для кодеров

@@ -1,0 +1,60 @@
+M0 role=None id=msg_10d09c8870012E0Wta2vgQrsyn
+  time=10-05 20:08:27
+  keys=['id', 'time', 'text', 'type']
+  text[:300]= Ты — АНАЛИТИК-СБОРЩИК документации для кодеров. Создай ПАКЕТ ИСПОЛНИТЕЛЬНОЙ ДОКУМЕНТАЦИИ в `E:\opencode_harness_portable\docs\CODERS\` — такую, чтобы кодеру осталось ТОЛЬКО КОДИТЬ (без философии, без решений, всё предрешено). Фабрика агентов должна заработать по итогу. ## КОНТРАКТ ВХОДА: что своди
+M1 role=None id=msg_10d09c8ba001wkm4FLwB09DMHE
+  time=10-05 20:08:27
+  keys=['id', 'time', 'type', 'agent', 'model', 'content', 'snapshot', 'finish', 'cost', 'tokens']
+  text[:300]= 
+M2 role=None id=msg_10d09eecc00170R0WHej8EnBJk
+  time=10-05 20:08:37
+  keys=['id', 'time', 'type', 'agent', 'model', 'content', 'snapshot', 'finish', 'cost', 'tokens']
+  text[:300]= 
+M3 role=None id=msg_10d0a48ce0019ksWu6GpkUG0P8
+  time=10-05 20:09:00
+  keys=['id', 'time', 'type', 'agent', 'model', 'content', 'snapshot', 'finish', 'cost', 'tokens']
+  text[:300]= 
+M4 role=None id=msg_10d0a7854001oU7HWISrVlRm3I
+  time=10-05 20:09:12
+  keys=['id', 'time', 'type', 'agent', 'model', 'content', 'snapshot', 'finish', 'cost', 'tokens']
+  text[:300]= 
+M5 role=None id=msg_10d0aad13001UXm38z4udxj0Jd
+  time=10-05 20:09:25
+  keys=['id', 'time', 'type', 'agent', 'model', 'content', 'snapshot', 'finish', 'cost', 'tokens']
+  text[:300]= 
+M6 role=None id=msg_10d0bdc8b001LliQQH13kBiVcI
+  time=10-05 20:10:43
+  keys=['id', 'time', 'type', 'agent', 'model', 'content', 'snapshot', 'finish', 'cost', 'tokens']
+  text[:300]= 
+M7 role=None id=msg_10d0d802c001UM9g3k3H3ahlMd
+  time=10-05 20:12:31
+  keys=['id', 'time', 'type', 'agent', 'model', 'content', 'snapshot', 'finish', 'cost', 'tokens']
+  text[:300]= 
+M8 role=None id=msg_10d0d9ea9001xQpYe6UpOHoFxQ
+  time=10-05 20:12:38
+  keys=['id', 'time', 'type', 'agent', 'model', 'content', 'snapshot', 'finish', 'cost', 'tokens']
+  text[:300]= 
+M9 role=None id=msg_10d0de37c0010QBwt66sdBahIW
+  time=10-05 20:12:56
+  keys=['id', 'time', 'type', 'agent', 'model', 'content', 'snapshot', 'finish', 'cost', 'tokens']
+  text[:300]= 
+M10 role=None id=msg_10d0e30f2001WHvGYzNkzxBibp
+  time=10-05 20:13:16
+  keys=['id', 'time', 'type', 'agent', 'model', 'content', 'snapshot', 'finish', 'cost', 'tokens']
+  text[:300]= 
+M11 role=None id=msg_10d0e5625001gCcx0oeGGeEE23
+  time=10-05 20:13:25
+  keys=['id', 'time', 'type', 'agent', 'model', 'content', 'cost', 'tokens']
+  text[:300]= 
+M12 role=None id=msg_10d13fffe001iQIMwRQ15TBYSt
+  time=10-05 20:19:37
+  keys=['id', 'time', 'text', 'type']
+  text[:300]= похоже сессия упала возобнови свою работу
+M13 role=None id=msg_10d14007d001Ed68G4t1Ox4235
+  time=10-05 20:19:37
+  keys=['id', 'time', 'type', 'agent', 'model', 'content', 'snapshot', 'cost', 'tokens']
+  text[:300]= 
+M14 role=None id=msg_10d14007d001pmYwVXWhjdyQ1c
+  time=10-05 20:19:37
+  keys=['id', 'time', 'type', 'text']
+  text[:300]= The available tools have changed.  The `bash` tool is now `shell` and must be called by that name.  The following tools now take `path` instead of `filePath`: `read`, `write`.
