@@ -141,7 +141,7 @@ class Handler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(body)
 
-    def log_message(self, fmt, *args):
+    def log_message(self, fmt, *args):  # dead: disable (intentionally silences BaseHTTPRequestHandler stderr logging)
         pass
 
 

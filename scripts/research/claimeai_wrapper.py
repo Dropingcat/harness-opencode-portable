@@ -173,7 +173,7 @@ class ClaimeAIWrapper:
         except Exception as e:
             raise RuntimeError(f"Failed to initialize LLM: {e}")
     
-    def _read_input(self, input_source: Union[str, Path]) -> str:
+    def _read_input(self, input_source: Union[str, Path]) -> str:  # stub: claimeai-pdf-input (PDF input not supported yet)
         """Чтение входа: файл или строка."""
         if isinstance(input_source, (str, Path)):
             path = Path(input_source)
