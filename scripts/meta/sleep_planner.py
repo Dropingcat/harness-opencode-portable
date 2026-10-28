@@ -31,10 +31,12 @@ from damage_basket import DamageBasket, DamageEntry
 class SleepPlan:
     """План сна: кластеры долгов → ветки → промпт сна."""
 
-    def __init__(self, orchestrator: str, clusters: Dict[str, List[DamageEntry]]) -> None:
+    def __init__(self, orchestrator: str, clusters: Dict[str, List[DamageEntry]],
+                 basket_snapshot: Optional[dict] = None) -> None:
         self.plan_id = str(uuid.uuid4())[:8]
         self.orchestrator = orchestrator
         self.clusters = clusters
+        self.basket_snapshot = json.loads(json.dumps(basket_snapshot))
         self.branches: List[str] = []
         self.created_at = datetime.now().isoformat()
         self._build_branches()
@@ -64,6 +66,7 @@ class SleepPlan:
             "branches": self.branches,
             "clusters": {k: [e.to_dict() for e in v] for k, v in self.clusters.items()},
             "sleep_prompt": self.sleep_prompt(),
+            "basket_snapshot": json.loads(json.dumps(self.basket_snapshot)),
         }
 
 
@@ -83,11 +86,12 @@ class SleepPlannerAgent:
     # ------------------------------------------------------ цикл (ведёт скрипт)
     def run_plan(self, orchestrator: str) -> Optional[SleepPlan]:
         """Скрипт вызывает: если урон >= порога — план сна."""
-        if not self.basket.should_trigger_sleep():
+        capture = self.basket.snapshot()
+        if capture['total_damage'] < capture['threshold']:
             return None
-        entries = self.basket.entries
+        entries = [DamageEntry.from_dict(e) for e in capture['entries']]
         clusters = self.cluster_fn(entries)
-        plan = SleepPlan(orchestrator, clusters)
+        plan = SleepPlan(orchestrator, clusters, capture)
         self.history.append(plan)
         return plan
 

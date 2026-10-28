@@ -36,6 +36,7 @@ from auditor_v2 import ExternalAuditorV2
 from sleep_planner import SleepPlannerAgent
 from orchestrator_integration import OrchestratorIntegration
 from sleep_controller import SleepController
+from daemon_safety import DaemonLease, execute_verified
 
 
 class MetaDaemon:
@@ -65,6 +66,7 @@ class MetaDaemon:
         self.sleep_count = 0
         # внедряемый исполнитель веток (спец-агент)
         self.branch_executor = None  # fn(branches) -> {merged: bool, result: str}
+        self.merge_verifier = None  # fn(branches, result) -> bool; independent evidence
 
     # ------------------------------------------------------ основной цикл
 
@@ -85,30 +87,55 @@ class MetaDaemon:
             self.sleep_count += 1
             plan = self.planner.run_plan(self.orchestrator)
             if plan:
+                # Validate exactly the plan's capture, never replace it with a fresh one.
+                try:
+                    capture = self.basket.validate_snapshot(getattr(plan, 'basket_snapshot', None))
+                except Exception as exc:
+                    return {'sleep': True, 'merged': False, 'acknowledged': False,
+                            'status': 'blocked', 'reason': 'invalid_basket_capture',
+                            'result': str(exc), 'branches': plan.branches,
+                            'hp': self.meta.health.health_points}
                 # 4. Контракт в файл (агент увидит при входе в сон)
                 contract = plan.to_dict()
+                contract['basket_snapshot'] = capture
+                contract['acknowledged'] = False
                 contract['orchestrator_prompt'] = self._build_sleep_prompt(plan)
                 contract['created_at'] = datetime.now().isoformat()
                 self.contract_file.write_text(
                     json.dumps(contract, ensure_ascii=False, indent=2), encoding='utf-8')
 
                 # 5. Выполнение веток (спец-агент)
-                if self.branch_executor:
-                    result = self.branch_executor(plan.branches)
-                else:
-                    result = self._default_branch_executor(plan.branches)
+                result = execute_verified(plan.branches, self.branch_executor,
+                                          self.merge_verifier)
+                contract.update(result)
+                self.contract_file.write_text(
+                    json.dumps(contract, ensure_ascii=False, indent=2), encoding='utf-8')
 
                 # 6. Merge → корзина очищена → контракт помечен done
                 if result.get('merged'):
                     self.meta.sleep_merge(success=True,
                                           result_summary=result.get('result', 'merged'))
-                    self.basket.reset()
+                    try:
+                        self.basket.acknowledge(capture)
+                    except Exception as exc:
+                        # External merge/HP effects already happened; do not claim rollback.
+                        contract.update(status='acknowledgement_failed', acknowledged=False,
+                                        result=f'basket acknowledgement failed: {exc}')
+                        self.contract_file.write_text(
+                            json.dumps(contract, ensure_ascii=False, indent=2), encoding='utf-8')
+                        return {'sleep': True, 'merged': True, 'acknowledged': False,
+                                'status': 'acknowledgement_failed', 'result': contract['result'],
+                                'branches': plan.branches, 'hp': self.meta.health.health_points}
+                    contract['acknowledged'] = True
                     contract['merged'] = True
                     contract['result'] = result.get('result', '')
                     self.contract_file.write_text(
                         json.dumps(contract, ensure_ascii=False, indent=2), encoding='utf-8')
-                    return {'sleep': True, 'merged': True, 'branches': plan.branches,
+                    return {'sleep': True, 'merged': True, 'acknowledged': True, 'branches': plan.branches,
                             'hp': self.meta.health.health_points}
+                return {'sleep': True, 'merged': False, 'status': 'blocked',
+                        'branches': plan.branches, 'hp': self.meta.health.health_points,
+                        'damage': self.basket.total_damage(), 'result': result['result']}
         # W7 TD-DEV-26: фиксируем свежий saved_at при каждом такте (--once и --daemon).
         # Раньше --once завершался БЕЗ вызова _save_state → saved_at оставался старым →
         # liveness (гл.29) считал демона мёртвым. _save_state — существующий механизм.
@@ -116,19 +143,30 @@ class MetaDaemon:
         return {'sleep': False, 'hp': self.meta.health.health_points,
                 'damage': self.basket.total_damage(), 'dropped': total_dropped}
 
-    def run_daemon(self, interval: float = 10.0, loops: int = 0) -> None:
+    def run_daemon(self, interval: float = 10.0, loops: int = 0,
+                   instance_token: str | None = None) -> None:
         """Бесконечный автономный цикл (loops=0 = вечно)."""
-        print(f'[daemon:{self.orchestrator}] запущен, интервал={interval}s')
+        import uuid
+        if interval <= 0 or loops < 0:
+            raise ValueError('interval must be positive; loops must be nonnegative')
+        lease = DaemonLease(self.meta.state_dir, self.orchestrator)
+        if not lease.lock.acquire():
+            raise RuntimeError('daemon already running or lifecycle identity unresolved')
+        token = instance_token or uuid.uuid4().hex
         i = 0
         try:
             while loops == 0 or i < loops:
+                lease.heartbeat(token)
                 i += 1
                 res = self.run_once()
                 if res.get('sleep'):
-                    print(f'[daemon] цикл {i}: СОН → merge веток {res["branches"]}, HP={res["hp"]}')
+                    print(f'[daemon] цикл {i}: sleep status={res.get("status", "merged")}, HP={res["hp"]}')
+                lease.heartbeat(token)
                 time.sleep(interval)
         except KeyboardInterrupt:
             print(f'\n[daemon:{self.orchestrator}] остановлен после {i} тактов')
+        finally:
+            lease.lock.close()
 
     # ------------------------------------------------------ внутренние
 
@@ -142,10 +180,7 @@ class MetaDaemon:
                 except Exception:
                     continue
             return arts
-        # дефолт: проверить 'текст' (аудит найдёт нарушения, если есть)
-        return [{'template': 'T3', 'slots': {
-            'data': {'entity_id': 'OBS_XRD_FWHM'},
-            'claim': {'entity_id': 'CLAIM_FERROMAGNETISM', 'modality': 'proves'}}}]
+        return []  # No evidence is not a scientific violation.
 
     def _build_sleep_prompt(self, plan) -> str:
         """Промпт сна для оркестратора (виден в контракте)."""
@@ -154,11 +189,8 @@ class MetaDaemon:
                 f"Выполни ветки, слей их без багов, не уводи от задачи.")
 
     def _default_branch_executor(self, branches: list) -> dict:
-        """Дефолтный исполнитель веток (в реальности — спец-агент с git)."""
-        # имитация: каждая ветка фиксируется в legacy
-        for b in branches:
-            self.meta.on_failure(f'[sleep-fix] {b}', task='sleep', tags=['sleep', 'daemon'])
-        return {'merged': True, 'result': f'merged {len(branches)} branches'}
+        """Observe-only default: never simulate remediation or merge."""
+        return execute_verified(branches)
 
 
 def main() -> int:
@@ -173,6 +205,7 @@ def main() -> int:
     ap.add_argument('--threshold', type=int, default=100)
     ap.add_argument('--artifacts-dir', default=None)
     ap.add_argument('--contract-file', default=None)
+    ap.add_argument('--instance-token', default=None, help=argparse.SUPPRESS)
     ap.add_argument('--hardcore', action='store_true', default=True,
                     help='хардкор-аудит (по умолчанию вкл)')
     args = ap.parse_args()
@@ -187,7 +220,7 @@ def main() -> int:
         hardcore=args.hardcore,
     )
     if args.daemon:
-        dm.run_daemon(interval=args.interval, loops=args.loops)
+        dm.run_daemon(interval=args.interval, loops=args.loops, instance_token=args.instance_token)
     else:
         res = dm.run_once()
         print(json.dumps(res, ensure_ascii=False, indent=2))

@@ -16,6 +16,11 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
+try:
+    from .durable_json import StoreCorruption, read_json, storage_identity, update_json
+except ImportError:
+    from durable_json import StoreCorruption, read_json, storage_identity, update_json
+
 
 class TraceEntry:
     """Одна запись трассы (событие любой ветки V1-V8)."""
@@ -93,6 +98,13 @@ class TransitionRecord:
             "timestamp": self.timestamp,
         }
 
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]) -> "TransitionRecord":
+        fields = {key: value for key, value in data.items() if key != 'timestamp'}
+        record = cls(**fields)
+        record.timestamp = data['timestamp']
+        return record
+
 
 def state_hash(snapshot: Dict[str, Any]) -> str:
     """SHA-256 подпись состояния (V8-TD-03)."""
@@ -111,6 +123,7 @@ class TraceStore:
 
     def __init__(self, storage_path: str | Path | None = None) -> None:
         self.storage_path = Path(storage_path) if storage_path else Path(__file__).parent / '_trace_store.json'
+        self.storage_path = storage_identity(self.storage_path)
         self.entries: List[TraceEntry] = []
         self.transitions: List[TransitionRecord] = []
         self.state_snapshots: Dict[str, Any] = {}
@@ -119,21 +132,24 @@ class TraceStore:
     # --- снимки состояний (V8-TD-02 reconstruct_state) ---
     def save_snapshot(self, state: Any) -> None:
         """Сохранить снимок состояния (объект с version_id + to_dict)."""
-        self.state_snapshots[state.version_id] = state.to_dict()
-        self._save()
+        version, snapshot = state.version_id, state.to_dict()
+        if not isinstance(version, str) or not isinstance(snapshot, dict):
+            raise ValueError('snapshot requires a string version_id and dictionary')
+        self._transaction(lambda data: data['state_snapshots'].__setitem__(version, snapshot))
 
     def get_snapshot(self, version_id: str) -> Optional[Dict[str, Any]]:
         return self.state_snapshots.get(version_id)
 
     # --- запись ---
     def append(self, entry: TraceEntry) -> None:
-        self.entries.append(entry)
-        self._save()
+        self._transaction(lambda data: data['entries'].append(entry.to_dict()))
 
     def record_transition(self, tr: TransitionRecord) -> None:
-        self.transitions.append(tr)
-        self.append(TraceEntry("V2", "state_transition", tr.to_dict(),
-                               tr.from_version, None))
+        entry = TraceEntry("V2", "state_transition", tr.to_dict(), tr.from_version, None)
+        def mutate(data):
+            data['transitions'].append(tr.to_dict())
+            data['entries'].append(entry.to_dict())
+        self._transaction(mutate)
 
     # --- запросы ---
     def query_by_state(self, state_version: str) -> List[TraceEntry]:
@@ -197,28 +213,52 @@ class TraceStore:
 
     # --- персистентность ---
     def _load(self) -> None:
-        if not self.storage_path.exists():
-            return
-        try:
-            data = json.loads(self.storage_path.read_text(encoding="utf-8"))
-            self.entries = [TraceEntry.from_dict(e) for e in data.get("entries", [])]
-            self.transitions = [TransitionRecord(**t) for t in data.get("transitions", [])]
-            self.state_snapshots = data.get("state_snapshots", {})
-        except Exception:
-            self.entries = []
-            self.transitions = []
-            self.state_snapshots = {}
+        self._publish(read_json(self.storage_path, self._default, self._validate))
 
-    def _save(self) -> None:
-        self.storage_path.parent.mkdir(parents=True, exist_ok=True)
-        data = {
-            "entries": [e.to_dict() for e in self.entries],
-            "transitions": [t.to_dict() for t in self.transitions],
-            "state_snapshots": self.state_snapshots,
-        }
-        self.storage_path.write_text(
-            json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8"
-        )
+    @staticmethod
+    def _default():
+        return {'entries': [], 'transitions': [], 'state_snapshots': {}}
+
+    @staticmethod
+    def _validate(data):
+        def require(condition, message):
+            if not condition:
+                raise StoreCorruption(message)
+        require(isinstance(data, dict) and set(data) == set(TraceStore._default()),
+                'expected entries/transitions/state_snapshots object')
+        require(isinstance(data['entries'], list) and isinstance(data['transitions'], list)
+                and isinstance(data['state_snapshots'], dict), 'unsupported collection shape')
+        for entry in data['entries']:
+            require(isinstance(entry, dict) and set(entry) == set(TraceEntry.__slots__),
+                    'unsupported entry fields')
+            require(all(isinstance(entry[k], str) for k in
+                        ('entry_id', 'timestamp', 'source_branch', 'event_type'))
+                    and isinstance(entry['payload'], dict)
+                    and all(entry[k] is None or isinstance(entry[k], str) for k in
+                            ('related_state_version', 'related_branch_id')), 'invalid entry types')
+        for transition in data['transitions']:
+            require(isinstance(transition, dict) and set(transition) == set(TransitionRecord.__slots__),
+                    'unsupported transition fields')
+            require(all(isinstance(transition[k], str) for k in
+                        ('from_version', 'to_version', 'timestamp'))
+                    and all(isinstance(transition[k], dict) for k in
+                            ('delta', 'metrics_before', 'metrics_after'))
+                    and isinstance(transition['evidence'], list)
+                    and all(isinstance(e, str) for e in transition['evidence']),
+                    'invalid transition types')
+        require(all(isinstance(k, str) and isinstance(v, dict)
+                    for k, v in data['state_snapshots'].items()), 'invalid snapshots')
+        json.dumps(data, allow_nan=False)
+
+    def _publish(self, data):
+        # Detach caller-owned payloads and snapshots after a successful commit.
+        data = json.loads(json.dumps(data, ensure_ascii=False))
+        self.entries = [TraceEntry.from_dict(e) for e in data['entries']]
+        self.transitions = [TransitionRecord.from_dict(t) for t in data['transitions']]
+        self.state_snapshots = data['state_snapshots']
+
+    def _transaction(self, mutate):
+        self._publish(update_json(self.storage_path, self._default, self._validate, mutate))
 
     # --- инструменты ---
     def export(self, out_path: str | Path) -> None:
