@@ -87,7 +87,8 @@ def cmd_index(args) -> int:
     client = _client(db)
     try:
         col = client.get_collection(col_name)
-        existing_ids = set(col.get()["ids"]) if col.count() else set()
+        # только идентификаторы: полный get() тянет тексты и векторы всей коллекции и падает по памяти
+        existing_ids = set(col.get(include=[])["ids"]) if col.count() else set()
         print(f"Существующая коллекция: {col.count()} чанков, resume={len(existing_ids)} ids")
     except Exception:
         from chromadb.utils import embedding_functions
