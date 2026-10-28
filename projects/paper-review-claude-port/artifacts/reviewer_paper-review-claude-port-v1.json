@@ -1,0 +1,60 @@
+{
+  "module": "paper-review-claude-port-v1",
+  "role": "reviewer",
+  "verdict": "APPROVE",
+  "scope_declared": {
+    "scope_in": [
+      "Port .claude-plugin/plugin.json -> packages/paper-review-plugin/manifest.json",
+      "Port .mcp.json -> .opencode/opencode.json (academic-search environment passthrough)",
+      "Port hooks/hooks.json -> packages/paper-review-plugin/dist-v2/v2/index.js (SessionStart-equivalent hook)",
+      "Windows-compatible check-deps.py replacing check-deps.sh for the hook"
+    ],
+    "scope_out": [
+      "Claude plugin.json/.mcp.json/hooks.json remain as historical originals in C:\\Temp\\opencode\\integration",
+      "No changes to existing harness MCP servers (coder_router, academic_search, doc_extract, searxng_search)"
+    ]
+  },
+  "comments": [
+    {
+      "file": "packages/paper-review-plugin/dist-v2/v2/index.js",
+      "line": "36",
+      "problem": "runDepsCheck spawns python without a timeout; a hung interpreter would keep the promise pending.",
+      "suggestion": "Acceptable for a short deps probe; document that check-deps.py is quick and the hook is best-effort. No blocking in setup awaited path beyond the probe.",
+      "falsification": "Run check-deps.py --json with a 120s timeout; if it exceeds the timeout the concern is real, otherwise it is not."
+    },
+    {
+      "file": "packages/paper-review-plugin/dist-v2/v2/index.js",
+      "line": "22",
+      "problem": "harnessRoot() falls back to packageRoot/../.. which depends on the plugin being inside packages/paper-review-plugin; if copied elsewhere it resolves wrongly.",
+      "suggestion": "OK for the harness layout; OPENCODE_HARNESS_ROOT env remains the primary override and is documented.",
+      "falsification": "Set OPENCODE_HARNESS_ROOT to a different path and verify setup uses it; the fallback is only a last resort."
+    },
+    {
+      "file": ".opencode/opencode.json",
+      "line": "59",
+      "problem": "environment uses {env:VAR} placeholders which expand only if the variables exist in the parent environment; missing vars create empty values.",
+      "suggestion": "Intended: same semantics as the original .mcp.json. Empty values are tolerated by the academic-search server (optional keys).",
+      "falsification": "Launch the academic-search MCP with no keys in the environment and verify tools/list still returns 7 tools."
+    },
+    {
+      "file": "scripts/paper-review/check-deps.py",
+      "line": "35",
+      "problem": "importlib.import_module('pymupdf') under pymupdf4llm: PyMuPDF package provides the pymupdf import name; if only pymupdf4llm is installed without core, check errors.",
+      "suggestion": "Harness installs pymupdf4llm which pulls pymupdf; smoke test (--json exit=0) confirms the pair resolves in the current venv.",
+      "falsification": "Run `pip uninstall pymupdf` in a scratch venv and confirm check-deps.py reports the missing dependency instead of raising."
+    }
+  ],
+  "verified_by_commands": [
+    "E:\\opencode_harness_portable\\.venv\\Scripts\\python.exe E:\\opencode_harness_portable\\scripts\\paper-review\\check-deps.py --json # exit=0, all_required_ok=true",
+    "node --check E:\\opencode_harness_portable\\packages\\paper-review-plugin\\dist-v2\\v2\\index.js # exit=0",
+    "python -c \"import json; json.load(open(manifest)); json.load(open(opencode.json))\" # both valid",
+    "python -c \"...print(c['mcp']['academic-search'].get('environment'))\" # {'CROSSREF_MAILTO': '{env:...}', 'SEMANTIC_SCHOLAR_API_KEY': '{env:...}'}"
+  ],
+  "out_of_scope_gaps": [
+    {
+      "module": "paper-review-claude-port-v1",
+      "finding": "Live OpenCode re-load of the new plugin is not exercised in-session (config change requires restart); stub-down verification done via node --check only."
+    }
+  ],
+  "written_by": "reviewer"
+}

@@ -1,0 +1,17 @@
+{
+  "name": "@paper-review/opencode-plugin",
+  "version": "2.2.0",
+  "description": "OpenCode V2 adapter for the Paper Review System: SessionStart-equivalent dependency hook + manifest. Port of the Claude plugin (.claude-plugin/plugin.json, .mcp.json, hooks/hooks.json) to OpenCode harness conventions.",
+  "type": "module",
+  "license": "MIT",
+  "main": "./dist-v2/v2/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist-v2/v2/index.js"
+    }
+  },
+  "files": [
+    "dist-v2",
+    "manifest.json"
+  ]
+}

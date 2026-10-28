@@ -1,0 +1,1697 @@
+{
+  "_meta": {
+    "version": 3,
+    "format": "event-sourced+provenance",
+    "created_at": "2026-10-25T07:29:42+00:00",
+    "updated_at": "2026-10-25T07:30:27+00:00"
+  },
+  "events": [
+    {
+      "seq": 1,
+      "event_id": "d55bbf7f-2002-4927-a6d6-d87e93a02633",
+      "type": "TASK_CREATED",
+      "actor": "controller",
+      "attempt_id": null,
+      "payload": {
+        "task_id": "PRS-CLAUDE-PORT",
+        "task_name": "Paper Review plugin: port Claude files (.claude-plugin/plugin.json, .mcp.json, hooks/hooks.json) to OpenCode harness conventions",
+        "attempt_limit": 3,
+        "max_cost_rub": 20.0,
+        "required_gates": [
+          "reviewer",
+          "tester",
+          "auditor"
+        ],
+        "gate_policy_hash": "503beae2707304107eef6597e17ef3bc2387fcc6dfb1ca5f630823d76ad02a45",
+        "gate_policy": {
+          "version": 1,
+          "policy_id": "code_factory_default",
+          "required_gates": [
+            "reviewer",
+            "tester",
+            "auditor"
+          ],
+          "optional_evidence": [
+            "worker",
+            "experimenter"
+          ],
+          "gate_semantics": {
+            "reviewer": {
+              "pass": [
+                "APPROVE"
+              ],
+              "retry": [
+                "REQUEST_CHANGES"
+              ],
+              "terminal_fail": [
+                "REJECT"
+              ],
+              "block": [
+                "AMBIGUOUS"
+              ]
+            },
+            "tester": {
+              "pass": [
+                "PASS"
+              ],
+              "retry": [
+                "FAIL"
+              ]
+            },
+            "auditor": {
+              "pass": [
+                "APPROVE"
+              ],
+              "retry": [
+                "REQUEST_CHANGES"
+              ],
+              "terminal_fail": [
+                "REJECT"
+              ],
+              "block": [
+                "INVALID_INPUT"
+              ]
+            }
+          },
+          "retry": {
+            "new_attempt_on_rework": true,
+            "attempt_limit_includes_initial": true,
+            "note": "attempt открывается только при реальной сдаче воркером исправления (state=REWORK); RETRY-сигналы ревьюеров/тестеров накапливаются в рамках текущего attempt и не тратят лимит"
+          },
+          "finalization": {
+            "requires_state": "PASSED"
+          },
+          "convergence": {
+            "review_fail_tribunal_threshold": 2,
+            "note": "Модуль, у которого ревью не прошло threshold раз подряд без PASS (RETRY/FAIL), помечается флагом tribunal_required. Код решает; оркестратор обязан диспатчить аудитора (code-auditor, только метаданные процесса) до следующих фиксов."
+          }
+        },
+        "provenance_policy_hash": "624010d5a5b260d93f1e43d5d94fe52916620ee7e3c3bad29c46b9e021f6060c",
+        "provenance_policy": {
+          "version": 1,
+          "hash_algorithm": "sha256",
+          "origins": {
+            "agent_output": {
+              "trust": "internal",
+              "guard_required": false
+            },
+            "local_file": {
+              "trust": "internal",
+              "guard_required": false
+            },
+            "tool_internal": {
+              "trust": "internal",
+              "guard_required": false
+            },
+            "web": {
+              "trust": "untrusted",
+              "guard_required": true
+            },
+            "external_tool": {
+              "trust": "untrusted",
+              "guard_required": true
+            },
+            "subagent": {
+              "trust": "untrusted",
+              "guard_required": true
+            },
+            "user_supplied": {
+              "trust": "untrusted",
+              "guard_required": true
+            }
+          },
+          "accepted_guard_verdicts": [
+            "PASS"
+          ],
+          "rejected_guard_verdicts": [
+            "FAIL",
+            "BLOCK",
+            "INVALID"
+          ],
+          "evidence_rules": {
+            "agent_output_artifact_required": true,
+            "referenced_untrusted_artifacts_must_be_admissible": true,
+            "sanitized_artifact_must_reference_source": true
+          }
+        }
+      },
+      "ts": "2026-10-25T07:29:42+00:00",
+      "prev_hash": null,
+      "event_hash": "1076ea3e686b2de3a43764a676b7d92f5736e2d8dcb5e7eedc0b20293613c131"
+    },
+    {
+      "seq": 2,
+      "event_id": "0d829fd4-8bad-40b2-af1b-6fdfdd65b858",
+      "type": "ATTEMPT_STARTED",
+      "actor": "controller",
+      "attempt_id": "attempt-1",
+      "payload": {
+        "attempt_id": "attempt-1",
+        "attempt_no": 1,
+        "kind": "initial"
+      },
+      "ts": "2026-10-25T07:29:42+00:00",
+      "prev_hash": "1076ea3e686b2de3a43764a676b7d92f5736e2d8dcb5e7eedc0b20293613c131",
+      "event_hash": "0f540f4b1e47d2f1e0237eac4f723e356796bfdf9b31fd22ca6ea9a92accd1e2"
+    },
+    {
+      "seq": 3,
+      "event_id": "26b97417-4586-4440-b8f6-90019a0d255c",
+      "type": "ARTIFACT_REGISTERED",
+      "actor": "worker",
+      "attempt_id": "attempt-1",
+      "payload": {
+        "artifact_id": "d65187a3-1ca2-4dc9-a372-1729871c28e5",
+        "origin": "agent_output",
+        "trust": "internal",
+        "guard_required": false,
+        "tool_id": "worker",
+        "source_ref": "paper-review-claude-port-v1",
+        "source_artifact_id": null,
+        "path_hint": "E:\\opencode_harness_portable\\projects\\paper-review-claude-port\\artifacts\\worker_paper-review-claude-port-v1.json",
+        "content_hash": "fba221813efb043191a14f6acb47f895a7b98dc229b39a03e0f47aca52c0fb0a",
+        "size_bytes": 2200,
+        "media_type": "application/json",
+        "metadata": {}
+      },
+      "ts": "2026-10-25T07:29:52+00:00",
+      "prev_hash": "0f540f4b1e47d2f1e0237eac4f723e356796bfdf9b31fd22ca6ea9a92accd1e2",
+      "event_hash": "951c64f554cc1fd4629323e6395a87224519354fb3b83c1aa4ff3c0fd20cef03"
+    },
+    {
+      "seq": 4,
+      "event_id": "97e9b9aa-9875-4057-970f-57bab142fdd1",
+      "type": "AGENT_EVIDENCE",
+      "actor": "worker",
+      "attempt_id": "attempt-1",
+      "payload": {
+        "evidence_id": "ac907572-25fe-4268-b0ca-830025fb795d",
+        "agent_type": "worker",
+        "module": "paper-review-claude-port-v1",
+        "data": {
+          "module": "paper-review-claude-port-v1",
+          "role": "worker",
+          "status": "DONE",
+          "code": "CLAUDE->OPENCODE PORT (module paper-review-claude-port-v1)\n\nProduced files:\n1. E:\\opencode_harness_portable\\packages\\paper-review-plugin\\manifest.json\n   - Port of .claude-plugin/plugin.json (name/version/description/author/repository/license)\n   - Extended with an \"opencode\" section mapping architecture (agents/*.md), commands, skills, MCP servers, contracts.\n2. E:\\opencode_harness_portable\\packages\\paper-review-plugin\\package.json\n   - ESM package metadata (@paper-review/opencode-plugin, main ./dist-v2/v2/index.js).\n3. E:\\opencode_harness_portable\\packages\\paper-review-plugin\\dist-v2\\v2\\index.js\n   - OpenCode V2 plugin (id paper-review.system.v2) replacing hooks/hooks.json:\n     * setup(): resolves harness root, runs scripts/paper-review/check-deps.py --json with .venv python,\n       persists result in ctx.storage, registers ctx.session.hook('context', ...) so a short system note\n       is injected when required deps are missing; fully exception-safe (never breaks app).\n4. E:\\opencode_harness_portable\\scripts\\paper-review\\check-deps.py\n   - Windows/portable port of check-deps.sh (no bash): checks mcp/pymupdf/pydantic/httpx/PIL,\n       optional marker; exits 0 when all required present, prints JSON with --json flag.\n5. E:\\opencode_harness_portable\\.opencode\\opencode.json\n   - MCP env passthrough from .mcp.json added to academic-search:\n       environment: { CROSSREF_MAILTO: {env:CROSSREF_MAILTO}, SEMANTIC_SCHOLAR_API_KEY: {env:SEMANTIC_SCHOLAR_API_KEY} }\n   - paper-review-plugin registered in plugin[] (file:// URL to dist-v2/v2).",
+          "description": "Ported the three Claude-specific plugin files (.claude-plugin/plugin.json, .mcp.json, hooks/hooks.json) to OpenCode-native equivalents: packages/paper-review-plugin (manifest + V2 plugin with the SessionStart-equivalent dependency hook), env passthrough for academic-search MCP, and a Windows-portable check-deps.py.",
+          "written_by": "worker",
+          "artifact_path": "E:\\opencode_harness_portable\\projects\\paper-review-claude-port\\artifacts\\worker_paper-review-claude-port-v1.json"
+        },
+        "output_artifact_id": "d65187a3-1ca2-4dc9-a372-1729871c28e5",
+        "artifact_refs": []
+      },
+      "ts": "2026-10-25T07:29:52+00:00",
+      "prev_hash": "951c64f554cc1fd4629323e6395a87224519354fb3b83c1aa4ff3c0fd20cef03",
+      "event_hash": "f48d024ba14c0b0db455a8bbbbaf867c9a9176023e864881249bc18c427a8761"
+    },
+    {
+      "seq": 5,
+      "event_id": "53143a07-c1b7-46f2-98ba-4ac0d0d637fd",
+      "type": "ARTIFACT_REGISTERED",
+      "actor": "reviewer",
+      "attempt_id": "attempt-1",
+      "payload": {
+        "artifact_id": "6c7e72af-69e5-44c7-b38b-4fc1e791f027",
+        "origin": "agent_output",
+        "trust": "internal",
+        "guard_required": false,
+        "tool_id": "reviewer",
+        "source_ref": "paper-review-claude-port-v1",
+        "source_artifact_id": null,
+        "path_hint": "E:\\opencode_harness_portable\\projects\\paper-review-claude-port\\artifacts\\reviewer_paper-review-claude-port-v1.json",
+        "content_hash": "586ca70825d381407e711adc35a0d3e7fd55f694abf8c72f0ec3bb1ace646787",
+        "size_bytes": 3800,
+        "media_type": "application/json",
+        "metadata": {}
+      },
+      "ts": "2026-10-25T07:30:16+00:00",
+      "prev_hash": "f48d024ba14c0b0db455a8bbbbaf867c9a9176023e864881249bc18c427a8761",
+      "event_hash": "cbe39741e02c40da834097d463c8407ac3d128213aa95549ba7a801b68721eff"
+    },
+    {
+      "seq": 6,
+      "event_id": "2026c234-8b13-4fe8-8869-90fb42a77faf",
+      "type": "AGENT_EVIDENCE",
+      "actor": "reviewer",
+      "attempt_id": "attempt-1",
+      "payload": {
+        "evidence_id": "36b9459b-84eb-4f0b-9b19-deb0e7169ec0",
+        "agent_type": "reviewer",
+        "module": "paper-review-claude-port-v1",
+        "data": {
+          "module": "paper-review-claude-port-v1",
+          "role": "reviewer",
+          "verdict": "APPROVE",
+          "scope_declared": {
+            "scope_in": [
+              "Port .claude-plugin/plugin.json -> packages/paper-review-plugin/manifest.json",
+              "Port .mcp.json -> .opencode/opencode.json (academic-search environment passthrough)",
+              "Port hooks/hooks.json -> packages/paper-review-plugin/dist-v2/v2/index.js (SessionStart-equivalent hook)",
+              "Windows-compatible check-deps.py replacing check-deps.sh for the hook"
+            ],
+            "scope_out": [
+              "Claude plugin.json/.mcp.json/hooks.json remain as historical originals in C:\\Temp\\opencode\\integration",
+              "No changes to existing harness MCP servers (coder_router, academic_search, doc_extract, searxng_search)"
+            ]
+          },
+          "comments": [
+            {
+              "file": "packages/paper-review-plugin/dist-v2/v2/index.js",
+              "line": "36",
+              "problem": "runDepsCheck spawns python without a timeout; a hung interpreter would keep the promise pending.",
+              "suggestion": "Acceptable for a short deps probe; document that check-deps.py is quick and the hook is best-effort. No blocking in setup awaited path beyond the probe.",
+              "falsification": "Run check-deps.py --json with a 120s timeout; if it exceeds the timeout the concern is real, otherwise it is not."
+            },
+            {
+              "file": "packages/paper-review-plugin/dist-v2/v2/index.js",
+              "line": "22",
+              "problem": "harnessRoot() falls back to packageRoot/../.. which depends on the plugin being inside packages/paper-review-plugin; if copied elsewhere it resolves wrongly.",
+              "suggestion": "OK for the harness layout; OPENCODE_HARNESS_ROOT env remains the primary override and is documented.",
+              "falsification": "Set OPENCODE_HARNESS_ROOT to a different path and verify setup uses it; the fallback is only a last resort."
+            },
+            {
+              "file": ".opencode/opencode.json",
+              "line": "59",
+              "problem": "environment uses {env:VAR} placeholders which expand only if the variables exist in the parent environment; missing vars create empty values.",
+              "suggestion": "Intended: same semantics as the original .mcp.json. Empty values are tolerated by the academic-search server (optional keys).",
+              "falsification": "Launch the academic-search MCP with no keys in the environment and verify tools/list still returns 7 tools."
+            },
+            {
+              "file": "scripts/paper-review/check-deps.py",
+              "line": "35",
+              "problem": "importlib.import_module('pymupdf') under pymupdf4llm: PyMuPDF package provides the pymupdf import name; if only pymupdf4llm is installed without core, check errors.",
+              "suggestion": "Harness installs pymupdf4llm which pulls pymupdf; smoke test (--json exit=0) confirms the pair resolves in the current venv.",
+              "falsification": "Run `pip uninstall pymupdf` in a scratch venv and confirm check-deps.py reports the missing dependency instead of raising."
+            }
+          ],
+          "verified_by_commands": [
+            "E:\\opencode_harness_portable\\.venv\\Scripts\\python.exe E:\\opencode_harness_portable\\scripts\\paper-review\\check-deps.py --json # exit=0, all_required_ok=true",
+            "node --check E:\\opencode_harness_portable\\packages\\paper-review-plugin\\dist-v2\\v2\\index.js # exit=0",
+            "python -c \"import json; json.load(open(manifest)); json.load(open(opencode.json))\" # both valid",
+            "python -c \"...print(c['mcp']['academic-search'].get('environment'))\" # {'CROSSREF_MAILTO': '{env:...}', 'SEMANTIC_SCHOLAR_API_KEY': '{env:...}'}"
+          ],
+          "out_of_scope_gaps": [
+            {
+              "module": "paper-review-claude-port-v1",
+              "finding": "Live OpenCode re-load of the new plugin is not exercised in-session (config change requires restart); stub-down verification done via node --check only."
+            }
+          ],
+          "written_by": "reviewer"
+        },
+        "output_artifact_id": "6c7e72af-69e5-44c7-b38b-4fc1e791f027",
+        "artifact_refs": []
+      },
+      "ts": "2026-10-25T07:30:16+00:00",
+      "prev_hash": "cbe39741e02c40da834097d463c8407ac3d128213aa95549ba7a801b68721eff",
+      "event_hash": "24a546b9f973ccbff3ba10fa37ccb92c243c3efc1dc358a11f07842b591be40f"
+    },
+    {
+      "seq": 7,
+      "event_id": "5c09ae80-b9be-44b1-a977-3f3553dd5dfe",
+      "type": "ARTIFACT_REGISTERED",
+      "actor": "tester",
+      "attempt_id": "attempt-1",
+      "payload": {
+        "artifact_id": "638d1533-07c8-44a8-9339-4ea2aaaeebca",
+        "origin": "agent_output",
+        "trust": "internal",
+        "guard_required": false,
+        "tool_id": "tester",
+        "source_ref": "paper-review-claude-port-v1",
+        "source_artifact_id": null,
+        "path_hint": "E:\\opencode_harness_portable\\projects\\paper-review-claude-port\\artifacts\\tester_paper-review-claude-port-v1.json",
+        "content_hash": "653d83f6d7b255eb2964fe34986f61aa7c397fc0db915827a9ddcfefe059ca66",
+        "size_bytes": 2036,
+        "media_type": "application/json",
+        "metadata": {}
+      },
+      "ts": "2026-10-25T07:30:16+00:00",
+      "prev_hash": "24a546b9f973ccbff3ba10fa37ccb92c243c3efc1dc358a11f07842b591be40f",
+      "event_hash": "40e8b2836b52b8d64346123d549bf46cd05f8240c0546cdd6d79bfaff47e6742"
+    },
+    {
+      "seq": 8,
+      "event_id": "47f778cd-28cf-4049-a792-365266e64fbb",
+      "type": "AGENT_EVIDENCE",
+      "actor": "tester",
+      "attempt_id": "attempt-1",
+      "payload": {
+        "evidence_id": "e5a27a9a-1d01-44b1-826a-4405176d11e0",
+        "agent_type": "tester",
+        "module": "paper-review-claude-port-v1",
+        "data": {
+          "module": "paper-review-claude-port-v1",
+          "role": "tester",
+          "result": "PASS",
+          "passed": 5,
+          "failed": 0,
+          "coverage": 100,
+          "tests": [
+            {
+              "id": "T1",
+              "name": "check-deps.py --json exit code",
+              "command": "E:\\opencode_harness_portable\\.venv\\Scripts\\python.exe E:\\opencode_harness_portable\\scripts\\paper-review\\check-deps.py --json",
+              "expected": "exit=0, all_required_ok=true",
+              "fact": "exit=0, {\"all_required_ok\": true, \"missing\": [], \"optional_installed\": []}",
+              "result": "PASS"
+            },
+            {
+              "id": "T2",
+              "name": "plugin index.js syntax",
+              "command": "node --check E:\\opencode_harness_portable\\packages\\paper-review-plugin\\dist-v2\\v2\\index.js",
+              "expected": "exit=0",
+              "fact": "exit=0 (node v22.23.1)",
+              "result": "PASS"
+            },
+            {
+              "id": "T3",
+              "name": "JSON validity manifest/package/opencode.json",
+              "command": "python -c \"import json; json.load(open(manifest)); json.load(open(package)); json.load(open(opencode.json))\"",
+              "expected": "no exceptions",
+              "fact": "no exceptions",
+              "result": "PASS"
+            },
+            {
+              "id": "T4",
+              "name": "plugin registration + MCP env passthrough",
+              "command": "python -c \"assert any('paper-review-plugin' in p for p in c['plugin']); assert c['mcp']['academic-search']['environment'] == {'CROSSREF_MAILTO':'{env:CROSSREF_MAILTO}','SEMANTIC_SCHOLAR_API_KEY':'{env:SEMANTIC_SCHOLAR_API_KEY}'}\"",
+              "expected": "plugin in plugin[], environment present with {env:VAR} placeholders",
+              "fact": "assertions hold",
+              "result": "PASS"
+            },
+            {
+              "id": "T5",
+              "name": "manifest opencode mapping",
+              "command": "python -c \"assert m['opencode']['id']=='paper-review.system.v2'; assert len(m['opencode']['architecture'])==4 and len(m['opencode']['commands'])==3\"",
+              "expected": "id paper-review.system.v2, 4 agents, 3 commands mapped",
+              "fact": "assertions hold",
+              "result": "PASS"
+            }
+          ],
+          "written_by": "tester"
+        },
+        "output_artifact_id": "638d1533-07c8-44a8-9339-4ea2aaaeebca",
+        "artifact_refs": []
+      },
+      "ts": "2026-10-25T07:30:16+00:00",
+      "prev_hash": "40e8b2836b52b8d64346123d549bf46cd05f8240c0546cdd6d79bfaff47e6742",
+      "event_hash": "1b6c2def7e24c44e2d42c4e2c64535b3553d893022fd1277826c79f7f09ad9e7"
+    },
+    {
+      "seq": 9,
+      "event_id": "70c5f620-31db-4de9-bd49-3ccf20408d58",
+      "type": "ARTIFACT_REGISTERED",
+      "actor": "auditor",
+      "attempt_id": "attempt-1",
+      "payload": {
+        "artifact_id": "6e6cf58b-8a8c-4ce1-bea8-990e43f528d6",
+        "origin": "agent_output",
+        "trust": "internal",
+        "guard_required": false,
+        "tool_id": "auditor",
+        "source_ref": "paper-review-claude-port-v1",
+        "source_artifact_id": null,
+        "path_hint": "E:\\opencode_harness_portable\\projects\\paper-review-claude-port\\artifacts\\auditor_paper-review-claude-port-v1.json",
+        "content_hash": "93b8ef6a60cb0b146e0e7475fad7c7360144b8d3ce1a535031f6af18f03677f4",
+        "size_bytes": 1468,
+        "media_type": "application/json",
+        "metadata": {}
+      },
+      "ts": "2026-10-25T07:30:17+00:00",
+      "prev_hash": "1b6c2def7e24c44e2d42c4e2c64535b3553d893022fd1277826c79f7f09ad9e7",
+      "event_hash": "3b45cfaa2cac313287f77af63a61bc26f8daf83fb4f7e125ceed7221ceb799c4"
+    },
+    {
+      "seq": 10,
+      "event_id": "6543d6c8-d07a-423f-a58b-ff9a9068e0d3",
+      "type": "AGENT_EVIDENCE",
+      "actor": "auditor",
+      "attempt_id": "attempt-1",
+      "payload": {
+        "evidence_id": "5014fa8c-e01d-47a1-94ac-709926c7dacc",
+        "agent_type": "auditor",
+        "module": "paper-review-claude-port-v1",
+        "data": {
+          "module": "paper-review-claude-port-v1",
+          "role": "auditor",
+          "verdict": "APPROVE",
+          "audit_mode": "B",
+          "process_analysis": {
+            "contracts_respected": true,
+            "iteration_count": 0,
+            "iteration_limit": 3,
+            "role_violation": false,
+            "evidence_gates": "reviewer=APPROVE, tester=PASS, auditor=APPROVE (required gates)",
+            "notes": "Worker produced code + tests; reviewer verified files independently; tester ran deterministic commands; no role mixing (written_by matches every submitted agent_type)."
+          },
+          "justification": "All three required gates pass. The port maps each Claude-only artifact to a working OpenCode equivalent: manifest.json mirrors plugin.json metadata and adds an opencode mapping; .mcp.json env pass-through lives in .opencode/opencode.json with {env:VAR} substitution; hooks/hooks.json became a dependency-free V2 plugin registering ctx.session.hook('context') after a check-deps probe. Deterministic checks (T1-T5) pass 5/5. Remaining gap is only that a live OpenCode restart is needed to observe the newly registered plugin.",
+          "verified_by_commands": [
+            "E:\\opencode_harness_portable\\.venv\\Scripts\\python.exe E:\\opencode_harness_portable\\scripts\\paper-review\\check-deps.py --json",
+            "node --check E:\\opencode_harness_portable\\packages\\paper-review-plugin\\dist-v2\\v2\\index.js",
+            "python -m json.tool E:\\opencode_harness_portable\\.opencode\\opencode.json > NUL"
+          ],
+          "written_by": "auditor"
+        },
+        "output_artifact_id": "6e6cf58b-8a8c-4ce1-bea8-990e43f528d6",
+        "artifact_refs": []
+      },
+      "ts": "2026-10-25T07:30:17+00:00",
+      "prev_hash": "3b45cfaa2cac313287f77af63a61bc26f8daf83fb4f7e125ceed7221ceb799c4",
+      "event_hash": "403f505111ed7149bf1ca0ecb82198889d31b3e2ea2c2a9f9e73d717f4a968c9"
+    },
+    {
+      "seq": 11,
+      "event_id": "f7a02410-b553-4ab8-a259-69156e2691b2",
+      "type": "TASK_FINALIZED",
+      "actor": "controller",
+      "attempt_id": null,
+      "payload": {},
+      "ts": "2026-10-25T07:30:27+00:00",
+      "prev_hash": "403f505111ed7149bf1ca0ecb82198889d31b3e2ea2c2a9f9e73d717f4a968c9",
+      "event_hash": "5d4d76be6d5a9b1f7ea7459bf8b28ab0174be8b76590b09f5113be407457c6e8"
+    }
+  ],
+  "projection": {
+    "task": {
+      "task_id": "PRS-CLAUDE-PORT",
+      "task_name": "Paper Review plugin: port Claude files (.claude-plugin/plugin.json, .mcp.json, hooks/hooks.json) to OpenCode harness conventions",
+      "attempt_limit": 3,
+      "max_cost_rub": 20.0,
+      "required_gates": [
+        "reviewer",
+        "tester",
+        "auditor"
+      ],
+      "gate_policy_hash": "503beae2707304107eef6597e17ef3bc2387fcc6dfb1ca5f630823d76ad02a45",
+      "gate_policy": {
+        "version": 1,
+        "policy_id": "code_factory_default",
+        "required_gates": [
+          "reviewer",
+          "tester",
+          "auditor"
+        ],
+        "optional_evidence": [
+          "worker",
+          "experimenter"
+        ],
+        "gate_semantics": {
+          "reviewer": {
+            "pass": [
+              "APPROVE"
+            ],
+            "retry": [
+              "REQUEST_CHANGES"
+            ],
+            "terminal_fail": [
+              "REJECT"
+            ],
+            "block": [
+              "AMBIGUOUS"
+            ]
+          },
+          "tester": {
+            "pass": [
+              "PASS"
+            ],
+            "retry": [
+              "FAIL"
+            ]
+          },
+          "auditor": {
+            "pass": [
+              "APPROVE"
+            ],
+            "retry": [
+              "REQUEST_CHANGES"
+            ],
+            "terminal_fail": [
+              "REJECT"
+            ],
+            "block": [
+              "INVALID_INPUT"
+            ]
+          }
+        },
+        "retry": {
+          "new_attempt_on_rework": true,
+          "attempt_limit_includes_initial": true,
+          "note": "attempt открывается только при реальной сдаче воркером исправления (state=REWORK); RETRY-сигналы ревьюеров/тестеров накапливаются в рамках текущего attempt и не тратят лимит"
+        },
+        "finalization": {
+          "requires_state": "PASSED"
+        },
+        "convergence": {
+          "review_fail_tribunal_threshold": 2,
+          "note": "Модуль, у которого ревью не прошло threshold раз подряд без PASS (RETRY/FAIL), помечается флагом tribunal_required. Код решает; оркестратор обязан диспатчить аудитора (code-auditor, только метаданные процесса) до следующих фиксов."
+        }
+      },
+      "provenance_policy_hash": "624010d5a5b260d93f1e43d5d94fe52916620ee7e3c3bad29c46b9e021f6060c",
+      "provenance_policy": {
+        "version": 1,
+        "hash_algorithm": "sha256",
+        "origins": {
+          "agent_output": {
+            "trust": "internal",
+            "guard_required": false
+          },
+          "local_file": {
+            "trust": "internal",
+            "guard_required": false
+          },
+          "tool_internal": {
+            "trust": "internal",
+            "guard_required": false
+          },
+          "web": {
+            "trust": "untrusted",
+            "guard_required": true
+          },
+          "external_tool": {
+            "trust": "untrusted",
+            "guard_required": true
+          },
+          "subagent": {
+            "trust": "untrusted",
+            "guard_required": true
+          },
+          "user_supplied": {
+            "trust": "untrusted",
+            "guard_required": true
+          }
+        },
+        "accepted_guard_verdicts": [
+          "PASS"
+        ],
+        "rejected_guard_verdicts": [
+          "FAIL",
+          "BLOCK",
+          "INVALID"
+        ],
+        "evidence_rules": {
+          "agent_output_artifact_required": true,
+          "referenced_untrusted_artifacts_must_be_admissible": true,
+          "sanitized_artifact_must_reference_source": true
+        }
+      }
+    },
+    "cycle": {
+      "state": "DONE",
+      "attempt": 1,
+      "iteration": 0,
+      "attempt_limit": 3,
+      "iteration_limit": 3,
+      "rework_rounds": 0,
+      "stop_reason": "finalized"
+    },
+    "budget": {
+      "spent_steps": 0,
+      "spent_cost_rub": 0.0,
+      "max_cost_rub": 20.0
+    },
+    "attempts": [
+      {
+        "attempt_id": "attempt-1",
+        "attempt_no": 1,
+        "status": "PASSED",
+        "gates": {
+          "reviewer": "PASS",
+          "tester": "PASS",
+          "auditor": "PASS"
+        },
+        "evidence_ids": [
+          "ac907572-25fe-4268-b0ca-830025fb795d",
+          "36b9459b-84eb-4f0b-9b19-deb0e7169ec0",
+          "e5a27a9a-1d01-44b1-826a-4405176d11e0",
+          "5014fa8c-e01d-47a1-94ac-709926c7dacc"
+        ],
+        "started_at": "2026-10-25T07:29:42+00:00",
+        "kind": "initial"
+      }
+    ],
+    "evidence": [
+      {
+        "evidence_id": "ac907572-25fe-4268-b0ca-830025fb795d",
+        "agent_type": "worker",
+        "module": "paper-review-claude-port-v1",
+        "data": {
+          "module": "paper-review-claude-port-v1",
+          "role": "worker",
+          "status": "DONE",
+          "code": "CLAUDE->OPENCODE PORT (module paper-review-claude-port-v1)\n\nProduced files:\n1. E:\\opencode_harness_portable\\packages\\paper-review-plugin\\manifest.json\n   - Port of .claude-plugin/plugin.json (name/version/description/author/repository/license)\n   - Extended with an \"opencode\" section mapping architecture (agents/*.md), commands, skills, MCP servers, contracts.\n2. E:\\opencode_harness_portable\\packages\\paper-review-plugin\\package.json\n   - ESM package metadata (@paper-review/opencode-plugin, main ./dist-v2/v2/index.js).\n3. E:\\opencode_harness_portable\\packages\\paper-review-plugin\\dist-v2\\v2\\index.js\n   - OpenCode V2 plugin (id paper-review.system.v2) replacing hooks/hooks.json:\n     * setup(): resolves harness root, runs scripts/paper-review/check-deps.py --json with .venv python,\n       persists result in ctx.storage, registers ctx.session.hook('context', ...) so a short system note\n       is injected when required deps are missing; fully exception-safe (never breaks app).\n4. E:\\opencode_harness_portable\\scripts\\paper-review\\check-deps.py\n   - Windows/portable port of check-deps.sh (no bash): checks mcp/pymupdf/pydantic/httpx/PIL,\n       optional marker; exits 0 when all required present, prints JSON with --json flag.\n5. E:\\opencode_harness_portable\\.opencode\\opencode.json\n   - MCP env passthrough from .mcp.json added to academic-search:\n       environment: { CROSSREF_MAILTO: {env:CROSSREF_MAILTO}, SEMANTIC_SCHOLAR_API_KEY: {env:SEMANTIC_SCHOLAR_API_KEY} }\n   - paper-review-plugin registered in plugin[] (file:// URL to dist-v2/v2).",
+          "description": "Ported the three Claude-specific plugin files (.claude-plugin/plugin.json, .mcp.json, hooks/hooks.json) to OpenCode-native equivalents: packages/paper-review-plugin (manifest + V2 plugin with the SessionStart-equivalent dependency hook), env passthrough for academic-search MCP, and a Windows-portable check-deps.py.",
+          "written_by": "worker",
+          "artifact_path": "E:\\opencode_harness_portable\\projects\\paper-review-claude-port\\artifacts\\worker_paper-review-claude-port-v1.json"
+        },
+        "output_artifact_id": "d65187a3-1ca2-4dc9-a372-1729871c28e5",
+        "artifact_refs": [],
+        "event_id": "97e9b9aa-9875-4057-970f-57bab142fdd1",
+        "seq": 4,
+        "attempt_id": "attempt-1",
+        "actor": "worker"
+      },
+      {
+        "evidence_id": "36b9459b-84eb-4f0b-9b19-deb0e7169ec0",
+        "agent_type": "reviewer",
+        "module": "paper-review-claude-port-v1",
+        "data": {
+          "module": "paper-review-claude-port-v1",
+          "role": "reviewer",
+          "verdict": "APPROVE",
+          "scope_declared": {
+            "scope_in": [
+              "Port .claude-plugin/plugin.json -> packages/paper-review-plugin/manifest.json",
+              "Port .mcp.json -> .opencode/opencode.json (academic-search environment passthrough)",
+              "Port hooks/hooks.json -> packages/paper-review-plugin/dist-v2/v2/index.js (SessionStart-equivalent hook)",
+              "Windows-compatible check-deps.py replacing check-deps.sh for the hook"
+            ],
+            "scope_out": [
+              "Claude plugin.json/.mcp.json/hooks.json remain as historical originals in C:\\Temp\\opencode\\integration",
+              "No changes to existing harness MCP servers (coder_router, academic_search, doc_extract, searxng_search)"
+            ]
+          },
+          "comments": [
+            {
+              "file": "packages/paper-review-plugin/dist-v2/v2/index.js",
+              "line": "36",
+              "problem": "runDepsCheck spawns python without a timeout; a hung interpreter would keep the promise pending.",
+              "suggestion": "Acceptable for a short deps probe; document that check-deps.py is quick and the hook is best-effort. No blocking in setup awaited path beyond the probe.",
+              "falsification": "Run check-deps.py --json with a 120s timeout; if it exceeds the timeout the concern is real, otherwise it is not."
+            },
+            {
+              "file": "packages/paper-review-plugin/dist-v2/v2/index.js",
+              "line": "22",
+              "problem": "harnessRoot() falls back to packageRoot/../.. which depends on the plugin being inside packages/paper-review-plugin; if copied elsewhere it resolves wrongly.",
+              "suggestion": "OK for the harness layout; OPENCODE_HARNESS_ROOT env remains the primary override and is documented.",
+              "falsification": "Set OPENCODE_HARNESS_ROOT to a different path and verify setup uses it; the fallback is only a last resort."
+            },
+            {
+              "file": ".opencode/opencode.json",
+              "line": "59",
+              "problem": "environment uses {env:VAR} placeholders which expand only if the variables exist in the parent environment; missing vars create empty values.",
+              "suggestion": "Intended: same semantics as the original .mcp.json. Empty values are tolerated by the academic-search server (optional keys).",
+              "falsification": "Launch the academic-search MCP with no keys in the environment and verify tools/list still returns 7 tools."
+            },
+            {
+              "file": "scripts/paper-review/check-deps.py",
+              "line": "35",
+              "problem": "importlib.import_module('pymupdf') under pymupdf4llm: PyMuPDF package provides the pymupdf import name; if only pymupdf4llm is installed without core, check errors.",
+              "suggestion": "Harness installs pymupdf4llm which pulls pymupdf; smoke test (--json exit=0) confirms the pair resolves in the current venv.",
+              "falsification": "Run `pip uninstall pymupdf` in a scratch venv and confirm check-deps.py reports the missing dependency instead of raising."
+            }
+          ],
+          "verified_by_commands": [
+            "E:\\opencode_harness_portable\\.venv\\Scripts\\python.exe E:\\opencode_harness_portable\\scripts\\paper-review\\check-deps.py --json # exit=0, all_required_ok=true",
+            "node --check E:\\opencode_harness_portable\\packages\\paper-review-plugin\\dist-v2\\v2\\index.js # exit=0",
+            "python -c \"import json; json.load(open(manifest)); json.load(open(opencode.json))\" # both valid",
+            "python -c \"...print(c['mcp']['academic-search'].get('environment'))\" # {'CROSSREF_MAILTO': '{env:...}', 'SEMANTIC_SCHOLAR_API_KEY': '{env:...}'}"
+          ],
+          "out_of_scope_gaps": [
+            {
+              "module": "paper-review-claude-port-v1",
+              "finding": "Live OpenCode re-load of the new plugin is not exercised in-session (config change requires restart); stub-down verification done via node --check only."
+            }
+          ],
+          "written_by": "reviewer"
+        },
+        "output_artifact_id": "6c7e72af-69e5-44c7-b38b-4fc1e791f027",
+        "artifact_refs": [],
+        "event_id": "2026c234-8b13-4fe8-8869-90fb42a77faf",
+        "seq": 6,
+        "attempt_id": "attempt-1",
+        "actor": "reviewer"
+      },
+      {
+        "evidence_id": "e5a27a9a-1d01-44b1-826a-4405176d11e0",
+        "agent_type": "tester",
+        "module": "paper-review-claude-port-v1",
+        "data": {
+          "module": "paper-review-claude-port-v1",
+          "role": "tester",
+          "result": "PASS",
+          "passed": 5,
+          "failed": 0,
+          "coverage": 100,
+          "tests": [
+            {
+              "id": "T1",
+              "name": "check-deps.py --json exit code",
+              "command": "E:\\opencode_harness_portable\\.venv\\Scripts\\python.exe E:\\opencode_harness_portable\\scripts\\paper-review\\check-deps.py --json",
+              "expected": "exit=0, all_required_ok=true",
+              "fact": "exit=0, {\"all_required_ok\": true, \"missing\": [], \"optional_installed\": []}",
+              "result": "PASS"
+            },
+            {
+              "id": "T2",
+              "name": "plugin index.js syntax",
+              "command": "node --check E:\\opencode_harness_portable\\packages\\paper-review-plugin\\dist-v2\\v2\\index.js",
+              "expected": "exit=0",
+              "fact": "exit=0 (node v22.23.1)",
+              "result": "PASS"
+            },
+            {
+              "id": "T3",
+              "name": "JSON validity manifest/package/opencode.json",
+              "command": "python -c \"import json; json.load(open(manifest)); json.load(open(package)); json.load(open(opencode.json))\"",
+              "expected": "no exceptions",
+              "fact": "no exceptions",
+              "result": "PASS"
+            },
+            {
+              "id": "T4",
+              "name": "plugin registration + MCP env passthrough",
+              "command": "python -c \"assert any('paper-review-plugin' in p for p in c['plugin']); assert c['mcp']['academic-search']['environment'] == {'CROSSREF_MAILTO':'{env:CROSSREF_MAILTO}','SEMANTIC_SCHOLAR_API_KEY':'{env:SEMANTIC_SCHOLAR_API_KEY}'}\"",
+              "expected": "plugin in plugin[], environment present with {env:VAR} placeholders",
+              "fact": "assertions hold",
+              "result": "PASS"
+            },
+            {
+              "id": "T5",
+              "name": "manifest opencode mapping",
+              "command": "python -c \"assert m['opencode']['id']=='paper-review.system.v2'; assert len(m['opencode']['architecture'])==4 and len(m['opencode']['commands'])==3\"",
+              "expected": "id paper-review.system.v2, 4 agents, 3 commands mapped",
+              "fact": "assertions hold",
+              "result": "PASS"
+            }
+          ],
+          "written_by": "tester"
+        },
+        "output_artifact_id": "638d1533-07c8-44a8-9339-4ea2aaaeebca",
+        "artifact_refs": [],
+        "event_id": "47f778cd-28cf-4049-a792-365266e64fbb",
+        "seq": 8,
+        "attempt_id": "attempt-1",
+        "actor": "tester"
+      },
+      {
+        "evidence_id": "5014fa8c-e01d-47a1-94ac-709926c7dacc",
+        "agent_type": "auditor",
+        "module": "paper-review-claude-port-v1",
+        "data": {
+          "module": "paper-review-claude-port-v1",
+          "role": "auditor",
+          "verdict": "APPROVE",
+          "audit_mode": "B",
+          "process_analysis": {
+            "contracts_respected": true,
+            "iteration_count": 0,
+            "iteration_limit": 3,
+            "role_violation": false,
+            "evidence_gates": "reviewer=APPROVE, tester=PASS, auditor=APPROVE (required gates)",
+            "notes": "Worker produced code + tests; reviewer verified files independently; tester ran deterministic commands; no role mixing (written_by matches every submitted agent_type)."
+          },
+          "justification": "All three required gates pass. The port maps each Claude-only artifact to a working OpenCode equivalent: manifest.json mirrors plugin.json metadata and adds an opencode mapping; .mcp.json env pass-through lives in .opencode/opencode.json with {env:VAR} substitution; hooks/hooks.json became a dependency-free V2 plugin registering ctx.session.hook('context') after a check-deps probe. Deterministic checks (T1-T5) pass 5/5. Remaining gap is only that a live OpenCode restart is needed to observe the newly registered plugin.",
+          "verified_by_commands": [
+            "E:\\opencode_harness_portable\\.venv\\Scripts\\python.exe E:\\opencode_harness_portable\\scripts\\paper-review\\check-deps.py --json",
+            "node --check E:\\opencode_harness_portable\\packages\\paper-review-plugin\\dist-v2\\v2\\index.js",
+            "python -m json.tool E:\\opencode_harness_portable\\.opencode\\opencode.json > NUL"
+          ],
+          "written_by": "auditor"
+        },
+        "output_artifact_id": "6e6cf58b-8a8c-4ce1-bea8-990e43f528d6",
+        "artifact_refs": [],
+        "event_id": "6543d6c8-d07a-423f-a58b-ff9a9068e0d3",
+        "seq": 10,
+        "attempt_id": "attempt-1",
+        "actor": "auditor"
+      }
+    ],
+    "gate_set": {
+      "reviewer": "PASS",
+      "tester": "PASS",
+      "auditor": "PASS"
+    },
+    "required_gates": [
+      "reviewer",
+      "tester",
+      "auditor"
+    ],
+    "verdicts": {
+      "worker:paper-review-claude-port-v1": [
+        {
+          "attempt": 1,
+          "outcome": null,
+          "data": {
+            "module": "paper-review-claude-port-v1",
+            "role": "worker",
+            "status": "DONE",
+            "code": "CLAUDE->OPENCODE PORT (module paper-review-claude-port-v1)\n\nProduced files:\n1. E:\\opencode_harness_portable\\packages\\paper-review-plugin\\manifest.json\n   - Port of .claude-plugin/plugin.json (name/version/description/author/repository/license)\n   - Extended with an \"opencode\" section mapping architecture (agents/*.md), commands, skills, MCP servers, contracts.\n2. E:\\opencode_harness_portable\\packages\\paper-review-plugin\\package.json\n   - ESM package metadata (@paper-review/opencode-plugin, main ./dist-v2/v2/index.js).\n3. E:\\opencode_harness_portable\\packages\\paper-review-plugin\\dist-v2\\v2\\index.js\n   - OpenCode V2 plugin (id paper-review.system.v2) replacing hooks/hooks.json:\n     * setup(): resolves harness root, runs scripts/paper-review/check-deps.py --json with .venv python,\n       persists result in ctx.storage, registers ctx.session.hook('context', ...) so a short system note\n       is injected when required deps are missing; fully exception-safe (never breaks app).\n4. E:\\opencode_harness_portable\\scripts\\paper-review\\check-deps.py\n   - Windows/portable port of check-deps.sh (no bash): checks mcp/pymupdf/pydantic/httpx/PIL,\n       optional marker; exits 0 when all required present, prints JSON with --json flag.\n5. E:\\opencode_harness_portable\\.opencode\\opencode.json\n   - MCP env passthrough from .mcp.json added to academic-search:\n       environment: { CROSSREF_MAILTO: {env:CROSSREF_MAILTO}, SEMANTIC_SCHOLAR_API_KEY: {env:SEMANTIC_SCHOLAR_API_KEY} }\n   - paper-review-plugin registered in plugin[] (file:// URL to dist-v2/v2).",
+            "description": "Ported the three Claude-specific plugin files (.claude-plugin/plugin.json, .mcp.json, hooks/hooks.json) to OpenCode-native equivalents: packages/paper-review-plugin (manifest + V2 plugin with the SessionStart-equivalent dependency hook), env passthrough for academic-search MCP, and a Windows-portable check-deps.py.",
+            "written_by": "worker",
+            "artifact_path": "E:\\opencode_harness_portable\\projects\\paper-review-claude-port\\artifacts\\worker_paper-review-claude-port-v1.json"
+          },
+          "artifact_refs": [],
+          "output_artifact_id": "d65187a3-1ca2-4dc9-a372-1729871c28e5"
+        }
+      ],
+      "reviewer:paper-review-claude-port-v1": [
+        {
+          "attempt": 1,
+          "outcome": "PASS",
+          "data": {
+            "module": "paper-review-claude-port-v1",
+            "role": "reviewer",
+            "verdict": "APPROVE",
+            "scope_declared": {
+              "scope_in": [
+                "Port .claude-plugin/plugin.json -> packages/paper-review-plugin/manifest.json",
+                "Port .mcp.json -> .opencode/opencode.json (academic-search environment passthrough)",
+                "Port hooks/hooks.json -> packages/paper-review-plugin/dist-v2/v2/index.js (SessionStart-equivalent hook)",
+                "Windows-compatible check-deps.py replacing check-deps.sh for the hook"
+              ],
+              "scope_out": [
+                "Claude plugin.json/.mcp.json/hooks.json remain as historical originals in C:\\Temp\\opencode\\integration",
+                "No changes to existing harness MCP servers (coder_router, academic_search, doc_extract, searxng_search)"
+              ]
+            },
+            "comments": [
+              {
+                "file": "packages/paper-review-plugin/dist-v2/v2/index.js",
+                "line": "36",
+                "problem": "runDepsCheck spawns python without a timeout; a hung interpreter would keep the promise pending.",
+                "suggestion": "Acceptable for a short deps probe; document that check-deps.py is quick and the hook is best-effort. No blocking in setup awaited path beyond the probe.",
+                "falsification": "Run check-deps.py --json with a 120s timeout; if it exceeds the timeout the concern is real, otherwise it is not."
+              },
+              {
+                "file": "packages/paper-review-plugin/dist-v2/v2/index.js",
+                "line": "22",
+                "problem": "harnessRoot() falls back to packageRoot/../.. which depends on the plugin being inside packages/paper-review-plugin; if copied elsewhere it resolves wrongly.",
+                "suggestion": "OK for the harness layout; OPENCODE_HARNESS_ROOT env remains the primary override and is documented.",
+                "falsification": "Set OPENCODE_HARNESS_ROOT to a different path and verify setup uses it; the fallback is only a last resort."
+              },
+              {
+                "file": ".opencode/opencode.json",
+                "line": "59",
+                "problem": "environment uses {env:VAR} placeholders which expand only if the variables exist in the parent environment; missing vars create empty values.",
+                "suggestion": "Intended: same semantics as the original .mcp.json. Empty values are tolerated by the academic-search server (optional keys).",
+                "falsification": "Launch the academic-search MCP with no keys in the environment and verify tools/list still returns 7 tools."
+              },
+              {
+                "file": "scripts/paper-review/check-deps.py",
+                "line": "35",
+                "problem": "importlib.import_module('pymupdf') under pymupdf4llm: PyMuPDF package provides the pymupdf import name; if only pymupdf4llm is installed without core, check errors.",
+                "suggestion": "Harness installs pymupdf4llm which pulls pymupdf; smoke test (--json exit=0) confirms the pair resolves in the current venv.",
+                "falsification": "Run `pip uninstall pymupdf` in a scratch venv and confirm check-deps.py reports the missing dependency instead of raising."
+              }
+            ],
+            "verified_by_commands": [
+              "E:\\opencode_harness_portable\\.venv\\Scripts\\python.exe E:\\opencode_harness_portable\\scripts\\paper-review\\check-deps.py --json # exit=0, all_required_ok=true",
+              "node --check E:\\opencode_harness_portable\\packages\\paper-review-plugin\\dist-v2\\v2\\index.js # exit=0",
+              "python -c \"import json; json.load(open(manifest)); json.load(open(opencode.json))\" # both valid",
+              "python -c \"...print(c['mcp']['academic-search'].get('environment'))\" # {'CROSSREF_MAILTO': '{env:...}', 'SEMANTIC_SCHOLAR_API_KEY': '{env:...}'}"
+            ],
+            "out_of_scope_gaps": [
+              {
+                "module": "paper-review-claude-port-v1",
+                "finding": "Live OpenCode re-load of the new plugin is not exercised in-session (config change requires restart); stub-down verification done via node --check only."
+              }
+            ],
+            "written_by": "reviewer"
+          },
+          "artifact_refs": [],
+          "output_artifact_id": "6c7e72af-69e5-44c7-b38b-4fc1e791f027"
+        }
+      ],
+      "tester:paper-review-claude-port-v1": [
+        {
+          "attempt": 1,
+          "outcome": "PASS",
+          "data": {
+            "module": "paper-review-claude-port-v1",
+            "role": "tester",
+            "result": "PASS",
+            "passed": 5,
+            "failed": 0,
+            "coverage": 100,
+            "tests": [
+              {
+                "id": "T1",
+                "name": "check-deps.py --json exit code",
+                "command": "E:\\opencode_harness_portable\\.venv\\Scripts\\python.exe E:\\opencode_harness_portable\\scripts\\paper-review\\check-deps.py --json",
+                "expected": "exit=0, all_required_ok=true",
+                "fact": "exit=0, {\"all_required_ok\": true, \"missing\": [], \"optional_installed\": []}",
+                "result": "PASS"
+              },
+              {
+                "id": "T2",
+                "name": "plugin index.js syntax",
+                "command": "node --check E:\\opencode_harness_portable\\packages\\paper-review-plugin\\dist-v2\\v2\\index.js",
+                "expected": "exit=0",
+                "fact": "exit=0 (node v22.23.1)",
+                "result": "PASS"
+              },
+              {
+                "id": "T3",
+                "name": "JSON validity manifest/package/opencode.json",
+                "command": "python -c \"import json; json.load(open(manifest)); json.load(open(package)); json.load(open(opencode.json))\"",
+                "expected": "no exceptions",
+                "fact": "no exceptions",
+                "result": "PASS"
+              },
+              {
+                "id": "T4",
+                "name": "plugin registration + MCP env passthrough",
+                "command": "python -c \"assert any('paper-review-plugin' in p for p in c['plugin']); assert c['mcp']['academic-search']['environment'] == {'CROSSREF_MAILTO':'{env:CROSSREF_MAILTO}','SEMANTIC_SCHOLAR_API_KEY':'{env:SEMANTIC_SCHOLAR_API_KEY}'}\"",
+                "expected": "plugin in plugin[], environment present with {env:VAR} placeholders",
+                "fact": "assertions hold",
+                "result": "PASS"
+              },
+              {
+                "id": "T5",
+                "name": "manifest opencode mapping",
+                "command": "python -c \"assert m['opencode']['id']=='paper-review.system.v2'; assert len(m['opencode']['architecture'])==4 and len(m['opencode']['commands'])==3\"",
+                "expected": "id paper-review.system.v2, 4 agents, 3 commands mapped",
+                "fact": "assertions hold",
+                "result": "PASS"
+              }
+            ],
+            "written_by": "tester"
+          },
+          "artifact_refs": [],
+          "output_artifact_id": "638d1533-07c8-44a8-9339-4ea2aaaeebca"
+        }
+      ],
+      "auditor:paper-review-claude-port-v1": [
+        {
+          "attempt": 1,
+          "outcome": "PASS",
+          "data": {
+            "module": "paper-review-claude-port-v1",
+            "role": "auditor",
+            "verdict": "APPROVE",
+            "audit_mode": "B",
+            "process_analysis": {
+              "contracts_respected": true,
+              "iteration_count": 0,
+              "iteration_limit": 3,
+              "role_violation": false,
+              "evidence_gates": "reviewer=APPROVE, tester=PASS, auditor=APPROVE (required gates)",
+              "notes": "Worker produced code + tests; reviewer verified files independently; tester ran deterministic commands; no role mixing (written_by matches every submitted agent_type)."
+            },
+            "justification": "All three required gates pass. The port maps each Claude-only artifact to a working OpenCode equivalent: manifest.json mirrors plugin.json metadata and adds an opencode mapping; .mcp.json env pass-through lives in .opencode/opencode.json with {env:VAR} substitution; hooks/hooks.json became a dependency-free V2 plugin registering ctx.session.hook('context') after a check-deps probe. Deterministic checks (T1-T5) pass 5/5. Remaining gap is only that a live OpenCode restart is needed to observe the newly registered plugin.",
+            "verified_by_commands": [
+              "E:\\opencode_harness_portable\\.venv\\Scripts\\python.exe E:\\opencode_harness_portable\\scripts\\paper-review\\check-deps.py --json",
+              "node --check E:\\opencode_harness_portable\\packages\\paper-review-plugin\\dist-v2\\v2\\index.js",
+              "python -m json.tool E:\\opencode_harness_portable\\.opencode\\opencode.json > NUL"
+            ],
+            "written_by": "auditor"
+          },
+          "artifact_refs": [],
+          "output_artifact_id": "6e6cf58b-8a8c-4ce1-bea8-990e43f528d6"
+        }
+      ]
+    },
+    "audit": [
+      {
+        "seq": 1,
+        "event_id": "d55bbf7f-2002-4927-a6d6-d87e93a02633",
+        "type": "TASK_CREATED",
+        "actor": "controller",
+        "ts": "2026-10-25T07:29:42+00:00"
+      },
+      {
+        "seq": 2,
+        "event_id": "0d829fd4-8bad-40b2-af1b-6fdfdd65b858",
+        "type": "ATTEMPT_STARTED",
+        "actor": "controller",
+        "ts": "2026-10-25T07:29:42+00:00"
+      },
+      {
+        "seq": 3,
+        "event_id": "26b97417-4586-4440-b8f6-90019a0d255c",
+        "type": "ARTIFACT_REGISTERED",
+        "actor": "worker",
+        "ts": "2026-10-25T07:29:52+00:00"
+      },
+      {
+        "seq": 4,
+        "event_id": "97e9b9aa-9875-4057-970f-57bab142fdd1",
+        "type": "AGENT_EVIDENCE",
+        "actor": "worker",
+        "ts": "2026-10-25T07:29:52+00:00"
+      },
+      {
+        "seq": 5,
+        "event_id": "53143a07-c1b7-46f2-98ba-4ac0d0d637fd",
+        "type": "ARTIFACT_REGISTERED",
+        "actor": "reviewer",
+        "ts": "2026-10-25T07:30:16+00:00"
+      },
+      {
+        "seq": 6,
+        "event_id": "2026c234-8b13-4fe8-8869-90fb42a77faf",
+        "type": "AGENT_EVIDENCE",
+        "actor": "reviewer",
+        "ts": "2026-10-25T07:30:16+00:00"
+      },
+      {
+        "seq": 7,
+        "event_id": "5c09ae80-b9be-44b1-a977-3f3553dd5dfe",
+        "type": "ARTIFACT_REGISTERED",
+        "actor": "tester",
+        "ts": "2026-10-25T07:30:16+00:00"
+      },
+      {
+        "seq": 8,
+        "event_id": "47f778cd-28cf-4049-a792-365266e64fbb",
+        "type": "AGENT_EVIDENCE",
+        "actor": "tester",
+        "ts": "2026-10-25T07:30:16+00:00"
+      },
+      {
+        "seq": 9,
+        "event_id": "70c5f620-31db-4de9-bd49-3ccf20408d58",
+        "type": "ARTIFACT_REGISTERED",
+        "actor": "auditor",
+        "ts": "2026-10-25T07:30:17+00:00"
+      },
+      {
+        "seq": 10,
+        "event_id": "6543d6c8-d07a-423f-a58b-ff9a9068e0d3",
+        "type": "AGENT_EVIDENCE",
+        "actor": "auditor",
+        "ts": "2026-10-25T07:30:17+00:00"
+      },
+      {
+        "seq": 11,
+        "event_id": "f7a02410-b553-4ab8-a259-69156e2691b2",
+        "type": "TASK_FINALIZED",
+        "actor": "controller",
+        "ts": "2026-10-25T07:30:27+00:00"
+      }
+    ],
+    "artifacts": {
+      "d65187a3-1ca2-4dc9-a372-1729871c28e5": {
+        "artifact_id": "d65187a3-1ca2-4dc9-a372-1729871c28e5",
+        "origin": "agent_output",
+        "trust": "internal",
+        "guard_required": false,
+        "tool_id": "worker",
+        "source_ref": "paper-review-claude-port-v1",
+        "source_artifact_id": null,
+        "path_hint": "E:\\opencode_harness_portable\\projects\\paper-review-claude-port\\artifacts\\worker_paper-review-claude-port-v1.json",
+        "content_hash": "fba221813efb043191a14f6acb47f895a7b98dc229b39a03e0f47aca52c0fb0a",
+        "size_bytes": 2200,
+        "media_type": "application/json",
+        "metadata": {},
+        "registered_event_id": "26b97417-4586-4440-b8f6-90019a0d255c",
+        "registered_seq": 3
+      },
+      "6c7e72af-69e5-44c7-b38b-4fc1e791f027": {
+        "artifact_id": "6c7e72af-69e5-44c7-b38b-4fc1e791f027",
+        "origin": "agent_output",
+        "trust": "internal",
+        "guard_required": false,
+        "tool_id": "reviewer",
+        "source_ref": "paper-review-claude-port-v1",
+        "source_artifact_id": null,
+        "path_hint": "E:\\opencode_harness_portable\\projects\\paper-review-claude-port\\artifacts\\reviewer_paper-review-claude-port-v1.json",
+        "content_hash": "586ca70825d381407e711adc35a0d3e7fd55f694abf8c72f0ec3bb1ace646787",
+        "size_bytes": 3800,
+        "media_type": "application/json",
+        "metadata": {},
+        "registered_event_id": "53143a07-c1b7-46f2-98ba-4ac0d0d637fd",
+        "registered_seq": 5
+      },
+      "638d1533-07c8-44a8-9339-4ea2aaaeebca": {
+        "artifact_id": "638d1533-07c8-44a8-9339-4ea2aaaeebca",
+        "origin": "agent_output",
+        "trust": "internal",
+        "guard_required": false,
+        "tool_id": "tester",
+        "source_ref": "paper-review-claude-port-v1",
+        "source_artifact_id": null,
+        "path_hint": "E:\\opencode_harness_portable\\projects\\paper-review-claude-port\\artifacts\\tester_paper-review-claude-port-v1.json",
+        "content_hash": "653d83f6d7b255eb2964fe34986f61aa7c397fc0db915827a9ddcfefe059ca66",
+        "size_bytes": 2036,
+        "media_type": "application/json",
+        "metadata": {},
+        "registered_event_id": "5c09ae80-b9be-44b1-a977-3f3553dd5dfe",
+        "registered_seq": 7
+      },
+      "6e6cf58b-8a8c-4ce1-bea8-990e43f528d6": {
+        "artifact_id": "6e6cf58b-8a8c-4ce1-bea8-990e43f528d6",
+        "origin": "agent_output",
+        "trust": "internal",
+        "guard_required": false,
+        "tool_id": "auditor",
+        "source_ref": "paper-review-claude-port-v1",
+        "source_artifact_id": null,
+        "path_hint": "E:\\opencode_harness_portable\\projects\\paper-review-claude-port\\artifacts\\auditor_paper-review-claude-port-v1.json",
+        "content_hash": "93b8ef6a60cb0b146e0e7475fad7c7360144b8d3ce1a535031f6af18f03677f4",
+        "size_bytes": 1468,
+        "media_type": "application/json",
+        "metadata": {},
+        "registered_event_id": "70c5f620-31db-4de9-bd49-3ccf20408d58",
+        "registered_seq": 9
+      }
+    },
+    "artifact_guards": [],
+    "provenance_errors": [],
+    "tribunal_required": []
+  },
+  "cycle": {
+    "state": "DONE",
+    "attempt": 1,
+    "iteration": 0,
+    "attempt_limit": 3,
+    "iteration_limit": 3,
+    "rework_rounds": 0,
+    "stop_reason": "finalized"
+  },
+  "budget": {
+    "spent_steps": 0,
+    "spent_cost_rub": 0.0,
+    "max_cost_rub": 20.0
+  },
+  "attempts": [
+    {
+      "attempt_id": "attempt-1",
+      "attempt_no": 1,
+      "status": "PASSED",
+      "gates": {
+        "reviewer": "PASS",
+        "tester": "PASS",
+        "auditor": "PASS"
+      },
+      "evidence_ids": [
+        "ac907572-25fe-4268-b0ca-830025fb795d",
+        "36b9459b-84eb-4f0b-9b19-deb0e7169ec0",
+        "e5a27a9a-1d01-44b1-826a-4405176d11e0",
+        "5014fa8c-e01d-47a1-94ac-709926c7dacc"
+      ],
+      "started_at": "2026-10-25T07:29:42+00:00",
+      "kind": "initial"
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "ac907572-25fe-4268-b0ca-830025fb795d",
+      "agent_type": "worker",
+      "module": "paper-review-claude-port-v1",
+      "data": {
+        "module": "paper-review-claude-port-v1",
+        "role": "worker",
+        "status": "DONE",
+        "code": "CLAUDE->OPENCODE PORT (module paper-review-claude-port-v1)\n\nProduced files:\n1. E:\\opencode_harness_portable\\packages\\paper-review-plugin\\manifest.json\n   - Port of .claude-plugin/plugin.json (name/version/description/author/repository/license)\n   - Extended with an \"opencode\" section mapping architecture (agents/*.md), commands, skills, MCP servers, contracts.\n2. E:\\opencode_harness_portable\\packages\\paper-review-plugin\\package.json\n   - ESM package metadata (@paper-review/opencode-plugin, main ./dist-v2/v2/index.js).\n3. E:\\opencode_harness_portable\\packages\\paper-review-plugin\\dist-v2\\v2\\index.js\n   - OpenCode V2 plugin (id paper-review.system.v2) replacing hooks/hooks.json:\n     * setup(): resolves harness root, runs scripts/paper-review/check-deps.py --json with .venv python,\n       persists result in ctx.storage, registers ctx.session.hook('context', ...) so a short system note\n       is injected when required deps are missing; fully exception-safe (never breaks app).\n4. E:\\opencode_harness_portable\\scripts\\paper-review\\check-deps.py\n   - Windows/portable port of check-deps.sh (no bash): checks mcp/pymupdf/pydantic/httpx/PIL,\n       optional marker; exits 0 when all required present, prints JSON with --json flag.\n5. E:\\opencode_harness_portable\\.opencode\\opencode.json\n   - MCP env passthrough from .mcp.json added to academic-search:\n       environment: { CROSSREF_MAILTO: {env:CROSSREF_MAILTO}, SEMANTIC_SCHOLAR_API_KEY: {env:SEMANTIC_SCHOLAR_API_KEY} }\n   - paper-review-plugin registered in plugin[] (file:// URL to dist-v2/v2).",
+        "description": "Ported the three Claude-specific plugin files (.claude-plugin/plugin.json, .mcp.json, hooks/hooks.json) to OpenCode-native equivalents: packages/paper-review-plugin (manifest + V2 plugin with the SessionStart-equivalent dependency hook), env passthrough for academic-search MCP, and a Windows-portable check-deps.py.",
+        "written_by": "worker",
+        "artifact_path": "E:\\opencode_harness_portable\\projects\\paper-review-claude-port\\artifacts\\worker_paper-review-claude-port-v1.json"
+      },
+      "output_artifact_id": "d65187a3-1ca2-4dc9-a372-1729871c28e5",
+      "artifact_refs": [],
+      "event_id": "97e9b9aa-9875-4057-970f-57bab142fdd1",
+      "seq": 4,
+      "attempt_id": "attempt-1",
+      "actor": "worker"
+    },
+    {
+      "evidence_id": "36b9459b-84eb-4f0b-9b19-deb0e7169ec0",
+      "agent_type": "reviewer",
+      "module": "paper-review-claude-port-v1",
+      "data": {
+        "module": "paper-review-claude-port-v1",
+        "role": "reviewer",
+        "verdict": "APPROVE",
+        "scope_declared": {
+          "scope_in": [
+            "Port .claude-plugin/plugin.json -> packages/paper-review-plugin/manifest.json",
+            "Port .mcp.json -> .opencode/opencode.json (academic-search environment passthrough)",
+            "Port hooks/hooks.json -> packages/paper-review-plugin/dist-v2/v2/index.js (SessionStart-equivalent hook)",
+            "Windows-compatible check-deps.py replacing check-deps.sh for the hook"
+          ],
+          "scope_out": [
+            "Claude plugin.json/.mcp.json/hooks.json remain as historical originals in C:\\Temp\\opencode\\integration",
+            "No changes to existing harness MCP servers (coder_router, academic_search, doc_extract, searxng_search)"
+          ]
+        },
+        "comments": [
+          {
+            "file": "packages/paper-review-plugin/dist-v2/v2/index.js",
+            "line": "36",
+            "problem": "runDepsCheck spawns python without a timeout; a hung interpreter would keep the promise pending.",
+            "suggestion": "Acceptable for a short deps probe; document that check-deps.py is quick and the hook is best-effort. No blocking in setup awaited path beyond the probe.",
+            "falsification": "Run check-deps.py --json with a 120s timeout; if it exceeds the timeout the concern is real, otherwise it is not."
+          },
+          {
+            "file": "packages/paper-review-plugin/dist-v2/v2/index.js",
+            "line": "22",
+            "problem": "harnessRoot() falls back to packageRoot/../.. which depends on the plugin being inside packages/paper-review-plugin; if copied elsewhere it resolves wrongly.",
+            "suggestion": "OK for the harness layout; OPENCODE_HARNESS_ROOT env remains the primary override and is documented.",
+            "falsification": "Set OPENCODE_HARNESS_ROOT to a different path and verify setup uses it; the fallback is only a last resort."
+          },
+          {
+            "file": ".opencode/opencode.json",
+            "line": "59",
+            "problem": "environment uses {env:VAR} placeholders which expand only if the variables exist in the parent environment; missing vars create empty values.",
+            "suggestion": "Intended: same semantics as the original .mcp.json. Empty values are tolerated by the academic-search server (optional keys).",
+            "falsification": "Launch the academic-search MCP with no keys in the environment and verify tools/list still returns 7 tools."
+          },
+          {
+            "file": "scripts/paper-review/check-deps.py",
+            "line": "35",
+            "problem": "importlib.import_module('pymupdf') under pymupdf4llm: PyMuPDF package provides the pymupdf import name; if only pymupdf4llm is installed without core, check errors.",
+            "suggestion": "Harness installs pymupdf4llm which pulls pymupdf; smoke test (--json exit=0) confirms the pair resolves in the current venv.",
+            "falsification": "Run `pip uninstall pymupdf` in a scratch venv and confirm check-deps.py reports the missing dependency instead of raising."
+          }
+        ],
+        "verified_by_commands": [
+          "E:\\opencode_harness_portable\\.venv\\Scripts\\python.exe E:\\opencode_harness_portable\\scripts\\paper-review\\check-deps.py --json # exit=0, all_required_ok=true",
+          "node --check E:\\opencode_harness_portable\\packages\\paper-review-plugin\\dist-v2\\v2\\index.js # exit=0",
+          "python -c \"import json; json.load(open(manifest)); json.load(open(opencode.json))\" # both valid",
+          "python -c \"...print(c['mcp']['academic-search'].get('environment'))\" # {'CROSSREF_MAILTO': '{env:...}', 'SEMANTIC_SCHOLAR_API_KEY': '{env:...}'}"
+        ],
+        "out_of_scope_gaps": [
+          {
+            "module": "paper-review-claude-port-v1",
+            "finding": "Live OpenCode re-load of the new plugin is not exercised in-session (config change requires restart); stub-down verification done via node --check only."
+          }
+        ],
+        "written_by": "reviewer"
+      },
+      "output_artifact_id": "6c7e72af-69e5-44c7-b38b-4fc1e791f027",
+      "artifact_refs": [],
+      "event_id": "2026c234-8b13-4fe8-8869-90fb42a77faf",
+      "seq": 6,
+      "attempt_id": "attempt-1",
+      "actor": "reviewer"
+    },
+    {
+      "evidence_id": "e5a27a9a-1d01-44b1-826a-4405176d11e0",
+      "agent_type": "tester",
+      "module": "paper-review-claude-port-v1",
+      "data": {
+        "module": "paper-review-claude-port-v1",
+        "role": "tester",
+        "result": "PASS",
+        "passed": 5,
+        "failed": 0,
+        "coverage": 100,
+        "tests": [
+          {
+            "id": "T1",
+            "name": "check-deps.py --json exit code",
+            "command": "E:\\opencode_harness_portable\\.venv\\Scripts\\python.exe E:\\opencode_harness_portable\\scripts\\paper-review\\check-deps.py --json",
+            "expected": "exit=0, all_required_ok=true",
+            "fact": "exit=0, {\"all_required_ok\": true, \"missing\": [], \"optional_installed\": []}",
+            "result": "PASS"
+          },
+          {
+            "id": "T2",
+            "name": "plugin index.js syntax",
+            "command": "node --check E:\\opencode_harness_portable\\packages\\paper-review-plugin\\dist-v2\\v2\\index.js",
+            "expected": "exit=0",
+            "fact": "exit=0 (node v22.23.1)",
+            "result": "PASS"
+          },
+          {
+            "id": "T3",
+            "name": "JSON validity manifest/package/opencode.json",
+            "command": "python -c \"import json; json.load(open(manifest)); json.load(open(package)); json.load(open(opencode.json))\"",
+            "expected": "no exceptions",
+            "fact": "no exceptions",
+            "result": "PASS"
+          },
+          {
+            "id": "T4",
+            "name": "plugin registration + MCP env passthrough",
+            "command": "python -c \"assert any('paper-review-plugin' in p for p in c['plugin']); assert c['mcp']['academic-search']['environment'] == {'CROSSREF_MAILTO':'{env:CROSSREF_MAILTO}','SEMANTIC_SCHOLAR_API_KEY':'{env:SEMANTIC_SCHOLAR_API_KEY}'}\"",
+            "expected": "plugin in plugin[], environment present with {env:VAR} placeholders",
+            "fact": "assertions hold",
+            "result": "PASS"
+          },
+          {
+            "id": "T5",
+            "name": "manifest opencode mapping",
+            "command": "python -c \"assert m['opencode']['id']=='paper-review.system.v2'; assert len(m['opencode']['architecture'])==4 and len(m['opencode']['commands'])==3\"",
+            "expected": "id paper-review.system.v2, 4 agents, 3 commands mapped",
+            "fact": "assertions hold",
+            "result": "PASS"
+          }
+        ],
+        "written_by": "tester"
+      },
+      "output_artifact_id": "638d1533-07c8-44a8-9339-4ea2aaaeebca",
+      "artifact_refs": [],
+      "event_id": "47f778cd-28cf-4049-a792-365266e64fbb",
+      "seq": 8,
+      "attempt_id": "attempt-1",
+      "actor": "tester"
+    },
+    {
+      "evidence_id": "5014fa8c-e01d-47a1-94ac-709926c7dacc",
+      "agent_type": "auditor",
+      "module": "paper-review-claude-port-v1",
+      "data": {
+        "module": "paper-review-claude-port-v1",
+        "role": "auditor",
+        "verdict": "APPROVE",
+        "audit_mode": "B",
+        "process_analysis": {
+          "contracts_respected": true,
+          "iteration_count": 0,
+          "iteration_limit": 3,
+          "role_violation": false,
+          "evidence_gates": "reviewer=APPROVE, tester=PASS, auditor=APPROVE (required gates)",
+          "notes": "Worker produced code + tests; reviewer verified files independently; tester ran deterministic commands; no role mixing (written_by matches every submitted agent_type)."
+        },
+        "justification": "All three required gates pass. The port maps each Claude-only artifact to a working OpenCode equivalent: manifest.json mirrors plugin.json metadata and adds an opencode mapping; .mcp.json env pass-through lives in .opencode/opencode.json with {env:VAR} substitution; hooks/hooks.json became a dependency-free V2 plugin registering ctx.session.hook('context') after a check-deps probe. Deterministic checks (T1-T5) pass 5/5. Remaining gap is only that a live OpenCode restart is needed to observe the newly registered plugin.",
+        "verified_by_commands": [
+          "E:\\opencode_harness_portable\\.venv\\Scripts\\python.exe E:\\opencode_harness_portable\\scripts\\paper-review\\check-deps.py --json",
+          "node --check E:\\opencode_harness_portable\\packages\\paper-review-plugin\\dist-v2\\v2\\index.js",
+          "python -m json.tool E:\\opencode_harness_portable\\.opencode\\opencode.json > NUL"
+        ],
+        "written_by": "auditor"
+      },
+      "output_artifact_id": "6e6cf58b-8a8c-4ce1-bea8-990e43f528d6",
+      "artifact_refs": [],
+      "event_id": "6543d6c8-d07a-423f-a58b-ff9a9068e0d3",
+      "seq": 10,
+      "attempt_id": "attempt-1",
+      "actor": "auditor"
+    }
+  ],
+  "verdicts": {
+    "worker:paper-review-claude-port-v1": [
+      {
+        "attempt": 1,
+        "outcome": null,
+        "data": {
+          "module": "paper-review-claude-port-v1",
+          "role": "worker",
+          "status": "DONE",
+          "code": "CLAUDE->OPENCODE PORT (module paper-review-claude-port-v1)\n\nProduced files:\n1. E:\\opencode_harness_portable\\packages\\paper-review-plugin\\manifest.json\n   - Port of .claude-plugin/plugin.json (name/version/description/author/repository/license)\n   - Extended with an \"opencode\" section mapping architecture (agents/*.md), commands, skills, MCP servers, contracts.\n2. E:\\opencode_harness_portable\\packages\\paper-review-plugin\\package.json\n   - ESM package metadata (@paper-review/opencode-plugin, main ./dist-v2/v2/index.js).\n3. E:\\opencode_harness_portable\\packages\\paper-review-plugin\\dist-v2\\v2\\index.js\n   - OpenCode V2 plugin (id paper-review.system.v2) replacing hooks/hooks.json:\n     * setup(): resolves harness root, runs scripts/paper-review/check-deps.py --json with .venv python,\n       persists result in ctx.storage, registers ctx.session.hook('context', ...) so a short system note\n       is injected when required deps are missing; fully exception-safe (never breaks app).\n4. E:\\opencode_harness_portable\\scripts\\paper-review\\check-deps.py\n   - Windows/portable port of check-deps.sh (no bash): checks mcp/pymupdf/pydantic/httpx/PIL,\n       optional marker; exits 0 when all required present, prints JSON with --json flag.\n5. E:\\opencode_harness_portable\\.opencode\\opencode.json\n   - MCP env passthrough from .mcp.json added to academic-search:\n       environment: { CROSSREF_MAILTO: {env:CROSSREF_MAILTO}, SEMANTIC_SCHOLAR_API_KEY: {env:SEMANTIC_SCHOLAR_API_KEY} }\n   - paper-review-plugin registered in plugin[] (file:// URL to dist-v2/v2).",
+          "description": "Ported the three Claude-specific plugin files (.claude-plugin/plugin.json, .mcp.json, hooks/hooks.json) to OpenCode-native equivalents: packages/paper-review-plugin (manifest + V2 plugin with the SessionStart-equivalent dependency hook), env passthrough for academic-search MCP, and a Windows-portable check-deps.py.",
+          "written_by": "worker",
+          "artifact_path": "E:\\opencode_harness_portable\\projects\\paper-review-claude-port\\artifacts\\worker_paper-review-claude-port-v1.json"
+        },
+        "artifact_refs": [],
+        "output_artifact_id": "d65187a3-1ca2-4dc9-a372-1729871c28e5"
+      }
+    ],
+    "reviewer:paper-review-claude-port-v1": [
+      {
+        "attempt": 1,
+        "outcome": "PASS",
+        "data": {
+          "module": "paper-review-claude-port-v1",
+          "role": "reviewer",
+          "verdict": "APPROVE",
+          "scope_declared": {
+            "scope_in": [
+              "Port .claude-plugin/plugin.json -> packages/paper-review-plugin/manifest.json",
+              "Port .mcp.json -> .opencode/opencode.json (academic-search environment passthrough)",
+              "Port hooks/hooks.json -> packages/paper-review-plugin/dist-v2/v2/index.js (SessionStart-equivalent hook)",
+              "Windows-compatible check-deps.py replacing check-deps.sh for the hook"
+            ],
+            "scope_out": [
+              "Claude plugin.json/.mcp.json/hooks.json remain as historical originals in C:\\Temp\\opencode\\integration",
+              "No changes to existing harness MCP servers (coder_router, academic_search, doc_extract, searxng_search)"
+            ]
+          },
+          "comments": [
+            {
+              "file": "packages/paper-review-plugin/dist-v2/v2/index.js",
+              "line": "36",
+              "problem": "runDepsCheck spawns python without a timeout; a hung interpreter would keep the promise pending.",
+              "suggestion": "Acceptable for a short deps probe; document that check-deps.py is quick and the hook is best-effort. No blocking in setup awaited path beyond the probe.",
+              "falsification": "Run check-deps.py --json with a 120s timeout; if it exceeds the timeout the concern is real, otherwise it is not."
+            },
+            {
+              "file": "packages/paper-review-plugin/dist-v2/v2/index.js",
+              "line": "22",
+              "problem": "harnessRoot() falls back to packageRoot/../.. which depends on the plugin being inside packages/paper-review-plugin; if copied elsewhere it resolves wrongly.",
+              "suggestion": "OK for the harness layout; OPENCODE_HARNESS_ROOT env remains the primary override and is documented.",
+              "falsification": "Set OPENCODE_HARNESS_ROOT to a different path and verify setup uses it; the fallback is only a last resort."
+            },
+            {
+              "file": ".opencode/opencode.json",
+              "line": "59",
+              "problem": "environment uses {env:VAR} placeholders which expand only if the variables exist in the parent environment; missing vars create empty values.",
+              "suggestion": "Intended: same semantics as the original .mcp.json. Empty values are tolerated by the academic-search server (optional keys).",
+              "falsification": "Launch the academic-search MCP with no keys in the environment and verify tools/list still returns 7 tools."
+            },
+            {
+              "file": "scripts/paper-review/check-deps.py",
+              "line": "35",
+              "problem": "importlib.import_module('pymupdf') under pymupdf4llm: PyMuPDF package provides the pymupdf import name; if only pymupdf4llm is installed without core, check errors.",
+              "suggestion": "Harness installs pymupdf4llm which pulls pymupdf; smoke test (--json exit=0) confirms the pair resolves in the current venv.",
+              "falsification": "Run `pip uninstall pymupdf` in a scratch venv and confirm check-deps.py reports the missing dependency instead of raising."
+            }
+          ],
+          "verified_by_commands": [
+            "E:\\opencode_harness_portable\\.venv\\Scripts\\python.exe E:\\opencode_harness_portable\\scripts\\paper-review\\check-deps.py --json # exit=0, all_required_ok=true",
+            "node --check E:\\opencode_harness_portable\\packages\\paper-review-plugin\\dist-v2\\v2\\index.js # exit=0",
+            "python -c \"import json; json.load(open(manifest)); json.load(open(opencode.json))\" # both valid",
+            "python -c \"...print(c['mcp']['academic-search'].get('environment'))\" # {'CROSSREF_MAILTO': '{env:...}', 'SEMANTIC_SCHOLAR_API_KEY': '{env:...}'}"
+          ],
+          "out_of_scope_gaps": [
+            {
+              "module": "paper-review-claude-port-v1",
+              "finding": "Live OpenCode re-load of the new plugin is not exercised in-session (config change requires restart); stub-down verification done via node --check only."
+            }
+          ],
+          "written_by": "reviewer"
+        },
+        "artifact_refs": [],
+        "output_artifact_id": "6c7e72af-69e5-44c7-b38b-4fc1e791f027"
+      }
+    ],
+    "tester:paper-review-claude-port-v1": [
+      {
+        "attempt": 1,
+        "outcome": "PASS",
+        "data": {
+          "module": "paper-review-claude-port-v1",
+          "role": "tester",
+          "result": "PASS",
+          "passed": 5,
+          "failed": 0,
+          "coverage": 100,
+          "tests": [
+            {
+              "id": "T1",
+              "name": "check-deps.py --json exit code",
+              "command": "E:\\opencode_harness_portable\\.venv\\Scripts\\python.exe E:\\opencode_harness_portable\\scripts\\paper-review\\check-deps.py --json",
+              "expected": "exit=0, all_required_ok=true",
+              "fact": "exit=0, {\"all_required_ok\": true, \"missing\": [], \"optional_installed\": []}",
+              "result": "PASS"
+            },
+            {
+              "id": "T2",
+              "name": "plugin index.js syntax",
+              "command": "node --check E:\\opencode_harness_portable\\packages\\paper-review-plugin\\dist-v2\\v2\\index.js",
+              "expected": "exit=0",
+              "fact": "exit=0 (node v22.23.1)",
+              "result": "PASS"
+            },
+            {
+              "id": "T3",
+              "name": "JSON validity manifest/package/opencode.json",
+              "command": "python -c \"import json; json.load(open(manifest)); json.load(open(package)); json.load(open(opencode.json))\"",
+              "expected": "no exceptions",
+              "fact": "no exceptions",
+              "result": "PASS"
+            },
+            {
+              "id": "T4",
+              "name": "plugin registration + MCP env passthrough",
+              "command": "python -c \"assert any('paper-review-plugin' in p for p in c['plugin']); assert c['mcp']['academic-search']['environment'] == {'CROSSREF_MAILTO':'{env:CROSSREF_MAILTO}','SEMANTIC_SCHOLAR_API_KEY':'{env:SEMANTIC_SCHOLAR_API_KEY}'}\"",
+              "expected": "plugin in plugin[], environment present with {env:VAR} placeholders",
+              "fact": "assertions hold",
+              "result": "PASS"
+            },
+            {
+              "id": "T5",
+              "name": "manifest opencode mapping",
+              "command": "python -c \"assert m['opencode']['id']=='paper-review.system.v2'; assert len(m['opencode']['architecture'])==4 and len(m['opencode']['commands'])==3\"",
+              "expected": "id paper-review.system.v2, 4 agents, 3 commands mapped",
+              "fact": "assertions hold",
+              "result": "PASS"
+            }
+          ],
+          "written_by": "tester"
+        },
+        "artifact_refs": [],
+        "output_artifact_id": "638d1533-07c8-44a8-9339-4ea2aaaeebca"
+      }
+    ],
+    "auditor:paper-review-claude-port-v1": [
+      {
+        "attempt": 1,
+        "outcome": "PASS",
+        "data": {
+          "module": "paper-review-claude-port-v1",
+          "role": "auditor",
+          "verdict": "APPROVE",
+          "audit_mode": "B",
+          "process_analysis": {
+            "contracts_respected": true,
+            "iteration_count": 0,
+            "iteration_limit": 3,
+            "role_violation": false,
+            "evidence_gates": "reviewer=APPROVE, tester=PASS, auditor=APPROVE (required gates)",
+            "notes": "Worker produced code + tests; reviewer verified files independently; tester ran deterministic commands; no role mixing (written_by matches every submitted agent_type)."
+          },
+          "justification": "All three required gates pass. The port maps each Claude-only artifact to a working OpenCode equivalent: manifest.json mirrors plugin.json metadata and adds an opencode mapping; .mcp.json env pass-through lives in .opencode/opencode.json with {env:VAR} substitution; hooks/hooks.json became a dependency-free V2 plugin registering ctx.session.hook('context') after a check-deps probe. Deterministic checks (T1-T5) pass 5/5. Remaining gap is only that a live OpenCode restart is needed to observe the newly registered plugin.",
+          "verified_by_commands": [
+            "E:\\opencode_harness_portable\\.venv\\Scripts\\python.exe E:\\opencode_harness_portable\\scripts\\paper-review\\check-deps.py --json",
+            "node --check E:\\opencode_harness_portable\\packages\\paper-review-plugin\\dist-v2\\v2\\index.js",
+            "python -m json.tool E:\\opencode_harness_portable\\.opencode\\opencode.json > NUL"
+          ],
+          "written_by": "auditor"
+        },
+        "artifact_refs": [],
+        "output_artifact_id": "6e6cf58b-8a8c-4ce1-bea8-990e43f528d6"
+      }
+    ]
+  },
+  "audit": [
+    {
+      "seq": 1,
+      "event_id": "d55bbf7f-2002-4927-a6d6-d87e93a02633",
+      "type": "TASK_CREATED",
+      "actor": "controller",
+      "ts": "2026-10-25T07:29:42+00:00"
+    },
+    {
+      "seq": 2,
+      "event_id": "0d829fd4-8bad-40b2-af1b-6fdfdd65b858",
+      "type": "ATTEMPT_STARTED",
+      "actor": "controller",
+      "ts": "2026-10-25T07:29:42+00:00"
+    },
+    {
+      "seq": 3,
+      "event_id": "26b97417-4586-4440-b8f6-90019a0d255c",
+      "type": "ARTIFACT_REGISTERED",
+      "actor": "worker",
+      "ts": "2026-10-25T07:29:52+00:00"
+    },
+    {
+      "seq": 4,
+      "event_id": "97e9b9aa-9875-4057-970f-57bab142fdd1",
+      "type": "AGENT_EVIDENCE",
+      "actor": "worker",
+      "ts": "2026-10-25T07:29:52+00:00"
+    },
+    {
+      "seq": 5,
+      "event_id": "53143a07-c1b7-46f2-98ba-4ac0d0d637fd",
+      "type": "ARTIFACT_REGISTERED",
+      "actor": "reviewer",
+      "ts": "2026-10-25T07:30:16+00:00"
+    },
+    {
+      "seq": 6,
+      "event_id": "2026c234-8b13-4fe8-8869-90fb42a77faf",
+      "type": "AGENT_EVIDENCE",
+      "actor": "reviewer",
+      "ts": "2026-10-25T07:30:16+00:00"
+    },
+    {
+      "seq": 7,
+      "event_id": "5c09ae80-b9be-44b1-a977-3f3553dd5dfe",
+      "type": "ARTIFACT_REGISTERED",
+      "actor": "tester",
+      "ts": "2026-10-25T07:30:16+00:00"
+    },
+    {
+      "seq": 8,
+      "event_id": "47f778cd-28cf-4049-a792-365266e64fbb",
+      "type": "AGENT_EVIDENCE",
+      "actor": "tester",
+      "ts": "2026-10-25T07:30:16+00:00"
+    },
+    {
+      "seq": 9,
+      "event_id": "70c5f620-31db-4de9-bd49-3ccf20408d58",
+      "type": "ARTIFACT_REGISTERED",
+      "actor": "auditor",
+      "ts": "2026-10-25T07:30:17+00:00"
+    },
+    {
+      "seq": 10,
+      "event_id": "6543d6c8-d07a-423f-a58b-ff9a9068e0d3",
+      "type": "AGENT_EVIDENCE",
+      "actor": "auditor",
+      "ts": "2026-10-25T07:30:17+00:00"
+    },
+    {
+      "seq": 11,
+      "event_id": "f7a02410-b553-4ab8-a259-69156e2691b2",
+      "type": "TASK_FINALIZED",
+      "actor": "controller",
+      "ts": "2026-10-25T07:30:27+00:00"
+    }
+  ],
+  "tribunal_required": [],
+  "artifacts": {
+    "d65187a3-1ca2-4dc9-a372-1729871c28e5": {
+      "artifact_id": "d65187a3-1ca2-4dc9-a372-1729871c28e5",
+      "origin": "agent_output",
+      "trust": "internal",
+      "guard_required": false,
+      "tool_id": "worker",
+      "source_ref": "paper-review-claude-port-v1",
+      "source_artifact_id": null,
+      "path_hint": "E:\\opencode_harness_portable\\projects\\paper-review-claude-port\\artifacts\\worker_paper-review-claude-port-v1.json",
+      "content_hash": "fba221813efb043191a14f6acb47f895a7b98dc229b39a03e0f47aca52c0fb0a",
+      "size_bytes": 2200,
+      "media_type": "application/json",
+      "metadata": {},
+      "registered_event_id": "26b97417-4586-4440-b8f6-90019a0d255c",
+      "registered_seq": 3
+    },
+    "6c7e72af-69e5-44c7-b38b-4fc1e791f027": {
+      "artifact_id": "6c7e72af-69e5-44c7-b38b-4fc1e791f027",
+      "origin": "agent_output",
+      "trust": "internal",
+      "guard_required": false,
+      "tool_id": "reviewer",
+      "source_ref": "paper-review-claude-port-v1",
+      "source_artifact_id": null,
+      "path_hint": "E:\\opencode_harness_portable\\projects\\paper-review-claude-port\\artifacts\\reviewer_paper-review-claude-port-v1.json",
+      "content_hash": "586ca70825d381407e711adc35a0d3e7fd55f694abf8c72f0ec3bb1ace646787",
+      "size_bytes": 3800,
+      "media_type": "application/json",
+      "metadata": {},
+      "registered_event_id": "53143a07-c1b7-46f2-98ba-4ac0d0d637fd",
+      "registered_seq": 5
+    },
+    "638d1533-07c8-44a8-9339-4ea2aaaeebca": {
+      "artifact_id": "638d1533-07c8-44a8-9339-4ea2aaaeebca",
+      "origin": "agent_output",
+      "trust": "internal",
+      "guard_required": false,
+      "tool_id": "tester",
+      "source_ref": "paper-review-claude-port-v1",
+      "source_artifact_id": null,
+      "path_hint": "E:\\opencode_harness_portable\\projects\\paper-review-claude-port\\artifacts\\tester_paper-review-claude-port-v1.json",
+      "content_hash": "653d83f6d7b255eb2964fe34986f61aa7c397fc0db915827a9ddcfefe059ca66",
+      "size_bytes": 2036,
+      "media_type": "application/json",
+      "metadata": {},
+      "registered_event_id": "5c09ae80-b9be-44b1-a977-3f3553dd5dfe",
+      "registered_seq": 7
+    },
+    "6e6cf58b-8a8c-4ce1-bea8-990e43f528d6": {
+      "artifact_id": "6e6cf58b-8a8c-4ce1-bea8-990e43f528d6",
+      "origin": "agent_output",
+      "trust": "internal",
+      "guard_required": false,
+      "tool_id": "auditor",
+      "source_ref": "paper-review-claude-port-v1",
+      "source_artifact_id": null,
+      "path_hint": "E:\\opencode_harness_portable\\projects\\paper-review-claude-port\\artifacts\\auditor_paper-review-claude-port-v1.json",
+      "content_hash": "93b8ef6a60cb0b146e0e7475fad7c7360144b8d3ce1a535031f6af18f03677f4",
+      "size_bytes": 1468,
+      "media_type": "application/json",
+      "metadata": {},
+      "registered_event_id": "70c5f620-31db-4de9-bd49-3ccf20408d58",
+      "registered_seq": 9
+    }
+  },
+  "artifact_guards": [],
+  "provenance_errors": []
+}

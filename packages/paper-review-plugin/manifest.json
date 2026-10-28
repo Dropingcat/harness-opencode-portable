@@ -1,0 +1,35 @@
+{
+  "name": "paper-review-plugin",
+  "display_name": "Paper Review System",
+  "version": "2.2.0",
+  "description": "Automated academic paper review system with venue-adaptive review, competitive paper analysis, rebuttal assistance, PDF parsing, reference verification, SOTA comparison, and 8-dimension scoring powered by 10 top-conference reviewer methodologies.",
+  "author": {
+    "name": "DaPeng",
+    "email": "li18838956649@gmail.com",
+    "url": "https://github.com/lidapengpeng"
+  },
+  "repository": "https://github.com/lidapengpeng/paper-review-system",
+  "license": "MIT",
+  "opencode": {
+    "id": "paper-review.system.v2",
+    "manager": "opencc/paper-review/000099",
+    "manager_comment": "Port of .claude-plugin/plugin.json -> OpenCode harness conventions",
+    "architecture": [
+      "agents/paper-analyzer.md",
+      "agents/paper-comparator.md",
+      "agents/reference-auditor.md",
+      "agents/technical-reviewer.md"
+    ],
+    "commands": [
+      ".opencode/commands/review-paper.md",
+      ".opencode/commands/pre-screen.md",
+      ".opencode/commands/rebuttal.md"
+    ],
+    "skills": ["skills/opencode-current/paper-review/"],
+    "mcp_servers": ["paper-parser", "academic-search"],
+    "contracts": [
+      "shared/paper-review-chain-contracts.md",
+      "shared/paper-review-orchestration.md"
+    ]
+  }
+}

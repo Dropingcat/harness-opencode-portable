@@ -1,0 +1,10 @@
+{
+  "agent": "technical-reviewer",
+  "categories": [
+    "CAT_EXPERIMENT",
+    "CAT_METRIC",
+    "CAT_BENCHMARK"
+  ],
+  "default_bucket": "research",
+  "capsule": "research-core"
+}

@@ -1,0 +1,9 @@
+{
+  "agent": "paper-analyzer",
+  "categories": [
+    "CAT_EXTRACTION",
+    "CAT_SOURCE"
+  ],
+  "default_bucket": "research",
+  "capsule": "research-core"
+}

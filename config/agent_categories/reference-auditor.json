@@ -1,0 +1,10 @@
+{
+  "agent": "reference-auditor",
+  "categories": [
+    "CAT_CITATION",
+    "CAT_VERDICT",
+    "CAT_SOURCE"
+  ],
+  "default_bucket": "research",
+  "capsule": "research-core"
+}

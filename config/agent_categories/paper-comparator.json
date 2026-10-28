@@ -1,0 +1,10 @@
+{
+  "agent": "paper-comparator",
+  "categories": [
+    "CAT_BENCHMARK",
+    "CAT_SEARCH",
+    "CAT_GAP"
+  ],
+  "default_bucket": "research",
+  "capsule": "research-core"
+}

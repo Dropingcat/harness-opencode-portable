@@ -1,0 +1,51 @@
+{
+  "module": "paper-review-claude-port-v1",
+  "role": "tester",
+  "result": "PASS",
+  "passed": 5,
+  "failed": 0,
+  "coverage": 100,
+  "tests": [
+    {
+      "id": "T1",
+      "name": "check-deps.py --json exit code",
+      "command": "E:\\opencode_harness_portable\\.venv\\Scripts\\python.exe E:\\opencode_harness_portable\\scripts\\paper-review\\check-deps.py --json",
+      "expected": "exit=0, all_required_ok=true",
+      "fact": "exit=0, {\"all_required_ok\": true, \"missing\": [], \"optional_installed\": []}",
+      "result": "PASS"
+    },
+    {
+      "id": "T2",
+      "name": "plugin index.js syntax",
+      "command": "node --check E:\\opencode_harness_portable\\packages\\paper-review-plugin\\dist-v2\\v2\\index.js",
+      "expected": "exit=0",
+      "fact": "exit=0 (node v22.23.1)",
+      "result": "PASS"
+    },
+    {
+      "id": "T3",
+      "name": "JSON validity manifest/package/opencode.json",
+      "command": "python -c \"import json; json.load(open(manifest)); json.load(open(package)); json.load(open(opencode.json))\"",
+      "expected": "no exceptions",
+      "fact": "no exceptions",
+      "result": "PASS"
+    },
+    {
+      "id": "T4",
+      "name": "plugin registration + MCP env passthrough",
+      "command": "python -c \"assert any('paper-review-plugin' in p for p in c['plugin']); assert c['mcp']['academic-search']['environment'] == {'CROSSREF_MAILTO':'{env:CROSSREF_MAILTO}','SEMANTIC_SCHOLAR_API_KEY':'{env:SEMANTIC_SCHOLAR_API_KEY}'}\"",
+      "expected": "plugin in plugin[], environment present with {env:VAR} placeholders",
+      "fact": "assertions hold",
+      "result": "PASS"
+    },
+    {
+      "id": "T5",
+      "name": "manifest opencode mapping",
+      "command": "python -c \"assert m['opencode']['id']=='paper-review.system.v2'; assert len(m['opencode']['architecture'])==4 and len(m['opencode']['commands'])==3\"",
+      "expected": "id paper-review.system.v2, 4 agents, 3 commands mapped",
+      "fact": "assertions hold",
+      "result": "PASS"
+    }
+  ],
+  "written_by": "tester"
+}
