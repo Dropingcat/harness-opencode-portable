@@ -1,0 +1,53 @@
+{
+  "schema": "superpowers-planning-verification/1.0",
+  "date": "2026-10-25",
+  "upstream_version": "7.0.1",
+  "adapter_version": "0.1.1",
+  "validated_location": "F:\\1",
+  "plugin_id": "harness.superpowers.planning",
+  "native_plugin_state": "active",
+  "checks": {
+    "adapter_tests_passed": 11,
+    "adapter_tests_failed": 0,
+    "adapter_tests_skipped": 0,
+    "syntax_check": "passed",
+    "deployed_entrypoint_import": "passed",
+    "upstream_skill_registration_test": "passed",
+    "upstream_session_bootstrap_test": "passed",
+    "upstream_bootstrap_caching_present_test": "passed",
+    "skills_before": 136,
+    "skills_after": 150,
+    "original_skills_lost": 0,
+    "original_skill_paths_replaced": 0,
+    "agent_count": 32,
+    "agent_definitions_and_permissions_unchanged": true,
+    "agent_definitions_sha256": "6c97267c762efe21a4f14ceb19f60921a7fbb3cdd576448763ba646fda55d946"
+  },
+  "review": {
+    "session_id": "ses_e8b377f2effejmEaqIPzMYmLCX",
+    "important_issue": "Concurrent identity-cache eviction could expose a verified child to upstream fail-open controller bootstrap",
+    "independently_reproduced_by_parent": true,
+    "regression_children": 257,
+    "controller_leaks_before_fix": 1,
+    "controller_leaks_after_fix": 0,
+    "fix": "Skip upstream controller hook immediately for a verified child in the current request",
+    "reviewer_verified_resolution": true,
+    "remaining_reported_blockers": 0
+  },
+  "hashes": {
+    "adapter_source_sha256": "fb4a516760c7e207d8cc85c59af920e17f94f782aa19a1f3e2e86cd209a7d9ad",
+    "global_entrypoint_sha256": "4806c48f7a7d8b367239527323cd728b846e93d4cc58d4ef580c1aa2446a8bd2",
+    "unchanged_upstream_plugin_sha256": "c979fe5a9fd6fddc9bc9730b34b25989f9d53939eed7d594c4564f6e47495f26"
+  },
+  "boundaries": {
+    "global_config_rewritten": false,
+    "agent_files_rewritten": false,
+    "service_restarted": false,
+    "automatic_dependency_updates": false,
+    "external_difficulty_detector_implemented": false,
+    "persistent_task_state_machine_implemented": false,
+    "all_roles_model_behavior_evaluated": false,
+    "unrelated_harness_full_suite_run": false,
+    "changes_committed": false
+  }
+}
