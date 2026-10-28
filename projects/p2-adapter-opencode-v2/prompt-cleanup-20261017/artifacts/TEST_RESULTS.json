@@ -1,0 +1,34 @@
+{
+  "task_id": "prompt-cleanup-20261017",
+  "status": "LOCAL_PROMPT_CLEANUP_VERIFIED",
+  "candidate_checks": {
+    "passed": 9,
+    "failed": 0
+  },
+  "live_checks": {
+    "passed": 9,
+    "failed": 0,
+    "exit_code": 0
+  },
+  "agent_regression": {
+    "passed": 6,
+    "failed": 0,
+    "exit_code": 0,
+    "command": "python -m unittest tests.test_agent_gen -v"
+  },
+  "agent_generator": {
+    "agents": 26,
+    "stale": [],
+    "exit_code": 0
+  },
+  "targeted_diff_check": "PASS",
+  "runtime_compilation": "PREEXISTING_STALE; not repaired; prompt-only projections patched",
+  "host_certification": "NOT_TESTED",
+  "independent_agent_gates": "NOT_RUN",
+  "scanner_invocations": 0,
+  "model_invocations": 0,
+  "global_config_changes": 0,
+  "candidate_removed": true,
+  "baseline_saved": "artifacts/baseline/",
+  "audit_unmodified": true
+}

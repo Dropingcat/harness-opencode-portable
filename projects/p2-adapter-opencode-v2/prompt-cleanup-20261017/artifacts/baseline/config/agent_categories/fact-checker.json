@@ -1,0 +1,10 @@
+{
+  "agent": "fact-checker",
+  "categories": [
+    "CAT_VERDICT",
+    "CAT_EVIDENCE",
+    "CAT_CAVEAT"
+  ],
+  "default_bucket": "research",
+  "capsule": "research-core"
+}

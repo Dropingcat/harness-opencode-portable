@@ -1,0 +1,28 @@
+{
+  "event_types": {
+    "step_start": 1,
+    "text": 1
+  },
+  "tool_metadata": [],
+  "jobs": [
+    {
+      "role": "reviewer",
+      "launched": false,
+      "state": "BLOCKED:precheck:child_inventory_incomplete",
+      "tokens": 0,
+      "observed_session_count": 0,
+      "usage_final_unverified": false
+    },
+    {
+      "role": "reviewer",
+      "launched": true,
+      "state": "BLOCKED:specialized_dispatch_not_observed",
+      "tokens": 2148,
+      "observed_session_count": 1,
+      "usage_final_unverified": false
+    }
+  ],
+  "total_tokens": 2148,
+  "admission": "NOT_GRANTED",
+  "text_content_included": false
+}

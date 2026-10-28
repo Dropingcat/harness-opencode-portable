@@ -1,0 +1,52 @@
+{
+  "kind": "native_permission_evaluation_only",
+  "model_calls_made": 0,
+  "rules_unchanged": true,
+  "tokens_before": 2148,
+  "tokens_after": 2148,
+  "cases": [
+    {
+      "case": "task_expected",
+      "action": "task",
+      "expected": "allow",
+      "observed": "allow",
+      "matches": true
+    },
+    {
+      "case": "task_other",
+      "action": "task",
+      "expected": "deny",
+      "observed": "deny",
+      "matches": true
+    },
+    {
+      "case": "read_source",
+      "action": "read",
+      "expected": "allow",
+      "observed": "allow",
+      "matches": true
+    },
+    {
+      "case": "read_secret",
+      "action": "read",
+      "expected": "deny",
+      "observed": "deny",
+      "matches": true
+    },
+    {
+      "case": "write_report",
+      "action": "edit",
+      "expected": "allow",
+      "observed": "allow",
+      "matches": true
+    },
+    {
+      "case": "write_source",
+      "action": "edit",
+      "expected": "deny",
+      "observed": "deny",
+      "matches": true
+    }
+  ],
+  "not_a_P2_admission": true
+}

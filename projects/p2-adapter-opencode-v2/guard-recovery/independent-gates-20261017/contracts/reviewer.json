@@ -1,0 +1,332 @@
+{
+  "role": "reviewer",
+  "primary": "code-reviewer-runner",
+  "specialized": "code-reviewer",
+  "candidate_commit": "892ecc3",
+  "workdir": "E:\\opencode_harness_portable\\projects\\p2-adapter-opencode-v2\\guard-recovery\\runs\\worktree",
+  "output": "E:\\opencode_harness_portable\\projects\\p2-adapter-opencode-v2\\guard-recovery\\independent-gates-20261017\\artifacts\\quarantine\\reviewer.json",
+  "prompt": "goal: Independently review guard-recovery checkpoint 892ecc3. This is local\nrecovery review, not production admission or a P2 host test.\n\nYou are the primary transport runner. Forward this entire contract once to the\nregistered code-reviewer via task. No general agent, no self-review in the\nprimary, no nested delegation or retries. If that role is unavailable, return\na transport error and stop. The specialized reviewer writes the JSON file.\n\ncontext:\n- Candidate root: E:\\opencode_harness_portable\\projects\\p2-adapter-opencode-v2\\guard-recovery\\runs\\worktree\n- Read ONLY these source/test files, the diff and the local process document:\n  guard/src/semantic_layer.py (configured_provider_names, ClassifierChain._build),\n  guard/src/artifact_guard.py (deadline, preflight, scan_artifact),\n  guard/src/opencode_transport.py (ClassificationReply and DTO context),\n  guard/src/native_semantic_transport.py,\n  scripts/tools/doc_guard.py,\n  tests/coder/test_guard_recovery.py,\n  tests/coder/test_native_classifier_recovery.py.\n- Last diff: E:\\opencode_harness_portable\\projects\\p2-adapter-opencode-v2\\guard-recovery\\independent-gates-20261017\\artifacts\\recovery-scope.patch\n- Scope in: disabled/unavailable routes cause no connection; no implicit local\n  route; caller deadline cannot expand config bound; no route fails promptly;\n  native explicit YES/NO, correlation, duplicate-message rejection; unchanged\n  P2/coverage/hash criteria and clearly disconnected real-host integration.\n- Scope out: actual OpenCode host wiring, other branches, general repository\n  cleanup, styling, legacy unrelated functions, process acceptance.\n- No previous reviewer verdict is supplied. Form an independent judgement.\n\noutput: Write E:\\opencode_harness_portable\\projects\\p2-adapter-opencode-v2\\guard-recovery\\independent-gates-20261017\\artifacts\\quarantine\\reviewer.json as UTF-8 JSON (no BOM), then return a short status.\nSchema: {module:\"guard-recovery\",verdict:\"APPROVE|REQUEST_CHANGES|REJECT\",\ncomments:[{file,line,problem,suggestion,falsification}],\nscope_declared:{scope_in:[],scope_out:[]},out_of_scope_gaps:[],written_by:\"code-reviewer\"}.\nPrioritize concrete safety/correctness defects. Each comment must cite the\nrelevant changed file/line and an observation that would falsify it. Do not\ninvent defects or hide out-of-scope gaps in blocking comments.\n\nguard: No web, session history, external documents, credentials, active config\nor provider calls. Do not run commands or modify candidate code. Native\npermissions may deny an action: report the exact limitation, never bypass it.\nYour output remains quarantined until the separate guard admission step.\nBudget: one review pass, concise JSON and final status; no follow-up loops.\n",
+  "permissions": [
+    {
+      "action": "*",
+      "resource": "*",
+      "effect": "deny"
+    },
+    {
+      "action": "read",
+      "resource": "E:/opencode_harness_portable/projects/p2-adapter-opencode-v2/guard-recovery/runs/worktree/shared/code-factory-process.md",
+      "effect": "allow"
+    },
+    {
+      "action": "read",
+      "resource": "E:\\opencode_harness_portable\\projects\\p2-adapter-opencode-v2\\guard-recovery\\runs\\worktree\\shared\\code-factory-process.md",
+      "effect": "allow"
+    },
+    {
+      "action": "read",
+      "resource": "shared/code-factory-process.md",
+      "effect": "allow"
+    },
+    {
+      "action": "read",
+      "resource": ".opencode/shared/code-factory-process.md",
+      "effect": "allow"
+    },
+    {
+      "action": "read",
+      "resource": "E:/opencode_harness_portable/projects/p2-adapter-opencode-v2/guard-recovery/runs/worktree/.opencode/shared/code-factory-process.md",
+      "effect": "allow"
+    },
+    {
+      "action": "read",
+      "resource": "E:\\opencode_harness_portable\\projects\\p2-adapter-opencode-v2\\guard-recovery\\runs\\worktree\\.opencode\\shared\\code-factory-process.md",
+      "effect": "allow"
+    },
+    {
+      "action": "read",
+      "resource": "../../../../../shared/code-factory-process.md",
+      "effect": "allow"
+    },
+    {
+      "action": "read",
+      "resource": "E:/opencode_harness_portable/shared/code-factory-process.md",
+      "effect": "allow"
+    },
+    {
+      "action": "read",
+      "resource": "E:\\opencode_harness_portable\\shared\\code-factory-process.md",
+      "effect": "allow"
+    },
+    {
+      "action": "read",
+      "resource": "E:/opencode_harness_portable/projects/p2-adapter-opencode-v2/guard-recovery/runs/worktree/guard/src/semantic_layer.py",
+      "effect": "allow"
+    },
+    {
+      "action": "read",
+      "resource": "E:\\opencode_harness_portable\\projects\\p2-adapter-opencode-v2\\guard-recovery\\runs\\worktree\\guard\\src\\semantic_layer.py",
+      "effect": "allow"
+    },
+    {
+      "action": "read",
+      "resource": "guard/src/semantic_layer.py",
+      "effect": "allow"
+    },
+    {
+      "action": "read",
+      "resource": "E:/opencode_harness_portable/projects/p2-adapter-opencode-v2/guard-recovery/runs/worktree/guard/src/artifact_guard.py",
+      "effect": "allow"
+    },
+    {
+      "action": "read",
+      "resource": "E:\\opencode_harness_portable\\projects\\p2-adapter-opencode-v2\\guard-recovery\\runs\\worktree\\guard\\src\\artifact_guard.py",
+      "effect": "allow"
+    },
+    {
+      "action": "read",
+      "resource": "guard/src/artifact_guard.py",
+      "effect": "allow"
+    },
+    {
+      "action": "read",
+      "resource": "E:/opencode_harness_portable/projects/p2-adapter-opencode-v2/guard-recovery/runs/worktree/guard/src/opencode_transport.py",
+      "effect": "allow"
+    },
+    {
+      "action": "read",
+      "resource": "E:\\opencode_harness_portable\\projects\\p2-adapter-opencode-v2\\guard-recovery\\runs\\worktree\\guard\\src\\opencode_transport.py",
+      "effect": "allow"
+    },
+    {
+      "action": "read",
+      "resource": "guard/src/opencode_transport.py",
+      "effect": "allow"
+    },
+    {
+      "action": "read",
+      "resource": "E:/opencode_harness_portable/projects/p2-adapter-opencode-v2/guard-recovery/runs/worktree/guard/src/native_semantic_transport.py",
+      "effect": "allow"
+    },
+    {
+      "action": "read",
+      "resource": "E:\\opencode_harness_portable\\projects\\p2-adapter-opencode-v2\\guard-recovery\\runs\\worktree\\guard\\src\\native_semantic_transport.py",
+      "effect": "allow"
+    },
+    {
+      "action": "read",
+      "resource": "guard/src/native_semantic_transport.py",
+      "effect": "allow"
+    },
+    {
+      "action": "read",
+      "resource": "E:/opencode_harness_portable/projects/p2-adapter-opencode-v2/guard-recovery/runs/worktree/scripts/tools/doc_guard.py",
+      "effect": "allow"
+    },
+    {
+      "action": "read",
+      "resource": "E:\\opencode_harness_portable\\projects\\p2-adapter-opencode-v2\\guard-recovery\\runs\\worktree\\scripts\\tools\\doc_guard.py",
+      "effect": "allow"
+    },
+    {
+      "action": "read",
+      "resource": "scripts/tools/doc_guard.py",
+      "effect": "allow"
+    },
+    {
+      "action": "read",
+      "resource": "E:/opencode_harness_portable/projects/p2-adapter-opencode-v2/guard-recovery/runs/worktree/tests/coder/test_guard_recovery.py",
+      "effect": "allow"
+    },
+    {
+      "action": "read",
+      "resource": "E:\\opencode_harness_portable\\projects\\p2-adapter-opencode-v2\\guard-recovery\\runs\\worktree\\tests\\coder\\test_guard_recovery.py",
+      "effect": "allow"
+    },
+    {
+      "action": "read",
+      "resource": "tests/coder/test_guard_recovery.py",
+      "effect": "allow"
+    },
+    {
+      "action": "read",
+      "resource": "E:/opencode_harness_portable/projects/p2-adapter-opencode-v2/guard-recovery/runs/worktree/tests/coder/test_native_classifier_recovery.py",
+      "effect": "allow"
+    },
+    {
+      "action": "read",
+      "resource": "E:\\opencode_harness_portable\\projects\\p2-adapter-opencode-v2\\guard-recovery\\runs\\worktree\\tests\\coder\\test_native_classifier_recovery.py",
+      "effect": "allow"
+    },
+    {
+      "action": "read",
+      "resource": "tests/coder/test_native_classifier_recovery.py",
+      "effect": "allow"
+    },
+    {
+      "action": "read",
+      "resource": "../../independent-gates-20261017/artifacts/recovery-scope.patch",
+      "effect": "allow"
+    },
+    {
+      "action": "read",
+      "resource": "E:/opencode_harness_portable/projects/p2-adapter-opencode-v2/guard-recovery/independent-gates-20261017/artifacts/recovery-scope.patch",
+      "effect": "allow"
+    },
+    {
+      "action": "read",
+      "resource": "E:\\opencode_harness_portable\\projects\\p2-adapter-opencode-v2\\guard-recovery\\independent-gates-20261017\\artifacts\\recovery-scope.patch",
+      "effect": "allow"
+    },
+    {
+      "action": "edit",
+      "resource": "../../independent-gates-20261017/artifacts/quarantine/reviewer.json",
+      "effect": "allow"
+    },
+    {
+      "action": "edit",
+      "resource": "E:/opencode_harness_portable/projects/p2-adapter-opencode-v2/guard-recovery/independent-gates-20261017/artifacts/quarantine/reviewer.json",
+      "effect": "allow"
+    },
+    {
+      "action": "edit",
+      "resource": "E:\\opencode_harness_portable\\projects\\p2-adapter-opencode-v2\\guard-recovery\\independent-gates-20261017\\artifacts\\quarantine\\reviewer.json",
+      "effect": "allow"
+    },
+    {
+      "action": "external_directory",
+      "resource": "E:/opencode_harness_portable/projects/p2-adapter-opencode-v2/guard-recovery/runs/worktree/guard/src",
+      "effect": "allow"
+    },
+    {
+      "action": "external_directory",
+      "resource": "E:\\opencode_harness_portable\\projects\\p2-adapter-opencode-v2\\guard-recovery\\runs\\worktree\\guard\\src",
+      "effect": "allow"
+    },
+    {
+      "action": "external_directory",
+      "resource": "guard/src",
+      "effect": "allow"
+    },
+    {
+      "action": "external_directory",
+      "resource": "../../independent-gates-20261017/artifacts",
+      "effect": "allow"
+    },
+    {
+      "action": "external_directory",
+      "resource": "E:/opencode_harness_portable/projects/p2-adapter-opencode-v2/guard-recovery/independent-gates-20261017/artifacts",
+      "effect": "allow"
+    },
+    {
+      "action": "external_directory",
+      "resource": "E:\\opencode_harness_portable\\projects\\p2-adapter-opencode-v2\\guard-recovery\\independent-gates-20261017\\artifacts",
+      "effect": "allow"
+    },
+    {
+      "action": "external_directory",
+      "resource": "../../../../../shared",
+      "effect": "allow"
+    },
+    {
+      "action": "external_directory",
+      "resource": "E:/opencode_harness_portable/shared",
+      "effect": "allow"
+    },
+    {
+      "action": "external_directory",
+      "resource": "E:\\opencode_harness_portable\\shared",
+      "effect": "allow"
+    },
+    {
+      "action": "external_directory",
+      "resource": "../../independent-gates-20261017/artifacts/quarantine",
+      "effect": "allow"
+    },
+    {
+      "action": "external_directory",
+      "resource": "E:/opencode_harness_portable/projects/p2-adapter-opencode-v2/guard-recovery/independent-gates-20261017/artifacts/quarantine",
+      "effect": "allow"
+    },
+    {
+      "action": "external_directory",
+      "resource": "E:\\opencode_harness_portable\\projects\\p2-adapter-opencode-v2\\guard-recovery\\independent-gates-20261017\\artifacts\\quarantine",
+      "effect": "allow"
+    },
+    {
+      "action": "external_directory",
+      "resource": ".opencode/shared",
+      "effect": "allow"
+    },
+    {
+      "action": "external_directory",
+      "resource": "E:/opencode_harness_portable/projects/p2-adapter-opencode-v2/guard-recovery/runs/worktree/.opencode/shared",
+      "effect": "allow"
+    },
+    {
+      "action": "external_directory",
+      "resource": "E:\\opencode_harness_portable\\projects\\p2-adapter-opencode-v2\\guard-recovery\\runs\\worktree\\.opencode\\shared",
+      "effect": "allow"
+    },
+    {
+      "action": "external_directory",
+      "resource": "E:/opencode_harness_portable/projects/p2-adapter-opencode-v2/guard-recovery/runs/worktree/shared",
+      "effect": "allow"
+    },
+    {
+      "action": "external_directory",
+      "resource": "E:\\opencode_harness_portable\\projects\\p2-adapter-opencode-v2\\guard-recovery\\runs\\worktree\\shared",
+      "effect": "allow"
+    },
+    {
+      "action": "external_directory",
+      "resource": "shared",
+      "effect": "allow"
+    },
+    {
+      "action": "external_directory",
+      "resource": "E:/opencode_harness_portable/projects/p2-adapter-opencode-v2/guard-recovery/runs/worktree/tests/coder",
+      "effect": "allow"
+    },
+    {
+      "action": "external_directory",
+      "resource": "E:\\opencode_harness_portable\\projects\\p2-adapter-opencode-v2\\guard-recovery\\runs\\worktree\\tests\\coder",
+      "effect": "allow"
+    },
+    {
+      "action": "external_directory",
+      "resource": "tests/coder",
+      "effect": "allow"
+    },
+    {
+      "action": "external_directory",
+      "resource": "E:/opencode_harness_portable/projects/p2-adapter-opencode-v2/guard-recovery/runs/worktree/scripts/tools",
+      "effect": "allow"
+    },
+    {
+      "action": "external_directory",
+      "resource": "E:\\opencode_harness_portable\\projects\\p2-adapter-opencode-v2\\guard-recovery\\runs\\worktree\\scripts\\tools",
+      "effect": "allow"
+    },
+    {
+      "action": "external_directory",
+      "resource": "scripts/tools",
+      "effect": "allow"
+    },
+    {
+      "action": "task",
+      "resource": "code-reviewer",
+      "effect": "allow"
+    },
+    {
+      "action": "skill",
+      "resource": "adversarial-critic-checklist",
+      "effect": "allow"
+    },
+    {
+      "action": "skill",
+      "resource": "code-review-and-quality",
+      "effect": "allow"
+    }
+  ],
+  "guard_admission": "NOT_GRANTED"
+}

@@ -1,0 +1,157 @@
+{
+    "task_id":  "guard-local-recovery-20261017",
+    "parent_project":  "p2-adapter-opencode-v2",
+    "project_path":  "projects/p2-adapter-opencode-v2/guard-recovery",
+    "branch":  "fix/guard-recovery",
+    "base_commit":  "ac037f3e496153ed6a68463505b26c9c6d850c10",
+    "status":  "OFFLINE_COMPONENT_CANDIDATE",
+    "main_guard_changed":  false,
+    "integrated":  false,
+    "host_tested":  false,
+    "provider_calls":  0,
+    "delegated_calls":  0,
+    "cost_rub":  0,
+    "factory_finalized":  false,
+    "required_gates":  {
+                           "auditor":  "PENDING",
+                           "tester":  "PENDING",
+                           "reviewer":  "PENDING"
+                       },
+    "debt_id":  "TD-GUARD-RECOVERY-01",
+    "verification":  {
+                         "negative_cli":  "BLOCK:p2_not_configured",
+                         "negative_cli_elapsed_ms":  242,
+                         "subtests":  37,
+                         "tests":  53,
+                         "result":  "PASS_OFFLINE_ONLY",
+                         "full_repository_suite":  "NOT_RUN"
+                     },
+    "hash_basis":  "working-tree bytes before checkpoint; not an admission receipt",
+    "files":  [
+                  {
+                      "path":  "guard/src/artifact_guard.py",
+                      "sha256":  "0506755e8683ef70f71c7324cb44dd3c17f9b761e595ce692c562c0331dbd6db",
+                      "bytes":  12646
+                  },
+                  {
+                      "path":  "guard/src/semantic_layer.py",
+                      "sha256":  "4b12dfaa093c9dbff44cf76b25bcc5a188820390c28d543111708d1bc51cd7d0",
+                      "bytes":  39236
+                  },
+                  {
+                      "path":  "guard/src/native_semantic_transport.py",
+                      "sha256":  "13d21b95d0c5e9a90739b176cc38786fee0f5aff38d07b5c68b1b1196894204d",
+                      "bytes":  9266
+                  },
+                  {
+                      "path":  "guard/src/opencode_transport.py",
+                      "sha256":  "4d37f4c9817b7c46daf35916751907928e9c106d278400a3230dc20bdc08409f",
+                      "bytes":  10869
+                  },
+                  {
+                      "path":  "scripts/tools/doc_guard.py",
+                      "sha256":  "c7f91a3c6f3e4f7111b2b8477243db6084fc34d737a08b6843542b480326cd45",
+                      "bytes":  1861
+                  },
+                  {
+                      "path":  "tests/coder/test_guard_recovery.py",
+                      "sha256":  "4572465d8cebb637230f86793e268ae1d8eb5efd74aab097d5dde88f9349ef25",
+                      "bytes":  7875
+                  },
+                  {
+                      "path":  "tests/coder/test_native_classifier_recovery.py",
+                      "sha256":  "cb5827322ed0c845e1b7770d84bf94b37a77ee746ac27ec6fdf11877a2a13c7e",
+                      "bytes":  7773
+                  },
+                  {
+                      "path":  "config/tech_debt.json",
+                      "sha256":  "92bbcd63bcd1b3428147d708d3bdeeafa0b0b4298c754d47d732c818e386a328",
+                      "bytes":  390060
+                  },
+                  {
+                      "path":  "projects/p2-adapter-opencode-v2/guard-recovery/.gitattributes",
+                      "sha256":  "92b799171fec8ac005fbb26c9983faee533428198c380d7c0a803f1eb503bd05",
+                      "bytes":  109
+                  },
+                  {
+                      "path":  "projects/p2-adapter-opencode-v2/guard-recovery/.gitignore",
+                      "sha256":  "247681cefffa8448d973f21147c92b38b63f492a98a50aca3b3c490bc97499e1",
+                      "bytes":  6
+                  },
+                  {
+                      "path":  "projects/p2-adapter-opencode-v2/guard-recovery/artifacts/baseline.xml",
+                      "sha256":  "70d0af5ee1486193b71bb88bd2878a092931fc9e0d382065eb4907970c4443aa",
+                      "bytes":  4205
+                  },
+                  {
+                      "path":  "projects/p2-adapter-opencode-v2/guard-recovery/artifacts/cli-negative.json",
+                      "sha256":  "16c2540c76ca0b50c7fe690e475054a164ae09f7ad5f1df82d1cf341f55817d2",
+                      "bytes":  2932
+                  },
+                  {
+                      "path":  "projects/p2-adapter-opencode-v2/guard-recovery/artifacts/green.xml",
+                      "sha256":  "4c7d81cd2b1b7657243dd51180a9e803a7a6712f300876854cb22e8b1f15a128",
+                      "bytes":  7285
+                  },
+                  {
+                      "path":  "projects/p2-adapter-opencode-v2/guard-recovery/artifacts/red.xml",
+                      "sha256":  "d53aa5fb06281624fbb9fefb6b1eb07f684edd824849165ce7d50332965ca0d5",
+                      "bytes":  19747
+                  },
+                  {
+                      "path":  "projects/p2-adapter-opencode-v2/guard-recovery/artifacts/regression.xml",
+                      "sha256":  "0edbf1d385675ae62eaca15d611c1f2dd34dde5559fcf6cff01f2c89fb5bb0f7",
+                      "bytes":  8294
+                  },
+                  {
+                      "path":  "projects/p2-adapter-opencode-v2/guard-recovery/artifacts/synthetic-canary.txt",
+                      "sha256":  "8c57de38f911be67160ae1945717ed7951c5767dde0f542b0fa172144a07c72f",
+                      "bytes":  66
+                  },
+                  {
+                      "path":  "projects/p2-adapter-opencode-v2/guard-recovery/config.env",
+                      "sha256":  "df80325a41c431be491104f56bc3f0dcb3adf823c4c5439468043142cf9cf7b3",
+                      "bytes":  333
+                  },
+                  {
+                      "path":  "projects/p2-adapter-opencode-v2/guard-recovery/contracts/RECOVERY.md",
+                      "sha256":  "7320311aa5265d314b0e4b2e07c5e1da81d0a2bf25144a119d65aff6d01b75b5",
+                      "bytes":  2641
+                  },
+                  {
+                      "path":  "projects/p2-adapter-opencode-v2/guard-recovery/README.md",
+                      "sha256":  "a082ca2651531ea3b72deceac76d38ac7816c6de9930031f86176f1a970f25e8",
+                      "bytes":  963
+                  },
+                  {
+                      "path":  "projects/p2-adapter-opencode-v2/guard-recovery/reports/CHANGES.md",
+                      "sha256":  "4cd60e4021c852e8e7616a1270fae78ee1eb58b8cee514dee352188e408696f1",
+                      "bytes":  3794
+                  },
+                  {
+                      "path":  "projects/p2-adapter-opencode-v2/guard-recovery/reports/handoff/2026-10-17/CHANGES.md",
+                      "sha256":  "54871030bae305c7cb729331a3ead8eeea293311fb04464d801568b1fc26f626",
+                      "bytes":  340
+                  },
+                  {
+                      "path":  "projects/p2-adapter-opencode-v2/guard-recovery/reports/handoff/2026-10-17/legacy_sources.md",
+                      "sha256":  "16061825348eb5feaeb171dc0a98570ca9881b44e1a4b6fb489575ea44b6ed15",
+                      "bytes":  714
+                  },
+                  {
+                      "path":  "projects/p2-adapter-opencode-v2/guard-recovery/reports/handoff/2026-10-17/TASKS.md",
+                      "sha256":  "c674db32092b60313ada8c14e57fb57cba17ebeb4c3dbfb8d44c8874bf8e672e",
+                      "bytes":  1151
+                  },
+                  {
+                      "path":  "projects/p2-adapter-opencode-v2/guard-recovery/reports/NEXT_STAGE.md",
+                      "sha256":  "71063cd72491fee2f17f42dc7154e11f5883f564491fd64425fbf8f9d85f1c01",
+                      "bytes":  1758
+                  },
+                  {
+                      "path":  "projects/p2-adapter-opencode-v2/guard-recovery/tech_debt.md",
+                      "sha256":  "cfcecf888554935e3c02d3600c161f7fd7f64b2e1eaf5a4124a17e14106fa4fd",
+                      "bytes":  385
+                  }
+              ]
+}

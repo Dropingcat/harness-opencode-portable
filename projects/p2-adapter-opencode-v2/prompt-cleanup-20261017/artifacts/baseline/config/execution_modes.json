@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "modes": {
+    "noagents_or_single": {
+      "agents": [],
+      "description": "NoAgents or one bounded worker path.",
+      "use_when_profiles": ["soft"]
+    },
+    "worker_reviewer_tester": {
+      "agents": ["coder-worker", "code-reviewer", "code-tester"],
+      "description": "Default code execution loop.",
+      "use_when_profiles": ["standard"]
+    },
+    "worker_reviewer_tester_auditor": {
+      "agents": ["coder-worker", "code-reviewer", "code-tester", "code-auditor"],
+      "description": "Strict execution loop with tribunal capability.",
+      "use_when_profiles": ["strict"]
+    },
+    "research_pipeline": {
+      "agents": ["claim-parser", "source-fetcher", "fact-checker", "synthesizer"],
+      "description": "Research claim/evidence loop.",
+      "use_when_profiles": ["standard", "strict"]
+    }
+  }
+}

@@ -1,0 +1,753 @@
+diff --git a/guard/src/artifact_guard.py b/guard/src/artifact_guard.py
+index bacb8f7..0ca1e4e 100644
+--- a/guard/src/artifact_guard.py
++++ b/guard/src/artifact_guard.py
+@@ -90,6 +90,19 @@ def _load_stages():
+     return p0, p2
+ 
+ 
++def _effective_timeout(cfg, requested=None):
++    """The caller may tighten, but never extend, the configured deadline."""
++    security = cfg.get('security', {})
++    if not isinstance(security, dict):
++        raise ValueError('timeout_invalid')
++    configured = security.get('timeout_sec', MAX_TIMEOUT)
++    values = (configured,) if requested is None else (configured, requested)
++    if any(type(value) not in (int, float) or not math.isfinite(value)
++           or not 0 < value <= MAX_TIMEOUT for value in values):
++        raise ValueError('timeout_invalid')
++    return float(min(values))
++
++
+ def _report():
+     return {'ok': False, 'verdict': 'BLOCK', 'reason': 'not_scanned',
+             'required_stages': ['P0', 'P2'], 'executed_stages': [],
+@@ -107,7 +120,11 @@ def preflight(*, harness_root=None, config=None):
+         root = _root(harness_root)
+         report['harness_root'] = str(root)
+         report['identity'] = _identity(root)
+-        _, report['config'], _ = _config(root, config)
++        cfg, report['config'], _ = _config(root, config)
++        _, semantic = _load_stages()
++        names = semantic.configured_provider_names(cfg)
++        report.update(configured_providers=list(names), p2_configured=bool(names),
++                      timeout_seconds=_effective_timeout(cfg))
+         report.update(readiness=True, reason='metadata_ready_not_admission')
+     except Exception:
+         report['reason'] = 'readiness_unavailable'
+@@ -202,7 +219,7 @@ def _bounded_p2(text, cfg, factory, timeout):
+         sender.close()
+ 
+ 
+-def scan_artifact(artifact, *, harness_root=None, config=None, timeout=MAX_TIMEOUT,
++def scan_artifact(artifact, *, harness_root=None, config=None, timeout=None,
+                   chain_factory=None):
+     report = _report()
+     report['evidence'] = ('testing_only_not_host_certification' if chain_factory is not None
+@@ -219,7 +236,7 @@ def scan_artifact(artifact, *, harness_root=None, config=None, timeout=MAX_TIMEO
+             report['reason'] = 'empty_or_size_limit'
+             return report
+         text = raw.decode('utf-8', errors='strict')
+-        p0, _ = _load_stages()
++        p0, semantic = _load_stages()
+         report['executed_stages'].append('P0')
+         normalized = p0._normalize(text)
+         for signature in p0.STRONG_EN + p0.WEAK_RU:
+@@ -228,8 +245,17 @@ def scan_artifact(artifact, *, harness_root=None, config=None, timeout=MAX_TIMEO
+                 report['reason'] = 'p0_signature'
+                 return report
+         cfg, report['config'], config_path = _config(root, config)
+-        if type(timeout) not in (float, int) or not math.isfinite(timeout) or not 0 < timeout <= MAX_TIMEOUT:
+-            raise ValueError('timeout_invalid')
++        try:
++            timeout = _effective_timeout(cfg, timeout)
++        except ValueError:
++            report['reason'] = 'timeout_invalid'
++            return report
++        report['timeout_seconds'] = timeout
++        names = semantic.configured_provider_names(cfg)
++        report.update(configured_providers=list(names), p2_configured=bool(names))
++        if chain_factory is None and not names:
++            report['reason'] = 'p2_not_configured'
++            return report
+         report['executed_stages'].append('P2')
+         result = _bounded_p2(text, cfg, chain_factory, timeout)
+         report['reason'] = result['reason']
+diff --git a/guard/src/native_semantic_transport.py b/guard/src/native_semantic_transport.py
+index 89edeed..a996bd2 100644
+--- a/guard/src/native_semantic_transport.py
++++ b/guard/src/native_semantic_transport.py
+@@ -2,13 +2,12 @@
+ 
+ `NativeTransportChain(cfg, budget)` mirrors the `ClassifierChain` result schema
+ (verdict/votes/provider/cost/alarm_level/alarm_info) consumed by
+-`artifact_guard._p2_run`, but delegates every classify-vote to a deterministic
+-adapter result cache keyed by (sha256(chunk), model_ref) fed by a future host
+-invoke — never to Local/Cloud classifiers.
++`artifact_guard._p2_run`, but requires explicit classifier responses from a
++future host boundary — never Local/Cloud classifiers or metadata-only results.
+ 
+ Fail-closed contract:
+-  - verdict is 'NO' ONLY when a correlated terminal assistant message with a
+-    matching model binding is present for the request; everything else (absent
++  - verdict is 'NO' ONLY when a majority of distinct, correlated terminal
++    responses explicitly say NO. YES remains YES. Everything else (absent
+     adapter, mismatched binding, foreign session, finish != 'stop', malformed
+     message) is verdict None + alarm_level='CRITICAL' — an explicit refusal,
+     never an implicit PASS.
+@@ -18,9 +17,12 @@ Fail-closed contract:
+ from __future__ import annotations
+ 
+ import hashlib
++import threading
++import uuid
+ from typing import Callable, Optional
+ 
+ from opencode_transport import (
++    ClassificationReply,
+     HostMessage,
+     ModelRef,
+     ParentContext,
+@@ -33,15 +35,15 @@ from opencode_transport import (
+ P2_VOTES = 3
+ _MAJORITY = (P2_VOTES + 1) // 2  # 2
+ 
+-# Neutral provider tag reported for native-classified (NO) results.
++# Neutral provider tag for explicit native classification results.
+ _NATIVE_PROVIDER = "native"
+ 
+ # Fail-closed provider tag (scanner requires provider != 'none' for NO; the
+ # alarm path uses 'none' exactly like semantic_layer._alarm).
+ _NONE_PROVIDER = "none"
+ 
+-# Callable shape: (input_sha256: str, chunk: str) -> HostMessage | None
+-AdapterChain = Callable[[str, str], Optional[HostMessage]]
++# Each vote receives its immutable binding and index; no global current parent.
++AdapterChain = Callable[[str, RequestSnapshot, int], Optional[ClassificationReply]]
+ 
+ 
+ def _sha256(data) -> str:
+@@ -65,44 +67,43 @@ def _models_equal(snapshot_model: ModelRef, message_model: ModelRef) -> bool:
+ class NativeAdapter:
+     """Pure DTO-level adapter: one classify() -> scanner-schema dict.
+ 
+-    Owns a private deterministic result cache keyed by (sha256(chunk),
+-    snapshot.model). No content is ever stored or emitted; alarm_info carries
+-    only neutral reason codes.
++    No response cache: one returned message cannot manufacture several votes.
++    Raw response text is never retained; alarm_info carries neutral codes only.
+     """
+ 
+     def __init__(self, adapter_chain: Optional[AdapterChain] = None):
+         self._adapter_chain = adapter_chain
+-        # key: (input_sha256, ModelRef) -> 'NO' | None  (deterministic vote)
+-        self._cache = {}
++        self._seen_messages = set()
++        self._lock = threading.Lock()
+ 
+     # -- per-vote primitive ---------------------------------------------------
+ 
+-    def _vote(self, chunk: str, snapshot: RequestSnapshot):
+-        """One classify-vote: 'NO' or None (fail-closed). Never raises."""
+-        input_hash = _sha256(chunk)
+-        key = (input_hash, snapshot.model)
+-        if key in self._cache:
+-            return self._cache[key]
+-        vote = None
+-        if self._adapter_chain is not None:
+-            try:
+-                message = self._adapter_chain(input_hash, chunk)
+-            except Exception:
+-                message = None  # adapter failure == unavailable (fail-closed)
+-            vote = self._correlate(message, input_hash, snapshot)
+-        self._cache[key] = vote
++    def _vote(self, chunk: str, snapshot: RequestSnapshot, vote_index: int):
++        """One separately returned YES/NO vote, or refusal. Never raises."""
++        if self._adapter_chain is None:
++            return None
++        try:
++            reply = self._adapter_chain(chunk, snapshot, vote_index)
++        except Exception:
++            return None
++        vote = self._correlate(reply, snapshot)
++        if vote is None:
++            return None
++        key = (reply.message.session_id, reply.message.message_id)
++        with self._lock:
++            if key in self._seen_messages:
++                return None
++            self._seen_messages.add(key)
+         return vote
+ 
+-    def _correlate(self, message, input_hash: str, snapshot: RequestSnapshot):
+-        """NO only for a correlated terminal 'stop' message with matching
+-        binding. Everything else -> None (refusal). Never raises: malformed
+-        inputs are data, not control flow.
+-        """
+-        if message is None:
++    def _correlate(self, reply, snapshot: RequestSnapshot):
++        """Correlate an explicit answer; completion alone never implies NO."""
++        if not isinstance(reply, ClassificationReply):
+             return None
++        message = reply.message
+         if not isinstance(message, HostMessage):
+             return None
+-        if message.request_hash is not None and message.request_hash != input_hash:
++        if message.request_hash != snapshot.input_sha256:
+             return None
+         if message.session_id != snapshot.request_id:  # owned child session
+             return None
+@@ -110,43 +111,52 @@ class NativeAdapter:
+             return None
+         if message.finish != "stop":
+             return None
+-        return "NO"
++        return reply.verdict if reply.verdict in ('YES', 'NO') else None
+ 
+     # -- public API -------------------------------------------------------------
+ 
+     def classify(self, chunk: str, snapshot: RequestSnapshot) -> dict:
+-        """Scanner-schema dict for one chunk. Fail-closed: NO only under full
+-        correlation; None verdict + alarm CRITICAL otherwise.
++        """Scanner-schema dict for one chunk with an explicit majority.
++
++        Missing or uncorrelated answers never imply NO.
+ 
+         Votes always sum to 3; NO requires no >= 2 (majority), mirroring
+         semantic_layer majority semantics.
+         """
+         if not isinstance(snapshot, RequestSnapshot):
+             return self._fail_closed("snapshot_invalid")
+-        if snapshot.model is None:
++        if not isinstance(snapshot.model, ModelRef):
+             return self._fail_closed("model_missing")
+         if not isinstance(chunk, str):
+             return self._fail_closed("chunk_invalid")
++        if snapshot.input_sha256 != _sha256(chunk):
++            return self._fail_closed('input_hash_mismatch')
++        if snapshot.parent.model != snapshot.model:
++            return self._fail_closed('parent_model_mismatch')
+ 
++        n_yes = 0
+         n_no = 0
+         n_timeout = 0
+-        for _ in range(P2_VOTES):
+-            if self._vote(chunk, snapshot) == "NO":
++        for vote_index in range(P2_VOTES):
++            vote = self._vote(chunk, snapshot, vote_index)
++            if vote == 'YES':
++                n_yes += 1
++            elif vote == 'NO':
+                 n_no += 1
+             else:
+                 n_timeout += 1
+-        votes = {"yes": 0, "no": n_no, "timeout": n_timeout}
++        votes = {"yes": n_yes, "no": n_no, "timeout": n_timeout}
+ 
+-        if n_no >= _MAJORITY:
++        if n_yes >= _MAJORITY or n_no >= _MAJORITY:
+             return {
+-                "verdict": "NO",
++                "verdict": 'YES' if n_yes >= _MAJORITY else 'NO',
+                 "votes": votes,
+                 "provider": _NATIVE_PROVIDER,
+                 "cost": 0.0,
+                 "alarm_level": None,
+                 "alarm_info": None,
+             }
+-        return self._fail_closed("no_correlated_terminal", votes=votes)
++        return self._fail_closed("no_correlated_majority", votes=votes)
+ 
+     @staticmethod
+     def _fail_closed(reason: str, votes=None) -> dict:
+@@ -172,7 +182,7 @@ class NativeAdapter:
+ class NativeTransportChain:
+     """Drop-in P2 chain in the scanner schema; NO fallback to Local/Cloud.
+ 
+-    Constructs its own NativeAdapter (with the private cache) and a snapshot
++    Constructs its own NativeAdapter (with replay detection) and a snapshot
+     derived from a caller-supplied `parent` (ParentContext). Component tests
+     inject `parent=` and optionally `adapter_chain=`; production wiring
+     supplies the real host invoke later (HOST_NOT_TESTED by contract).
+@@ -188,9 +198,10 @@ class NativeTransportChain:
+     # -- snapshot derivation ---------------------------------------------------
+ 
+     def _snapshot_for(self, chunk: str):
+-        """Immutable binding per chunk: parent context validated, owned child
+-        session id derived deterministically (neutral 'ses_r1_*' for R1
+-        fixtures; a real host owns/creates the child in R2).
++        """Immutable binding per chunk with unique component-only request ids.
++
++        These ids are not real host sessions. A separately verified host
++        boundary must create and bind actual owned children in R2.
+         """
+         parent = self._parent
+         if parent is None or not isinstance(parent, ParentContext):
+@@ -202,7 +213,7 @@ class NativeTransportChain:
+         if parent.model is None:
+             return None
+         input_hash = _sha256(chunk)
+-        child_id = "ses_r1_" + input_hash[:16]
++        child_id = "ses_r1_" + uuid.uuid4().hex
+         return RequestSnapshot(request_id=child_id, parent=parent,
+                                input_sha256=input_hash, model=parent.model)
+ 
+@@ -219,4 +230,4 @@ class NativeTransportChain:
+             return result
+         result = self._adapter.classify(chunk, snapshot)
+         self.budget.add(result["cost"])
+-        return result
+\ No newline at end of file
++        return result
+diff --git a/guard/src/opencode_transport.py b/guard/src/opencode_transport.py
+index 80c0a56..0b2fd14 100644
+--- a/guard/src/opencode_transport.py
++++ b/guard/src/opencode_transport.py
+@@ -210,6 +210,32 @@ class HostMessage:
+                    model=model, finish=finish, request_hash=request_hash)
+ 
+ 
++@dataclass(frozen=True)
++class ClassificationReply:
++    """Explicit classifier answer plus transport provenance, not a host API DTO.
++
++    Completion metadata alone is never a classification. The future host
++    boundary must supply the actual response text to from_response(); raw text
++    is not retained in the result or tracker. Structural validity is not proof
++    of host authenticity.
++    """
++
++    message: HostMessage
++    verdict: str
++
++    def __post_init__(self):
++        if not isinstance(self.message, HostMessage):
++            raise TransportError('classification_message_invalid')
++        if not isinstance(self.verdict, str) or self.verdict not in ('YES', 'NO'):
++            raise TransportError('classification_verdict_invalid')
++
++    @classmethod
++    def from_response(cls, message, text):
++        if not isinstance(text, str) or len(text) > 32 or text.strip() not in ('YES', 'NO'):
++            raise TransportError('classification_response_invalid')
++        return cls(message=message, verdict=text.strip())
++
++
+ class Clock:
+     """Monotonic clock, injectable for deterministic tests.
+ 
+@@ -224,4 +250,4 @@ class Clock:
+     def now(self) -> float:
+         if self._now_fn is not None:
+             return float(self._now_fn())
+-        return time.monotonic()
+\ No newline at end of file
++        return time.monotonic()
+diff --git a/guard/src/semantic_layer.py b/guard/src/semantic_layer.py
+index 3f1a2b7..8043833 100644
+--- a/guard/src/semantic_layer.py
++++ b/guard/src/semantic_layer.py
+@@ -72,6 +72,35 @@ class ConfigError(Exception):
+     """Конфиг не загружен (graceful, без traceback)."""
+ 
+ 
++def configured_provider_names(cfg):
++    """Configured HTTP routes only; this does not probe their availability.
++
++    Legacy, explicitly listed providers may omit enabled/transport. An absent
++    provider never creates an implicit route. Native or unknown transports must
++    not silently fall back to the built-in HTTP endpoint.
++    """
++    providers = cfg.get('providers', {})
++    if not isinstance(providers, dict) or set(providers) - {'cloud', 'fallback', 'local'}:
++        raise ConfigError('providers_invalid')
++    names = []
++    for name in ('cloud', 'fallback', 'local'):
++        provider = providers.get(name)
++        if provider is None:
++            continue
++        if not isinstance(provider, dict):
++            raise ConfigError('provider_invalid')
++        enabled = provider.get('enabled', bool(provider))
++        transport = provider.get('transport', 'http')
++        if type(enabled) is not bool or not isinstance(transport, str):
++            raise ConfigError('provider_flags_invalid')
++        if not enabled or transport == 'unavailable':
++            continue
++        if transport != 'http':
++            raise ConfigError('provider_transport_unsupported')
++        names.append(name)
++    return tuple(names)
++
++
+ def load_config(path):
+     """
+     Загружает JSON-конфиг из `path`. Возвращает dict.
+@@ -352,13 +381,13 @@ class ClassifierChain:
+ 
+     def _build(self):
+         provs = self.cfg.get("providers", {})
+-        p = provs.get("cloud")
+-        if p:
+-            self.cloud_primary = _cloud_from_cfg(p, "cloud")
+-        p = provs.get("fallback")
+-        if p:
+-            self.cloud_fallback = _cloud_from_cfg(p, "fallback")
+-        self.local = _local_from_cfg(self.cfg)
++        enabled = configured_provider_names(self.cfg)
++        if 'cloud' in enabled:
++            self.cloud_primary = _cloud_from_cfg(provs['cloud'], "cloud")
++        if 'fallback' in enabled:
++            self.cloud_fallback = _cloud_from_cfg(provs['fallback'], "fallback")
++        if 'local' in enabled:
++            self.local = _local_from_cfg(self.cfg)
+ 
+     def _cloud_usable(self, clf):
+         """
+diff --git a/scripts/tools/doc_guard.py b/scripts/tools/doc_guard.py
+index ffbc080..fd59150 100644
+--- a/scripts/tools/doc_guard.py
++++ b/scripts/tools/doc_guard.py
+@@ -14,6 +14,8 @@ def main():
+     parser.add_argument('--harness-root')
+     parser.add_argument('--config')
+     parser.add_argument('--artifact')
++    parser.add_argument('--timeout', type=float,
++                        help='Scan deadline in seconds; can only tighten configured timeout (max 180)')
+     parser.add_argument('--json', action='store_true')
+     args = parser.parse_args()
+     try:
+@@ -25,7 +27,8 @@ def main():
+             result = artifact_guard.preflight(harness_root=args.harness_root, config=args.config)
+             code = 0 if result['readiness'] else 1
+         else:
+-            result = artifact_guard.scan_artifact(args.artifact, harness_root=args.harness_root, config=args.config)
++            result = artifact_guard.scan_artifact(args.artifact, harness_root=args.harness_root,
++                                                 config=args.config, timeout=args.timeout)
+             code = 0 if result['ok'] else 1
+     except Exception:
+         result = {'ok': False, 'verdict': 'BLOCK', 'reason': 'scanner_unavailable',
+diff --git a/tests/coder/test_guard_recovery.py b/tests/coder/test_guard_recovery.py
+new file mode 100644
+index 0000000..46e3ac6
+--- /dev/null
++++ b/tests/coder/test_guard_recovery.py
+@@ -0,0 +1,154 @@
++"""Local recovery regressions. No live provider, credentials or host calls."""
++import json
++import os
++from pathlib import Path
++import subprocess
++import sys
++import tempfile
++import unittest
++from unittest.mock import patch
++
++ROOT = Path(__file__).resolve().parents[2]
++sys.path.insert(0, str(ROOT / 'guard/src'))
++import artifact_guard as guard
++import semantic_layer as semantic
++
++
++DISABLED = {'providers': {name: {'enabled': False, 'transport': 'unavailable'}
++                          for name in ('cloud', 'fallback', 'local')}}
++
++
++class GuardRecoveryTests(unittest.TestCase):
++    def setUp(self):
++        self.temp = tempfile.TemporaryDirectory()
++        self.addCleanup(self.temp.cleanup)
++        self.artifact = Path(self.temp.name) / 'synthetic.txt'
++        self.artifact.write_text('Synthetic technical description.', encoding='utf-8')
++        self.config = Path(self.temp.name) / 'config.json'
++        self.config.write_text(json.dumps(DISABLED), encoding='utf-8')
++
++    def test_disabled_providers_are_not_constructed(self):
++        with patch.object(semantic, '_cloud_from_cfg') as cloud, \
++                patch.object(semantic, '_local_from_cfg') as local:
++            chain = semantic.ClassifierChain(DISABLED, semantic.Budget(1))
++        cloud.assert_not_called()
++        local.assert_not_called()
++        self.assertIsNone(chain.cloud_primary)
++        self.assertIsNone(chain.cloud_fallback)
++        self.assertIsNone(chain.local)
++        self.assertIsNone(chain.run('synthetic')['verdict'])
++
++    def test_missing_providers_do_not_create_implicit_local_route(self):
++        with patch.object(semantic, '_local_from_cfg') as local:
++            chain = semantic.ClassifierChain({}, semantic.Budget(1))
++        local.assert_not_called()
++        self.assertIsNone(chain.local)
++
++    def test_unavailable_transport_is_not_reinterpreted_as_http(self):
++        cfg = {'providers': {'cloud': {'enabled': True, 'transport': 'unavailable'}}}
++        with patch.object(semantic, '_cloud_from_cfg') as cloud:
++            semantic.ClassifierChain(cfg, semantic.Budget(1))
++        cloud.assert_not_called()
++
++    def test_invalid_enabled_or_unknown_transport_is_refused(self):
++        for provider in ({'enabled': 'false'}, {'enabled': 0},
++                         {'enabled': True, 'transport': 'unknown'},
++                         {'enabled': True, 'transport': None}):
++            with self.subTest(provider=provider), self.assertRaises(semantic.ConfigError):
++                semantic.ClassifierChain({'providers': {'cloud': provider}}, semantic.Budget(1))
++
++    def test_legacy_explicit_provider_without_enabled_flag_is_preserved(self):
++        cfg = {'providers': {'cloud': {'model': 'synthetic-model'}}}
++        with patch.object(semantic, '_cloud_from_cfg', return_value=object()) as cloud, \
++                patch.object(semantic, '_local_from_cfg') as local:
++            chain = semantic.ClassifierChain(cfg, semantic.Budget(1))
++        cloud.assert_called_once()
++        local.assert_not_called()
++        self.assertIsNotNone(chain.cloud_primary)
++
++    def test_scanner_blocks_unconfigured_p2_without_starting_worker(self):
++        with patch.object(guard, '_bounded_p2', side_effect=AssertionError('must not spawn')):
++            report = guard.scan_artifact(self.artifact, config=self.config)
++        self.assertEqual('p2_not_configured', report['reason'])
++        self.assertEqual(['P0'], report['executed_stages'])
++        self.assertEqual('BLOCK', report['verdict'])
++        self.assertFalse(report['coverage']['complete'])
++        self.assertFalse(report['ok'])
++
++    def test_preflight_exposes_missing_route_but_never_grants_admission(self):
++        report = guard.preflight(config=self.config)
++        self.assertTrue(report['readiness'])
++        self.assertFalse(report['p2_configured'])
++        self.assertEqual([], report['configured_providers'])
++        self.assertFalse(report['ok'])
++        self.assertEqual('READINESS', report['verdict'])
++        self.assertFalse(report['provider_availability_verified'])
++
++    def test_configured_deadline_is_used_and_cli_can_only_tighten_it(self):
++        self.config.write_text(json.dumps({'security': {'timeout_sec': 0.5}}), encoding='utf-8')
++        for requested, expected in ((None, 0.5), (0.1, 0.1), (2.0, 0.5)):
++            with self.subTest(requested=requested), \
++                    patch.object(guard, '_bounded_p2', return_value={'reason': 'timeout', 'ranges': []}) as worker:
++                report = guard.scan_artifact(self.artifact, config=self.config,
++                                             timeout=requested, chain_factory=object())
++            self.assertEqual(expected, worker.call_args.args[-1])
++            self.assertEqual(expected, report['timeout_seconds'])
++            self.assertEqual('timeout', report['reason'])
++            self.assertFalse(report['ok'])
++
++    def test_invalid_deadlines_are_structured_blocks(self):
++        for value in (0, -1, float('nan'), float('inf'), True, guard.MAX_TIMEOUT + 1):
++            with self.subTest(value=value):
++                report = guard.scan_artifact(self.artifact, config=self.config, timeout=value)
++                self.assertEqual('timeout_invalid', report['reason'])
++                self.assertFalse(report['ok'])
++
++    def test_cli_disabled_config_returns_json_promptly_with_explicit_deadline(self):
++        env = dict(os.environ, OPENCODE_HARNESS_ROOT=str(ROOT))
++        proc = subprocess.run(
++            [sys.executable, str(ROOT / 'scripts/tools/doc_guard.py'), 'scan',
++             '--artifact', str(self.artifact), '--config', str(self.config),
++             '--timeout', '0.1', '--json'],
++            capture_output=True, text=True, encoding='utf-8', env=env, timeout=10)
++        self.assertEqual(1, proc.returncode, proc.stderr)
++        report = json.loads(proc.stdout)
++        self.assertEqual('p2_not_configured', report['reason'])
++        self.assertFalse(report['ok'])
++        self.assertEqual([], report['coverage']['ranges'])
++
++    def test_cli_invalid_deadline_is_a_json_block_not_a_traceback(self):
++        env = dict(os.environ, OPENCODE_HARNESS_ROOT=str(ROOT))
++        proc = subprocess.run(
++            [sys.executable, str(ROOT / 'scripts/tools/doc_guard.py'), 'scan',
++             '--artifact', str(self.artifact), '--config', str(self.config),
++             '--timeout', 'nan', '--json'],
++            capture_output=True, text=True, encoding='utf-8', env=env, timeout=10)
++        self.assertEqual(1, proc.returncode)
++        self.assertEqual('timeout_invalid', json.loads(proc.stdout)['reason'])
++        self.assertNotIn('Traceback', proc.stdout + proc.stderr)
++
++    def test_provider_config_validation_cannot_be_bypassed_by_fixture_chain(self):
++        self.config.write_text(json.dumps({'providers': {'cloud': {'enabled': 'false'}}}), encoding='utf-8')
++        with patch.object(guard, '_bounded_p2') as worker:
++            report = guard.scan_artifact(self.artifact, config=self.config, chain_factory=object())
++        worker.assert_not_called()
++        self.assertFalse(report['ok'])
++
++    def test_timeout_terminates_owned_worker_and_closes_pipe(self):
++        from unittest.mock import Mock
++        receiver, sender, process, context = Mock(), Mock(), Mock(), Mock()
++        context.Pipe.return_value = (receiver, sender)
++        context.Process.return_value = process
++        receiver.poll.return_value = False
++        process.is_alive.return_value = True
++        with patch.object(guard.multiprocessing, 'get_context', return_value=context):
++            result = guard._bounded_p2('synthetic', DISABLED, None, 0.01)
++        self.assertEqual({'reason': 'timeout', 'ranges': []}, result)
++        receiver.poll.assert_called_once_with(0.01)
++        process.terminate.assert_called_once()
++        receiver.close.assert_called_once()
++        self.assertTrue(sender.close.called)
++
++
++if __name__ == '__main__':
++    unittest.main()
+diff --git a/tests/coder/test_native_classifier_recovery.py b/tests/coder/test_native_classifier_recovery.py
+new file mode 100644
+index 0000000..e13003e
+--- /dev/null
++++ b/tests/coder/test_native_classifier_recovery.py
+@@ -0,0 +1,158 @@
++"""Synthetic component checks; not evidence of trusted host execution."""
++from concurrent.futures import ThreadPoolExecutor
++from dataclasses import replace
++import hashlib
++import json
++from pathlib import Path
++import sys
++import tempfile
++import unittest
++
++ROOT = Path(__file__).resolve().parents[2]
++sys.path.insert(0, str(ROOT / 'guard/src'))
++import opencode_transport as transport
++from native_semantic_transport import NativeAdapter, NativeTransportChain
++from semantic_layer import Budget
++import artifact_guard
++
++
++CHUNK = 'Synthetic classifier input.'
++
++
++def snapshot(parent_id='ses_parent_a'):
++    model = transport.ModelRef('component-provider', 'component-model')
++    parent = transport.ParentContext(parent_id, model=model)
++    return transport.RequestSnapshot('ses_component_child', parent,
++                                     hashlib.sha256(CHUNK.encode()).hexdigest(), model)
++
++
++def message(bound, message_id='msg_1', request_hash=True):
++    return transport.HostMessage('assistant', bound.request_id, message_id,
++                                 bound.model, 'stop',
++                                 bound.input_sha256 if request_hash else None)
++
++
++def reply(bound, verdict, message_id='msg_1', request_hash=True):
++    return transport.ClassificationReply.from_response(
++        message(bound, message_id, request_hash), verdict)
++
++
++class NativeClassifierRecoveryTests(unittest.TestCase):
++    def test_transport_completion_alone_is_not_a_clean_classification(self):
++        bound = snapshot()
++        adapter = NativeAdapter(lambda *args: message(bound))
++        report = adapter.classify(CHUNK, bound)
++        self.assertIsNone(report['verdict'])
++        self.assertEqual('CRITICAL', report['alarm_level'])
++
++    def test_classification_parser_rejects_missing_or_ambiguous_response(self):
++        bound = snapshot()
++        for text in (None, '', 'yes', 'NO but also YES', 'The result is NO', {'verdict': 'NO'}):
++            with self.subTest(text=text), self.assertRaises(transport.TransportError):
++                reply(bound, text)
++        self.assertEqual('NO', reply(bound, ' NO\n').verdict)
++
++    def test_three_unique_explicit_no_replies_can_form_component_majority(self):
++        calls = []
++        def classify(chunk, bound, vote_index):
++            calls.append((chunk, bound, vote_index))
++            return reply(bound, 'NO', 'msg_' + str(vote_index))
++        report = NativeAdapter(classify).classify(CHUNK, snapshot())
++        self.assertEqual('NO', report['verdict'])
++        self.assertEqual({'yes': 0, 'no': 3, 'timeout': 0}, report['votes'])
++        self.assertEqual(3, len(calls))
++        self.assertEqual([0, 1, 2], [call[2] for call in calls])
++
++    def test_explicit_yes_is_not_converted_to_no(self):
++        adapter = NativeAdapter(lambda chunk, bound, vote: reply(bound, 'YES', 'msg_' + str(vote)))
++        report = adapter.classify(CHUNK, snapshot())
++        self.assertEqual('YES', report['verdict'])
++        self.assertEqual({'yes': 3, 'no': 0, 'timeout': 0}, report['votes'])
++
++    def test_repeating_one_message_does_not_manufacture_three_votes(self):
++        bound = snapshot()
++        cached_reply = reply(bound, 'NO')
++        report = NativeAdapter(lambda *args: cached_reply).classify(CHUNK, bound)
++        self.assertIsNone(report['verdict'])
++        self.assertEqual({'yes': 0, 'no': 1, 'timeout': 2}, report['votes'])
++
++    def test_missing_request_hash_cannot_pass(self):
++        adapter = NativeAdapter(lambda chunk, bound, vote: reply(bound, 'NO', 'msg_' + str(vote), False))
++        self.assertIsNone(adapter.classify(CHUNK, snapshot())['verdict'])
++
++    def test_foreign_session_model_and_nonterminal_replies_cannot_pass(self):
++        bound = snapshot()
++        for changes in ({'session_id': 'ses_foreign'},
++                        {'model': transport.ModelRef('other-provider', 'other-model')},
++                        {'finish': None}, {'finish': 'length'},
++                        {'request_hash': 'different-input'}):
++            with self.subTest(changes=changes):
++                wrong = replace(message(bound), **changes)
++                adapter = NativeAdapter(lambda *args: transport.ClassificationReply(wrong, 'NO'))
++                self.assertIsNone(adapter.classify(CHUNK, bound)['verdict'])
++
++    def test_adapter_exception_is_refusal_and_does_not_leak_details(self):
++        def broken(*args):
++            raise RuntimeError('synthetic-secret-do-not-log')
++        report = NativeAdapter(broken).classify(CHUNK, snapshot())
++        self.assertIsNone(report['verdict'])
++        self.assertNotIn('synthetic-secret', json.dumps(report))
++
++    def test_snapshot_must_describe_the_actual_chunk(self):
++        calls = []
++        adapter = NativeAdapter(lambda *args: calls.append(args))
++        self.assertIsNone(adapter.classify(CHUNK + 'changed', snapshot())['verdict'])
++        self.assertEqual([], calls)
++
++    def test_existing_majority_rule_is_preserved(self):
++        for values, expected in ((('NO', 'NO', 'YES'), 'NO'),
++                                 (('YES', 'NO', 'YES'), 'YES'),
++                                 (('NO', 'YES', None), None)):
++            def classify(chunk, bound, vote):
++                return None if values[vote] is None else reply(bound, values[vote], 'msg_' + str(vote))
++            self.assertEqual(expected, NativeAdapter(classify).classify(CHUNK, snapshot())['verdict'])
++
++    def test_parallel_parents_and_repeated_inputs_have_distinct_component_requests(self):
++        def run(parent_id):
++            seen = []
++            def classify(chunk, bound, vote):
++                seen.append((bound.parent.parent_id, bound.request_id))
++                return reply(bound, 'NO', 'msg_' + str(vote))
++            parent = snapshot(parent_id).parent
++            chain = NativeTransportChain({}, Budget(0), parent=parent, adapter_chain=classify)
++            self.assertEqual('NO', chain.run(CHUNK)['verdict'])
++            self.assertEqual('NO', chain.run(CHUNK)['verdict'])
++            return seen
++        with ThreadPoolExecutor(2) as pool:
++            a, b = list(pool.map(run, ['ses_parent_a', 'ses_parent_b']))
++        self.assertEqual({'ses_parent_a'}, {p for p, _ in a})
++        self.assertEqual({'ses_parent_b'}, {p for p, _ in b})
++        ids_a, ids_b = {i for _, i in a}, {i for _, i in b}
++        self.assertEqual(2, len(ids_a))
++        self.assertEqual(2, len(ids_b))
++        self.assertTrue(ids_a.isdisjoint(ids_b))
++
++    def test_scanner_consumes_native_classification_not_completion_metadata(self):
++        with tempfile.TemporaryDirectory() as folder:
++            path, config = Path(folder) / 'synthetic.txt', Path(folder) / 'config.json'
++            path.write_text(CHUNK * 400, encoding='utf-8')
++            config.write_text('{"budget":{"max_cost_rub":0}}', encoding='utf-8')
++            for verdict in ('YES', 'NO'):
++                def classify(chunk, bound, vote):
++                    return reply(bound, verdict, 'msg_' + str(vote))
++                def factory(cfg, budget):
++                    return NativeTransportChain(cfg, budget, parent=snapshot().parent,
++                                                adapter_chain=classify)
++                report = artifact_guard.scan_artifact(path, config=config, chain_factory=factory)
++                self.assertEqual('testing_only_not_host_certification', report['evidence'])
++                self.assertEqual(verdict == 'NO', report['ok'])
++                if verdict == 'YES':
++                    self.assertEqual('p2_injection', report['reason'])
++                    self.assertFalse(report['coverage']['complete'])
++                else:
++                    self.assertTrue(report['coverage']['complete'])
++                    self.assertGreater(len(report['coverage']['ranges']), 1)
++
++
++if __name__ == '__main__':
++    unittest.main()

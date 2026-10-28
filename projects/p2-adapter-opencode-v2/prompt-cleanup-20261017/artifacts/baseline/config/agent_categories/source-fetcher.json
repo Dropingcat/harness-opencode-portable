@@ -1,0 +1,10 @@
+{
+  "agent": "source-fetcher",
+  "categories": [
+    "CAT_SOURCE",
+    "CAT_EVIDENCE_SPAN",
+    "CAT_PROVENANCE"
+  ],
+  "default_bucket": "research",
+  "capsule": "research-core"
+}

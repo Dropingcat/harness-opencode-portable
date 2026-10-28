@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "task_id": "guard-independent-gates-20261017",
+  "state": "BLOCKED",
+  "reason_code": "SPECIALIZED_DISPATCH_NOT_OBSERVED",
+  "affected_capability": "independent_reviewer",
+  "candidate_commit": "892ecc3",
+  "observed_check_tokens": 2148,
+  "token_budget": 100000,
+  "budget_mode": "observational",
+  "primary_cli_jobs_launched": 1,
+  "specialized_children_observed": 0,
+  "role_output_admission": "NOT_GRANTED",
+  "safe_projection": "artifacts/reviewer-dispatch-metadata.json",
+  "raw_output_location": "artifacts/quarantine/reviewer-events.json",
+  "root_cause": "UNRESOLVED: native permission evaluation or tool visibility must be checked",
+  "requested_decision": {
+    "kind": "SCOPED_RECOVERY_AND_RETRY",
+    "scope_in": [
+      "non-generative inspection of native permissions and role tool visibility",
+      "task-local capsule corrections preserving exact allowed actions and paths",
+      "one additional reviewer CLI launch only after control prechecks"
+    ],
+    "scope_out": [
+      "global configuration changes",
+      "permission wildcard expansion",
+      "general-agent substitution",
+      "guard-PASS fabrication",
+      "P2 host-canary",
+      "merge, push, restart"
+    ],
+    "resume_gate": "Effective scoped task/read capabilities confirmed; new user retry authorization recorded; token usage still below aggregate budget"
+  },
+  "note": "This records a request, not an approval or a guard admission receipt. Reviewer text was not included in the projection."
+}

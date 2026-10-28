@@ -1,0 +1,29 @@
+{
+  "record_type": "conversation_authorization_projection_not_guard_receipt",
+  "task_id": "guard-independent-gates-20261017",
+  "user_answer": "да можешь провечти рековери и повторы так же изучи ревью E:\\opencode_harness_portable\\docs\\audit 17-10-26",
+  "conservative_execution_scope": {
+    "native_non_generative_diagnostics": true,
+    "task_local_capsule_correction_only": true,
+    "additional_reviewer_cli_jobs": 1,
+    "original_tester_cli_jobs_remaining": 1,
+    "original_auditor_cli_jobs_remaining": 1,
+    "max_seconds_per_job": 120,
+    "aggregate_observed_tokens": 100000,
+    "tokens_already_spent": 2148,
+    "token_budget_reset": false,
+    "general_substitution": false,
+    "global_config_changes": false,
+    "guard_admission_bypass": false,
+    "p2_canary": false,
+    "merge": false,
+    "push": false,
+    "restart": false
+  },
+  "audit_document": {
+    "path": "docs/audit 17-10-26/audit_1.md",
+    "requested": true,
+    "content_admission": "BLOCK:p2_not_configured",
+    "content_used": false
+  }
+}

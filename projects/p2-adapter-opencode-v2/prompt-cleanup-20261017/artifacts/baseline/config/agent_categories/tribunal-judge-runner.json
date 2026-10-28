@@ -1,0 +1,10 @@
+{
+  "agent": "tribunal-judge-runner",
+  "categories": [
+    "CAT_RUNNER_PROXY"
+  ],
+  "default_bucket": "security",
+  "capsule": "core-orchestration",
+  "wraps": "tribunal-judge",
+  "note": "primary-обёртка субагента для точечного диспатча (TD-A1 registry overlay)"
+}

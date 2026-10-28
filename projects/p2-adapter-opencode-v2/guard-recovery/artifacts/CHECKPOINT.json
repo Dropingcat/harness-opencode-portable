@@ -1,0 +1,15 @@
+{
+    "task_id":  "guard-local-recovery-20261017",
+    "branch":  "fix/guard-recovery",
+    "commit":  "892ecc3327dcb1753c6ae482f8d7a71d0c922e79",
+    "source_root_relative":  "projects/p2-adapter-opencode-v2/guard-recovery/runs/worktree",
+    "artifact_snapshot_relative":  "projects/p2-adapter-opencode-v2/guard-recovery",
+    "factory_state_relative":  "projects/p2-adapter-opencode-v2/guard-recovery/runs/worktree/projects/p2-adapter-opencode-v2/guard-recovery/runs/factory_state.json",
+    "status":  "OFFLINE_COMPONENT_CANDIDATE",
+    "integrated":  false,
+    "independent_gates":  "PENDING",
+    "host_tested":  false,
+    "note":  "Source hashes in MANIFEST resolve from the worktree, not the unchanged main guard.",
+    "observed_main_head_at_close":  "9fd54a22c95a63f21f0c84e36d50b237a88642ab",
+    "concurrent_change_note":  "Parallel coder-router fast-forward, not this task. Main guard unchanged; revalidate integration against current main HEAD."
+}

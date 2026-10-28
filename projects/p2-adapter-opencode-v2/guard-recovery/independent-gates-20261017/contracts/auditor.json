@@ -1,0 +1,172 @@
+{
+  "role": "auditor",
+  "primary": "code-auditor-runner",
+  "specialized": "code-auditor",
+  "candidate_commit": "892ecc3",
+  "workdir": "E:\\opencode_harness_portable\\projects\\p2-adapter-opencode-v2\\guard-recovery\\independent-gates-20261017",
+  "output": "E:\\opencode_harness_portable\\projects\\p2-adapter-opencode-v2\\guard-recovery\\independent-gates-20261017\\artifacts\\quarantine\\auditor.json",
+  "prompt": "goal: Independently audit the PROCESS of the current local guard recovery and\nits independent-check stage. This is not a code-quality review or a conflict\ntribunal. Do not declare missing gates passed.\n\nYou are the primary transport runner. Forward this contract once to the\nregistered code-auditor via task. No general agent or primary self-audit. If\nthat role is unavailable, report a transport error and stop. No nested agents.\n\ncontext:\n- Process metadata only: E:\\opencode_harness_portable\\projects\\p2-adapter-opencode-v2\\guard-recovery\\independent-gates-20261017\\artifacts\\process-metadata.json\n- The metadata contains authorizations, revision identities, role/dispatch\n  observations, counters, and admission statuses. No worker code is supplied.\n- Scope in: explicit recovery authorization, separation of author/reviewer/\n  tester/process auditor, token/time limits, provenance and quarantined output,\n  honest status of independent and host gates, absence of unauthorized merge.\n- Scope out: source code, code paths, implementation correctness and style.\n- Do not inspect the implementation, Git diff, candidate source or repository\n  history. If information is insufficient, return REQUEST_CHANGES or\n  INVALID_INPUT with the specific missing process fact.\n\noutput: Write E:\\opencode_harness_portable\\projects\\p2-adapter-opencode-v2\\guard-recovery\\independent-gates-20261017\\artifacts\\quarantine\\auditor.json as UTF-8 JSON (no BOM), then return a short status.\nSchema: {verdict:\"APPROVE|REJECT|REQUEST_CHANGES|INVALID_INPUT\",\njustification:string,process_analysis:{contracts_respected:boolean,\niteration_count:number,iteration_limit:number,role_violation:boolean,\nreviewer_args_assessment:string,worker_args_assessment:string},requirements:[],\nwritten_by:\"code-auditor\"}.\n\nguard: Read only process metadata and the process document. No code, commands,\nweb, credentials, global configuration or Git mutations. Quarantined reviewer/\ntester statements are not admitted evidence. Do not infer approval from process\nexit codes or file existence. Your report also requires separate admission.\nBudget: one concise process assessment, no retry loop.\n",
+  "permissions": [
+    {
+      "action": "*",
+      "resource": "*",
+      "effect": "deny"
+    },
+    {
+      "action": "read",
+      "resource": "../runs/worktree/shared/code-factory-process.md",
+      "effect": "allow"
+    },
+    {
+      "action": "read",
+      "resource": "E:/opencode_harness_portable/projects/p2-adapter-opencode-v2/guard-recovery/runs/worktree/shared/code-factory-process.md",
+      "effect": "allow"
+    },
+    {
+      "action": "read",
+      "resource": "E:\\opencode_harness_portable\\projects\\p2-adapter-opencode-v2\\guard-recovery\\runs\\worktree\\shared\\code-factory-process.md",
+      "effect": "allow"
+    },
+    {
+      "action": "read",
+      "resource": "../runs/worktree/.opencode/shared/code-factory-process.md",
+      "effect": "allow"
+    },
+    {
+      "action": "read",
+      "resource": "E:/opencode_harness_portable/projects/p2-adapter-opencode-v2/guard-recovery/runs/worktree/.opencode/shared/code-factory-process.md",
+      "effect": "allow"
+    },
+    {
+      "action": "read",
+      "resource": "E:\\opencode_harness_portable\\projects\\p2-adapter-opencode-v2\\guard-recovery\\runs\\worktree\\.opencode\\shared\\code-factory-process.md",
+      "effect": "allow"
+    },
+    {
+      "action": "read",
+      "resource": "../../../../shared/code-factory-process.md",
+      "effect": "allow"
+    },
+    {
+      "action": "read",
+      "resource": "E:/opencode_harness_portable/shared/code-factory-process.md",
+      "effect": "allow"
+    },
+    {
+      "action": "read",
+      "resource": "E:\\opencode_harness_portable\\shared\\code-factory-process.md",
+      "effect": "allow"
+    },
+    {
+      "action": "read",
+      "resource": "E:/opencode_harness_portable/projects/p2-adapter-opencode-v2/guard-recovery/independent-gates-20261017/artifacts/process-metadata.json",
+      "effect": "allow"
+    },
+    {
+      "action": "read",
+      "resource": "E:\\opencode_harness_portable\\projects\\p2-adapter-opencode-v2\\guard-recovery\\independent-gates-20261017\\artifacts\\process-metadata.json",
+      "effect": "allow"
+    },
+    {
+      "action": "read",
+      "resource": "artifacts/process-metadata.json",
+      "effect": "allow"
+    },
+    {
+      "action": "edit",
+      "resource": "E:/opencode_harness_portable/projects/p2-adapter-opencode-v2/guard-recovery/independent-gates-20261017/artifacts/quarantine/auditor.json",
+      "effect": "allow"
+    },
+    {
+      "action": "edit",
+      "resource": "E:\\opencode_harness_portable\\projects\\p2-adapter-opencode-v2\\guard-recovery\\independent-gates-20261017\\artifacts\\quarantine\\auditor.json",
+      "effect": "allow"
+    },
+    {
+      "action": "edit",
+      "resource": "artifacts/quarantine/auditor.json",
+      "effect": "allow"
+    },
+    {
+      "action": "external_directory",
+      "resource": "E:/opencode_harness_portable/projects/p2-adapter-opencode-v2/guard-recovery/independent-gates-20261017/artifacts",
+      "effect": "allow"
+    },
+    {
+      "action": "external_directory",
+      "resource": "E:\\opencode_harness_portable\\projects\\p2-adapter-opencode-v2\\guard-recovery\\independent-gates-20261017\\artifacts",
+      "effect": "allow"
+    },
+    {
+      "action": "external_directory",
+      "resource": "artifacts",
+      "effect": "allow"
+    },
+    {
+      "action": "external_directory",
+      "resource": "../../../../shared",
+      "effect": "allow"
+    },
+    {
+      "action": "external_directory",
+      "resource": "E:/opencode_harness_portable/shared",
+      "effect": "allow"
+    },
+    {
+      "action": "external_directory",
+      "resource": "E:\\opencode_harness_portable\\shared",
+      "effect": "allow"
+    },
+    {
+      "action": "external_directory",
+      "resource": "E:/opencode_harness_portable/projects/p2-adapter-opencode-v2/guard-recovery/independent-gates-20261017/artifacts/quarantine",
+      "effect": "allow"
+    },
+    {
+      "action": "external_directory",
+      "resource": "E:\\opencode_harness_portable\\projects\\p2-adapter-opencode-v2\\guard-recovery\\independent-gates-20261017\\artifacts\\quarantine",
+      "effect": "allow"
+    },
+    {
+      "action": "external_directory",
+      "resource": "artifacts/quarantine",
+      "effect": "allow"
+    },
+    {
+      "action": "external_directory",
+      "resource": "../runs/worktree/.opencode/shared",
+      "effect": "allow"
+    },
+    {
+      "action": "external_directory",
+      "resource": "E:/opencode_harness_portable/projects/p2-adapter-opencode-v2/guard-recovery/runs/worktree/.opencode/shared",
+      "effect": "allow"
+    },
+    {
+      "action": "external_directory",
+      "resource": "E:\\opencode_harness_portable\\projects\\p2-adapter-opencode-v2\\guard-recovery\\runs\\worktree\\.opencode\\shared",
+      "effect": "allow"
+    },
+    {
+      "action": "external_directory",
+      "resource": "../runs/worktree/shared",
+      "effect": "allow"
+    },
+    {
+      "action": "external_directory",
+      "resource": "E:/opencode_harness_portable/projects/p2-adapter-opencode-v2/guard-recovery/runs/worktree/shared",
+      "effect": "allow"
+    },
+    {
+      "action": "external_directory",
+      "resource": "E:\\opencode_harness_portable\\projects\\p2-adapter-opencode-v2\\guard-recovery\\runs\\worktree\\shared",
+      "effect": "allow"
+    },
+    {
+      "action": "task",
+      "resource": "code-auditor",
+      "effect": "allow"
+    }
+  ],
+  "guard_admission": "NOT_GRANTED"
+}

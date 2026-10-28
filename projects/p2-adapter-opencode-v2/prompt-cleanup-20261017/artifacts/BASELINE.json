@@ -1,0 +1,434 @@
+{
+  "task_id": "prompt-cleanup-20261017",
+  "root": "E:\\opencode_harness_portable",
+  "head": "9fd54a22c95a63f21f0c84e36d50b237a88642ab",
+  "targets": [
+    "agents/code-orchestrator.md",
+    "shared/code-factory-process.md",
+    "shared/harness-dispatch-map.md",
+    ".opencode/shared/code-factory-process.md",
+    ".opencode/agent/code-orchestrator.md",
+    ".opencode/agent/research-orchestrator.md",
+    ".opencode/agents/code-orchestrator.md",
+    ".opencode/agents/research-orchestrator.md",
+    "config/routes_authority.json",
+    "config/tool_contracts_authority.json",
+    "config/tool_skill_routes.json",
+    "config/runtime_snapshot.json",
+    ".opencode/agent/_registry_index.json",
+    "mcp/README.md"
+  ],
+  "files": [
+    {
+      "path": ".opencode/agent/_registry_index.json",
+      "sha256": "fa350e61b6620a1253a503b71d7225f5fb138d31318dfa1d249f77eec6ededcd",
+      "target": true
+    },
+    {
+      "path": ".opencode/agent/code-orchestrator.md",
+      "sha256": "2c812989bda0206a5f0d8667f4f9cd36fc5d915e033fd41446b4b460ed86a3e8",
+      "target": true
+    },
+    {
+      "path": ".opencode/agent/research-orchestrator.md",
+      "sha256": "82f64f21da64b92000e918944d6830eda9388480d87254a73e8a3690b0b8e028",
+      "target": true
+    },
+    {
+      "path": ".opencode/agents/code-orchestrator.md",
+      "sha256": "cbdbab228d63924cd008c09e7f47a210636822363c9fba90144616e3d4e7ae50",
+      "target": true
+    },
+    {
+      "path": ".opencode/agents/research-orchestrator.md",
+      "sha256": "82f64f21da64b92000e918944d6830eda9388480d87254a73e8a3690b0b8e028",
+      "target": true
+    },
+    {
+      "path": ".opencode/shared/code-factory-process.md",
+      "sha256": "38ac699d299b827b009022b7dc295612e2e0dd9b96664d3a71c58ae85520ffd6",
+      "target": true
+    },
+    {
+      "path": "agents/article-writer.md",
+      "sha256": "eea0726d5e4680d67d2e91d4f094996a5568c48c12dc15b6052148e1467ca8cb",
+      "target": false
+    },
+    {
+      "path": "agents/claim-parser-runner.md",
+      "sha256": "150540c701bb26456ffd07500345085810a84e6b8fdb6bdb0f70662aca4b3dcf",
+      "target": false
+    },
+    {
+      "path": "agents/claim-parser.md",
+      "sha256": "0192dff78f828c3ec5e6a2319abfd83b65e420e6138c55b0319c1dea83ca8952",
+      "target": false
+    },
+    {
+      "path": "agents/code-auditor-runner.md",
+      "sha256": "e34657a6b50491716365ac42ad841efac87e9ff167203290348f919465491a32",
+      "target": false
+    },
+    {
+      "path": "agents/code-auditor.md",
+      "sha256": "856cc4f0d9a7c8fd6092d1219bc85f478f977580e682b7be9a12d34d00df1f46",
+      "target": false
+    },
+    {
+      "path": "agents/code-orchestrator.md",
+      "sha256": "bf24921196177ab2e710960b1eb2afd58b06992828b5544f4dfd2c6871dbb676",
+      "target": true
+    },
+    {
+      "path": "agents/code-reviewer-runner.md",
+      "sha256": "96094ceb337d10682a0caf301896088c6baf400622fcea7992548f83be8d4825",
+      "target": false
+    },
+    {
+      "path": "agents/code-reviewer.md",
+      "sha256": "9566e82c6c58c9b8c7f7323627df964aa850338e025fac29ea57372e7610a873",
+      "target": false
+    },
+    {
+      "path": "agents/code-tester-runner.md",
+      "sha256": "9c8a31c19b36bba1588435cff540bd03e6a07d8879d93036961130b69236007e",
+      "target": false
+    },
+    {
+      "path": "agents/code-tester.md",
+      "sha256": "ab7168aa37548bee65317bbd66b16997af928e4373558ed42d0dd0c14dfeb821",
+      "target": false
+    },
+    {
+      "path": "agents/coder-worker-runner.md",
+      "sha256": "43cbf9685217ba24d3c4b08db6f1f053a723c60e680d9d240f76f0444f246a09",
+      "target": false
+    },
+    {
+      "path": "agents/coder-worker.md",
+      "sha256": "d126265230c6bfec0346cba8c2371942657f8d1b17ef99230a0392b35b4fb4c2",
+      "target": false
+    },
+    {
+      "path": "agents/experimenter.md",
+      "sha256": "7ed31b530328bd6529954bcee85cd8a66ee6d70d3415b70d5cdc9a0e4b1403aa",
+      "target": false
+    },
+    {
+      "path": "agents/fact-checker-runner.md",
+      "sha256": "83d78eef95bd42ecd8d9e77fd91e9ed6b7dc7322ae77749fb18cc5d071b8c814",
+      "target": false
+    },
+    {
+      "path": "agents/fact-checker.md",
+      "sha256": "08a635de149c1cfbdb933af193a9ba2373824d2da0207eda81e7396f9c75b32a",
+      "target": false
+    },
+    {
+      "path": "agents/glossary-maintainer.md",
+      "sha256": "0bd9860c554c24e00bb3eb9912b178328fdefc7d4cd888a7c5b6d7cce112a62a",
+      "target": false
+    },
+    {
+      "path": "agents/research-orchestrator.md",
+      "sha256": "d9b1cce9de2de99ccfb43463c07ecb4068d5e065e88eb43affb86a166f2ccafa",
+      "target": false
+    },
+    {
+      "path": "agents/researcher.md",
+      "sha256": "4e016430477bdf1ce2d456fd102ae2dd7d922edac02465a31156a9b9343f2757",
+      "target": false
+    },
+    {
+      "path": "agents/source-fetcher-runner.md",
+      "sha256": "87f75720fef42fc5ca7181ebde5a41e805d9284e1cb5c884424dc21beca84b15",
+      "target": false
+    },
+    {
+      "path": "agents/source-fetcher.md",
+      "sha256": "b4a535cf64c3d7fc57732128e515beb77f5b45b3c80e912c014892e72fd846fc",
+      "target": false
+    },
+    {
+      "path": "agents/synthesizer-runner.md",
+      "sha256": "2c2d4dac3fdc5076913a4d8118ff6b57f289e704595d5b9d0158d61a1995bc3f",
+      "target": false
+    },
+    {
+      "path": "agents/synthesizer.md",
+      "sha256": "a81bcfd9a87d389c693f54d326d944cacaf3fbbd0b95b35cc9a1a1b6e2a2ed67",
+      "target": false
+    },
+    {
+      "path": "agents/tribunal-judge-runner.md",
+      "sha256": "5a954d9d19fb5e03ac7613d79326c6dfa0f0c42ae225a461447db095e7c45d56",
+      "target": false
+    },
+    {
+      "path": "agents/tribunal-judge.md",
+      "sha256": "ed6f08e48f9dae3c07d4246d8a4b0dffd8cb50dfcb7b0383adb7b291804f3214",
+      "target": false
+    },
+    {
+      "path": "agents/writer-runner.md",
+      "sha256": "63c180f0f8e1b0b6938f50939a2195d871e4d38004c166674e90343641b357e8",
+      "target": false
+    },
+    {
+      "path": "agents/writing-orchestrator.md",
+      "sha256": "96f3691b9bab8e26a7822364fa7add97879c58fc986a685df234a54c3e7e854b",
+      "target": false
+    },
+    {
+      "path": "config/agent_categories/article-writer.json",
+      "sha256": "df8e91f7c561745c7fbcb42b74037d59019612065dae00eb3a365defb1dd53a5",
+      "target": false
+    },
+    {
+      "path": "config/agent_categories/auditor.json",
+      "sha256": "edb7f2f5ddb84b0b5c028d456b3fff609a4187aa958cfbefcae0b6b316d5aec9",
+      "target": false
+    },
+    {
+      "path": "config/agent_categories/claim-parser-runner.json",
+      "sha256": "8ce70c754bf0a966e1aa8b04aaf7920aefc15a59af4edf98337a5a3e333db81b",
+      "target": false
+    },
+    {
+      "path": "config/agent_categories/claim-parser.json",
+      "sha256": "a10455c596bc27f16048dd72615bb8926e3f0153b1ebcc7b7f5f9f15ca8740be",
+      "target": false
+    },
+    {
+      "path": "config/agent_categories/code-auditor-runner.json",
+      "sha256": "ebc1d859b8452527567cedb680144b706727aef5167e40db3c3c75cf569c60eb",
+      "target": false
+    },
+    {
+      "path": "config/agent_categories/code-auditor.json",
+      "sha256": "a98009db0d28fd3f8e907ce2cfb552d82a8c4997e60db6ed012c4b323b76bf55",
+      "target": false
+    },
+    {
+      "path": "config/agent_categories/code-orchestrator.json",
+      "sha256": "302efe856d890bef70aed36a149b073abacc5b9a9360c2db26cce3febe49db09",
+      "target": false
+    },
+    {
+      "path": "config/agent_categories/code-reviewer-runner.json",
+      "sha256": "5601dde03c63661edc8b3baee1d9f61e7fda453524c72d33237f23dc026e6ed4",
+      "target": false
+    },
+    {
+      "path": "config/agent_categories/code-reviewer.json",
+      "sha256": "f9b3be7dc9c8848e3ffb228b5c0138611b139ee60d9a275b000022d183af71e2",
+      "target": false
+    },
+    {
+      "path": "config/agent_categories/code-tester-runner.json",
+      "sha256": "a1b14daee2561211478e45fb8a01fbfbbeac6a626a92f6c2d46c9999280fbf1d",
+      "target": false
+    },
+    {
+      "path": "config/agent_categories/code-tester.json",
+      "sha256": "0131cce61db85acf628f0a1c98f8a95c571c50bca5e328044db855a83064bd24",
+      "target": false
+    },
+    {
+      "path": "config/agent_categories/code.json",
+      "sha256": "fd20fccef35865ee8c52ded77bb9f25d15f4d885b8d3b2b0f410c1d5f7808e77",
+      "target": false
+    },
+    {
+      "path": "config/agent_categories/coder-worker-runner.json",
+      "sha256": "89055b3e0c26d304a5c4add46b28e953142d1c63266a2cf59115878c991e7693",
+      "target": false
+    },
+    {
+      "path": "config/agent_categories/coder-worker.json",
+      "sha256": "41fd650cb86067217a0f7cd37e4c904005d6b7ec361c8c6c45d834b3bdb10bdb",
+      "target": false
+    },
+    {
+      "path": "config/agent_categories/experimenter.json",
+      "sha256": "d4369166514aa65138b9a9f597db4234c508d37b713b3fe08c83984678687144",
+      "target": false
+    },
+    {
+      "path": "config/agent_categories/fact-checker-runner.json",
+      "sha256": "0aa0be2a514b33a44fc2057d09dd7e1a860e721d146890ecd36d2da24287b30b",
+      "target": false
+    },
+    {
+      "path": "config/agent_categories/fact-checker.json",
+      "sha256": "c163734fb159e0e74a9aa61f1d6fb3446250fbf73b4022fac8f8b55352f3f7da",
+      "target": false
+    },
+    {
+      "path": "config/agent_categories/general.json",
+      "sha256": "991f6e77236c186403a83abbb28634e08da5924cf7b8134a5366947ed2334122",
+      "target": false
+    },
+    {
+      "path": "config/agent_categories/glossary-maintainer.json",
+      "sha256": "e4236a305f58bc5b95b55be733f303e1d53052be262d5a3c38b05fe272d26b1e",
+      "target": false
+    },
+    {
+      "path": "config/agent_categories/research-orchestrator.json",
+      "sha256": "0bd2a60c8d164d4d68aa3c8bfd052e6409f3914d83e7df4d34a412e735a4bfed",
+      "target": false
+    },
+    {
+      "path": "config/agent_categories/research.json",
+      "sha256": "bfbf417747a62c54f551426267bd6b13659d722d028e4937754f7518c0156b2d",
+      "target": false
+    },
+    {
+      "path": "config/agent_categories/researcher.json",
+      "sha256": "c0bedf22f31af2c195eea9fb32855ec5fe569815f6e1b61a3d0f41b81d728fcf",
+      "target": false
+    },
+    {
+      "path": "config/agent_categories/source-fetcher-runner.json",
+      "sha256": "08127094f3fe1fc214d8e8528a4c9f4e6d383d3bd081ebd6325585fe79aa60e0",
+      "target": false
+    },
+    {
+      "path": "config/agent_categories/source-fetcher.json",
+      "sha256": "c081f75f54ec8527ed674bac0710b37603f6a0711b96aa18edb94c40eb39f9f4",
+      "target": false
+    },
+    {
+      "path": "config/agent_categories/synthesizer-runner.json",
+      "sha256": "1db59c28581f03051be9c3d7445241b0aac03cb16ecf599513513ae95429016b",
+      "target": false
+    },
+    {
+      "path": "config/agent_categories/synthesizer.json",
+      "sha256": "303f97d2e35fefcd005eff7354cc23adda77e9a1d8e30129936cdc0065236a8c",
+      "target": false
+    },
+    {
+      "path": "config/agent_categories/tribunal-judge-runner.json",
+      "sha256": "aa4c6dc56cca55ecc418cb84d576477ebfee20ee9a3b2eb5fa5c8871e0531d53",
+      "target": false
+    },
+    {
+      "path": "config/agent_categories/tribunal-judge.json",
+      "sha256": "2b05e099e36a37669e32b732ccf35ca446d0f818625f24894d13a04cec38fd1c",
+      "target": false
+    },
+    {
+      "path": "config/agent_categories/writer-runner.json",
+      "sha256": "24f484170576c7b32fa1fb1b81cfcc873815be6481f4e0c489816c49326210f2",
+      "target": false
+    },
+    {
+      "path": "config/agent_categories/writer.json",
+      "sha256": "b8242616b23c263a46eb9fe711a9633a6432543f8aa25c938260c0b662471be1",
+      "target": false
+    },
+    {
+      "path": "config/agent_categories/writing-orchestrator.json",
+      "sha256": "8fc4280537898566c4f21c32fb53579174c4e9a8c10740f5fc804c8f83682ce4",
+      "target": false
+    },
+    {
+      "path": "config/bucket_contracts.json",
+      "sha256": "09c0b5e2449fde82fe20456552f66cc42a671eb2abad0479d4c2b061273f9eb2",
+      "target": false
+    },
+    {
+      "path": "config/execution_modes.json",
+      "sha256": "5928a811827c3f3a955a23849352faf4b078e72babba5028be38eb19bdcc4158",
+      "target": false
+    },
+    {
+      "path": "config/guard_policy.json",
+      "sha256": "2da420a5b510fcd7ef9299b7dc00c42207a4a33f0867bb5126b38cc1954366e3",
+      "target": false
+    },
+    {
+      "path": "config/route_resolution_policy.json",
+      "sha256": "c151545fc11b7560462c17456ebe83b6c282a4363acd5503f545491c7781dd56",
+      "target": false
+    },
+    {
+      "path": "config/routes_authority.json",
+      "sha256": "e04365fc04de6b5b6d987fc39ebb1cf2cb1f6b0591aba9061533b30966b533b0",
+      "target": true
+    },
+    {
+      "path": "config/runtime_snapshot.json",
+      "sha256": "5b85473cc1ed9c8acafaba7300e178db12f7c6f1ff54c0368d611d5a01ef072e",
+      "target": true
+    },
+    {
+      "path": "config/skill_capsule_policy.json",
+      "sha256": "68a0eb3c5bc73b175f28db99ee2e7dc4e5056f7a242d8b6f26a7a39eeeb1f3a6",
+      "target": false
+    },
+    {
+      "path": "config/skills_registry.json",
+      "sha256": "6fcf87d57fc1af3c242737995bcf9625605ee2632527cffee3a3e0edc2b6d79e",
+      "target": false
+    },
+    {
+      "path": "config/strictness_profiles.json",
+      "sha256": "b4c3d3b154b5a52ec6c54e776cf4c0fb367515483f7fe9b6026b62fc21a2d36b",
+      "target": false
+    },
+    {
+      "path": "config/tool_capsule_policy.json",
+      "sha256": "f4198a1443c9fd0d3e1929745ae5f13383e919c53c7264bc3735ce09aade2f93",
+      "target": false
+    },
+    {
+      "path": "config/tool_contracts_authority.json",
+      "sha256": "dbf3fe1c1d471e7fb1af40f22ef6616a3d91754db0f678328797e2b0b96f82d8",
+      "target": true
+    },
+    {
+      "path": "config/tool_runtime_bindings.json",
+      "sha256": "148c1289259727a1db86145fa4bf10cc5931d44deb15474596cf2fe1adf83a13",
+      "target": false
+    },
+    {
+      "path": "config/tool_skill_routes.json",
+      "sha256": "38f8a41347fc117842e0e3b4fdd195ce082a9fad311283c7f6a4d7631fa01068",
+      "target": true
+    },
+    {
+      "path": "mcp/README.md",
+      "sha256": "cfb0ad474f8393cb5afd868d97aca1f88788b65e9bfab1500d2b3b767ad7ceab",
+      "target": true
+    },
+    {
+      "path": "runtime/model_bindings.json",
+      "sha256": "427ba86c0b79c76406ec9767a0b357093ba109fd70646cca4cd2df379d127fb2",
+      "target": false
+    },
+    {
+      "path": "shared/code-factory-process.md",
+      "sha256": "56afb2ea1f7bb6852b921e16e11941dc14deb206bb7780f9d123343573b9a4ae",
+      "target": true
+    },
+    {
+      "path": "shared/harness-dispatch-map.md",
+      "sha256": "61955554f36fc6f8a79c289e45a47e5a845eae7a9f42e76eb38d7b39eb89d754",
+      "target": true
+    }
+  ],
+  "baseline_checks": {
+    "agent_generator": "PASS (26 agents)",
+    "runtime_generator": "PREEXISTING_STALE: all five compiled outputs"
+  },
+  "forbidden_actions": [
+    "scanner execution",
+    "model calls",
+    "config/provider/credential changes",
+    "history rewriting",
+    "unrelated source modifications"
+  ]
+}

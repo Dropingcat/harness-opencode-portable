@@ -1,0 +1,9 @@
+{
+  "agent": "code-auditor",
+  "categories": [
+    "CAT_PROCESS_AUDIT",
+    "CAT_ESCALATION"
+  ],
+  "default_bucket": "security",
+  "capsule": "core-orchestration"
+}

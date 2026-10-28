@@ -1,0 +1,9 @@
+{
+  "agent": "code-tester",
+  "categories": [
+    "CAT_TEST",
+    "CAT_COVERAGE"
+  ],
+  "default_bucket": "code",
+  "capsule": "code"
+}

@@ -1,0 +1,14 @@
+test_agent_frontmatter_preserved (__main__.PromptCleanupTests.test_agent_frontmatter_preserved) ... ok
+test_compiled_views_change_only_matching_prompt_text (__main__.PromptCleanupTests.test_compiled_views_change_only_matching_prompt_text) ... ok
+test_guard_policy_and_unrelated_support_are_unchanged (__main__.PromptCleanupTests.test_guard_policy_and_unrelated_support_are_unchanged) ... ok
+test_manual_scanner_registration_is_not_removed (__main__.PromptCleanupTests.test_manual_scanner_registration_is_not_removed) ... ok
+test_no_scanner_instruction_in_agent_or_shared_prompts (__main__.PromptCleanupTests.test_no_scanner_instruction_in_agent_or_shared_prompts) ... ok
+test_route_hint_changed_without_route_behavior_changes (__main__.PromptCleanupTests.test_route_hint_changed_without_route_behavior_changes) ... ok
+test_source_and_generated_agents_agree (__main__.PromptCleanupTests.test_source_and_generated_agents_agree) ... ok
+test_source_audit_is_unmodified (__main__.PromptCleanupTests.test_source_audit_is_unmodified) ... ok
+test_tool_authority_changes_only_prompt_fields (__main__.PromptCleanupTests.test_tool_authority_changes_only_prompt_fields) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.574s
+
+OK

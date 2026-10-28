@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="32" skipped="0" tests="36" time="0.831" timestamp="2026-10-17T12:07:35.196845+03:00" hostname="HOME-PC"><testcase classname="tests.coder.test_guard_recovery.GuardRecoveryTests" name="test_cli_disabled_config_returns_json_promptly_with_explicit_deadline" time="0.128"><failure message="AssertionError: 1 != 2 : usage: doc_guard.py [-h] [--harness-root HARNESS_ROOT] [--config CONFIG]&#10;                    [--artifact ARTIFACT] [--json]&#10;                    {preflight,scan}&#10;doc_guard.py: error: unrecognized arguments: --timeout 0.1">tests\coder\test_guard_recovery.py:113: in test_cli_disabled_config_returns_json_promptly_with_explicit_deadline
+    self.assertEqual(1, proc.returncode, proc.stderr)
+E   AssertionError: 1 != 2 : usage: doc_guard.py [-h] [--harness-root HARNESS_ROOT] [--config CONFIG]
+E                       [--artifact ARTIFACT] [--json]
+E                       {preflight,scan}
+E   doc_guard.py: error: unrecognized arguments: --timeout 0.1</failure></testcase><testcase classname="tests.coder.test_guard_recovery.GuardRecoveryTests" name="test_configured_deadline_is_used_and_cli_can_only_tighten_it" time="0.023"><failure message="AttributeError: 'NoneType' object has no attribute 'args'">tests\coder\test_guard_recovery.py:94: in test_configured_deadline_is_used_and_cli_can_only_tighten_it
+    self.assertEqual(expected, worker.call_args.args[-1])
+                               ^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: 'NoneType' object has no attribute 'args'</failure></testcase><testcase classname="tests.coder.test_guard_recovery.GuardRecoveryTests" name="test_disabled_providers_are_not_constructed" time="0.003"><failure message="AssertionError: Expected '_cloud_from_cfg' to not have been called. Called 2 times.&#10;Calls: [call({'enabled': False, 'transport': 'unavailable'}, 'cloud'),&#10; call({'enabled': False, 'transport': 'unavailable'}, 'fallback')].">tests\coder\test_guard_recovery.py:34: in test_disabled_providers_are_not_constructed
+    cloud.assert_not_called()
+C:\Users\Arhys\AppData\Roaming\uv\python\cpython-3.11-windows-x86_64-none\Lib\unittest\mock.py:900: in assert_not_called
+    raise AssertionError(msg)
+E   AssertionError: Expected '_cloud_from_cfg' to not have been called. Called 2 times.
+E   Calls: [call({'enabled': False, 'transport': 'unavailable'}, 'cloud'),
+E    call({'enabled': False, 'transport': 'unavailable'}, 'fallback')].</failure></testcase><testcase classname="tests.coder.test_guard_recovery.GuardRecoveryTests" name="test_invalid_deadlines_are_structured_blocks" time="0.047"><failure message="AssertionError: 'timeout_invalid' != 'input_root_policy_config_or_stage_unavailable'&#10;- timeout_invalid&#10;+ input_root_policy_config_or_stage_unavailable">tests\coder\test_guard_recovery.py:103: in test_invalid_deadlines_are_structured_blocks
+    self.assertEqual('timeout_invalid', report['reason'])
+E   AssertionError: 'timeout_invalid' != 'input_root_policy_config_or_stage_unavailable'
+E   - timeout_invalid
+E   + input_root_policy_config_or_stage_unavailable</failure><failure message="AssertionError: 'timeout_invalid' != 'input_root_policy_config_or_stage_unavailable'&#10;- timeout_invalid&#10;+ input_root_policy_config_or_stage_unavailable">tests\coder\test_guard_recovery.py:103: in test_invalid_deadlines_are_structured_blocks
+    self.assertEqual('timeout_invalid', report['reason'])
+E   AssertionError: 'timeout_invalid' != 'input_root_policy_config_or_stage_unavailable'
+E   - timeout_invalid
+E   + input_root_policy_config_or_stage_unavailable</failure><failure message="AssertionError: 'timeout_invalid' != 'input_root_policy_config_or_stage_unavailable'&#10;- timeout_invalid&#10;+ input_root_policy_config_or_stage_unavailable">tests\coder\test_guard_recovery.py:103: in test_invalid_deadlines_are_structured_blocks
+    self.assertEqual('timeout_invalid', report['reason'])
+E   AssertionError: 'timeout_invalid' != 'input_root_policy_config_or_stage_unavailable'
+E   - timeout_invalid
+E   + input_root_policy_config_or_stage_unavailable</failure><failure message="AssertionError: 'timeout_invalid' != 'input_root_policy_config_or_stage_unavailable'&#10;- timeout_invalid&#10;+ input_root_policy_config_or_stage_unavailable">tests\coder\test_guard_recovery.py:103: in test_invalid_deadlines_are_structured_blocks
+    self.assertEqual('timeout_invalid', report['reason'])
+E   AssertionError: 'timeout_invalid' != 'input_root_policy_config_or_stage_unavailable'
+E   - timeout_invalid
+E   + input_root_policy_config_or_stage_unavailable</failure><failure message="AssertionError: 'timeout_invalid' != 'input_root_policy_config_or_stage_unavailable'&#10;- timeout_invalid&#10;+ input_root_policy_config_or_stage_unavailable">tests\coder\test_guard_recovery.py:103: in test_invalid_deadlines_are_structured_blocks
+    self.assertEqual('timeout_invalid', report['reason'])
+E   AssertionError: 'timeout_invalid' != 'input_root_policy_config_or_stage_unavailable'
+E   - timeout_invalid
+E   + input_root_policy_config_or_stage_unavailable</failure><failure message="AssertionError: 'timeout_invalid' != 'input_root_policy_config_or_stage_unavailable'&#10;- timeout_invalid&#10;+ input_root_policy_config_or_stage_unavailable">tests\coder\test_guard_recovery.py:103: in test_invalid_deadlines_are_structured_blocks
+    self.assertEqual('timeout_invalid', report['reason'])
+E   AssertionError: 'timeout_invalid' != 'input_root_policy_config_or_stage_unavailable'
+E   - timeout_invalid
+E   + input_root_policy_config_or_stage_unavailable</failure></testcase><testcase classname="tests.coder.test_guard_recovery.GuardRecoveryTests" name="test_invalid_enabled_or_unknown_transport_is_refused" time="0.018"><failure message="AssertionError: ConfigError not raised">tests\coder\test_guard_recovery.py:57: in test_invalid_enabled_or_unknown_transport_is_refused
+    with self.subTest(provider=provider), self.assertRaises(semantic.ConfigError):
+E   AssertionError: ConfigError not raised</failure><failure message="AssertionError: ConfigError not raised">tests\coder\test_guard_recovery.py:57: in test_invalid_enabled_or_unknown_transport_is_refused
+    with self.subTest(provider=provider), self.assertRaises(semantic.ConfigError):
+E   AssertionError: ConfigError not raised</failure><failure message="AssertionError: ConfigError not raised">tests\coder\test_guard_recovery.py:57: in test_invalid_enabled_or_unknown_transport_is_refused
+    with self.subTest(provider=provider), self.assertRaises(semantic.ConfigError):
+E   AssertionError: ConfigError not raised</failure><failure message="AssertionError: ConfigError not raised">tests\coder\test_guard_recovery.py:57: in test_invalid_enabled_or_unknown_transport_is_refused
+    with self.subTest(provider=provider), self.assertRaises(semantic.ConfigError):
+E   AssertionError: ConfigError not raised</failure></testcase><testcase classname="tests.coder.test_guard_recovery.GuardRecoveryTests" name="test_legacy_explicit_provider_without_enabled_flag_is_preserved" time="0.003"><failure message="AssertionError: Expected '_local_from_cfg' to not have been called. Called 1 times.&#10;Calls: [call({'providers': {'cloud': {'model': 'synthetic-model'}}})].">tests\coder\test_guard_recovery.py:66: in test_legacy_explicit_provider_without_enabled_flag_is_preserved
+    local.assert_not_called()
+C:\Users\Arhys\AppData\Roaming\uv\python\cpython-3.11-windows-x86_64-none\Lib\unittest\mock.py:900: in assert_not_called
+    raise AssertionError(msg)
+E   AssertionError: Expected '_local_from_cfg' to not have been called. Called 1 times.
+E   Calls: [call({'providers': {'cloud': {'model': 'synthetic-model'}}})].</failure></testcase><testcase classname="tests.coder.test_guard_recovery.GuardRecoveryTests" name="test_missing_providers_do_not_create_implicit_local_route" time="0.003"><failure message="AssertionError: Expected '_local_from_cfg' to not have been called. Called 1 times.&#10;Calls: [call({})].">tests\coder\test_guard_recovery.py:44: in test_missing_providers_do_not_create_implicit_local_route
+    local.assert_not_called()
+C:\Users\Arhys\AppData\Roaming\uv\python\cpython-3.11-windows-x86_64-none\Lib\unittest\mock.py:900: in assert_not_called
+    raise AssertionError(msg)
+E   AssertionError: Expected '_local_from_cfg' to not have been called. Called 1 times.
+E   Calls: [call({})].</failure></testcase><testcase classname="tests.coder.test_guard_recovery.GuardRecoveryTests" name="test_preflight_exposes_missing_route_but_never_grants_admission" time="0.005"><failure message="KeyError: 'p2_configured'">tests\coder\test_guard_recovery.py:81: in test_preflight_exposes_missing_route_but_never_grants_admission
+    self.assertFalse(report['p2_configured'])
+                     ^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'p2_configured'</failure></testcase><testcase classname="tests.coder.test_guard_recovery.GuardRecoveryTests" name="test_scanner_blocks_unconfigured_p2_without_starting_worker" time="0.007"><failure message="AssertionError: 'p2_not_configured' != 'input_root_policy_config_or_stage_unavailable'&#10;- p2_not_configured&#10;+ input_root_policy_config_or_stage_unavailable">tests\coder\test_guard_recovery.py:72: in test_scanner_blocks_unconfigured_p2_without_starting_worker
+    self.assertEqual('p2_not_configured', report['reason'])
+E   AssertionError: 'p2_not_configured' != 'input_root_policy_config_or_stage_unavailable'
+E   - p2_not_configured
+E   + input_root_policy_config_or_stage_unavailable</failure></testcase><testcase classname="tests.coder.test_guard_recovery.GuardRecoveryTests" name="test_unavailable_transport_is_not_reinterpreted_as_http" time="0.003"><failure message="AssertionError: Expected '_cloud_from_cfg' to not have been called. Called 1 times.&#10;Calls: [call({'enabled': True, 'transport': 'unavailable'}, 'cloud')].">tests\coder\test_guard_recovery.py:51: in test_unavailable_transport_is_not_reinterpreted_as_http
+    cloud.assert_not_called()
+C:\Users\Arhys\AppData\Roaming\uv\python\cpython-3.11-windows-x86_64-none\Lib\unittest\mock.py:900: in assert_not_called
+    raise AssertionError(msg)
+E   AssertionError: Expected '_cloud_from_cfg' to not have been called. Called 1 times.
+E   Calls: [call({'enabled': True, 'transport': 'unavailable'}, 'cloud')].</failure></testcase><testcase classname="tests.coder.test_native_classifier_recovery.NativeClassifierRecoveryTests" name="test_classification_parser_rejects_missing_or_ambiguous_response" time="0.034"><failure message="AttributeError: module 'opencode_transport' has no attribute 'ClassificationReply'">tests\coder\test_native_classifier_recovery.py:48: in test_classification_parser_rejects_missing_or_ambiguous_response
+    reply(bound, text)
+tests\coder\test_native_classifier_recovery.py:32: in reply
+    return transport.ClassificationReply.from_response(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: module 'opencode_transport' has no attribute 'ClassificationReply'</failure><failure message="AttributeError: module 'opencode_transport' has no attribute 'ClassificationReply'">tests\coder\test_native_classifier_recovery.py:48: in test_classification_parser_rejects_missing_or_ambiguous_response
+    reply(bound, text)
+tests\coder\test_native_classifier_recovery.py:32: in reply
+    return transport.ClassificationReply.from_response(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: module 'opencode_transport' has no attribute 'ClassificationReply'</failure><failure message="AttributeError: module 'opencode_transport' has no attribute 'ClassificationReply'">tests\coder\test_native_classifier_recovery.py:48: in test_classification_parser_rejects_missing_or_ambiguous_response
+    reply(bound, text)
+tests\coder\test_native_classifier_recovery.py:32: in reply
+    return transport.ClassificationReply.from_response(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: module 'opencode_transport' has no attribute 'ClassificationReply'</failure><failure message="AttributeError: module 'opencode_transport' has no attribute 'ClassificationReply'">tests\coder\test_native_classifier_recovery.py:48: in test_classification_parser_rejects_missing_or_ambiguous_response
+    reply(bound, text)
+tests\coder\test_native_classifier_recovery.py:32: in reply
+    return transport.ClassificationReply.from_response(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: module 'opencode_transport' has no attribute 'ClassificationReply'</failure><failure message="AttributeError: module 'opencode_transport' has no attribute 'ClassificationReply'">tests\coder\test_native_classifier_recovery.py:48: in test_classification_parser_rejects_missing_or_ambiguous_response
+    reply(bound, text)
+tests\coder\test_native_classifier_recovery.py:32: in reply
+    return transport.ClassificationReply.from_response(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: module 'opencode_transport' has no attribute 'ClassificationReply'</failure><failure message="AttributeError: module 'opencode_transport' has no attribute 'ClassificationReply'">tests\coder\test_native_classifier_recovery.py:48: in test_classification_parser_rejects_missing_or_ambiguous_response
+    reply(bound, text)
+tests\coder\test_native_classifier_recovery.py:32: in reply
+    return transport.ClassificationReply.from_response(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: module 'opencode_transport' has no attribute 'ClassificationReply'</failure><failure message="AttributeError: module 'opencode_transport' has no attribute 'ClassificationReply'">tests\coder\test_native_classifier_recovery.py:49: in test_classification_parser_rejects_missing_or_ambiguous_response
+    self.assertEqual('NO', reply(bound, ' NO\n').verdict)
+                           ^^^^^^^^^^^^^^^^^^^^^
+tests\coder\test_native_classifier_recovery.py:32: in reply
+    return transport.ClassificationReply.from_response(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: module 'opencode_transport' has no attribute 'ClassificationReply'</failure></testcase><testcase classname="tests.coder.test_native_classifier_recovery.NativeClassifierRecoveryTests" name="test_existing_majority_rule_is_preserved" time="0.001"><failure message="AssertionError: 'NO' != None">tests\coder\test_native_classifier_recovery.py:91: in test_existing_majority_rule_is_preserved
+    self.assertEqual(expected, NativeAdapter(classify).classify(CHUNK, snapshot())['verdict'])
+E   AssertionError: 'NO' != None</failure></testcase><testcase classname="tests.coder.test_native_classifier_recovery.NativeClassifierRecoveryTests" name="test_explicit_yes_is_not_converted_to_no" time="0.001"><failure message="AssertionError: 'YES' != None">tests\coder\test_native_classifier_recovery.py:65: in test_explicit_yes_is_not_converted_to_no
+    self.assertEqual('YES', report['verdict'])
+E   AssertionError: 'YES' != None</failure></testcase><testcase classname="tests.coder.test_native_classifier_recovery.NativeClassifierRecoveryTests" name="test_missing_request_hash_cannot_pass" time="0.001" /><testcase classname="tests.coder.test_native_classifier_recovery.NativeClassifierRecoveryTests" name="test_parallel_parents_and_repeated_inputs_have_distinct_component_requests" time="0.004"><failure message="AssertionError: 'NO' != None">tests\coder\test_native_classifier_recovery.py:105: in test_parallel_parents_and_repeated_inputs_have_distinct_component_requests
+    a, b = list(pool.map(run, ['ses_parent_a', 'ses_parent_b']))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Arhys\AppData\Roaming\uv\python\cpython-3.11-windows-x86_64-none\Lib\concurrent\futures\_base.py:619: in result_iterator
+    yield _result_or_cancel(fs.pop())
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Arhys\AppData\Roaming\uv\python\cpython-3.11-windows-x86_64-none\Lib\concurrent\futures\_base.py:317: in _result_or_cancel
+    return fut.result(timeout)
+           ^^^^^^^^^^^^^^^^^^^
+C:\Users\Arhys\AppData\Roaming\uv\python\cpython-3.11-windows-x86_64-none\Lib\concurrent\futures\_base.py:449: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+C:\Users\Arhys\AppData\Roaming\uv\python\cpython-3.11-windows-x86_64-none\Lib\concurrent\futures\_base.py:401: in __get_result
+    raise self._exception
+C:\Users\Arhys\AppData\Roaming\uv\python\cpython-3.11-windows-x86_64-none\Lib\concurrent\futures\thread.py:58: in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\coder\test_native_classifier_recovery.py:101: in run
+    self.assertEqual('NO', chain.run(CHUNK)['verdict'])
+E   AssertionError: 'NO' != None</failure></testcase><testcase classname="tests.coder.test_native_classifier_recovery.NativeClassifierRecoveryTests" name="test_repeating_one_message_does_not_manufacture_three_votes" time="0.001"><failure message="AttributeError: module 'opencode_transport' has no attribute 'ClassificationReply'">tests\coder\test_native_classifier_recovery.py:70: in test_repeating_one_message_does_not_manufacture_three_votes
+    cached_reply = reply(bound, 'NO')
+                   ^^^^^^^^^^^^^^^^^^
+tests\coder\test_native_classifier_recovery.py:32: in reply
+    return transport.ClassificationReply.from_response(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: module 'opencode_transport' has no attribute 'ClassificationReply'</failure></testcase><testcase classname="tests.coder.test_native_classifier_recovery.NativeClassifierRecoveryTests" name="test_snapshot_must_describe_the_actual_chunk" time="0.001"><failure message="AssertionError: Lists differ: [] != [('4817906e55a74f59c399b27a6f714f9938250d2[61 chars]ed')]&#10;&#10;Second list contains 1 additional elements.&#10;First extra element 0:&#10;('4817906e55a74f59c399b27a6f714f9938250d293bd5efdad202479925367bf3', 'Synthetic classifier input.changed')&#10;&#10;- []&#10;+ [('4817906e55a74f59c399b27a6f714f9938250d293bd5efdad202479925367bf3',&#10;+   'Synthetic classifier input.changed')]">tests\coder\test_native_classifier_recovery.py:83: in test_snapshot_must_describe_the_actual_chunk
+    self.assertEqual([], calls)
+E   AssertionError: Lists differ: [] != [('4817906e55a74f59c399b27a6f714f9938250d2[61 chars]ed')]
+E   
+E   Second list contains 1 additional elements.
+E   First extra element 0:
+E   ('4817906e55a74f59c399b27a6f714f9938250d293bd5efdad202479925367bf3', 'Synthetic classifier input.changed')
+E   
+E   - []
+E   + [('4817906e55a74f59c399b27a6f714f9938250d293bd5efdad202479925367bf3',
+E   +   'Synthetic classifier input.changed')]</failure></testcase><testcase classname="tests.coder.test_native_classifier_recovery.NativeClassifierRecoveryTests" name="test_three_unique_explicit_no_replies_can_form_component_majority" time="0.001"><failure message="AssertionError: 'NO' != None">tests\coder\test_native_classifier_recovery.py:57: in test_three_unique_explicit_no_replies_can_form_component_majority
+    self.assertEqual('NO', report['verdict'])
+E   AssertionError: 'NO' != None</failure></testcase><testcase classname="tests.coder.test_native_classifier_recovery.NativeClassifierRecoveryTests" name="test_transport_completion_alone_is_not_a_clean_classification" time="0.001"><failure message="AssertionError: 'NO' is not None">tests\coder\test_native_classifier_recovery.py:41: in test_transport_completion_alone_is_not_a_clean_classification
+    self.assertIsNone(report['verdict'])
+E   AssertionError: 'NO' is not None</failure></testcase></testsuite></testsuites>

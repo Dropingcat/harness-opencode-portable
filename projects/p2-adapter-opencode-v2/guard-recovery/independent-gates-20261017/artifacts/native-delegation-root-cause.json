@@ -1,0 +1,10 @@
+{
+  "native_action": "subagent",
+  "requested_role": "code-reviewer",
+  "observed_effect_before_correction": "deny",
+  "legacy_action": "task",
+  "legacy_effect_previously_observed": "allow",
+  "source_evidence": "runs/native-tool-decisive-source.json",
+  "model_calls_made": 0,
+  "tokens_unchanged": true
+}

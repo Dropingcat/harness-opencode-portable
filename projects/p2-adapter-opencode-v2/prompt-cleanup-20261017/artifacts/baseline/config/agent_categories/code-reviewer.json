@@ -1,0 +1,9 @@
+{
+  "agent": "code-reviewer",
+  "categories": [
+    "CAT_REVIEW_FINDING",
+    "CAT_FALSIFICATION"
+  ],
+  "default_bucket": "code",
+  "capsule": "code"
+}

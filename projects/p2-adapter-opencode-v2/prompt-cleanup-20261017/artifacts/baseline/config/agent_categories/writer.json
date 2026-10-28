@@ -1,0 +1,6 @@
+{
+  "agent": "writer",
+  "categories": ["CAT_NARRATIVE", "CAT_EVIDENCE_TABLE", "CAT_CITATION"],
+  "default_bucket": "writing",
+  "capsule": "writing"
+}

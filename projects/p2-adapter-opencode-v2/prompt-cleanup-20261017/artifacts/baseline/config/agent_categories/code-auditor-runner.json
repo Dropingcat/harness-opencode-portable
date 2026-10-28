@@ -1,0 +1,10 @@
+{
+  "agent": "code-auditor-runner",
+  "categories": [
+    "CAT_RUNNER_PROXY"
+  ],
+  "default_bucket": "security",
+  "capsule": "core-orchestration",
+  "wraps": "code-auditor",
+  "note": "primary-обёртка субагента для точечного диспатча (TD-A1 registry overlay)"
+}

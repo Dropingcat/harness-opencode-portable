@@ -1,0 +1,2 @@
+# Preserve raw machine-generated pytest/JUnit failure output, including spacing.
+artifacts/*.xml -whitespace

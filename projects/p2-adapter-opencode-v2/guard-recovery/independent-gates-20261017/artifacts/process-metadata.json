@@ -1,0 +1,26 @@
+{
+  "task_id": "guard-independent-gates-20261017",
+  "candidate_commit": "892ecc3",
+  "implementation_author": "code-orchestrator under explicit local recovery authorization",
+  "prior_offline_tests": 53,
+  "prior_offline_subtests": 37,
+  "independent_gates": "PENDING",
+  "implementation_files": 5,
+  "focused_test_files": 2,
+  "guard_admission": "NOT_GRANTED",
+  "user_authorization": {
+    "specialized_jobs": 3,
+    "seconds_per_job": 120,
+    "observed_tokens": 100000,
+    "inflight_overshoot_accepted": true,
+    "canary": false,
+    "merge": false,
+    "restart": false
+  },
+  "worker_role_impersonated": false,
+  "reviewer_tester_content": "not supplied; unadmitted",
+  "rework_rounds": 0,
+  "attempt_limit": 2,
+  "native_bridge": "BRIDGE_ERROR:bridge_closed",
+  "cli_transport": "explicit registered primary runners; no general fallback"
+}

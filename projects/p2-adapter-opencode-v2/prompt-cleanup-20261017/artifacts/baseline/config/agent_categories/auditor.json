@@ -1,0 +1,6 @@
+{
+  "agent": "auditor",
+  "categories": ["CAT_RISK", "CAT_GAP", "CAT_CONFLICT", "CAT_VALIDATION"],
+  "default_bucket": "security",
+  "capsule": "core-orchestration"
+}
