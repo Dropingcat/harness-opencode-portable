@@ -1,0 +1,76 @@
+{
+  "schema": "writer_core.review_report.v1",
+  "generated_by": "writer_core.review.REVIEW_CYCLE",
+  "created_at": "2026-10-23T17:05:00+00:00",
+  "inputs": {
+    "draft": "E:\\opencode_harness_portable\\projects\\writer-gates-restore\\reports\\tmppur3l1gj\\draft.md",
+    "contract": "E:\\opencode_harness_portable\\projects\\writer-gates-restore\\reports\\tmppur3l1gj\\contract.json",
+    "plan": null,
+    "dom": "E:\\opencode_harness_portable\\projects\\writer-gates-restore\\reports\\tmppur3l1gj\\dom.json",
+    "max_iterations": 0,
+    "max_contract_claims": null,
+    "draft_chars": 68
+  },
+  "iterations": 1,
+  "final_verdict": "FAIL",
+  "stopped_reason": "iteration_limit",
+  "escalation": true,
+  "escalation_reasons": [
+    "вердикт FAIL после 1 итераций (максимум 0): semantic/структурные дефекты не устраняются детерминированным constrained repair — требуется approval человека"
+  ],
+  "issues_by_level": {
+    "L1": [],
+    "L2": {
+      "skipped": true,
+      "note": "plan не передан — L2 не запущен",
+      "issues": []
+    },
+    "L3": []
+  },
+  "rtt_defects_final": [],
+  "trace_checks_final": {
+    "verdict": "FAIL",
+    "issues": [
+      {
+        "type": "dangling_claim",
+        "severity": "high",
+        "detail": "C-A"
+      },
+      {
+        "type": "source_mismatch",
+        "severity": "high",
+        "detail": "Установлено, что синтетический образец имеет синий цвет [C-A] [S-A]."
+      }
+    ],
+    "checks": [
+      {
+        "name": "exact_sentence_trace",
+        "sentences": 1,
+        "claims": 1
+      }
+    ],
+    "scope": "Deterministic literary DOM traceability; curated metadata is read-only.",
+    "limitations": [
+      "PASS proves structural/exact-sentence grounding only, not scientific truth.",
+      "No semantic paraphrase, causal synthesis, source retrieval or scientific computation.",
+      "Evidence quotes are checked against source.text only when supplied; locators are syntactic.",
+      "Use one exact claim per sentence with citations before terminal punctuation; headings must match DOM titles."
+    ]
+  },
+  "repaired_spans": [],
+  "rounds": [
+    {
+      "iteration": 0,
+      "verdict": "FAIL",
+      "reasons": [
+        "RTT_FAIL",
+        "TRACE_FAIL"
+      ],
+      "n_l1": 0,
+      "n_l2": 0,
+      "n_l3_defects": 0,
+      "trace_verdict": "FAIL",
+      "changed": null
+    }
+  ]
+}

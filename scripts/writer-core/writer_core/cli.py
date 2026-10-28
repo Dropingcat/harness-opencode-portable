@@ -436,6 +436,7 @@ def _normalize_dom_claims(data: Any) -> list[dict]:
             "span": c.get("span"),
             "start": c.get("start"),
             "end": c.get("end"),
+            "evidence": c.get("evidence") or [],
         })
     return out
 
@@ -548,7 +549,7 @@ def cmd_review(args: argparse.Namespace) -> int:
                          if isinstance(report.get("trace_checks_final"), dict) else None,
         "repaired_spans": len(report.get("repaired_spans") or []),
     }, ensure_ascii=False, indent=2))
-    return 0
+    return 0 if report.get("final_verdict") == "PASS" and not report.get("escalation") else 1
 
 
 def cmd_uncertainty(args: argparse.Namespace) -> int:

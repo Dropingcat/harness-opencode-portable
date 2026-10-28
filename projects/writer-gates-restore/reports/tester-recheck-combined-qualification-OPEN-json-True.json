@@ -1,0 +1,17 @@
+{
+  "command": [
+    "E:\\opencode_harness_portable\\.venv\\Scripts\\python.exe",
+    "E:\\opencode_harness_portable\\scripts\\writer\\draft_loop.py",
+    "--text",
+    "E:\\opencode_harness_portable\\projects\\writer-gates-restore\\reports\\tmpih7vfi9_\\draft.md",
+    "--dom",
+    "E:\\opencode_harness_portable\\projects\\writer-gates-restore\\reports\\tmpih7vfi9_\\dom.json",
+    "--paragraph-id",
+    "P-A",
+    "--apply"
+  ],
+  "cwd": "E:\\opencode_harness_portable",
+  "exit_code": 0,
+  "stdout": "{\n  \"verdict\": \"PASS\",\n  \"issues\": [],\n  \"checks\": [\n    {\n      \"name\": \"exact_sentence_trace\",\n      \"sentences\": 1,\n      \"claims\": 1\n    }\n  ],\n  \"scope\": \"Deterministic literary DOM traceability; curated metadata is read-only.\",\n  \"limitations\": [\n    \"PASS proves structural/exact-sentence grounding only, not scientific truth.\",\n    \"No semantic paraphrase, causal synthesis, source retrieval or scientific computation.\",\n    \"Evidence quotes are checked against source.text only when supplied; locators are syntactic.\",\n    \"Use one exact claim per sentence with citations before terminal punctuation; headings must match DOM titles.\"\n  ],\n  \"paragraph_id\": \"P-A\",\n  \"changed\": true,\n  \"applied\": true\n}\n",
+  "stderr": ""
+}

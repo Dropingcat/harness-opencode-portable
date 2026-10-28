@@ -1,0 +1,17 @@
+{
+  "command": [
+    "E:\\opencode_harness_portable\\.venv\\Scripts\\python.exe",
+    "E:\\opencode_harness_portable\\scripts\\writer\\draft_loop.py",
+    "--text",
+    "E:\\opencode_harness_portable\\projects\\writer-gates-restore\\reports\\tmpmozkudyr\\draft.md",
+    "--dom",
+    "E:\\opencode_harness_portable\\projects\\writer-gates-restore\\reports\\tmpmozkudyr\\dom.yaml",
+    "--paragraph-id",
+    "P-NO",
+    "--apply"
+  ],
+  "cwd": "E:\\opencode_harness_portable",
+  "exit_code": 1,
+  "stdout": "{\n  \"verdict\": \"FAIL\",\n  \"issues\": [\n    {\n      \"type\": \"input_error\",\n      \"severity\": \"high\",\n      \"detail\": \"paragraph-id does not resolve exactly\"\n    }\n  ],\n  \"checks\": [],\n  \"scope\": \"Input validation\",\n  \"limitations\": [\n    \"PASS proves structural/exact-sentence grounding only, not scientific truth.\",\n    \"No semantic paraphrase, causal synthesis, source retrieval or scientific computation.\",\n    \"Evidence quotes are checked against source.text only when supplied; locators are syntactic.\",\n    \"Use one exact claim per sentence with citations before terminal punctuation; headings must match DOM titles.\"\n  ],\n  \"applied\": false\n}\n",
+  "stderr": ""
+}

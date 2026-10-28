@@ -36,6 +36,8 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+import re
+
 from decimal import Decimal, InvalidOperation
 from pathlib import Path
 
@@ -48,13 +50,26 @@ except ImportError:
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 try:
     from researcher_core.guard import scan_text
-    from researcher_core.numeric import NumericComparisonStatus, NumericValue, compare_numeric
+    from researcher_core.numeric import (
+        DEFAULT_UNIT_REGISTRY,
+        NumericComparisonStatus,
+        NumericValue,
+        UnitConversionError,
+        compare_numeric,
+    )
     from researcher_core.formulas import check_constant, detect_formula
     from researcher_core.qualifier import extract_qualifier
     RESEARCHER_OK = True
 except Exception as exc:  # pragma: no cover
     RESEARCHER_OK = False
     _IMPORT_ERR = str(exc)
+
+# Явный, задокументированный disposition для чисел-марок/служебных токенов:
+# verify_claims распознаёт не-количественные токены (марки сталей Р18/Р6М5/
+# ВКС-10/08Х18Н10Т/AISI1045, номера ГОСТ, глав и т.п.) и НЕ выдаёт их за
+# измеряемые величины. citation_trace принимает ТОЛЬКО это точное значение
+# disposition (никаких фальшивых MATCH; подмена status на MATCH = FAIL).
+NON_QUANTITY_DISPOSITION = "non-quantity-grade-token"
 
 
 def _load_yaml(path: Path) -> dict:
@@ -67,29 +82,73 @@ def _load_yaml(path: Path) -> dict:
     return data
 
 
+def _unit_is_known(unit: str | None) -> bool:
+    """Единица валидна, если она нормализуется через реестр researcher_core.numeric.
+
+    Критерий принят контрактом кодового контура: токен считается измеряемой
+    величиной ТОЛЬКО при валидной единице реестра (DEFAULT_UNIT_REGISTRY).
+    Иначе — марк/не-количество (марки сталей, номера ГОСТ/глав и т.п.).
+    """
+    if not unit:
+        return True  # безразмерная величина (ratio)
+    try:
+        DEFAULT_UNIT_REGISTRY.normalize_unit(unit)
+        return True
+    except (UnitConversionError, TypeError, ValueError):
+        return False
+
+
 def _extract_numbers(text: str) -> list[dict]:
-    """Детерминированный мини-парсер чисел (value + unit) из текста claim/source."""
+    """Детерминированный мини-парсер чисел (value + unit) из текста claim/source.
+
+    Возвращает ТОЛЬКО числа с валидной единицей реестра (см. _unit_is_known):
+    марки/служебные токены (Р18, ВКС-10, 08Х18Н10Т, AISI1045, ГОСТ 5632-72 и
+    т.п.) НЕ распознаются как измеряемые величины и в результат не попадают.
+    Порядок приоритета сохранён: первый валидный диапазон -> иначе первое
+    валидное одиночное число+единица.
+    """
     import re
     out = []
-    # диапазон "70-80 HV" / "0.5–0.7"
-    m = re.search(r"(\d+[.,]?\d*)\s*[–—-]\s*(\d+[.,]?\d*)\s*([А-Яа-яёЁA-Za-z%°/µ²]+)", text)
-    if m:
+    # диапазон "70-80 HV" / "0.5–0.7 %" / "950-1000 °C"
+    for m in re.finditer(r"(\d+[.,]?\d*)\s*[–—-]\s*(\d+[.,]?\d*)\s*([А-Яа-яёЁA-Za-z%°µ²]+)", text):
+        unit = _normalize_unit(m.group(3))
+        if not _unit_is_known(unit):
+            continue
         try:
             lo = Decimal(m.group(1).replace(",", "."))
             hi = Decimal(m.group(2).replace(",", "."))
-            out.append({"value": (lo + hi) / 2, "lower": lo, "upper": hi, "unit": m.group(3), "raw": m.group(0)})
-            return out
         except InvalidOperation:
-            pass
+            continue
+        out.append({"value": (lo + hi) / 2, "lower": lo, "upper": hi, "unit": unit, "raw": m.group(0)})
+        return out
     # одиночное число + единица
-    m = re.search(r"(\d+[.,]?\d*)\s*([А-Яа-яёЁA-Za-z%°µ²]+)", text)
-    if m:
+    for m in re.finditer(r"(\d+[.,]?\d*)\s*([А-Яа-яёЁA-Za-z%°µ²]+)", text):
+        unit = _normalize_unit(m.group(2))
+        if not _unit_is_known(unit):
+            continue
         try:
-            out.append({"value": Decimal(m.group(1).replace(",", ".")), "unit": m.group(2), "raw": m.group(0)})
+            out.append({"value": Decimal(m.group(1).replace(",", ".")), "unit": unit, "raw": m.group(0)})
         except InvalidOperation:
-            pass
+            continue
+        return out
     return out
 
+
+_MARK_TOKEN_RE = re.compile(r"[А-Яа-яёЁA-Za-z]*\d[А-Яа-яёЁA-Za-z0-9\-–_.]*")
+
+
+def _extract_mark_tokens(text: str) -> list[str]:
+    """Цифросодержащие подстроки (марки/номера), НЕ распознанные как величины.
+
+    Используется для прозрачной диагностики в numeric_comparison с disposition
+    non-quantity-grade-token: что именно отнесено к не-количественным токенам.
+    """
+    seen: list[str] = []
+    for m in _MARK_TOKEN_RE.finditer(text or ""):
+        tok = m.group(0)
+        if tok and tok not in seen:
+            seen.append(tok)
+    return seen[:8]
 
 def _normalize_unit(u: str | None) -> str | None:
     if not u:
@@ -218,7 +277,10 @@ def verify_claim(claim: dict, source_text: str | None, policy: dict | None = Non
     except Exception:
         result["formula"] = "ERROR"
 
-    # 4. Numeric: если есть число в claim и source
+    # 4. Numeric: честное сравнение ТОЛЬКО при реальных величинах в claim И source
+    #    (число с валидной единицей реестра — см. _unit_is_known). Марки/служебные
+    #    токены (Р18, Р6М5, ВКС-10, 08Х18Н10Т, AISI1045, ГОСТ 5632-72, номера глав
+    #    и т.п.) НЕ считаются измеряемыми величинами и в сравнение не попадают.
     claim_nums = _extract_numbers(text)
     source_nums = _extract_numbers(source_text or "") if source_text else []
     if claim_nums and source_nums:
@@ -244,8 +306,22 @@ def verify_claim(claim: dict, source_text: str | None, policy: dict | None = Non
             return result
         except Exception as exc:
             result["numeric_comparison"] = {"error": str(exc)}
+    elif not claim_nums and re.search(r"\d", text or ""):
+        # В claim есть цифры, но НЕТ реальной величины с валидной единицей — это
+        # марки/номера (non-quantity-grade-token). Чтобы цитатный гейт НЕ трактовал
+        # их как numeric_unverified/numeric_conflict, пишем ЯВНЫЙ задокументиро-
+        # ванный disposition (контракт кодового контура). НИКАКИХ фальшивых
+        # MATCH/чисел/единиц: status NOT_COMPARABLE + disposition — и только.
+        result["numeric_comparison"] = {
+            "status": "NOT_COMPARABLE",
+            "disposition": NON_QUANTITY_DISPOSITION,
+            "reason": "digits present but no measured quantity with a registered unit "
+                      "(mark/grade/service tokens)",
+            "tokens": _extract_mark_tokens(text),
+        }
+        return result
 
-    # 5. Нет чисел → если есть evidence с source, ставим OPEN (фактический check — в r3/citation)
+    # 5. Нет цифр → если есть evidence с source, ставим OPEN (фактический check — в r3/citation)
     if source_text:
         result["verdict"] = "OPEN" if not result.get("verdict") or result["verdict"] == "OPEN" else result["verdict"]
         result["confidence"] = max(result.get("confidence", 0.0), 0.3)

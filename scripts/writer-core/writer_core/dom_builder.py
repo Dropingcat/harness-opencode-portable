@@ -202,12 +202,15 @@ def _claim_text(c: dict) -> str:
 
 
 def claims_to_dom(claims: list[dict]) -> list[dict]:
-    """Наши claims (hybrid_extract: {text, qa_status, span}) -> DOM claims[].
+    """Наши claims (hybrid_extract: {text, qa_status, span, evidence}) -> DOM claims[].
 
     id: C-001..; kind: factual/derived/assumed (по числу/каузальности);
-    evidence=[] (пусто до верификации); verification: verdict по qa_status
-    (GROUNDED->SUPPORTED, PROPOSED->OPEN, UNGROUNDED->UNSUPPORTED), confidence
-    дефолт 0.5.
+    evidence: пробрасывается из входа (не пусто, если вход уже содержит
+    evidence с locator/exact_span из кураторского claims.json — compose_evidence
+    spans собирает span штатно, см. compose_evidence_spans); если во входе
+    evidence нет — остаётся [] (пусто до верификации); verification: verdict
+    по qa_status (GROUNDED->SUPPORTED, PROPOSED->OPEN, UNGROUNDED->UNSUPPORTED),
+    confidence дефолт 0.5.
     """
     out: list[dict] = []
     for i, c in enumerate(claims, start=1):
@@ -219,7 +222,8 @@ def claims_to_dom(claims: list[dict]) -> list[dict]:
             "id": f"C-{i:03d}",
             "text": text,
             "kind": _claim_kind(text),
-            "evidence": [],
+            "evidence": [dict(e) for e in (c.get("evidence") or [])
+                         if isinstance(e, dict)],
             "verification": {
                 "verdict": verdict,
                 "confidence": conf,
@@ -367,6 +371,68 @@ def _sources_and_uncertainty(source_kinds: list[str]) -> tuple[list[dict], dict]
 # 5. build_dom — собрать DOM по контракту + сохранить YAML
 # ---------------------------------------------------------------------------
 
+def _pretty_locator(loc) -> str:
+    """Композиция human-readable локатора из DOM evidence locator.
+
+    dict: printed_page -> 'pN', lines [a,b] -> 'lines a–b', section -> 'section X';
+    непустые части собираются через ', '. Пустой dict -> 'k=v' через '; ' (или
+    'n/a'). Строка — как есть (trim). Это формат пилотного dom_span_compose.py;
+    никакие данные не выдумываются.
+    """
+    if isinstance(loc, dict):
+        parts = []
+        pp = loc.get("printed_page")
+        if pp is not None:
+            parts.append(f"p{pp}")
+        lines = loc.get("lines")
+        if isinstance(lines, (list, tuple)) and len(lines) == 2:
+            parts.append(f"lines {lines[0]}–{lines[1]}")
+        sec = loc.get("section")
+        if isinstance(sec, str) and sec.strip():
+            parts.append(f"section {sec.strip()}")
+        if parts:
+            return ", ".join(parts)
+        other = [f"{k}={v}" for k, v in loc.items() if v is not None]
+        return "; ".join(other) if other else "n/a"
+    if isinstance(loc, str) and loc.strip():
+        return loc.strip()
+    return "n/a"
+
+
+def compose_evidence_spans(dom: dict) -> int:
+    """Штатная композиция evidence.span := '<locator>: «exact_span»'.
+
+    Контракт citation_trace требует evidence.span в форме 'locator: «quote»'
+    (строка) или {locator, quote} (dict). Билдер обязан составлять это штатно
+    из УЖЕ присутствующих полей входа (locator dict/string + exact_span) —
+    ровно как пилотный _tools/dom_span_compose.py: чисто форматная композиция,
+    без выдумывания фактов/чисел/локаторов/цитат и без перемещения данных.
+
+    Уже валидные span (строка с 'loc: «quote»' или dict с quote) не трогаются;
+    evidence без exact_span пропускается. Возвращает число скомпонованных span.
+    """
+    changed = 0
+    for c in dom.get("claims") or []:
+        if not isinstance(c, dict):
+            continue
+        for e in c.get("evidence") or []:
+            if not isinstance(e, dict):
+                continue
+            span = e.get("span")
+            quote = e.get("exact_span")
+            needs_fix = not (
+                (isinstance(span, str) and ": «" in span)
+                or (isinstance(span, dict) and span.get("quote"))
+            )
+            if not needs_fix:
+                continue
+            if not (isinstance(quote, str) and quote.strip()):
+                continue
+            e["span"] = f"{_pretty_locator(e.get('locator'))}: «{quote.strip()}»"
+            changed += 1
+    return changed
+
+
 def _next_free_id(existing: set[str], base: str) -> str:
     """Ближайший свободный id с префиксом base относительно множества existing.
 
@@ -505,6 +571,9 @@ def build_dom(template_path: str, plan: dict | None = None,
         if qwen_extra.get("errors"):
             dom.setdefault("_qwen_errors", qwen_extra["errors"])
 
+    # Дефект 2 (contract): span := '<locator>: «exact_span»' композируется штатно
+    # из уже присутствующих полей входа (locator + exact_span). Без выдумывания.
+    compose_evidence_spans(dom)
     errs = validate_dom(dom)
     dom["_validation"] = {"errors": errs, "valid": not errs}
 

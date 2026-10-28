@@ -1,0 +1,21 @@
+{
+  "command": [
+    "E:\\opencode_harness_portable\\.venv\\Scripts\\python.exe",
+    "E:\\opencode_harness_portable\\scripts\\writer-core\\wc_cli.py",
+    "review",
+    "--draft",
+    "E:\\opencode_harness_portable\\projects\\writer-gates-restore\\reports\\tmppur3l1gj\\draft.md",
+    "--contract",
+    "E:\\opencode_harness_portable\\projects\\writer-gates-restore\\reports\\tmppur3l1gj\\contract.json",
+    "--dom",
+    "E:\\opencode_harness_portable\\projects\\writer-gates-restore\\reports\\tmppur3l1gj\\dom.json",
+    "--max-iterations",
+    "0",
+    "--out",
+    "E:\\opencode_harness_portable\\projects\\writer-gates-restore\\reports\\tmppur3l1gj\\good.json"
+  ],
+  "cwd": "E:\\opencode_harness_portable",
+  "exit_code": 0,
+  "stdout": "{\n  \"command\": \"review\",\n  \"out\": \"E:\\\\opencode_harness_portable\\\\projects\\\\writer-gates-restore\\\\reports\\\\tmppur3l1gj\\\\good.json\",\n  \"final_verdict\": \"PASS\",\n  \"iterations\": 1,\n  \"stopped_reason\": \"approved\",\n  \"escalation\": false,\n  \"n_issues\": {\n    \"L1\": 0,\n    \"L2\": 0,\n    \"L3\": 0\n  },\n  \"rtt_defects_final\": 0,\n  \"trace_verdict\": \"PASS\",\n  \"repaired_spans\": 0\n}\n",
+  "stderr": ""
+}

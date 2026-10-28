@@ -592,12 +592,10 @@ def _load_dom(dom: Any) -> Any:
         if not os.path.exists(dom):
             raise ValueError(f"review: файл DOM не найден: {dom}")
         try:
-            if dom.lower().endswith((".yaml", ".yml")):
-                import yaml  # noqa: F401
-                with open(dom, "r", encoding="utf-8") as fh:
-                    return yaml.safe_load(fh)
-            with open(dom, "r", encoding="utf-8-sig") as fh:
-                return json.load(fh)
+            # Reuse the gate's duplicate-key-rejecting loader. Ordinary YAML/JSON
+            # loaders silently discard duplicate curation keys before validation.
+            from citation_trace import load_dom
+            return load_dom(dom)
         except Exception:
             raise ValueError(f"review: DOM не читается: {dom}")
     raise ValueError(f"review: DOM не распознан ({type(dom).__name__})")

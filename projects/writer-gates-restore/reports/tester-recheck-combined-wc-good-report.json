@@ -1,0 +1,60 @@
+{
+  "schema": "writer_core.review_report.v1",
+  "generated_by": "writer_core.review.REVIEW_CYCLE",
+  "created_at": "2026-10-23T17:04:59+00:00",
+  "inputs": {
+    "draft": "E:\\opencode_harness_portable\\projects\\writer-gates-restore\\reports\\tmppur3l1gj\\draft.md",
+    "contract": "E:\\opencode_harness_portable\\projects\\writer-gates-restore\\reports\\tmppur3l1gj\\contract.json",
+    "plan": null,
+    "dom": "E:\\opencode_harness_portable\\projects\\writer-gates-restore\\reports\\tmppur3l1gj\\dom.json",
+    "max_iterations": 0,
+    "max_contract_claims": null,
+    "draft_chars": 68
+  },
+  "iterations": 1,
+  "final_verdict": "PASS",
+  "stopped_reason": "approved",
+  "escalation": false,
+  "escalation_reasons": [],
+  "issues_by_level": {
+    "L1": [],
+    "L2": {
+      "skipped": true,
+      "note": "plan не передан — L2 не запущен",
+      "issues": []
+    },
+    "L3": []
+  },
+  "rtt_defects_final": [],
+  "trace_checks_final": {
+    "verdict": "PASS",
+    "issues": [],
+    "checks": [
+      {
+        "name": "exact_sentence_trace",
+        "sentences": 1,
+        "claims": 1
+      }
+    ],
+    "scope": "Deterministic literary DOM traceability; curated metadata is read-only.",
+    "limitations": [
+      "PASS proves structural/exact-sentence grounding only, not scientific truth.",
+      "No semantic paraphrase, causal synthesis, source retrieval or scientific computation.",
+      "Evidence quotes are checked against source.text only when supplied; locators are syntactic.",
+      "Use one exact claim per sentence with citations before terminal punctuation; headings must match DOM titles."
+    ]
+  },
+  "repaired_spans": [],
+  "rounds": [
+    {
+      "iteration": 0,
+      "verdict": "PASS",
+      "reasons": [],
+      "n_l1": 0,
+      "n_l2": 0,
+      "n_l3_defects": 0,
+      "trace_verdict": "PASS",
+      "changed": null
+    }
+  ]
+}
