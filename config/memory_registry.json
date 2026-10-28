@@ -3,6 +3,68 @@
   "levels": {
     "L3": {
       "lessons": {
+        "024c727655a8a79e2dfda4f824b9e6c4d4f3bb2f5868cb39b52c19ddfb1da65d": {
+          "admissions": 1,
+          "evidence_refs": [
+            "F:/1/_STRUCTURED/09_LITERATURE/datasets/CHAPTER1_MODELS_SUPPLEMENT_v0_2.md",
+            "F:/1/_STRUCTURED/_AGENT_TECH/ch1_miniplans_2026-10-18/user_source_pack/SOURCE_CHECK.md",
+            "F:/1/_STRUCTURED/research_verification/ch1_dom.json:c284"
+          ],
+          "lesson_text": "Для диссертационного c284 различать декомпозицию профильных функций и аддитивные модели уже рассчитанных скалярных/обобщённых характеристик. Автор явно исключает WPPM/CMWP и распределения из этого блока. Не подменять источниковый ответ обзором свёрток и не требовать идентичного исторического Δβ-протокола для признания известного класса скалярных подходов. WH даёт прецедент с предпосылками; Martinelli2026 по прочитанному абстракту даёт относительное качественное сравнение с ненулевым референсом; это не проверка конкретного применения автора. Подборку GPT проверять по первичным фрагментам/абстрактам с разными уровнями доступа.",
+          "reason_codes": [
+            "respect_author_method_scope",
+            "scalar_model_not_profile_inverse_problem",
+            "source_pack_access_levels"
+          ],
+          "sources": [
+            {
+              "added_via": "memory_bridge.add",
+              "snapshot_id": null,
+              "task_id": "WR-CH1-MINIPLANS-20261018"
+            }
+          ]
+        },
+        "047f291de4665f3cf4a7d34657548a9ae1e659b2fa38d16991b10f58d3c7e2e7": {
+          "admissions": 1,
+          "evidence_refs": [
+            "F:/1/_STRUCTURED/09_LITERATURE/datasets/DISSERTATION_MODEL_METHOD_SOURCE_MAP_v0_1.md",
+            "F:/1/_STRUCTURED/_AGENT_TECH/diss_model_method_readback_2026-10-19/research/claims.json#WRMM-002,WRMM-003",
+            "F:/1/_STRUCTURED/_AGENT_TECH/diss_model_method_readback_2026-10-19/research/history_ledger.json"
+          ],
+          "lesson_text": "В чтении19.10.2026 автор ограничил текущую работу главами диссертации, не авторефератом; принята терминология изменение параметра решётки/решёточный отклик. Профильная апробация08Х18Н10Т обеспечивает получение скаляров, а основная сравнительная схема использует параметры решёток, физические ширины и доли фаз. В найденном HKL_G2.py TanTheta — Beta_Phys_Rad/Epsilon_Total_pct, не наклон регрессии;3D HKL_G3 добавляет Nitrides_pct. Документальные формулы/история не удостоверяют принятую окончательную процедуру или физическую истинность. Точные источники и версии сохранены для глав2–3.",
+          "reason_codes": [
+            "documentary_vs_scientific_validation",
+            "scope_alignment"
+          ],
+          "sources": [
+            {
+              "added_via": "writing-orchestrator.closing_ritual",
+              "snapshot_id": null,
+              "task_id": "WR-DISS-MODEL-METHOD-READBACK-20261019"
+            }
+          ]
+        },
+        "0602381512838e50874d8ef24354fefe6925bd73f27f8d97aaf82a5bbb847045": {
+          "admissions": 1,
+          "evidence_refs": [
+            "F:/1/_STRUCTURED/_AGENT_TECH/ch1_scalar_basis_2026-10-18/AUTHOR_MODEL_READBACK.md",
+            "F:/1/_STRUCTURED/_AGENT_TECH/ch1_scalar_basis_2026-10-18/C285_CHANGELOG.md",
+            "F:/1/_STRUCTURED/_AGENT_TECH/ch1_scalar_basis_2026-10-18/delhez_primary_evidence.json"
+          ],
+          "lesson_text": "Для скалярной референсной декомпозиции различать три уровня: точное определение выбранной ширины, определённые последовательные разности состояний (их телескопическая сумма алгебраически точна) и дополнительную модельную атрибуцию разностей независимым физическим причинам. Не называть само определение FWHM приближением; не смешивать FWHM, HWHM и integral breadth. Delhez et al.1988 Sense and Nonsense — DOI PH880213, не прежний Langford PH880173: §3 pp218–219 даёт relative determinations с ненулевым референсом и Cauchy/Gaussian component rules; §5b p225 — welded steel. Присланные первичные страницы можно использовать с явным provenance даже если online PDF закрыт; не переименовывать selected passages в скачанный fulltext. Высокий R² свободной регрессии не равен проверке равенства компонентной суммы наблюдаемой ширине.",
+          "reason_codes": [
+            "primary_user_pages_distinct_from_downloaded_PDF",
+            "reference_contrast_identity_not_causal_independence",
+            "scalar_definition_estimation_interpretation"
+          ],
+          "sources": [
+            {
+              "added_via": "memory_bridge.add",
+              "snapshot_id": null,
+              "task_id": "WR-CH1-SCALAR-CORPUS-20261018"
+            }
+          ]
+        },
         "163eb32181ca63f952aca05f0b21eead35b6989313d245905d4d00a0625b141d": {
           "admissions": 1,
           "evidence_refs": [
@@ -24,6 +86,27 @@
             }
           ]
         },
+        "1e585a85a5286398807985d774145dfe6a390fe698c86ecf6357abb12a3c4fd9": {
+          "admissions": 1,
+          "evidence_refs": [
+            "F:/1/_STRUCTURED/_AGENT_TECH/ch1_plan_2026-10-18/AUTHORREF_SOURCE_AUDIT.md",
+            "F:/1/_STRUCTURED/_AGENT_TECH/ch1_plan_2026-10-18/ORCHESTRATOR_PLAN_REVIEW.md",
+            "F:/1/_STRUCTURED/_AGENT_TECH/ch1_plan_2026-10-18/structure_plan.topic.json"
+          ],
+          "lesson_text": "Планируя главу по автореферату, сверять сам источник, а не только производный вектор: в локальном DOCX v21 выявлены три задачи, тогда как вектор пропускал первую методическую задачу. Штатный writer-core plan --topic выдаёт каркас автореферата, а plan --bundle сохраняет anchors без секций; эти выходы нельзя автоматически выдавать за содержательный план главы обзора. Сохранять отдельную редакционную архитектуру с явными привязками и статусом проекта.",
+          "reason_codes": [
+            "authorref_primary_alignment",
+            "derived_outline_drift",
+            "topic_template_scope"
+          ],
+          "sources": [
+            {
+              "added_via": "memory_bridge.add",
+              "snapshot_id": null,
+              "task_id": "WR-CH1-PLAN-20261018"
+            }
+          ]
+        },
         "28cf522a6a28e26b4476402f118d27f1a886dfd499c10f32f61d31987158a2e1": {
           "admissions": 1,
           "evidence_refs": [
@@ -39,6 +122,89 @@
               "added_via": "memory_bridge.add",
               "snapshot_id": "snap-2026-09-01",
               "task_id": "post-audit-2026-09-01"
+            }
+          ]
+        },
+        "29433f7fedd7ce401f7dae0e058053e6ccb1b1a2db7a04711880ebd0433d8814": {
+          "admissions": 1,
+          "evidence_refs": [
+            "F:/1/_STRUCTURED/_AGENT_TECH/diss_archive_sources_2026-10-19/ORCHESTRATOR_CHECK.json",
+            "F:/1/_STRUCTURED/_AGENT_TECH/diss_archive_sources_2026-10-19/research/FINDINGS.md",
+            "F:/1/_STRUCTURED/_AGENT_TECH/diss_archive_sources_2026-10-19/research/receipt.json"
+          ],
+          "lesson_text": "Архивный подбор к принятому единому скелету завершён20.10.2026 в diss_archive_sources_2026-10-19/research: FINDINGS — карта по пяти параграфам, source_section_map —37функций/36адресов/введение/8методическихметок; corpus_inventory и register_proposal —60карточек, включая22прежние и38новых предложений. evidence_bank содержит35новых выписок+50explicitreuse;27ограниченных propositions подготовлены для будущих блоков, не научные вердикты. 156DOI-подобных указателей и14890Chroma chunks не являются количеством статей; локальный носитель не означает полный текст. НовыеBIB023-060 не внесены в master и не процитированы. Отдельно оговорены непрочитанные источники, L-кривая, макрорельеф,Cr/Ni и независимый тепловойР6М5; это адресные пробелы, не общий стоп. Продолжение идёт от готовой карты и её spans, не с повторной инвентаризации или новой структуры; master/автореферат/DOM/данные иHEAD/index в этом проходе не менялись.",
+          "reason_codes": [
+            "dissertation_archive_source_map",
+            "resume_saved_research_not_restart",
+            "source_readiness_not_registration"
+          ],
+          "sources": [
+            {
+              "added_via": "memory_bridge.add",
+              "snapshot_id": null,
+              "task_id": "WR-DISS-ARCHIVE-SOURCES-20261019"
+            }
+          ]
+        },
+        "2a7d87bdc3e4426a216e6b5e4c18ef9c2ac852ccd6f20bf27ff1969a09f9bb45": {
+          "admissions": 1,
+          "evidence_refs": [
+            "F:/1/_STRUCTURED/09_LITERATURE/datasets/CHAPTER1_PARAGRAPH_QUEUE_v1.md",
+            "F:/1/_STRUCTURED/09_LITERATURE/datasets/CHAPTER1_WORK_TRACKER.md#CH1-ED-001",
+            "F:/1/_STRUCTURED/09_LITERATURE/datasets/CHAPTER1_WORK_TRACKER.md#CH1-ED-002"
+          ],
+          "lesson_text": "Для этого диссертационного обзора абзац о близких экспериментах должен показывать достигнутые результаты и разработанность направления. Не навязывать каждому источнику финальную оговорку о недостаточности: автор отклонил S6 пилота; конкретную количественную добавку формулировать при сшивке/синтезе подраздела. Демченко уже даёт количественную толщину от степени прокатки, поэтому нельзя противопоставлять всю литературу как качественную собственным количественным результатам.",
+          "reason_codes": [
+            "avoid_universal_gap_claim",
+            "literature_review_paragraph_role",
+            "user_style_feedback"
+          ],
+          "sources": [
+            {
+              "added_via": "memory_bridge.add",
+              "snapshot_id": null,
+              "task_id": "WR-CH1-PLAN-20261018"
+            }
+          ]
+        },
+        "380815f85a95c68003bd90ca52eb1dc7e1ec832eba78bc9d56cb6a11bfe92c79": {
+          "admissions": 1,
+          "evidence_refs": [
+            "F:/1/_STRUCTURED/09_LITERATURE/Treb/verified_2026-10-19/sources_registry.json",
+            "F:/1/_STRUCTURED/09_LITERATURE/datasets/DISSERTATION_PRELIMINARY_COMPLIANCE_v0_1.md",
+            "F:/1/_STRUCTURED/_AGENT_TECH/diss_intro_vak_2026-10-19/regulatory/requirements_ledger.json#NR-07,NR-22,NR-28,CF-05"
+          ],
+          "lesson_text": "В нормативном планировании диссертации текст требования, актуальность его редакции и применимость к конкретной защите имеют разный статус. В проверке19.10.2026 старые локальные паспорта1.3.8 05/06 оказались оба техническими; физико-математический вариант получен отдельно с официального сайта Калуги, но последняя федеральная версия не удостоверена. Восемь элементов введения по прочитанному5.3.1 не означают тринадцать обязательных заголовков; личный вклад содержательно требуется общим порядком независимо от наличия отдельной рубрики. Планы/источниковые ссылки и хеш-проверки не удостоверяют научную новизну или формальное соответствие всей диссертации.",
+          "reason_codes": [
+            "currentness_vs_applicability",
+            "source_scope_mismatch"
+          ],
+          "sources": [
+            {
+              "added_via": "writing-orchestrator.closing_ritual",
+              "snapshot_id": null,
+              "task_id": "WR-DISS-INTRO-VAK-20261019"
+            }
+          ]
+        },
+        "5e0f1f670fa98ff704236a23d71595f0f8791513b2a082b78c63e83c1c8830ab": {
+          "admissions": 1,
+          "evidence_refs": [
+            "F:/1/_STRUCTURED/_AGENT_TECH/diss_own_papers_reading_2026-10-21/PARENT_REVIEW_QA.json",
+            "F:/1/_STRUCTURED/_AGENT_TECH/diss_own_papers_reading_2026-10-21/research/evidence_bank.json#OWN-E035",
+            "F:/1/_STRUCTURED/_AGENT_TECH/diss_own_papers_reading_2026-10-21/research/own_publications_catalogue.json"
+          ],
+          "lesson_text": "В чтении собственных публикаций Черенкова 22.10.2026 файл articles/Винтайкин.pdf оказался корректурой Р18–2024, а не английской версией 08Х18Н10Т–2025. Десять ZIP-элементов были байтовыми копиями. Девять доступных семейств тел/фрагментов включали четыре опубликованные работы, корректуру, конференционные материалы и черновик; их наличие не удостоверяет девять журнальных публикаций или независимых опытов. Таблица корректуры Р18 явно содержит массовые доли и не устанавливает объёмные доли финальной сравнительной модели.",
+          "reason_codes": [
+            "DOCUMENT_VERSION",
+            "EVIDENCE_SCOPE",
+            "SOURCE_IDENTITY"
+          ],
+          "sources": [
+            {
+              "added_via": "memory_bridge.add",
+              "snapshot_id": "2026-10-22-own-papers-documentary",
+              "task_id": "WR-DISS-OWN-PAPERS-READING-20261021"
             }
           ]
         },
@@ -61,6 +227,91 @@
             }
           ]
         },
+        "7390ad156dbda1d64d938e4550bd9d4d9388520469f616ce35d694a6b3f7d98e": {
+          "admissions": 1,
+          "evidence_refs": [
+            ".runs/harness-restore-20261014/native_loader_diagnosis.json",
+            ".runs/harness-restore-20261014/tester_live-observers.json",
+            "HARNESS-RESTORE-20261014",
+            "handoff/harness-restore-2026-10-14/CHANGES.md"
+          ],
+          "lesson_text": "OpenCode Desktop 2.0.29: API-visible agents may be hidden by General/Show agent. Configured local plugin FILE targets are silently filtered before loading; a directory containing the reviewed index.js activates the plugin. Verify /api/plugin with explicit location and live daemon identity/heartbeat; local doctor or connected MCP alone is not proof of full autonomy. Observer activation must not enable simulated merge recovery.",
+          "reason_codes": [
+            "HOST_V2_LOADER_DIRECTORY",
+            "TRUTHFUL_DAEMON_RECOVERY"
+          ],
+          "sources": [
+            {
+              "added_via": "memory_bridge.add",
+              "snapshot_id": null,
+              "task_id": null
+            }
+          ]
+        },
+        "913493f3c4712389c3f696ee566a7922f9935fde119d43d3dc5ba98323302f76": {
+          "admissions": 1,
+          "evidence_refs": [
+            "F:/1/_STRUCTURED/09_LITERATURE/datasets/DISSERTATION_WORKING_SKELETON_v1.md#abbrev-register",
+            "F:/1/_STRUCTURED/09_LITERATURE/datasets/DISSERTATION_WORKING_SKELETON_v1.md#literature-policy",
+            "F:/1/_STRUCTURED/_AGENT_TECH/diss_registers_2026-10-19/REGISTRY_CHECK.json"
+          ],
+          "lesson_text": "Автор поручил вести реестры с самого начала в едином скелете диссертации: общий список сокращений/условных обозначений и собственный список литературы у каждой главы. Master DISSERTATION_WORKING_SKELETON_v1.md содержит редактируемые таблицы; JSON лишь контролирует связи. Одна публикация сохраняет общий BIB-ID при повторном включении в разные главы, локальные L1/L2/L3 независимы. С каждым блоком обновлять назначение, фактическое использование и страницы/evidence, не считать подготовленного кандидата уже процитированным. Начальные22 публикации — не весь корпус; глава3 заполняется при её обсуждении. Итоговое печатное оформление библиографии не подменяет и не останавливает раздельный рабочий учёт.",
+          "reason_codes": [
+            "chapter_bibliography_registers",
+            "single_working_master",
+            "traceability_from_start"
+          ],
+          "sources": [
+            {
+              "added_via": "writing-orchestrator.closing_ritual",
+              "snapshot_id": null,
+              "task_id": "WR-DISS-REGISTERS-20261019"
+            }
+          ]
+        },
+        "9afe2a561bebd77349f91857295b555ccec28b194306a018a582354c3a0ce388": {
+          "admissions": 1,
+          "evidence_refs": [
+            "F:/1/_STRUCTURED/_AGENT_TECH/diss_own_papers_reading_2026-10-21/applied_routing_v1_2/ERRATA.json",
+            "F:/1/_STRUCTURED/_AGENT_TECH/diss_own_papers_reading_2026-10-21/independent_review/RECHECK.json",
+            "F:/1/_STRUCTURED/_AGENT_TECH/diss_own_papers_reading_2026-10-21/independent_review/REVIEW.json"
+          ],
+          "lesson_text": "Независимое редакционное ревью плана диссертации 22.10.2026 обнаружило ошибочную внешнюю роль собственной BIB-053 в унаследованном пуле и отсутствие OWN-E014 в адресации оксидной фразы P14-01. Целостность файлов и существование всех ID эти дефекты не выявили: потребовались сверка роли источника и содержания конкретного exact_span. Поправки вынесены в отдельную действующую карту, на которую переключён master; запечатанный исследовательский пакет и первый NEEDS_FIX сохранены, повторный проход закрыл R1/R2 со статусом PASS_EDITORIAL_ONLY.",
+          "reason_codes": [
+            "EXACT_SPAN_GROUNDING",
+            "SOURCE_ROLE",
+            "VERSIONED_EDITORIAL_REPAIR"
+          ],
+          "sources": [
+            {
+              "added_via": "memory_bridge.add",
+              "snapshot_id": "2026-10-22-R1-R2-editorial-recheck",
+              "task_id": "WR-DISS-OWN-PAPERS-READING-20261021"
+            }
+          ]
+        },
+        "a178a013846d5cd40018f852bf59a4432208ad71b0d4ec89c8073c8ef660ee26": {
+          "admissions": 1,
+          "evidence_refs": [
+            "F:/1/_STRUCTURED/09_LITERATURE/datasets/DISSERTATION_WORKING_SKELETON_v1.md",
+            "F:/1/_STRUCTURED/_AGENT_TECH/diss_reading_context_2026-10-20/ORCHESTRATOR_CHECK.json",
+            "F:/1/_STRUCTURED/_AGENT_TECH/diss_reading_context_2026-10-20/research/FINDINGS.md",
+            "F:/1/_STRUCTURED/_AGENT_TECH/diss_reading_context_2026-10-20/research/reading_audit.json"
+          ],
+          "lesson_text": "Автор подтвердил работу от готовой локальной карты: проверять фактическое чтение, непрочитанное отдавать на адресное чтение, прочитанное раскладывать к существующим абзацным функциям, остаток искать контекстно локально затем вне корпуса. В diss_reading_context_2026-10-20/research сохранены initial60+transitions: тела/оговорённые вторичные фрагменты40→50; исходные019/018/021 всё ещё без тела,020Murugesan теперь с выбранными фрагментами. Проверены19приоритетных карточек,10получили новыеbodyspans;8новых061-068 с фрагментами и069толькоаннотация. Контекстные механизмы, альтернативы и ограничения не являются доказательством собственных результатов. MasterMD/JSON получил только источниковые привязки к прежним37функциям и обновлённое чтениеBIB020,без научной прозы/формул/выводов. LOCAL_RESIDUAL записан перед внешним поиском;5прочитанных первичныхPDF из6загрузок пока только вacquired,предложение интеграции не применено,Chromaнеизменна. Дальше использовать FINAL_RESIDUAL и placement_map,не начинать общий поиск заново;L-кривую как литературную потребность не искать повторно,но её выполнение автором проверять по своим документам.",
+          "reason_codes": [
+            "actual_reading_before_source_placement",
+            "contextual_analogy_not_author_result_validation",
+            "dissertation_reading_context_map"
+          ],
+          "sources": [
+            {
+              "added_via": "memory_bridge.add",
+              "snapshot_id": null,
+              "task_id": "WR-DISS-READING-CONTEXT-20261020"
+            }
+          ]
+        },
         "a3134ce09f0354b0702c63528964d016e5e04ba97d535fa5f5efbe4e302e20bb": {
           "admissions": 1,
           "evidence_refs": [
@@ -76,6 +327,109 @@
               "added_via": "memory_bridge.add",
               "snapshot_id": null,
               "task_id": "DEPLOY-FINAL-20260914"
+            }
+          ]
+        },
+        "a7ca62a74ea6b1e4e99bcfdfd6eef9b0fa0556ed8a62ab84ce0f668eb57ea793": {
+          "admissions": 1,
+          "evidence_refs": [
+            "F:/1/_STRUCTURED/09_LITERATURE/datasets/DISSERTATION_WORKING_SKELETON_v1.md",
+            "F:/1/_STRUCTURED/_AGENT_TECH/diss_unified_skeleton_2026-10-19/WORKFLOW_CLARIFICATION_RECEIPT.json"
+          ],
+          "lesson_text": "Автор уточнил порядок диссертационной работы: план → скелет → содержательные блоки с прослеживаемостью. Для литературного обзора и методики основной материал уже имеется: использовать и связывать его, не начинать сбор заново. Требования выводятся также из положений на защиту, применённых методов и выводов; отражаются в нужных блоках обзора/методики, обсуждаются и закрываются по мере появления. Результаты и остальные содержательные вопросы обсуждаются в третьей главе; основания для них предусматриваются в предыдущих. Общий список открытых формальных/источниковых условий не является общей остановкой работы. Это рабочая исходная обеспеченность материалом, а не автоматическое scientific PASS всех утверждений.",
+          "reason_codes": [
+            "existing_materials_first",
+            "incremental_requirement_closure",
+            "scope_alignment"
+          ],
+          "sources": [
+            {
+              "added_via": "writing-orchestrator.closing_ritual",
+              "snapshot_id": null,
+              "task_id": "WR-DISS-BLOCK-WORKFLOW-20261019"
+            }
+          ]
+        },
+        "ab73012384850d7e04c394b16d37ad55e609f57100e77b17656487a029bfa534": {
+          "admissions": 1,
+          "evidence_refs": [
+            "F:/1/_STRUCTURED/_AGENT_TECH/diss_corpus_gaps_plan_2026-10-21/CHROMA_INDEX_QA.json",
+            "F:/1/_STRUCTURED/_AGENT_TECH/diss_kuzmin_vintaikin_cards_2026-10-21/CHROMA_CARD_INDEX_QA.json",
+            "F:/1/_STRUCTURED/_AGENT_TECH/diss_kuzmin_vintaikin_cards_2026-10-21/FINAL_INTEGRATION_CHECK.json",
+            "F:/1/_STRUCTURED/_AGENT_TECH/diss_kuzmin_vintaikin_cards_2026-10-21/research/REVIEW_READING_NOTE.md"
+          ],
+          "lesson_text": "Итог21.10.2026:source-onlymaster1.1попрежнемупутиDISSERTATION_WORKING_SKELETON_v1.*;40MD(39новых+1existing)и36PDFдобавлены,canonicalpapers14890→16202(+1312);resume0. Затем18паркарточекКузьмин–Винтайкинв03-Registries/Kuzmin-Vintaikin/20261021,старыеID070/073/071/072/054/DOCOWN2022сохранены,новые074–085зарегистрированывкорпусенеавтоцитаты;дваMathNetprimaryPDF074/075идословныхexcerptдали9chunks,текущийpapers16211. Все1321newID/text/filehashсверены,old14890payloadсохранён. ShortRussiantitlequeryневернул074top5,verbatimbodyqueryвернулегоrank0:semanticранжированиенеэквивалентналичияфайла. Исходныйuserreviewсopaque turnцитатамисохранёнsecondary;реконструкцияfunctional/testrecommendationsнеисторический1986методинеexecutedauthorprotocol. Оригиналов070/073/diss0,14из18безтела. Наличие1312+9chunksнеполноепрочтениеи не научнаяверификация. Parentfull1007postcopyrehashtimeoutнеобъявленPASS;agentprecopy1007иparentnarrow96проверены. Следующийexplicituserзапрос—читатьсобственныепубликацииЧеренковавarticlesиобновитьвведение/главу1,неписатьнаучныйтекст.",
+          "reason_codes": [
+            "metadata_body_and_review_separation",
+            "observed_incremental_index_trial",
+            "own_publication_is_not_independent_validation"
+          ],
+          "sources": [
+            {
+              "added_via": "memory_bridge.add",
+              "snapshot_id": null,
+              "task_id": "WR-DISS-KUZMIN-VINTAIKIN-CARDS-20261021"
+            }
+          ]
+        },
+        "b03d432b881c55202cdeeffc8ad2320a3b3c662b5f81e60989270f35a062b43f": {
+          "admissions": 1,
+          "evidence_refs": [
+            "F:/1/_STRUCTURED/_AGENT_TECH/diss_vintaikin_lineage_2026-10-20/AUTHOR_INPUT.md",
+            "F:/1/_STRUCTURED/_AGENT_TECH/diss_vintaikin_lineage_2026-10-20/CORPUS_ADDITION_RECEIPT.json",
+            "F:/1/_STRUCTURED/_AGENT_TECH/diss_vintaikin_lineage_2026-10-20/research/FINDINGS.md",
+            "F:/1/_STRUCTURED/_AGENT_TECH/diss_vintaikin_lineage_2026-10-20/research/RESUME_AUDIT_2026-10-21.md"
+          ],
+          "lesson_text": "Автор уточнил реальное происхождение профильного вариационного подхода как преемственность Кузьмин→Винтайкин; назвал статью1986Кристаллография31(4)656–660,докторскую1991(РГБ01002161087,423с.,OD71 93-0/444),кандидатскую1986(01008581696,174с.,OD61 87-1/2135) иФММ1986,61(3)561–568. В опубликованных собственныхР18_2022/08Х18Н10Т_2025/ВКС10_2024 прочитаны прямые method/referenceedges на статью656;это документальная опора происхождения,не тело1986 и не независимая проверка результатов. Hansen—дополнительная общая опора,не подмена реально использованной линии;точный критерий в1986безтела неизвестен. Послеusage-limit21.10 проверили63файла,агент сначала RESUME_AUDITзатем доделал пакет. Ни один из4оригиналов не скачан:в корпус добавлены только4metadataJSON безChromaиндексации,вmaster зарегистрированыBIB070–073(L1-023–026,L2-008для070). КаталогдокторскойимеетMARC506ДСП,не обходить/не выдавать модальный UIтекстзаfulltext. Пакет diss_vintaikin_lineage_2026-10-20/research иквитанции сохраняют18точныхсвидетельств,остатокдоступа,конфликтстаройnkr-записи678–684 иверсий BIB054;неповторятьготовыеизвлечения/каталоги и не называтьметаданныеполнымистатьями.",
+          "reason_codes": [
+            "author_identified_actual_method_lineage",
+            "metadata_not_fulltext_not_body_index",
+            "resume_audit_before_retry"
+          ],
+          "sources": [
+            {
+              "added_via": "memory_bridge.add",
+              "snapshot_id": null,
+              "task_id": "WR-DISS-VINTAIKIN-LINEAGE-20261020"
+            }
+          ]
+        },
+        "c1dd29a6f302272b125e8252946b56ca2cd1d98d2d1f67de883ea6359d4a5332": {
+          "admissions": 1,
+          "evidence_refs": [
+            "E:/opencode_harness_portable/docs/CODERS/WR_DISS_UNIFIED_SKELETON_20261019.md",
+            "F:/1/_STRUCTURED/09_LITERATURE/datasets/DISSERTATION_PLAN_AUDIT_v0_2.md",
+            "F:/1/_STRUCTURED/09_LITERATURE/datasets/DISSERTATION_WORKING_SKELETON_v1.md"
+          ],
+          "lesson_text": "Для диссертации автор выбрал единый рабочий скелет: верхний уровень — уже извлечённые требования с условиями применения; затем введение и параграфы главы1; уточнённая научная рамкаv0.2 задаёт постановку, а детализацияv1.2 служит комментариями к наполнению. Рабочий вход DISSERTATION_WORKING_SKELETON_v1.md, аудит адресуется этому скелету, не автореферату. Старые планы/рамки/кандидаты сохраняются как источники и история; не следует заставлять автора одновременно заполнять несколько конкурирующих планов. Наличие нормативного места, готовность источников и доказанность научного содержания — разные состояния; после расширения скелета написание идёт по отдельно выбранным параграфам.",
+          "reason_codes": [
+            "editorial_vs_scientific_readiness",
+            "scope_alignment",
+            "single_working_master"
+          ],
+          "sources": [
+            {
+              "added_via": "writing-orchestrator.closing_ritual",
+              "snapshot_id": null,
+              "task_id": "WR-DISS-UNIFIED-SKELETON-20261019"
+            }
+          ]
+        },
+        "c770dc2e8cd0513ea74c5a6bebeb9e97da9d4624fb58f759cbfbb9815893b8f1": {
+          "admissions": 1,
+          "evidence_refs": [
+            "C:/Temp/opencode/fractions-v42-20261013/REPAIR_NOTES.md",
+            "C:/Temp/opencode/fractions-v42-20261013/reviewer_repair.json"
+          ],
+          "lesson_text": "In two fraction v3.13 workbooks, documentation headings and annotated examples starting with = serialized as executable Excel formulas and blocked normal Open. Force literal text serialization in documentation sheet writers; test actual Excel Open plus input/chart preservation, not only openpyxl parsing.",
+          "reason_codes": [
+            "EXCEL_LITERAL_FORMULA_BOUNDARY"
+          ],
+          "sources": [
+            {
+              "added_via": "memory_bridge.add",
+              "snapshot_id": null,
+              "task_id": "fractions-v42-completion"
             }
           ]
         },
@@ -99,8 +453,100 @@
               "task_id": "NKR-CH1-001"
             }
           ]
+        },
+        "dc42233f97837596bb1e0b7b845a0b01649354a344c79f703fdaa6e870463e35": {
+          "admissions": 1,
+          "evidence_refs": [
+            "F:/1/_STRUCTURED/09_LITERATURE/datasets/CHAPTER1_PLAN_CHANGES_v1_1.md",
+            "F:/1/_STRUCTURED/09_LITERATURE/datasets/CHAPTER1_WORK_TRACKER.md#CH1-PLAN-004",
+            "F:/1/_STRUCTURED/_AGENT_TECH/ch1_plan_2026-10-18/revision_1_1/EDITORIAL_HANDOFF.md"
+          ],
+          "lesson_text": "При масштабировании удачного абзацного пилота на диссертационный литературный обзор не сужать целое экспериментальное направление до авторов пилота или одного модельного сплава. Автор потребовал для плана v1.1 физическую постановку на известных Fe-системах, фундаментальную рамку N/C и легирования шире V, разработанность по направлениям и отдельную применимость декомпозиции/регуляризации. Это смещение фокуса плана, не новая научная верификация; до повторного авторского аудита не переходить к заполнению.",
+          "reason_codes": [
+            "author_audit_stop_boundary",
+            "physics_research_framing",
+            "pilot_scope_not_chapter_scope"
+          ],
+          "sources": [
+            {
+              "added_via": "memory_bridge.add",
+              "snapshot_id": null,
+              "task_id": "WR-CH1-PLAN11-20261018"
+            }
+          ]
+        },
+        "e859f40fb4b754a862f3a2d75a65883aa8d9abf409b86db4bba83a591ecbeb23": {
+          "admissions": 1,
+          "evidence_refs": [
+            "runbook-junction"
+          ],
+          "lesson_text": "Windows: use ASCII junction paths for API, not cyrillic",
+          "reason_codes": [
+            "PORTABILITY"
+          ],
+          "sources": [
+            {
+              "added_via": "memory_router.add",
+              "snapshot_id": null,
+              "task_id": null
+            }
+          ]
+        },
+        "ef7b39f503801409694d1b56be0571a83f25f3fedc44d18337b1969f352335cd": {
+          "admissions": 1,
+          "evidence_refs": [
+            "git:892ecc3327dcb1753c6ae482f8d7a71d0c922e79",
+            "projects/p2-adapter-opencode-v2/guard-recovery/artifacts/regression.xml"
+          ],
+          "lesson_text": "Baseline ac037f3 ignored disabled guard routes and treated native completion metadata as a clean verdict; checkpoint 892ecc3 repairs these offline. One cached reply is not three classifier votes. The main guard and real-host readiness remain unchanged; fixture PASS is not admission.",
+          "reason_codes": [
+            "CLASSIFICATION_NOT_TRANSPORT_COMPLETION",
+            "GUARD_DISABLED_PROVIDER"
+          ],
+          "sources": [
+            {
+              "added_via": "memory_bridge.add",
+              "snapshot_id": null,
+              "task_id": "guard-local-recovery-20261017"
+            }
+          ]
         }
       }
+    }
+  },
+  "namespaces": {
+    "claim-parser": {
+      "lesson_keys": []
+    },
+    "code-reviewer": {
+      "lesson_keys": []
+    },
+    "code-worker": {
+      "lesson_keys": []
+    },
+    "fact-checker": {
+      "lesson_keys": []
+    },
+    "global": {
+      "lesson_keys": [
+        "163eb32181ca63f952aca05f0b21eead35b6989313d245905d4d00a0625b141d",
+        "28cf522a6a28e26b4476402f118d27f1a886dfd499c10f32f61d31987158a2e1",
+        "646ca8420e0026a13e58ff22a632ce6486254b7cda2b1cfc4e899a1b537af6ce",
+        "a3134ce09f0354b0702c63528964d016e5e04ba97d535fa5f5efbe4e302e20bb"
+      ]
+    },
+    "research-orchestrator": {
+      "lesson_keys": []
+    },
+    "source-fetcher": {
+      "lesson_keys": [
+        "e859f40fb4b754a862f3a2d75a65883aa8d9abf409b86db4bba83a591ecbeb23"
+      ]
+    },
+    "writing-orchestrator": {
+      "lesson_keys": [
+        "ce5cf6cc6fc115a3fcd0e872e5768bf549b31e42e65c7badb655c3624e1a4c2b"
+      ]
     }
   },
   "version": 1
