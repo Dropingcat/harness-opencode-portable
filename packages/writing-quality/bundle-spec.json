@@ -1,0 +1,74 @@
+{
+  "plugin": "writing-quality",
+  "version": "0.2.3",
+  "skills": [
+    "business-writing-intent-enforcer",
+    "claim-boundary-checker",
+    "writing-enforcer",
+    "writing-quality-router"
+  ],
+  "coordinator_skills": [
+    "claim-boundary-checker",
+    "writing-quality-router"
+  ],
+  "companions": [
+    "knowledge-work-superpowers",
+    "documents",
+    "google-drive"
+  ],
+  "writing_enforcer_engine": {
+    "pattern_count": 47,
+    "manifest": "skills/writing-enforcer/references/unslop-engine-manifest.json",
+    "migration_source_sha256": "512f4daa985c7b52503c9c2cb7fb32c1cb4c36efd649d4072e3fec692d4131a6",
+    "runtime_dependency_on_harness_unslop": false,
+    "contextual_score_floor": 8.0,
+    "contextual_score_target": 10.0,
+    "raw_script_scores_are_verdicts": false
+  },
+  "ownership": {
+    "ordinary_prose_owner": "writing-quality",
+    "harness_and_plugin_maintenance_owner": "harness-engineering:unslop-harness-repair",
+    "writing_quality_requires_harness_unslop": false,
+    "harness_unslop_requires_writing_quality": false
+  },
+  "protected_subtrees": {
+    "skills/business-writing-intent-enforcer": {
+      "files": 6,
+      "inventory_sha256": "c8b4fcd28ee77207fe393853527cfe94737a587046d1c7aa826fba45ca6bd871"
+    },
+    "skills/claim-boundary-checker": {
+      "files": 4,
+      "inventory_sha256": "52b1c0c695675c566be069654a81f010849f67430ac914511573a2ff8ec7f90b"
+    }
+  },
+  "guardrails": [
+    "DETECT is report-only and does not mutate prose.",
+    "REWRITE requires explicit authority and makes the minimum effective edit.",
+    "Voice recovery uses only the selected source or an explicit user-supplied sample.",
+    "Never invent personality, facts, examples, certainty, identity, experience, results, opinions, emotions, or first-person claims.",
+    "Protected exact material remains unchanged.",
+    "Punctuation helpers operate only on reviewed scratch prose with separate input and output paths.",
+    "Raw scanner scores are report-only evidence; contextual qualification and hard gates decide the result.",
+    "Unsupported claims are removed, qualified, sourced, or marked unverified."
+  ],
+  "routing_cases": [
+    {
+      "prompt": "Rewrite this executive email for a skeptical reader.",
+      "expected_skill": "writing-quality-router",
+      "evidence_file": "skills/writing-quality-router/references/routing.md",
+      "evidence_contains": "## rewrite"
+    },
+    {
+      "prompt": "Flag issues in this draft but do not rewrite it.",
+      "expected_skill": "writing-enforcer",
+      "evidence_file": "skills/writing-quality-router/SKILL.md",
+      "evidence_contains": "writing-enforcer in `DETECT` report-only mode"
+    },
+    {
+      "prompt": "Which statements in this launch copy lack support?",
+      "expected_skill": "claim-boundary-checker",
+      "evidence_file": "skills/claim-boundary-checker/SKILL.md",
+      "evidence_contains": "claim audit"
+    }
+  ]
+}
