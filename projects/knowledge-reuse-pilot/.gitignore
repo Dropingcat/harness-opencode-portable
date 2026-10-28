@@ -1,0 +1,12 @@
+__pycache__/
+.venv/
+state/
+tmp/
+cache/
+logs/
+vendor/
+artifacts/
+wiki/
+graphify-out/
+*.sqlite*
+*.log

@@ -1,0 +1,22 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "servers": {
+      "knowledge_pilot": {
+        "type": "local",
+        "command": [
+          "E:/opencode_harness_portable/.venv/Scripts/python.exe",
+          "-B",
+          "E:/opencode_harness_portable/projects/knowledge-reuse-pilot/mcp_server.py"
+        ],
+        "cwd": "E:/opencode_harness_portable/projects/knowledge-reuse-pilot",
+        "environment": {
+          "PYTHONDONTWRITEBYTECODE": "1",
+          "TEMP": "E:/opencode_harness_portable/projects/knowledge-reuse-pilot/tmp",
+          "TMP": "E:/opencode_harness_portable/projects/knowledge-reuse-pilot/tmp",
+          "GRAPHIFY_NO_AUTO_REFRESH": "1"
+        }
+      }
+    }
+  }
+}

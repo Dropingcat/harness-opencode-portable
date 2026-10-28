@@ -1,0 +1,19 @@
+{
+  "schema": "knowledge-pilot-config/1",
+  "harness_root": "E:/opencode_harness_portable",
+  "roots": {
+    "project": "F:/1",
+    "harness-projects": "E:/opencode_harness_portable/projects",
+    "harness-docs": "E:/opencode_harness_portable/docs",
+    "harness-shared": "E:/opencode_harness_portable/shared",
+    "harness-memory": "E:/opencode_harness_portable/config"
+  },
+  "exclude_dirs": [".git", ".venv", "venv", "node_modules", "__pycache__", ".pytest_cache", ".mypy_cache", ".ruff_cache", "graphify-out"],
+  "max_file_bytes": 41943040,
+  "max_text_chars": 250000,
+  "max_pdf_pages": 200,
+  "search_url": "http://127.0.0.1:8888",
+  "search_backend": "existing-mini-searxng",
+  "flowsint_url": "http://127.0.0.1:5001",
+  "external_models": false
+}
