@@ -41,6 +41,20 @@
 4. В СВОЁМ ОТЧЁТЕ (вердикт) перечисли зарегистрированные TD-ID (чтобы деплоер их закоммитил).
 5. Деплоер коммитит `PROBLEMS_REGISTER.md` + вердикт-JSON (шаг 3.5 контракта 04).
 
+## 4.5 ПУТЬ АРТЕФАКТА (обязательный шаблон)
+
+```
+${HARNESS_ROOT}/<ROLE>_<BLOCK_ID>.json
+Пример: E:\opencode_harness_portable\reviewer_EXP-1b.json, E:\opencode_harness_portable\auditor_W1.json
+```
+
+- HARNESS_ROOT = `E:\opencode_harness_portable` (НЕ `.runs/` — это рантайм, не версионируется)
+- ROLE = `worker` | `reviewer` | `auditor` | `analyst` | `researcher` | `deployer`
+- BLOCK_ID = идентификатор блока (B1-T2, W1, EXP-1b...)
+- Файл git-версионируется (деплоер коммитит)
+- Отчёт в отчёте: указывать путь явно
+- Вердикт-файлы ревьюера/аудитора (`reviewer_<ID>.json`, `auditor_<ID>.json`) записывать ПО ЭТОМУ шаблону в HARNESS_ROOT, а НЕ без явного пути
+
 ## 5. ПРАВИЛА
 
 - Не дублировать существующие TD-ID (проверить перед записью).
