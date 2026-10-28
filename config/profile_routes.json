@@ -1,7 +1,7 @@
 {
   "version": 2,
   "generated": true,
-  "generated_from_policy_hash": "df07cc313e630e6a37113748e77d356467d978c94d30104b9a28965cf85e0cd9",
+  "generated_from_policy_hash": "772204090ea2bafc3375dbd1c856a03924bcf66c6a7b802e8f2ff4551c1ce771",
   "routes": {
     "academic-research": {
       "match_regex": "(paper|arxiv|openalex|doi|pubmed|literature|citation|study|статья|публикац|литератур|источник|верификац|клайм|клаим|проверь факт|проверь утверждени|научн\\w* текст|fact.?check|вердикт)",

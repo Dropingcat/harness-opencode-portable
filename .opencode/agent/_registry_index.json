@@ -19,12 +19,16 @@
     "fact-checker",
     "fact-checker-runner",
     "glossary-maintainer",
+    "paper-analyzer",
+    "paper-comparator",
+    "reference-auditor",
     "research-orchestrator",
     "researcher",
     "source-fetcher",
     "source-fetcher-runner",
     "synthesizer",
     "synthesizer-runner",
+    "technical-reviewer",
     "tribunal-judge",
     "tribunal-judge-runner",
     "writer-runner",
@@ -55,8 +59,12 @@
     "coder-worker",
     "fact-checker",
     "glossary-maintainer",
+    "paper-analyzer",
+    "paper-comparator",
+    "reference-auditor",
     "source-fetcher",
     "synthesizer",
+    "technical-reviewer",
     "tribunal-judge"
   ],
   "with_bound_model": [],
@@ -74,6 +82,6 @@
     "web-research": "research-orchestrator",
     "writing-prose": "writing-orchestrator"
   },
-  "policy_hash": "df07cc313e630e6a37113748e77d356467d978c94d30104b9a28965cf85e0cd9",
-  "content_hash": "6ba3b0e993c062c1fd688203a48de862916c2c43215a6b4385e100371a698d2e"
+  "policy_hash": "772204090ea2bafc3375dbd1c856a03924bcf66c6a7b802e8f2ff4551c1ce771",
+  "content_hash": "564d0462e579058482256cf82e4d63a49f1116af4b303860f9a4f705c0056fb7"
 }

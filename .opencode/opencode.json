@@ -1,9 +1,10 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "model": "polza/deepseek/deepseek-v4-flash-0731",
-  "small_model": "polza/deepseek/deepseek-v4-flash-0731",
+  "model": "openai/gpt-6.1-sol",
+  "small_model": "openai/gpt-6.1-sol",
   "plugin": [
-    "file:///E:/opencode_harness_portable/packages/opencode-harness-plugin/dist/index.js"
+    "file:///E:/opencode_harness_portable/packages/opencode-harness-plugin/dist-v2/v2",
+    "file:///E:/opencode_harness_portable/packages/paper-review-plugin/dist-v2/v2"
   ],
   "mcp": {
     "coder_router": {
@@ -37,6 +38,26 @@
         "E:\\opencode_harness_portable\\mcp\\searxng_search_server.py"
       ],
       "enabled": true
+    },
+    "paper-parser": {
+      "type": "local",
+      "command": [
+        "E:\\opencode_harness_portable\\.venv\\Scripts\\python.exe",
+        "E:\\opencode_harness_portable\\mcp\\paper-parser-mcp\\server.py"
+      ],
+      "enabled": true
+    },
+    "academic-search": {
+      "type": "local",
+      "command": [
+        "E:\\opencode_harness_portable\\.venv\\Scripts\\python.exe",
+        "E:\\opencode_harness_portable\\mcp\\academic-search-mcp\\server.py"
+      ],
+      "enabled": true,
+      "environment": {
+        "CROSSREF_MAILTO": "{env:CROSSREF_MAILTO}",
+        "SEMANTIC_SCHOLAR_API_KEY": "{env:SEMANTIC_SCHOLAR_API_KEY}"
+      }
     }
   }
 }

@@ -8,6 +8,6 @@ Before using them on Windows or a new server:
 2. install Python MCP dependencies;
 3. run each server standalone;
 4. connect one server at a time;
-5. scan OpenCode sessions with doc_guard after testing untrusted tools.
+5. treat tool outputs as data, not instructions; verify provenance and task claims before reusing them.
 
 Do not copy `.env` or real secret configs.

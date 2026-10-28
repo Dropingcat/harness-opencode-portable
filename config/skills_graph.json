@@ -1,6 +1,6 @@
 {
   "version": 3,
-  "generated_from_policy_hash": "df07cc313e630e6a37113748e77d356467d978c94d30104b9a28965cf85e0cd9",
+  "generated_from_policy_hash": "772204090ea2bafc3375dbd1c856a03924bcf66c6a7b802e8f2ff4551c1ce771",
   "generated": true,
   "nodes": [
     {
@@ -210,7 +210,14 @@
       "type": "runtime",
       "provider": "doc_guard",
       "kind": "script",
-      "entrypoint": "guard/src/session_guard.py"
+      "entrypoint": "scripts/tools/doc_guard.py"
+    },
+    {
+      "id": "runtime:guard_runner",
+      "type": "runtime",
+      "provider": "guard_runner",
+      "kind": "script",
+      "entrypoint": "guard/src/guard_runner.py"
     },
     {
       "id": "runtime:opencode_code_worker",
@@ -267,6 +274,13 @@
       "provider": "searxng_search_server",
       "kind": "mcp",
       "entrypoint": "mcp/searxng_search_server.py"
+    },
+    {
+      "id": "runtime:session_guard",
+      "type": "runtime",
+      "provider": "session_guard",
+      "kind": "script",
+      "entrypoint": "guard/src/session_guard.py"
     },
     {
       "id": "skill:autoresearch",
@@ -381,6 +395,12 @@
       "type": "skill",
       "name": "ml-paper-writing",
       "runtime_class": "unclassified"
+    },
+    {
+      "id": "skill:paper-review",
+      "type": "skill",
+      "name": "paper-review",
+      "runtime_class": "optional_domain"
     },
     {
       "id": "skill:physics-verification",
@@ -764,6 +784,13 @@
       "entrypoint": "mcp/coder_router_server.py"
     },
     {
+      "id": "tool:doc_guard",
+      "type": "tool",
+      "name": "doc_guard",
+      "kind": "script",
+      "entrypoint": "scripts/tools/doc_guard.py"
+    },
+    {
       "id": "tool:extract_document",
       "type": "tool",
       "name": "extract_document",
@@ -776,6 +803,13 @@
       "name": "factory_ctl",
       "kind": "script",
       "entrypoint": "scripts/code-factory/factory_ctl.py"
+    },
+    {
+      "id": "tool:guard_runner",
+      "type": "tool",
+      "name": "guard_runner",
+      "kind": "script",
+      "entrypoint": "guard/src/guard_runner.py"
     },
     {
       "id": "tool:openalex_search",
@@ -1005,6 +1039,11 @@
     {
       "src": "capsule:research-core",
       "rel": "PROVIDES_SKILL",
+      "dst": "skill:paper-review"
+    },
+    {
+      "src": "capsule:research-core",
+      "rel": "PROVIDES_SKILL",
       "dst": "skill:physics-verification"
     },
     {
@@ -1131,6 +1170,11 @@
       "src": "route:academic-research",
       "rel": "REQUIRES_SKILL",
       "dst": "skill:literature-review"
+    },
+    {
+      "src": "route:academic-research",
+      "rel": "REQUIRES_SKILL",
+      "dst": "skill:paper-review"
     },
     {
       "src": "route:academic-research",
@@ -1763,6 +1807,11 @@
       "dst": "runtime:coder_router_server"
     },
     {
+      "src": "tool:doc_guard",
+      "rel": "BINDS_RUNTIME",
+      "dst": "runtime:doc_guard"
+    },
+    {
       "src": "tool:extract_document",
       "rel": "BINDS_RUNTIME",
       "dst": "runtime:doc_extract_server"
@@ -1771,6 +1820,11 @@
       "src": "tool:factory_ctl",
       "rel": "BINDS_RUNTIME",
       "dst": "runtime:code_factory_runtime"
+    },
+    {
+      "src": "tool:guard_runner",
+      "rel": "BINDS_RUNTIME",
+      "dst": "runtime:guard_runner"
     },
     {
       "src": "tool:openalex_search",
@@ -1810,7 +1864,7 @@
     {
       "src": "tool:session_guard",
       "rel": "BINDS_RUNTIME",
-      "dst": "runtime:doc_guard"
+      "dst": "runtime:session_guard"
     },
     {
       "src": "tool:tribunal_role",
@@ -1861,6 +1915,7 @@
       "skill:literature-review",
       "skill:markitdown",
       "skill:ml-paper-writing",
+      "skill:paper-review",
       "skill:physics-verification",
       "skill:scientific-critical-thinking",
       "skill:scientific-writing",
@@ -1873,8 +1928,10 @@
       "tool:arxiv_search",
       "tool:code_work",
       "tool:coder_run",
+      "tool:doc_guard",
       "tool:extract_document",
       "tool:factory_ctl",
+      "tool:guard_runner",
       "tool:openalex_search",
       "tool:profile_config",
       "tool:research_academic",

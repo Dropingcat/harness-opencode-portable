@@ -59,7 +59,7 @@ class OfflineResearchPipeline:
             )
         )
         sources, evidence_spans = observation_to_source_evidence(document_observation)
-        # Guard block (целиком P0+P2 polza) перед admit — как в doc_guard для researcher/оркестратора
+        # Guard block (целиком P0+P2 polza) перед admit — как в bundled guard для researcher/оркестратора
         # P0 всегда, P2 — tie-breaker для untrusted low/no-match, простенькая lunaris оставлена
         try:
             policy = load_policy(Path.cwd())
