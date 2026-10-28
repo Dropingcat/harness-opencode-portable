@@ -113,7 +113,7 @@ def scan_call_graph(root: str | Path, include_tests: bool = False) -> dict[str, 
                 "class": cls,
                 "kind": "method" if cls else "function",
             })
-            for callee in _direct_calls(node):
+            for callee in sorted(_direct_calls(node)):
                 dst = local.get(callee)
                 if dst:
                     edges.append({"src": qname, "dst": _qualified(rel, cls, dst) if dst else dst, "confidence": "exact"})
