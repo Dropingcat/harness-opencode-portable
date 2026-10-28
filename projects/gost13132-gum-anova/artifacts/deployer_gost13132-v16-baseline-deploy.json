@@ -1,0 +1,87 @@
+{
+  "module": "gost13132-gum-anova",
+  "role": "deployer",
+  "project_id": "gost13132-gum-anova",
+  "block": "gost13132-gum-anova (цикл закрыт, блоки 1-6 APPROVE)",
+  "verdict": "DEPLOYED",
+  "closes_gate": "P2 (APPROVE -> deploy обязателен, контракт 06 §4.14)",
+  "commit": {
+    "hash": "b64bd0a",
+    "subject": "ГОСТ EN 13132: ANOVA-GUM расчёт v16 — ядро, LIVE/CALC книги, Word-протокол, PROBLEMS_REGISTER (192 TD), методический контракт",
+    "branch": "main",
+    "files": 24,
+    "insertions": 6564
+  },
+  "push": {
+    "status": "REJECTED_NON_FAST_FORWARD",
+    "detail": "origin/main (calc_model) ушёл на 22 коммита вперёд по чужому циклу; локальная main впереди на 1 (наш b64bd0a). Push невозможен без rebase/force — по контракту 04 §6 force-push запрещён, не обходил. Решение владельца.",
+    "remote": "https://github.com/Dropingcat/calc_model.git"
+  },
+  "files": [
+    "ГОСТ EN 13132/PROBLEMS_REGISTER.md",
+    "ГОСТ EN 13132/v15/METHODIC_CONTRACT_ANOVA_GUM.md",
+    "ГОСТ EN 13132/v15/AUDIT_FINDINGS.md",
+    "ГОСТ EN 13132/v15/PLAN_FACTORY_CYCLE.md",
+    "ГОСТ EN 13132/v15/EN13132_v15_QA.json",
+    "ГОСТ EN 13132/v15/EN13132_v15_ИНСТРУКЦИЯ.md",
+    "ГОСТ EN 13132/v15/EN13132_v15_ФИНАЛЬНАЯ_РЕВИЗИЯ_ДОЛГОВ.md",
+    "ГОСТ EN 13132/v15/finalize_en13132_v15.py",
+    "ГОСТ EN 13132/v15/make_en13132_v15_reports.py",
+    "ГОСТ EN 13132/v15/verify_en13132_v15.py",
+    "ГОСТ EN 13132/v16/EN13132_v16_LIVE.xlsx",
+    "ГОСТ EN 13132/v16/EN13132_v16_CALC.xlsx",
+    "ГОСТ EN 13132/v16/EN13132_v16_Отчёт.docx",
+    "ГОСТ EN 13132/v16/anova_gum.py",
+    "ГОСТ EN 13132/v16/build_en13132_v16_live.py",
+    "ГОСТ EN 13132/v16/build_en13132_v16_calc.py",
+    "ГОСТ EN 13132/v16/build_en13132_v16_word.py",
+    "ГОСТ EN 13132/v16/verify_en13132_v16_charts.py",
+    "ГОСТ EN 13132/v16/check_live_recalc.py",
+    "ГОСТ EN 13132/v16/test_anova_gum.py",
+    "ГОСТ EN 13132/v16/worker_en13132_v16_calc_live.json",
+    "auditor_gost13132_gum_cycle.json",
+    "worker_gost13132-v15-problems-register.json",
+    ".gitignore"
+  ],
+  "temp_cleanup": {
+    "C:/Temp/EN13132_v16_LIVE_fixed_tmp.xlsx": "УДАЛЁН: SHA-256 == каноническая v16 LIVE (F4DF56F023A7D8302C7141F2F8F29F2E49B4547DB724055682876360765006B9)"
+  },
+  "td_candidates_closed": {
+    "note": "Деплоер реестр не правит (контракт 04). Кандидаты на CLOSED отмечены в отчёте.",
+    "TD-DEV-206": "CLOSED (аудитор блок 4 итер.3, уже в реестре)",
+    "TD-DEV-207": "CLOSED (аудитор блок 4 итер.3, уже в реестре)",
+    "TD-DEV-210": "CLOSED (аудитор блоков 5/6 финальный in-cycle, уже в реестре)",
+    "TD-DEV-208": "OPEN, REQUIRES_USER_DECISION — smooth/step критерий приёмки; требует решения методиста/пользователя, НЕ закрывается деплоем",
+    "TD-DEV-33": "OPEN, статус весов СЦЕНАРИЙ (ПРЕДВАРИТЕЛЬНО) — требует паспортных данных; НЕ закрывается деплоем"
+  },
+  "left_uncommitted": {
+    "reason": "вне scope цикла gost13132-gum-anova / чужой цикл fraction / legacy",
+    "list": [
+      "ГОСТ EN 13132/v11/**", "ГОСТ EN 13132/v12/**",
+      "ГОСТ EN 13132/v16/cal_v4.py",
+      "fix_fraction/", "fraction_lib/", "new_versions*/",
+      "gen_*.py", "gen_*.txt", "restructure_v4.py", "real_data_test*.py",
+      "reviewer_фракционка.json", "auditor_fraction_cycle.json",
+      "reviewer_fraction_v311.json", "reviewer_fraction_fix.json", "reviewer_fr13_gost2177.json",
+      "техдолги_фракционка.md", "techdebt.md", "нормативики/",
+      ".opencode/", "*.png", "verify_*.txt", "validate_distillation_model.py"
+    ]
+  },
+  "checks": {
+    "files_exist_12/12": "PASS",
+    "temp_hash_vs_canon": "PASS (MATCH=TRUE, удалён)",
+    "lock_files_~$": "PASS (нет)",
+    "git_status_no_tmp_in_staged": "PASS",
+    "staged_scope_only_cycle": "PASS (v11/v12/cal_v4 сняты из staged)",
+    "commit": "PASS (b64bd0a)",
+    "git_status_clean_after": "PASS для scope (мусор fraction/v11/v12 остался в рабочем дереве, не коммитился)",
+    "push": "REJECTED_NON_FAST_FORWARD"
+  },
+  "next_actions": [
+    "Владелец решает по push: rebase main на origin/main (1 коммит поверх 22 чужих) или force-push отдельной ветки. НЕ выполнено деплоером (контракт 04 §6).",
+    "TD-DEV-208: подтвердить smooth-критерий приёмки методистом и зафиксировать в контракте.",
+    "TD-DEV-33: получить паспортные данные весов/партий, перевести статус из ПРЕДВАРИТЕЛЬНО в подтверждённый.",
+    "v11/v12/cal_v4.py — решить судьбу (добавить/игнорировать) отдельным решением."
+  ],
+  "timestamp": "2026-10-12"
+}

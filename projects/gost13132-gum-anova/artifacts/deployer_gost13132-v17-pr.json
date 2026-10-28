@@ -1,0 +1,73 @@
+{
+  "contract": "04_DEPLOYER_CONTRACT.md",
+  "variant": "B (ветка v17 + PR, чужие коммиты origin/main требуют ревью)",
+  "repo": "C:\\Users\\Arhys\\Desktop\\каллибровка",
+  "remote": "origin = Dropingcat/calc_model",
+  "branch": "v17",
+  "base": "origin/main",
+  "status": "DEPLOYED",
+  "timestamp": "2026-10-12",
+  "cherry_picked": [
+    {
+      "source": "b64bd0a",
+      "target": "3854ff0",
+      "desc": "ANOVA-GUM расчёт v16",
+      "conflict": ".gitignore (разрешён: наша версия + *.token/*.pyc из origin)"
+    },
+    {
+      "source": "774e26e",
+      "target": "42f0bad",
+      "desc": "v17 — step по НД (TD-DEV-208), вклады=поля ввода (TD-DEV-33)",
+      "conflict": "нет"
+    },
+    {
+      "source": "c3c9b4b",
+      "target": "79a0408",
+      "desc": "v17 РЕЛИЗ + диагностика v16/v17 + RELEASE.md",
+      "conflict": "нет"
+    },
+    {
+      "source": "db696cf",
+      "target": "e5bb140",
+      "desc": "финализация RELEASE.md",
+      "conflict": "нет"
+    },
+    {
+      "source": "359f45f",
+      "target": "6517832",
+      "desc": "реестр TD-DEV-208/213 CLOSED",
+      "conflict": "нет"
+    }
+  ],
+  "push": {
+    "branch": "origin/v17",
+    "result": "OK, new branch"
+  },
+  "pr": {
+    "number": 3,
+    "url": "https://github.com/Dropingcat/calc_model/pull/3",
+    "base": "main",
+    "head": "v17",
+    "title": "ГОСТ EN 13132: v16/v17 ANOVA-GUM расчёт (калибровка MTBE/МТАЭ)"
+  },
+  "checks": {
+    "branch_from_origin_main": "PASS (checkout -b v17 origin/main)",
+    "all_5_cherry_pick": "PASS (5 коммитов, log origin/main..v17)",
+    "conflicts_resolved": "PASS (1: .gitignore — наша версия + *.token/*.pyc)",
+    "diff_no_fraction": "PASS (grep fraction в diff — пусто)",
+    "diff_only_calibration": "PASS (81 файл: v15/v16/v17, PROBLEMS_REGISTER, auditor/worker json, .gitignore)",
+    "push": "PASS (origin/v17 создана)",
+    "pr": "PASS (#3)"
+  },
+  "local_main": "НЕ ТРОНУТА (ahead 5, behind 22 — осталась как была)",
+  "temporary_moves": {
+    "fix_fraction/": "убрана из рабочего дерева, бэкап в C:\\Temp\\opencode\\backup_v17_fix_fraction",
+    "fraction_lib/": "убрана из рабочего дерева, бэкап в C:\\Temp\\opencode\\backup_v17_fraction_lib",
+    "techdebt.md": "stash 'temp-deployer: techdebt.md' (вернуть: git stash pop)"
+  },
+  "notes": [
+    "origin/main НЕ содержит путей v15/v16/v17/PROBLEMS_REGISTER — конфликты cherry-pick были маловероятны; единственный конфликт — .gitignore.",
+    "untracked мусор других задач (fix_fraction.zip, new_versions*, reviewer_*.json и пр.) НЕ попал в коммиты v17.",
+    "Для возврата рабочего дерева на main: git checkout main; git stash pop (techdebt.md); вернуть fix_fraction/ и fraction_lib/ из C:\\Temp\\opencode бэкапа."
+  ]
+}

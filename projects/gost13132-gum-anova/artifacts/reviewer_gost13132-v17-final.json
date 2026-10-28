@@ -1,0 +1,214 @@
+{
+  "module": "gost13132-v17-final",
+  "role": "reviewer",
+  "verdict": "APPROVE",
+  "block": "gost13132-v17-final",
+  "workspace": "C:\\Users\\Arhys\\Desktop\\каллибровка\\ГОСТ EN 13132\\v17",
+  "reviewed_files": [
+    "anova_gum.py", "test_anova_gum.py", "build_en13132_v17_calc.py",
+    "EN13132_v17_CALC.xlsx", "build_en13132_v17_live.py", "EN13132_v17_LIVE.xlsx",
+    "build_en13132_v17_word.py", "EN13132_v17_Отчёт.docx",
+    "verify_en13132_v17_charts.py", "check_live_recalc.py"
+  ],
+  "checks": [
+    {
+      "check": "Ядро: default interpolation='step'",
+      "command": "inspect.signature(ag.u_repr_from_tables) + u_repr(4.0)",
+      "expected": "interpolation: str = 'step'; u_repr(4.0, default)=0.140607 (ступенька (3;5]), smooth=0.156186",
+      "fact": "signature: interpolation: str = 'step'; default u_repr(4.0)=0.140607283; smooth=0.156186211",
+      "result": "PASS"
+    },
+    {
+      "check": "Ядро: docstring про НД-вердикт TD-DEV-208",
+      "command": "чтение anova_gum.py строки 8-18",
+      "expected": "упоминание TD-DEV-208, r/R дискретны, интерполяция не предписана, GUM 4.1.4 неприменим, smooth — допущение не по НД",
+      "fact": "docstring модуля строки 8-18 содержит полный текст вердикта (step по умолчанию, дискретность, ссылки 5725-6/РМГ 61, GUM 4.1.4)",
+      "result": "PASS"
+    },
+    {
+      "check": "Ядро: combined_budget исключает u==0 из u_c и nu_eff (TD-DEV-33)",
+      "command": "combined_budget(base) vs combined_budget(base+весы=0) vs (+эталоны=0)",
+      "expected": "u_c и nu_eff и k не меняются; zeroed содержит исключённые",
+      "fact": "u_c=0.1019803903, nu_eff=2704.0, k=1.9608417 во всех трёх случаях; zeroed=[('весы',0,None)] и [('весы',0,None),('эталоны',0,50)]; assert PASS",
+      "result": "PASS"
+    },
+    {
+      "check": "pytest ядра",
+      "command": "python -m pytest test_anova_gum.py -q",
+      "expected": "20/20 PASS",
+      "fact": "20 passed in 1.33s",
+      "result": "PASS"
+    },
+    {
+      "check": "CALC: step-числа и U(06_Итог)==маркер",
+      "command": "openpyxl чтение CALC + verify V3r",
+      "expected": "u_repr=0.140607; u_c=0.040164; nu_eff=86.27; k=1.9878; U=0.079841; U%=0.3178; U_rel=8.01; U(06_Итог)==Графики!D4==ядро",
+      "fact": "05_Бюджет: u_c=0.040164496, nu_eff=86.266, k=1.9878468, U=0.079840864, U%=0.3177666; 06_Итог w=3.966567; Графики C4=0.99662495, D4=0.079840864; V3r PASS; профиль A2='step'; D(row)=0.0083939 (const внутри поддиапазона)",
+      "result": "PASS"
+    },
+    {
+      "check": "LIVE: режим-ячейка B29",
+      "command": "openpyxl чтение 01_Ввод!B29",
+      "expected": "1 (step)",
+      "fact": "01_Ввод!B29 = 1; подпись 'Режим u_repr (1=step, 2=smooth)'; комментарий про TD-DEV-208",
+      "result": "PASS"
+    },
+    {
+      "check": "LIVE: поля-вводы вкладов с пометкой «0 = не учитывать»",
+      "command": "чтение 01_Ввод B25/B26/B27 + комментарии + B31 STATUS",
+      "expected": "подписи/комментарии про 0=не учитывать; STATUS_TEXT без блокировки",
+      "fact": "B25/B26/B27 комментарии 'ПОЛЕ ВВОДА ... ИЛИ 0 = «не учитывать» (TD-DEV-33)'; B31 STATUS='ВКЛАДЫ — ПОЛЯ ВВОДА ... заполнить перед протоколом (TD-DEV-33/208)'",
+      "result": "PASS"
+    },
+    {
+      "check": "LIVE: формулы бюджета с IF(<поле>=0,0,...)",
+      "command": "чтение 05_Бюджет B5/B6/B7 и 04_Профиль E5/F5, 06_Итог B19/B20/B25",
+      "expected": "IF(01_Ввод!$B$27=0,0,...) и аналоги для B26/B25; B19/B20/B25 — формулы-ссылки",
+      "fact": "05_Бюджет B5=IF(B27=0,0,ABS(B19)*B27); B6=IF(AND(B26=0,1),0,...); B7=IF(B25=0,0,...); 04_Профиль E5/F5 содержат IF(поле=0,0,...); 06_Итог B19=(Y0-b0)/b1, B20=B19*B3, B25='05_Бюджет'!B14",
+      "result": "PASS"
+    },
+    {
+      "check": "LIVE: 3 диаграммы, xVal/yVal на одном листе",
+      "command": "openpyxl инспекция chart.series + verify V7/V8",
+      "expected": "3 ScatterChart; каждая серия xVal/yVal на одном листе",
+      "fact": "chart1 4 серии, chart2 3 серии, chart3 2 серии — все ScatterChart, xVal/yVal на одном листе; V7/V8 PASS",
+      "result": "PASS"
+    },
+    {
+      "check": "Word: числа == step-ядру; примечания; w=3.967±0.32",
+      "command": "python-docx чтение Отчёта",
+      "expected": "u_repr=0.140607, U=0.0798409 г/г, U%=0.3178, nu_eff=86.27, k=1.9878, U_rel=8.01, w0=3.967; протокол '3,967 ± 0,32 % мас.'; примечания TD-DEV-208/TD-DEV-33",
+      "fact": "все числа совпали (таблица 5: u_c=0,0401645, nu_eff=86,27, k=1,9878, U=0,0798409, U%=0,3178); 'w(MTBE) = 3,967 ± 0,32 % мас. (P = 0,95, k = 1,99, ν_eff = 86)'; округление 'w = 4,0 ± 0,3 % мас.'; все 11 фраз step/TD-DEV-208/TD-DEV-33/«0 = не учитывать» присутствуют",
+      "result": "PASS"
+    },
+    {
+      "check": "verify_en13132_v17_charts.py",
+      "command": "python verify_en13132_v17_charts.py",
+      "expected": "PASS, 114/0",
+      "fact": "ИТОГ: PASS=114, FAIL=0 (V1-V8, V3r, V5 4/5/8 уровней, V6a ступенчатость 7 сегментов, V6c u_repr(w0)=0.140607)",
+      "result": "PASS"
+    },
+    {
+      "check": "check_live_recalc.py",
+      "command": "python check_live_recalc.py",
+      "expected": "PASS 5/5 (rtol=1e-3)",
+      "fact": "5/5 PASS: B19=0.9966249517, B20=3.966567308, B25=0.07984437632, B10=0.9609977574, B15=0.9997401717",
+      "result": "PASS"
+    },
+    {
+      "check": "Сверка с v16 (что изменено только заявленное)",
+      "command": "Compare-Object v16/v17 anova_gum.py + git status",
+      "expected": "изменены: default step (уже был в сигнатуре v16), явный zeroed-фильтр в combined_budget, docstring/TD-тексты; v16 книги не тронуты",
+      "fact": "v16 ядро уже имело default step в сигнатуре (стр.316), но v16 build_workbook/compute_calibration вызывали smooth ЯВНО (v16_calc.py стр.388/1097/1159). v17: default confirmed, добавлен явный фильтр u<=EPS в combined_budget (zeroed), все вызовы/verify/Word/LIVE — step; MD5 v16/v17 anova_gum.py различаются (3CB0A7D5 vs 627D56CB); git: v17 — untracked, v16 — не изменена (нет в git status M); единственный изменённый трекаемый файл в репо — techdebt.md (не v16/v17)",
+      "result": "PASS"
+    }
+  ],
+  "comments": [
+    {
+      "file": "anova_gum.py",
+      "line": 17,
+      "severity": "minor",
+      "problem": "Docstring утверждает: «В combined_budget и welch_satterthwaite нулевые u_i пропускаются (уже реализовано в v16, проверено и задокументировано)». Фактически в v16\anova_gum.py есть только пропуск u_i<=0 в welch_satterthwaite (стр.451); явного фильтра u==0 в combined_budget v16 НЕ было (grep 'u <= EPS|zeroed' в v16 — 0 совпадений). Поведенчески результат v16 был тот же (u=0 не менял u_c и nu_eff через welch), но формулировка «уже реализовано в v16» для combined_budget — преувеличение: явный zeroed-фильтр — это добавление v17.",
+      "suggestion": "Уточнить формулировку: «пропуск u_i<=0 в welch_satterthwaite унаследован из v16; явный фильтр/пометка zeroed в combined_budget добавлен в v17 (TD-DEV-33)».",
+      "falsification": "Замечание опровергается, если в v16\anova_gum.py будет найден фрагмент combined_budget с фильтрацией u<=0/zeroed (grep даст совпадение в теле функции combined_budget, а не welch_satterthwaite)."
+    },
+    {
+      "file": "verify_en13132_v17_charts.py",
+      "line": 481,
+      "severity": "minor",
+      "problem": "V3r2 сверяет маркер D4 с кривой профиля U(x_pred) с tol 1e-3 (rel=2.57e-06 фактически), что заявлено воркером как техдолг «точного равенства нет — профиль на сетке». Это не дефект v17 и не блокирует, но при изменении числа точек сетки/диапазона допуск 1e-3 может стать недостаточным без предупреждения.",
+      "suggestion": "Оставить как есть (техдолг подтверждён), при желании — добавить в вывод V3r2 фактическое смещение маркера к ближайшему узлу сетки для аудита.",
+      "falsification": "Замечание опровергается, если V3r2 сверяет маркер с профилем, пересчитанным точно в точке X0 (а не по ближайшему узлу сетки), — тогда техдолг о сеточном приближении отсутствует."
+    },
+    {
+      "file": "EN13132_v17_LIVE.xlsx",
+      "line": 0,
+      "severity": "minor",
+      "problem": "Живая книга не содержит кэша значений (все расчётные ячейки — формулы, cached=None). Это by design (заявлено в docstring и Инструкции), но означает: любой программный читатель без пересчёта (openpyxl data_only, pandas) получит None; формулы-пересчёт formulas-библиотекой даёт 06_Итог!B25=0.07984437632 vs ядро 0.07984086387 — расхождение 4.4e-5 (0.004%, rtol 1e-3 PASS) из-за цепочки TINV/ROUND. Для внешнего аудита чисел без Excel книга не является источником фактических значений.",
+      "suggestion": "Зафиксировать в Инструкции/README явное указание: числовые значения для внешних систем брать из ядра (compute_calibration step), а не из LIVE-книги без пересчёта. Техдолг от воркера подтверждён.",
+      "falsification": "Замечание опровергается, если в EN13132_v17_LIVE.xlsx будут найдены кэшированные числовые значения в расчётных ячейках 05_Бюджет/06_Итог (data_only load вернёт числа), либо если формулы-пересчёт даст совпадение с ядром с точностью < 1e-9 без допуска."
+    }
+  ],
+  "tech_debts": [
+    "Совпадение U(06_Итог)==U(x_pred) маркер проверяется с tol 1e-3 (маркер D4 — значение ядра, кривая — ближайший узел сетки профиля); для точного равенства нужен пересчёт профиля в точке X0.",
+    "Весы/партии не аттестованы данными спецификаций — поля ввода заполняются пользователем; автоматической проверки «спецификация vs введённое» нет.",
+    "σL данных лаборатории не оценивалась (QC BUD-17, вне плана) — грубый учёт σR из табл.1 ГОСТ EN 13132.",
+    "Границы поддиапазонов табл.1/2 и R-05 зашиты в anova_gum.py (TABLE1_RANGES/TABLE2_RANGES), не вынесены в конфиг.",
+    "GUM 4.1.4 к приписанным нормам прецизионности неприменим (TD-DEV-208) — решение зафиксировано текстом, но не валидировано внешней рецензией НД-специалиста.",
+    "smooth-режим сохранён в ядре/книгах как методическое допущение (не по НД) — потенциал случайного использования при ручном переключении B29=2.",
+    "LIVE не хранит кэша значений — внешнее программное чтение без пересчёта даёт None; расхождение формулы-пересчёта с ядром ~0.004% (TINV/ROUND)."
+  ],
+  "findings": [
+    {
+      "note": "u_repr(step, w0=3.967 %мас)=0.140607 %мас точно совпадает с ожиданием контракта; поддиапазон (3;5]: r=0.1, R=0.4 (степень).",
+      "severity": "ok"
+    },
+    {
+      "note": "U(step)=0.079840864 г/г (0.3178 %мас) vs ожидание контракта ~0.0795 г/г (0.3165 %мас) — расхождение 0.4% объяснимо точными входами (K_G2PCT=3.98, u_rel вкладов); эталон — фактическое ядро, подтверждено verify V3l.",
+      "severity": "info"
+    },
+    {
+      "note": "LIVE formulas-пересчёт U(06_Итог!B25)=0.079844376 vs ядро 0.079840864: расхождение 4.4e-5 (0.004%) из-за цепочки TINV/ROUND в Excel — в пределах rtol=1e-3 (PASS).",
+      "severity": "info"
+    },
+    {
+      "note": "В v16 ядро уже имело default 'step' в сигнатуре, НО v16 build_workbook/compute_calibration/verify вызывали smooth ЯВНО (v16_calc стр.388/1097/1159). v17 — фактическая смена режима по умолчанию во всех вызовах: compute_calibration default 'step' (стр.403), build_workbook default 'step' (стр.1128), verify вызывает 'step' (стр.336), LIVE B29=1, Word 'step' (стр.214). Изменение реальное, не косметическое.",
+      "severity": "ok"
+    },
+    {
+      "note": "V5: динамическая генерация при 4/5/8 уровнях (step) не падает, U(06_Итог)==D4 во всех наборах (0.10862/0.08608/0.08769).",
+      "severity": "ok"
+    },
+    {
+      "note": "Проверка «LIVE B6 чистота: IF(AND(B26=0,1),0,...)» — избыточное AND(условие,1), функционально эквивалентно IF(B26=0,0,...) — не баг, но лишний синтаксис.",
+      "severity": "info"
+    }
+  ],
+  "adversarial_critic": {
+    "checklist": [
+      {
+        "id": "domain_coverage",
+        "passed": true,
+        "score": 1.0,
+        "findings": "Оба решения (TD-DEV-208 step-дефолт, TD-DEV-33 0=не учитывать) реализованы на всех четырёх уровнях доставки (ядро, CALC, LIVE, Word) и в верификаторах; покрыты 5725-6/РМГ 61/GUM ссылками."
+      },
+      {
+        "id": "fact_concept_consistency",
+        "passed": true,
+        "score": 1.0,
+        "findings": "Все числа артефакта перепроверены фактическим перезапуском: pytest 20/20, verify 114/0, check_live 5/5, openpyxl-чтение книг, python-docx чтение отчёта."
+      },
+      {
+        "id": "concept_diversity",
+        "passed": true,
+        "score": 1.0,
+        "findings": "Два независимых решения (дискретность r/R и исключение u=0) реализованы раздельными механизмами: step-VLOOKUP/ядро vs zeroed-фильтр+IF(поле=0)."
+      },
+      {
+        "id": "source_specificity",
+        "passed": true,
+        "score": 1.0,
+        "findings": "Ссылки на ГОСТ EN 13132-2012 табл.1/2, ГОСТ Р ИСО 5725-6-2002 §4.1.2/4.1.4/4.2.3, ГОСТ 34100.3-2017 (GUM) G.2b/H.5/6.2.1, РМГ 61-2010 §5.5 — в docstring ядра и примечаниях Word/LIVE."
+      },
+      {
+        "id": "triz_correctness",
+        "passed": true,
+        "score": 1.0,
+        "findings": "ТРИЗ-приёмы в плане не использовались (это НД-соответствие, не изобретательская задача) — критерий не применим, пункт помечен N/A в сторону PASS."
+      },
+      {
+        "id": "estimates_realism",
+        "passed": true,
+        "score": 1.0,
+        "findings": "Заявленные воркером трудозатраты не оценивались; фактически все прогоны выполнены за время сессии ревью с корректными результатами."
+      }
+    ],
+    "severity": {
+      "critical": 0,
+      "major": 0,
+      "minor": 3
+    }
+  },
+  "new_tds": [],
+  "artifact_path": "E:\\opencode_harness_portable\\projects\\gost13132-gum-anova\\artifacts\\reviewer_gost13132-v17-final.json"
+}

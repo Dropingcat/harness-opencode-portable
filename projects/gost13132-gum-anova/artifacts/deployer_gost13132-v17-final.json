@@ -1,0 +1,58 @@
+{
+  "deployer_report": {
+    "block_id": "gost13132-v17-final",
+    "role": "deployer",
+    "verdict": "APPROVE",
+    "status": "DEPLOYED_COMMIT_PUSH_BLOCKED_DIVERGED",
+    "date": "2026-10-12"
+  },
+  "section1_result": {
+    "git_hash": "774e26e4f271a7a498f0a4f6d042859f3bec279f",
+    "short_hash": "774e26e",
+    "commit_message": "ГОСТ EN 13132: v17 — step по НД (TD-DEV-208), вклады=поля ввода с 0=не учитывать (TD-DEV-33), LIVE/CALC/Word v17",
+    "files_committed": [
+      "ГОСТ EN 13132/v17/anova_gum.py",
+      "ГОСТ EN 13132/v17/build_en13132_v17_calc.py",
+      "ГОСТ EN 13132/v17/build_en13132_v17_live.py",
+      "ГОСТ EN 13132/v17/build_en13132_v17_word.py",
+      "ГОСТ EN 13132/v17/check_live_recalc.py",
+      "ГОСТ EN 13132/v17/verify_en13132_v17_charts.py",
+      "ГОСТ EN 13132/v17/test_anova_gum.py",
+      "ГОСТ EN 13132/v17/EN13132_v17_CALC.xlsx (via git add -f, *.xlsx ignored)",
+      "ГОСТ EN 13132/v17/EN13132_v17_LIVE.xlsx (via git add -f, *.xlsx ignored)",
+      "ГОСТ EN 13132/v17/EN13132_v17_Отчёт.docx (via git add -f, *.docx ignored)"
+    ],
+    "push_status": "REJECTED non-fast-forward (ahead 2, behind 22). No force-push performed."
+  },
+  "section2_checks": [
+    { "check": "10 файлов в v17\\ (Test-Path)", "result": "PASS" },
+    { "check": "git status --short: v17 untracked", "result": "PASS" },
+    { "check": "прошлый коммит b64bd0a (v16) на месте", "result": "PASS" },
+    { "check": "origin/main ушёл вперёд: ahead 1, behind 22", "result": "CONFIRMED (после fetch/commit: ahead 2, behind 22)" },
+    { "check": "git add v17 (10 файлов)", "result": "PASS" },
+    { "check": "git add -f для .xlsx/.docx (игнор .gitignore)", "result": "PASS" },
+    { "check": "staged = только 10 артефактов v17, мусора нет", "result": "PASS" },
+    { "check": "git commit", "result": "PASS (774e26e)" },
+    { "check": "git pull --rebase origin main", "result": "FAIL — блокирован: 22 чужих коммита origin/main содержат fix_fraction/ и fraction_lib/, локально untracked (52 файла), checkout перезаписал бы их. Rebase aborted безопасно." },
+    { "check": "git push origin main", "result": "FAIL — rejected non-fast-forward (ahead 2, behind 22)" },
+    { "check": "force-push использован", "result": "NO (запрещён контрактом)" },
+    { "check": "PROBLEMS_REGISTER.md менялся", "result": "NO (TD-DEV-208/33 уже в реестре, оба OPEN)" }
+  ],
+  "section3_what_remains": [
+    "TD-DEV-208: закрыт РЕШЕНИЕМ (step по НД), но в реестре статус OPEN — ждёт смены статуса владельцем.",
+    "TD-DEV-33: решено полями ввода (вклад=0 → не учитывать), НО значения вкладов из спецификаций заполняет пользователь вручную — OPEN до фактического ввода.",
+    "PUSH: коммит 774e26e не запушен — origin/main diverged (ahead 2 / behind 22).",
+    "Конфликт рабочих каталогов fix_fraction/ и fraction_lib/ (локально untracked, а в origin/main — 52 файла из чужих 22 коммитов)."
+  ],
+  "section4_findings": [
+    "FINDING_1: remote содержит живой токен в выводе `git remote -v` — в отчёте замаскирован как ghp_***; владельцу: проверить/ротировать write-токен.",
+    "FINDING_2: rebase/pull заблокирован не конфликтом содержимого, а collision untracked-каталогов fix_fraction/ и fraction_lib/ — их надо решить (stash + merge, или перенести в отдельную ветку) до любого pull.",
+    "FINDING_3: рабочее дерево содержит НЕ версионированный мусор (new_versions*, gen_*, *_out.txt, fix_fraction.zip и др.) — не коммитилось, но загрязняет status и мешает rebase (см. FINDING_2).",
+    "FINDING_4: коммит v17 сделан в `main`, а не в feature-ветку (по контракту 04 — feature/<id>); отклонение от контракта обусловлено задачей оркестратора (прямой коммит в main)."
+  ],
+  "recommendation": [
+    "Не force-push. Вариант A: владельцу/оркестратору решить судьбу untracked fix_fraction/ + fraction_lib/ (коммит в отдельную ветку или stash), затем `git pull --rebase origin main` и `git push origin main`.",
+    "Вариант B: открыть отдельную ветку от origin/main, cherry-pick 774e26e (или перенести изменения v17), затем PR в main.",
+    "После успешного push: обновить статусы TD-DEV-208 (→ CLOSED-BYSOLUTION) и TD-DEV-33 в PROBLEMS_REGISTER.md."
+  ]
+}

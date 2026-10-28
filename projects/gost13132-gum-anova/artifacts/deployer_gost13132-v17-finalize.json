@@ -1,0 +1,46 @@
+{
+  "artifact": "deployer_gost13132-v17-finalize",
+  "role": "deployer (контракт 04)",
+  "date": "2026-10-12",
+  "repo": "C:\\Users\\Arhys\\Desktop\\каллибровка",
+  "remote": "https://github.com/Dropingcat/calc_model.git",
+  "branch": "main",
+  "section1_result": {
+    "commit_register": "359f45f",
+    "commit_register_msg": "ГОСТ EN 13132 v17: реестр — TD-DEV-208/213 CLOSED (step по НД; правило путей)",
+    "commit_release_hash_embedded": "c3c9b4b",
+    "commit_release_finalize": "db696cf",
+    "files_committed_register": ["ГОСТ EN 13132/PROBLEMS_REGISTER.md"],
+    "log_oneline_4": [
+      "359f45f ГОСТ EN 13132 v17: реестр — TD-DEV-208/213 CLOSED (step по НД; правило путей)",
+      "db696cf ГОСТ EN 13132 v17: RELEASE.md — зафиксирован git-хэш c3c9b4b",
+      "c3c9b4b ГОСТ EN 13132 v17: РЕЛИЗ - фикс сетки X (ROW($A$52)), оси точек (NA() вместо пустых), локализация FIXED, NA()-маскировка деления; правило путей AGENTS_PATHS_RULE.md (TD-DEV-213); диагностика v16/v17; RELEASE.md",
+      "774e26e ГОСТ EN 13132: v17 — step по НД (TD-DEV-208), вклады=поля ввода с 0=не учитывать (TD-DEV-33), LIVE/CALC/Word v17"
+    ],
+    "push_result": "REJECTED (non-fast-forward)",
+    "force_used": false
+  },
+  "section2_checks": [
+    {"check": "status до коммита", "result": "PASS", "detail": "РЕЕСТР M; RELEASE.md НЕ в status (уже в истории); остальное — мусор из других задач (фракционка/gen_*) — в коммит НЕ включено"},
+    {"check": "RELEASE.md привязан к c3c9b4b", "result": "PASS", "detail": "git log -1 -- RELEASE.md = c3c9b4b; хэш зафиксирован в db696cf (RELEASE.md финализация)"},
+    {"check": "TD-DEV-208 → CLOSED", "result": "PASS", "detail": "закрыт вердиктом ресерчера по НД (step по умолчанию в v17, anova_gum.py interpolation='step'), пользователь подтвердил «вышло отлично»"},
+    {"check": "TD-DEV-213 → CLOSED", "result": "PASS", "detail": "AGENTS_PATHS_RULE.md создан (v17\\, 5 правил), C:\\Temp перенесён в v17/v16 diagnostics; критерий закрытия соблюдён"},
+    {"check": "счётчик статусов реестра", "result": "PASS", "detail": "124 OPEN + 61 CLOSED + 7 PARTIAL + 1 IMPLEMENTED = 193; severity 72 HIGH + 41 MEDIUM + 80 LOW = 193"},
+    {"check": "коммит реестра", "result": "PASS", "detail": "359f45f, 1 file changed, 5 insertions(+), 5 deletions(-)"},
+    {"check": "незакоммиченных релизных файлов нет", "result": "PASS", "detail": "untracked содержит только мусор других задач; в этот коммит добавлен только PROBLEMS_REGISTER.md"}
+  ],
+  "section3_remaining": {
+    "push_collision": {
+      "status": "REJECTED non-fast-forward",
+      "local_behind": 22,
+      "local_ahead": 5,
+      "recommendation_to_owner": "main отстаёт от origin/main на 22 коммита и опережает на 5. Force-push запрещён. Рекомендуется: 1) git pull origin main --rebase (перебазировать 5 локальных коммитов v17 поверх remote) и разрулить возможные конфликты; 2) повторно прогнать verify (минимум — PROBLEMS_REGISTER счётчики и pytest, т.к. изменения RELEASE/реестра чисто метаданные, конфликты маловероятны, но не исключены в общих файлах); 3) git push origin main после успешного rebase. Альтернатива — ветка-презентация v17 + PR, если remote-коммиты чужие и требуют ревью."
+    }
+  },
+  "section4_findings": [
+    "В корне проекта скопилось значительное количество untracked-мусора из других задач (gen_fraction_xlsx_*.py ×12, new_versions* ×9, reviewer_*.json, validation_plot_*.png, ревью*.txt и др.) — не относится к релизу v17, в коммит не включалось; рекомендуется отдельная уборка/изоляция по шаблону 12 (например, в подпапку wip/ или .gitignore).",
+    "techdebt.md имеет незакоммиченные изменения (добавлен раздел «Фракционный состав» ФР-01…ФР-22) — вне рамок релиза v17, оставлено как есть.",
+    "Дубликат артефакта блока 4 worker_en13132_v16_calc_live.json (TD-DEV-212) так и остаётся в v16\\ — косметика, в релизный коммит не включён.",
+    "RELEASE.md корректно сослан на c3c9b4b через db696cf — цепочка релизных хэшей v17 полная и согласованная."
+  ]
+}

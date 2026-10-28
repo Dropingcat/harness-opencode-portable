@@ -1,0 +1,52 @@
+{
+  "role": "deployer",
+  "block": "gost13132-v17-release",
+  "date": "2026-10-12",
+  "status": "DEPLOYED_LOCAL_PUSH_REJECTED",
+  "git_repo": "https://github.com/Dropingcat/calc_model.git",
+  "branch": "main",
+  "commit": {
+    "hash": "c3c9b4b",
+    "short": "c3c9b4b",
+    "message": "ГОСТ EN 13132 v17: РЕЛИЗ - фикс сетки X (ROW($A$52)), оси точек (NA() вместо пустых), локализация FIXED, NA()-маскировка деления; правило путей AGENTS_PATHS_RULE.md (TD-DEV-213); диагностика v16/v17; RELEASE.md",
+    "files_changed": 56,
+    "insertions": 3067,
+    "deletions": 26
+  },
+  "release_marker": "C:\\Users\\Arhys\\Desktop\\каллибровка\\ГОСТ EN 13132\\v17\\RELEASE.md",
+  "release_marker_committed": true,
+  "push": {
+    "attempted": true,
+    "result": "REJECTED_NON_FAST_FORWARD",
+    "detail": "main -> main (non-fast-forward); origin/main ahead 22, local ahead 3",
+    "force_push": false,
+    "rebase": false,
+    "action": "коммит сохранён локально; рекомендация владельцу — разрешить коллизию вручную"
+  },
+  "committed_artifacts": [
+    "ГОСТ EN 13132/v17/ (все .py, .xlsx, .docx, .md, AGENTS_PATHS_RULE.md, diagnostics/, RELEASE.md)",
+    "ГОСТ EN 13132/v16/diagnostics/ (перенесённая диагностика, без v16chk распакованного xlsx)",
+    "ГОСТ EN 13132/PROBLEMS_REGISTER.md (изменён: TD-DEV-213, счётчики 192->193)"
+  ],
+  "excluded_junk": [
+    "v11/", "v12/", "cal_v4.py (v16)", "fraction_lib/", "fix_fraction/", "fix_fraction.zip",
+    "gen_fraction_xlsx*", "new_versions*/", "tmp", ".pytest_cache", "__pycache__", "*.pyc",
+    "v16chk/ (распакованный xlsx)", "techdebt.md (фракционный состав, чужой блок)",
+    ".opencode/", "нормативки/", "техдолги_фракционка.md", "ревью*.txt", "gen_*.txt",
+    "verify_out.txt/verify_err.txt/gen_err.txt (корень)", "validation_plot_*", "real_data_test*",
+    "restructure_v4.py", "validate_distillation_model.py", "verify_v4.py", "worker_restructure_v4.json",
+    "reviewer_*.json", "auditor_fraction_cycle.json", "compare_v3_vs_lib.py"
+  ],
+  "td_recommendations": {
+    "TD-DEV-208": "OPEN -> CLOSED: step по НД решён вердиктом ресерчера (табл.1/2 ГОСТ EN 13132), реализован step по умолчанию в v17",
+    "TD-DEV-213": "OPEN -> CLOSED: правило путей AGENTS_PATHS_RULE.md создано, перенос C:\\Temp\\v17_recalc\\ -> v17\\diagnostics\\ выполнен (21+49 файлов)",
+    "note": "Реестр НЕ правился деплоером (контракт 04). Обновит оркестратор отдельным шагом."
+  },
+  "checks": {
+    "git_status_pre_commit": "PASS (только артефакты блока + мусор отмечен)",
+    "git_commit": "PASS (c3c9b4b, 56 файлов)",
+    "release_marker": "PASS (RELEASE.md, UTF-8, хэш c3c9b4b)",
+    "push": "FAIL (REJECTED_NON_FAST_FORWARD — известная коллизия, НЕ обходил)",
+    "no_junk_committed": "PASS (reset .pytest_cache, __pycache__, v16chk из staged)"
+  }
+}

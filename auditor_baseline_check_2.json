@@ -1,0 +1,82 @@
+{
+  "verdict": "REQUEST_CHANGES",
+  "justification": "Закрытые блоки прошлой сверки подтверждены фактически: строка W7 журнала восстановлена (c4fe8ff), EXP-1b запушен (c4fe8ff+fbc09c2), контракты 11/12/13 tracked, ветка синхронна с origin (0/0). НО найдены НОВЫЕ и НЕРЕШЁННЫЕ разрывы: (1) контракт 08_ANALYST_RESEARCHER_CONTRACT.md UNTRACKED — 00_INDEX и контракты 10-15 ссылаются на него, в git его нет (нарушение 13 §4.5 п.4); (2) TD-DEV-38 подтверждён фактически — User OPENCODE_HARNESS_ROOT=канон в реестре HKCU, флаг OPENCODE_HARNESS_SETUP_USER НЕ установлен, env-процесса указывает на канон (портабельность B1-T5 заблокирована); (3) эскап-хэтч W1_SKIP_HOOKS стал рабочей практикой для 3 push подряд — TD-DEV-31/32/37 (push-блокеры) НЕ решены, хуки обходятся, а не чинятся; (4) TD-DEV-12/13 не решены — 0 промптов оркестраторов содержат route-preflight/harness-тулы (M1 не подключён), двойной источник правды agents/ vs .opencode/agent жив (21373 vs 22383 байта); (5) TD-DEV-30 (CRITICAL, W13) и TD-DEV-33 (.gitignore) не решены.",
+  "process_analysis": {
+    "contracts_respected": true,
+    "iteration_count": 0,
+    "iteration_limit": 3,
+    "role_violation": false,
+    "reviewer_args_assessment": "Режим B (standalone): содержимое кода воркера НЕ читалось, пути к коду в контракт не принимались. Проверены только метаданные: git log/status/ls-files, журнал ANALYST_REPORTS (6 строк = 6 коммитов, потерь нет), реестр TD (43 уникальных, пропусков нет), env-реестр HKCU, байтовые размеры промптов, grep route-preflight/harness-тулов, .gitignore, флаги setup_env.ps1.",
+    "worker_args_assessment": "Контракт входа (7 пунктов 13 §4.5) отработан фактически: git-история vs трекер сверены, журнал прочитан полностью (строки 1-20), реестр прочитан полностью (строки 1-124), tracked-контракты проверены ls-files + status, push-блокеры проверены hooksPath + содержимое hooks/, TD-блокеры проверены реестром + реестром Windows + фактическим grep."
+  },
+  "requirements": [
+    "1. (КРИТИЧНО) Закоммитить docs/CODERS/08_ANALYST_RESEARCHER_CONTRACT.md — единственный untracked контракт; 00_INDEX (tracked) и контракты 10/11/14/15 на него ссылаются. Проверить, что c4fe8ff не пропустил его намеренно.",
+    "2. (HIGH) TD-DEV-38: User OPENCODE_HARNESS_ROOT в HKCU = канон (E:\\Documents\\...\\doc_Opencode_agern-new), флаг OPENCODE_HARNESS_SETUP_USER НЕ установлен — B3-T1 env=portable НЕ применён. Прогнать setup_env.ps1 с флагом ПОСЛЕ решения единого источника BIN (TD-DEV-5/6/7, W11) или зафиксировать решение пользователя; правка плагина (core_root из CWD/якоря) остаётся.",
+    "3. (HIGH) Прекратить обход W1_SKIP_HOOKS как норму: решить TD-DEV-31 (регенерация coder_dom.yaml), TD-DEV-32 (compile_agents.py), TD-DEV-37 (stub-gate: маркеры # stub: или исключение из scope) — чтобы следующий push прошёл БЕЗ эскап-хэтча.",
+    "4. (HIGH) TD-DEV-30 (CRITICAL): решение архитектора по sleep-маркерам (git add -f / whitelist / перенос MARKERS_REL) ДО старта W13 — блокер ночного git-аудита.",
+    "5. (MEDIUM) TD-DEV-12/13: подключить route-preflight + 3 роутер-тула в промпты 3 оркестраторов (B3-T3/M1, сейчас 0 хитов); решить источник правды agents/ (source) vs .opencode/agent/ (runtime, 21373 vs 22383 байта — рассинхрон жив).",
+    "6. (MEDIUM) TD-DEV-33: довести .gitignore до спеки W1 §4.2 (.kanban.db, .opencode/.mcp.json, config/session_tracker.json, .runs/session_sync_index.json, agents-data, .tmp_l2.json и др. — сейчас 0 из 9 паттернов) КРОМЕ .runs/sleep_markers/ (ждёт TD-DEV-30)."
+  ],
+  "report": {
+    "section0_verified_doubtful": [
+      "НЕ читал содержимое кода воркера — процессный аудит (режим B, 14 §2). Проверял только метаданные и конфиг-файлы (не код).",
+      "git-история: 17 коммитов на ветке, b9c504e == origin (синхронно 0/0). Коммиты B1-T2/M0-a/B3-T1/B1-T4/B1-T1/B1-T3/W7/W1/EXP-1b/14-15 — все на месте, ни один закрытый блок не потерян.",
+      "Журнал ANALYST_REPORTS.md: 6 строк (B1-T1, B1-T3, W7, W1, EXP-1b, 14/15) — каждая соответствует коммитам (ccac1f0, 32ab90b+f937a11, 7542ca7+109372c, 045e26d+5a6fe51+2e69d9e, c4fe8ff+fbc09c2, c9e7c3a+b9c504e). Потерь строк НЕТ (W7 восстановлен).",
+      "PROBLEMS_REGISTER.md: скриптом по regex — 43 уникальных TD-DEV (1..43), пропусков нет; повторы ID (1,3,9,14,17,20,22,23,30,31,34) — кросс-ссылки в тексте других записей, не дубли записей. TD-DEV-22/26 = FIXED, остальные OPEN.",
+      "Tracked-контракты: git ls-files docs/CODERS/ = 00-15 (КРОМЕ 08) + ANALYST_REPORTS + ORCHESTRATOR_NOTES + TECH_DEBT_MASTER. 08 — UNTRACKED (git status ?? , git log --all = 0 коммитов).",
+      "Push-блокеры: hooksPath=hooks, hooks/ = pre-commit, post-commit, pre-push, coder-dom-verify.sh, hook_utils.sh. НОВЫХ блокеров не накопилось; TD-DEV-31/32/37 OPEN, но 3 последних push прошли через W1_SKIP_HOOKS (ORCHESTRATOR_NOTES 3.7) — эскап-хэтч стал нормой.",
+      "TD-DEV-38: реестр Windows HKCU\\Environment OPENCODE_HARNESS_ROOT = канон (подтверждено, кодировка cp1251); OPENCODE_HARNESS_SETUP_USER отсутствует; $env:OPENCODE_HARNESS_ROOT в процессе = канон. setup_env.ps1 содержит флаг и BIN-детект (проверено).",
+      "TD-DEV-12: grep route-preflight|harness_run|harness_status|coder_run по agents/*.md + .opencode/agent/*.md = 0 файлов из 40+ — M1 в промпты НЕ подключён.",
+      "TD-DEV-13: agents/code-orchestrator.md = 21373 байт vs .opencode/agent/code-orchestrator.md = 22383 байта — рассинхрон жив (SAME: False).",
+      "TD-DEV-33: .gitignore содержит только .runs/, .meta_state/, .l2_memory/ и др.; из 9 проверенных паттернов спеки §4.2 (включая .kanban.db, .opencode/.mcp.json, config/session_tracker.json) — НИ ОДНОГО. Подтверждено untracked-статусом этих файлов в git status.",
+      "Трекер: config/development_tracker.json = трекер DEV-01..13/workstreams WS-55A (updated 2026-09-15), блоков фабрики B1-T5/W13/B4-T7 НЕ содержит — фактический трекер блоков = PLAN_MASTER_MIGRATION.md (16 упоминаний статусов). Расхождения трекера не зафиксировано как TD — наблюдение."
+    ],
+    "section1_baseline_map": [
+      {"block": "B1-T2 (ядро конфигурации)", "status": "закрыт", "commits": "56cd015", "td": "TD-DEV-38 (найден позже, OPEN)"},
+      {"block": "M0-a (ядро запуска)", "status": "закрыт", "commits": "d1272c7", "td": "TD-DEV-3 (junction, REQUIRES_USER_DECISION), TD-DEV-21 (нет ревью-артефакта)"},
+      {"block": "B3-T1 (setup_env)", "status": "закрыт (код), env НЕ применён", "commits": "cae3be7", "td": "TD-DEV-5/6/7/8/9/10 OPEN; TD-DEV-38 — User env по-прежнему канон"},
+      {"block": "B1-T4 (shared-документы)", "status": "закрыт", "commits": "e498c7a", "td": "TD-DEV-11/12/13 OPEN (M1/M5 блокеры)"},
+      {"block": "B1-T1 (venv)", "status": "закрыт", "commits": "ccac1f0", "td": "TD-DEV-14..20 OPEN"},
+      {"block": "B1-T3 (мета-комплект)", "status": "закрыт", "commits": "32ab90b, f937a11", "td": "TD-DEV-22/26 FIXED; 23/24/25 OPEN"},
+      {"block": "W7 (мета-цикл)", "status": "закрыт", "commits": "7542ca7, 109372c", "td": "TD-DEV-27/28/29 OPEN; строка журнала ВОССТАНОВЛЕНА (c4fe8ff)"},
+      {"block": "W1 (git-хуки)", "status": "закрыт (3 push через эскап-хэтч)", "commits": "045e26d, 5a6fe51, 2e69d9e", "td": "TD-DEV-30 CRITICAL; 31/32/37 push-блокеры НЕ решены (обход W1_SKIP_HOOKS); 33/34/35/36"},
+      {"block": "EXP-1b (merge)", "status": "закрыт, запушен", "commits": "c4fe8ff, fbc09c2", "td": "TD-DEV-38/39/40/41 OPEN (38 — активный блокер портабельности)"},
+      {"block": "Контракты 11/12/13", "status": "закрыты, tracked", "commits": "c4fe8ff", "td": "TD-DEV-40/41 OPEN (внедрение после B5)"},
+      {"block": "Контракты 14/15", "status": "закрыты, tracked", "commits": "c9e7c3a, b9c504e", "td": "TD-DEV-42/43 OPEN (внедрение в промпты диспетчеров)"},
+      {"block": "Контракт 08", "status": "UNTRACKED (НОВЫЙ разрыв)", "commits": "— (0 коммитов в git log --all)", "td": "—"},
+      {"block": "B1-T5 (легализация канона)", "status": "ОСТАЛОСЬ", "commits": "—", "td": "TD-DEV-25/29/38, P-MAJ-4 (Desktop), P-MAJ-8"},
+      {"block": "W13 (ночные сны)", "status": "ОСТАЛОСЬ", "commits": "—", "td": "TD-DEV-30 CRITICAL — не решён, БЛОКИРУЕТ"},
+      {"block": "B4-T7 (compile_agents)", "status": "ОСТАЛОСЬ", "commits": "—", "td": "TD-DEV-32 (регенерация не проведена)"},
+      {"block": "B3-T3/M1 (роутер в промптах)", "status": "ОСТАЛОСЬ", "commits": "—", "td": "TD-DEV-12 (0 хитов route-preflight/тулов)"},
+      {"block": "B2 (live-зеркало)", "status": "ОСТАЛОСЬ", "commits": "—", "td": "TD-DEV-39 (MCP-конфликт имён), ждёт EXP-1b-followup"},
+      {"block": "W10/W11/W12", "status": "ОСТАЛОСЬ", "commits": "—", "td": "EXP-3/4/5 не выполнены (блокеры W11/W5); TD-DEV-2"}
+    ],
+    "section2_gaps": [
+      "Новый разрыв: docs/CODERS/08_ANALYST_RESEARCHER_CONTRACT.md UNTRACKED — 00_INDEX (tracked) и контракты 10/11/14/15 ссылаются на него, git log --all = 0 коммитов. Прошлая сверка фиксировала 11/12/13 untracked — они вошли в c4fe8ff, а 08 остался вне git.",
+      "TD-DEV-38 подтверждён фактически: HKCU OPENCODE_HARNESS_ROOT = канон, флаг OPENCODE_HARNESS_SETUP_USER не установлен, env процесса = канон. B3-T1 env=portable НЕ применён — портабельность (B1-T5) и плагин-резолв core_root продолжают указывать на канон.",
+      "Эскап-хэтч W1_SKIP_HOOKS стал рабочей практикой: 3 push (c4fe8ff, fbc09c2, c9e7c3a, b9c504e) прошли в обход pre-push; TD-DEV-31/32/37 (STALE coder_dom, compile_agents, stub-gate) остаются OPEN. Контроль цикла деплоера (04 §3.6) слепнет на хуках.",
+      "TD-DEV-12/13 не решены: M1 (роутер в промптах) не подключён (0 файлов с route-preflight/harness-тулами), двойной источник правды agents/ vs .opencode/agent/ жив (21373 vs 22383 байта, все 26 файлов рассинхронизированы).",
+      "TD-DEV-30 (CRITICAL) не решён: решения архитектора по sleep-маркерам нет — W13 (ночной git-аудит) заблокирован.",
+      "TD-DEV-33 не решён: .gitignore не содержит ни одного из 9 проверенных паттернов спеки W1 §4.2; .kanban.db, .opencode/.mcp.json, config/session_tracker.json висят untracked.",
+      "Трекер development_tracker.json устарел (updated 2026-09-15, DEV-01..13) и не отражает блоки фабрики — фактический трекер блоков живёт в PLAN_MASTER_MIGRATION.md. Наблюдение, не TD."
+    ],
+    "section3_next_step_blockers": [
+      {"block": "W13", "blockers": ["TD-DEV-30 CRITICAL (sleep_git vs .gitignore) — решение архитектора до старта"]},
+      {"block": "B1-T5", "blockers": ["TD-DEV-38 (User env=канон, портабельность)", "TD-DEV-25 (канон L2→L3 не закоммичен)", "TD-DEV-29 (aware-fix только portable)", "TD-DEV-3 (junction, REQUIRES_USER_DECISION)", "TD-DEV-16/17/20 (судьба канон-venv/пакетов)", "P-MAJ-4 (Desktop)"]},
+      {"block": "B4-T7", "blockers": ["TD-DEV-32 (compile_agents stale, регенерация не проведена)"]},
+      {"block": "B3-T3/M1", "blockers": ["TD-DEV-12 (route-preflight не подключён, 0 хитов)", "TD-DEV-13 (двойной источник правды)"]},
+      {"block": "Следующий push", "blockers": ["TD-DEV-31/32/37 — пока обходятся W1_SKIP_HOOKS, но это нарушение духа контроля цикла"]},
+      {"block": "B2-T3", "blockers": ["TD-DEV-39 (MCP-конфликт имён, EXP-1b-followup)"]}
+    ],
+    "section4_recommendation": [
+      "(1) Закоммитить 08_ANALYST_RESEARCHER_CONTRACT.md немедленно (единственный untracked контракт; 00_INDEX и 10-15 на него ссылаются). Проверить отсутствие других untracked контрактов.",
+      "(2) TD-DEV-38: решить единый источник BIN (TD-DEV-5/6/7) → прогнать setup_env.ps1 с OPENCODE_HARNESS_SETUP_USER=1 → User HARNESS_ROOT=portable; правка плагина core_root (из CWD/якоря) — в B3-T2/W11.",
+      "(3) Разовый сеанс чистки хуков БЕЗ эскап-хэтча: регенерировать coder_dom.yaml (TD-DEV-31) + compile_agents (TD-DEV-32) + решить stub-gate (TD-DEV-37: маркеры # stub: для claimeai_wrapper/mini_searxng или исключение из scope) — чтобы вернуть pre-push как реальный контроль.",
+      "(4) TD-DEV-30: решение архитектора до W13 (git add -f / whitelist !.runs/sleep_markers/ / перенос MARKERS_REL) — не откладывать.",
+      "(5) TD-DEV-12/13 в B3-T3/M1: подключить route-preflight + 3 тула роутера в ритуал старта 3 оркестраторов; решить источник правды (agents/ = source, .opencode/agent = генерация).",
+      "(6) TD-DEV-33: применить паттерны .gitignore §4.2 (кроме sleep_markers) — закроет untracked-мусор (.kanban.db и др.).",
+      "(7) После закрытия TD-DEV-31/32/37/38 — push контракта 08 и проверить pre-push на ЧИСТОМ проходе (без W1_SKIP_HOOKS)."
+    ],
+    "section5_verdict": "Базлайн по ЗАКРЫТЫМ блокам в порядке: все 17 коммитов на месте, ветка синхронна с origin, журнал аналитика полон (6/6 строк, W7 восстановлен), реестр полон (43/43 TD, дублей записей нет), контракты 11-15 tracked. ОДНАКО процесс НЕ в порядке по незакрытым пунктам: новый untracked-контракт 08, TD-DEV-38 (env=канон) подтверждён фактически как активный блокер портабельности, эскап-хэтч W1_SKIP_HOOKS стал нормой вместо решения push-блокеров (TD-DEV-31/32/37), TD-DEV-12/13 (M1) и TD-DEV-30 (W13) не решены. Итог: REQUEST_CHANGES — закрыть 08, применить env=portable, вернуть pre-push без эскап-хэтча, решить TD-DEV-30."
+  }
+}

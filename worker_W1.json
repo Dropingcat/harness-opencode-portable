@@ -1,0 +1,87 @@
+{
+  "module": "W1-GIT-HOOKS",
+  "date": "2026-10-07",
+  "cwd": "E:\\opencode_harness_portable",
+  "branch": "feature/b1-t2-core-config (рабочая, деплоер коммитит)",
+  "code": "N/A (файлы перенесены/созданы, см. files)",
+
+  "files": {
+    "pereneseheno_iz_vetok": {
+      "scripts/tools/sleep_git.py": "из feature/m6-sleep-git (коммит 5697339), 415 строк, в индексе (A)",
+      "scripts/tools/git_session_sync.py": "из feature/m5-git-session-sync (коммит 1601a21), 354 строки, в индексе (A)"
+    },
+    "sozdano_v_hooks": {
+      "hooks/hook_utils.sh": "общие утилиты: REPO_ROOT (pwd -W, win32-фикс), PYTHON_BIN (venv), run_with_timeout (эмуляция без coreutils), log_hook",
+      "hooks/pre-commit": "perfectionist completion_hook (warning) + sleep_git --dry-run snapshot; exit 0 ВСЕГДА",
+      "hooks/post-commit": "compile_agents --check (WARN) + health_check + git_session_sync --no-commit; exit 0",
+      "hooks/pre-push": "compile_agents --check (БЛОК) + coder-dom-verify.sh (БЛОК); exit 1 при fail"
+    },
+    "ne_trogalsya": ["hooks/coder-dom-verify.sh (существовал)", "scripts/meta/perfectionist.py", "scripts/meta/sleep_integration.py"]
+  },
+
+  "section1_perenos_m5_m6": {
+    "metod": "git checkout <branch> -- <path> (НЕ merge-коммит)",
+    "komandy": [
+      "git checkout feature/m6-sleep-git -- scripts/tools/sleep_git.py",
+      "git checkout feature/m5-git-session-sync -- scripts/tools/git_session_sync.py"
+    ],
+    "git_status": "A  scripts/tools/git_session_sync.py | A  scripts/tools/sleep_git.py (в индексе, staged, НЕ закоммичены — по правилу)",
+    "identichnost": "git diff feature/m6-sleep-git:...  = 0 (идентичны исходникам); git diff m5 = 0",
+    "muсor_ne_perenesen": ".runs/worker_m*.json НЕ перенесены (checkout по конкретному пути)",
+    "git_log_vse_vetki": "5697339 (m6), 1601a21 (m5) доступны через git log --all"
+  },
+
+  "section2_hookspath_i_huki": {
+    "core_hooksPath": "hooks (установлен: git config core.hooksPath hooks; проверено: git config --get core.hooksPath → hooks)",
+    "sposob_zapuska": "Git-Bash (bash.exe найден: C:\\Program Files\\Git\\bin\\bash.exe и usr\\bin). core.hooksPath + имя файла без расширения = git вызывает sh-скрипты через sh.exe (найден). .cmd НЕ нужен — Git for Windows 2.46 обрабатывает .sh хуки.",
+    "win32_fix": "hook_utils.sh использует pwd -W для REPO_ROOT: Git-Bash возвращает POSIX-путь (/e/...), который python на win32 НЕ понимает. Без фикса perfectionist падал ModuleNotFoundError.",
+    "vyzov_gitom": "НЕ проверен на live-коммите (правило: НЕ коммить, деплоер после цепочки). Ручной запуск через bash/sh — корректен. git config core.hooksPath=hooks активен.",
+    "fail_eskap": "W1_SKIP_HOOKS=1 учитывается в run_with_timeout (возврат 0)"
+  },
+
+  "section3_proverki": [
+    {"proverka": "sleep_git.py запускается", "komanda": "python scripts/tools/sleep_git.py --dry-run snapshot --task w1-smoke", "ozhidanie": "JSON с tag+commit, exit 0", "fakt": "{\"tag\":\"baseline/w1-smoke/...\",\"commit\":\"109372c...\"}", "rezultat": "PASS"},
+    {"proverka": "dry-run не создаёт тег", "komanda": "git tag --list 'baseline/w1-*'", "ozhidanie": "пусто", "fakt": "пусто", "rezultat": "PASS"},
+    {"proverka": "git_session_sync.py запускается", "komanda": "python scripts/tools/git_session_sync.py sync --no-commit --since-minutes 1", "ozhidanie": "noop или committed:false, exit 0", "fakt": "{\"status\":\"noop\",\"new_deltas\":0}", "rezultat": "PASS"},
+    {"proverka": "оба импортируются", "komanda": "python -c 'import sleep_git, git_session_sync'", "ozhidanie": "exit 0", "fakt": "импорт без ошибок (проверено косвенно через запуск)", "rezultat": "PASS"},
+    {"proverka": "core.hooksPath", "komanda": "git config --get core.hooksPath", "ozhidanie": "hooks", "fakt": "hooks", "rezultat": "PASS"},
+    {"proverka": "pre-commit (bash)", "komanda": "bash hooks/pre-commit", "ozhidanie": "exit 0, [w1] perfectionist verdict + [w1] sleep_git dry-run", "fakt": "[w1] perfectionist verdict=good weaknesses=1 + [w1] sleep_git --dry-run ...; EXIT=0 (не блокирует)", "rezultat": "PASS"},
+    {"proverka": "pre-commit из чужого CWD", "komanda": "bash -c 'cd /c/Temp/opencode && hooks/pre-commit'", "ozhidanie": "exit 0", "fakt": "EXIT=0", "rezultat": "PASS"},
+    {"proverka": "post-commit (bash)", "komanda": "bash hooks/post-commit", "ozhidanie": "exit 0, 3 WARN-проверки", "fakt": "compile_agents WARN (рассинхрон) + health_check HEALTHY + git_session_sync noop; EXIT=0", "rezultat": "PASS"},
+    {"proverka": "pre-push (bash)", "komanda": "bash hooks/pre-push", "ozhidanie": "exit 1 при рассинхроне агентов (БЛОК)", "fakt": "FAIL: .opencode/agent/ рассинхронизирован; EXIT=1 (блокирует — by-design)", "rezultat": "PASS"},
+    {"proverka": "coder-dom-verify.sh", "komanda": "bash hooks/coder-dom-verify.sh", "ozhidanie": "STALE → exit 1 (блок до регенерации)", "fakt": "FAIL: coder_dom.yaml stale; EXIT=1", "rezultat": "PASS (ожидаемый блок, деплоер регенерирует)"},
+    {"proverka": "sleep_integration видит реальный sleep_git", "komanda": "python scripts/meta/sleep_integration.py cycle --task smoke-real --branches fix/A --no-baseline --no-git", "ozhidanie": "загрузка M6 (не _FallbackSleepGit)", "fakt": "Цикл зашёл в SleepGit.create_sleep_branches (реальный git add маркеров) → GitSleepError на git add .runs/sleep_markers (см. техдолг TD-1). _Fallback НЕ использовался. DoD-7 выполнен.", "rezultat": "PASS (с оговоркой TD-1)"},
+    {"proverka": "smoke-команда контракта", "komanda": "python scripts/meta/sleep_integration.py cycle --task smoke --branches fix/A --simulate --orchestrator code-orchestrator", "ozhidanie": "simulated:true, merged:[fix/A], exit 0", "fakt": "JSON: merged [fix/A], sleep_success true, simulated true; EXIT=0", "rezultat": "PASS"}
+  ],
+
+  "section4_dod_w1": [
+    {"punkt": 1, "opisanie": "sleep_git.py в scripts/tools/ (из m6)", "status": "DONE", "dokazatelstvo": "A scripts/tools/sleep_git.py, идентичен 5697339"},
+    {"punkt": 2, "opisanie": "git_session_sync.py в scripts/tools/ (из m5)", "status": "DONE", "dokazatelstvo": "A scripts/tools/git_session_sync.py, идентичен 1601a21"},
+    {"punkt": 3, "opisanie": "Оба запускаются", "status": "DONE", "dokazatelstvo": "snapshot --dry-run → JSON exit 0; sync --no-commit → noop exit 0"},
+    {"punkt": 4, "opisanie": "core.hooksPath = hooks", "status": "DONE", "dokazatelstvo": "git config --get core.hooksPath → hooks"},
+    {"punkt": 5, "opisanie": "pre-commit/post-commit/pre-push созданы", "status": "DONE", "dokazatelstvo": "hooks/ содержит 5 файлов: pre-commit post-commit pre-push hook_utils.sh coder-dom-verify.sh"},
+    {"punkt": 6, "opisanie": "pre-commit не блокирует (warning-only perfectionist)", "status": "DONE", "dokazatelstvo": "bash hooks/pre-commit → EXIT=0 при verdict=good"},
+    {"punkt": 7, "opisanie": "sleep_integration видит реальный sleep_git (не _Fallback)", "status": "DONE", "dokazatelstvo": "цикл без --simulate загрузил SleepGit (реальный git add), _FallbackSleepGit не вызывался"}
+  ],
+
+  "section5_techdolgi": [
+    "TD-1 [КРИТИЧНО для W13]: конфликт sleep_git ↔ .gitignore. B1-T3 добавил в .gitignore строку 102 `.runs/` (целиком). sleep_git.create_sleep_branches коммитит маркеры в `.runs/sleep_markers/` через `git add` → git отклоняет (rc=1, GitSleepError: 'paths are ignored'). Полный `sleep_git run` (W13, ночной W7) УПАДЁТ. PLAN_W1 §4.2 предусматривал `.runs/*.json` + подкаталоги, НО НЕ `.runs/` целиком. Решение для W13: `git add -f` маркеров ИЛИ exception-правило `!.runs/sleep_markers/` (тогда они станут трекаемыми — спорно) ИЛИ перенос маркеров вне `.runs/`. НЕ исправлено в W1 (вне скоупа, требует решения архитектора).",
+    "TD-2: live-вызов хуков git'ом (git commit --allow-empty) НЕ проверен — правило W1 запрещает коммитить (деплоер после цепочки). Ручной запуск bash/sh корректен; core.hooksPath активен. Деплоеру: проверить `git commit --allow-empty -m 'w1 smoke'` → в выводе [w1] pre-commit/post-commit.",
+    "TD-3: coder-dom-verify.sh сейчас STALE (docs/glossary/coder_dom.yaml устарел после правок B1-T2/T3) → pre-push БЛОКИРУЕТ push до регенерации: python scripts/glossary/coder_dom_build.py --root E:\\opencode_harness_portable. Деплоеру: выполнить регенерацию перед push (by-design, риск-6 спеки).",
+    "TD-4: compile_agents --check сейчас FAIL (stale: code-orchestrator.md, _registry_index.json) → pre-push блокирует. Регенерация: python scripts/agent_gen/compile_agents.py + git add .opencode/agent. (B4-T7 запланирован; by-design.)",
+    "TD-5: .gitignore из PLAN_W1 §4.2 НЕ применялся целиком (только `.runs/`, `.meta_state/`, `.l2_memory/` — от B1-T3). Отсутствуют: `.runs/session_sync_index.json`, `.runs/session_deltas/`, `.runs/sleep_state/`, `.runs/sleep_markers/`, `.runs/progress/`, `.runs/verification/`, `.runs/*.json`, `!.runs/worker_m11.json`, `.tmp_l2.json`, `.kanban.db`, `.kanban.db-*`, `agents-data/**/*`, `.runs/deliberation/`. Сейчас .kanban.db и worker_W1.json видны как untracked. Решение за W1-владельцем (в контракте пункта не было — вынесено сюда).",
+    "TD-6: W1_SKIP_HOOKS для CI/ночного прогона — документирован в hook_utils, но НЕ вынесен в env-контракт (setup_env.ps1).",
+    "TD-7: sleep_git._ensure_clean игнорирует только .runs/sleep_state и .runs/sleep_markers — при чистом `.runs/`-игноре реальный run будет падать раньше, на создании маркера (см. TD-1)."
+  ],
+
+  "description": "W1 выполнен: перенесены sleep_git.py (m6, 415 строк) и git_session_sync.py (m5, 354 строки) в scripts/tools/ через git checkout <branch> -- <path> (без merge-коммита); установлен core.hooksPath=hooks; созданы 4 файла хуков (pre-commit/post-commit/pre-push/hook_utils.sh) по PLAN_W1 §3.1-3.4 с win32-фиксом pwd -W. Все хуки проверены ручным запуском через Git-Bash: pre-commit exit 0 (не блокирует), post-commit exit 0 (warning-only), pre-push exit 1 при рассинхроне (блокирует — by-design). sleep_integration загружает реальный SleepGit (не _Fallback) — DoD-7 выполнен. Коммиты НЕ создавались (правило).",
+
+  "notes": [
+    "Ветка работы: feature/b1-t2-core-config (текущая). PLAN_W1 ожидал базу feature/m11-daemon-integration, но в контракте W1 этого не требовалось — перенос файлов и хуки работают из любой ветки.",
+    "Изменённые/созданные файлы: scripts/tools/{sleep_git,git_session_sync}.py (staged), hooks/{pre-commit,post-commit,pre-push,hook_utils.sh} (untracked, готовы к коммиту).",
+    "win32-фикс pwd -W в hook_utils.sh — ОТКЛОНЕНИЕ от текста PLAN_W1 §3.1 (там был pwd без -W). Без фикса perfectionist падал ModuleNotFoundError в Git-Bash. Изменение минимально и совместимо.",
+    "НЕ коммичено по жёсткому правилу: перенос (2 файла) + хуки (4 файла) — деплоер коммитит после цепочки.",
+    "Критично для деплоера: перед push выполнить регенерацию coder_dom.yaml и compile_agents (TD-3, TD-4), иначе pre-push заблокирует.",
+    "Критично для W13: TD-1 (sleep_git vs .gitignore .runs/) — заблокирует полный sleep run, решить до W13."
+  ]
+}

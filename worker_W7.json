@@ -1,0 +1,54 @@
+{
+  "module": "W7_META_CYCLE",
+  "description": "Мета-цикл W7: закрыты TD-DEV-22 и TD-DEV-26, создан ночной прогон (cmd+XML), добавлена секция Meta-Cycle health (V-1), проверен L2→L3 промоушен, пофикшен дефект idle_tasks (Unicode).",
+  "notes": [
+    "TD-DEV-22 фикс: _parse_iso в sleep_integration.py (строки 79-95) привязывает timezone.utc к naive datetime; комплементарно orchestrator_integration._save_state (строка 194) пишет datetime.now(timezone.utc).isoformat(). Канон НЕ тронут.",
+    "TD-DEV-26 фикс: meta_daemon.run_once (после return sleep-ветки) вызывает self.meta._save_state() при каждом такте --once/--daemon — saved_at свежий и aware.",
+    "meta_nightly.cmd создан (--simulate с комментарием «убрать после W1 (TD-DEV-* W13)»). Из контракта убран --state-dir у cycle (у subcommand cycle такого флага нет — падало с unrecognized arguments).",
+    "meta_nightly_task.xml создан и валиден (UTF-8, триггер 02:30 daily, команда на meta_nightly.cmd).",
+    "Секция «Meta-Cycle health (V-1)» вставлена в agents/code-orchestrator.md (строка 86, между проверкой окружения и валидацией контрактов — как в плане).",
+    "idle_tasks.py падал с UnicodeEncodeError (cp1251 не кодирует '→') — добавлен sys.stdout.reconfigure(utf-8) (тот же паттерн, что в sleep_integration.py). memory_circulator импортируется и promote_to_l3 работает.",
+    "Импорты 29/29 OK, compileall scripts/meta OK, 0 канон-хардкодов в изменённых файлах, XML_VALID.",
+    "Ночной прогон meta_nightly.cmd выполнен end-to-end: exit 0, liveness alive:true silent 0.0 мин.",
+    "Файл meta_nightly.log создан в .meta_state (runtime, gitignored).",
+    "Коммит НЕ делался (деплоер после цепочки)."
+  ],
+  "section_1_td_fixes": {
+    "TD-DEV-22": "sleep_integration.py _parse_iso: naive -> timezone.utc (строки 79-95); orchestrator_integration.py _save_state: datetime.now(timezone.utc) (строка 194).",
+    "TD-DEV-26": "meta_daemon.py run_once: self.meta._save_state() в конце каждого такта (строка ~112)."
+  },
+  "section_2_nightly": {
+    "cmd": "E:\\opencode_harness_portable\\scripts\\meta\\meta_nightly.cmd",
+    "xml": "E:\\opencode_harness_portable\\scripts\\meta\\meta_nightly_task.xml",
+    "xml_valid": true,
+    "trigger": "2026-10-06T02:30:00 daily",
+    "log": "E:\\opencode_harness_portable\\.meta_state\\meta_nightly.log"
+  },
+  "section_3_health_section": "«## Meta-Cycle health (V-1)» в agents/code-orchestrator.md (строка 86): ритуалы старта/закрытия, право вето, L2→L3 промоушен.",
+  "section_4_checks": [
+    {"check": "liveness без TypeError", "cmd": "sleep_integration.py liveness --orchestrator code-orchestrator", "expect": "нет traceback", "fact": "alive:true, silent_minutes:0.0", "result": "PASS"},
+    {"check": "meta_daemon --once пишет свежий saved_at (aware)", "cmd": "meta_daemon.py --once", "expect": "saved_at ~ now, aware", "fact": "SAVED_AT: 2026-10-06T20:29:53.003567+00:00, AWARE: True", "result": "PASS"},
+    {"check": "meta_nightly.cmd существует", "cmd": "Test-Path", "expect": "true", "fact": "true, --simulate с комментарием про W13", "result": "PASS"},
+    {"check": "XML Task Scheduler существует", "cmd": "Test-Path + [xml]parse", "expect": "true + valid", "fact": "true, XML_VALID", "result": "PASS"},
+    {"check": "Секция Meta-Cycle в code-orchestrator.md", "cmd": "grep '## Meta-Cycle health (V-1)'", "expect": "найдено", "fact": "строка 86", "result": "PASS"},
+    {"check": "idle_tasks/memory_circulator работают", "cmd": "idle_tasks.py --check; import memory_circulator", "expect": "работают", "fact": "idle_tasks: 5 пунктов агенды; memory_circulator OK; promote_to_l3 []", "result": "PASS"},
+    {"check": "Импорты 29/29 OK, 0 хардкодов", "cmd": "ALL_IMPORT_OK 29; Select-String canon paths", "expect": "29 FAIL [], NO_CANON_HARDCODES", "fact": "ALL_IMPORT_OK 29; NO_CANON_HARDCODES", "result": "PASS"}
+  ],
+  "section_5_dod": {
+    "1_liveness_no_typeerror": "PASS",
+    "2_once_saved_at_fresh_aware": "PASS",
+    "3_nightly_cmd_exists_simulate_w13_comment": "PASS",
+    "4_xml_exists": "PASS",
+    "5_health_section_in_prompt": "PASS",
+    "6_idle_tasks_memory_circulator": "PASS",
+    "7_imports_29_ok_0_hardcodes": "PASS"
+  },
+  "section_6_techdebt": [
+    "W1 (sleep_git) не сделан — meta_nightly.cmd держит --simulate (снять после W1, TD-DEV-* W13).",
+    "idle_tasks.py --check: 7 статусов канбана >24ч в WORKING (зависшие — кандидат на ручную чистку).",
+    "В state от --once: damage 75 (корзина накопила урон от прежних прогонов/имитаций) — порог сна 100 не достигнут; после накопления следующий --once сам уйдёт в сон (проверено: первый прогон вернул sleep:true, merged:true).",
+    "XML использует LogonType=InteractiveToken (требует вход пользователя для запуска Task Scheduler); если нужен запуск без сессии — заменить на S4U/Password при импорте.",
+    "meta_nightly.log — фиксированное имя (перезаписывается каждый прогон); при желании истории — вернуть маску с датой в имени (в плане была %DATE%_%TIME%).",
+    "Канонский orchestrator_integration._save_state (E:\\Documents\\...) остаётся naive — фикс только в portable; при следующем портировании канонского файла поверх фикс затёрт (защита: TD-DEV-22/26 зафиксированы в PROBLEMS_REGISTER)."
+  ]
+}

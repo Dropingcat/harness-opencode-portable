@@ -1,0 +1,66 @@
+{
+  "verdict": "REQUEST_CHANGES",
+  "justification": "Базлайн по ЗАКРЫТЫМ блокам подтверждён фактически (все 8 коммитов в git log, ветка feature/b1-t2-core-config синхронна с origin 0/0). НО найдены существенные расхождения в незакоммиченной части: (1) журнал ANALYST_REPORTS.md ПОТЕРЯЛ строку W7 — коммит 5a6fe51 (W1) перезаписал файл, удалив запись, добавленную 109372c (W7); это потеря данных единого baseline-журнала. (2) EXP-1b правки применены (CONFIG_MERGE.md v2.0, TD-DEV-38/39), но НЕ запушены — 0 коммитов после 2e69d9e, реестр с TD-DEV-38..41 только в working copy. (3) Контракты 11/12/13_FACTORY_CYCLE.md не tracked (00_INDEX упоминает, файлов в git нет). (4) Следующий push заблокирован хуками W1: TD-DEV-31 (coder_dom.yaml STALE), TD-DEV-32 (compile_agents stale), TD-DEV-37 (stub-gate 2 pre-existing stubs) — все OPEN. (5) TD-DEV-33 подтверждён фактически: .gitignore не содержит .kanban.db/.opencode/.mcp.json/config/session_tracker.json.",
+  "process_analysis": {
+    "contracts_respected": true,
+    "iteration_count": 0,
+    "iteration_limit": 3,
+    "role_violation": false,
+    "reviewer_args_assessment": "Код не читался (роль: процессный аудит-сверка). Оценены только метаданные: журнал аналитика, реестр TD, git-история, статус хуков.",
+    "worker_args_assessment": "Контракт входа (4 источника) прочитан; git log/status/diff проверены фактически, без выдумывания."
+  },
+  "requirements": [
+    "Восстановить строку W7 в docs/CODERS/ANALYST_REPORTS.md (регресс 5a6fe51: добавлена 109372c, удалена W1-коммитом) — baseline-журнал должен содержать все закрытые блоки: B1-T1, B1-T3, W7, W1 (+ M0-a/B3-T1/B1-T4 при наличии отчётов).",
+    "Зафиксировать EXP-1b: закоммитить CONFIG_MERGE.md v2.0, auditor_EXP-1b.json, reviewer_exp1b.json, worker_W1.json/W7.json и реестр с TD-DEV-38/39 (и 40/41).",
+    "Перед push решить блокеры хуков: TD-DEV-31 (регенерировать coder_dom.yaml), TD-DEV-32 (прогнать compile_agents.py), TD-DEV-37 (маркеры # stub: или исключение из scope stub-gate).",
+    "Закоммитить контракты 11_AGENT_ROLES.md, 12_PROJECT_ARTIFACTS.md, 13_FACTORY_CYCLE.md + TD-DEV-40/41 (внедрение — после B5).",
+    "Довести .gitignore до спеки W1 §4.2 (TD-DEV-33): .kanban.db, agents-data/**/*, .tmp_l2.json, .runs/*.json, .runs/deliberation/, !.runs/worker_m11.json — КРОМЕ .runs/sleep_markers/ (ждёт решения TD-DEV-30).",
+    "TD-DEV-30 (CRITICAL, блокер W13) — решение архитектора: (а) git add -f / (б) whitelist !.runs/sleep_markers/ / (в) перенос MARKERS_REL вне .runs/ — ДО старта W13."
+  ],
+  "report": {
+    "section1_baseline_map": [
+      {"block": "B1-T2 (ядро)", "status": "закрыт", "commits": "56cd015", "td": "TD-DEV-38 (HARNESS_ROOT, найден позже в EXP-1b)"},
+      {"block": "M0-a", "status": "закрыт", "commits": "d1272c7", "td": "TD-DEV-3 (junction, REQUIRES_USER_DECISION), TD-DEV-21 (нет ревью-артефакта)"},
+      {"block": "B3-T1 (env)", "status": "закрыт", "commits": "cae3be7", "td": "TD-DEV-5/6/7/8/9/10 (OPEN)"},
+      {"block": "B1-T4 (shared)", "status": "закрыт", "commits": "e498c7a", "td": "TD-DEV-11/12/13 (OPEN, блокеры M1/M5)"},
+      {"block": "B1-T1 (venv)", "status": "закрыт", "commits": "ccac1f0", "td": "TD-DEV-14..20 (OPEN)"},
+      {"block": "B1-T3 (мета)", "status": "закрыт", "commits": "32ab90b, f937a11", "td": "TD-DEV-22/26 FIXED; 23/24/25 OPEN (25 — закоммитить канон до B1-T5)"},
+      {"block": "W7 (мета-цикл)", "status": "закрыт", "commits": "7542ca7, 109372c", "td": "TD-DEV-27/28/29 OPEN; СТРОКА ЖУРНАЛА ПОТЕРЯНА при 5a6fe51"},
+      {"block": "W1 (хуки)", "status": "закрыт", "commits": "045e26d, 5a6fe51, 2e69d9e", "td": "TD-DEV-30 CRITICAL, 31/32/33/37 блокируют следующий push, 34/35/36"},
+      {"block": "EXP-1b (merge)", "status": "В РАБОТЕ (правки применены, НЕ запушены)", "commits": "— (0 коммитов после 2e69d9e)", "td": "TD-DEV-38/39 в working copy реестра, не в HEAD"},
+      {"block": "B1-T5 (легализация)", "status": "ОСТАЛОСЬ", "commits": "—", "td": "TD-DEV-25/29, P-MAJ-4 (Desktop)"},
+      {"block": "W13 (сны)", "status": "ОСТАЛОСЬ", "commits": "—", "td": "TD-DEV-30 (CRITICAL блокер!)"},
+      {"block": "B4-T7 (compile_agents)", "status": "ОСТАЛОСЬ", "commits": "—", "td": "TD-DEV-32 (закрывается перегенерацией)"},
+      {"block": "B2 (live-зеркало)", "status": "ОСТАЛОСЬ", "commits": "—", "td": "TD-DEV-12/13; B2-T3 ждёт финализации EXP-1b"},
+      {"block": "Матрёшка M0-M6", "status": "ОСТАЛОСЬ (приёмка; M0-M5 спеки ГОТОВО, M6 BLOCKED снят)", "commits": "—", "td": "прогон test_e2e_matryoshka.py не выполнен"},
+      {"block": "W10/W11/W12", "status": "ОСТАЛОСЬ (пост-миграция / HIGH)", "commits": "—", "td": "EXP-3/4/5 не выполнены (блокеры W11/W5)"}
+    ],
+    "section2_active_td": [
+      {"td": "TD-DEV-30", "severity": "CRITICAL", "blocks": "W13 (ночной сон, sleep_git)", "solution": "решение архитектора: git add -f / whitelist !.runs/sleep_markers/ / перенос MARKERS_REL вне .runs/ — подтверждено фактически (.gitignore:102 .runs/)"},
+      {"td": "TD-DEV-38", "severity": "HIGH", "blocks": "портабельность (B1-T5), EXP-1b", "solution": "B3-T1 env=portable + правка плагина: core_root из CWD/якоря, не из env; реестр-запись НЕ в HEAD"},
+      {"td": "TD-DEV-3", "severity": "HIGH", "blocks": "M0-a/B3 (junction shared)", "solution": "REQUIRES_USER_DECISION + B3-T1"},
+      {"td": "TD-DEV-12/13", "severity": "MEDIUM", "blocks": "M1/M5 (роутер в промптах, двойной источник)", "solution": "B3-T3/M1: ссылка route-preflight в ритуал старта + 3 тула роутера; W5: источник правды промптов"},
+      {"td": "TD-DEV-31/32/37", "severity": "MEDIUM", "blocks": "следующий push (pre-push хуки W1)", "solution": "регенерация coder_dom.yaml + compile_agents + решение stub-gate (маркеры/исключение)"},
+      {"td": "TD-DEV-39", "severity": "MEDIUM", "blocks": "EXP-1b-followup / B2-T3", "solution": "проверить resolved MCP-конфиг при конфликте имён sequential-thinking/grep_app, зафиксировать политику приоритета"},
+      {"td": "TD-DEV-33", "severity": "MEDIUM", "blocks": "W1 (.gitignore неполон)", "solution": "применить паттерны §4.2 кроме sleep_markers — подтверждено фактически (untracked: .kanban.db, .opencode/.mcp.json, config/session_tracker.json)"}
+    ],
+    "section3_gaps": [
+      "ПОТЕРЯ ДАННЫХ baseline-журнала: строка W7 (analyst_W7.json, APPROVE 7542ca7) удалена коммитом 5a6fe51 (W1) — в HEAD журнала только B1-T1/B1-T3/W1.",
+      "EXP-1b не запушен: CONFIG_MERGE.md v2.0, auditor_EXP-1b.json, reviewer_exp1b.json, TD-DEV-38/39 — в working copy, 0 коммитов после 2e69d9e (ветка 0/0 с origin = результаты не в origin).",
+      "Контракты 11/12/13_FACTORY_CYCLE.md созданы, но не tracked (00_INDEX в working copy упоминает 09-13; в git только 09/10); TD-DEV-40/41 в реестре только в working copy.",
+      "Следующий push НЕ ПРОЙДЁТ: pre-push хуки (TD-DEV-31 STALE coder_dom, TD-DEV-32 compile_agents stale, TD-DEV-37 stub-gate 2 stubs) — блокер деплоя EXP-1b.",
+      "TD-DEV-33 подтверждён: .gitignore без .kanban.db/.opencode/.mcp.json/config/session_tracker.json (untracked в git status).",
+      "B4-T7 (compile_agents 26/26) и B4-T10 (canon) не выполнены; TD-DEV-32 открыт.",
+      "B1-T5 не начат: канон не заморожен, meta_core/skill_master L2→L3 не закоммичены в канон (TD-DEV-25), Desktop-контур (P-MAJ-4) не решён.",
+      "Эксперименты EXP-3/4/5 не выполнены (блокеры W11/W5) — шаг A8 критического пути не пройден."
+    ],
+    "section4_recommendation": [
+      "(а) ФИНАЛИЗИРОВАТЬ EXP-1b: восстановить строку W7 журнала + закоммитить CONFIG_MERGE.md v2.0, артефакты EXP-1b (auditor/reviewer), реестр с TD-DEV-38..41, контракты 11/12/13. Перед push: решить TD-DEV-31/32/37 (регенерация coder_dom + compile_agents + stub-gate).",
+      "(б) TD-DEV-30 решить ДО W13 (решение архитектора по маркерам снов) — блокер ночного git-аудита.",
+      "(в) B1-T5: закоммитить канон (meta_core/skill_master L2→L3, TD-DEV-25), решить судьбу канон-venv (TD-DEV-16/17/20), учесть Desktop (P-MAJ-4), затем легализация в _LEGACY_ARCHIVE.",
+      "(г) B4-T7: перегенерация .opencode/agent через compile_agents.py (закрывает TD-DEV-32); далее B4-T2/T4/T5/T6/T8/T9/T11.",
+      "(д) По ANALYST_REPORTS.md: рекомендация аналитика W1 — EXP-1b следующий (совпадает с (а)); TD-DEV-30 решить до W13 (совпадает с (б))."
+    ],
+    "section5_verdict": "Базлайн в порядке по ЗАКРЫТЫМ блокам (все 8 коммитов подтверждены в git, ветка синхронна с origin). ЕСТЬ РАСХОЖДЕНИЯ: (1) потеря строки W7 в журнале аналитика (регресс 5a6fe51); (2) EXP-1b и контракты 11/12/13 не запушены (working copy); (3) следующий push заблокирован хуками W1 (TD-DEV-31/32/37); (4) .gitignore неполон (TD-DEV-33 подтверждён). Расхождения — в незакоммиченной части и журнале, не в самих закрытых блоках."
+  }
+}
