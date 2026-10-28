@@ -50,7 +50,111 @@ def tech_debt(root: Path):
         return {"error": str(e)}
 
 
+def _tracker_object(pairs):
+    """Do not silently accept duplicate JSON keys (including counts/readiness)."""
+    result = {}
+    for key, value in pairs:
+        if key in result:
+            raise ValueError(f"duplicate JSON key: {key}")
+        result[key] = value
+    return result
+
+
+def _structured_tracker(path: Path):
+    # Resolve executable code relative to this module, never the supplied data root.
+    import importlib.util
+    validator_path = Path(__file__).resolve().parents[1] / "tools/check_development_tracker.py"
+    spec = importlib.util.spec_from_file_location("_context_tracker_validator", validator_path)
+    validator = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(validator)
+    data = json.loads(path.read_text(encoding="utf-8-sig"), object_pairs_hook=_tracker_object)
+    if not isinstance(data, dict):
+        raise ValueError("tracker must be an object")
+    records = []
+    for group, pattern in (("dev_items", r"DEV-\d+"), ("workstreams", r"WS-\d+[A-Z]?")):
+        items = data.get(group)
+        if not isinstance(items, list):
+            raise ValueError(f"{group} must be a list")
+        for item in items:
+            if not isinstance(item, dict):
+                raise ValueError(f"{group} records must be objects")
+            if not isinstance(item.get("id"), str) or not re.fullmatch(pattern, item["id"]):
+                raise ValueError(f"invalid {group} ID")
+            for key in ("title", "status"):
+                if not isinstance(item.get(key), str) or not item[key].strip():
+                    raise ValueError(f"invalid {key}: {item['id']}")
+            for key in ("evidence", "next_gate", "completion_scope"):
+                if key in item and not isinstance(item[key], str):
+                    raise ValueError(f"invalid {key}: {item['id']}")
+            if "production_ready" in item and type(item["production_ready"]) is not bool:
+                raise ValueError(f"invalid production_ready: {item['id']}")
+            refs = item.get("internal_refs", [])
+            if not isinstance(refs, list) or any(not isinstance(ref, str) for ref in refs):
+                raise ValueError(f"invalid internal_refs: {item['id']}")
+            if "current_readiness" in item:
+                readiness = item["current_readiness"]
+                if not isinstance(readiness, dict):
+                    raise ValueError(f"invalid current_readiness: {item['id']}")
+                if any(not isinstance(readiness.get(key), str) for key in
+                       ("host_version", "scope") + validator.DIMENSIONS):
+                    raise ValueError(f"invalid readiness fields: {item['id']}")
+                sources = readiness.get("external_sources")
+                if (not isinstance(sources, list) or not sources or
+                        any(not isinstance(source, str) or not source.strip() for source in sources)):
+                    raise ValueError(f"invalid readiness sources: {item['id']}")
+            records.append(item)
+    counts = data.get("counts")
+    if not isinstance(counts, dict) or any(type(n) is not int or n < 0 for n in counts.values()):
+        raise ValueError("counts must contain nonnegative integers")
+    critical = data.get("critical_path", [])
+    if not isinstance(critical, list) or any(not isinstance(ref, str) for ref in critical):
+        raise ValueError("critical_path must be a list of IDs")
+    errors = validator.check(data)
+    if errors:
+        raise ValueError("; ".join(errors))
+    current = [{**item["current_readiness"], "id": item["id"], "declared_status": item["status"]}
+               for item in records if "current_readiness" in item]
+    pending = [item["id"] for item in current
+               if any(item[key] != "PASS" for key in validator.DIMENSIONS)]
+    open_items = []
+    for item in records:
+        if item["status"] != "done" or item["id"] in pending:
+            label = f"{item['title']} [declared: {item['status']}]"
+            if item["id"] in pending:
+                readiness = item["current_readiness"]
+                label += f" [host {readiness['host_version']}: current readiness incomplete]"
+            open_items.append({"ws": item["id"], "item": label})
+    return {
+        "validation": "PASS", "counts": counts, "declared_items": records,
+        "open_items": open_items,
+        "current_host_readiness": {
+            "authority": "Declared tracker facts only; not runtime certification",
+            "host_versions": sorted({item["host_version"] for item in current}),
+            "items": current, "pending_ids": pending,
+            "unassessed_ids": [item["id"] for item in records if "current_readiness" not in item],
+        },
+    }
+
+
 def tracker(root: Path):
+    """Prefer the validated structured tracker; legacy is absence-only fallback."""
+    structured = root / "config" / "development_tracker.json"
+    legacy = root / "IMPLEMENTATION_TRACKER.md"
+    metadata = {"legacy_present": legacy.exists()}
+    if structured.exists() or structured.is_symlink():
+        metadata.update(source=str(structured), source_format="structured_json")
+        try:
+            return {**metadata, **_structured_tracker(structured)}
+        except (OSError, ValueError, TypeError, KeyError, AttributeError, ImportError) as exc:
+            return {**metadata, "validation": "FAIL", "error": f"invalid structured tracker: {exc}"}
+    metadata.update(
+        source=str(legacy) if metadata["legacy_present"] else None,
+        source_format="legacy_markdown" if metadata["legacy_present"] else None,
+    )
+    return {**metadata, **_legacy_tracker(root)}
+
+
+def _legacy_tracker(root: Path):
     """Извлекает открытые задачи из IMPLEMENTATION_TRACKER.md (checkbox - [ ])."""
     p = root / "IMPLEMENTATION_TRACKER.md"
     if not p.exists():

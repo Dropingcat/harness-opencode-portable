@@ -1,0 +1,2 @@
+# Keep the hash-pinned original tracker fixture byte-exact on Windows checkouts.
+tests/fixtures/development_tracker.original.2026-09-15.json -text

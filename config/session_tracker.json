@@ -1,0 +1,13 @@
+{
+  "sessions": [
+    {
+      "agent": "source-fetcher",
+      "created": "2026-10-02T12:32:07Z",
+      "light_summary": "downloader: PDF->md ok, use ASCII junction paths",
+      "session_id": "s1",
+      "task_hash": "8f205dd4509de987a158cc87c30be345e5eb1cd516ce4f6b63d40bcefe20bf66",
+      "tech_debts_created": []
+    }
+  ],
+  "version": 1
+}

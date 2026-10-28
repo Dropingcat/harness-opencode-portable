@@ -1,0 +1,21 @@
+{
+  "exp2_run": {
+    "date": "2026-10-04",
+    "agent": "coder-worker-runner",
+    "model": "polza/deepseek/deepseek-v4-flash-0731",
+    "bin": "C:\\Temp\\bunx-1873903505-opencode-ai@latest\\node_modules\\.bin\\opencode.exe",
+    "rc": 0
+  },
+  "steps": [
+    {"type": "step-finish", "reason": "tool-calls", "tokens_total": 33174, "tokens_input": 32917, "tokens_output": 91, "tokens_reasoning": 166, "cost": 0},
+    {"type": "step-finish", "reason": "stop", "tokens_total": 32965, "tokens_input": 32861, "tokens_output": 104, "tokens_reasoning": 0, "cost": 0}
+  ],
+  "sessionID": "ses_ef80a8a01ffebNrCJbD2YpWp6h",
+  "found": {
+    "step-finish": true,
+    "sessionID": true,
+    "reason_top_level": false
+  },
+  "parser_conclusion": "FIELDS_DIFFER",
+  "notes": "Внешний type события в stdout = step_finish (подчёркивание). part.type = step-finish (дефис). reason/text/tool/sessionID/cost/tokens — на УРОВНЕ part (не верхнем). sessionID также продублирован на верхнем уровне события. sessionID в part.data (БД) отсутствует, но в stdout приходит на верхнем уровне события."
+}
