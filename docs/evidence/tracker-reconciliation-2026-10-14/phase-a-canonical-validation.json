@@ -1,0 +1,47 @@
+{
+  "applied": true,
+  "validated": true,
+  "observed_at_utc": "2026-10-15T03:59:06.632578+00:00",
+  "baseline_sha256": "9e7303c2801a7cac72fab5718c6eed3b338352c87add7f31a283ae78a04be199",
+  "canonical_tracker_sha256": "723652ac2cf041cb9b529ee59c0eee8d69a67e2ea3af3af70453376dab94e2f7",
+  "source_tracker_sha256": "723652ac2cf041cb9b529ee59c0eee8d69a67e2ea3af3af70453376dab94e2f7",
+  "counts": {
+    "dev_done": 3,
+    "dev_in_progress": 5,
+    "dev_not_started": 5,
+    "workstream_done": 5,
+    "workstream_in_progress": 1,
+    "workstream_not_started": 1
+  },
+  "commands": [
+    {
+      "command": [
+        "C:\\Users\\Arhys\\AppData\\Local\\hermes\\hermes-agent\\venv\\Scripts\\python.exe",
+        "-B",
+        "E:\\opencode_harness_portable\\scripts\\tools\\check_development_tracker.py"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"result\": \"PASS\", \"errors\": []}\r\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\Arhys\\AppData\\Local\\hermes\\hermes-agent\\venv\\Scripts\\python.exe",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "E:\\opencode_harness_portable\\tests\\coder",
+        "-p",
+        "test_development_tracker*.py"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "...................\r\n----------------------------------------------------------------------\r\nRan 19 tests in 0.020s\r\n\r\nOK\r\n"
+    }
+  ],
+  "canonical_commit_performed": false,
+  "runtime_settings_changed": false,
+  "td_statuses_changed": false
+}

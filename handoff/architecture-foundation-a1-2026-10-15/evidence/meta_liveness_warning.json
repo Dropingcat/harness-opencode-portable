@@ -1,0 +1,15 @@
+{
+  "event": "META_HEARTBEAT_STALE",
+  "observed_by": "code-orchestrator closing liveness helper",
+  "checked_at": "2026-10-15T18:23:03.992503+00:00",
+  "orchestrator": "code-orchestrator",
+  "alive_projection": false,
+  "silent_minutes": 76.0,
+  "configured_max_silence_minutes": 30,
+  "last_seen": "2026-10-15T17:07:03.960312+00:00",
+  "interpretation": "Stored heartbeat is stale; this observation alone does not prove that an OS daemon process is dead.",
+  "action": "Record visible follow-up for the A5 observability/lifecycle tranche; no automatic restart, HP edit or recovery claim.",
+  "A1_product_acceptance_changed": false,
+  "runtime_restarted": false,
+  "production_state_content_exposed": false
+}

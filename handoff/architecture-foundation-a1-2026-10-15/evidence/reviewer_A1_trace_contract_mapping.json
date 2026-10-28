@@ -1,0 +1,16 @@
+{
+  "kind": "deterministic contract adaptation, no new judgment",
+  "input": "reviewer_A1_trace.json",
+  "input_sha256": "da7f0db6445378b6e099f213f0bda2a1f91a48295376130887268fb7ec5e22d5",
+  "output": "reviewer_A1_trace_normalized.json",
+  "output_sha256": "d3ad1109e4e4095c49bf2fc18eeb5638da4d6ca1f6a05cd43144417c0d15d72a",
+  "mapping": {
+    "out_of_scope_gaps[].module": "copy of existing area",
+    "out_of_scope_gaps[].finding": "copy of existing detail"
+  },
+  "original_fields_preserved": true,
+  "verdict_changed": false,
+  "reviewed_hashes_changed": false,
+  "extra_reviewer_calls": 0,
+  "raw_output_schema_valid": false
+}

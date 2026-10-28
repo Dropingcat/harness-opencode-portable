@@ -1,0 +1,74 @@
+{
+  "module": "live-observers",
+  "result": "PASS",
+  "passed": 8,
+  "failed": 0,
+  "coverage": 0,
+  "tests": [
+    {
+      "name": "canonical reviewed-file identity",
+      "command": "python - [inline hashlib.sha256 comparison of workspace and E:/opencode_harness_portable/scripts/meta/{meta_daemon.py,auto_bootstrap.py,daemon_safety.py}]",
+      "exit_status": 0,
+      "result": "PASS: all three files match byte-for-byte; hashes recorded in live-observers-before.json and agree with deployed-hashes.json. The compound discovery shell ended 1 due to an absent CLI search directory, not the hash check."
+    },
+    {
+      "name": "owned live leases and matching tokens",
+      "command": "python - [inline deployed DaemonLease(state_dir, orchestrator).live(90, token=identity['token']); wrong-token rejection]",
+      "exit_status": 0,
+      "result": "PASS: code-orchestrator PID 9736, research-orchestrator PID 3336, writing-orchestrator PID 6740; all live, wrong tokens rejected. Initial and final lease checks both live.",
+      "evidence": "live-observers-before.json; live-observers-after.json"
+    },
+    {
+      "name": "OS process identity",
+      "command": "powershell -NoProfile -Command Get-CimInstance Win32_Process ... Select-Object ProcessId,ParentProcessId,ExecutablePath,CommandLine,CreationDate | ConvertTo-Json -Depth 4",
+      "exit_status": 0,
+      "result": "PASS: each leased PID exists; command line matches deployed script, orchestrator, canonical state directory, interval 30.0 and exact instance token. Each interpreter has an E:/opencode_harness_portable/.venv/Scripts/python.exe launcher parent. Launcher/interpreter pairs are not duplicate independent daemon instances. Exact command stored in live-observers-commands.json.",
+      "evidence": "live-observers-processes.json; live-observers-identity-checks.json"
+    },
+    {
+      "name": "no duplicate startup",
+      "command": "python - [inline deployed AutoBootstrap(name, state_dir=canonical/.meta_state, daemon_interval=30).ensure_daemon() with subprocess.Popen patched to raise on any attempted spawn]",
+      "exit_status": 0,
+      "result": "PASS: all three return true; Popen call_count=0 and leased PID unchanged. No daemon was started or terminated by this verification.",
+      "evidence": "live-observers-identity-checks.json"
+    },
+    {
+      "name": "fresh heartbeat progression",
+      "command": "python - [two read-only identity snapshots with useful process/MCP/startup-check work between them; no sleeps]",
+      "exit_status": 0,
+      "result": "PASS over 47.838 seconds: all three heartbeats advanced approximately 30 seconds, same PID/token, final heartbeat ages 23.648-24.693 seconds and live(90) true.",
+      "evidence": "live-observers-before.json; live-observers-after.json"
+    },
+    {
+      "name": "no new synthetic damage or merge during observation",
+      "command": "python - [inline before/after SHA256 and sanitized JSON counters for canonical .meta_state, .damage_basket, .auditor_v2_state]",
+      "exit_status": 0,
+      "result": "PASS within observation window: basket bytes unchanged, zero entries and zero damage; all three HP, recovery counts and damage-log counts unchanged; no new sleep contracts; existing contract and other non-state/non-identity JSON unchanged. Meta state timestamps refresh normally. Historical sleep contents were not dumped or counted as new successful repair.",
+      "evidence": "live-observers-before.json; live-observers-after.json"
+    },
+    {
+      "name": "missing-executor gate remains blocked",
+      "command": "python - [inline deployed execute_verified(['fix/independent-read-only-check']) with no executor or verifier]",
+      "exit_status": 0,
+      "result": "PASS: merged=false, status=blocked, verified executor and merge evidence required; no remediation invoked.",
+      "evidence": "live-observers-identity-checks.json"
+    },
+    {
+      "name": "four connected deployment MCP transports",
+      "command": "C:/Users/Arhys/AppData/Roaming/ai.opencode.desktop/cli/2.0.29-x64/opencode-cli.exe api get /api/mcp?location%5Bdirectory%5D=E%3A%5Copencode_harness_portable",
+      "exit_status": 0,
+      "result": "PASS: authenticated CLI normal discovery/authentication, explicit deployment location echoed by response; academic_search, coder_router, doc_extract, searxng_search all connected. No MCP tool/model invocation.",
+      "evidence": "live-observers-mcp.stdout.json; live-observers-mcp.stderr.txt; live-observers-commands.json"
+    }
+  ],
+  "problems": [
+    {"type": "coverage_not_measured", "detail": "coverage=0 means unmeasured; these are eight grouped integration checks, not line coverage."},
+    {"type": "observer_only", "detail": "Artifact feed absent from daemon launch arguments; no --artifacts-dir configured. Idle observer liveness does not certify ingestion of real scientific artifacts or useful auditing."},
+    {"type": "autonomy_blocked", "detail": "No executor/verifier installed; full autonomous repair and verified merges remain blocked. No prior merged record is evidence of a new successful repair."},
+    {"type": "bounded_observation", "detail": "No-new-damage/merge claim is limited to the observed 47.838-second window and checked persisted counters/files. Historical sleep state is retained and not asserted validated."},
+    {"type": "persistence_scope", "detail": "Live persistent processes verified only; no reboot autostart or scheduler/service recovery claim."},
+    {"type": "untouched_scope", "detail": "V2 adapter activation deliberately not inspected or changed. No production source/config edits, stop/restart, model calls, billing, MCP mutations or global edits. Python imports may create normal bytecode caches; no operational state writes requested by tester beyond observer reads and existing-live ensure_daemon checks."},
+    {"type": "cli_discovery", "detail": "Bare Get-Command opencode failed because CLI is not on PATH; resolved documented explicit existing executable and successful authenticated GET. Discovery diagnostics are not represented as MCP connection failures."},
+    {"type": "connectivity_scope", "detail": "MCP connected statuses certify transport connectivity only, not model-backed tool success, subscription quota or full system restoration. Earlier unrelated health-suite fixture failures remain documented separately."}
+  ]
+}

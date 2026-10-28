@@ -1,0 +1,38 @@
+{
+  "module": "A1-trace",
+  "role": "deployer",
+  "status": "BLOCKED",
+  "source_root": "C:\\Users\\Arhys\\.local\\share\\opencode\\worktree\\62047a\\clever-squid",
+  "destination_root": "E:\\opencode_harness_portable",
+  "files": [],
+  "canonical_checks": [],
+  "scoped_tests_passed": 0,
+  "td_tracker_unchanged": null,
+  "source_hashes_match": null,
+  "rollback_performed": false,
+  "canonical_commit": false,
+  "runtime_activation_changed": false,
+  "limits": [
+    "Stopped on missing exact-path prerequisites before canonical inspection or writes.",
+    "No tests executed; required exact fixture commands unavailable.",
+    "No factory or kanban finalization."
+  ],
+  "verified_by_commands": [
+    "python -B -: checked exact prerequisite paths using pathlib.Path.is_file; confirmed current source root."
+  ],
+  "findings_escape_hatch": [
+    {
+      "severity": "blocking",
+      "reason": "Required contract prerequisites missing",
+      "paths": [
+        "C:\\Users\\Arhys\\.local\\share\\opencode\\worktree\\62047a\\clever-squid\\.runs\\architecture-foundation-20261015\\reviewer_A1_trace_normalized.json",
+        "C:\\Users\\Arhys\\.local\\share\\opencode\\worktree\\62047a\\clever-squid\\.runs\\architecture-foundation-20261015\\researcher_A1_trace.json"
+      ]
+    }
+  ],
+  "timestamp_utc": "2026-10-15T18:08:27.399986+00:00",
+  "canonical_writes_performed": false,
+  "tests_expected": 24,
+  "tests_executed": 0,
+  "rollback_evidence": "No canonical changes made; rollback unnecessary."
+}

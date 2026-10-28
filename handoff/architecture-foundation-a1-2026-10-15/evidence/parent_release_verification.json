@@ -1,0 +1,44 @@
+{
+  "parent_independent_hash_check": "PASS",
+  "all_eight_canonical_source_hashes_match": true,
+  "scoped_tests_reported_passed": 24,
+  "source_guards_and_tracker_gates": "PASS",
+  "files": [
+    {
+      "path": "scripts/meta/trace_store.py",
+      "sha256": "cfab578b041e0ffda0955b3d3eed4978a30cca324996214ed90ed4bed0935759"
+    },
+    {
+      "path": "scripts/meta/durable_json.py",
+      "sha256": "3448d4f644187662683e71399c8927dbaca36d7487ad503dc7ad4b57d19d2f8f"
+    },
+    {
+      "path": "scripts/meta/daemon_safety.py",
+      "sha256": "8955be1822a7599ba6763ba4c33cc6185a6a049424c757ec5e66adeaf149a341"
+    },
+    {
+      "path": "tests/coder/test_trace_store_durability.py",
+      "sha256": "e1fb37edaf14a03b5938791d3e7bda761f90d048294220a7420fa803b9ad440e"
+    },
+    {
+      "path": "tests/coder/test_trace_store_durability_independent.py",
+      "sha256": "677189ce7380cefae37f6faae8341b62190a7578f755aa56a18be1f60bacfc51"
+    },
+    {
+      "path": "tests/coder/test_trace_store_rework1.py",
+      "sha256": "021e9133dae833204f904da4ecc3dcb6020b765ed953416bed3518f3c1a58606"
+    },
+    {
+      "path": "docs/TRACE_STORE_DURABILITY.md",
+      "sha256": "c128c84798ca08ff205a01ef2852979763b778e1b85982776d61992eb46b3672"
+    },
+    {
+      "path": "docs/ARCHITECTURE_FOUNDATION_PLAN_2026-10-15.md",
+      "sha256": "3cf94d5b5bcbf364af943d717e02c9f2523646f965a98b60d9e22776e759b6fb"
+    }
+  ],
+  "canonical_deployed": true,
+  "runtime_activation_changed": false,
+  "td_statuses_changed": false,
+  "full_suite_green_claimed": false
+}

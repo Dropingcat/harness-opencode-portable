@@ -1,0 +1,16 @@
+{
+  "task_id": "HARNESS-ARCH-FOUNDATION-A1-20261015",
+  "state": "DONE",
+  "attempt": 3,
+  "attempt_limit": 2,
+  "rework_rounds": 2,
+  "gate_set": {
+    "reviewer": "PASS",
+    "tester": "PASS",
+    "auditor": "PASS"
+  },
+  "tribunal_required": [],
+  "provenance_errors": [],
+  "last_event_hash": "6031fb7e6303b818a06865a36addbac080e79e2a34641267bec2b2c9e3f24bce",
+  "projection_note": "Typed fields only; free-text reason omitted from portable evidence"
+}

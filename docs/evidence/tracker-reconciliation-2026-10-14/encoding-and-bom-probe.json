@@ -1,0 +1,31 @@
+{
+  "task": "HARNESS-MEMORY-CHECK-20261014",
+  "mode": "read-only verification; temporary BOM fixture only",
+  "encoding_probe": {
+    "method": "Python subprocess captures CLI raw stdout bytes and decodes UTF-8, without a PowerShell native-to-native text pipeline",
+    "canonical_api_agents": {
+      "code-orchestrator": {"cyrillic_codepoints": 9713, "literal_question_marks": 0, "replacement_characters": 0},
+      "coder-worker": {"cyrillic_codepoints": 1237, "literal_question_marks": 0, "replacement_characters": 0},
+      "claim-parser": {"cyrillic_codepoints": 6173, "literal_question_marks": 2, "replacement_characters": 0}
+    },
+    "memory_registry": {"cyrillic_codepoints": 290, "literal_question_marks": 0, "replacement_characters": 0},
+    "conclusion": "Earlier instruction-corruption diagnosis was based on lossy PowerShell piping and is retracted for these measured sources."
+  },
+  "current_session_api_managed_instruction_entries": {
+    "count": 0,
+    "limitation": "This API lists API-managed entries only, not every possible source of compiled system instructions. It does not alone prove absence of all memory injection."
+  },
+  "historical_bom_lesson": {
+    "factory_ctl_load_output_accepts_utf8_BOM": true,
+    "standalone_contract_validator_exit": 2,
+    "standalone_contract_validator_reports_BOM_rejection": true,
+    "conclusion": "Stored claim that both reject BOM is partially stale."
+  },
+  "guards": {
+    "audit_documents_fresh_P0_PASS": 7,
+    "unique_audit_documents": 5,
+    "memory_registry_P0": "PASS",
+    "semantic_P2_certified": false
+  },
+  "runtime_or_memory_mutations": false
+}

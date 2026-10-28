@@ -1,0 +1,58 @@
+{
+  "purpose": "deterministic recovery of truncated L2 research evidence; no semantic judgment",
+  "all_eight_reviewed_files_match": true,
+  "checked_files": [
+    {
+      "path": "scripts/meta/trace_store.py",
+      "expected": "cfab578b041e0ffda0955b3d3eed4978a30cca324996214ed90ed4bed0935759",
+      "actual": "cfab578b041e0ffda0955b3d3eed4978a30cca324996214ed90ed4bed0935759",
+      "matches": true
+    },
+    {
+      "path": "scripts/meta/durable_json.py",
+      "expected": "3448d4f644187662683e71399c8927dbaca36d7487ad503dc7ad4b57d19d2f8f",
+      "actual": "3448d4f644187662683e71399c8927dbaca36d7487ad503dc7ad4b57d19d2f8f",
+      "matches": true
+    },
+    {
+      "path": "scripts/meta/daemon_safety.py",
+      "expected": "8955be1822a7599ba6763ba4c33cc6185a6a049424c757ec5e66adeaf149a341",
+      "actual": "8955be1822a7599ba6763ba4c33cc6185a6a049424c757ec5e66adeaf149a341",
+      "matches": true
+    },
+    {
+      "path": "tests/coder/test_trace_store_durability.py",
+      "expected": "e1fb37edaf14a03b5938791d3e7bda761f90d048294220a7420fa803b9ad440e",
+      "actual": "e1fb37edaf14a03b5938791d3e7bda761f90d048294220a7420fa803b9ad440e",
+      "matches": true
+    },
+    {
+      "path": "tests/coder/test_trace_store_durability_independent.py",
+      "expected": "677189ce7380cefae37f6faae8341b62190a7578f755aa56a18be1f60bacfc51",
+      "actual": "677189ce7380cefae37f6faae8341b62190a7578f755aa56a18be1f60bacfc51",
+      "matches": true
+    },
+    {
+      "path": "tests/coder/test_trace_store_rework1.py",
+      "expected": "021e9133dae833204f904da4ecc3dcb6020b765ed953416bed3518f3c1a58606",
+      "actual": "021e9133dae833204f904da4ecc3dcb6020b765ed953416bed3518f3c1a58606",
+      "matches": true
+    },
+    {
+      "path": "docs/TRACE_STORE_DURABILITY.md",
+      "expected": "c128c84798ca08ff205a01ef2852979763b778e1b85982776d61992eb46b3672",
+      "actual": "c128c84798ca08ff205a01ef2852979763b778e1b85982776d61992eb46b3672",
+      "matches": true
+    },
+    {
+      "path": "docs/ARCHITECTURE_FOUNDATION_PLAN_2026-10-15.md",
+      "expected": "3cf94d5b5bcbf364af943d717e02c9f2523646f965a98b60d9e22776e759b6fb",
+      "actual": "3cf94d5b5bcbf364af943d717e02c9f2523646f965a98b60d9e22776e759b6fb",
+      "matches": true
+    }
+  ],
+  "mapping_input_output_hashes_match": true,
+  "L4_TD_mapping": "NOT_TESTED; no TD closure authorized",
+  "canonical_deployed": false,
+  "research_output_format_repair": "one explicit format-only retry, raw retained"
+}

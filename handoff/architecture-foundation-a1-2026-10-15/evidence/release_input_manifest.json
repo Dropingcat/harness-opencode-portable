@@ -1,0 +1,24 @@
+{
+  "source_root": "C:\\Users\\Arhys\\.local\\share\\opencode\\worktree\\62047a\\clever-squid",
+  "destination_root": "E:\\opencode_harness_portable",
+  "reviewer_normalized": "C:\\Users\\Arhys\\.local\\share\\opencode\\worktree\\62047a\\clever-squid\\reviewer_A1_trace_normalized.json",
+  "researcher": "C:\\Users\\Arhys\\.local\\share\\opencode\\worktree\\62047a\\clever-squid\\researcher_A1_trace.json",
+  "auditor": "C:\\Users\\Arhys\\.local\\share\\opencode\\worktree\\62047a\\clever-squid\\auditor_A1_trace.json",
+  "analyst": "C:\\Users\\Arhys\\.local\\share\\opencode\\worktree\\62047a\\clever-squid\\analyst_A1_trace.json",
+  "mapping": "C:\\Users\\Arhys\\.local\\share\\opencode\\worktree\\62047a\\clever-squid\\reviewer_A1_trace_contract_mapping.json",
+  "baseline_hashes": "C:\\Users\\Arhys\\.local\\share\\opencode\\worktree\\62047a\\clever-squid\\.runs\\architecture-foundation-20261015\\baseline\\hashes.json",
+  "hash_preflight": "C:\\Users\\Arhys\\.local\\share\\opencode\\worktree\\62047a\\clever-squid\\.runs\\architecture-foundation-20261015\\release_preflight_hashes.json",
+  "output": "C:\\Users\\Arhys\\.local\\share\\opencode\\worktree\\62047a\\clever-squid\\deployer_A1_trace.json",
+  "receipt": "C:\\Users\\Arhys\\.local\\share\\opencode\\worktree\\62047a\\clever-squid\\.runs\\architecture-foundation-20261015\\canonical_release_receipt.json",
+  "kernel_fixture": {
+    "source_kind": "immutable Git blob; exact existing method AST only",
+    "git_revision": "e6d3c3f0a80603e686bc59f591660a423f2d4f23",
+    "relative_path": "tests/coder/test_daemon_safety.py",
+    "blob_sha256": "59a98f93743515ca04c00343869b4da70f1ad75bb2a0f0489fd5ab529be3d6e4",
+    "method_name": "test_exclusive_lock_rejects_second_owner_and_releases",
+    "class_name": "DaemonSafetyTests",
+    "method_ast_sha256": "aa7ea266547fc43ce18293df2119744c740a22ec18618a2697e501f6c3896f90",
+    "matches_existing_reviewed_worktree_method": true,
+    "import_full_legacy_module": false
+  }
+}

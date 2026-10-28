@@ -1,0 +1,33 @@
+{
+  "audit": "RUD-2 universal agent: API/GUI/CLI contours",
+  "date": "2026-10-04",
+  "verdict": "ARCHITECTURE_PROPOSAL",
+  "key_findings": {
+    "cli_contour": "opencode-ai@1.18.34 via bunx cache (opencode-ai, NOT 'opencode' npm pkg). run/serve/export/db/session/mcp subcommands verified. agent_loop.py + factory_ctl.py are CLI orchestration core.",
+    "api_contour_verified": "opencode serve --port 4099 runs headless HTTP server; root returns 401 basic-auth (OPENCODE_SERVER_PASSWORD) => HTTP API exists NATIVELY. run --attach <url> connects to running server. plugin harness_run/harness_status = plugin-bridge tools (not REST). MCP stdio servers = programmatic contour (stdio, not HTTP).",
+    "gui_contour": "OpenCode Desktop (Electron) running since 02.10.2026, 7 processes, shares SAME opencode.db (426 sessions) at C:\\Users\\Arhys\\.local\\share\\opencode\\opencode.db. Desktop session list confirmed in DB (last sessions from harness dir).",
+    "shared_state": "single DB + storage/session_diff (26 files) + session export (JSON with info/messages) => all contours share session store.",
+    "venv_facts": "portable .venv has uvicorn+starlette (fastapi/flask ABSENT). mcp package present (1.30.0). canonical python E:\\Documents\\Документы\\doc_Opencode_agern-new\\.venv\\Scripts\\python.exe is still hardcoded in .opencode/opencode.json mcp config (4 servers).",
+    "mcp_servers": "4 servers (coder_router, academic_search, doc_extract, searxng_search) in .opencode/opencode.json; all point to CANON python, NOT portable. mcp_lifecycle_config.json uses ${PYTHON_BIN}/${OPENCODE_HARNESS_ROOT} placeholders (portable-ready).",
+    "no_rest_wrappers": "grep FastAPI/flask/uvicorn/http.server over scripts/*.py => NO REST wrappers exist yet."
+  },
+  "architecture_recommendation": {
+    "api_contour": "PRIMARY: native opencode serve (headless server) + SDK/HTTP. SECONDARY (today): MCP stdio servers (already present). TERTIARY: python module import (factory_ctl as library). REST wrapper scripts/api/harness_api.py NOT needed as separate layer — serve already gives HTTP; harness API layer = thin facade over factory_ctl + agent_loop + router.",
+    "gui_contour": "Desktop stays interactive; must be pointed at portable via CWD/config (project .opencode/opencode.json already project-scoped) + shared DB is automatic. GUI learns harness via project-scoped config + plugin (file:// portable dist).",
+    "equality_matrix": "run agent: CLI opencode run / agent_loop; API serve+SDK or MCP coder_router; GUI Desktop chat. status: CLI factory_ctl status / opencode session list; API MCP get_status (new) or SDK; GUI session list. submit artifact: CLI factory_ctl submit; API factory_ctl as library / MCP; GUI via filesystem/kanban."
+  },
+  "master_plan_impact": {
+    "B3-T2": "shim OPENCODE_BIN -> becomes CONTOUR ENTRY (opencode.cmd -> bunx opencode-ai). Fix: npm package name is opencode-ai, NOT opencode.",
+    "B4-T5": "agent_loop stays CLI core; add --attach to talk to running serve instance (API contour reuse).",
+    "W5": "router (resolve_route/resolve_bundle) is transport-agnostic python; expose via MCP harness_control or serve SDK.",
+    "MCP": "EXTEND: new mcp/harness_control_server.py with run_agent/get_status/submit tools (stdio, same pattern as coder_router).",
+    "E2E step 7": "ADD check: start serve, run --attach smoke, assert HTTP 200/401-auth + session visible in shared DB.",
+    "new_tasks": "W11-T1..T5 (see report)."
+  },
+  "open_questions": [
+    "Desktop CWD: which directory does Desktop use? sessions show C:/Users/Arhys/Desktop/... and E:/opencode_harness_portable => verify GUI project selection.",
+    "Basic auth for serve: OPENCODE_SERVER_PASSWORD management across contours.",
+    "MCP servers: switch .opencode/opencode.json python to portable .venv (EXP-5 dependency).",
+    "serve daemon lifecycle: Task Scheduler / plugin-managed vs on-demand spawn."
+  ]
+}

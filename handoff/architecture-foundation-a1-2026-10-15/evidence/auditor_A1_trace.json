@@ -1,0 +1,66 @@
+{
+  "module": "A1-trace",
+  "audit_mode": "A",
+  "verdict": "APPROVE",
+  "justification": "По предоставленным метаданным замещающее независимое ревью выполнено в фактическом лимите 12/12 и относится к окончательным байтам; финальная подача воркера уложилась в 3/3, а две реальные переработки исчерпали, но не превысили лимит 2. Историческое превышение 9/8 и невалидная схема сырого замещающего отчёта сохраняются как нарушения, а не получают ретроспективное разрешение. Копирование area/detail в module/finding допустимо как явно обозначенная детерминированная адаптация отдельного производного отчёта с сохранением оригинала, вердикта и хешей и заявленной валидацией кодом. Это одобрение только текущего процессного согласования: оно не означает DONE, развёртывание или полную защиту guard и не заменяет оставшиеся ворота.",
+  "process_analysis": {
+    "contracts_respected": true,
+    "iteration_count": 2,
+    "iteration_limit": 2,
+    "attempt_no": 3,
+    "role_violation": false,
+    "historical_compliance": false,
+    "current_compliance": true,
+    "compliance_scope": "Current reconciled evidence package, conditional on accuracy of supplied process metadata; not raw report schema or entire history.",
+    "reviewer_args_assessment": "Первоначальное блокирующее замечание не опровергается зелёными тестами; по истории оно привело к ограниченному исправлению. Текущее специализированное APPROVE заменяет прежнее свидетельство для приёмки, но не стирает его перерасход; соответствие окончательным байтам и 12/12 подтверждены родителем в метаданных.",
+    "worker_args_assessment": "Одна переработка кода и одна фактическая переподача пакета с независимым тестом дают rework=2 при attempt=3. Это не сброс счётчика и не основание для третьей переработки; неизменность production-кода после первого исправления заявлена явно.",
+    "replacement_review_budget": {"used": 12, "limit": 12},
+    "worker_final_package_budget": {"used": 3, "limit": 3},
+    "remaining_worker_rework_budget": 0,
+    "historical_overrun": {"used": 9, "limit": 8, "erased": false, "exception_granted": false, "acceptance_evidence_superseded": true},
+    "output_adaptation": {
+      "raw_schema_valid": false,
+      "derivative_schema_validated_by_code_reported": true,
+      "mapping": {"out_of_scope_gaps[].module": "copy existing area", "out_of_scope_gaps[].finding": "copy existing detail"},
+      "original_preserved": true,
+      "verdict_changed": false,
+      "reviewed_hashes_changed": false,
+      "extra_model_calls": 0,
+      "raw_sha256": "da7f0db6445378b6e099f213f0bda2a1f91a48295376130887268fb7ec5e22d5",
+      "normalized_sha256": "d3ad1109e4e4095c49bf2fc18eeb5638da4d6ca1f6a05cd43144417c0d15d72a"
+    },
+    "active_gates_reported": {"reviewer": "APPROVE", "tester": "PASS", "methods": 24, "failed": 0, "tribunal_required": false},
+    "canonical_deployed": false,
+    "controller_actions_performed": false
+  },
+  "section_0_checked_doubts": [
+    {"doubt": "Does replacement excuse the old overrun?", "resolution": "No: retain 9/8 nonconformance; accept separate bounded replacement only."},
+    {"doubt": "Does adaptation misrepresent raw compliance?", "resolution": "No: raw schema failure is explicit; distinct hashed derivative copies existing strings without new judgment, with code validation reported."},
+    {"doubt": "Does attempt 3 exceed rework limit 2?", "resolution": "No under supplied real-resubmission semantics: initial delivery plus two reworks; no further rework remains."},
+    {"doubt": "Is deployment required for this approval?", "resolution": "No: analyst synthesis, LIGHT verification, controlled release and finalization remain subsequent gates."}
+  ],
+  "verified_by_commands": [],
+  "verification_provenance": {
+    "evidence": "User-attached process_A1_trace_final.json and reconciliation contract; local shared process document read.",
+    "independent_product_verification": false,
+    "host_api_and_budget_counts": "Reported by parent, not independently queried by auditor.",
+    "hash_and_derivative_validation": "Reported by parent, not independently recomputed by auditor.",
+    "audit_file_validation": "Local JSON, required-field, type and UTF-8-no-BOM check only; not factory admission."
+  },
+  "findings_escape_hatch": [
+    {"severity": "historical", "finding": "Delta reviewer 9/8 remains noncompliant; replacement does not authorize or erase it."},
+    {"severity": "historical", "finding": "Initial wrapper transport failed; host-confirmed specialized replacement is reported, not a successful original dispatch."},
+    {"severity": "disclosed_adaptation", "finding": "Raw replacement JSON is not schema compliant; only the explicitly separate normalized derivative has reported validator and submit acceptance."},
+    {"severity": "boundary", "finding": "If reported identity, event counts, hash matching or validation provenance proves false, return to process escalation rather than infer acceptance or grant more repair budget."}
+  ],
+  "requirements": [],
+  "limits": [
+    "Process-only verdict based on supplied metadata; no source, tests, worker serialized code, raw reviewer file or controller state read.",
+    "No delegation, test execution, controller mutation, deployment or product-quality re-review performed.",
+    "Parent owns guard processing, deterministic admission and state projection; this artifact assigns no controller state.",
+    "Analyst synthesis, local LIGHT verification, conflict-checked release, final fixture checks and controller handoff remain pending.",
+    "No DONE/deployed/full-guard claim; coverage was not measured.",
+    "Windows fixture evidence does not certify POSIX, power loss, unbounded replay or exactly-once behavior; stable filesystem namespace remains required.",
+    "Instance-local queries, legacy replay behavior and unactivated scopes remain unchanged."
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "reviewer_replacement": {
+    "used": 12,
+    "limit": 12,
+    "compliant": true,
+    "session": "ses_ebf53288effeL2XLzyuEluOvxM"
+  },
+  "worker_final_package": {
+    "used": 3,
+    "limit": 3,
+    "compliant": true,
+    "session": "ses_ebf52b9beffef6exMfqbvYZkJ5"
+  }
+}

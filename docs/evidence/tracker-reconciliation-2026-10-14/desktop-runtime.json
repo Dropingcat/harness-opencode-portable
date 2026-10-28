@@ -1,0 +1,71 @@
+{
+  "schema": "tracker-evidence-snapshot/1.0",
+  "observed_at_utc": "2026-10-14T18:52:53.390655+00:00",
+  "host_version": "2.0.29",
+  "locations": [
+    {
+      "directory": "E:\\opencode_harness_portable",
+      "harness_plugins": [
+        {
+          "id": "harness.native.v2.deterministic",
+          "source": {
+            "type": "local",
+            "path": "E:\\opencode_harness_portable\\packages\\opencode-harness-plugin\\dist-v2\\v2\\index.js"
+          },
+          "features": {
+            "server": true
+          },
+          "state": {
+            "status": "active"
+          }
+        }
+      ],
+      "mcp": [
+        {
+          "name": "academic_search",
+          "status": {
+            "status": "connected"
+          }
+        },
+        {
+          "name": "coder_router",
+          "status": {
+            "status": "connected"
+          }
+        },
+        {
+          "name": "doc_extract",
+          "status": {
+            "status": "connected"
+          }
+        },
+        {
+          "name": "searxng_search",
+          "status": {
+            "status": "connected"
+          }
+        }
+      ]
+    },
+    {
+      "directory": "C:\\Users\\Arhys\\.local\\share\\opencode\\worktree\\62047a\\clever-squid",
+      "harness_plugins": [],
+      "mcp": []
+    }
+  ],
+  "openai_auth_metadata_only": [
+    {
+      "integrationID": "openai",
+      "active": true,
+      "auth_type": "oauth"
+    }
+  ],
+  "not_tested": [
+    "model-driven native tool invocation",
+    "V2 semantic execution",
+    "automatic memory injection",
+    "semantic guard certification",
+    "autonomous repair/merge"
+  ],
+  "no_runtime_mutations": true
+}

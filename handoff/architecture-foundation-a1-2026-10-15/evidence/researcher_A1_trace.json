@@ -1,0 +1,105 @@
+{
+  "module": "A1-trace",
+  "mode": "LIGHT",
+  "status": "BOUNDED_HANDOFF_WITH_EVIDENCE_CAPTURE_GAP",
+  "questions": [
+    {
+      "id": "L1",
+      "verdict": "PASS",
+      "evidence": [
+        "worker_A1_trace.json changed_paths/counting and reviewer_A1_trace_normalized.json scope_declared agree: three production files, three focused test files, durability documentation; architecture plan is specification, not an automatic release addition. Legacy kernel method is selected separately.",
+        "tester_A1_trace.json current_counts: 12 worker + 6 original independent + 1 added independent + 4 rework + 1 legacy = 24, failed 0, skipped 0. Coverage unmeasured; coverage=0 is a placeholder.",
+        "process_A1_trace_final.json actors agree with rework_actor_identities.json; final_actors agree with final_actor_identities.json: replacement reviewer ses_ebf53288effeL2XLzyuEluOvxM/code-reviewer, package worker ses_ebf52b9beffef6exMfqbvYZkJ5/coder-worker, auditor ses_ebf58150fffe4wcLfV61VklB3l/code-auditor. Rework tester ses_ebf5e97abffeLxDvOmyQB1wk8h/code-tester. All record succeeded, openai/gpt-6.1-sol, receiving clever-squid worktree.",
+        "Older *_host_identity.json records identify earlier sessions, not contradictory replacement identities. direct_worker_host_identity.json title is a role/fallback check, not implementation proof. These are local server-recorded metadata, not a live independent host query or correctness certification.",
+        "Accepted normalized reviewer APPROVE; process-only auditor APPROVE. Worker pending-review and historical auditor REQUEST_CHANGES narratives are superseded, not erased. Historical reviewer 9/8 remains noncompliant; replacement 12/12 and package 3/3 remain reported process evidence. Factory PASSED supplied by parent is not release/finalize."
+      ]
+    },
+    {
+      "id": "L2",
+      "verdict": "NOT_TESTED",
+      "evidence": [
+        "Executed independent hashlib.sha256 checks against all eight normalized-review final_reviewed_hashes, four process artifact_sha256 entries, mapping input/output hashes and exact inverse field-copy comparison. Paths were resolved from Path.cwd(), not metadata root strings; actual .git file points to E:/opencode_harness_portable/.git/worktrees/clever-squid.",
+        "Evidence-capture gap: shell output omitted the leading hash/result rows through automatic truncation. Full output is retained at C:/Users/Arhys/.local/share/opencode/shell/62047a75a169c9577e5825eaf54140b2bd752057/sh_140b971f4001zWs0y7ArG9O8Ti.out. Within the six-tool cap those rows were not reread. Therefore this report does NOT assert exact final hash equality, HEAD equality or scoped-status cleanliness. Recover/recheck those rows before release; absence of observed mismatches is not PASS.",
+        "Expected accepted raw SHA256 da7f0db6445378b6e099f213f0bda2a1f91a48295376130887268fb7ec5e22d5; normalized SHA256 d3ad1109e4e4095c49bf2fc18eeb5638da4d6ca1f6a05cd43144417c0d15d72a. These were read from mapping/process metadata, not independently confirmed here.",
+        "Visible baseline daemon_safety.py diff adds only BaseException close/re-raise inside FileLease.acquire. Independent source lines 17-39 contain the tester-added stale-writer dangling-symlink method, preserving link metadata/target absence/cache and successful retry. Reviewer/tester attribute that sole post-head code delta to independent tests. Full scoped diff/HEAD rows require recovery before certifying unchanged bytes."
+      ]
+    },
+    {
+      "id": "L3",
+      "verdict": "PASS",
+      "evidence": [
+        "Fixture safety verified by local source inspection, not a fresh suite run: worker setup lines 35-38, independent setup lines 41-44 and rework setup lines 16-20 use TemporaryDirectory(dir=C:\\Temp\\opencode), explicit trace.json and cleanup. Spawn tests use bounded synthetic children. Existing sleeps in fixtures were inspected, not executed. Unsupported link creation can skip; release must require zero skips.",
+        "docs/TRACE_STORE_DURABILITY.md lines 26-31, 44-47 and 58-62 constrain tests to Windows stable local namespace and exclude broad daemon/meta suites. Legacy test module imports MetaDaemon and AutoBootstrap, so do not recommend importing that module merely to select one test. Use the AST-isolated exact method command below instead.",
+        "No destination conflicts were independently checked. .git identifies canonical repository location but does not establish target-byte compatibility or authorize copying. Allowlist below is a bounded candidate, not permission to overwrite."
+      ]
+    },
+    {
+      "id": "L4",
+      "verdict": "NOT_TESTED",
+      "evidence": [
+        "Read local docs/PROBLEMS_REGISTER.md (171 lines); case-insensitive search for trace, replay, fsync, power-loss, posix, 230 and 241 returned no matching lines. No exact existing TD mapping established by that bounded search; this is not proof that all synonymous entries are absent.",
+        "Parent warns local registry 230 differs from canonical 241. Canonical registry metadata was not read within this budget; local mapping would be provisional. No TD IDs invented, closed or changed.",
+        "Verified local limitation references instead: docs/TRACE_STORE_DURABILITY.md:14-17 instance-local queries, :27-31 platform/power-loss/replay/exactly-once exclusions, :44-47 stable namespace/network filesystem exclusions. Missing TD mapping is a disclosed follow-up, not a new isolated A1 code blocker."
+      ]
+    }
+  ],
+  "release_file_allowlist": [
+    "scripts/meta/trace_store.py",
+    "scripts/meta/durable_json.py",
+    "scripts/meta/daemon_safety.py",
+    "tests/coder/test_trace_store_durability.py",
+    "tests/coder/test_trace_store_durability_independent.py",
+    "tests/coder/test_trace_store_rework1.py",
+    "docs/TRACE_STORE_DURABILITY.md"
+  ],
+  "release_exclusions": [
+    "Do not copy tests/coder/test_daemon_safety.py: existing method is a fixture dependency, not an A1 change.",
+    "Do not automatically copy the pre-existing architecture plan, TD registry, .runs, databases, configuration, caches or unrelated git changes.",
+    "Preserve raw reviewer, normalized reviewer, mapping and historical nonconformance records together in evidence handoff; evidence packaging is separate from the seven-file runtime/test/docs allowlist."
+  ],
+  "fixture_commands": {
+    "execution_status": "SOURCE_INSPECTED_NOT_EXECUTED_BY_RESEARCHER",
+    "cwd": "Authorized receiving/released repository root; revalidate hashes and fixture path first",
+    "focused": [
+      "python -B -m unittest discover -s tests/coder -p test_trace_store_durability.py -v",
+      "python -B -m unittest discover -s tests/coder -p test_trace_store_durability_independent.py -v",
+      "python -B -m unittest discover -s tests/coder -p test_trace_store_rework1.py -v"
+    ],
+    "legacy_ast_isolated": "python -B -c \"import ast,pathlib,sys,tempfile,unittest; sys.path.insert(0,str(pathlib.Path('scripts/meta').resolve())); from daemon_safety import FileLease; p=pathlib.Path('tests/coder/test_daemon_safety.py'); t=ast.parse(p.read_text(encoding='utf-8-sig')); c=next(n for n in t.body if isinstance(n,ast.ClassDef) and n.name=='DaemonSafetyTests'); f=next(n for n in c.body if isinstance(n,ast.FunctionDef) and n.name=='test_exclusive_lock_rejects_second_owner_and_releases'); ns={'FileLease':FileLease}; exec(compile(ast.fix_missing_locations(ast.Module(body=[f],type_ignores=[])),str(p),'exec'),ns); tmp=tempfile.TemporaryDirectory(dir=r'C:\\Temp\\opencode'); C=type('IsolatedKernelLeaseTest',(unittest.TestCase,),{f.name:ns[f.name],'root':pathlib.Path(tmp.name)}); suite=unittest.defaultTestLoader.loadTestsFromTestCase(C); result=unittest.TextTestRunner(verbosity=2).run(suite); tmp.cleanup(); sys.exit(not(result.wasSuccessful() and result.testsRun==1 and not result.skipped))\"",
+    "legacy_resolution": "Executes only unchanged AST-extracted method at tests/coder/test_daemon_safety.py:127; supplies self.root and unittest cleanup, imports daemon_safety only, not legacy module/meta_daemon/auto_bootstrap. Command construction source-verified, execution NOT_TESTED. Require 12+7+4+1=24 successes and zero skips; -B avoids local bytecode writes."
+  },
+  "deployment_blockers": [
+    {
+      "id": "EVIDENCE_CAPTURE",
+      "classification": "verification_gap_not_demonstrated_code_defect",
+      "condition": "Recover retained leading hash/mapping/HEAD/status rows or rerun compact exact checks; any real mismatch requires stop and provenance escalation. L2 remains unresolved, so no release recommendation yet."
+    },
+    {
+      "id": "DEPLOYER_PENDING",
+      "classification": "pending_authorized_deployer_work_not_code_blocker",
+      "condition": "Before any copy, authorize exact destination and seven-file scope; check destination symlinks/reparse/aliases, git conflicts and per-file hashes against accepted source and baseline. Identical destination bytes are no-op; baseline-compatible differences require explicit approval; unexpected changes/missing prerequisites stop, never blind overwrite. Rehash immediately before/after controlled copy, run scoped fixtures at destination, then owner performs release/finalize and handoff. None performed here."
+    }
+  ],
+  "scope_limits": [
+    "No source/test/docs/canonical edits, network, models, installs, daemon execution, controller operations, commits or production state access. Only this report written.",
+    "Six tool calls total; no fresh product tests executed. One metadata/read command ended with stdout UnicodeEncodeError; subsequent read used UTF-8. Final aggregate read output was truncated, explicitly limiting hash/HEAD conclusions.",
+    "No A2-A6 activation; pre-A1 callers/safety/replay/query issues do not expand DoD. No POSIX, power-loss/directory-fsync, hostile namespace, network filesystem, general replay, retry idempotency, exactly-once or full semantic guard certification.",
+    "No specialized factory role substitution, new debt IDs, closure claims, full-system readiness, deployment authorization or DONE claim."
+  ],
+  "verified_by_commands": [
+    "read .runs/architecture-foundation-20261015/researcher_A1_trace_contract.md",
+    "read analyst_A1_trace.json",
+    "Local Python JSON reads of normalized/raw-mapping/tester/auditor/process/actor/host records and explicit worker metadata; serialized worker code field excluded",
+    "Local Python source/AST/UTF-8 policy/docs/registry reads; hashlib SHA256 and inverse mapping comparison attempted with retained-output gap; scoped git status/diff/rev-parse read-only"
+  ],
+  "findings_escape_hatch": {
+    "level_1": [],
+    "level_2": [
+      "Unchanged replay/query/platform/durability limits documented above; TD mapping unverified, no registry changes."
+    ],
+    "level_3": [
+      "Orchestrator/deployer must resolve exact hash evidence capture and destination conflicts before release; neither is an established new A1 product defect."
+    ],
+    "historical": "Preserve raw schema-invalid review plus deterministic accepted derivative/mapping and 9/8 overrun; process APPROVE does not erase history."
+  }
+}

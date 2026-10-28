@@ -1,0 +1,68 @@
+{
+  "schema": "dispatch-identity-projection/1",
+  "source_sha256": "f9092b4797daae8aba4b4b1e74fd3da0e6dc6d109451bd6964bc664a8242e86d",
+  "source_kind": "recorded managed OpenCode API observations",
+  "fields_removed": [
+    "title",
+    "free_text"
+  ],
+  "a2_started": false,
+  "runtime_root_cause_verified": false,
+  "wrapper_report_code": "TASK_TOOL_UNAVAILABLE_REPORTED",
+  "sessions": [
+    {
+      "id": "ses_ebf6f8143ffeAguG5zvgdbDAcc",
+      "agent": "coder-worker",
+      "parentID": null,
+      "transport_class": "standalone_cli"
+    },
+    {
+      "id": "ses_ebf695b82ffexlp4wOS0raUYiy",
+      "agent": "code-reviewer",
+      "parentID": null,
+      "transport_class": "standalone_cli"
+    },
+    {
+      "id": "ses_ebf68ea7affetZmAxhbdOwoe9s",
+      "agent": "code-tester",
+      "parentID": null,
+      "transport_class": "standalone_cli"
+    },
+    {
+      "id": "ses_ebf53288effeL2XLzyuEluOvxM",
+      "agent": "code-reviewer",
+      "parentID": null,
+      "transport_class": "standalone_cli"
+    },
+    {
+      "id": "ses_ebf52b9beffef6exMfqbvYZkJ5",
+      "agent": "coder-worker",
+      "parentID": null,
+      "transport_class": "standalone_cli"
+    },
+    {
+      "id": "ses_ebf58150fffe4wcLfV61VklB3l",
+      "agent": "code-auditor",
+      "parentID": null,
+      "transport_class": "standalone_cli"
+    },
+    {
+      "id": "ses_ebf497603ffedRN3078eWmlx9V",
+      "agent": "general",
+      "parentID": "ses_ec495ad44ffe53wj4aL32oMYUu",
+      "transport_class": "nested_general"
+    },
+    {
+      "id": "ses_ebf474e22ffeYEtEwAYbS0yeux",
+      "agent": "general",
+      "parentID": "ses_ec495ad44ffe53wj4aL32oMYUu",
+      "transport_class": "nested_general"
+    },
+    {
+      "id": "ses_ebf4035dfffeEJPeXbsCGogfYH",
+      "agent": "general",
+      "parentID": "ses_ec495ad44ffe53wj4aL32oMYUu",
+      "transport_class": "nested_general"
+    }
+  ]
+}

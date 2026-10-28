@@ -1,0 +1,104 @@
+{
+  "schema": "injection-verification/1.0",
+  "date": "2026-10-14",
+  "terminal_status": "HIGH_IMPACT_GAPS_CONFIRMED",
+  "canonical_root": "E:\\opencode_harness_portable",
+  "scope": "Hostile prompt injection protection and trust boundaries only; excludes memory retrieval/injection.",
+  "method": "Read-only canonical source inspection, SHA-256 comparison, AST-isolated pure local function tests; only this requested report was written in clever-squid.",
+  "adapter_relative_prefix": "packages/opencode-harness-plugin/",
+  "adapter_source_and_dist_sha256": "969619d79cee48279e937666bb0ad8a6bb41008eaee47fb403031e3b980a216b",
+  "checks": [
+    {
+      "id": "native_hook",
+      "expected": "Mandatory content guard on untrusted outputs before reuse/handoff/side effects.",
+      "observed": "Source and deployed dist are byte-identical. execute.before checks only event.tool against writer_draft_internal, writer_repair_internal, semantic.execute_internal. No post-tool content gate, guard invocation, policy loading or P0/P2 execution receipt in this adapter. Other validation checks tool inputs/host identity, not hostile output content. Semantic execution is explicitly disabled.",
+      "evidence": ["docs/AUDIT 14-10-26/deep-research-report(1).md:359-407", "docs/AUDIT 14-10-26/deep-research-report(4).md:102,684", "docs/AUDIT 14-10-26/deep-research-report.md:265,425", "packages/opencode-harness-plugin/src/v2/index.js:11,60-125", "packages/opencode-harness-plugin/dist-v2/v2/index.js:11,60-125", "config/guard_policy.json:3-9,40-68"],
+      "status": "AUDIT_CLAIM_CONFIRMED_CURRENT_V2",
+      "severity": "major",
+      "impact": "Ordinary web/document/subagent tool names are not content-guarded by this hook. This is missing enforcement, not a demonstration that a model obeyed an attack.",
+      "smallest_complete_fix": "Integrate a mandatory untrusted-output gate before downstream consumption, with coverage and fail-closed execution receipts; a pre-tool name check alone is insufficient."
+    },
+    {
+      "id": "execution_proof",
+      "expected": "Runtime proves P0 and required P2 actually ran on each relevant untrusted input.",
+      "observed": "Guard points are policy instructions to run scripts, including an explicit no-DB labeling alternative. V2 exposes deterministic route/status calls, not automatic guard execution. In the inspected path invocation remains caller/orchestrator-driven; an available script or guard_required flag is not execution evidence.",
+      "evidence": ["config/guard_policy.json:40-59,75-78", "guard/src/guard_runner.py:65-130,153-161", "packages/opencode-harness-plugin/src/v2/index.js:70-102,105-122", "docs/AUDIT 14-10-26/deep-research-report(1).md:1765", "docs/AUDIT 14-10-26/deep-research-report.md:425"],
+      "status": "NOT_PROVEN_AUTOMATIC",
+      "severity": "major"
+    },
+    {
+      "id": "runner_fail_closed",
+      "expected": "ERROR, missing/unknown verdicts and unsuccessful subprocess exits cannot compose into PASS.",
+      "observed": "guard() blocks P0 only on exact FAIL, ignores both exit codes, and defaults P2 unknown/missing verdicts to success. Pure isolated tests reproduced PASS for P0 ERROR + P2 PASS, P0 PASS + empty P2 dict, and P2 PASS with exit 1. Explicit P0 FAIL blocks; explicit P2 DEGRADED returns ok=false. P0 timeout is uncaught and is not a structured BLOCK, but was not tested as a permissive caller outcome.",
+      "evidence": ["guard/src/guard_runner.py:65-76,95-104,107-130", "config/guard_policy.json:62-67", "docs/AUDIT 14-10-26/deep-research-report(1).md:361"],
+      "status": "FAIL_CLOSED_CLAIM_PARTIALLY_FALSE",
+      "severity": "major",
+      "smallest_complete_fix": "Require explicit PASS and successful exit from both stages, reject malformed/unknown responses, and map execution exceptions/timeouts to structured non-success."
+    },
+    {
+      "id": "p0_wrapper_import_fallback",
+      "expected": "Unavailable bundled scanner cannot produce a clean scan.",
+      "observed": "researcher_core wrapper catches any bundled P0 import exception. Its fallback definitions are nested under the P2 import exception, and fallback _doc_analyze returns unconditional PASS without scanning. P2 import failure can replace even a successfully imported analyzer. scan_text also converts suspicion exceptions into low. This is wrapper behavior, not session_guard.py itself: the real scanner returns ERROR/nonzero for DB open failure. Actual deployment import failure was not induced.",
+      "evidence": ["scripts/researcher/researcher_core/guard.py:24-55,56-115,137-150", "guard/src/session_guard.py:336-347,499-517"],
+      "status": "FAIL_OPEN_FALLBACK_CONFIRMED_STATIC",
+      "severity": "major",
+      "smallest_complete_fix": "Remove unconditional PASS fallback; report unavailable/error and require caller rejection. Separate P0 and optional P2 import availability."
+    },
+    {
+      "id": "p0_detection_limits",
+      "expected": "A P0 PASS is interpreted as no high configured-signature finding, not proof of safe content.",
+      "observed": "Finite signatures and contextual downgrades are used. Pure tests: bare 'ignore previous instructions' is high; adding 'table:' makes it low. Nested list-of-list strings are omitted by _iter_state_strings. Scanner takes the first matching signature/field and breaks even if low, so later high matches can be missed. Text parts are classified trusted solely by type; internal outputs receive no weak-RU checks. These are bounded scanner blindspots, not demonstrated successful hostile execution.",
+      "evidence": ["guard/src/session_guard.py:70-98,229-263,266-324,386-436,440-457", "scripts/researcher/researcher_core/guard.py:8-9"],
+      "status": "LIMITATIONS_CONFIRMED",
+      "severity": "major"
+    },
+    {
+      "id": "p2_coverage",
+      "expected": "Required P2 checks cover all relevant untrusted material or report incomplete coverage as non-success.",
+      "observed": "Unresolved classifier results conservatively count as YES/FAIL, which is genuine fail-closed behavior for attempted classifications. However internal outputs skip P2; after default limit=50 further P0-clean untrusted parts are silently skipped. Long text is head/tail truncated, dropping the middle. Final PASS depends on findings, not complete coverage. Therefore P0+P2 PASS does not establish semantic analysis of all input.",
+      "evidence": ["guard/src/semantic_layer.py:161-168,524-525,594-619,630-640,660-705", "config/guard_policy.json:75-78"],
+      "status": "PARTIAL_FAIL_CLOSED_WITH_COVERAGE_GAPS",
+      "severity": "major"
+    },
+    {
+      "id": "factory_provenance",
+      "expected": "Guard PASS proves actual scanning of the exact admitted untrusted artifact.",
+      "observed": "Real controls exist: registration hashes bytes, unknown origins reject, missing/non-PASS guards reject referenced guard_required artifacts in both submission and reducer, and a separate file-hash verification helper exists. But guard_artifact accepts a caller-provided verdict with default manual_guard, optional policy hash and empty findings; it does not invoke the scanner. Admissibility matches artifact_id and verdict, not an executed P0/P2 receipt bound to content hash. sanitize_artifact requires a known source and hashes derivative bytes but marks it guard_required=false without a scan. This establishes metadata gates, not cryptographic proof of scanning/sanitization. Requires a caller allowed to submit these events; no unauthorized access demonstrated.",
+      "evidence": ["config/artifact_provenance_policy.json:4-18", "scripts/code-factory/provenance.py:49-103", "scripts/code-factory/code_factory_runner.py:105-130,144-169", "scripts/code-factory/state_reducer.py:202-230"],
+      "status": "METADATA_ENFORCEMENT_PRESENT_EXECUTION_ATTESTATION_ABSENT",
+      "severity": "major",
+      "smallest_complete_fix": "Bind admission to scanner-produced receipts containing artifact content hash, policy hash, required stages, coverage and successful execution; guard sanitized derivatives and retain source lineage."
+    },
+    {
+      "id": "audit_cve_claim",
+      "expected": "A named audit CVE is applicable only with matching current vulnerable code evidence.",
+      "observed": "Audit (5) asserts CVE-2026-64651 applicability and sandbox-to-host authorization bypass. This review established neither that CVE's validity nor matching current vulnerable implementation. Three-name content-guard gap does not prove this separate authorization exploit.",
+      "evidence": ["docs/AUDIT 14-10-26/deep-research-report(5).md:3-5,48,179", "packages/opencode-harness-plugin/src/v2/index.js:70-76"],
+      "status": "UNSUPPORTED_APPLICABILITY_NOT_ASSERTED",
+      "severity": "info"
+    },
+    {
+      "id": "audit_p0_pass_interpretation",
+      "expected": "Fresh bundled doc_guard P0 PASS on seven audits is distinguished from demonstrated defense.",
+      "observed": "Fresh seven-document P0 PASS was supplied by parent, not rerun here. It means no high finding by that scan, not absence of hostile content or verified enforcement. SHA-256 independently confirms reports (1),(2),(3) are exact duplicates, so seven files are five distinct contents. No hostile-protection claim matching searched terms was found in (6).",
+      "evidence": ["guard/src/session_guard.py:440-457", "docs/AUDIT 14-10-26/deep-research-report(1).md:17,359-407", "docs/AUDIT 14-10-26/deep-research-report(2).md:17,359-407", "docs/AUDIT 14-10-26/deep-research-report(3).md:17,359-407"],
+      "duplicate_sha256": "5f657fbe181dd8a0980673c8dc9e8b065e77cba43b0f1f4caadb9b66419811bd",
+      "status": "PASS_IS_NOT_DEFENSE_PROOF"
+    }
+  ],
+  "negative_case_tests": {
+    "method": "Canonical guard() AST function compiled alone with inert run_p0/run_p2 stubs; canonical session_guard module executed with non-main name, calling only pure helpers. python -B; no DB, subprocess scanner, network or provider call.",
+    "cases": [
+      {"input": "P0 ERROR/exit=1; P2 PASS/exit=0", "expected": "non-success", "observed": "ok=true PASS", "status": "FAIL"},
+      {"input": "P0 PASS; P2 {}", "expected": "non-success", "observed": "ok=true PASS", "status": "FAIL"},
+      {"input": "P0 PASS; P2 PASS/exit=1", "expected": "non-success", "observed": "ok=true PASS", "status": "FAIL"},
+      {"input": "P0 PASS; P2 DEGRADED", "expected": "non-success", "observed": "ok=false DEGRADED", "status": "PASS"},
+      {"input": "P0 FAIL", "expected": "non-success", "observed": "ok=false BLOCK", "status": "PASS"},
+      {"input": "untrusted bare ignore-previous signature", "expected": "high", "observed": "high", "status": "PASS"},
+      {"input": "same signature prefixed table:", "expected": "context-downgrade characterization", "observed": "low", "status": "BLINDSPOT_CONFIRMED"},
+      {"input": "state.output nested list containing signature", "expected": "recursive coverage characterization", "observed": "no yielded strings", "status": "BLINDSPOT_CONFIRMED"}
+    ]
+  },
+  "high_impact_gaps": ["No native output-content enforcement in current V2 adapter", "Guard runner accepts malformed/error-stage success combinations", "P0 wrapper has unconditional clean-result fallback", "P2 silently omits excess parts and long-text middle", "Factory metadata PASS/sanitized labels do not attest scanner execution"],
+  "limits": ["No source/config edits, DB access, auth/key reads, web/model/paid calls, process/service changes or unsafe exploits.", "Only the requested JSON artifact was created; no canonical state was intentionally changed.", "No live host hook execution, model instruction-following attack, import-failure deployment test or end-to-end factory mutation was performed.", "Canonical source and deployed dist files inspected; running host's actual loaded plugin identity was not queried.", "Searches are navigation aids; relevant code ranges were read. One broad PowerShell search accidentally included non-Python paths and encountered locked daemon lock files; no content from those locks was read, and the search was replaced with extension-filtered Python inspection.", "No quantitative bypass-rate or audit CVE claim is adopted as measured fact."]
+}

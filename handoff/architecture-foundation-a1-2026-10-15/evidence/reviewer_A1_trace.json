@@ -1,0 +1,74 @@
+{
+  "module": "A1_trace",
+  "verdict": "APPROVE",
+  "comments": [
+    {
+      "file": "scripts/meta/durable_json.py",
+      "line": 85,
+      "severity": "minor",
+      "kind": "verified_invariant_closure",
+      "problem": "Closure, not a defect: latest-state read, mutation, validation and fsynced sibling replacement remain inside one shared kernel lease. Timestamp restoration, stale writers, corruption rejection, failure preservation, leaf alias rejection and unpublished-handle cleanup are supported by direct source review and focused Windows tests.",
+      "suggestion": "Retain these transaction boundaries and explicit-path regression assertions; no source change requested.",
+      "falsification": "A focused regression losing a committed event, changing prior bytes after an injected pre-replace failure, accepting a leaf symlink/hardlink, changing a persisted timestamp, or leaking the injected acquisition handle would invalidate this closure."
+    }
+  ],
+  "scope_declared": {
+    "baseline": "1e9bc3d",
+    "reviewed_head": "e6d3c3f0a80603e686bc59f591660a423f2d4f23",
+    "production": ["scripts/meta/trace_store.py", "scripts/meta/durable_json.py", "scripts/meta/daemon_safety.py:FileLease.acquire only"],
+    "tests": ["tests/coder/test_trace_store_durability.py", "tests/coder/test_trace_store_durability_independent.py", "tests/coder/test_trace_store_rework1.py"],
+    "specification": "docs/ARCHITECTURE_FOUNDATION_PLAN_2026-10-15.md:A1 and first limited rework amendment",
+    "documentation": "docs/TRACE_STORE_DURABILITY.md",
+    "independence": "Source and test bytes inspected directly; previous verdicts and serialized worker code not used as authority. No delegation, source/test edits, installs, controller, deployment or canonical E: access.",
+    "final_delta": "git diff HEAD shows only one added independent dangling-symlink stale-writer method; prior assertions unchanged and production files unchanged. Baseline daemon_safety diff adds only BaseException cleanup inside acquire.",
+    "five_axes": {
+      "correctness": "Stable timestamps restored; atomic operation-level updates preserve latest disk state and reject corruption visibly.",
+      "readability": "Small primitive and explicit validation; no blocking readability issue.",
+      "architecture": "Existing FileLease reused; no second locking framework; dependency delta restricted to acquire.",
+      "security": "Leaf links rejected before mutation; stable namespace required and hostile namespace races explicitly excluded.",
+      "performance": "Whole-store JSON serialization remains linear per mutation; no scalability certification claimed. Lock retries use a finite monotonic deadline."
+    }
+  },
+  "out_of_scope_gaps": [
+    {"area": "platform/durability", "status": "not_certified", "detail": "Windows executed; actual POSIX, directory-fsync/power-loss, network filesystem and hostile external namespace mutation guarantees are excluded."},
+    {"area": "legacy replay/query semantics", "status": "unchanged", "detail": "Baseline diff leaves replay target-version filtering and instance-local query views unchanged; not new A1 acceptance conditions. No general replay or exactly-once certification."},
+    {"area": "acquisition exceptions", "status": "bounded_evidence", "detail": "RuntimeError injection executes real opened-handle cleanup. Other BaseException subclasses are structurally covered, not individually injected."}
+  ],
+  "verified_by_commands": [
+    {"command": "read .opencode/shared/code-factory-process.md; load adversarial-critic-checklist and code-review-and-quality", "result": "Process, six-check discipline and five-axis review applied."},
+    {"command": "git status --short; git rev-parse HEAD", "result": "HEAD e6d3c3f; pre-existing report changes and independent test modification observed."},
+    {"command": "Direct UTF-8 source/test/docs reads; CODERS 06 reviewer / 09 / 10 verified commands; A1 specification and amendment", "result": "Reviewed actual final code and assertions; no serialized worker code or previous CLI history inspected."},
+    {"command": "git diff 1e9bc3d -- scripts/meta/daemon_safety.py; git diff 1e9bc3d -- scripts/meta/trace_store.py; git diff HEAD -- scoped code/tests/docs", "result": "Minimal acquire-only dependency change; unchanged legacy replay; post-head test addition only, with no weakened prior assertions."},
+    {"command": "python -m unittest discover -s tests/coder -p test_trace_store_durability.py -v", "result": "12 methods passed, zero skips; spawned stale writers and owner-exit kernel release exercised."},
+    {"command": "python -m unittest discover -s tests/coder -p test_trace_store_durability_independent.py -v", "result": "7 methods passed, zero skips, including final stale-writer dangling leaf symlink test."},
+    {"command": "python -m unittest discover -s tests/coder -p test_trace_store_rework1.py -v", "result": "4 methods passed, zero skips; real Windows symlink/hardlink rejection and RuntimeError handle cleanup."},
+    {"command": "Final validation command: execute unchanged AST-extracted legacy test_exclusive_lock_rejects_second_owner_and_releases with explicit C:\\Temp\\opencode tempfile fixture, avoiding meta_daemon imports; validate report schema, UTF-8/no BOM and all SHA256; check production HEAD bytes", "result": "Acceptance of this report is conditional on that command succeeding; its actual output is authoritative. Expected total: 24 test methods."},
+    {"command": "rg search attempted in tool event 7", "result": "Unavailable PowerShell executable; replaced by Get-ChildItem/Select-String and AST source inspection. No test success inferred from failed search."}
+  ],
+  "final_reviewed_hashes": {
+    "algorithm": "SHA256",
+    "files": {
+      "scripts/meta/trace_store.py": "cfab578b041e0ffda0955b3d3eed4978a30cca324996214ed90ed4bed0935759",
+      "scripts/meta/durable_json.py": "3448d4f644187662683e71399c8927dbaca36d7487ad503dc7ad4b57d19d2f8f",
+      "scripts/meta/daemon_safety.py": "8955be1822a7599ba6763ba4c33cc6185a6a049424c757ec5e66adeaf149a341",
+      "tests/coder/test_trace_store_durability.py": "e1fb37edaf14a03b5938791d3e7bda761f90d048294220a7420fa803b9ad440e",
+      "tests/coder/test_trace_store_durability_independent.py": "677189ce7380cefae37f6faae8341b62190a7578f755aa56a18be1f60bacfc51",
+      "tests/coder/test_trace_store_rework1.py": "021e9133dae833204f904da4ecc3dcb6020b765ed953416bed3518f3c1a58606",
+      "docs/TRACE_STORE_DURABILITY.md": "c128c84798ca08ff205a01ef2852979763b778e1b85982776d61992eb46b3672",
+      "docs/ARCHITECTURE_FOUNDATION_PLAN_2026-10-15.md": "3cf94d5b5bcbf364af943d717e02c9f2523646f965a98b60d9e22776e759b6fb"
+    }
+  },
+  "adversarial_checklist": [
+    {"id": "domain_coverage", "passed": true, "score": 1.0, "findings": "Persistence, identity, corruption, deadlines and cleanup checked against A1; platform exclusions explicit.", "issues": []},
+    {"id": "fact_concept_consistency", "passed": true, "score": 1.0, "findings": "Claims grounded in direct source, git deltas and executed focused tests.", "issues": []},
+    {"id": "concept_diversity", "passed": true, "score": 1.0, "findings": "Independent fault injection, stale-instance/spawn contention, alias rejection and literal fixture checks cover different failure modes.", "issues": []},
+    {"id": "source_specificity", "passed": true, "score": 1.0, "findings": "Local code/specification line references and final SHA256 are primary evidence; external DOI/URL not applicable to this code-only scope.", "issues": []},
+    {"id": "triz_correctness", "passed": true, "score": 1.0, "findings": "No numbered TRIZ invention or contradiction-matrix claim made; ideal invariant states result rather than prescribing implementation.", "issues": []},
+    {"id": "estimates_realism", "passed": true, "score": 1.0, "findings": "Finite tool budget and measured method counts, no untested durability or throughput estimate.", "issues": []}
+  ],
+  "post_validation": {"ifr": "Committed trace records retain identity and time; rejected writes leave prior store bytes intact.", "forbidden_ifr_verbs": [], "solution_verb_gate": "not applicable: review closure, no proposed implementation concept"},
+  "tool_budget": {"limit": 12, "used_reported": 12, "count_basis": "All tool invocations including two skills, output patch and final validation; no nested delegation. Parent independently counts completed events."},
+  "supersedes_prior_review": true,
+  "prior_nonconformance": "Replacement evidence does not approve or erase the prior reviewer budget overrun. Prior working review retained verbatim as reviewer_A1_trace_prior_replacement.json.",
+  "findings_escape_hatch": {"level_1": [], "level_2": [], "level_3": [], "status": "No new defect findings. Prior budget nonconformance remains recorded for process auditor; no state acceptance or deployment authorization is asserted."}
+}

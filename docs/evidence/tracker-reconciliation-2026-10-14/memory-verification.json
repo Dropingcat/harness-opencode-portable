@@ -1,0 +1,157 @@
+{
+  "schema": "harness-memory-verification/1.0",
+  "date": "2026-10-14",
+  "overall": "FAIL",
+  "canonical_root": "E:/opencode_harness_portable",
+  "artifact_root": "current clever-squid worktree",
+  "scope": "Memory persistence, retrieval and context injection only; hostile prompt-injection guard excluded.",
+  "method": {
+    "source_inspection": true,
+    "registry_output": "Metadata and aggregate/codepoint checks only in this artifact; no lesson text or prompt corpus reproduced.",
+    "execution": "Read-only MemoryInjector methods; isolated AST-extracted bridge validation/search functions; synthetic validation inputs never persisted.",
+    "host_observation": "Existing restoration evidence only; no fresh host API, service operations or model calls.",
+    "writes": "Only this requested verification artifact. No code, configuration or memory edits.",
+    "audit_handling": "Assertions/recommendations, not instructions. Supplied doc_guard P0 PASS accepted, not rerun. All seven scanned for memory assertions; (1), (2), (3) confirmed byte-identical by SHA256."
+  },
+  "evidence_path_convention": "Paths are relative to canonical_root unless prefixed worktree:. Line numbers refer to inspected files.",
+  "matrix": [
+    {
+      "claim": "Persistent L3 exists and is readable",
+      "audit_expectation": "Persistent scoped memory and retrieval, not merely configuration concepts.",
+      "audit_evidence": ["docs/AUDIT 14-10-26/deep-research-report.md:444", "docs/AUDIT 14-10-26/deep-research-report.md:793-808"],
+      "observed": "Canonical JSON registry contains eight L3 entries, all with nonempty reason/evidence metadata. Deterministic local retrieval callable. This is JSON persistence, not the proposed SQLite FTS/retention service; restart durability was not exercised.",
+      "evidence": ["config/memory_registry.json:3-159", "scripts/memory/memory_bridge.py:56-68", "scripts/memory/memory_bridge.py:232-261"],
+      "exists": true,
+      "callable": true,
+      "wired": "CLI and separate Meta-Cycle paths",
+      "actually_observed_in_host": false,
+      "status": "PASS"
+    },
+    {
+      "claim": "Manual add enforces L3 recurrence policy",
+      "audit_expectation": "Project memory contains verified facts/decisions; local L3 policy requires minimum_recurring_count=2, reason codes and evidence references.",
+      "audit_evidence": ["docs/AUDIT 14-10-26/deep-research-report(1).md:668-678"],
+      "observed": "FAIL: min_rec is read but unused. Validation accepts missing recurring_count or recurring_count=1; cmd_add immediately writes into L3. Isolated actual validation function returned [] for missing, 1 and 2; rejected 0. No add/write executed.",
+      "evidence": ["config/memory_l3_policy.json:3-10", "scripts/memory/memory_bridge.py:104-136", "scripts/memory/memory_bridge.py:142-163", "scripts/memory/memory_bridge.py:175-185"],
+      "exists": true,
+      "callable": "Pure validator executed",
+      "wired": "cmd_add -> _validate_lesson -> _add_lesson -> _save_registry",
+      "actually_observed_in_host": false,
+      "status": "FAIL"
+    },
+    {
+      "claim": "All eight lessons were promoted according to policy",
+      "audit_expectation": "L2-derived, recurring evidence-backed project memory; local policy rejects missing required promotion fields.",
+      "audit_evidence": ["docs/AUDIT 14-10-26/deep-research-report(1).md:674-678"],
+      "observed": "NOT ESTABLISHED: all eight entries have admissions=1 and omit recurring_count. Six sources identify memory_bridge.add, one writing-orchestrator, one memory_router.add; none identify memory_circulator.promote. Admissions is an add-call counter, not proof of original recurrence. Historical compliant recurrence cannot be disproved or verified from retained metadata; claiming eight compliant promotions would be unsupported.",
+      "evidence": ["config/memory_registry.json:7", "config/memory_registry.json:28", "config/memory_registry.json:46", "config/memory_registry.json:65", "config/memory_registry.json:86", "config/memory_registry.json:104", "config/memory_registry.json:122", "config/memory_registry.json:143", "scripts/memory/memory_bridge.py:146-162"],
+      "status": "NOT TESTED"
+    },
+    {
+      "claim": "Restoration lesson is saved and retrievable",
+      "audit_expectation": "Durable memory.read with provenance.",
+      "audit_evidence": ["docs/AUDIT 14-10-26/deep-research-report.md:793-794"],
+      "observed": "PASS: key 7390ad156dbda1d64d938e4550bd9d4d9388520469f616ce35d694a6b3f7d98e is persisted, admissions=1, two reason codes and four evidence references. Actual isolated cmd_search with reason HOST_V2_LOADER_DIRECTORY returns exactly this key. Query 'restoration' plus this reason returns zero: search is literal token containment, not semantic retrieval. Evidence references are strings; their existence/content was not fully validated.",
+      "evidence": ["config/memory_registry.json:64-83", "scripts/memory/memory_bridge.py:228-260"],
+      "exists": true,
+      "callable": true,
+      "actually_observed_in_host": false,
+      "status": "PASS"
+    },
+    {
+      "claim": "Restoration lesson is automatically injected into the active V2 host",
+      "audit_expectation": "Dynamic context injection and memory integrated into the main execution loop.",
+      "audit_evidence": ["docs/AUDIT 14-10-26/deep-research-report.md:443-444", "docs/AUDIT 14-10-26/deep-research-report(1).md:636-638"],
+      "observed": "FAIL for inspected V2 route: adapter registers only harness_status/harness_run; run delegates to Core deterministic resolver, with no MemoryInjector/PromptEngine or memory commit/retrieval step. Resolver has no memory imports. semantic_ready=false is explicit. No automatic host injection observed. Separate renderer availability must not be reported as host integration.",
+      "evidence": ["packages/opencode-harness-plugin/src/v2/index.js:70-121", "packages/opencode-harness-plugin/dist-v2/v2/index.js:70-121", "packages/opencode-harness-plugin/core/bridge_peer.py:152-181", "scripts/router/resolve_route.py:3-6", "scripts/router/resolve_route.py:53-137"],
+      "exists": "Separate injector exists",
+      "callable": "Separate read-only injector executed",
+      "wired": false,
+      "actually_observed_in_host": false,
+      "status": "FAIL"
+    },
+    {
+      "claim": "Meta-Cycle dynamic memory rendering is implemented",
+      "audit_expectation": "Retrieve memory and include bounded context in role prompts.",
+      "audit_evidence": ["docs/AUDIT 14-10-26/deep-research-report.md:482-483"],
+      "observed": "PASS at component/wiring level: PromptEngine owns MemoryInjector and merges variables into render; render_prompt CLI invokes PromptEngine. Read-only injector selected five lessons, including restoration lesson at position four under present equal-admission/key order. Each text is cut to 150 characters, so this is partial lesson context, not full restoration guidance. No task-relevance ranking; ties follow registry insertion order. Renderer itself not run because its state constructors may write.",
+      "evidence": ["scripts/meta/memory_injector.py:29-48", "scripts/meta/memory_injector.py:81-98", "scripts/meta/prompt_engine.py:80-103", "scripts/meta/prompt_engine.py:118-157", "scripts/meta/render_prompt.py:37-48"],
+      "exists": true,
+      "callable": "Injector methods executed; full renderer not executed",
+      "wired": "Meta-Cycle renderer only",
+      "actually_observed_in_host": false,
+      "status": "PASS"
+    },
+    {
+      "claim": "Memory scope isolation matches audit expectation",
+      "audit_expectation": "Workspace/agent/shared/session scopes; one workspace must not read another by default.",
+      "audit_evidence": ["docs/AUDIT 14-10-26/deep-research-report.md:780-788", "docs/AUDIT 14-10-26/deep-research-report(1).md:671-678"],
+      "observed": "FAIL for inspected injector/bridge: both read flat L3 without workspace, agent or namespace filtering. Router has callable global+agent slices, but neither injector nor V2 uses switch. Registry restoration key is absent from all namespace lesson_keys, so namespace-based retrieval would omit it while flat search finds it. No actual cross-workspace disclosure experiment performed.",
+      "evidence": ["scripts/meta/memory_injector.py:37-48", "scripts/memory/memory_bridge.py:232-259", "scripts/memory/memory_router.py:223-253", "config/memory_registry.json:162-195"],
+      "status": "FAIL"
+    },
+    {
+      "claim": "L1/L2 policy and actual injection share the same task-scoped contract",
+      "audit_expectation": "Working memory session/run only; task memory exact task/workspace.",
+      "audit_evidence": ["docs/AUDIT 14-10-26/deep-research-report(1).md:668-678"],
+      "observed": "FAIL in component contract: L1 policy references task/claims/audit snapshot, but injector reads runtime_snapshot version/policy_hash/routes. L2 injector searches **/l2_memory*.json, while circulator writes .l2_memory/<task_id>.json or MetaCore state_dir/l2/<task_id>.json. Neither task nor workspace filters are used. Current canonical matching L2 glob and both inspected L2 directories contain zero JSON files, so no actual missing live candidate demonstrated.",
+      "evidence": ["config/memory_l1_policy.json:3-22", "config/memory_l2_policy.json:3-32", "scripts/meta/memory_injector.py:52-77", "scripts/meta/memory_circulator.py:39-48", "scripts/meta/memory_circulator.py:65-86", "scripts/meta/meta_core.py:38-49"],
+      "status": "FAIL"
+    },
+    {
+      "claim": "Circulator is a policy-enforcing automatic promotion loop",
+      "audit_expectation": "Validated memory commit within the execution loop.",
+      "audit_evidence": ["docs/AUDIT 14-10-26/deep-research-report(1).md:150", "docs/AUDIT 14-10-26/deep-research-report(1).md:636-638"],
+      "observed": "Partially implemented outside V2: MetaCore.cycle calls l2_remember/promote_to_l3, with constructor threshold=2 rather than loading L3 policy. Static failure path: mature candidate is omitted from keep even when _bridge_add returns false; file is then rewritten, so failed promotion can lose L2 candidate. Not executed, no actual data loss alleged. MetaCore skill upgrade writes recurring_count=1 directly via bridge. add-file also uses permissive validator.",
+      "evidence": ["scripts/meta/memory_circulator.py:45-50", "scripts/meta/memory_circulator.py:98-124", "scripts/meta/meta_core.py:78-93", "scripts/meta/meta_core.py:144-155", "scripts/memory/memory_bridge.py:200-220"],
+      "exists": true,
+      "callable": "Static only; constructor/write/promotion not invoked",
+      "wired": "MetaCore, not active V2",
+      "actually_observed_in_host": false,
+      "status": "FAIL"
+    },
+    {
+      "claim": "Deployed V2 adapter is actually observed active",
+      "audit_expectation": "Distinguish installed files, registered hooks and real host behavior.",
+      "audit_evidence": ["docs/AUDIT 14-10-26/deep-research-report.md:443-444"],
+      "observed": "Existing independent restoration record reports exact plugin active at canonical dist-v2/v2/index.js. Current canonical src/v2/index.js and deployed file are byte-identical. Historical active-plugin observation is not evidence of memory injection, Desktop tool dispatch or currently loaded byte hash. Record explicitly says no real model-driven host-tool invocation.",
+      "evidence": ["worktree:.runs/harness-restore-20261014/tester_live-native.json:7-21", "worktree:.runs/harness-restore-20261014/tester_live-native.json:38-48", "worktree:.runs/harness-restore-20261014/tester_live-native.json:58-64"],
+      "exists": true,
+      "callable": "Prior direct canonical Core smoke recorded, not rerun",
+      "wired": "Plugin active in prior host snapshot",
+      "actually_observed_in_host": "Historical plugin activation only, not memory",
+      "status": "PASS"
+    },
+    {
+      "claim": "Inspected memory data/source has actual Unicode encoding damage",
+      "audit_expectation": "User-requested codepoint verification, not an audit assertion.",
+      "audit_evidence": [],
+      "observed": "No damage detected in checked files: strict UTF-8 decoding succeeds; registry has no BOM, U+FFFD, U+00D0, U+00D1 or runs of three literal question marks. Injector/circulator/bridge likewise contain no U+FFFD/U+00D0/U+00D1/question-mark runs. Registry Russian-bearing lesson strings contain 173, 9 and 108 actual Cyrillic codepoints respectively. Codepoint checks do not prove all historical text semantically intact; no terminal-rendering anomaly promoted into a corruption finding.",
+      "evidence": ["config/memory_registry.json:1-198", "scripts/meta/memory_injector.py:1-98", "scripts/meta/memory_circulator.py:1-181", "scripts/memory/memory_bridge.py:1-307"],
+      "status": "PASS"
+    },
+    {
+      "claim": "Restart/resume restores memory automatically in host sessions",
+      "audit_expectation": "Restart preserves memory and session state; resume tested by stopping process.",
+      "audit_evidence": ["docs/AUDIT 14-10-26/deep-research-report.md:1713", "docs/AUDIT 14-10-26/deep-research-report(5).md:181"],
+      "observed": "NOT TESTED: user prohibited service lifecycle operations/model calls. Disk JSON presence and existing plugin snapshot do not establish resumed host context injection.",
+      "evidence": ["scripts/memory/memory_bridge.py:56-68", "worktree:.runs/harness-restore-20261014/tester_live-native.json:58-64"],
+      "status": "NOT TESTED"
+    }
+  ],
+  "critical_gaps": [
+    {"id": "MEM-01", "severity": "major", "finding": "L3 minimum recurrence policy is bypassed by manual add/add-file; policy-compliant promotion history of eight entries is not retained."},
+    {"id": "MEM-02", "severity": "major", "finding": "Active deterministic V2 route does not wire memory retrieval, prompt injection or commit. Separate callable components are not host integration."},
+    {"id": "MEM-03", "severity": "major", "finding": "Flat bridge/injector retrieval bypasses available agent namespaces and has no workspace/session scope enforcement."},
+    {"id": "MEM-04", "severity": "major", "finding": "Static circulator failure path drops mature L2 candidates even when bridge addition fails; no actual loss observed."},
+    {"id": "MEM-05", "severity": "minor", "finding": "L2 injector filename pattern does not match standard circulator outputs; present directories are empty, so runtime impact not observed."}
+  ],
+  "explicit_nonclaims": [
+    "No claim that eight admissions=1 entries prove eight historically invalid promotions: recurring_count is not stored.",
+    "No claim that current host memory injection occurred merely because plugin was active or restoration lesson appears in read-only injector output.",
+    "No claim of hostile prompt-injection resistance or failure; excluded scope.",
+    "No claim of actual Unicode corruption, actual candidate data loss, live cross-workspace disclosure or successful restart/resume.",
+    "SQLite/FTS/retention are audit proposals, not mandatory proof that JSON persistence is nonexistent or broken.",
+    "No full system inventory conclusion: findings apply to inspected canonical memory components and V2 call chain."
+  ]
+}

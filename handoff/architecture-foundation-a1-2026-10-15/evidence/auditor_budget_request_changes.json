@@ -1,0 +1,107 @@
+{
+  "audit_mode": "A",
+  "module": "A1-trace",
+  "section_0_checked_doubts": [
+    {
+      "doubt": "Green tests might have displaced independent negative discovery.",
+      "check": "Compared attached sequence, reviewer findings and tester counters; metadata only.",
+      "result": "Initial 18 PASS did not override the reviewer's blocking alias finding. One actual repair, delta approval at 23 tests and final test-only reconciliation at 24 PASS are reported. Product correctness was not independently verified."
+    },
+    {
+      "doubt": "Attempt counts or replacement profiles might conceal an extra repair or role substitution.",
+      "check": "Compared rework_rounds, attempt_no, attempt_limit, sequence and actor records.",
+      "result": "One repair round and attempt 2 of 2 are consistent. Failed initial transport accepted no worker receipt. Host-confirmed coder-worker, code-tester and two distinct code-reviewer sessions are reported, not general substitutes; actor identity is metadata-attested, not independently queried."
+    },
+    {
+      "doubt": "Reviewer approval might conceal budget exhaustion.",
+      "check": "Compared process_nonconformances with shared process rule that budget exhaustion yields BLOCKED or PARTIAL under policy, not false success.",
+      "result": "Process nonconformance confirmed by supplied metadata: delta reviewer exceeded its eight-call cap by one report-only call. Disclosure and absence of source edits reduce impact but do not establish an authorized exception. Separate final test-only review does not retrospectively authorize the overrun."
+    },
+    {
+      "doubt": "Foundation approval might be confused with deployment or live guard certification.",
+      "check": "Compared dispatch scope, canonical_deployed, pending_stages and verification_limits.",
+      "result": "Canonical deployment is false and legitimately remains a later gate. Windows kernel/spawn fixture controls are reported, not production/provider or heartbeat-based live guard proof. P0 hygiene is not semantic certification; outstanding scopes remain open."
+    }
+  ],
+  "verdict": "REQUEST_CHANGES",
+  "justification": "Метаданные подтверждают честный PARTIAL воркера, независимое обнаружение дефекта вопреки зелёным тестам, один ограниченный ремонт и заключительное согласование тестовых изменений. Однако превышение бюджета delta-reviewer раскрыто без документированного разрешения или предусмотренного политикой исхода PARTIAL/BLOCKED; отдельное test-only ревью не устраняет это процессное нарушение. Требуется только разрешение бюджетного несоответствия оркестратором, а не повторная оценка кода или преждевременный деплой.",
+  "process_analysis": {
+    "contracts_respected": false,
+    "iteration_count": 1,
+    "iteration_limit": 2,
+    "attempt_no": 2,
+    "role_violation": false,
+    "reviewer_args_assessment": "Independent blocking discovery appropriately superseded initial green tests. Delta and final-byte approval are reported; neither product approval nor schema repair authorizes exceeding the tool cap.",
+    "worker_args_assessment": "Initial PARTIAL explicitly escalated dependency cleanup rather than claiming completion. One bounded acquisition-cleanup amendment and repair are consistent with the declared foundation-only scope.",
+    "method": "Metadata-only process audit against the dispatch and shared process, supplemented by diligence, escape-hatch and mode contracts; no product re-review.",
+    "assumptions": [
+      "Attached actor records, validation outcomes and chronology are orchestrator attestations.",
+      "No policy exception for the reported reviewer budget overrun is supplied."
+    ],
+    "invariants": [
+      "One actual repair round; attempt count does not exceed two.",
+      "Reviewer and tester remain distinct from worker and process auditor.",
+      "Auditor evidence does not assign controller state or certify deployment.",
+      "Foundation scope does not imply completion of excluded runtime capabilities."
+    ],
+    "baseline": {
+      "declared": "1e9bc3d",
+      "first_implementation": "2fa3baad",
+      "repair_head": "e6d3c3f",
+      "verification": "Identifiers and three artifact SHA256 values supplied as provenance; no git or file-byte verification performed."
+    },
+    "validation_assessment": "Reported 24 methods, zero failures; coverage explicitly unmeasured. Counts are not a coverage percentage or independent correctness certificate.",
+    "budget_nonconformance": {
+      "reported_cap": 8,
+      "reported_calls": 9,
+      "extra_call_scope": "Report schema repair only; no source edits reported.",
+      "disposition": "Unresolved policy authorization; process approval withheld pending bounded disposition."
+    },
+    "release_assessment": "Analyst/research followup and local LIGHT verification precede conflict-checked canonical release and controller finalize. Deployment is not a prerequisite for this process gate, and no DONE or deployed status is asserted.",
+    "cost_assessment": "Token usage recorded for subscription requests; no inference that requests were free."
+  },
+  "verified_by_commands": [
+    {
+      "tool": "read",
+      "target": ".opencode/shared/code-factory-process.md",
+      "result": "Read process contract, budget exhaustion rule and deterministic state ownership."
+    },
+    {
+      "tool": "shell",
+      "command": "Get-Content -LiteralPath <07_AUDITOR_DILIGENCE.md,09_FINDINGS_ESCAPE_HATCH.md,14_AUDITOR_MODES.md> -Encoding UTF8",
+      "result": "First read had garbled console encoding; repeated read with UTF8 console output successfully recovered all three documents. Both calls were read-only."
+    }
+  ],
+  "findings_escape_hatch": {
+    "level_1": [],
+    "level_2": [
+      {
+        "id": "OUT_OF_SCOPE_FINDING-BUDGET-A1",
+        "finding": "Reported delta-reviewer tool cap exceeded; disclosure is not authorization.",
+        "action": "Recorded in this report; no canonical register writes or invented TD number."
+      }
+    ],
+    "level_3": [
+      {
+        "status": "[ESCALATED]",
+        "to": "code-orchestrator",
+        "finding": "[UNVERIFIED] Whether an applicable policy permits accepting the report-only overrun.",
+        "action": "Supply an authorized policy disposition, or arrange compliant replacement review evidence within existing attempt/iteration limits. Controller, not auditor, determines resulting task state."
+      }
+    ]
+  },
+  "requirements": [
+    "Resolve the disclosed reviewer budget overrun with an explicit applicable policy authorization, or compliant replacement review evidence; preserve the original nonconformance and do not reset attempt counts or retroactively claim strict budget compliance.",
+    "Return only the bounded disposition metadata for process reconciliation. Do not require code changes, new product tests or canonical deployment to resolve this audit finding."
+  ],
+  "limits": [
+    "Only attached process metadata and process documents were assessed. No source, tests, serialized worker code or full reviewer artifacts were opened; no delegation or tests were run.",
+    "Artifact hashes, actor identities, final-byte linkage and validation outcomes were not independently recomputed; parent guard and deterministic admission remain required.",
+    "Actual Windows kernel and spawn fixture controls are reported, not independently observed here. No POSIX, power-loss, unbounded replay or exactly-once certification.",
+    "Stable filesystem namespace is assumed; hostile concurrent link replacement is not certified. Queries remain instance-local and legacy replay-chain behavior is unchanged.",
+    "P0 hygiene with negative control is not combined semantic guard certification. Fixture provider and heartbeat do not establish live guard correctness.",
+    "Basket, sleep recovery, memory promotion, guard completion, native semantics and provider client installation remain outstanding.",
+    "No canonical release, state transition, controller action or deployment was performed. Only this requested audit artifact was written.",
+    "Four tool calls total including artifact creation; stopped at dispatch cap."
+  ]
+}

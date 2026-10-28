@@ -1,0 +1,124 @@
+{
+  "module": "A1-trace",
+  "verdict": "APPROVE",
+  "comments": [
+    {
+      "file": "scripts/meta/durable_json.py",
+      "line": 50,
+      "problem": "RESOLVED prior comment 1 (informational closure, not an outstanding defect): leaf symlink/dangling and multiple-hardlink targets are visibly rejected before mutation. Accepted ordinary spellings share a resolved target and lock. Windows regressions preserve old bytes and alias relationships while the target lock is held.",
+      "suggestion": "Retain the rejection regressions and documented stable-namespace boundary; no further change requested for this bounded rework.",
+      "falsification": "This closure is refuted if a leaf-symlink or hardlink stale append succeeds, changes target bytes or link identity, creates an alias lock, or an accepted relative/absolute/directory-alias spelling bypasses the held target lock.",
+      "severity": "minor"
+    }
+  ],
+  "scope_declared": {
+    "baseline": "2fa3baad977d4e87af31e23b82a91e51f8b75450",
+    "reviewed_head": "e6d3c3f0a80603e686bc59f591660a423f2d4f23",
+    "scope_in": [
+      "Final test-only reconciliation: accept the current 24 added lines of test_stale_writer_preserves_dangling_leaf_symlink; git status shows no tracked production-source modifications relative to HEAD. No existing test assertions removed.",
+      "Delta in durable_json.py and TraceStore storage identity, prior blocking comment 1 and worker response",
+      "Only four added lines inside FileLease.acquire and their acquisition-cleanup regression",
+      "Four new regression methods, existing scoped tests, relevant architecture amendment and durability documentation"
+    ],
+    "scope_out": [
+      "Whole-project review, CLI history, replay redesign, query-limit redesign",
+      "execute_verified/DaemonLease behavior changes, sleep activation, memory/providers, deployment",
+      "Canonical writes, controller operations, network/model calls, delegation, code/test edits and commits"
+    ],
+    "independent_test_integrity": {
+      "previously_reviewed_committed_sha256": "90736d40de16fb0b748ae17c750f46b11fbc9f4762c15578b91a45fdb37af7a7",
+      "matches_committed_head_blob": false,
+      "final_test_delta_accepted": true,
+      "limitation": "Current working-tree file adds exactly the reviewed 24-line dangling-leaf stale-writer test to the committed blob; the historical hash does not identify current bytes. No independent pre-rework copy was supplied to authenticate earlier provenance. Reviewer did not modify tests. Final seven-test runtime result is tester-reported, not independently rerun during this reconciliation."
+    }
+  },
+  "out_of_scope_gaps": [
+    {"module": "Certification", "finding": "Actual POSIX execution, power-loss/directory-fsync survival, retry idempotency and exactly-once semantics remain uncertified, not new A1 DoD."},
+    {"module": "Legacy", "finding": "Legacy replay chain filtering and query limits remain unchanged gaps, not acceptance additions."},
+    {"module": "Filesystem namespace", "finding": "Concurrent external rename/link creation, lock-file substitution, unusual filesystem aliases and network-filesystem locking remain outside the documented stable-namespace contract."},
+    {"module": "Test evidence", "finding": "RuntimeError acquisition failure was injected; other BaseException subtypes are covered structurally, not separately tested. Historical RED chronology was not independently rerun."},
+    {"module": "Final runtime evidence", "finding": "Concurrent test-change caveat resolved by inspecting the complete sole test diff: current added test bytes accepted. Specialized tester reports PASS24 (12+7+4+1); reconciliation did not independently rerun the seven-test suite or authenticate the tester report contents. Existing independently observed 23-test evidence remains historical."}
+  ],
+  "verified_by_commands": [
+    {
+      "command": "git status --short; git diff HEAD -- tests/coder/test_trace_store_durability_independent.py",
+      "exit_code": 0,
+      "result": "Final reconciliation: only reviewer_A1_trace.json, tester_A1_trace.json and the independent test file are modified; no tracked production-source change. Complete test diff adds 24 lines, removes none: stale instance rejects dangling leaf symlink, preserves link identity/metadata and missing target, creates no lock, leaves entries empty, then succeeds after link removal. Accepted current final test bytes; LF/CRLF warning is informational. No tests rerun in this reconciliation."
+    },
+    {
+      "command": "git diff 2fa3baad977d4e87af31e23b82a91e51f8b75450 e6d3c3f -- scripts/meta/durable_json.py scripts/meta/trace_store.py scripts/meta/daemon_safety.py tests/coder/test_trace_store_rework1.py docs/TRACE_STORE_DURABILITY.md",
+      "exit_code": 0,
+      "result": "Inspected actual repository delta, previous reviewer comment, selected worker metadata/response only (not serialized code), architecture A1/amendment, shared factory process and CODERS 06/09/10."
+    },
+    {
+      "command": "python -m unittest discover -s tests/coder -p test_trace_store_durability.py -v",
+      "exit_code": 0,
+      "result": "12 passed, zero skips, 1.055s."
+    },
+    {
+      "command": "python -m unittest discover -s tests/coder -p test_trace_store_durability_independent.py -v",
+      "exit_code": 0,
+      "result": "6 passed, zero skips, 0.110s; reviewer made no test edits."
+    },
+    {
+      "command": "python -m unittest discover -s tests/coder -p test_trace_store_rework1.py -v",
+      "exit_code": 0,
+      "result": "4 passed, zero skips, 0.058s. Actual symlink/dangling/hardlink fixtures exercised. RuntimeError after real open propagates, closes unpublished handle, allows retry and preserves exclusion."
+    },
+    {
+      "command": "python -c \"import sys,tempfile,unittest; tempfile.tempdir=r'C:\\Temp\\opencode'; sys.path.insert(0,'tests/coder'); import test_daemon_safety; suite=unittest.defaultTestLoader.loadTestsFromName('DaemonSafetyTests.test_exclusive_lock_rejects_second_owner_and_releases',test_daemon_safety); result=unittest.TextTestRunner(verbosity=2).run(suite); sys.exit(not result.wasSuccessful())\"",
+      "exit_code": 0,
+      "result": "1 isolated existing kernel test passed, zero skips, 0.002s; no daemon execution."
+    },
+    {
+      "command": "PowerShell here-string | python -: AST comparison with git show 2fa3baad:scripts/meta/daemon_safety.py, excluding only FileLease.acquire; SHA256 and committed-blob comparison of independent test",
+      "exit_code": 0,
+      "result": "AST outside acquire identical; independent SHA256 matches worker record and git blob matches e6d3c3f."
+    },
+    {
+      "command": "PowerShell here-string | python -: temporary ordinary-path identity/held-lock probe under C:\\Temp\\opencode",
+      "exit_code": 0,
+      "result": "Absolute, relative, dot-parent and directory-symlink spellings resolve identically. Each update with timeout=0 raises TimeoutError under target lock and retains bytes. Post-release append visible through directory alias. Fixtures cleaned."
+    },
+    {
+      "command": "git diff --check; git status --short",
+      "exit_code": 0,
+      "result": "Whitespace clean; working tree clean before reviewer report overwrite."
+    }
+  ],
+  "actual_test_count": 23,
+  "test_count_basis": "12 existing worker + 6 independent + 4 new regression + 1 isolated existing kernel unittest methods. All passed with zero skips. Additional ordinary-identity probe excluded from 23.",
+  "requirement_coverage": [
+    {"requirement": "Prior alias lock-bypass/replace finding", "status": "PASS", "evidence": "Reject leaf symlinks and dangling links via lstat before resolution; reject st_nlink > 1. Tests verify construction and stale writes reject without target mutation or alias splitting."},
+    {"requirement": "Accepted ordinary paths share transaction lock", "status": "PASS", "evidence": "Constructor pins resolved identity; read/update revalidate. Four-spelling held-lock probe passed; existing stale-instance and multiprocess tests passed."},
+    {"requirement": "Authorized unpublished acquisition-handle cleanup only", "status": "PASS", "evidence": "Four acquire-body lines close then re-raise BaseException. Real-handle RuntimeError injection passes. Existing OSError close/False preserved; AST outside acquire unchanged, including execute_verified and DaemonLease."},
+    {"requirement": "Final independent test delta and truthful test counts", "status": "PASS with provenance limit", "evidence": "Current final test bytes accepted: exactly one added 24-line test, no assertion removals. Historical 23 methods independently rerun; final 24 methods are tester-reported, not newly independently executed. Baseline lacks the independent file; no claim of authenticated pre-baseline provenance."},
+    {"requirement": "Original scoped persistence/failure guarantees remain green", "status": "PASS for exercised checks", "evidence": "Existing round-trip, stale writers, corruption, failed replacement, timeout and owner-exit cases pass; no general replay, POSIX or power-loss inference."}
+  ],
+  "adversarial_checklist": [
+    {"id": "domain_coverage", "passed": true, "score": 1.0, "findings": "Covered rejected aliases, accepted spellings, cleanup and bounded scope.", "issues": []},
+    {"id": "fact_concept_consistency", "passed": true, "score": 1.0, "findings": "Closure supported by actual delta and independently executed regressions.", "issues": []},
+    {"id": "concept_diversity", "passed": true, "score": 1.0, "findings": "Distinct symlink, hardlink, ordinary identity and acquisition-failure probes; concept generation not applicable.", "issues": []},
+    {"id": "source_specificity", "passed": true, "score": 1.0, "findings": "Primary evidence is exact repository revision, paths and commands; external DOI/URL not applicable.", "issues": []},
+    {"id": "triz_correctness", "passed": true, "score": 1.0, "findings": "No TRIZ principle/matrix claim. Invariant separates rejected aliases from accepted shared identity.", "issues": []},
+    {"id": "estimates_realism", "passed": true, "score": 1.0, "findings": "23 historically observed methods versus final tester-reported 24 distinguished; additional probe counted separately, historical RED and platform limits explicit.", "issues": []}
+  ],
+  "post_validation": {
+    "ideal_result": "Rejected aliases retain their bytes and link identity; accepted paths share one history and transaction boundary; failed acquisition retains no unpublished handle.",
+    "forbidden_ifr_verbs_present": false,
+    "solution_action_check": "Resolve accepted identity and reject unsupported aliases; close unpublished handles and preserve exception propagation."
+  },
+  "five_axis_review": {
+    "correctness": "Prior blocker resolved within stable namespace; all 23 methods pass.",
+    "readability": "Small explicit identity function and narrow cleanup branch; no material defect.",
+    "architecture": "Existing FileLease reused; dependency amendment obeyed.",
+    "security": "No new execution/network surface; filesystem race hardening explicitly not certified.",
+    "performance": "Small per-operation metadata checks; no unsupported benchmark claim."
+  },
+  "findings_escape_hatch": {
+    "level_1": "Prior blocking finding resolved; comments contains a closure note solely to satisfy the required nonempty schema. No outstanding in-scope defect found; no code/test edits.",
+    "level_2": "Existing certification/replay gaps and independent-file provenance limit recorded above; no new global TD registration or canonical writes.",
+    "level_3": "RESOLVED: sole concurrent test delta inspected and accepted; no pending concurrent-test-change caveat. APPROVE now includes current final test bytes and unchanged production head, not deployment or later architecture tranches. Prior contract-reading/review evidence retained; no controller, delegation, canonical writes, source/test edits or commits during reconciliation. Artifact not revalidated by controller.",
+    "doubt_cycle": "Attempted falsification using actual links, held kernel locks, ordinary alias spellings and real-handle fault injection. No delegation or additional model calls."
+  }
+}
